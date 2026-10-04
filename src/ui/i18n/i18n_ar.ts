@@ -81,10 +81,6 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <source>Group</source>
-        <translation>مجموعة</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>وقت الإنشاء</translation>
     </message>
@@ -99,6 +95,14 @@
     <message>
         <source>Name</source>
         <translation>الاسم</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>المجموعات</translation>
+    </message>
+    <message>
+        <source>Speed Limits</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>File Path</source>
@@ -165,125 +169,6 @@
     </message>
 </context>
 <context>
-    <name>ApplicationsPage</name>
-    <message>
-        <source>Group Name</source>
-        <translation>اسم المجموعة</translation>
-    </message>
-    <message>
-        <source>Add Group</source>
-        <translation>إضافة مجموعة</translation>
-    </message>
-    <message>
-        <source>Rename Group</source>
-        <translation>إعادة تسمية المجموعة</translation>
-    </message>
-    <message>
-        <source>Download speed limit:</source>
-        <translation>تقييد سرعة التنزيل:</translation>
-    </message>
-    <message>
-        <source>Upload speed limit:</source>
-        <translation>تقييد سرعة الرفع:</translation>
-    </message>
-    <message>
-        <source>Collect connection statistics</source>
-        <translation>تسجيل إحصائيات الاتصال</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>تفعيل</translation>
-    </message>
-    <message>
-        <source>time period:</source>
-        <translation>المدة الزمنية:</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>حظر</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>سماح</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Allow&apos;</source>
-        <translation>نقل كل العناصر إلى &apos;سماح&apos;</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Block&apos;</source>
-        <translation>نقل كل العناصر إلى &apos;حظر&apos;</translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation>تبديل كل العناصر</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Allow&apos;</source>
-        <translation>نقل كل العناصر إلى &apos;سماح&apos;</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Block&apos;</source>
-        <translation>نقل كل العناصر إلى &apos;حظر&apos;</translation>
-    </message>
-    <message>
-        <source>Select File</source>
-        <translation>تحديد ملف</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>مخصص</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>عدم التفعيل</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>البرامج (*.exe);;كل الملفات (*.*)</translation>
-    </message>
-    <message>
-        <source>Apply same rules to child processes</source>
-        <translation>تطبيق القواعد نفسها للعمليات الفرعية</translation>
-    </message>
-    <message>
-        <source>Latency:</source>
-        <translation>التأخير:</translation>
-    </message>
-    <message>
-        <source>Packet Loss:</source>
-        <translation>الحزم الضائعة:</translation>
-    </message>
-    <message>
-        <source>Download Buffer Size:</source>
-        <translation>حجم مخزن التنزيل:</translation>
-    </message>
-    <message>
-        <source>Upload Buffer Size:</source>
-        <translation>حجم مخزن الرفع:</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>عمليات الاتصال المحظورة</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>إيقاف اتصال الإنترنت</translation>
-    </message>
-    <message>
-        <source>Kill Process</source>
-        <translation>إنهاء البرامج</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>خيارات</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>مسح</translation>
-    </message>
-</context>
-<context>
     <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
@@ -300,14 +185,6 @@
     <message>
         <source>Too many IP addresses</source>
         <translation>عناوين الـ IP كثيرة جدًا</translation>
-    </message>
-    <message>
-        <source>Number of Application Groups must be between 1 and %1</source>
-        <translation>عدد مجموعات التطبيقات يجب أن تكون محصورة بين 1 و %1</translation>
-    </message>
-    <message>
-        <source>Length of Application Group&apos;s Name must be &lt; %1</source>
-        <translation>طول اسم مجموعات التطبيقات يجب أن يكون أقل من %1</translation>
     </message>
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
@@ -435,6 +312,10 @@
         <translation>تقييد تحذيرات الاتصال</translation>
     </message>
     <message>
+        <source>Block Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>مجهول</translation>
     </message>
@@ -492,6 +373,14 @@
     <message>
         <source>Clear All</source>
         <translation>حذف الكل</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>بحث</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>البحث</translation>
     </message>
     <message>
         <source>Auto scroll</source>
@@ -725,6 +614,122 @@
     </message>
     <message>
         <source>Show speed</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>الاسم:</translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>تفعيل</translation>
+    </message>
+    <message>
+        <source>Exclusive</source>
+        <translation>استثناء</translation>
+    </message>
+    <message>
+        <source>A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rule:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Rule is applied to the Group&apos;s programs before their own Rule, while the Group is active.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Group is active only in this Time Period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>موافق</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>إلغاء</translation>
+    </message>
+    <message>
+        <source>Edit Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupListModel</name>
+    <message>
+        <source>Group</source>
+        <translation>مجموعة</translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>تغيير الوقت</translation>
+    </message>
+</context>
+<context>
+    <name>GroupsController</name>
+    <message>
+        <source>Group Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot edit Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Group&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupsSelector</name>
+    <message>
+        <source>Select Groups.
+A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>المجموعات</translation>
+    </message>
+    <message>
+        <source>(exclusive)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>تعديل</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>إضافة</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>المجموعات</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected group?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1165,10 +1170,6 @@
         <translation>عناوين الـ IP</translation>
     </message>
     <message>
-        <source>Application Groups</source>
-        <translation>مجموعات التطبيقات</translation>
-    </message>
-    <message>
         <source>Statistics</source>
         <translation>الإحصائيات</translation>
     </message>
@@ -1355,16 +1356,20 @@ Make sure that you have a fresh backup.</source>
         <translation>التنزيل التلقائي للإصدار الجديد</translation>
     </message>
     <message>
-        <source>Block traffic for disabled App Groups</source>
-        <translation>حظر حركة المرور لمجموعات التطبيقات المعطلة</translation>
-    </message>
-    <message>
         <source>Auto-install after download</source>
         <translation>تثبيت تلقائي بعد التنزيل</translation>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation>وضع الشبح (امنع فحص المنفذ)</translation>
+    </message>
+    <message>
+        <source>Block traffic for disabled Groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed Limiter Enabled</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
@@ -1436,18 +1441,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Options</source>
         <translation>الخيارات</translation>
-    </message>
-    <message>
-        <source>Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!
-
-(They are read-only now and will be removed in v4.)
-
-Do you want to open a discussion thread in browser?</source>
-        <translation>قم بنقل أسماء البرامج إلى حروف الاستبدال الخاصة بالبرامج!!!
-
-            (هذه القيم للفراءة فقط وسيتم إزالتها عند الإصدار v4.0)
-
-            هل تريد فتح discussion thread في متصفح الإنترنت؟</translation>
     </message>
 </context>
 <context>
@@ -1540,10 +1533,6 @@ Do you want to open a discussion thread in browser?</source>
     <message>
         <source>Rules inheritance:</source>
         <translation>قواعد التوريث:</translation>
-    </message>
-    <message>
-        <source>Group:</source>
-        <translation>مجموعة:</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1735,16 +1724,36 @@ Do you want to open a discussion thread in browser?</source>
 <context>
     <name>ProgNetworkPage</name>
     <message>
+        <source>Block:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Inbound Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>الإنترنت</translation>
+    </message>
+    <message>
         <source>Block Internet Traffic</source>
         <translation>إيقاف حركة الإنترنت</translation>
     </message>
     <message>
-        <source>Rule</source>
-        <translation>قاعدة</translation>
+        <source>Download:</source>
+        <translation>التنزيل:</translation>
     </message>
     <message>
-        <source>Select Rule</source>
-        <translation>تحديد القاعدة</translation>
+        <source>Upload:</source>
+        <translation>الرفع:</translation>
+    </message>
+    <message>
+        <source>No Limit</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1914,6 +1923,14 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Timer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Obsolete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by Groups</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2114,6 +2131,17 @@ Please check other program with the same path.</source>
     <message>
         <source>Preset Rules</source>
         <translation>القواعد الأساسية</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSelector</name>
+    <message>
+        <source>Rule</source>
+        <translation>قاعدة</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2322,6 +2350,18 @@ Please check other program with the same path.</source>
         <source>Process ID</source>
         <translation>معرّف العملية</translation>
     </message>
+    <message>
+        <source>The changes were reset by the system. Make the service trackable again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the service to apply the changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the computer to apply the changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ServicesWindow</name>
@@ -2338,20 +2378,173 @@ Please check other program with the same path.</source>
         <translation>تراجع عن التعديلات</translation>
     </message>
     <message>
+        <source>Restart Service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Add Program</source>
         <translation>إضافة برنامج</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>بحث</translation>
     </message>
     <message>
         <source>Refresh</source>
         <translation>تحديث</translation>
     </message>
     <message>
+        <source>Search</source>
+        <translation>البحث</translation>
+    </message>
+    <message>
         <source>Services</source>
         <translation>الخدمات</translation>
     </message>
     <message>
-        <source>Please restart the computer to reload changed services!</source>
-        <translation>قم بإعادة تشغيل الحاسوب لكي تظهر التغييرات!</translation>
+        <source>Restart the service &quot;%1&quot;?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart the service &quot;%1&quot; to apply the changes?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the computer to apply the changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot restart the service &quot;%1&quot;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>الاسم:</translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>تفعيل</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>الرفع</translation>
+    </message>
+    <message>
+        <source>Speed:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Latency:</source>
+        <translation>التأخير:</translation>
+    </message>
+    <message>
+        <source>Packet Loss:</source>
+        <translation>الحزم الضائعة:</translation>
+    </message>
+    <message>
+        <source>Buffer Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Speed Limit is active only in this Time Period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>موافق</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>إلغاء</translation>
+    </message>
+    <message>
+        <source>Edit Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>مخصص</translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitListModel</name>
+    <message>
+        <source>Buffer overflow: %1
+Packet loss: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dropped</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>الاتجاه</translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>تغيير الوقت</translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitsController</name>
+    <message>
+        <source>Speed Limit Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot edit Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Speed Limit&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>تعديل</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>إضافة</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed Limits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected speed limit?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2537,6 +2730,136 @@ Please check other program with the same path.</source>
     </message>
 </context>
 <context>
+    <name>TimePeriodEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>الاسم:</translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>تفعيل</translation>
+    </message>
+    <message>
+        <source>The disabled Time Period doesn&apos;t restrict its Groups and Speed Limits.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intervals:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Time Period is active in ANY of its intervals.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Interval</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>موافق</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>إلغاء</translation>
+    </message>
+    <message>
+        <source>Edit Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodIntervalEdit</name>
+    <message>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To (the same time means the whole 24 hours)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodListModel</name>
+    <message>
+        <source>Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intervals</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>تغيير الوقت</translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodSelector</name>
+    <message>
+        <source>Time Period:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodsController</name>
+    <message>
+        <source>Time Period Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot edit Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Time Period&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>تعديل</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>إضافة</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected time period?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TrafListModel</name>
     <message>
         <source>Date</source>
@@ -2652,12 +2975,24 @@ Please check other program with the same path.</source>
         <translation>المناطق</translation>
     </message>
     <message>
+        <source>Speed Limits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Traffic Graph</source>
         <translation>مخطط حركة البيانات</translation>
     </message>
     <message>
         <source>Filter Enabled</source>
         <translation>تفعيل المرشّح</translation>
+    </message>
+    <message>
+        <source>Group Modifier</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Quit</source>
@@ -2696,10 +3031,6 @@ Please check other program with the same path.</source>
         <translation>القواعد</translation>
     </message>
     <message>
-        <source>App Group Modifier</source>
-        <translation>محرّر مجموعة التطبيق</translation>
-    </message>
-    <message>
         <source>Block Traffic</source>
         <translation>منع حركة المرور</translation>
     </message>
@@ -2725,6 +3056,21 @@ Please check other program with the same path.</source>
     <message>
         <source>Error at line %1: %2 (%3)</source>
         <translation>خطأ في الأسطر %1: %2 (%3)</translation>
+    </message>
+</context>
+<context>
+    <name>WeekDaysSelector</name>
+    <message>
+        <source>All</source>
+        <translation>الكل</translation>
+    </message>
+    <message>
+        <source>Week Days</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Days</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

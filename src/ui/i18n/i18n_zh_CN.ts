@@ -81,10 +81,6 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <source>Group</source>
-        <translation>群组</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>创建时间</translation>
     </message>
@@ -99,6 +95,14 @@
     <message>
         <source>Name</source>
         <translation>名称</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>分组</translation>
+    </message>
+    <message>
+        <source>Speed Limits</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>File Path</source>
@@ -165,125 +169,6 @@
     </message>
 </context>
 <context>
-    <name>ApplicationsPage</name>
-    <message>
-        <source>Group Name</source>
-        <translation>分组名称</translation>
-    </message>
-    <message>
-        <source>Add Group</source>
-        <translation>添加分组</translation>
-    </message>
-    <message>
-        <source>Rename Group</source>
-        <translation>重命名分组</translation>
-    </message>
-    <message>
-        <source>Download speed limit:</source>
-        <translation>下载速度限制：</translation>
-    </message>
-    <message>
-        <source>Upload speed limit:</source>
-        <translation>上传速度限制：</translation>
-    </message>
-    <message>
-        <source>Collect connection statistics</source>
-        <translation>收集连接统计数据</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>已启用</translation>
-    </message>
-    <message>
-        <source>time period:</source>
-        <translation>时间周期：</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>阻止</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>允许</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Allow&apos;</source>
-        <translation>移动所有行到“允许”</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Block&apos;</source>
-        <translation>移动所有行到“阻止”</translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation>交换所有行</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Allow&apos;</source>
-        <translation>移动选中的行到“允许”</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Block&apos;</source>
-        <translation>移动选中的行到“阻止”</translation>
-    </message>
-    <message>
-        <source>Select File</source>
-        <translation>选择文件</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>自定义</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>已禁用</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>应用程序 (*.exe);;所有文件 (*.*)</translation>
-    </message>
-    <message>
-        <source>Apply same rules to child processes</source>
-        <translation>将相同的规则应用于子进程</translation>
-    </message>
-    <message>
-        <source>Latency:</source>
-        <translation>延迟：</translation>
-    </message>
-    <message>
-        <source>Packet Loss:</source>
-        <translation>数据包丢失：</translation>
-    </message>
-    <message>
-        <source>Download Buffer Size:</source>
-        <translation>下载缓冲区大小：</translation>
-    </message>
-    <message>
-        <source>Upload Buffer Size:</source>
-        <translation>上传缓冲区大小：</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>收集被阻止的连接</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>阻止互联网流量</translation>
-    </message>
-    <message>
-        <source>Kill Process</source>
-        <translation>终止进程</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>选项</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>清除</translation>
-    </message>
-</context>
-<context>
     <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
@@ -300,14 +185,6 @@
     <message>
         <source>Too many IP addresses</source>
         <translation>IP 地址过多</translation>
-    </message>
-    <message>
-        <source>Number of Application Groups must be between 1 and %1</source>
-        <translation>应用程序组的数量必须介于 1 和 %1 之间</translation>
-    </message>
-    <message>
-        <source>Length of Application Group&apos;s Name must be &lt; %1</source>
-        <translation>应用程序组名称的长度必须小于 %1</translation>
     </message>
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
@@ -435,6 +312,10 @@
         <translation>连接请求限制</translation>
     </message>
     <message>
+        <source>Block Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
@@ -492,6 +373,14 @@
     <message>
         <source>Clear All</source>
         <translation>清除所有</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>查找</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>搜索</translation>
     </message>
     <message>
         <source>Auto scroll</source>
@@ -726,6 +615,122 @@
     <message>
         <source>Show speed</source>
         <translation>显示速度</translation>
+    </message>
+</context>
+<context>
+    <name>GroupEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>名称：</translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>已启用</translation>
+    </message>
+    <message>
+        <source>Exclusive</source>
+        <translation>独有的</translation>
+    </message>
+    <message>
+        <source>A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rule:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Rule is applied to the Group&apos;s programs before their own Rule, while the Group is active.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Group is active only in this Time Period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>确定</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <source>Edit Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupListModel</name>
+    <message>
+        <source>Group</source>
+        <translation>群组</translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>更改时间</translation>
+    </message>
+</context>
+<context>
+    <name>GroupsController</name>
+    <message>
+        <source>Group Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot edit Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Group&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupsSelector</name>
+    <message>
+        <source>Select Groups.
+A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>分组</translation>
+    </message>
+    <message>
+        <source>(exclusive)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>编辑</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>添加</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>分组</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected group?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1165,10 +1170,6 @@
         <translation>IP 地址</translation>
     </message>
     <message>
-        <source>Application Groups</source>
-        <translation>应用程序组</translation>
-    </message>
-    <message>
         <source>Statistics</source>
         <translation>统计数据</translation>
     </message>
@@ -1355,16 +1356,20 @@ Make sure that you have a fresh backup.</source>
         <translation>自动下载新版本</translation>
     </message>
     <message>
-        <source>Block traffic for disabled App Groups</source>
-        <translation>阻止已禁用应用程序组的流量</translation>
-    </message>
-    <message>
         <source>Auto-install after download</source>
         <translation>下载后自动安装</translation>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation>隐身模式（防止端口扫描）</translation>
+    </message>
+    <message>
+        <source>Block traffic for disabled Groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed Limiter Enabled</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
@@ -1436,18 +1441,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Options</source>
         <translation>选项</translation>
-    </message>
-    <message>
-        <source>Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!
-
-(They are read-only now and will be removed in v4.)
-
-Do you want to open a discussion thread in browser?</source>
-        <translation>请将【允许/阻止】字段的文本从【应用程序组】移至【通配符程序】！！！
-
-（它们现在是只读的，将在 v4 版本中被删除。）
-
-您想在浏览器中打开一个讨论主题吗？</translation>
     </message>
 </context>
 <context>
@@ -1540,10 +1533,6 @@ Do you want to open a discussion thread in browser?</source>
     <message>
         <source>Rules inheritance:</source>
         <translation>规则继承：</translation>
-    </message>
-    <message>
-        <source>Group:</source>
-        <translation>组：</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1735,16 +1724,36 @@ Do you want to open a discussion thread in browser?</source>
 <context>
     <name>ProgNetworkPage</name>
     <message>
+        <source>Block:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Inbound Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>互联网</translation>
+    </message>
+    <message>
         <source>Block Internet Traffic</source>
         <translation>阻止互联网流量</translation>
     </message>
     <message>
-        <source>Rule</source>
-        <translation>规则</translation>
+        <source>Download:</source>
+        <translation>下载：</translation>
     </message>
     <message>
-        <source>Select Rule</source>
-        <translation>选择规则</translation>
+        <source>Upload:</source>
+        <translation>上传：</translation>
+    </message>
+    <message>
+        <source>No Limit</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1916,6 +1925,14 @@ Please check other program with the same path.</source>
     <message>
         <source>Timer</source>
         <translation>计时器</translation>
+    </message>
+    <message>
+        <source>Obsolete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by Groups</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Disable</source>
@@ -2115,6 +2132,17 @@ Please check other program with the same path.</source>
     <message>
         <source>Preset Rules</source>
         <translation>预置规则</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSelector</name>
+    <message>
+        <source>Rule</source>
+        <translation>规则</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation>选择规则</translation>
     </message>
 </context>
 <context>
@@ -2323,6 +2351,18 @@ Please check other program with the same path.</source>
         <source>Process ID</source>
         <translation>进程 ID</translation>
     </message>
+    <message>
+        <source>The changes were reset by the system. Make the service trackable again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the service to apply the changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the computer to apply the changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ServicesWindow</name>
@@ -2339,20 +2379,173 @@ Please check other program with the same path.</source>
         <translation>还原更改</translation>
     </message>
     <message>
+        <source>Restart Service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Add Program</source>
         <translation>添加应用程序</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>查找</translation>
     </message>
     <message>
         <source>Refresh</source>
         <translation>刷新</translation>
     </message>
     <message>
+        <source>Search</source>
+        <translation>搜索</translation>
+    </message>
+    <message>
         <source>Services</source>
         <translation>服务</translation>
     </message>
     <message>
-        <source>Please restart the computer to reload changed services!</source>
-        <translation>请重启计算机以重新加载已更改的服务！</translation>
+        <source>Restart the service &quot;%1&quot;?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart the service &quot;%1&quot; to apply the changes?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the computer to apply the changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot restart the service &quot;%1&quot;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>名称：</translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>已启用</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>下载</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>上传</translation>
+    </message>
+    <message>
+        <source>Speed:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Latency:</source>
+        <translation>延迟：</translation>
+    </message>
+    <message>
+        <source>Packet Loss:</source>
+        <translation>数据包丢失：</translation>
+    </message>
+    <message>
+        <source>Buffer Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Speed Limit is active only in this Time Period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>确定</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <source>Edit Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>自定义</translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitListModel</name>
+    <message>
+        <source>Buffer overflow: %1
+Packet loss: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dropped</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>排序顺序</translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>更改时间</translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitsController</name>
+    <message>
+        <source>Speed Limit Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot edit Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Speed Limit&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>编辑</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>添加</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <source>Speed Limits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected speed limit?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2538,6 +2731,136 @@ Please check other program with the same path.</source>
     </message>
 </context>
 <context>
+    <name>TimePeriodEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>名称：</translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>已启用</translation>
+    </message>
+    <message>
+        <source>The disabled Time Period doesn&apos;t restrict its Groups and Speed Limits.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intervals:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Time Period is active in ANY of its intervals.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Interval</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>确定</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <source>Edit Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodIntervalEdit</name>
+    <message>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To (the same time means the whole 24 hours)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>删除</translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodListModel</name>
+    <message>
+        <source>Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intervals</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>更改时间</translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodSelector</name>
+    <message>
+        <source>Time Period:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodsController</name>
+    <message>
+        <source>Time Period Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot edit Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Time Period&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>编辑</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>添加</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected time period?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TrafListModel</name>
     <message>
         <source>Date</source>
@@ -2653,12 +2976,24 @@ Please check other program with the same path.</source>
         <translation>区域</translation>
     </message>
     <message>
+        <source>Speed Limits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Traffic Graph</source>
         <translation>流量图</translation>
     </message>
     <message>
         <source>Filter Enabled</source>
         <translation>过滤器已启用</translation>
+    </message>
+    <message>
+        <source>Group Modifier</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Quit</source>
@@ -2697,10 +3032,6 @@ Please check other program with the same path.</source>
         <translation>规则</translation>
     </message>
     <message>
-        <source>App Group Modifier</source>
-        <translation>应用程序组修改器</translation>
-    </message>
-    <message>
         <source>Block Traffic</source>
         <translation>阻止流量</translation>
     </message>
@@ -2726,6 +3057,21 @@ Please check other program with the same path.</source>
     <message>
         <source>Error at line %1: %2 (%3)</source>
         <translation>第 %1 行错误：%2（%3）</translation>
+    </message>
+</context>
+<context>
+    <name>WeekDaysSelector</name>
+    <message>
+        <source>All</source>
+        <translation>全部</translation>
+    </message>
+    <message>
+        <source>Week Days</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Days</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

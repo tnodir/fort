@@ -81,10 +81,6 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <source>Group</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation></translation>
     </message>
@@ -98,6 +94,14 @@
     </message>
     <message>
         <source>Name</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Speed Limits</source>
         <translation></translation>
     </message>
     <message>
@@ -165,125 +169,6 @@
     </message>
 </context>
 <context>
-    <name>ApplicationsPage</name>
-    <message>
-        <source>Group Name</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Add Group</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Rename Group</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Download speed limit:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Upload speed limit:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Collect connection statistics</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>time period:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Allow&apos;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Block&apos;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Allow&apos;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Block&apos;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Select File</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Apply same rules to child processes</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Latency:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Packet Loss:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Download Buffer Size:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Upload Buffer Size:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Kill Process</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
     <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
@@ -299,14 +184,6 @@
     </message>
     <message>
         <source>Too many IP addresses</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Number of Application Groups must be between 1 and %1</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation></translation>
     </message>
     <message>
@@ -435,6 +312,10 @@
         <translation></translation>
     </message>
     <message>
+        <source>Block Inbound</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation></translation>
     </message>
@@ -491,6 +372,14 @@
     </message>
     <message>
         <source>Clear All</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Search</source>
         <translation></translation>
     </message>
     <message>
@@ -725,6 +614,122 @@
     </message>
     <message>
         <source>Show speed</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>GroupEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Exclusive</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Rule:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The Rule is applied to the Group&apos;s programs before their own Rule, while the Group is active.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The Group is active only in this Time Period.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Edit Group</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>GroupListModel</name>
+    <message>
+        <source>Group</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>GroupsController</name>
+    <message>
+        <source>Group Configuration Error</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cannot edit Group</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cannot delete Group</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cannot update Group&apos;s name</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>GroupsSelector</name>
+    <message>
+        <source>Select Groups.
+A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>(exclusive)</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>GroupsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected group?</source>
         <translation></translation>
     </message>
 </context>
@@ -1165,10 +1170,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Application Groups</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Statistics</source>
         <translation></translation>
     </message>
@@ -1353,15 +1354,19 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Block traffic for disabled App Groups</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Auto-install after download</source>
         <translation></translation>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block traffic for disabled Groups</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Speed Limiter Enabled</source>
         <translation></translation>
     </message>
     <message>
@@ -1433,14 +1438,6 @@ Make sure that you have a fresh backup.</source>
     <name>OptionsWindow</name>
     <message>
         <source>Options</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!
-
-(They are read-only now and will be removed in v4.)
-
-Do you want to open a discussion thread in browser?</source>
         <translation></translation>
     </message>
 </context>
@@ -1533,10 +1530,6 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>Rules inheritance:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Group:</source>
         <translation></translation>
     </message>
     <message>
@@ -1729,15 +1722,35 @@ Do you want to open a discussion thread in browser?</source>
 <context>
     <name>ProgNetworkPage</name>
     <message>
+        <source>Block:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block Inbound Connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Block Internet Traffic</source>
         <translation></translation>
     </message>
     <message>
-        <source>Rule</source>
+        <source>Download:</source>
         <translation></translation>
     </message>
     <message>
-        <source>Select Rule</source>
+        <source>Upload:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>No Limit</source>
         <translation></translation>
     </message>
 </context>
@@ -1903,6 +1916,14 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Timer</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Obsolete</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Filter by Groups</source>
         <translation></translation>
     </message>
     <message>
@@ -2102,6 +2123,17 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Preset Rules</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>RuleSelector</name>
+    <message>
+        <source>Rule</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
         <translation></translation>
     </message>
 </context>
@@ -2311,6 +2343,18 @@ Please check other program with the same path.</source>
         <source>Process ID</source>
         <translation></translation>
     </message>
+    <message>
+        <source>The changes were reset by the system. Make the service trackable again.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Please restart the service to apply the changes.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Please restart the computer to apply the changes.</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ServicesWindow</name>
@@ -2327,7 +2371,15 @@ Please check other program with the same path.</source>
         <translation></translation>
     </message>
     <message>
+        <source>Restart Service</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Add Program</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Find</source>
         <translation></translation>
     </message>
     <message>
@@ -2335,11 +2387,156 @@ Please check other program with the same path.</source>
         <translation></translation>
     </message>
     <message>
+        <source>Search</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Services</source>
         <translation></translation>
     </message>
     <message>
-        <source>Please restart the computer to reload changed services!</source>
+        <source>Restart the service &quot;%1&quot;?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Restart the service &quot;%1&quot; to apply the changes?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Please restart the computer to apply the changes.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cannot restart the service &quot;%1&quot;.</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Speed:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Latency:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Packet Loss:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Buffer Size:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The Speed Limit is active only in this Time Period.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Edit Speed Limit</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitListModel</name>
+    <message>
+        <source>Buffer overflow: %1
+Packet loss: %2</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Speed Limit</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Queue</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Dropped</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitsController</name>
+    <message>
+        <source>Speed Limit Configuration Error</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cannot edit Speed Limit</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cannot delete Speed Limit</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cannot update Speed Limit&apos;s name</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Speed Limits</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected speed limit?</source>
         <translation></translation>
     </message>
 </context>
@@ -2526,6 +2723,136 @@ Please check other program with the same path.</source>
     </message>
 </context>
 <context>
+    <name>TimePeriodEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The disabled Time Period doesn&apos;t restrict its Groups and Speed Limits.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Intervals:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The Time Period is active in ANY of its intervals.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Add Interval</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Edit Time Period</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodIntervalEdit</name>
+    <message>
+        <source>From</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>To (the same time means the whole 24 hours)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodListModel</name>
+    <message>
+        <source>Time Period</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Intervals</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodSelector</name>
+    <message>
+        <source>Time Period:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>No Period</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodsController</name>
+    <message>
+        <source>Time Period Configuration Error</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cannot edit Time Period</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cannot delete Time Period</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cannot update Time Period&apos;s name</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected time period?</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>TrafListModel</name>
     <message>
         <source>Date</source>
@@ -2641,11 +2968,23 @@ Please check other program with the same path.</source>
         <translation></translation>
     </message>
     <message>
+        <source>Speed Limits</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Traffic Graph</source>
         <translation></translation>
     </message>
     <message>
         <source>Filter Enabled</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Group Modifier</source>
         <translation></translation>
     </message>
     <message>
@@ -2685,10 +3024,6 @@ Please check other program with the same path.</source>
         <translation></translation>
     </message>
     <message>
-        <source>App Group Modifier</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Block Traffic</source>
         <translation></translation>
     </message>
@@ -2713,6 +3048,21 @@ Please check other program with the same path.</source>
     <name>ValueRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>WeekDaysSelector</name>
+    <message>
+        <source>All</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Week Days</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>No Days</source>
         <translation></translation>
     </message>
 </context>

@@ -81,10 +81,6 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <source>Group</source>
-        <translation>Grupa</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>Czas utworzenia</translation>
     </message>
@@ -99,6 +95,14 @@
     <message>
         <source>Name</source>
         <translation>Nazwa</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Grupy</translation>
+    </message>
+    <message>
+        <source>Speed Limits</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>File Path</source>
@@ -165,125 +169,6 @@
     </message>
 </context>
 <context>
-    <name>ApplicationsPage</name>
-    <message>
-        <source>Group Name</source>
-        <translation>Nazwa grupy</translation>
-    </message>
-    <message>
-        <source>Add Group</source>
-        <translation>Dodaj grupę</translation>
-    </message>
-    <message>
-        <source>Rename Group</source>
-        <translation>Zmień nazwę grupy</translation>
-    </message>
-    <message>
-        <source>Download speed limit:</source>
-        <translation>Ograniczenie pobierania:</translation>
-    </message>
-    <message>
-        <source>Upload speed limit:</source>
-        <translation>Ograniczenie wysyłania:</translation>
-    </message>
-    <message>
-        <source>Collect connection statistics</source>
-        <translation>Zbieraj statystyki połączeń</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Włączone</translation>
-    </message>
-    <message>
-        <source>time period:</source>
-        <translation>okres:</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Blokuj</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>Zezwól</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Allow&apos;</source>
-        <translation>Przenieś wszystkie wiersze do &apos;Zezwól&apos;</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Block&apos;</source>
-        <translation>Przenieś wszystkie wiersze do &apos;Blokuj&apos;</translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation>Wymień wszystkie wiersze</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Allow&apos;</source>
-        <translation>Przenieś zaznaczone wiersze do &apos;Zezwól&apos;</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Block&apos;</source>
-        <translation>Przenieś zaznaczone wiersze do &apos;Blokuj&apos;</translation>
-    </message>
-    <message>
-        <source>Select File</source>
-        <translation>Wybierz plik</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Własne</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Wyłączone</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>Programy (*.exe);;Wszystkie pliki (*.*)</translation>
-    </message>
-    <message>
-        <source>Apply same rules to child processes</source>
-        <translation>Zastosuj te same reguły do procesów potomnych</translation>
-    </message>
-    <message>
-        <source>Latency:</source>
-        <translation>Opóźnienie</translation>
-    </message>
-    <message>
-        <source>Packet Loss:</source>
-        <translation>Utrata pakietów</translation>
-    </message>
-    <message>
-        <source>Download Buffer Size:</source>
-        <translation>Rozmiar bufora pobierania:</translation>
-    </message>
-    <message>
-        <source>Upload Buffer Size:</source>
-        <translation>Rozmiar bufora wysyłania:</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>Zbieraj blokowane połączenia</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>Blokuj ruch internetowy</translation>
-    </message>
-    <message>
-        <source>Kill Process</source>
-        <translation>Zakończ proces</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Opcje</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>Czyść</translation>
-    </message>
-</context>
-<context>
     <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
@@ -300,14 +185,6 @@
     <message>
         <source>Too many IP addresses</source>
         <translation>Zbyt wiele adresów IP</translation>
-    </message>
-    <message>
-        <source>Number of Application Groups must be between 1 and %1</source>
-        <translation>Liczba grup aplikacji musi być pomiędzy 1 i %1</translation>
-    </message>
-    <message>
-        <source>Length of Application Group&apos;s Name must be &lt; %1</source>
-        <translation>Długość nazwy grupy aplikacji musi być &lt; %1</translation>
     </message>
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
@@ -435,6 +312,10 @@
         <translation>Limit próśb o połączenie</translation>
     </message>
     <message>
+        <source>Block Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>Nieznany</translation>
     </message>
@@ -492,6 +373,14 @@
     <message>
         <source>Clear All</source>
         <translation>Czyść wszystkie</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Znajdź</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Szukaj</translation>
     </message>
     <message>
         <source>Auto scroll</source>
@@ -726,6 +615,122 @@
     <message>
         <source>Show speed</source>
         <translation>Pokaż szybkość</translation>
+    </message>
+</context>
+<context>
+    <name>GroupEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Nazwa:</translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exclusive</source>
+        <translation>Wyłączność</translation>
+    </message>
+    <message>
+        <source>A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rule:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Rule is applied to the Group&apos;s programs before their own Rule, while the Group is active.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Group is active only in this Time Period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Anuluj</translation>
+    </message>
+    <message>
+        <source>Edit Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupListModel</name>
+    <message>
+        <source>Group</source>
+        <translation>Grupa</translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>Czas zmiany</translation>
+    </message>
+</context>
+<context>
+    <name>GroupsController</name>
+    <message>
+        <source>Group Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot edit Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Group&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupsSelector</name>
+    <message>
+        <source>Select Groups.
+A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Grupy</translation>
+    </message>
+    <message>
+        <source>(exclusive)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Dodaj</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Usuń</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Grupy</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected group?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1165,10 +1170,6 @@
         <translation>Adresy IP</translation>
     </message>
     <message>
-        <source>Application Groups</source>
-        <translation>Grupy aplikacji</translation>
-    </message>
-    <message>
         <source>Statistics</source>
         <translation>Statystyki</translation>
     </message>
@@ -1355,16 +1356,20 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <translation>Automatyczne pobieranie nowej wersji</translation>
     </message>
     <message>
-        <source>Block traffic for disabled App Groups</source>
-        <translation>Blokuj ruch dla wyłączonych grup aplikacji</translation>
-    </message>
-    <message>
         <source>Auto-install after download</source>
         <translation>Automatyczna instalacja po pobraniu</translation>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation>Tryb ukryty (zapobiega skanowaniu portów)</translation>
+    </message>
+    <message>
+        <source>Block traffic for disabled Groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed Limiter Enabled</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
@@ -1436,18 +1441,6 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
     <message>
         <source>Options</source>
         <translation>Opcje</translation>
-    </message>
-    <message>
-        <source>Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!
-
-(They are read-only now and will be removed in v4.)
-
-Do you want to open a discussion thread in browser?</source>
-        <translation>Przenieś teksty pól Zezwól/Blokuj z grup aplikacji do programów wieloznacznych!!!
-
-(Są one teraz tylko do odczytu i zostaną usunięte w v4.)
-
-Czy chcesz otworzyć wątek dyskusji w preglądarce?</translation>
     </message>
 </context>
 <context>
@@ -1540,10 +1533,6 @@ Czy chcesz otworzyć wątek dyskusji w preglądarce?</translation>
     <message>
         <source>Rules inheritance:</source>
         <translation>Reguły dziedziczenia:</translation>
-    </message>
-    <message>
-        <source>Group:</source>
-        <translation>Grupa:</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1735,16 +1724,36 @@ Czy chcesz otworzyć wątek dyskusji w preglądarce?</translation>
 <context>
     <name>ProgNetworkPage</name>
     <message>
+        <source>Block:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Inbound Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>Internet</translation>
+    </message>
+    <message>
         <source>Block Internet Traffic</source>
         <translation>Blokuj ruch internetowy</translation>
     </message>
     <message>
-        <source>Rule</source>
-        <translation>Reguła</translation>
+        <source>Download:</source>
+        <translation>Pobieranie:</translation>
     </message>
     <message>
-        <source>Select Rule</source>
-        <translation>Wybierz regułę</translation>
+        <source>Upload:</source>
+        <translation>Wysyłanie:</translation>
+    </message>
+    <message>
+        <source>No Limit</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1916,6 +1925,14 @@ Sprawdź inny program o tej samej ścieżce.</translation>
     <message>
         <source>Timer</source>
         <translation>Timer</translation>
+    </message>
+    <message>
+        <source>Obsolete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by Groups</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Disable</source>
@@ -2115,6 +2132,17 @@ Sprawdź inny program o tej samej ścieżce.</translation>
     <message>
         <source>Preset Rules</source>
         <translation>Ustawione reguły</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSelector</name>
+    <message>
+        <source>Rule</source>
+        <translation>Reguła</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation>Wybierz regułę</translation>
     </message>
 </context>
 <context>
@@ -2323,6 +2351,18 @@ Sprawdź inny program o tej samej ścieżce.</translation>
         <source>Process ID</source>
         <translation>ID usługi</translation>
     </message>
+    <message>
+        <source>The changes were reset by the system. Make the service trackable again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the service to apply the changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the computer to apply the changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ServicesWindow</name>
@@ -2339,20 +2379,173 @@ Sprawdź inny program o tej samej ścieżce.</translation>
         <translation>Cofnij zmiany</translation>
     </message>
     <message>
+        <source>Restart Service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Add Program</source>
         <translation>Dodaj program</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Znajdź</translation>
     </message>
     <message>
         <source>Refresh</source>
         <translation>Odśwież</translation>
     </message>
     <message>
+        <source>Search</source>
+        <translation>Szukaj</translation>
+    </message>
+    <message>
         <source>Services</source>
         <translation>Usługi</translation>
     </message>
     <message>
-        <source>Please restart the computer to reload changed services!</source>
-        <translation>Uruchom ponownie komputer, aby ponownie załadować zmienione usługi!</translation>
+        <source>Restart the service &quot;%1&quot;?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart the service &quot;%1&quot; to apply the changes?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the computer to apply the changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot restart the service &quot;%1&quot;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Nazwa:</translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>Wysyłanie</translation>
+    </message>
+    <message>
+        <source>Speed:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Latency:</source>
+        <translation>Opóźnienie</translation>
+    </message>
+    <message>
+        <source>Packet Loss:</source>
+        <translation>Utrata pakietów</translation>
+    </message>
+    <message>
+        <source>Buffer Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Speed Limit is active only in this Time Period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Anuluj</translation>
+    </message>
+    <message>
+        <source>Edit Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Własne</translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitListModel</name>
+    <message>
+        <source>Buffer overflow: %1
+Packet loss: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dropped</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Kierunek</translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>Czas zmiany</translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitsController</name>
+    <message>
+        <source>Speed Limit Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot edit Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Speed Limit&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Dodaj</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Usuń</translation>
+    </message>
+    <message>
+        <source>Speed Limits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected speed limit?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2538,6 +2731,136 @@ Sprawdź inny program o tej samej ścieżce.</translation>
     </message>
 </context>
 <context>
+    <name>TimePeriodEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Nazwa:</translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The disabled Time Period doesn&apos;t restrict its Groups and Speed Limits.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intervals:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Time Period is active in ANY of its intervals.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Interval</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Anuluj</translation>
+    </message>
+    <message>
+        <source>Edit Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodIntervalEdit</name>
+    <message>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To (the same time means the whole 24 hours)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Usuń</translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodListModel</name>
+    <message>
+        <source>Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intervals</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>Czas zmiany</translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodSelector</name>
+    <message>
+        <source>Time Period:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodsController</name>
+    <message>
+        <source>Time Period Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot edit Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Time Period&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Dodaj</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Usuń</translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected time period?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TrafListModel</name>
     <message>
         <source>Date</source>
@@ -2653,12 +2976,24 @@ Sprawdź inny program o tej samej ścieżce.</translation>
         <translation>Strefy</translation>
     </message>
     <message>
+        <source>Speed Limits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Traffic Graph</source>
         <translation>Wykres ruchu</translation>
     </message>
     <message>
         <source>Filter Enabled</source>
         <translation>Filtr włączony</translation>
+    </message>
+    <message>
+        <source>Group Modifier</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Quit</source>
@@ -2697,10 +3032,6 @@ Sprawdź inny program o tej samej ścieżce.</translation>
         <translation>Reguły</translation>
     </message>
     <message>
-        <source>App Group Modifier</source>
-        <translation>Modyfikator grupy aplikacji</translation>
-    </message>
-    <message>
         <source>Block Traffic</source>
         <translation>Blokuj ruch</translation>
     </message>
@@ -2726,6 +3057,21 @@ Sprawdź inny program o tej samej ścieżce.</translation>
     <message>
         <source>Error at line %1: %2 (%3)</source>
         <translation>Błąd w wierszu %1: %2 (%3)</translation>
+    </message>
+</context>
+<context>
+    <name>WeekDaysSelector</name>
+    <message>
+        <source>All</source>
+        <translation>Wszystkie</translation>
+    </message>
+    <message>
+        <source>Week Days</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Days</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

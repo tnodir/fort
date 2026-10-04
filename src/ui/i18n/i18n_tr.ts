@@ -81,10 +81,6 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <source>Group</source>
-        <translation>Grup</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>Oluşturma Zamanı</translation>
     </message>
@@ -99,6 +95,14 @@
     <message>
         <source>Name</source>
         <translation>Ad</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Gruplar</translation>
+    </message>
+    <message>
+        <source>Speed Limits</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>File Path</source>
@@ -165,125 +169,6 @@
     </message>
 </context>
 <context>
-    <name>ApplicationsPage</name>
-    <message>
-        <source>Group Name</source>
-        <translation>Grup Adı</translation>
-    </message>
-    <message>
-        <source>Add Group</source>
-        <translation>Grup Ekle</translation>
-    </message>
-    <message>
-        <source>Rename Group</source>
-        <translation>Grubu Yeniden Adlandır</translation>
-    </message>
-    <message>
-        <source>Download speed limit:</source>
-        <translation>İndirme Hız Sınırı:</translation>
-    </message>
-    <message>
-        <source>Upload speed limit:</source>
-        <translation>Yükleme Hız Sınırı:</translation>
-    </message>
-    <message>
-        <source>Collect connection statistics</source>
-        <translation>Bağlantı İstatistiklerini Topla</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Etkin</translation>
-    </message>
-    <message>
-        <source>time period:</source>
-        <translation>Zaman Aralığı: </translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Engelle </translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>İzin Ver </translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Allow&apos;</source>
-        <translation>Tüm Satırları &apos;İzin Ver&apos; Konumuna Taşı;</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Block&apos;</source>
-        <translation>Tüm Satırları &apos;Engelle&apos;ye Taşı;</translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation>Tüm Satırları Değiştir</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Allow&apos;</source>
-        <translation>Seçili Satırları &apos;İzin Ver&apos; Konumuna Taşı;</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Block&apos;</source>
-        <translation>Seçili Satırları &apos;Engelle&apos;ye Taşı;</translation>
-    </message>
-    <message>
-        <source>Select File</source>
-        <translation>Dosya Seç</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Özel</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Kapalı</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>Programlar (*.exe);;Tüm dosyalar (*.*)</translation>
-    </message>
-    <message>
-        <source>Apply same rules to child processes</source>
-        <translation>Alt Süreçlere De Aynı Kuralları Uygula</translation>
-    </message>
-    <message>
-        <source>Latency:</source>
-        <translation>Gecikme:</translation>
-    </message>
-    <message>
-        <source>Packet Loss:</source>
-        <translation>Paket Kaybı:</translation>
-    </message>
-    <message>
-        <source>Download Buffer Size:</source>
-        <translation>İndirme Önbellek Boyutu:</translation>
-    </message>
-    <message>
-        <source>Upload Buffer Size:</source>
-        <translation>Yükleme Önbellek Boyutu:</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>Engellenen Bağlantıları Topla</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>İnternet Trafiğini Engelle </translation>
-    </message>
-    <message>
-        <source>Kill Process</source>
-        <translation>İşlemi Sonlandır</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Ayarlar</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>Temizle</translation>
-    </message>
-</context>
-<context>
     <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
@@ -300,14 +185,6 @@
     <message>
         <source>Too many IP addresses</source>
         <translation>Çok Fazla IP Adresi</translation>
-    </message>
-    <message>
-        <source>Number of Application Groups must be between 1 and %1</source>
-        <translation>Uygulama Gruplarının Sayısı 1 ile %1 Arasında Olmalıdır </translation>
-    </message>
-    <message>
-        <source>Length of Application Group&apos;s Name must be &lt; %1</source>
-        <translation>Uygulama Grubu&apos;nun Adının Uzunluğu &lt; %1 Olmalıdır</translation>
     </message>
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
@@ -435,6 +312,10 @@
         <translation>Bağlantı İsteği Limiti</translation>
     </message>
     <message>
+        <source>Block Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>Bilinmeyen</translation>
     </message>
@@ -492,6 +373,14 @@
     <message>
         <source>Clear All</source>
         <translation>Tümünü Temizle</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Bul</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Ara</translation>
     </message>
     <message>
         <source>Auto scroll</source>
@@ -726,6 +615,122 @@
     <message>
         <source>Show speed</source>
         <translation>Hızı göster</translation>
+    </message>
+</context>
+<context>
+    <name>GroupEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Etkin</translation>
+    </message>
+    <message>
+        <source>Exclusive</source>
+        <translation>Ayrıcalıklı</translation>
+    </message>
+    <message>
+        <source>A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rule:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Rule is applied to the Group&apos;s programs before their own Rule, while the Group is active.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Group is active only in this Time Period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Tamam</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>İptal Et</translation>
+    </message>
+    <message>
+        <source>Edit Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupListModel</name>
+    <message>
+        <source>Group</source>
+        <translation>Grup</translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>Zamanı Değiştir</translation>
+    </message>
+</context>
+<context>
+    <name>GroupsController</name>
+    <message>
+        <source>Group Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot edit Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Group&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupsSelector</name>
+    <message>
+        <source>Select Groups.
+A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Gruplar</translation>
+    </message>
+    <message>
+        <source>(exclusive)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Düzenle</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Ekle</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Kaldır</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Gruplar</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected group?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1165,10 +1170,6 @@
         <translation>IP Adresleri</translation>
     </message>
     <message>
-        <source>Application Groups</source>
-        <translation>Uygulama Grupları</translation>
-    </message>
-    <message>
         <source>Statistics</source>
         <translation>İstatistikler</translation>
     </message>
@@ -1355,16 +1356,20 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Yeni Sürümü Otomatik Olarak İndir </translation>
     </message>
     <message>
-        <source>Block traffic for disabled App Groups</source>
-        <translation>Devre Dışı Bırakılmış Uygulama Grupları İçin Trafiği Engelle </translation>
-    </message>
-    <message>
         <source>Auto-install after download</source>
         <translation>İndirdikten Sonra Otomatik Olarak Kur </translation>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation>Gizlilik Modu (Port Taramasını Önle)</translation>
+    </message>
+    <message>
+        <source>Block traffic for disabled Groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed Limiter Enabled</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
@@ -1436,18 +1441,6 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     <message>
         <source>Options</source>
         <translation>Ayarlar</translation>
-    </message>
-    <message>
-        <source>Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!
-
-(They are read-only now and will be removed in v4.)
-
-Do you want to open a discussion thread in browser?</source>
-        <translation>Lütfen İzin Ver/Engelle alanlarının metinlerini uygulama gruplarından Joker Programlarına taşı!!! 
-
-(Şu an salt okunur durumdalar ve v4&apos;te kaldırılacaklar.)
-
-Tarayıcıda bir tartışma başlığı açmak ister misin?</translation>
     </message>
 </context>
 <context>
@@ -1540,10 +1533,6 @@ Tarayıcıda bir tartışma başlığı açmak ister misin?</translation>
     <message>
         <source>Rules inheritance:</source>
         <translation>Kuralların Devralınması:</translation>
-    </message>
-    <message>
-        <source>Group:</source>
-        <translation>Grup:</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1735,16 +1724,36 @@ Tarayıcıda bir tartışma başlığı açmak ister misin?</translation>
 <context>
     <name>ProgNetworkPage</name>
     <message>
+        <source>Block:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Inbound Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>İnternet</translation>
+    </message>
+    <message>
         <source>Block Internet Traffic</source>
         <translation>İnternet Trafiğini Engelle </translation>
     </message>
     <message>
-        <source>Rule</source>
-        <translation>Kural</translation>
+        <source>Download:</source>
+        <translation>İndir:</translation>
     </message>
     <message>
-        <source>Select Rule</source>
-        <translation>Kural Seç</translation>
+        <source>Upload:</source>
+        <translation>Yükle:</translation>
+    </message>
+    <message>
+        <source>No Limit</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1915,6 +1924,14 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
     <message>
         <source>Timer</source>
         <translation>Zamanlayıcı</translation>
+    </message>
+    <message>
+        <source>Obsolete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by Groups</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Disable</source>
@@ -2114,6 +2131,17 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
     <message>
         <source>Preset Rules</source>
         <translation>Önceden Ayarlanmış Kurallar</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSelector</name>
+    <message>
+        <source>Rule</source>
+        <translation>Kural</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation>Kural Seç</translation>
     </message>
 </context>
 <context>
@@ -2322,6 +2350,18 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <source>Process ID</source>
         <translation>İşlem ID</translation>
     </message>
+    <message>
+        <source>The changes were reset by the system. Make the service trackable again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the service to apply the changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the computer to apply the changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ServicesWindow</name>
@@ -2338,20 +2378,173 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <translation>Değişiklikleri Geri Al</translation>
     </message>
     <message>
+        <source>Restart Service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Add Program</source>
         <translation>Program Ekle</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Bul</translation>
     </message>
     <message>
         <source>Refresh</source>
         <translation>Yenile</translation>
     </message>
     <message>
+        <source>Search</source>
+        <translation>Ara</translation>
+    </message>
+    <message>
         <source>Services</source>
         <translation>Hizmetler</translation>
     </message>
     <message>
-        <source>Please restart the computer to reload changed services!</source>
-        <translation>Değiştirilen hizmetleri yeniden yüklemek için lütfen bilgisayarı yeniden başlat!</translation>
+        <source>Restart the service &quot;%1&quot;?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart the service &quot;%1&quot; to apply the changes?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the computer to apply the changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot restart the service &quot;%1&quot;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Etkin</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>İndir</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>Yükle</translation>
+    </message>
+    <message>
+        <source>Speed:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Latency:</source>
+        <translation>Gecikme:</translation>
+    </message>
+    <message>
+        <source>Packet Loss:</source>
+        <translation>Paket Kaybı:</translation>
+    </message>
+    <message>
+        <source>Buffer Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Speed Limit is active only in this Time Period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Tamam</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>İptal Et</translation>
+    </message>
+    <message>
+        <source>Edit Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Özel</translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitListModel</name>
+    <message>
+        <source>Buffer overflow: %1
+Packet loss: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dropped</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Yön</translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>Zamanı Değiştir</translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitsController</name>
+    <message>
+        <source>Speed Limit Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot edit Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Speed Limit&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Düzenle</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Ekle</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Kaldır</translation>
+    </message>
+    <message>
+        <source>Speed Limits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected speed limit?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2537,6 +2730,136 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
     </message>
 </context>
 <context>
+    <name>TimePeriodEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Etkin</translation>
+    </message>
+    <message>
+        <source>The disabled Time Period doesn&apos;t restrict its Groups and Speed Limits.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intervals:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Time Period is active in ANY of its intervals.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Interval</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Tamam</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>İptal Et</translation>
+    </message>
+    <message>
+        <source>Edit Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodIntervalEdit</name>
+    <message>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To (the same time means the whole 24 hours)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Kaldır</translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodListModel</name>
+    <message>
+        <source>Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intervals</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>Zamanı Değiştir</translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodSelector</name>
+    <message>
+        <source>Time Period:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodsController</name>
+    <message>
+        <source>Time Period Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot edit Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Time Period&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Düzenle</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Ekle</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Kaldır</translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected time period?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TrafListModel</name>
     <message>
         <source>Date</source>
@@ -2652,12 +2975,24 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <translation>Bölgeler</translation>
     </message>
     <message>
+        <source>Speed Limits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Traffic Graph</source>
         <translation>Trafik Tablosu</translation>
     </message>
     <message>
         <source>Filter Enabled</source>
         <translation>Filtreleme Etkin</translation>
+    </message>
+    <message>
+        <source>Group Modifier</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Quit</source>
@@ -2696,10 +3031,6 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <translation>Kurallar</translation>
     </message>
     <message>
-        <source>App Group Modifier</source>
-        <translation>Uygulama Grubu Değiştirici</translation>
-    </message>
-    <message>
         <source>Block Traffic</source>
         <translation>Trafiği Engelle </translation>
     </message>
@@ -2725,6 +3056,21 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
     <message>
         <source>Error at line %1: %2 (%3)</source>
         <translation>Hata Satırı %1: %2 (%3) </translation>
+    </message>
+</context>
+<context>
+    <name>WeekDaysSelector</name>
+    <message>
+        <source>All</source>
+        <translation>Tümü</translation>
+    </message>
+    <message>
+        <source>Week Days</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Days</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

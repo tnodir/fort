@@ -81,10 +81,6 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <source>Group</source>
-        <translation>Skupina</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>Čas nastanka</translation>
     </message>
@@ -99,6 +95,14 @@
     <message>
         <source>Name</source>
         <translation>Ime</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Skupine</translation>
+    </message>
+    <message>
+        <source>Speed Limits</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>File Path</source>
@@ -165,125 +169,6 @@
     </message>
 </context>
 <context>
-    <name>ApplicationsPage</name>
-    <message>
-        <source>Group Name</source>
-        <translation>Ime skupine</translation>
-    </message>
-    <message>
-        <source>Add Group</source>
-        <translation>Dodaj skupino</translation>
-    </message>
-    <message>
-        <source>Rename Group</source>
-        <translation>Preimenuj skupino</translation>
-    </message>
-    <message>
-        <source>Download speed limit:</source>
-        <translation>Omejitev hitrosti prejenosa:</translation>
-    </message>
-    <message>
-        <source>Upload speed limit:</source>
-        <translation>Omejitev hitrosti nalaganja:</translation>
-    </message>
-    <message>
-        <source>Collect connection statistics</source>
-        <translation>Zberi statistiko povezave</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Omogočeno</translation>
-    </message>
-    <message>
-        <source>time period:</source>
-        <translation>Časovno obdobje:</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Blokiraj</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>Dovoli</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Allow&apos;</source>
-        <translation>Premakni vse vrstice v &apos;Dovoli&apos;</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Block&apos;</source>
-        <translation>Premakni vse vrstice v &apos;Blokiraj&apos;</translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation>Zamenjaj vse vrstice</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Allow&apos;</source>
-        <translation>Premakni izbrane vrstice v &apos;Dovoli&apos;</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Block&apos;</source>
-        <translation>Premakni izbrane vrstice v &apos;Blokiraj&apos;</translation>
-    </message>
-    <message>
-        <source>Select File</source>
-        <translation>Izberi datoteko</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Po meri</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Onemogočeno</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>Programi (*.exe);;Vse datoteke (*.*)</translation>
-    </message>
-    <message>
-        <source>Apply same rules to child processes</source>
-        <translation>Uporabi ista pravila za podrejene procese</translation>
-    </message>
-    <message>
-        <source>Latency:</source>
-        <translation>Zakasnitev:</translation>
-    </message>
-    <message>
-        <source>Packet Loss:</source>
-        <translation>Izguba paketa:</translation>
-    </message>
-    <message>
-        <source>Download Buffer Size:</source>
-        <translation>Velikost medpomnilnika za prenos:</translation>
-    </message>
-    <message>
-        <source>Upload Buffer Size:</source>
-        <translation>Velikost medpomnilnika za nalaganje:</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>Zberi blokirane povezave</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>Onemogoči internetni promet</translation>
-    </message>
-    <message>
-        <source>Kill Process</source>
-        <translation>Uniči proces</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Možnosti</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>Počisti</translation>
-    </message>
-</context>
-<context>
     <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
@@ -300,14 +185,6 @@
     <message>
         <source>Too many IP addresses</source>
         <translation>Preveč naslovov IP</translation>
-    </message>
-    <message>
-        <source>Number of Application Groups must be between 1 and %1</source>
-        <translation>Število aplikacijskih skupin mora biti med 1 in %1</translation>
-    </message>
-    <message>
-        <source>Length of Application Group&apos;s Name must be &lt; %1</source>
-        <translation>Dolžina imena skupine aplikacij mora biti &lt; %1</translation>
     </message>
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
@@ -435,6 +312,10 @@
         <translation>Omejitev &apos;Vprašaj za povezavo&apos;</translation>
     </message>
     <message>
+        <source>Block Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>Neznano</translation>
     </message>
@@ -492,6 +373,14 @@
     <message>
         <source>Clear All</source>
         <translation>Počisti vse</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Poišči</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Poišči</translation>
     </message>
     <message>
         <source>Auto scroll</source>
@@ -726,6 +615,122 @@
     <message>
         <source>Show speed</source>
         <translation>Prikaži hitrost</translation>
+    </message>
+</context>
+<context>
+    <name>GroupEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Ime:</translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Omogočeno</translation>
+    </message>
+    <message>
+        <source>Exclusive</source>
+        <translation>Izključno</translation>
+    </message>
+    <message>
+        <source>A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rule:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Rule is applied to the Group&apos;s programs before their own Rule, while the Group is active.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Group is active only in this Time Period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Vredu</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Prekliči</translation>
+    </message>
+    <message>
+        <source>Edit Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupListModel</name>
+    <message>
+        <source>Group</source>
+        <translation>Skupina</translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>Spremeni čas</translation>
+    </message>
+</context>
+<context>
+    <name>GroupsController</name>
+    <message>
+        <source>Group Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot edit Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Group&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupsSelector</name>
+    <message>
+        <source>Select Groups.
+A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Skupine</translation>
+    </message>
+    <message>
+        <source>(exclusive)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Uredi</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Dodaj</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Odstrani</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Skupine</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected group?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1165,10 +1170,6 @@
         <translation>Naslovi IP</translation>
     </message>
     <message>
-        <source>Application Groups</source>
-        <translation>Skupine programov</translation>
-    </message>
-    <message>
         <source>Statistics</source>
         <translation>Statistika</translation>
     </message>
@@ -1355,16 +1356,20 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Samodejni prenos nove različice</translation>
     </message>
     <message>
-        <source>Block traffic for disabled App Groups</source>
-        <translation>Blokiraj promet za onemogočene skupine aplikacij</translation>
-    </message>
-    <message>
         <source>Auto-install after download</source>
         <translation>Samodejna namestitev po prenosu</translation>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation>Prikriti način (prepreči skeniranje vrat)</translation>
+    </message>
+    <message>
+        <source>Block traffic for disabled Groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed Limiter Enabled</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
@@ -1436,18 +1441,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>Options</source>
         <translation>Možnosti</translation>
-    </message>
-    <message>
-        <source>Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!
-
-(They are read-only now and will be removed in v4.)
-
-Do you want to open a discussion thread in browser?</source>
-        <translation>Premaknite besedila polj Dovoli/Onemogoči iz skupin aplikacij v Nadomestni znaki programov!!!
-
-(Zdaj so samo za branje in bodo odstranjena v različici 4.)
-
-Ali želite odpreti nit razprave v brskalniku?</translation>
     </message>
 </context>
 <context>
@@ -1540,10 +1533,6 @@ Ali želite odpreti nit razprave v brskalniku?</translation>
     <message>
         <source>Rules inheritance:</source>
         <translation>Pravila dedovanja:</translation>
-    </message>
-    <message>
-        <source>Group:</source>
-        <translation>Skupina:</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1735,16 +1724,36 @@ Ali želite odpreti nit razprave v brskalniku?</translation>
 <context>
     <name>ProgNetworkPage</name>
     <message>
+        <source>Block:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Inbound Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>Internet</translation>
+    </message>
+    <message>
         <source>Block Internet Traffic</source>
         <translation>Onemogoči internetni promet</translation>
     </message>
     <message>
-        <source>Rule</source>
-        <translation>Pravilo</translation>
+        <source>Download:</source>
+        <translation>Prenos:</translation>
     </message>
     <message>
-        <source>Select Rule</source>
-        <translation>Izberite Pravilo</translation>
+        <source>Upload:</source>
+        <translation>Nalaganje:</translation>
+    </message>
+    <message>
+        <source>No Limit</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1916,6 +1925,14 @@ Preverite drug program z isto potjo.</translation>
     <message>
         <source>Timer</source>
         <translation>Časovnik</translation>
+    </message>
+    <message>
+        <source>Obsolete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by Groups</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Disable</source>
@@ -2115,6 +2132,17 @@ Preverite drug program z isto potjo.</translation>
     <message>
         <source>Preset Rules</source>
         <translation>Pravila prednastavitve</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSelector</name>
+    <message>
+        <source>Rule</source>
+        <translation>Pravilo</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation>Izberite Pravilo</translation>
     </message>
 </context>
 <context>
@@ -2323,6 +2351,18 @@ Preverite drug program z isto potjo.</translation>
         <source>Process ID</source>
         <translation>ID procesa</translation>
     </message>
+    <message>
+        <source>The changes were reset by the system. Make the service trackable again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the service to apply the changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the computer to apply the changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ServicesWindow</name>
@@ -2339,20 +2379,173 @@ Preverite drug program z isto potjo.</translation>
         <translation>Obrni spremembe</translation>
     </message>
     <message>
+        <source>Restart Service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Add Program</source>
         <translation>Dodaj program</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Poišči</translation>
     </message>
     <message>
         <source>Refresh</source>
         <translation>Osveži</translation>
     </message>
     <message>
+        <source>Search</source>
+        <translation>Poišči</translation>
+    </message>
+    <message>
         <source>Services</source>
         <translation>Storitve</translation>
     </message>
     <message>
-        <source>Please restart the computer to reload changed services!</source>
-        <translation>Ponovno zaženite računalnik, da znova naložite spremenjene storitve!</translation>
+        <source>Restart the service &quot;%1&quot;?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart the service &quot;%1&quot; to apply the changes?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the computer to apply the changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot restart the service &quot;%1&quot;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Ime:</translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Omogočeno</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>Nalaganje</translation>
+    </message>
+    <message>
+        <source>Speed:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Latency:</source>
+        <translation>Zakasnitev:</translation>
+    </message>
+    <message>
+        <source>Packet Loss:</source>
+        <translation>Izguba paketa:</translation>
+    </message>
+    <message>
+        <source>Buffer Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Speed Limit is active only in this Time Period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Vredu</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Prekliči</translation>
+    </message>
+    <message>
+        <source>Edit Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Po meri</translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitListModel</name>
+    <message>
+        <source>Buffer overflow: %1
+Packet loss: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dropped</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Smer</translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>Spremeni čas</translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitsController</name>
+    <message>
+        <source>Speed Limit Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot edit Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Speed Limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Speed Limit&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Uredi</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Dodaj</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Odstrani</translation>
+    </message>
+    <message>
+        <source>Speed Limits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected speed limit?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2538,6 +2731,136 @@ Preverite drug program z isto potjo.</translation>
     </message>
 </context>
 <context>
+    <name>TimePeriodEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Ime:</translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Omogočeno</translation>
+    </message>
+    <message>
+        <source>The disabled Time Period doesn&apos;t restrict its Groups and Speed Limits.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intervals:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Time Period is active in ANY of its intervals.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Interval</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Vredu</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Prekliči</translation>
+    </message>
+    <message>
+        <source>Edit Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodIntervalEdit</name>
+    <message>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To (the same time means the whole 24 hours)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Odstrani</translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodListModel</name>
+    <message>
+        <source>Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intervals</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>Spremeni čas</translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodSelector</name>
+    <message>
+        <source>Time Period:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodsController</name>
+    <message>
+        <source>Time Period Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot edit Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Time Period</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Time Period&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Uredi</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Dodaj</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Odstrani</translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected time period?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TrafListModel</name>
     <message>
         <source>Date</source>
@@ -2653,12 +2976,24 @@ Preverite drug program z isto potjo.</translation>
         <translation>Področja</translation>
     </message>
     <message>
+        <source>Speed Limits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Traffic Graph</source>
         <translation>Graf prometa</translation>
     </message>
     <message>
         <source>Filter Enabled</source>
         <translation>Filter je omogočen</translation>
+    </message>
+    <message>
+        <source>Group Modifier</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Quit</source>
@@ -2697,10 +3032,6 @@ Preverite drug program z isto potjo.</translation>
         <translation>Pravila</translation>
     </message>
     <message>
-        <source>App Group Modifier</source>
-        <translation>Modifikator skupine aplikacij</translation>
-    </message>
-    <message>
         <source>Block Traffic</source>
         <translation>Blokiraj promet</translation>
     </message>
@@ -2726,6 +3057,21 @@ Preverite drug program z isto potjo.</translation>
     <message>
         <source>Error at line %1: %2 (%3)</source>
         <translation>Napaka v vrstici %1: %2 (%3)</translation>
+    </message>
+</context>
+<context>
+    <name>WeekDaysSelector</name>
+    <message>
+        <source>All</source>
+        <translation>Vse</translation>
+    </message>
+    <message>
+        <source>Week Days</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Days</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

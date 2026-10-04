@@ -81,10 +81,6 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <source>Group</source>
-        <translation>Группа</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>Время создания</translation>
     </message>
@@ -99,6 +95,14 @@
     <message>
         <source>Name</source>
         <translation>Наименование</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Группы</translation>
+    </message>
+    <message>
+        <source>Speed Limits</source>
+        <translation>Ограничения скорости</translation>
     </message>
     <message>
         <source>File Path</source>
@@ -165,125 +169,6 @@
     </message>
 </context>
 <context>
-    <name>ApplicationsPage</name>
-    <message>
-        <source>Group Name</source>
-        <translation>Имя группы</translation>
-    </message>
-    <message>
-        <source>Add Group</source>
-        <translation>Добавить группу</translation>
-    </message>
-    <message>
-        <source>Rename Group</source>
-        <translation>Переименовать</translation>
-    </message>
-    <message>
-        <source>Download speed limit:</source>
-        <translation>Ограничение скорости загрузки</translation>
-    </message>
-    <message>
-        <source>Upload speed limit:</source>
-        <translation>Ограничение скорости отдачи</translation>
-    </message>
-    <message>
-        <source>Collect connection statistics</source>
-        <translation>Собирать статистику соединений</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Включено</translation>
-    </message>
-    <message>
-        <source>time period:</source>
-        <translation>период:</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Блокировать</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>Разрешить</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Allow&apos;</source>
-        <translation>Перенести все строки в &apos;Разрешить&apos;</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Block&apos;</source>
-        <translation>Перенести все строки в &apos;Блокировать&apos;</translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation>Обменять все строки</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Allow&apos;</source>
-        <translation>Перенести выделенные строки в &apos;Разрешить&apos;</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Block&apos;</source>
-        <translation>Перенести выделенные строки в &apos;Блокировать&apos;</translation>
-    </message>
-    <message>
-        <source>Select File</source>
-        <translation>Выбрать файл</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Нестандартный</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Отключено</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>Программы (*.exe);;Все файлы (*.*)</translation>
-    </message>
-    <message>
-        <source>Apply same rules to child processes</source>
-        <translation>Применить те же правила к дочерним процессам</translation>
-    </message>
-    <message>
-        <source>Latency:</source>
-        <translation>Задержка:</translation>
-    </message>
-    <message>
-        <source>Packet Loss:</source>
-        <translation>Потеря пакетов:</translation>
-    </message>
-    <message>
-        <source>Download Buffer Size:</source>
-        <translation>Размер буфера загрузки:</translation>
-    </message>
-    <message>
-        <source>Upload Buffer Size:</source>
-        <translation>Размер буфера отдачи:</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>Собирать заблокированные соединения</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>Блокировать Интернет трафик</translation>
-    </message>
-    <message>
-        <source>Kill Process</source>
-        <translation>Убить процесс</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Опции</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>Очистить</translation>
-    </message>
-</context>
-<context>
     <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
@@ -300,14 +185,6 @@
     <message>
         <source>Too many IP addresses</source>
         <translation>Слишком много IP адресов</translation>
-    </message>
-    <message>
-        <source>Number of Application Groups must be between 1 and %1</source>
-        <translation>Количество групп приложений должно быть от 1 до %1</translation>
-    </message>
-    <message>
-        <source>Length of Application Group&apos;s Name must be &lt; %1</source>
-        <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
@@ -435,6 +312,10 @@
         <translation>Лимит режима Спрашивать для соединения</translation>
     </message>
     <message>
+        <source>Block Inbound</source>
+        <translation>Блокировать входящие</translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>Неизвестно</translation>
     </message>
@@ -492,6 +373,14 @@
     <message>
         <source>Clear All</source>
         <translation>Очистить всё</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Найти</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Поиск</translation>
     </message>
     <message>
         <source>Auto scroll</source>
@@ -726,6 +615,123 @@
     <message>
         <source>Show speed</source>
         <translation>Показать скорость</translation>
+    </message>
+</context>
+<context>
+    <name>GroupEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Наименование:</translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation>Заметки:</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Включено</translation>
+    </message>
+    <message>
+        <source>Exclusive</source>
+        <translation>Эксклюзив</translation>
+    </message>
+    <message>
+        <source>A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
+        <translation>Программа включена, только если включена ЛЮБАЯ из её эксклюзивных групп, или, без эксклюзивных групп, ЛЮБАЯ из её групп.</translation>
+    </message>
+    <message>
+        <source>Rule:</source>
+        <translation>Правило:</translation>
+    </message>
+    <message>
+        <source>The Rule is applied to the Group&apos;s programs before their own Rule, while the Group is active.</source>
+        <translation>Правило применяется к программам Группы перед их собственным Правилом, пока Группа активна.</translation>
+    </message>
+    <message>
+        <source>The Group is active only in this Time Period.</source>
+        <translation>Группа активна только в этот Период времени.</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>ОК</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Отмена</translation>
+    </message>
+    <message>
+        <source>Edit Group</source>
+        <translation>Редактирование Группы</translation>
+    </message>
+</context>
+<context>
+    <name>GroupListModel</name>
+    <message>
+        <source>Group</source>
+        <translation>Группа</translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>Время Изменения</translation>
+    </message>
+</context>
+<context>
+    <name>GroupsController</name>
+    <message>
+        <source>Group Configuration Error</source>
+        <translation>Ошибка конфигурации Группы</translation>
+    </message>
+    <message>
+        <source>Cannot edit Group</source>
+        <translation>Невозможно обновить Группу</translation>
+    </message>
+    <message>
+        <source>Cannot delete Group</source>
+        <translation>Невозможно удалить Группу</translation>
+    </message>
+    <message>
+        <source>Cannot update Group&apos;s name</source>
+        <translation>Невозможно обновить наименование Группы</translation>
+    </message>
+</context>
+<context>
+    <name>GroupsSelector</name>
+    <message>
+        <source>Select Groups.
+A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
+        <translation>Выберите Группы.
+Программа включена, только если включена ЛЮБАЯ из её эксклюзивных групп, или, без эксклюзивных групп, ЛЮБАЯ из её групп.</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Группы</translation>
+    </message>
+    <message>
+        <source>(exclusive)</source>
+        <translation>(эксклюзив)</translation>
+    </message>
+</context>
+<context>
+    <name>GroupsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Изменить</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Добавить</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Группы</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected group?</source>
+        <translation>Удалить выбранную группу?</translation>
     </message>
 </context>
 <context>
@@ -1165,10 +1171,6 @@
         <translation>IP Адреса</translation>
     </message>
     <message>
-        <source>Application Groups</source>
-        <translation>Группы приложений</translation>
-    </message>
-    <message>
         <source>Statistics</source>
         <translation>Статистика</translation>
     </message>
@@ -1355,16 +1357,20 @@ Make sure that you have a fresh backup.</source>
         <translation>Авто-скачивание новой версии</translation>
     </message>
     <message>
-        <source>Block traffic for disabled App Groups</source>
-        <translation>Блокировать трафик для отключенных групп приложений</translation>
-    </message>
-    <message>
         <source>Auto-install after download</source>
         <translation>Авто-установка после скачивания</translation>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation>Скрытый режим (запрет сканирования портов)</translation>
+    </message>
+    <message>
+        <source>Block traffic for disabled Groups</source>
+        <translation>Блокировать трафик выключенных Групп</translation>
+    </message>
+    <message>
+        <source>Speed Limiter Enabled</source>
+        <translation>Ограничение скорости включено</translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
@@ -1436,18 +1442,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Options</source>
         <translation>Опции</translation>
-    </message>
-    <message>
-        <source>Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!
-
-(They are read-only now and will be removed in v4.)
-
-Do you want to open a discussion thread in browser?</source>
-        <translation>Пожалуйста, переместите тексты полей Разрешить/Блокировать из Групп приложений в Программы с подстановочными знаками!!!
-
-(Сейчас они доступны только для чтения и будут удалены в версии 4.)
-
-Хотите открыть ветку обсуждения в браузере?</translation>
     </message>
 </context>
 <context>
@@ -1540,10 +1534,6 @@ Do you want to open a discussion thread in browser?</source>
     <message>
         <source>Rules inheritance:</source>
         <translation>Наследование правил:</translation>
-    </message>
-    <message>
-        <source>Group:</source>
-        <translation>Группа:</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1735,16 +1725,36 @@ Do you want to open a discussion thread in browser?</source>
 <context>
     <name>ProgNetworkPage</name>
     <message>
+        <source>Block:</source>
+        <translation>Блокировать:</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Входящие</translation>
+    </message>
+    <message>
+        <source>Block Inbound Connections</source>
+        <translation>Блокировать входящие соединения</translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>Интернет</translation>
+    </message>
+    <message>
         <source>Block Internet Traffic</source>
         <translation>Блокировать Интернет трафик</translation>
     </message>
     <message>
-        <source>Rule</source>
-        <translation>Правило</translation>
+        <source>Download:</source>
+        <translation>Загрузка:</translation>
     </message>
     <message>
-        <source>Select Rule</source>
-        <translation>Выбрать правило</translation>
+        <source>Upload:</source>
+        <translation>Отдача:</translation>
+    </message>
+    <message>
+        <source>No Limit</source>
+        <translation>Без ограничения</translation>
     </message>
 </context>
 <context>
@@ -1916,6 +1926,14 @@ Please check other program with the same path.</source>
     <message>
         <source>Timer</source>
         <translation>Таймер</translation>
+    </message>
+    <message>
+        <source>Obsolete</source>
+        <translation>Устаревшие</translation>
+    </message>
+    <message>
+        <source>Filter by Groups</source>
+        <translation>Фильтр по Группам</translation>
     </message>
     <message>
         <source>Disable</source>
@@ -2115,6 +2133,17 @@ Please check other program with the same path.</source>
     <message>
         <source>Preset Rules</source>
         <translation>Заданные правила</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSelector</name>
+    <message>
+        <source>Rule</source>
+        <translation>Правило</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation>Выбрать правило</translation>
     </message>
 </context>
 <context>
@@ -2323,6 +2352,18 @@ Please check other program with the same path.</source>
         <source>Process ID</source>
         <translation>ИД процесса</translation>
     </message>
+    <message>
+        <source>The changes were reset by the system. Make the service trackable again.</source>
+        <translation>Изменения были сброшены системой. Сделайте службу отслеживаемой снова.</translation>
+    </message>
+    <message>
+        <source>Please restart the service to apply the changes.</source>
+        <translation>Перезапустите службу для применения изменений.</translation>
+    </message>
+    <message>
+        <source>Please restart the computer to apply the changes.</source>
+        <translation>Перезагрузите компьютер для применения изменений.</translation>
+    </message>
 </context>
 <context>
     <name>ServicesWindow</name>
@@ -2339,20 +2380,174 @@ Please check other program with the same path.</source>
         <translation>Отменить трассировку</translation>
     </message>
     <message>
+        <source>Restart Service</source>
+        <translation>Перезапустить службу</translation>
+    </message>
+    <message>
         <source>Add Program</source>
         <translation>Добавить программу</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Найти</translation>
     </message>
     <message>
         <source>Refresh</source>
         <translation>Обновить</translation>
     </message>
     <message>
+        <source>Search</source>
+        <translation>Поиск</translation>
+    </message>
+    <message>
         <source>Services</source>
         <translation>Службы</translation>
     </message>
     <message>
-        <source>Please restart the computer to reload changed services!</source>
-        <translation>Перезагрузите компьютер, чтобы обновить изменённые службы!</translation>
+        <source>Restart the service &quot;%1&quot;?</source>
+        <translation>Перезапустить службу &quot;%1&quot;?</translation>
+    </message>
+    <message>
+        <source>Restart the service &quot;%1&quot; to apply the changes?</source>
+        <translation>Перезапустить службу &quot;%1&quot; для применения изменений?</translation>
+    </message>
+    <message>
+        <source>Please restart the computer to apply the changes.</source>
+        <translation>Перезагрузите компьютер для применения изменений.</translation>
+    </message>
+    <message>
+        <source>Cannot restart the service &quot;%1&quot;.</source>
+        <translation>Невозможно перезапустить службу &quot;%1&quot;.</translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Наименование:</translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation>Заметки:</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Включено</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Загрузка</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>Отдача</translation>
+    </message>
+    <message>
+        <source>Speed:</source>
+        <translation>Скорость:</translation>
+    </message>
+    <message>
+        <source>Latency:</source>
+        <translation>Задержка:</translation>
+    </message>
+    <message>
+        <source>Packet Loss:</source>
+        <translation>Потеря пакетов:</translation>
+    </message>
+    <message>
+        <source>Buffer Size:</source>
+        <translation>Размер буфера:</translation>
+    </message>
+    <message>
+        <source>The Speed Limit is active only in this Time Period.</source>
+        <translation>Ограничение скорости активно только в этот Период времени.</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>ОК</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Отмена</translation>
+    </message>
+    <message>
+        <source>Edit Speed Limit</source>
+        <translation>Редактирование Ограничения скорости</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Нестандартный</translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitListModel</name>
+    <message>
+        <source>Buffer overflow: %1
+Packet loss: %2</source>
+        <translation>Переполнение буфера: %1
+Потеря пакетов: %2</translation>
+    </message>
+    <message>
+        <source>Speed Limit</source>
+        <translation>Ограничение скорости</translation>
+    </message>
+    <message>
+        <source>Queue</source>
+        <translation>Очередь</translation>
+    </message>
+    <message>
+        <source>Dropped</source>
+        <translation>Отброшено</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Направление</translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>Время Изменения</translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitsController</name>
+    <message>
+        <source>Speed Limit Configuration Error</source>
+        <translation>Ошибка конфигурации Ограничения скорости</translation>
+    </message>
+    <message>
+        <source>Cannot edit Speed Limit</source>
+        <translation>Невозможно обновить Ограничение скорости</translation>
+    </message>
+    <message>
+        <source>Cannot delete Speed Limit</source>
+        <translation>Невозможно удалить Ограничение скорости</translation>
+    </message>
+    <message>
+        <source>Cannot update Speed Limit&apos;s name</source>
+        <translation>Невозможно обновить наименование Ограничения скорости</translation>
+    </message>
+</context>
+<context>
+    <name>SpeedLimitsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Изменить</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Добавить</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>Speed Limits</source>
+        <translation>Ограничения скорости</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected speed limit?</source>
+        <translation>Удалить выбранное ограничение скорости?</translation>
     </message>
 </context>
 <context>
@@ -2538,6 +2733,136 @@ Please check other program with the same path.</source>
     </message>
 </context>
 <context>
+    <name>TimePeriodEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Наименование:</translation>
+    </message>
+    <message>
+        <source>Notes:</source>
+        <translation>Заметки:</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Включено</translation>
+    </message>
+    <message>
+        <source>The disabled Time Period doesn&apos;t restrict its Groups and Speed Limits.</source>
+        <translation>Выключенный Период времени не ограничивает свои Группы и Ограничения скорости.</translation>
+    </message>
+    <message>
+        <source>Intervals:</source>
+        <translation>Интервалы:</translation>
+    </message>
+    <message>
+        <source>The Time Period is active in ANY of its intervals.</source>
+        <translation>Период времени активен в ЛЮБОМ из своих интервалов.</translation>
+    </message>
+    <message>
+        <source>Add Interval</source>
+        <translation>Добавить интервал</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>ОК</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Отмена</translation>
+    </message>
+    <message>
+        <source>Edit Time Period</source>
+        <translation>Редактирование Периода времени</translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodIntervalEdit</name>
+    <message>
+        <source>From</source>
+        <translation>С</translation>
+    </message>
+    <message>
+        <source>To (the same time means the whole 24 hours)</source>
+        <translation>До (то же время означает все 24 часа)</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Удалить</translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodListModel</name>
+    <message>
+        <source>Time Period</source>
+        <translation>Период времени</translation>
+    </message>
+    <message>
+        <source>Intervals</source>
+        <translation>Интервалы</translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>Время Изменения</translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodSelector</name>
+    <message>
+        <source>Time Period:</source>
+        <translation>Период времени:</translation>
+    </message>
+    <message>
+        <source>No Period</source>
+        <translation>Без периода</translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation>Периоды времени</translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodsController</name>
+    <message>
+        <source>Time Period Configuration Error</source>
+        <translation>Ошибка конфигурации Периода времени</translation>
+    </message>
+    <message>
+        <source>Cannot edit Time Period</source>
+        <translation>Невозможно обновить Период времени</translation>
+    </message>
+    <message>
+        <source>Cannot delete Time Period</source>
+        <translation>Невозможно удалить Период времени</translation>
+    </message>
+    <message>
+        <source>Cannot update Time Period&apos;s name</source>
+        <translation>Невозможно обновить наименование Периода времени</translation>
+    </message>
+</context>
+<context>
+    <name>TimePeriodsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Изменить</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Добавить</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation>Периоды времени</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected time period?</source>
+        <translation>Удалить выбранный период времени?</translation>
+    </message>
+</context>
+<context>
     <name>TrafListModel</name>
     <message>
         <source>Date</source>
@@ -2653,12 +2978,24 @@ Please check other program with the same path.</source>
         <translation>Зоны</translation>
     </message>
     <message>
+        <source>Speed Limits</source>
+        <translation>Ограничения скорости</translation>
+    </message>
+    <message>
+        <source>Time Periods</source>
+        <translation>Периоды времени</translation>
+    </message>
+    <message>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
     <message>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
+    </message>
+    <message>
+        <source>Group Modifier</source>
+        <translation>Модификатор групп</translation>
     </message>
     <message>
         <source>Quit</source>
@@ -2697,10 +3034,6 @@ Please check other program with the same path.</source>
         <translation>Правила</translation>
     </message>
     <message>
-        <source>App Group Modifier</source>
-        <translation>Модификатор группы приложений</translation>
-    </message>
-    <message>
         <source>Block Traffic</source>
         <translation>Блокировка трафика</translation>
     </message>
@@ -2726,6 +3059,21 @@ Please check other program with the same path.</source>
     <message>
         <source>Error at line %1: %2 (%3)</source>
         <translation>Ошибка в строке %1: %2 (%3)</translation>
+    </message>
+</context>
+<context>
+    <name>WeekDaysSelector</name>
+    <message>
+        <source>All</source>
+        <translation>Все</translation>
+    </message>
+    <message>
+        <source>Week Days</source>
+        <translation>Дни недели</translation>
+    </message>
+    <message>
+        <source>No Days</source>
+        <translation>Без дней</translation>
     </message>
 </context>
 <context>
