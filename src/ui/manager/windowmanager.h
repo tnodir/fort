@@ -24,6 +24,7 @@ class RulesWindow;
 class ServicesWindow;
 class SpeedLimitsWindow;
 class StatisticsWindow;
+class TimePeriodsWindow;
 class TrayIcon;
 class WidgetWindow;
 class ZonesWindow;
@@ -58,6 +59,7 @@ public:
     ZonesWindow *zonesWindow() const;
     GroupsWindow *groupsWindow() const;
     SpeedLimitsWindow *speedLimitsWindow() const;
+    TimePeriodsWindow *timePeriodsWindow() const;
     GraphWindow *graphWindow() const;
 
     void setUp() override;
@@ -112,6 +114,8 @@ public slots:
     bool showGroupsWindow() { return showWindowByCode(WindowGroups); }
 
     bool showSpeedLimitsWindow() { return showWindowByCode(WindowSpeedLimits); }
+
+    bool showTimePeriodsWindow() { return showWindowByCode(WindowTimePeriods); }
 
     bool showGraphWindow() { return showWindowByCode(WindowGraph, /*activate=*/false); }
 
@@ -202,6 +206,7 @@ private:
         FormPointer(WindowZones),
         FormPointer(WindowGroups),
         FormPointer(WindowSpeedLimits),
+        FormPointer(WindowTimePeriods),
         FormPointer(WindowGraph),
     };
 };

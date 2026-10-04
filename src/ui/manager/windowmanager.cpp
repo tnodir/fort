@@ -22,6 +22,7 @@
 #include <form/speedlimit/speedlimitswindow.h>
 #include <form/stat/statisticswindow.h>
 #include <form/svc/serviceswindow.h>
+#include <form/timeperiod/timeperiodswindow.h>
 #include <form/tray/trayicon.h>
 #include <form/zone/zoneswindow.h>
 #include <fortglobal.h>
@@ -50,7 +51,7 @@ bool WindowManager::hasForm(WindowCode code)
 {
     constexpr quint32 windowForms = (WindowHome | WindowPrograms | WindowProgramAlert
             | WindowServices | WindowOptions | WindowRules | WindowStatistics | WindowZones
-            | WindowGroups | WindowSpeedLimits | WindowGraph);
+            | WindowGroups | WindowSpeedLimits | WindowTimePeriods | WindowGraph);
 
     return (code & windowForms) != 0;
 }
@@ -123,6 +124,11 @@ GroupsWindow *WindowManager::groupsWindow() const
 SpeedLimitsWindow *WindowManager::speedLimitsWindow() const
 {
     return static_cast<SpeedLimitsWindow *>(windowByCode(WindowSpeedLimits));
+}
+
+TimePeriodsWindow *WindowManager::timePeriodsWindow() const
+{
+    return static_cast<TimePeriodsWindow *>(windowByCode(WindowTimePeriods));
 }
 
 GraphWindow *WindowManager::graphWindow() const

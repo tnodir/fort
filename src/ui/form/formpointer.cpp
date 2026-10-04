@@ -10,6 +10,7 @@
 #include <form/speedlimit/speedlimitswindow.h>
 #include <form/stat/statisticswindow.h>
 #include <form/svc/serviceswindow.h>
+#include <form/timeperiod/timeperiodswindow.h>
 #include <form/zone/zoneswindow.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -38,6 +39,7 @@ static const createWindow_func createWindow_funcList[] = {
     &createWindow<ZonesWindow>,
     &createWindow<GroupsWindow>,
     &createWindow<SpeedLimitsWindow>,
+    &createWindow<TimePeriodsWindow>,
     &createWindow<GraphWindow>,
 };
 

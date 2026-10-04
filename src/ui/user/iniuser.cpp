@@ -12,6 +12,7 @@ const char *const list[] = {
     zones,
     groups,
     speedLimits,
+    timePeriods,
     services,
     statistics,
     graph,

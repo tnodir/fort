@@ -21,10 +21,10 @@ public:
     static QString fromTime(const QTime &time);
     static QTime toTime(const QString &text);
 
+    static QTimeEdit *createTimeEdit();
+
 private:
     void setupUi();
-
-    static QTimeEdit *createTimeEdit();
 
 private:
     QCheckBox *m_checkBox = nullptr;

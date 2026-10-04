@@ -12,6 +12,7 @@ const char *const rules = "rules";
 const char *const zones = "zones";
 const char *const groups = "groups";
 const char *const speedLimits = "speedLimits";
+const char *const timePeriods = "timePeriods";
 const char *const services = "services";
 const char *const statistics = "statistics";
 const char *const graph = "graph";
@@ -270,6 +271,32 @@ public:
     void setSpeedLimitsHeader(const QByteArray &v)
     {
         setValue("speedLimitWindow/speedLimitsHeader", v);
+    }
+
+    static QString timePeriodWindowGroup() { return "timePeriodWindow"; }
+
+    QRect timePeriodWindowGeometry() const { return value("timePeriodWindow/geometry").toRect(); }
+    void setTimePeriodWindowGeometry(const QRect &v) { setValue("timePeriodWindow/geometry", v); }
+
+    bool timePeriodWindowMaximized() const { return valueBool("timePeriodWindow/maximized"); }
+    void setTimePeriodWindowMaximized(bool on) { setValue("timePeriodWindow/maximized", on); }
+
+    int timePeriodsHeaderVersion() const
+    {
+        return valueInt("timePeriodWindow/timePeriodsHeaderVersion");
+    }
+    void setTimePeriodsHeaderVersion(int v)
+    {
+        setValue("timePeriodWindow/timePeriodsHeaderVersion", v);
+    }
+
+    QByteArray timePeriodsHeader() const
+    {
+        return valueByteArray("timePeriodWindow/timePeriodsHeader");
+    }
+    void setTimePeriodsHeader(const QByteArray &v)
+    {
+        setValue("timePeriodWindow/timePeriodsHeader", v);
     }
 
     static QString serviceWindowGroup() { return "serviceWindow"; }

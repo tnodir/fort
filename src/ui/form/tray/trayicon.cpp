@@ -403,6 +403,7 @@ void TrayIcon::retranslateUi()
     m_zonesAction->setText(tr("Zones"));
     m_groupsAction->setText(tr("Groups"));
     m_speedLimitsAction->setText(tr("Speed Limits"));
+    m_timePeriodsAction->setText(tr("Time Periods"));
     m_servicesAction->setText(tr("Services"));
     m_statisticsAction->setText(tr("Statistics"));
     m_graphAction->setText(tr("Traffic Graph"));
@@ -548,6 +549,10 @@ void TrayIcon::setupTrayMenuOptions()
     m_speedLimitsAction = addAction(m_optionsMenu,
             { ":/icons/speedometer.png", this, SLOT(onShowWindowAction()), WindowSpeedLimits });
     addHotKey(m_speedLimitsAction, HotKey::speedLimits);
+
+    m_timePeriodsAction = addAction(m_optionsMenu,
+            { ":/icons/clock.png", this, SLOT(onShowWindowAction()), WindowTimePeriods });
+    addHotKey(m_timePeriodsAction, HotKey::timePeriods);
 
     m_servicesAction = addAction(m_optionsMenu,
             { ":/icons/windows-48.png", this, SLOT(onShowWindowAction()), WindowServices });

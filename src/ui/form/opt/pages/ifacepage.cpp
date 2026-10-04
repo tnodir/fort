@@ -220,6 +220,7 @@ void IfacePage::retranslateComboHotKey()
         TrayIcon::tr("Zones"),
         TrayIcon::tr("Groups"),
         TrayIcon::tr("Speed Limits"),
+        TrayIcon::tr("Time Periods"),
         TrayIcon::tr("Services"),
         TrayIcon::tr("Statistics"),
         TrayIcon::tr("Traffic Graph"),

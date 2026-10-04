@@ -140,6 +140,10 @@ SOURCES += \
     form/stat/statisticswindow.cpp \
     form/svc/servicescontroller.cpp \
     form/svc/serviceswindow.cpp \
+    form/timeperiod/timeperiodeditdialog.cpp \
+    form/timeperiod/timeperiodintervaledit.cpp \
+    form/timeperiod/timeperiodscontroller.cpp \
+    form/timeperiod/timeperiodswindow.cpp \
     form/tray/traycontroller.cpp \
     form/tray/trayicon.cpp \
     form/zone/zoneeditdialog.cpp \
@@ -183,6 +187,7 @@ SOURCES += \
     model/rulesetmodel.cpp \
     model/servicelistmodel.cpp \
     model/speedlimitlistmodel.cpp \
+    model/timeperiodlistmodel.cpp \
     model/traflistmodel.cpp \
     model/trafunittype.cpp \
     model/zonelistmodel.cpp \
@@ -432,6 +437,10 @@ HEADERS += \
     form/stat/statisticswindow.h \
     form/svc/servicescontroller.h \
     form/svc/serviceswindow.h \
+    form/timeperiod/timeperiodeditdialog.h \
+    form/timeperiod/timeperiodintervaledit.h \
+    form/timeperiod/timeperiodscontroller.h \
+    form/timeperiod/timeperiodswindow.h \
     form/tray/traycontroller.h \
     form/tray/trayicon.h \
     form/tray/trayicon_types.h \
@@ -479,6 +488,7 @@ HEADERS += \
     model/rulesetmodel.h \
     model/servicelistmodel.h \
     model/speedlimitlistmodel.h \
+    model/timeperiodlistmodel.h \
     model/traflistcolumn.h \
     model/traflistmodel.h \
     model/trafunittype.h \

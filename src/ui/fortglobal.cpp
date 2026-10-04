@@ -26,6 +26,7 @@
 #include <manager/windowmanager.h>
 #include <model/grouplistmodel.h>
 #include <model/speedlimitlistmodel.h>
+#include <model/timeperiodlistmodel.h>
 #include <model/zonelistmodel.h>
 #include <rpc/rpcmanager.h>
 #include <stat/askpendingmanager.h>
@@ -200,6 +201,11 @@ StatManager *statManager()
 TaskManager *taskManager()
 {
     return IoC<TaskManager>();
+}
+
+TimePeriodListModel *timePeriodListModel()
+{
+    return IoC<TimePeriodListModel>();
 }
 
 TranslationManager *translationManager()
