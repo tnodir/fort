@@ -395,7 +395,7 @@ void ProgramsWindow::setupFilter()
     layout->addWidget(m_cbFilterParked);
     layout->addWidget(m_cbFilterKillProcess);
     layout->addWidget(ControlUtil::createHSeparator());
-    layout->addWidget(m_btFilterGroups, 0, Qt::AlignLeft);
+    layout->addWidget(m_btFilterGroups);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addWidget(m_btClearFilter, 0, Qt::AlignCenter);
 
@@ -448,6 +448,7 @@ void ProgramsWindow::setupFilterGroups()
 {
     m_btFilterGroups = new GroupsSelector();
     m_btFilterGroups->setMaxGroupCount(ConfUtil::groupMaxCount());
+    m_btFilterGroups->setFlat(true);
 
     connect(m_btFilterGroups, &GroupsSelector::groupsChanged, this,
             [&] { appListModel()->setFilterGroups(m_btFilterGroups->groups()); });
