@@ -50,7 +50,7 @@ build-win10\tests\UtilTest\UtilTest.exe
 build-win10\tests\UtilTest\UtilTest.exe --gtest_filter=ConfUtilTest.*   :: single test/suite
 ```
 
-Suites: `UtilTest` (bitutil, confutil, dateutil, fileutil, ioccontainer, netutil, ruletextparser, stringutil, wildmatch), `StatTest`, `LogBufferTest`, `LogReaderTest`. `LogReaderTest` needs the loaded kernel driver: run it only manually from a console, never as part of an automated test run. Each `tst_*.h` is included from the suite's `tst_main.cpp` and must also be listed in the suite's `.pro`.
+Suites: `UtilTest` (bitutil, confutil, dateutil, fileutil, ioccontainer, netutil, ruletextparser, stringutil, timeperiod, wildmatch), `StatTest`, `LogBufferTest`, `LogReaderTest`. `LogReaderTest` needs the loaded kernel driver: run it only manually from a console, never as part of an automated test run. Each `tst_*.h` is included from the suite's `tst_main.cpp` and must also be listed in the suite's `.pro`.
 
 ### Testing the real driver (test-mode VM)
 
@@ -94,11 +94,13 @@ IPC is `QLocalServer`/`QLocalSocket` (`src/ui/control/`): `ControlManager` liste
 
 ### Configuration pipeline (UI → driver)
 
-`FirewallConf` / `App` / `Group` / `SpeedLimit` / `Rule` / `Zone` (`src/ui/conf/`) are the in-memory model, persisted to SQLite by `ConfManager` and the specialized `ConfAppManager`, `ConfRuleManager`, `ConfZoneManager`, `ConfGroupManager`, `ConfSpeedLimitManager`. `src/ui/util/conf/confbuffer.cpp` + `confutil.cpp` serialize that model into the **packed binary layout defined in `src/driver/common/fortconf.h`**, which `DriverManager`/`DriverWorker` push to the driver via the `FORT_IOCTL_*` codes in `src/driver/common/fortioctl.h` (`SETCONF`, `ADDAPP`, `SETRULES`, `SETZONES`, `SETGROUPS`, `SETSPEEDLIMITS`, `GETLOG`, …).
+`FirewallConf` / `App` / `Group` / `SpeedLimit` / `TimePeriod` / `Rule` / `Zone` (`src/ui/conf/`) are the in-memory model, persisted to SQLite by `ConfManager` and the specialized `ConfAppManager`, `ConfRuleManager`, `ConfZoneManager`, `ConfGroupManager`, `ConfSpeedLimitManager`, `ConfTimePeriodManager`. `src/ui/util/conf/confbuffer.cpp` + `confutil.cpp` serialize that model into the **packed binary layout defined in `src/driver/common/fortconf.h`**, which `DriverManager`/`DriverWorker` push to the driver via the `FORT_IOCTL_*` codes in `src/driver/common/fortioctl.h` (`SETCONF`, `ADDAPP`, `SETRULES`, `SETZONES`, `SETGROUPS`, `SETSPEEDLIMITS`, `GETLOG`, …).
 
 `src/driver/common/` is compiled into **both** the UI and the driver (via `src/driver/Driver.pri`). It is the shared contract: changing the `fortconf.h` layout, the IOCTL set, or the log record format requires updating both sides and bumping `DRIVER_VERSION` in `src/version/fort_version.h` (checked in `driver/fortdev.c` against the value written by `confbuffer.cpp`).
 
-Programs belong to `Group`s (`conf/group.h`, max 32: enabled, exclusive, time period and an optional Rule) by the `app.groups_mask` bit mask, and reference one-direction `SpeedLimit`s (`conf/speedlimit.h`, max 32) by `app.in_limit_id` / `app.out_limit_id`. They replace the old App. Groups, which `ConfManager`'s DB migration converts.
+Programs belong to `Group`s (`conf/group.h`, max 32: enabled, exclusive, an optional Time Period and an optional Rule) by the `app.groups_mask` bit mask, and reference one-direction `SpeedLimit`s (`conf/speedlimit.h`, max 32) by `app.in_limit_id` / `app.out_limit_id`. They replace the old App. Groups, which `ConfManager`'s DB migration converts.
+
+Groups and Speed Limits may refer to a `TimePeriod` (`conf/timeperiod.h`, max 64: a list of intervals, each with its week days and time from/to) by `period_id`, applied while their `period_enabled` is set. Time Periods are UI-only: `ConfTimePeriodManager` tracks their activity by minutes and folds it into the Groups' and Speed Limits' enabled masks written to the driver (`writeGroupFlags()` / `writeSpeedLimitFlags()`), so the driver knows nothing about them.
 
 ### Databases
 
@@ -116,6 +118,7 @@ No Qt SQL — a hand-rolled SQLite wrapper in `src/ui/3rdparty/sqlite/` (`Sqlite
 
 - Format with `src/_clang-format` (WebKit-based Qt style, 100 columns, `PointerBindsToType: false`, braces on their own line after functions/classes only).
 - Keep each function's cyclomatic complexity below 9: CodeScene reports a "Complex Method" otherwise. Every `case`/`default` label, `if`, loop, `continue`, `&&`, `||` and `?:` adds one (`break` doesn't); split long `switch`es into helpers or a function table indexed by the enum (e.g. `fort_conf_rule_filter_check_funcList` in `driver/common/fortconf.c`). Likewise keep at most 4 arguments per function ("Excess Number of Function Arguments"), grouping them into a struct if needed (cf. `FORT_CALLOUT_ARG`), and at most one `&&`/`||` in an `if`/`while` condition ("Complex Conditional"): move the rest into a named helper or early returns. Nest a conditional or loop in at most one of a function's top-level branches/loop bodies ("Bumpy Road"); move the others into helpers.
+- Keep a form's code in the order of its controls: the members in the header, their creation in the `setup*Layout()` functions and their lines in `initialize()`, `retranslateUi()`, `fill*()`. Moving a control on the form moves all of them.
 - Commit subjects are prefixed by area: `UI:`, `Driver:`, `Tests:`, `Deploy:`, `Installer:`, `README:` — e.g. `UI: ConfManager: Refactor save()`.
 - User-visible changes get a line in `ChangeLog` under the release heading, referencing the GitHub issue number where applicable.
 - App version lives in `src/version/fort_version.h` (`APP_VERSION_*` and `DRIVER_VERSION`).
