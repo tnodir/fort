@@ -26,6 +26,9 @@ public:
     int scrollOffset(int row) const;
     void setScrollOffset(int row, int offset);
 
+    /* Select the row (or the last one) after the model's next reset */
+    void selectRowOnReset(int row) { m_resetRow = row; }
+
 signals:
     void currentIndexChanged(const QModelIndex &index);
 
@@ -44,9 +47,15 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 
 private:
+    void onModelReset();
+
+    void selectResetRow();
+
     int rowScrollPos(int row) const;
 
 private:
+    int m_resetRow = -1;
+
     QMenu *m_menu = nullptr;
 };
 

@@ -809,7 +809,14 @@ void ProgramsWindow::deleteSelectedApps()
     const auto appIdList = selectedAppIdList();
     const QStringList appNames = getAppListNames(appIdList);
 
-    windowManager()->showConfirmBox([=, this] { ctrl()->deleteApps(appIdList); },
+    // The next program takes the first removed one's row
+    const int row = m_appListView->selectedRows().value(0, -1);
+
+    windowManager()->showConfirmBox(
+            [=, this] {
+                m_appListView->selectRowOnReset(row);
+                ctrl()->deleteApps(appIdList);
+            },
             tr("Are you sure to remove selected program(s)?")
                     // App names
                     + "\n\n" + appNames.join('\n'));

@@ -20,8 +20,7 @@ void TableView::setModel(QAbstractItemModel *model)
 {
     QTableView::setModel(model);
 
-    connect(model, &QAbstractItemModel::modelReset, this,
-            [&] { emit currentIndexChanged(currentIndex()); });
+    connect(model, &QAbstractItemModel::modelReset, this, &TableView::onModelReset);
 }
 
 int TableView::currentRow() const
@@ -116,6 +115,24 @@ void TableView::selectCell(int row, int column)
     const auto index = model()->index(row, column);
     this->setCurrentIndex(index);
     this->scrollTo(index);
+}
+
+void TableView::onModelReset()
+{
+    selectResetRow();
+
+    emit currentIndexChanged(currentIndex());
+}
+
+void TableView::selectResetRow()
+{
+    const int row = qMin(m_resetRow, model()->rowCount() - 1);
+
+    m_resetRow = -1;
+
+    if (row >= 0) {
+        selectCell(row);
+    }
 }
 
 void TableView::copySelectedText()
