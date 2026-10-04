@@ -430,18 +430,55 @@ void ConnectionsPage::doAutoScroll()
     }
 }
 
+void ConnectionsPage::saveTopRow()
+{
+    m_topRowIndex = m_connListView->indexAt(QPoint(0, 0));
+
+    if (!m_topRowIndex.isValid())
+        return;
+
+    m_topRowOffset = m_connListView->scrollOffset(m_topRowIndex.row());
+}
+
+void ConnectionsPage::restoreTopRow()
+{
+    if (!m_topRowIndex.isValid())
+        return;
+
+    m_connListView->setScrollOffset(m_topRowIndex.row(), m_topRowOffset);
+}
+
 void ConnectionsPage::updateAutoScroll()
 {
-    if (iniUser().statAutoScroll()) {
-        connect(connListModel(), &QAbstractItemModel::rowsInserted, this,
-                &ConnectionsPage::doAutoScroll);
-        connect(connListModel(), &QAbstractItemModel::modelReset, this,
-                &ConnectionsPage::doAutoScroll);
+    connListModel()->disconnect(this);
 
-        doAutoScroll();
+    if (iniUser().statAutoScroll()) {
+        setupAutoScrollConnections();
     } else {
-        connListModel()->disconnect(this);
+        setupKeepScrollConnections();
     }
+}
+
+void ConnectionsPage::setupAutoScrollConnections()
+{
+    connect(connListModel(), &QAbstractItemModel::rowsInserted, this,
+            &ConnectionsPage::doAutoScroll);
+    connect(connListModel(), &QAbstractItemModel::modelReset, this, &ConnectionsPage::doAutoScroll);
+
+    doAutoScroll();
+}
+
+void ConnectionsPage::setupKeepScrollConnections()
+{
+    /* Keep the visible rows in place, when rows are inserted or removed above them */
+    connect(connListModel(), &QAbstractItemModel::rowsAboutToBeInserted, this,
+            &ConnectionsPage::saveTopRow);
+    connect(connListModel(), &QAbstractItemModel::rowsInserted, this,
+            &ConnectionsPage::restoreTopRow);
+    connect(connListModel(), &QAbstractItemModel::rowsAboutToBeRemoved, this,
+            &ConnectionsPage::saveTopRow);
+    connect(connListModel(), &QAbstractItemModel::rowsRemoved, this,
+            &ConnectionsPage::restoreTopRow);
 }
 
 void ConnectionsPage::updateShowHostNames()

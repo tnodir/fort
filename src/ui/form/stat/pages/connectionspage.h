@@ -1,6 +1,8 @@
 #ifndef CONNECTIONSPAGE_H
 #define CONNECTIONSPAGE_H
 
+#include <QPersistentModelIndex>
+
 #include "statbasepage.h"
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
@@ -51,7 +53,12 @@ private:
     void onTableConnSortClicked(int section, Qt::SortOrder order);
     void doAutoScroll();
 
+    void saveTopRow();
+    void restoreTopRow();
+
     void updateAutoScroll();
+    void setupAutoScrollConnections();
+    void setupKeepScrollConnections();
     void updateShowHostNames();
 
     void deleteConn(int row);
@@ -60,6 +67,8 @@ private:
     const ConnRow &currentConnRow() const;
 
 private:
+    int m_topRowOffset = 0;
+
     ConnSearchModel *m_connListModel = nullptr;
 
     QPushButton *m_btEdit = nullptr;
@@ -77,6 +86,8 @@ private:
     QCheckBox *m_cbShowHostNames = nullptr;
     TableView *m_connListView = nullptr;
     AppInfoRow *m_appInfoRow = nullptr;
+
+    QPersistentModelIndex m_topRowIndex;
 };
 
 #endif // CONNECTIONSPAGE_H
