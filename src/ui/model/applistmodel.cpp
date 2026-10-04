@@ -55,8 +55,8 @@ void AppListModel::setFilterValue(FilterFlag v, Qt::CheckState checkState)
 {
     m_filterValues.setFlag(v, (checkState == Qt::Checked));
 
-    if (v == FilterObsolete && checkState != Qt::PartiallyChecked) {
-        updateObsoleteAppIds();
+    if (v == FilterObsolete) {
+        updateObsoleteAppIds(checkState != Qt::PartiallyChecked);
     }
 
     setFilter(v, (checkState != Qt::PartiallyChecked));
@@ -78,6 +78,7 @@ void AppListModel::setFilterGroups(quint32 v)
 void AppListModel::clearFilters()
 {
     m_filterValues = FilterNone;
+    m_obsoleteAppIds.clear();
 
     setFilterGroups(0);
     setFilters(FilterNone);
@@ -322,7 +323,7 @@ QString AppListModel::sqlWhere() const
         addSqlFilter(list, "t.is_wildcard", FilterWildcard);
         addSqlFilter(list, "t.parked", FilterParked);
         addSqlFilter(list, "t.kill_process", FilterKillProcess);
-        addSqlFilter(list, "(t.app_id IN (" + m_obsoleteAppIds + "))", FilterObsolete);
+        addSqlObsoleteFilter(list);
     }
 
     if (filterGroups() != 0) {
@@ -411,8 +412,21 @@ void AppListModel::addSqlFilter(QStringList &list, const QString &name, FilterFl
     }
 }
 
-void AppListModel::updateObsoleteAppIds()
+void AppListModel::addSqlObsoleteFilter(QStringList &list) const
 {
+    if (!filters().testFlag(FilterObsolete))
+        return;
+
+    addSqlFilter(list, "(t.app_id IN (" + m_obsoleteAppIds + "))", FilterObsolete);
+}
+
+void AppListModel::updateObsoleteAppIds(bool enabled)
+{
+    m_obsoleteAppIds.clear();
+
+    if (!enabled)
+        return;
+
     const auto appIdList = confAppManager()->collectObsoleteApps(/*withParked=*/true);
 
     QStringList list;

@@ -99,9 +99,10 @@ protected:
     const QStringList &regexpColumns() const override;
 
     void addSqlFilter(QStringList &list, const QString &name, FilterFlag flag) const;
+    void addSqlObsoleteFilter(QStringList &list) const;
 
 private:
-    void updateObsoleteAppIds();
+    void updateObsoleteAppIds(bool enabled);
 
     QVariant dataDisplay(const QModelIndex &index, int role) const;
     QVariant dataDecoration(const QModelIndex &index) const;
