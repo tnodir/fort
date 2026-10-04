@@ -87,6 +87,7 @@ SOURCES += \
     form/controls/toolbutton.cpp \
     form/controls/treeitemdelegate.cpp \
     form/controls/treeview.cpp \
+    form/controls/weekdaysselector.cpp \
     form/controls/zonesselector.cpp \
     form/dialog/dialogutil.cpp \
     form/dialog/passworddialog.cpp \
@@ -377,6 +378,7 @@ HEADERS += \
     form/controls/toolbutton.h \
     form/controls/treeitemdelegate.h \
     form/controls/treeview.h \
+    form/controls/weekdaysselector.h \
     form/controls/zonesselector.h \
     form/dialog/dialogutil.h \
     form/dialog/passworddialog.h \
