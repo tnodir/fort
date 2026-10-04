@@ -227,6 +227,7 @@ void ServicesWindow::setupTableServiceList()
     m_serviceListView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_serviceListView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
+    m_serviceListView->setSortingEnabled(true);
     m_serviceListView->setModel(serviceListModel());
 
     m_serviceListView->setMenu(m_btEdit->menu());
@@ -246,6 +247,10 @@ void ServicesWindow::setupTableServiceListHeader()
     header->resizeSection(0, 180);
     header->resizeSection(1, 520);
     header->resizeSection(2, 100);
+
+    header->setSectionsClickable(true);
+    header->setSortIndicatorShown(true);
+    header->setSortIndicator(0, Qt::AscendingOrder);
 }
 
 void ServicesWindow::setupTableServicesChanged()
