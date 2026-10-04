@@ -429,9 +429,14 @@ qint64 ConnListModel::connIdByIndex(int row) const
     return isAscendingOrder() ? (connIdMin() + row) : (connIdMax() - row);
 }
 
-int ConnListModel::doSqlCount() const
+int ConnListModel::connIdCount() const
 {
     return connIdMax() <= 0 ? 0 : int(connIdMax() - connIdMin()) + 1;
+}
+
+int ConnListModel::doSqlCount() const
+{
+    return connIdCount();
 }
 
 QString ConnListModel::sqlBase() const
@@ -488,8 +493,7 @@ void ConnListModel::updateConnRows(qint64 oldIdMin, qint64 oldIdMax, qint64 idMi
 
     const int addedCount = idMax - oldIdMax;
     if (addedCount > 0) {
-        const int endRow = oldIdMax - idMin + 1;
-        insertConnRows(idMax, endRow, addedCount);
+        insertConnRows(idMax, addedCount);
     }
 }
 
@@ -503,15 +507,21 @@ void ConnListModel::resetConnRows(qint64 idMin, qint64 idMax)
 
 void ConnListModel::removeConnRows(qint64 idMin, int count)
 {
-    beginRemoveRows({}, 0, count - 1);
+    /* The oldest rows are at the bottom in descending order */
+    const int first = isAscendingOrder() ? 0 : (connIdCount() - count);
+
+    beginRemoveRows({}, first, first + count - 1);
     m_connIdMin = idMin;
     invalidateRowCache();
     endRemoveRows();
 }
 
-void ConnListModel::insertConnRows(qint64 idMax, int endRow, int count)
+void ConnListModel::insertConnRows(qint64 idMax, int count)
 {
-    beginInsertRows({}, endRow, endRow + count - 1);
+    /* The newest rows are at the top in descending order */
+    const int first = isAscendingOrder() ? connIdCount() : 0;
+
+    beginInsertRows({}, first, first + count - 1);
     m_connIdMax = idMax;
     invalidateRowCache();
     endInsertRows();

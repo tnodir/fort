@@ -105,6 +105,8 @@ private:
     qint64 connIdMax() const { return m_connIdMax; }
     void setConnIdMax(qint64 v) { m_connIdMax = v; }
 
+    int connIdCount() const;
+
     QVariant headerDataDisplay(int section, int role) const;
     QVariant headerDataDecoration(int section) const;
 
@@ -114,7 +116,7 @@ private:
 
     void updateConnRows(qint64 oldIdMin, qint64 oldIdMax, qint64 idMin, qint64 idMax);
     void removeConnRows(qint64 idMin, int count);
-    void insertConnRows(qint64 idMax, int endRow, int count);
+    void insertConnRows(qint64 idMax, int count);
 
 private:
     uint m_resolveAddress : 1 = false;
