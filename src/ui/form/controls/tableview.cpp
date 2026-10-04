@@ -1,8 +1,10 @@
 #include "tableview.h"
 
 #include <QContextMenuEvent>
+#include <QHeaderView>
 #include <QKeyEvent>
 #include <QMenu>
+#include <QScrollBar>
 
 #include <util/guiutil.h>
 
@@ -96,6 +98,19 @@ QString TableView::cellText(const QModelIndex &index) const
     return tooltipText;
 }
 
+int TableView::scrollOffset(int row) const
+{
+    return verticalScrollBar()->value() - rowScrollPos(row);
+}
+
+void TableView::setScrollOffset(int row, int offset)
+{
+    // Update the scroll bar's range
+    doItemsLayout();
+
+    verticalScrollBar()->setValue(rowScrollPos(row) + offset);
+}
+
 void TableView::selectCell(int row, int column)
 {
     const auto index = model()->index(row, column);
@@ -143,4 +158,12 @@ void TableView::keyPressEvent(QKeyEvent *event)
     }
 
     QAbstractItemView::keyPressEvent(event);
+}
+
+int TableView::rowScrollPos(int row) const
+{
+    if (verticalScrollMode() == QAbstractItemView::ScrollPerItem)
+        return row;
+
+    return verticalHeader()->sectionPosition(row);
 }

@@ -22,6 +22,10 @@ public:
     QString selectedText() const;
     QString cellText(const QModelIndex &index) const;
 
+    /* The vertical scroll position relative to the row */
+    int scrollOffset(int row) const;
+    void setScrollOffset(int row, int offset);
+
 signals:
     void currentIndexChanged(const QModelIndex &index);
 
@@ -38,6 +42,9 @@ protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
 
     void keyPressEvent(QKeyEvent *event) override;
+
+private:
+    int rowScrollPos(int row) const;
 
 private:
     QMenu *m_menu = nullptr;
