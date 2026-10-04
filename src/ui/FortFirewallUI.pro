@@ -31,6 +31,7 @@ SOURCES += \
     conf/inioptions.cpp \
     conf/rule.cpp \
     conf/speedlimit.cpp \
+    conf/timeperiod.cpp \
     conf/zone.cpp \
     control/command/controlcommandbackup.cpp \
     control/command/controlcommandbase.cpp \
@@ -317,6 +318,7 @@ HEADERS += \
     conf/inioptions.h \
     conf/rule.h \
     conf/speedlimit.h \
+    conf/timeperiod.h \
     conf/zone.h \
     control/command/controlcommandbackup.h \
     control/command/controlcommandbase.h \
