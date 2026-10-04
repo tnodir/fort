@@ -28,6 +28,8 @@ public:
             int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
+
     const QVector<ServiceInfo> &services() const { return m_services; }
     const ServiceInfo &serviceInfoAt(int index) const;
 
@@ -41,6 +43,7 @@ protected:
 
 private:
     void updateServices();
+    void sortServices();
 
     QVariant headerDataDisplay(int section) const;
     QVariant dataDisplay(const QModelIndex &index) const;
@@ -53,6 +56,9 @@ private:
     static QString trackIconPath(const ServiceInfo &info);
 
 private:
+    int m_sortColumn = -1;
+    Qt::SortOrder m_sortOrder = Qt::AscendingOrder;
+
     QString m_textFilter;
 
     TextMatcher m_textMatcher;

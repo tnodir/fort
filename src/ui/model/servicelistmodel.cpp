@@ -22,6 +22,19 @@ QString serviceSearchText(const ServiceInfo &info)
     return list.join('\n');
 }
 
+int compareServiceInfos(const ServiceInfo &a, const ServiceInfo &b, int column)
+{
+    switch (column) {
+    case 0:
+        return a.realServiceName.compare(b.realServiceName, Qt::CaseInsensitive);
+    case 1:
+        return a.displayName.compare(b.displayName, Qt::CaseInsensitive);
+    case 2:
+        return int(a.processId > b.processId) - int(a.processId < b.processId);
+    }
+    return 0;
+}
+
 }
 
 ServiceListModel::ServiceListModel(QObject *parent) : TableItemModel(parent) { }
@@ -54,7 +67,24 @@ void ServiceListModel::updateServices()
         }
     }
 
+    sortServices();
+
     reset();
+}
+
+void ServiceListModel::sortServices()
+{
+    if (m_sortColumn < 0)
+        return;
+
+    const int column = m_sortColumn;
+    const bool isAscending = (m_sortOrder == Qt::AscendingOrder);
+
+    std::stable_sort(
+            m_services.begin(), m_services.end(), [=](const ServiceInfo &a, const ServiceInfo &b) {
+                const int res = compareServiceInfos(a, b, column);
+                return isAscending ? (res < 0) : (res > 0);
+            });
 }
 
 int ServiceListModel::rowCount(const QModelIndex &parent) const
@@ -103,6 +133,19 @@ QVariant ServiceListModel::data(const QModelIndex &index, int role) const
     }
 
     return {};
+}
+
+void ServiceListModel::sort(int column, Qt::SortOrder order)
+{
+    if (m_sortColumn == column && m_sortOrder == order)
+        return;
+
+    m_sortColumn = column;
+    m_sortOrder = order;
+
+    sortServices();
+
+    reset();
 }
 
 QVariant ServiceListModel::headerDataDisplay(int section) const
