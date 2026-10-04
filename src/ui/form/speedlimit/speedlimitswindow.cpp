@@ -117,7 +117,7 @@ void SpeedLimitsWindow::setupUi()
     this->setFont(WindowManager::defaultFont());
 
     // Size
-    this->setMinimumSize(500, 600);
+    this->setMinimumSize(500, 300);
 }
 
 QLayout *SpeedLimitsWindow::setupHeader()

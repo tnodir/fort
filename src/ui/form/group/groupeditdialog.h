@@ -42,6 +42,7 @@ private:
     void setupUi();
     QLayout *setupMainLayout();
     QLayout *setupNameLayout();
+    QLayout *setupOptionsLayout();
     QLayout *setupButtons();
 
     bool save();

@@ -113,11 +113,16 @@ QLayout *GroupEditDialog::setupMainLayout()
     // Name
     auto nameLayout = setupNameLayout();
 
+    // Options
+    auto optionsLayout = setupOptionsLayout();
+
     // OK/Cancel
     auto buttonsLayout = setupButtons();
 
     auto layout = new QVBoxLayout();
     layout->addLayout(nameLayout);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addLayout(optionsLayout);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(buttonsLayout);
 
@@ -152,6 +157,14 @@ QLayout *GroupEditDialog::setupNameLayout()
 
     layout->addRow(QString(), m_cbExclusive);
 
+    return layout;
+}
+
+QLayout *GroupEditDialog::setupOptionsLayout()
+{
+    auto layout = new QFormLayout();
+    layout->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
+
     // Period
     m_ctpPeriod = new CheckTimePeriod();
 
@@ -159,6 +172,7 @@ QLayout *GroupEditDialog::setupNameLayout()
 
     // Rule
     m_ruleSelector = new RuleSelector();
+    m_ruleSelector->setMinimumWidth(250);
 
     layout->addRow("Rule:", m_ruleSelector);
     m_labelRule = ControlUtil::formRowLabel(layout, m_ruleSelector);
