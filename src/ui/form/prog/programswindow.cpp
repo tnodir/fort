@@ -283,10 +283,10 @@ void ProgramsWindow::setupEditMenu()
     setupTimerMenuActions();
 
     m_actAllowApp = menu->addAction(IconCache::icon(":/icons/accept.png"), QString());
-    m_actAllowApp->setShortcut(Qt::Key_A);
+    m_actAllowApp->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_A));
 
     m_actBlockApp = menu->addAction(IconCache::icon(":/icons/deny.png"), QString());
-    m_actBlockApp->setShortcut(Qt::Key_B);
+    m_actBlockApp->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_B));
 
     m_actKillApp = menu->addAction(IconCache::icon(":/icons/scull.png"), QString());
     m_actKillApp->setShortcut(QKeyCombination(Qt::CTRL | Qt::ALT, Qt::Key_K));
@@ -294,10 +294,10 @@ void ProgramsWindow::setupEditMenu()
     menu->addSeparator();
 
     m_actAddApp = menu->addAction(IconCache::icon(":/icons/add.png"), QString());
-    m_actAddApp->setShortcut(Qt::Key_Plus);
+    m_actAddApp->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actAddWildcard = menu->addAction(IconCache::icon(":/icons/coding.png"), QString());
-    m_actAddWildcard->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
+    m_actAddWildcard->setShortcut(QKeyCombination(Qt::CTRL | Qt::SHIFT, Qt::Key_N));
 
     m_actEditApp = menu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
     m_actEditApp->setShortcut(Qt::Key_Enter);

@@ -126,7 +126,7 @@ QLayout *SpeedLimitsWindow::setupHeader()
     auto editMenu = ControlUtil::createMenu(this);
 
     m_actAddSpeedLimit = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
-    m_actAddSpeedLimit->setShortcut(Qt::Key_Plus);
+    m_actAddSpeedLimit->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actEditSpeedLimit = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
     m_actEditSpeedLimit->setShortcut(Qt::Key_Enter);

@@ -152,7 +152,7 @@ QLayout *RulesWindow::setupHeader()
     auto editMenu = ControlUtil::createMenu(this);
 
     m_actAddRule = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
-    m_actAddRule->setShortcut(Qt::Key_Plus);
+    m_actAddRule->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actEditRule = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
     m_actEditRule->setShortcut(Qt::Key_Enter);

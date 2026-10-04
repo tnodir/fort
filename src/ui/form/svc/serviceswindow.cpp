@@ -143,7 +143,7 @@ QLayout *ServicesWindow::setupHeader()
             editMenu->addAction(IconCache::icon(":/icons/arrow_rotate_clockwise.png"), QString());
 
     m_actAddProgram = editMenu->addAction(IconCache::icon(":/icons/application.png"), QString());
-    m_actAddProgram->setShortcut(Qt::Key_Insert);
+    m_actAddProgram->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     editMenu->addSeparator();
 

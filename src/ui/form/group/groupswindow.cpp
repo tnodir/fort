@@ -120,7 +120,7 @@ QLayout *GroupsWindow::setupHeader()
     auto editMenu = ControlUtil::createMenu(this);
 
     m_actAddGroup = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
-    m_actAddGroup->setShortcut(Qt::Key_Plus);
+    m_actAddGroup->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actEditGroup = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
     m_actEditGroup->setShortcut(Qt::Key_Enter);

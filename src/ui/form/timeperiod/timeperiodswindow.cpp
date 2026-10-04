@@ -119,7 +119,7 @@ QLayout *TimePeriodsWindow::setupHeader()
     auto editMenu = ControlUtil::createMenu(this);
 
     m_actAddTimePeriod = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
-    m_actAddTimePeriod->setShortcut(Qt::Key_Plus);
+    m_actAddTimePeriod->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actEditTimePeriod = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
     m_actEditTimePeriod->setShortcut(Qt::Key_Enter);

@@ -124,7 +124,7 @@ QLayout *ConnectionsPage::setupHeader()
     m_actLookupIp->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_L);
 
     m_actAddProgram = menu->addAction(IconCache::icon(":/icons/application.png"), QString());
-    m_actAddProgram->setShortcut(Qt::Key_Insert);
+    m_actAddProgram->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actRemoveConn = menu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveConn->setShortcut(Qt::Key_Delete);

@@ -124,7 +124,7 @@ QLayout *ZonesWindow::setupHeader()
     auto editMenu = ControlUtil::createMenu(this);
 
     m_actAddZone = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
-    m_actAddZone->setShortcut(Qt::Key_Plus);
+    m_actAddZone->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actEditZone = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
     m_actEditZone->setShortcut(Qt::Key_Enter);

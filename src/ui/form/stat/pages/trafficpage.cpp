@@ -178,7 +178,7 @@ void TrafficPage::setupClearMenu()
     auto menu = ControlUtil::createMenu(this);
 
     m_actAddProgram = menu->addAction(IconCache::icon(":/icons/application.png"), QString());
-    m_actAddProgram->setShortcut(Qt::Key_Insert);
+    m_actAddProgram->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actRemoveApp = menu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveApp->setShortcut(Qt::Key_Delete);
