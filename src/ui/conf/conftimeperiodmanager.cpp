@@ -30,6 +30,9 @@ const char *const sqlSelectTimePeriodIds = "SELECT period_id FROM time_period"
 
 const char *const sqlDeleteTimePeriod = "DELETE FROM time_period WHERE period_id = ?1;";
 
+const char *const sqlDeleteGroupTimePeriod = "UPDATE app_group SET period_id = NULL"
+                                             "  WHERE period_id = ?1;";
+
 const char *const sqlUpdateTimePeriodEnabled =
         "UPDATE time_period SET enabled = ?2 WHERE period_id = ?1;";
 
@@ -172,6 +175,9 @@ bool ConfTimePeriodManager::deleteTimePeriod(quint8 periodId)
 
     if (DbQuery(sqliteDb(), &ok).sql(sqlDeleteTimePeriod).vars(vars).executeOk()) {
         DbQuery(sqliteDb(), &ok).sql(sqlDeleteTimePeriodIntervals).vars(vars).executeOk();
+
+        // Delete the Time Period from Groups
+        DbQuery(sqliteDb(), &ok).sql(sqlDeleteGroupTimePeriod).vars(vars).executeOk();
     }
 
     endTransaction(ok);

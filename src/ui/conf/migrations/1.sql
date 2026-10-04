@@ -49,11 +49,10 @@ CREATE TABLE app_group(
   group_id INTEGER PRIMARY KEY,
   enabled BOOLEAN NOT NULL,
   exclusive BOOLEAN NOT NULL DEFAULT 0,
-  period_enabled BOOLEAN NOT NULL,
+  period_enabled BOOLEAN NOT NULL DEFAULT 1,
   name TEXT NOT NULL,
   notes TEXT,
-  period_from TEXT,
-  period_to TEXT,
+  period_id INTEGER,
   rule_id INTEGER,
   mod_time INTEGER NOT NULL DEFAULT 0
 );

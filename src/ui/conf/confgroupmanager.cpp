@@ -17,12 +17,11 @@
 #include <util/ioc/ioccontainer.h>
 
 #include "confmanager.h"
+#include "conftimeperiodmanager.h"
 
 namespace {
 
 const QLoggingCategory LC("confGroup");
-
-inline constexpr int GROUP_PERIODS_UPDATE_INTERVAL = 60 * 1000; // 1 minute
 
 #define SELECT_GROUP_FIELDS                                                                        \
     "    t.group_id,"                                                                              \
@@ -31,8 +30,7 @@ inline constexpr int GROUP_PERIODS_UPDATE_INTERVAL = 60 * 1000; // 1 minute
     "    t.period_enabled,"                                                                        \
     "    t.name,"                                                                                  \
     "    t.notes,"                                                                                 \
-    "    t.period_from,"                                                                           \
-    "    t.period_to,"                                                                             \
+    "    t.period_id,"                                                                             \
     "    t.rule_id,"                                                                               \
     "    t.mod_time"
 
@@ -43,14 +41,14 @@ const char *const sqlSelectGroupById = "SELECT" SELECT_GROUP_FIELDS "  FROM app_
                                        "  WHERE t.group_id = ?1;";
 
 const char *const sqlInsertGroup = "INSERT INTO app_group(group_id, name, notes, enabled,"
-                                   "    exclusive, period_enabled, period_from, period_to,"
-                                   "    rule_id, mod_time)"
-                                   "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10);";
+                                   "    exclusive, period_enabled, period_id, rule_id,"
+                                   "    mod_time)"
+                                   "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9);";
 
 const char *const sqlUpdateGroup = "UPDATE app_group"
                                    "  SET name = ?2, notes = ?3, enabled = ?4, exclusive = ?5,"
-                                   "    period_enabled = ?6, period_from = ?7, period_to = ?8,"
-                                   "    rule_id = ?9, mod_time = ?10"
+                                   "    period_enabled = ?6, period_id = ?7, rule_id = ?8,"
+                                   "    mod_time = ?9"
                                    "  WHERE group_id = ?1;";
 
 const char *const sqlSelectGroupNameById = "SELECT name FROM app_group WHERE group_id = ?1;";
@@ -67,10 +65,6 @@ const char *const sqlDeleteAppGroup = "UPDATE app"
 const char *const sqlUpdateGroupName = "UPDATE app_group SET name = ?2 WHERE group_id = ?1;";
 
 const char *const sqlUpdateGroupEnabled = "UPDATE app_group SET enabled = ?2 WHERE group_id = ?1;";
-
-const char *const sqlSelectAnyGroupPeriod = "SELECT 1 FROM app_group"
-                                            "  WHERE enabled = 1 AND period_enabled = 1"
-                                            "  LIMIT 1;";
 
 bool driverWriteGroups(ConfBuffer &confBuf, bool onlyFlags = false)
 {
@@ -92,16 +86,19 @@ bool driverWriteGroups(ConfBuffer &confBuf, bool onlyFlags = false)
 
 ConfGroupManager::ConfGroupManager(QObject *parent) : ConfManagerBase(parent)
 {
-    setupPeriodsTimer();
     setupGroupNamesCache();
 }
 
 void ConfGroupManager::setUp()
 {
     auto confManager = Fort::dependency<ConfManager>();
+    auto confTimePeriodManager = Fort::dependency<ConfTimePeriodManager>();
 
     // The imported DB may reuse the ids
     connect(confManager, &ConfManager::imported, this, &ConfGroupManager::clearGroupNamesCache);
+
+    connect(confTimePeriodManager, &ConfTimePeriodManager::activePeriodsChanged, this,
+            &ConfGroupManager::updateDriverGroupFlags);
 }
 
 QString ConfGroupManager::groupNameById(quint8 groupId)
@@ -165,8 +162,7 @@ bool ConfGroupManager::addOrUpdateGroup(Group &group)
             group.enabled,
             group.exclusive,
             group.periodEnabled,
-            group.periodFrom,
-            group.periodTo,
+            DbVar::nullable(group.periodId),
             DbVar::nullable(group.ruleId),
             DateUtil::now(),
         };
@@ -255,7 +251,7 @@ bool ConfGroupManager::updateGroupEnabled(quint8 groupId, bool enabled)
     if (ok) {
         emit groupUpdated();
 
-        updateDriverGroupFlags(); // the Group's period may keep it inactive
+        updateDriverGroupFlags(); // the Group's Time Period may keep it inactive
     }
 
     return ok;
@@ -291,8 +287,6 @@ bool ConfGroupManager::walkGroups(const std::function<walkGroupsCallback> &func)
 
 void ConfGroupManager::updateDriverGroups()
 {
-    stopPeriodsTimer();
-
     const quint32 activeMask = activeGroupsMask();
 
     ConfBuffer confBuf;
@@ -302,32 +296,27 @@ void ConfGroupManager::updateDriverGroups()
     if (driverWriteGroups(confBuf)) {
         m_driverActiveMask = activeMask;
     }
-
-    startPeriodsTimer();
 }
 
 void ConfGroupManager::updateDriverGroupFlags()
 {
-    stopPeriodsTimer();
-
     const quint32 activeMask = activeGroupsMask();
 
-    if (activeMask != m_driverActiveMask) {
-        ConfBuffer confBuf;
+    if (activeMask == m_driverActiveMask)
+        return;
 
-        confBuf.writeGroupFlags(activeMask);
+    ConfBuffer confBuf;
 
-        if (driverWriteGroups(confBuf, /*onlyFlags=*/true)) {
-            m_driverActiveMask = activeMask;
-        }
+    confBuf.writeGroupFlags(activeMask);
+
+    if (driverWriteGroups(confBuf, /*onlyFlags=*/true)) {
+        m_driverActiveMask = activeMask;
     }
-
-    startPeriodsTimer();
 }
 
 quint32 ConfGroupManager::activeGroupsMask() const
 {
-    const QTime now = DateUtil::currentTime();
+    auto confTimePeriodManager = Fort::confTimePeriodManager();
 
     quint32 activeMask = 0;
 
@@ -335,7 +324,8 @@ quint32 ConfGroupManager::activeGroupsMask() const
         if (Q_UNLIKELY(group.groupId <= 0 || group.groupId > ConfUtil::groupMaxCount()))
             return true; // skip an out of range Group
 
-        if (group.isActive(now)) {
+        if (group.enabled
+                && confTimePeriodManager->isTimePeriodActive(group.periodEnabled, group.periodId)) {
             activeMask |= (quint32(1) << (group.groupId - 1));
         }
 
@@ -343,31 +333,6 @@ quint32 ConfGroupManager::activeGroupsMask() const
     });
 
     return activeMask;
-}
-
-void ConfGroupManager::setupPeriodsTimer()
-{
-    m_periodsTimer.setSingleShot(true);
-    m_periodsTimer.setTimerType(Qt::PreciseTimer); // not earlier than the next minute
-
-    connect(&m_periodsTimer, &QTimer::timeout, this, &ConfGroupManager::updateDriverGroupFlags);
-}
-
-void ConfGroupManager::startPeriodsTimer()
-{
-    const bool anyPeriodEnabled =
-            DbQuery(sqliteDb()).sql(sqlSelectAnyGroupPeriod).execute().toBool();
-
-    if (anyPeriodEnabled) {
-        // Wake up at the start of the next minute: the periods are in "hh:mm"
-        const int msecs = DateUtil::currentTime().msecsSinceStartOfDay();
-        m_periodsTimer.start(GROUP_PERIODS_UPDATE_INTERVAL - msecs % GROUP_PERIODS_UPDATE_INTERVAL);
-    }
-}
-
-void ConfGroupManager::stopPeriodsTimer()
-{
-    m_periodsTimer.stop();
 }
 
 void ConfGroupManager::setupGroupNamesCache()
@@ -389,8 +354,7 @@ void ConfGroupManager::fillGroup(Group &group, const SqliteStmt &stmt)
     group.periodEnabled = stmt.columnBool(3);
     group.groupName = stmt.columnText(4);
     group.notes = stmt.columnText(5);
-    group.periodFrom = stmt.columnText(6);
-    group.periodTo = stmt.columnText(7);
-    group.ruleId = stmt.columnInt64(8);
-    group.modTime = stmt.columnDateTime(9);
+    group.periodId = stmt.columnInt(6);
+    group.ruleId = stmt.columnInt64(7);
+    group.modTime = stmt.columnDateTime(8);
 }

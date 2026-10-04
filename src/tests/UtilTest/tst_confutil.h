@@ -336,31 +336,6 @@ TEST_F(ConfUtilTest, groupsWriteRead)
 #undef TEST_GROUP_BIT
 }
 
-TEST_F(ConfUtilTest, groupIsActive)
-{
-    Group group;
-
-    ASSERT_TRUE(group.isActive(QTime(12, 0)));
-
-    group.enabled = false;
-    ASSERT_FALSE(group.isActive(QTime(12, 0)));
-
-    group.enabled = true;
-    group.periodEnabled = true;
-    group.periodFrom = "09:00";
-    group.periodTo = "18:00";
-    ASSERT_FALSE(group.isActive(QTime(8, 59)));
-    ASSERT_TRUE(group.isActive(QTime(9, 0)));
-    ASSERT_FALSE(group.isActive(QTime(18, 0)));
-
-    // Over midnight
-    group.periodFrom = "22:00";
-    group.periodTo = "06:00";
-    ASSERT_TRUE(group.isActive(QTime(23, 0)));
-    ASSERT_TRUE(group.isActive(QTime(5, 59)));
-    ASSERT_FALSE(group.isActive(QTime(12, 0)));
-}
-
 TEST_F(ConfUtilTest, groupsRulesConnFiltered)
 {
     static Rule g_rules[] = {

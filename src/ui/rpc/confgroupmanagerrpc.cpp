@@ -94,8 +94,8 @@ bool ConfGroupManagerRpc::updateGroupEnabled(quint8 groupId, bool enabled)
 
 QVariantList ConfGroupManagerRpc::groupToVarList(const Group &group)
 {
-    return { group.enabled, group.exclusive, group.periodEnabled, group.groupId, group.ruleId,
-        group.groupName, group.notes, group.periodFrom, group.periodTo };
+    return { group.enabled, group.exclusive, group.periodEnabled, group.groupId, group.periodId,
+        group.ruleId, group.groupName, group.notes };
 }
 
 Group ConfGroupManagerRpc::varListToGroup(const QVariantList &v)
@@ -105,11 +105,10 @@ Group ConfGroupManagerRpc::varListToGroup(const QVariantList &v)
     group.exclusive = v.value(1).toBool();
     group.periodEnabled = v.value(2).toBool();
     group.groupId = v.value(3).toInt();
-    group.ruleId = v.value(4).toInt();
-    group.groupName = v.value(5).toString();
-    group.notes = v.value(6).toString();
-    group.periodFrom = v.value(7).toString();
-    group.periodTo = v.value(8).toString();
+    group.periodId = v.value(4).toInt();
+    group.ruleId = v.value(5).toInt();
+    group.groupName = v.value(6).toString();
+    group.notes = v.value(7).toString();
     return group;
 }
 

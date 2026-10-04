@@ -3,7 +3,6 @@
 
 #include <QHash>
 #include <QObject>
-#include <QTimer>
 
 #include <util/classhelpers.h>
 #include <util/conf/confgroupswalker.h>
@@ -46,10 +45,6 @@ signals:
 private:
     quint32 activeGroupsMask() const;
 
-    void setupPeriodsTimer();
-    void startPeriodsTimer();
-    void stopPeriodsTimer();
-
     void setupGroupNamesCache();
     void clearGroupNamesCache();
 
@@ -59,8 +54,6 @@ private:
     mutable QHash<quint8, QString> m_groupNamesCache;
 
     quint32 m_driverActiveMask = 0; // last written to the driver
-
-    QTimer m_periodsTimer;
 };
 
 #endif // CONFGROUPMANAGER_H

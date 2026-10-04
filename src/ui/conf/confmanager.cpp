@@ -24,6 +24,7 @@
 
 #include "addressgroup.h"
 #include "confappmanager.h"
+#include "timeperiod.h"
 
 using namespace Fort;
 
@@ -275,6 +276,61 @@ bool loadOldAppGroups(SqliteDb *db, quint32 appGroupBits, QList<OldAppGroup> &ap
     return true;
 }
 
+void clearTimePeriods(SqliteDb *db)
+{
+    db->execute("DELETE FROM time_period;");
+    db->execute("DELETE FROM time_period_interval;");
+}
+
+// The Time Period with the same name (period) is reused
+int migrateTimePeriod(SqliteDb *db, const QString &periodFrom, const QString &periodTo)
+{
+    const QString name = periodFrom + '-' + periodTo;
+
+    const int existingPeriodId = DbQuery(db)
+                                         .sql("SELECT period_id FROM time_period WHERE name = ?1;")
+                                         .vars({ name })
+                                         .execute()
+                                         .toInt();
+    if (existingPeriodId != 0)
+        return existingPeriodId;
+
+    bool ok = true;
+
+    const int periodId = DbQuery(db, &ok)
+                                 .sql("SELECT period_id FROM time_period"
+                                      "  WHERE period_id <= ?1 ORDER BY period_id;")
+                                 .vars({ ConfUtil::timePeriodMaxCount() })
+                                 .getFreeId(/*maxId=*/ConfUtil::timePeriodMaxCount());
+    if (!ok) {
+        qCWarning(LC) << "Migrate: No free Time Period id for the period:" << name;
+        return 0;
+    }
+
+    DbQuery(db, &ok)
+            .sql("INSERT INTO time_period(period_id, name, mod_time) VALUES(?1, ?2, ?3);")
+            .vars({ periodId, name, DateUtil::now() })
+            .executeOk();
+
+    // The old period of the equal times was never active, the new one is the whole 24 hours
+    const quint8 weekDays = (periodFrom == periodTo) ? 0 : TimePeriodAllWeekDays;
+
+    DbQuery(db, &ok)
+            .sql("INSERT INTO time_period_interval(period_id, order_index, week_days,"
+                 "    time_from, time_to)"
+                 "  VALUES(?1, 0, ?2, ?3, ?4);")
+            .vars({ periodId, weekDays, periodFrom, periodTo })
+            .executeOk();
+
+    return ok ? periodId : 0;
+}
+
+// The disabled period is kept, unless it's the default one
+bool hasOldPeriod(bool periodEnabled, const QString &periodFrom, const QString &periodTo)
+{
+    return periodEnabled || periodFrom != periodTo;
+}
+
 QString oldAppGroupAppIdsSql()
 {
     return "SELECT app_id FROM " + oldEntityName("app") + " WHERE app_group_id = ?1";
@@ -294,20 +350,24 @@ bool migrateOldAppGroup(SqliteDb *db, const OldAppGroup &appGroup)
         return false;
     }
 
+    const int periodId =
+            hasOldPeriod(appGroup.periodEnabled, appGroup.periodFrom, appGroup.periodTo)
+            ? migrateTimePeriod(db, appGroup.periodFrom, appGroup.periodTo)
+            : 0;
+
     const QVariantList vars = {
         groupId,
         appGroup.enabled,
         appGroup.periodEnabled,
         appGroup.name,
-        appGroup.periodFrom,
-        appGroup.periodTo,
+        DbVar::nullable(periodId),
         DateUtil::now(),
     };
 
     DbQuery(db, &ok)
-            .sql("INSERT INTO app_group(group_id, enabled, exclusive, period_enabled,"
-                 "    name, period_from, period_to, mod_time)"
-                 "  VALUES(?1, ?2, 0, ?3, ?4, ?5, ?6, ?7);")
+            .sql("INSERT INTO app_group(group_id, enabled, exclusive, period_enabled, name,"
+                 "    period_id, mod_time)"
+                 "  VALUES(?1, ?2, 0, ?3, ?4, ?5, ?6);")
             .vars(vars)
             .executeOk();
     if (!ok)
@@ -386,6 +446,9 @@ void migrateAppGroups(SqliteDb *db, quint32 appGroupBits)
     // The old App. Groups' speed limits replace the current Speed Limits on import
     db->execute("DELETE FROM speed_limit;");
 
+    // The old App. Groups' periods replace the current Time Periods on import
+    clearTimePeriods(db);
+
     QList<OldAppGroup> appGroups;
 
     if (!loadOldAppGroups(db, appGroupBits, appGroups))
@@ -400,6 +463,39 @@ void migrateAppGroups(SqliteDb *db, quint32 appGroupBits)
         migrateOldAppGroupSpeedLimit(db, appGroup, /*inbound=*/true);
         migrateOldAppGroupSpeedLimit(db, appGroup, /*inbound=*/false);
     }
+}
+
+// The Groups' periods are replaced by the Time Periods
+bool migrateGroupPeriods(SqliteDb *db)
+{
+    // The old Groups' periods replace the current Time Periods on import
+    clearTimePeriods(db);
+
+    // The "period_enabled" column is copied as is
+    const QString sql = "SELECT group_id, period_enabled, period_from, period_to FROM "
+            + oldEntityName("app_group");
+
+    SqliteStmt stmt;
+    if (!DbQuery(db).sql(sql).prepare(stmt))
+        return false;
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        const qint64 groupId = stmt.columnInt64(0);
+        const QString periodFrom = stmt.columnText(2);
+        const QString periodTo = stmt.columnText(3);
+
+        if (!hasOldPeriod(stmt.columnBool(1), periodFrom, periodTo))
+            continue;
+
+        const int periodId = migrateTimePeriod(db, periodFrom, periodTo);
+
+        DbQuery(db)
+                .sql("UPDATE app_group SET period_id = ?2 WHERE group_id = ?1;")
+                .vars({ groupId, DbVar::nullable(periodId) })
+                .executeOk();
+    }
+
+    return true;
 }
 
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
@@ -424,6 +520,11 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     // COMPAT: Migrate the App. Groups to the Groups and Speed Limits
     if (version < 59) {
         migrateAppGroups(db, settings()->appGroupBits());
+    }
+
+    // COMPAT: Migrate the Groups' periods to the Time Periods
+    if (version >= 59 && version < 60) {
+        migrateGroupPeriods(db);
     }
 
     return true;

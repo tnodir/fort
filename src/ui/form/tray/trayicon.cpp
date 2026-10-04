@@ -736,7 +736,7 @@ void TrayIcon::updateGroupFlagActions()
 
             groupId = groupRow.groupId;
             enabled = groupRow.enabled;
-            menuLabel = groupRow.menuLabel();
+            menuLabel = GroupListModel::menuLabel(groupRow);
         }
 
         action->setText(menuLabel);

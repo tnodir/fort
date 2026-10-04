@@ -9,6 +9,7 @@
 #include <conf/confgroupmanager.h>
 #include <conf/confmanager.h>
 #include <conf/confrulemanager.h>
+#include <conf/conftimeperiodmanager.h>
 #include <fortglobal.h>
 
 using namespace Fort;
@@ -29,6 +30,7 @@ void GroupListModel::setUp()
     auto confManager = Fort::dependency<ConfManager>();
     auto confGroupManager = Fort::dependency<ConfGroupManager>();
     auto confRuleManager = Fort::dependency<ConfRuleManager>();
+    auto confTimePeriodManager = Fort::dependency<ConfTimePeriodManager>();
 
     connect(confManager, &ConfManager::imported, this, &TableItemModel::reset);
 
@@ -38,6 +40,12 @@ void GroupListModel::setUp()
 
     // The deleted Rule is cleared from the Groups
     connect(confRuleManager, &ConfRuleManager::ruleRemoved, this, &TableItemModel::refresh);
+
+    // The Time Periods' names are shown, the deleted Time Period is cleared from the Groups
+    connect(confTimePeriodManager, &ConfTimePeriodManager::timePeriodRemoved, this,
+            &TableItemModel::refresh);
+    connect(confTimePeriodManager, &ConfTimePeriodManager::timePeriodUpdated, this,
+            &TableItemModel::refresh);
 }
 
 int GroupListModel::columnCount(const QModelIndex & /*parent*/) const
@@ -99,7 +107,7 @@ QVariant GroupListModel::dataDisplay(const QModelIndex &index) const
 
     switch (column) {
     case 0:
-        return QString("%1) %2").arg(QString::number(groupRow.groupId), groupRow.menuLabel());
+        return QString("%1) %2").arg(QString::number(groupRow.groupId), menuLabel(groupRow));
     case 1:
         return groupRow.modTime;
     }
@@ -145,6 +153,13 @@ const GroupRow &GroupListModel::groupRowAt(int row) const
     return m_groupRow;
 }
 
+QString GroupListModel::menuLabel(const GroupRow &groupRow)
+{
+    const quint8 periodId = groupRow.periodEnabled ? groupRow.periodId : 0;
+
+    return groupRow.menuLabel(confTimePeriodManager()->timePeriodNameById(periodId));
+}
+
 bool GroupListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
 {
     return updateGroupRow(sql(), vars, m_groupRow);
@@ -163,10 +178,9 @@ bool GroupListModel::updateGroupRow(
     groupRow.periodEnabled = stmt.columnBool(3);
     groupRow.groupName = stmt.columnText(4);
     groupRow.notes = stmt.columnText(5);
-    groupRow.periodFrom = stmt.columnText(6);
-    groupRow.periodTo = stmt.columnText(7);
-    groupRow.ruleId = stmt.columnInt(8);
-    groupRow.modTime = stmt.columnDateTime(9);
+    groupRow.periodId = stmt.columnInt(6);
+    groupRow.ruleId = stmt.columnInt(7);
+    groupRow.modTime = stmt.columnDateTime(8);
 
     return true;
 }
@@ -180,8 +194,7 @@ QString GroupListModel::sqlBase() const
            "    period_enabled,"
            "    name,"
            "    notes,"
-           "    period_from,"
-           "    period_to,"
+           "    period_id,"
            "    rule_id,"
            "    mod_time"
            "  FROM app_group";

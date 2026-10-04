@@ -11,12 +11,12 @@ QT_FORWARD_DECLARE_CLASS(QFrame)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 
-class CheckTimePeriod;
 class Group;
 class GroupsController;
 class LineEdit;
 class PlainTextEdit;
 class RuleSelector;
+class TimePeriodSelector;
 
 class GroupEditDialog : public QDialog
 {
@@ -59,9 +59,9 @@ private:
     PlainTextEdit *m_editNotes = nullptr;
     QCheckBox *m_cbEnabled = nullptr;
     QCheckBox *m_cbExclusive = nullptr;
-    CheckTimePeriod *m_ctpPeriod = nullptr;
     QLabel *m_labelRule = nullptr;
     RuleSelector *m_ruleSelector = nullptr;
+    TimePeriodSelector *m_periodSelector = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 

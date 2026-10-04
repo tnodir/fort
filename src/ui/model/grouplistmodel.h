@@ -31,6 +31,8 @@ public:
 
     const GroupRow &groupRowAt(int row) const;
 
+    static QString menuLabel(const GroupRow &groupRow);
+
 protected:
     Qt::ItemFlags flagIsUserCheckable(const QModelIndex &index) const override;
 

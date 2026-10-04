@@ -1,7 +1,5 @@
 #include "group.h"
 
-#include <util/dateutil.h>
-
 bool Group::isFlagsEqual(const Group &o) const
 {
     return enabled == o.enabled && exclusive == o.exclusive && periodEnabled == o.periodEnabled;
@@ -9,8 +7,7 @@ bool Group::isFlagsEqual(const Group &o) const
 
 bool Group::isOptionsEqual(const Group &o) const
 {
-    return isFlagsEqual(o) && ruleId == o.ruleId && notes == o.notes && periodFrom == o.periodFrom
-            && periodTo == o.periodTo;
+    return isFlagsEqual(o) && periodId == o.periodId && ruleId == o.ruleId && notes == o.notes;
 }
 
 bool Group::isNameEqual(const Group &o) const
@@ -18,36 +15,10 @@ bool Group::isNameEqual(const Group &o) const
     return groupName == o.groupName;
 }
 
-bool Group::isActive(QTime time) const
+QString Group::menuLabel(const QString &periodName) const
 {
-    if (!enabled)
-        return false;
+    if (periodName.isEmpty())
+        return groupName;
 
-    if (!periodEnabled)
-        return true;
-
-    return DateUtil::isTimeInPeriod(
-            time, DateUtil::parseTime(periodFrom), DateUtil::parseTime(periodTo));
-}
-
-QString Group::menuLabel() const
-{
-    QString text = groupName;
-
-    if (periodEnabled) {
-        text += QLatin1Char(' ') + DateUtil::formatPeriod(periodFrom, periodTo);
-    }
-
-    return text;
-}
-
-void GroupPeriod::setupPeriodTimes(const QString &periodFrom, const QString &periodTo)
-{
-    periodFromTime = DateUtil::parseTime(periodFrom);
-    periodToTime = DateUtil::parseTime(periodTo);
-}
-
-bool GroupPeriod::isTimeInPeriod(QTime time) const
-{
-    return DateUtil::isTimeInPeriod(time, periodFromTime, periodToTime);
+    return groupName + " (" + periodName + ')';
 }

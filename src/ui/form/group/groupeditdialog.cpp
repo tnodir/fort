@@ -5,14 +5,13 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QPushButton>
-#include <QTimeEdit>
 #include <QVBoxLayout>
 
-#include <form/controls/checktimeperiod.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
 #include <form/controls/ruleselector.h>
+#include <form/controls/timeperiodselector.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/grouplistmodel.h>
@@ -40,11 +39,10 @@ void GroupEditDialog::initialize(const Group &group)
     m_cbEnabled->setChecked(group.enabled);
     m_cbExclusive->setChecked(group.exclusive);
 
-    m_ctpPeriod->checkBox()->setChecked(group.periodEnabled);
-    m_ctpPeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(group.periodFrom));
-    m_ctpPeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(group.periodTo));
-
     m_ruleSelector->setRuleId(group.ruleId);
+
+    m_periodSelector->setPeriodEnabled(group.periodEnabled);
+    m_periodSelector->setPeriodId(group.periodId);
 
     initializeFocus();
 }
@@ -67,13 +65,13 @@ void GroupEditDialog::retranslateUi()
             tr("A program is enabled only if ANY of its exclusive groups is enabled,"
                " or, without exclusive groups, ANY of its groups is enabled."));
 
-    m_ctpPeriod->checkBox()->setText(tr("time period:"));
-    m_ctpPeriod->setToolTip(tr("The Group is active only in this time period."));
-
     m_labelRule->setText(tr("Rule:"));
     m_ruleSelector->retranslateUi();
     m_ruleSelector->setToolTip(tr("The Rule is applied to the Group's programs"
                                   " before their own Rule, while the Group is active."));
+
+    m_periodSelector->retranslateUi();
+    m_periodSelector->setToolTip(tr("The Group is active only in this Time Period."));
 
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
@@ -116,6 +114,9 @@ QLayout *GroupEditDialog::setupMainLayout()
     // Options
     auto optionsLayout = setupOptionsLayout();
 
+    // Time Period
+    m_periodSelector = new TimePeriodSelector();
+
     // OK/Cancel
     auto buttonsLayout = setupButtons();
 
@@ -123,6 +124,8 @@ QLayout *GroupEditDialog::setupMainLayout()
     layout->addLayout(nameLayout);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(optionsLayout);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addWidget(m_periodSelector, 0, Qt::AlignLeft);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(buttonsLayout);
 
@@ -164,11 +167,6 @@ QLayout *GroupEditDialog::setupOptionsLayout()
 {
     auto layout = new QFormLayout();
     layout->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
-
-    // Period
-    m_ctpPeriod = new CheckTimePeriod();
-
-    layout->addRow(QString(), m_ctpPeriod);
 
     // Rule
     m_ruleSelector = new RuleSelector();
@@ -241,8 +239,7 @@ void GroupEditDialog::fillGroup(Group &group) const
     group.notes = m_editNotes->toPlainText();
     group.enabled = m_cbEnabled->isChecked();
     group.exclusive = m_cbExclusive->isChecked();
-    group.periodEnabled = m_ctpPeriod->checkBox()->isChecked();
-    group.periodFrom = CheckTimePeriod::fromTime(m_ctpPeriod->timeEdit1()->time());
-    group.periodTo = CheckTimePeriod::fromTime(m_ctpPeriod->timeEdit2()->time());
     group.ruleId = m_ruleSelector->ruleId();
+    group.periodEnabled = m_periodSelector->periodEnabled();
+    group.periodId = m_periodSelector->periodId();
 }
