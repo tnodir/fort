@@ -77,6 +77,9 @@ const char *const sqlSelectApps = "SELECT" SELECT_APP_FIELDS "  FROM app t"
 const char *const sqlSelectAppsToPurge = "SELECT app_id, path FROM app"
                                          "  WHERE is_wildcard = 0 AND parked = 0;";
 
+const char *const sqlSelectAppsWithParked = "SELECT app_id, path FROM app"
+                                            "  WHERE is_wildcard = 0;";
+
 const char *const sqlSelectMinEndApp = "SELECT MIN(end_time) FROM app"
                                        "  WHERE end_time != 0;";
 
@@ -151,6 +154,14 @@ const char *const sqlUpdateAppTimer = "UPDATE app SET blocked = ?2, kill_process
 
 using AppsMap = QHash<qint64, QString>;
 using AppIdsArray = QVector<qint64>;
+
+quint32 obsoleteAppsDriveMask()
+{
+    if (!ini().progPurgeOnMounted())
+        return -1;
+
+    return FileUtil::mountedDriveMask(FileUtil::driveMask());
+}
 
 }
 
@@ -530,12 +541,7 @@ bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
 
 bool ConfAppManager::purgeApps()
 {
-    quint32 driveMask = -1;
-    if (ini().progPurgeOnMounted()) {
-        driveMask = FileUtil::mountedDriveMask(FileUtil::driveMask());
-    }
-
-    const auto appIdList = collectObsoleteApps(driveMask);
+    const auto appIdList = collectObsoleteApps();
     if (appIdList.isEmpty())
         return true;
 
@@ -647,13 +653,17 @@ bool ConfAppManager::updateAppTimer(qint64 appId, QDateTime scheduleTime, bool &
     return true;
 }
 
-QVector<qint64> ConfAppManager::collectObsoleteApps(quint32 driveMask)
+QVector<qint64> ConfAppManager::collectObsoleteApps(bool withParked)
 {
     QVector<qint64> appIdList;
 
+    const char *sql = withParked ? sqlSelectAppsWithParked : sqlSelectAppsToPurge;
+
     SqliteStmt stmt;
-    if (!DbQuery(sqliteDb()).sql(sqlSelectAppsToPurge).prepare(stmt))
+    if (!DbQuery(sqliteDb()).sql(sql).prepare(stmt))
         return {};
+
+    const quint32 driveMask = obsoleteAppsDriveMask();
 
     while (stmt.step() == SqliteStmt::StepRow) {
         const QString appPath = stmt.columnText(1);

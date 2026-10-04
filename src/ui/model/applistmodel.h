@@ -42,6 +42,7 @@ public:
         FilterWildcard = (1 << 1),
         FilterParked = (1 << 2),
         FilterKillProcess = (1 << 3),
+        FilterObsolete = (1 << 4),
     };
     Q_ENUM(FilterFlag)
     Q_DECLARE_FLAGS(FilterFlags, FilterFlag)
@@ -100,6 +101,8 @@ protected:
     void addSqlFilter(QStringList &list, const QString &name, FilterFlag flag) const;
 
 private:
+    void updateObsoleteAppIds();
+
     QVariant dataDisplay(const QModelIndex &index, int role) const;
     QVariant dataDecoration(const QModelIndex &index) const;
     QVariant dataForeground(const QModelIndex &index) const;
@@ -114,6 +117,8 @@ private:
     FilterFlags m_filterValues = FilterNone;
 
     quint32 m_filterGroups = 0;
+
+    QString m_obsoleteAppIds;
 
     mutable AppRow m_appRow;
 };

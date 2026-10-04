@@ -49,6 +49,8 @@ public:
 
     qint64 getAlertAppId();
 
+    QVector<qint64> collectObsoleteApps(bool withParked = false);
+
     virtual bool importAppsBackup(const QString &path);
 
     virtual bool canUpdateDriverConf() const { return true; }
@@ -80,8 +82,6 @@ private:
     bool checkAppBlockedChanged(App &app, bool blocked, bool killProcess);
 
     bool updateAppTimer(qint64 appId, QDateTime scheduleTime, bool &isWildcard);
-
-    QVector<qint64> collectObsoleteApps(quint32 driveMask);
 
     bool saveAppBlocked(const App &app);
     bool saveAppTimer(const App &app);

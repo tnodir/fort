@@ -130,6 +130,7 @@ private:
     QCheckBox *m_cbFilterWildcard = nullptr;
     QCheckBox *m_cbFilterParked = nullptr;
     QCheckBox *m_cbFilterKillProcess = nullptr;
+    QCheckBox *m_cbFilterObsolete = nullptr;
     GroupsSelector *m_btFilterGroups = nullptr;
     QToolButton *m_btSortAllowed = nullptr;
     QToolButton *m_btSortBlocked = nullptr;

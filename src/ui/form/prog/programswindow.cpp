@@ -163,6 +163,7 @@ void ProgramsWindow::retranslateUi()
     m_cbFilterWildcard->setText(tr("Wildcard Paths"));
     m_cbFilterParked->setText(tr("Parked"));
     m_cbFilterKillProcess->setText(tr("Kill Process"));
+    m_cbFilterObsolete->setText(tr("Obsolete"));
     m_btFilterGroups->retranslateUi();
     m_btFilterGroups->setToolTip(tr("Filter by Groups"));
 
@@ -394,6 +395,7 @@ void ProgramsWindow::setupFilter()
     layout->addWidget(m_cbFilterWildcard);
     layout->addWidget(m_cbFilterParked);
     layout->addWidget(m_cbFilterKillProcess);
+    layout->addWidget(m_cbFilterObsolete);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addWidget(m_btFilterGroups);
     layout->addWidget(ControlUtil::createHSeparator());
@@ -442,6 +444,12 @@ void ProgramsWindow::setupFilterCheckBoxes()
                 appListModel()->setFilterValue(
                         AppListModel::FilterKillProcess, m_cbFilterKillProcess->checkState());
             });
+
+    m_cbFilterObsolete =
+            ControlUtil::createCheckStateBox(":/icons/recycle.png", Qt::PartiallyChecked, [&] {
+                appListModel()->setFilterValue(
+                        AppListModel::FilterObsolete, m_cbFilterObsolete->checkState());
+            });
 }
 
 void ProgramsWindow::setupFilterGroups()
@@ -463,6 +471,7 @@ void ProgramsWindow::setupFilterClear()
         m_cbFilterWildcard->setCheckState(Qt::PartiallyChecked);
         m_cbFilterParked->setCheckState(Qt::PartiallyChecked);
         m_cbFilterKillProcess->setCheckState(Qt::PartiallyChecked);
+        m_cbFilterObsolete->setCheckState(Qt::PartiallyChecked);
         m_btFilterGroups->setGroups(0);
     });
 }
