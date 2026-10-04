@@ -1,5 +1,18 @@
 Fort Firewall ChangeLog
 
+v3.20.0, 2026-10-04:
+- UI: Rework App. Groups to Groups and per-program Speed Limits (#38, #93, #143, #210, #423, #479, #518).
+- UI: Add Time Periods, used by Groups and Speed Limits (#173, #718).
+- UI: Program: Add "Block Inbound" flag.
+- UI: Improve Programs window (#704, #705, #707).
+- UI: Improve Services window; Repair services reset by Windows Update (#641, #762).
+- UI: Improve Connections window (#139, #708).
+- UI: Add Turkish and Vietnamese languages.
+- UI: Update SQLite to 3.53.4
+- Driver: Speed Limits: Improve shaping accuracy (#435).
+- Driver: Various fixes (#756).
+- Other fixes (#709, #720, #749).
+
 v3.19.9, 2025-10-11:
 - UI: Options: Add "Disable command line management" flag (#667).
 - UI: Rules: Fix windows closing (#664).
