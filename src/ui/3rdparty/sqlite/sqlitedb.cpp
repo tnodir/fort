@@ -135,7 +135,7 @@ bool SqliteDb::optimize(OptimizeFlags flags)
         return execute("PRAGMA optimize;");
     }
 
-    return executeStr(QString("PRAGMA optimize(%1);").arg(flags.toInt()));
+    return executeStr(QString("PRAGMA optimize(%1);").arg(int(flags)));
 }
 
 bool SqliteDb::execute(const char *sql)
