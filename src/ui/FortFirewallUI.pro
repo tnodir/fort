@@ -25,6 +25,7 @@ SOURCES += \
     conf/confmanagerbase.cpp \
     conf/confrulemanager.cpp \
     conf/confspeedlimitmanager.cpp \
+    conf/conftimeperiodmanager.cpp \
     conf/confzonemanager.cpp \
     conf/firewallconf.cpp \
     conf/group.cpp \
@@ -194,6 +195,7 @@ SOURCES += \
     rpc/confmanagerrpc.cpp \
     rpc/confrulemanagerrpc.cpp \
     rpc/confspeedlimitmanagerrpc.cpp \
+    rpc/conftimeperiodmanagerrpc.cpp \
     rpc/confzonemanagerrpc.cpp \
     rpc/dberrormanagerrpc.cpp \
     rpc/drivermanagerrpc.cpp \
@@ -312,6 +314,7 @@ HEADERS += \
     conf/confmanagerbase.h \
     conf/confrulemanager.h \
     conf/confspeedlimitmanager.h \
+    conf/conftimeperiodmanager.h \
     conf/confzonemanager.h \
     conf/firewallconf.h \
     conf/group.h \
@@ -488,6 +491,7 @@ HEADERS += \
     rpc/confmanagerrpc.h \
     rpc/confrulemanagerrpc.h \
     rpc/confspeedlimitmanagerrpc.h \
+    rpc/conftimeperiodmanagerrpc.h \
     rpc/confzonemanagerrpc.h \
     rpc/dberrormanagerrpc.h \
     rpc/drivermanagerrpc.h \

@@ -7,6 +7,7 @@
 #include <conf/confmanager.h>
 #include <conf/confrulemanager.h>
 #include <conf/confspeedlimitmanager.h>
+#include <conf/conftimeperiodmanager.h>
 #include <conf/confzonemanager.h>
 #include <conf/firewallconf.h>
 #include <control/controlmanager.h>
@@ -79,6 +80,11 @@ ConfRuleManager *confRuleManager()
 ConfSpeedLimitManager *confSpeedLimitManager()
 {
     return IoC<ConfSpeedLimitManager>();
+}
+
+ConfTimePeriodManager *confTimePeriodManager()
+{
+    return IoC<ConfTimePeriodManager>();
 }
 
 ConfZoneManager *confZoneManager()

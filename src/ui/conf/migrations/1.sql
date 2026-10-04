@@ -26,6 +26,25 @@ CREATE TABLE address_group(
   exclude_text TEXT NOT NULL
 );
 
+CREATE TABLE time_period(
+  period_id INTEGER PRIMARY KEY,
+  enabled BOOLEAN NOT NULL DEFAULT 1,
+  name TEXT NOT NULL,
+  notes TEXT,
+  mod_time INTEGER NOT NULL
+);
+
+CREATE TABLE time_period_interval(
+  interval_id INTEGER PRIMARY KEY,
+  period_id INTEGER NOT NULL,
+  order_index INTEGER NOT NULL,
+  week_days INTEGER NOT NULL, -- Monday = 1 << 0, ..., Sunday = 1 << 6
+  time_from TEXT NOT NULL, -- "hh:mm"
+  time_to TEXT NOT NULL -- "hh:mm"
+);
+
+CREATE INDEX time_period_interval_period_id_idx ON time_period_interval(period_id);
+
 CREATE TABLE app_group(
   group_id INTEGER PRIMARY KEY,
   enabled BOOLEAN NOT NULL,

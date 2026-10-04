@@ -89,6 +89,14 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(Rpc_ConfSpeedLimitManager_speedLimitRemoved),
     CASE_STRING(Rpc_ConfSpeedLimitManager_speedLimitUpdated),
 
+    CASE_STRING(Rpc_ConfTimePeriodManager_addOrUpdateTimePeriod),
+    CASE_STRING(Rpc_ConfTimePeriodManager_deleteTimePeriod),
+    CASE_STRING(Rpc_ConfTimePeriodManager_updateTimePeriodName),
+    CASE_STRING(Rpc_ConfTimePeriodManager_updateTimePeriodEnabled),
+    CASE_STRING(Rpc_ConfTimePeriodManager_timePeriodAdded),
+    CASE_STRING(Rpc_ConfTimePeriodManager_timePeriodRemoved),
+    CASE_STRING(Rpc_ConfTimePeriodManager_timePeriodUpdated),
+
     CASE_STRING(Rpc_DriverManager_updateState),
     CASE_STRING(Rpc_DriverManager_readSpeedLimitStatus),
 
@@ -137,6 +145,7 @@ static const QHash<RpcManager, const char *> g_managerNames = {
     CASE_STRING(Rpc_ConfZoneManager),
     CASE_STRING(Rpc_ConfGroupManager),
     CASE_STRING(Rpc_ConfSpeedLimitManager),
+    CASE_STRING(Rpc_ConfTimePeriodManager),
     CASE_STRING(Rpc_DriverManager),
     CASE_STRING(Rpc_QuotaManager),
     CASE_STRING(Rpc_StatManager),
@@ -233,6 +242,14 @@ static const RpcManager g_commandManagers[] = {
     Rpc_ConfSpeedLimitManager, // Rpc_ConfSpeedLimitManager_speedLimitAdded,
     Rpc_ConfSpeedLimitManager, // Rpc_ConfSpeedLimitManager_speedLimitRemoved,
     Rpc_ConfSpeedLimitManager, // Rpc_ConfSpeedLimitManager_speedLimitUpdated,
+
+    Rpc_ConfTimePeriodManager, // Rpc_ConfTimePeriodManager_addOrUpdateTimePeriod,
+    Rpc_ConfTimePeriodManager, // Rpc_ConfTimePeriodManager_deleteTimePeriod,
+    Rpc_ConfTimePeriodManager, // Rpc_ConfTimePeriodManager_updateTimePeriodName,
+    Rpc_ConfTimePeriodManager, // Rpc_ConfTimePeriodManager_updateTimePeriodEnabled,
+    Rpc_ConfTimePeriodManager, // Rpc_ConfTimePeriodManager_timePeriodAdded,
+    Rpc_ConfTimePeriodManager, // Rpc_ConfTimePeriodManager_timePeriodRemoved,
+    Rpc_ConfTimePeriodManager, // Rpc_ConfTimePeriodManager_timePeriodUpdated,
 
     Rpc_DriverManager, // Rpc_DriverManager_updateState,
     Rpc_DriverManager, // Rpc_DriverManager_readSpeedLimitStatus,
@@ -355,6 +372,14 @@ static const qint8 g_commandValidations[] = {
     0, // Rpc_ConfSpeedLimitManager_speedLimitAdded,
     0, // Rpc_ConfSpeedLimitManager_speedLimitRemoved,
     0, // Rpc_ConfSpeedLimitManager_speedLimitUpdated,
+
+    true, // Rpc_ConfTimePeriodManager_addOrUpdateTimePeriod,
+    true, // Rpc_ConfTimePeriodManager_deleteTimePeriod,
+    true, // Rpc_ConfTimePeriodManager_updateTimePeriodName,
+    true, // Rpc_ConfTimePeriodManager_updateTimePeriodEnabled,
+    0, // Rpc_ConfTimePeriodManager_timePeriodAdded,
+    0, // Rpc_ConfTimePeriodManager_timePeriodRemoved,
+    0, // Rpc_ConfTimePeriodManager_timePeriodUpdated,
 
     0, // Rpc_DriverManager_updateState,
     0, // Rpc_DriverManager_readSpeedLimitStatus,

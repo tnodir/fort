@@ -9,6 +9,7 @@ public:
     static int zoneMaxCount();
     static int groupMaxCount();
     static int speedLimitMaxCount();
+    static int timePeriodMaxCount();
 
     static int ruleMaxCount();
     static int ruleGlobalMaxCount();

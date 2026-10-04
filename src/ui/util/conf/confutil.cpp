@@ -19,6 +19,11 @@ int ConfUtil::speedLimitMaxCount()
     return FORT_CONF_SPEED_LIMIT_MAX;
 }
 
+int ConfUtil::timePeriodMaxCount()
+{
+    return 64; // the UI only folds them into the Groups' and Speed Limits' flags
+}
+
 int ConfUtil::ruleMaxCount()
 {
     return FORT_CONF_RULE_MAX;
