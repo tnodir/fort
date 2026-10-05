@@ -27,36 +27,7 @@
 
 #include <mocks/mocksqlitestmt.h>
 
-namespace {
-
-class TestApps : public ConfAppsWalker
-{
-public:
-    explicit TestApps(const QList<App> &apps) : m_apps(apps) { }
-
-    bool walkApps(const std::function<walkAppsCallback> &func) const override
-    {
-        for (App app : m_apps) {
-            if (!func(app))
-                return false;
-        }
-        return true;
-    }
-
-private:
-    QList<App> m_apps;
-};
-
-App wildcardApp(const QString &pathsText, bool blocked = false)
-{
-    App app;
-    app.isWildcard = true;
-    app.blocked = blocked;
-    app.appOriginPath = pathsText;
-    return app;
-}
-
-}
+#include "testconfwalkers.h"
 
 class ConfUtilTest : public Test
 {

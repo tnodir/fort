@@ -1,6 +1,7 @@
 include(../Common/Common.pri)
 
 HEADERS += \
+    testconfwalkers.h \
     tst_bitutil.h \
     tst_confutil.h \
     tst_dateutil.h \
