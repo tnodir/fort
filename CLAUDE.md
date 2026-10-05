@@ -50,7 +50,7 @@ build-win10\tests\UtilTest\UtilTest.exe
 build-win10\tests\UtilTest\UtilTest.exe --gtest_filter=ConfUtilTest.*   :: single test/suite
 ```
 
-Suites: `UtilTest` (bitutil, confutil, dateutil, fileutil, ioccontainer, netutil, ruletextparser, stringutil, timeperiod, wildmatch), `StatTest`, `LogBufferTest`, `LogReaderTest`. `LogReaderTest` needs the loaded kernel driver: run it only manually from a console, never as part of an automated test run. Each `tst_*.h` is included from the suite's `tst_main.cpp` and must also be listed in the suite's `.pro`.
+Suites: `UtilTest` (bitutil, confutil, connfilter, dateutil, fileutil, ioccontainer, netutil, ruletextparser, stringutil, timeperiod, wildmatch), `StatTest`, `LogBufferTest`, `LogReaderTest`. `LogReaderTest` needs the loaded kernel driver: run it only manually from a console, never as part of an automated test run. Each `tst_*.h` is included from the suite's `tst_main.cpp` and must also be listed in the suite's `.pro`.
 
 ### Testing the real driver (test-mode VM)
 
@@ -108,7 +108,7 @@ No Qt SQL — a hand-rolled SQLite wrapper in `src/ui/3rdparty/sqlite/` (`Sqlite
 
 ### Driver internals (`src/driver/`)
 
-`fortdrv.c` entry point; `fortcout.c` WFP callouts registration, `fortcout_ale.c` ALE and `fortcout_pkt.c` packet classify callouts; `fortcnf*.c` the live configuration (conf/rules/groups/zones) with reader-writer locks; `fortbuf.c` the log ring buffer read back by the UI; `fortpkt.c` packets' cloning and re-injection, `fortpkt_shaper.c` the Speed Limits' shaper queues, `fortpkt_pending.c` the pended (Ask to Connect) packets; `fortstat.c` traffic accounting; `fortps.c` process tracking; `fortpool.c`/`forttlsf.c` allocators (TLSF from `src/3rdparty/tlsf`); `fortmod.c` + `loader/` the self-loading module (fortfwdl.sys unpacks the signed payload); `proxycb/` callout trampolines (with .asm variants per arch).
+`fortdrv.c` entry point; `fortcout.c` WFP callouts registration, `fortcout_ale.c` ALE and `fortcout_pkt.c` packet classify callouts; `common/fortconf_conn.c` the ALE connection's decision (local addresses, flags, addresses, Filter Mode, App, Zones, Rules, Groups), shared with the UI (`DriverCommon::confConnFilter()`) and accessing the conf via callbacks, so the driver keeps its locks; `fortcnf*.c` the live configuration (conf/rules/groups/zones) with reader-writer locks; `fortbuf.c` the log ring buffer read back by the UI; `fortpkt.c` packets' cloning and re-injection, `fortpkt_shaper.c` the Speed Limits' shaper queues, `fortpkt_pending.c` the pended (Ask to Connect) packets; `fortstat.c` traffic accounting; `fortps.c` process tracking; `fortpool.c`/`forttlsf.c` allocators (TLSF from `src/3rdparty/tlsf`); `fortmod.c` + `loader/` the self-loading module (fortfwdl.sys unpacks the signed payload); `proxycb/` callout trampolines (with .asm variants per arch).
 
 ### UI layer
 
