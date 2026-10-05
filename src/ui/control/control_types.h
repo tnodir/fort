@@ -21,6 +21,7 @@ enum Command : qint8 {
     CommandConf,
     CommandBackup,
     CommandZone,
+    CommandRule,
 
     Rpc_Result_Ok,
     Rpc_Result_Error,

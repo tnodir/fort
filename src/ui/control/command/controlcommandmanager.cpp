@@ -13,6 +13,7 @@
 #include "controlcommandhome.h"
 #include "controlcommandprog.h"
 #include "controlcommandrpc.h"
+#include "controlcommandrule.h"
 #include "controlcommandzone.h"
 
 namespace {
@@ -27,6 +28,7 @@ inline constexpr ControlCommandGroup commandGroup;
 inline constexpr ControlCommandConf commandConf;
 inline constexpr ControlCommandBackup commandBackup;
 inline constexpr ControlCommandZone commandZone;
+inline constexpr ControlCommandRule commandRule;
 
 inline constexpr ControlCommandRpc commandRpc;
 
@@ -41,12 +43,13 @@ inline constexpr const ControlCommandBase *commandList[] = {
     &commandConf, // Control::CommandConf,
     &commandBackup, // Control::CommandBackup,
     &commandZone, // Control::CommandZone,
+    &commandRule, // Control::CommandRule,
 };
 
 const ControlCommandBase *commandByType(Control::Command command)
 {
     return RpcManager::getProcessFunc<const ControlCommandBase>(
-            command, commandList, Control::CommandHome, Control::CommandZone, &commandRpc);
+            command, commandList, Control::CommandHome, Control::CommandRule, &commandRpc);
 }
 
 }

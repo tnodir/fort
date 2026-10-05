@@ -43,6 +43,11 @@ const char *const sqlSelectRules = "SELECT" SELECT_RULE_FIELDS "  FROM rule t"
                                    "  LEFT JOIN rule_menu menu ON menu.rule_id = t.rule_id"
                                    "  ORDER BY t.rule_id;";
 
+const char *const sqlSelectRulesByName = "SELECT" SELECT_RULE_FIELDS "  FROM rule t"
+                                         "  LEFT JOIN rule_menu menu ON menu.rule_id = t.rule_id"
+                                         "  WHERE t.name = ?1"
+                                         "  ORDER BY t.rule_id;";
+
 const char *const sqlSelectRuleSets =
         "SELECT * FROM ("
         "  SELECT t.rule_id, t.sub_rule_id, t.order_index"
@@ -209,6 +214,25 @@ QVector<Rule> ConfRuleManager::getTrayMenuRules() const
         rule.ruleId = stmt.columnInt(0);
         rule.enabled = stmt.columnBool(1);
         rule.ruleName = stmt.columnText(2);
+
+        ruleList.append(rule);
+    }
+
+    return ruleList;
+}
+
+QVector<Rule> ConfRuleManager::getRulesByName(const QString &ruleName) const
+{
+    QVector<Rule> ruleList;
+
+    SqliteStmt stmt;
+    if (!DbQuery(sqliteDb()).sql(sqlSelectRulesByName).vars({ ruleName }).prepare(stmt))
+        return {};
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        Rule rule;
+        fillRule(rule, stmt);
+        rule.ruleName = ruleName;
 
         ruleList.append(rule);
     }

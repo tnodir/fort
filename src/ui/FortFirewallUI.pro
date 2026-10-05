@@ -46,6 +46,7 @@ SOURCES += \
     control/command/controlcommandmanager.cpp \
     control/command/controlcommandprog.cpp \
     control/command/controlcommandrpc.cpp \
+    control/command/controlcommandrule.cpp \
     control/command/controlcommandzone.cpp \
     control/control.cpp \
     control/controlmanager.cpp \
@@ -343,6 +344,7 @@ HEADERS += \
     control/command/controlcommandmanager.h \
     control/command/controlcommandprog.h \
     control/command/controlcommandrpc.h \
+    control/command/controlcommandrule.h \
     control/command/controlcommandzone.h \
     control/control.h \
     control/control_types.h \
