@@ -102,7 +102,7 @@
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>Limitations de vitesse</translation>
     </message>
     <message>
         <source>File Path</source>
@@ -313,7 +313,7 @@
     </message>
     <message>
         <source>Block Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer connexions entrantes</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -625,7 +625,7 @@
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Notes :</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -637,23 +637,23 @@
     </message>
     <message>
         <source>A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est activé, ou, sans groupes exclusifs, si l&apos;un de ses groupes est activé.</translation>
     </message>
     <message>
         <source>Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>Règle:</translation>
     </message>
     <message>
         <source>The Rule is applied to the Group&apos;s programs before their own Rule, while the Group is active.</source>
-        <translation type="unfinished"></translation>
+        <translation>La règle s&apos;applique aux programmes du Group&apos;s avant leur propre règle, tant que le Groupe est actif.</translation>
     </message>
     <message>
         <source>The Group is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le groupe n&apos;est actif qu&apos;au cours de cette période.</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -661,7 +661,7 @@
     </message>
     <message>
         <source>Edit Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Éditer le groupe</translation>
     </message>
 </context>
 <context>
@@ -679,19 +679,19 @@
     <name>GroupsController</name>
     <message>
         <source>Group Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur de configuration du groupe</translation>
     </message>
     <message>
         <source>Cannot edit Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d&apos;éditer le groupe</translation>
     </message>
     <message>
         <source>Cannot delete Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de supprimer le groupe</translation>
     </message>
     <message>
         <source>Cannot update Group&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de mettre à jour le nom Group&apos;s</translation>
     </message>
 </context>
 <context>
@@ -699,7 +699,8 @@
     <message>
         <source>Select Groups.
 A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>Choisir les groupes.
+Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est activé ou, en l&apos;absence de groupes exclusifs, si l&apos;un de ses groupes est activé.</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -707,7 +708,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>(exclusive)</source>
-        <translation type="unfinished"></translation>
+        <translation>(exclusif)</translation>
     </message>
 </context>
 <context>
@@ -730,7 +731,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Are you sure to remove selected group?</source>
-        <translation type="unfinished"></translation>
+        <translation>Êtes-vous sûr de vouloir retirer le groupe choisi ?</translation>
     </message>
 </context>
 <context>
@@ -1365,11 +1366,11 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Block traffic for disabled Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer le trafic pour les groupes désactivés</translation>
     </message>
     <message>
         <source>Speed Limiter Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Limiteur de vitesse activé</translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
@@ -1725,15 +1726,15 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     <name>ProgNetworkPage</name>
     <message>
         <source>Block:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloc:</translation>
     </message>
     <message>
         <source>Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Entrant</translation>
     </message>
     <message>
         <source>Block Inbound Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer les connexions entrantes</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -1753,7 +1754,7 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>No Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Sans limite</translation>
     </message>
 </context>
 <context>
@@ -1928,11 +1929,11 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     </message>
     <message>
         <source>Obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>Obsolète</translation>
     </message>
     <message>
         <source>Filter by Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtrer par groupes</translation>
     </message>
     <message>
         <source>Disable</source>
@@ -2353,15 +2354,15 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     </message>
     <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
-        <translation type="unfinished"></translation>
+        <translation>Les modifs ont été réinitialisées par le système. Rendez à nouveau le service traçable.</translation>
     </message>
     <message>
         <source>Please restart the service to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Veuillez redémarrer le service pour appliquer les modifs.</translation>
     </message>
     <message>
         <source>Please restart the computer to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Veuillez redémarrer l&apos;ordinateur pour appliquer les modifs.</translation>
     </message>
 </context>
 <context>
@@ -2380,7 +2381,7 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     </message>
     <message>
         <source>Restart Service</source>
-        <translation type="unfinished"></translation>
+        <translation>Redémarrer le service</translation>
     </message>
     <message>
         <source>Add Program</source>
@@ -2404,19 +2405,19 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     </message>
     <message>
         <source>Restart the service &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>Redémarrer le service &quot;%1&quot;?</translation>
     </message>
     <message>
         <source>Restart the service &quot;%1&quot; to apply the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Redémarrer le service &quot;%1&quot; pour appliquer les modifs ?</translation>
     </message>
     <message>
         <source>Please restart the computer to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Veuillez redémarrer l&apos;ordinateur pour appliquer les modifs.</translation>
     </message>
     <message>
         <source>Cannot restart the service &quot;%1&quot;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de redémarrer le service &quot;%1&quot;.</translation>
     </message>
 </context>
 <context>
@@ -2427,7 +2428,7 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Notes :</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -2443,7 +2444,7 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     </message>
     <message>
         <source>Speed:</source>
-        <translation type="unfinished"></translation>
+        <translation>Vitesse:</translation>
     </message>
     <message>
         <source>Latency:</source>
@@ -2455,15 +2456,15 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     </message>
     <message>
         <source>Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille du tampon&#xa0;:</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>La limitation de vitesse n&apos;est active que durant cette période.</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -2471,11 +2472,11 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     </message>
     <message>
         <source>Edit Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifier la limite de vitesse</translation>
     </message>
     <message>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation>Personnalisé</translation>
     </message>
 </context>
 <context>
@@ -2483,19 +2484,20 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     <message>
         <source>Buffer overflow: %1
 Packet loss: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Dépassement de tampon : %1
+Perte de paquets : %2</translation>
     </message>
     <message>
         <source>Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Limite de vitesse</translation>
     </message>
     <message>
         <source>Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>File d&apos;attente</translation>
     </message>
     <message>
         <source>Dropped</source>
-        <translation type="unfinished"></translation>
+        <translation>Abandonné</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -2510,19 +2512,19 @@ Packet loss: %2</source>
     <name>SpeedLimitsController</name>
     <message>
         <source>Speed Limit Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur de Configuration de Limite de Vitesse</translation>
     </message>
     <message>
         <source>Cannot edit Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d&apos;éditer la limitation de vitesse</translation>
     </message>
     <message>
         <source>Cannot delete Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de supprimer la limite de vitesse</translation>
     </message>
     <message>
         <source>Cannot update Speed Limit&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de d&apos;éditer le nom de la Limit&apos;s de vitesse</translation>
     </message>
 </context>
 <context>
@@ -2541,11 +2543,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>Limites de vitesse</translation>
     </message>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Êtes-vous sûr de vouloir retirer la limitation de vitesse définie ?</translation>
     </message>
 </context>
 <context>
@@ -2738,7 +2740,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Notes :</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -2746,23 +2748,23 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>The disabled Time Period doesn&apos;t restrict its Groups and Speed Limits.</source>
-        <translation type="unfinished"></translation>
+        <translation>La période désactivée ne restreint pas&apos;t ses groupes ni ses limites de vitesse.</translation>
     </message>
     <message>
         <source>Intervals:</source>
-        <translation type="unfinished"></translation>
+        <translation>Intervalles :</translation>
     </message>
     <message>
         <source>The Time Period is active in ANY of its intervals.</source>
-        <translation type="unfinished"></translation>
+        <translation>La période est active dans N&apos;IMPORTE LEQUEL de ses intervalles.</translation>
     </message>
     <message>
         <source>Add Interval</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter un intervalle</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -2770,18 +2772,18 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Edit Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Éditer la plage horaire</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodIntervalEdit</name>
     <message>
         <source>From</source>
-        <translation type="unfinished"></translation>
+        <translation>Depuis</translation>
     </message>
     <message>
         <source>To (the same time means the whole 24 hours)</source>
-        <translation type="unfinished"></translation>
+        <translation>À (cette heure-là, c&apos;est-à-dire les 24 heures)</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2792,11 +2794,11 @@ Packet loss: %2</source>
     <name>TimePeriodListModel</name>
     <message>
         <source>Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Plage horaire</translation>
     </message>
     <message>
         <source>Intervals</source>
-        <translation type="unfinished"></translation>
+        <translation>Intervalles</translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -2807,34 +2809,34 @@ Packet loss: %2</source>
     <name>TimePeriodSelector</name>
     <message>
         <source>Time Period:</source>
-        <translation type="unfinished"></translation>
+        <translation>Plage horaire :</translation>
     </message>
     <message>
         <source>No Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Aucune plage horaire</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>Périodes de temps</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodsController</name>
     <message>
         <source>Time Period Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur de config de la plage horaire</translation>
     </message>
     <message>
         <source>Cannot edit Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d&apos;éditer la plage horaire</translation>
     </message>
     <message>
         <source>Cannot delete Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de supprimer la plage horaire</translation>
     </message>
     <message>
         <source>Cannot update Time Period&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de mettre à jour le nom de la plage&apos;s horaire</translation>
     </message>
 </context>
 <context>
@@ -2853,11 +2855,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>Plages horaire</translation>
     </message>
     <message>
         <source>Are you sure to remove selected time period?</source>
-        <translation type="unfinished"></translation>
+        <translation>Êtes-vous sûr de supprimer la période sélectionnée&#xa0;?</translation>
     </message>
 </context>
 <context>
@@ -2977,11 +2979,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>Limites de vitesse</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>Périodes de temps</translation>
     </message>
     <message>
         <source>Traffic Graph</source>
@@ -2993,7 +2995,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Group Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>Groupe Modifier</translation>
     </message>
     <message>
         <source>Quit</source>
@@ -3067,11 +3069,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Week Days</source>
-        <translation type="unfinished"></translation>
+        <translation>Jours de semaine</translation>
     </message>
     <message>
         <source>No Days</source>
-        <translation type="unfinished"></translation>
+        <translation>Aucun jour</translation>
     </message>
 </context>
 <context>
