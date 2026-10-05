@@ -418,7 +418,6 @@ typedef struct fort_conf_conn_actions
 
 typedef struct fort_conf_meta_conn
 {
-    UINT16 conn_filled : 1;
     UINT16 app_data_filled : 1;
 
     UINT16 is_reauth : 1;
@@ -431,7 +430,7 @@ typedef struct fort_conf_meta_conn
     UINT16 inherited : 1;
     UINT16 ignore : 1;
     UINT16 ask_to_connect : 1;
-    UINT16 reserved : 3; /* not used */
+    UINT16 reserved : 4; /* not used */
 
     FORT_CONF_CONN_ACTIONS act;
 

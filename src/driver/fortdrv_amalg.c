@@ -10,6 +10,7 @@
 
 #include "common/fortcmnutl.c"
 #include "common/fortconf.c"
+#include "common/fortconf_conn.c"
 #include "common/fortconf_valid.c"
 #include "common/fortlog.c"
 #include "common/fortprov.c"
