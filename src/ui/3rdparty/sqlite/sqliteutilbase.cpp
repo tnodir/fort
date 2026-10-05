@@ -2,6 +2,7 @@
 
 #include <util/fileutil.h>
 
+#include "dbquery.h"
 #include "sqlitedb.h"
 
 void SqliteUtilBase::removeDbFilesToCleanOpen() const
@@ -37,4 +38,17 @@ void SqliteUtilBase::commitTransaction()
 void SqliteUtilBase::endTransaction(bool &ok)
 {
     sqliteDb()->endTransaction(ok);
+}
+
+bool SqliteUtilBase::executeWrite(const char *sql, const QVariantList &vars)
+{
+    bool ok = false;
+
+    beginWriteTransaction();
+
+    DbQuery(sqliteDb(), &ok).sql(sql).vars(vars).executeOk();
+
+    endTransaction(ok);
+
+    return ok;
 }

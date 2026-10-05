@@ -434,63 +434,36 @@ bool ConfRuleManager::deleteRule(quint16 ruleId)
 
 bool ConfRuleManager::updateRuleName(quint16 ruleId, const QString &ruleName)
 {
-    bool ok = false;
+    if (!executeWrite(sqlUpdateRuleName, { ruleId, ruleName }))
+        return false;
 
-    beginWriteTransaction();
+    emit ruleUpdated(ruleId);
 
-    const QVariantList vars = { ruleId, ruleName };
-
-    DbQuery(sqliteDb(), &ok).sql(sqlUpdateRuleName).vars(vars).executeOk();
-
-    endTransaction(ok);
-
-    if (ok) {
-        emit ruleUpdated(ruleId);
-    }
-
-    return ok;
+    return true;
 }
 
 bool ConfRuleManager::updateRuleEnabled(quint16 ruleId, bool enabled)
 {
-    bool ok = false;
+    if (!executeWrite(sqlUpdateRuleEnabled, { ruleId, enabled }))
+        return false;
 
-    beginWriteTransaction();
+    emit ruleUpdated(ruleId);
 
-    const QVariantList vars = { ruleId, enabled };
+    updateDriverRuleFlag(ruleId, enabled);
 
-    DbQuery(sqliteDb(), &ok).sql(sqlUpdateRuleEnabled).vars(vars).executeOk();
-
-    endTransaction(ok);
-
-    if (ok) {
-        emit ruleUpdated(ruleId);
-
-        updateDriverRuleFlag(ruleId, enabled);
-    }
-
-    return ok;
+    return true;
 }
 
 bool ConfRuleManager::updateRuleText(quint16 ruleId, const QString &ruleText)
 {
-    bool ok = false;
+    if (!executeWrite(sqlUpdateRuleText, { ruleId, ruleText, DateUtil::now() }))
+        return false;
 
-    beginWriteTransaction();
+    updateDriverRules();
 
-    const QVariantList vars = { ruleId, ruleText, DateUtil::now() };
+    emit ruleUpdated(ruleId);
 
-    DbQuery(sqliteDb(), &ok).sql(sqlUpdateRuleText).vars(vars).executeOk();
-
-    endTransaction(ok);
-
-    if (ok) {
-        updateDriverRules();
-
-        emit ruleUpdated(ruleId);
-    }
-
-    return ok;
+    return true;
 }
 
 bool ConfRuleManager::walkRules(

@@ -1,6 +1,8 @@
 #ifndef SQLITEUTILBASE_H
 #define SQLITEUTILBASE_H
 
+#include <QVariant>
+
 #include <sqlite/sqlite_types.h>
 
 class SqliteUtilBase
@@ -16,6 +18,8 @@ protected:
     bool beginWriteTransaction();
     void commitTransaction();
     void endTransaction(bool &ok);
+
+    bool executeWrite(const char *sql, const QVariantList &vars);
 };
 
 #endif // SQLITEUTILBASE_H
