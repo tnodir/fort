@@ -17,6 +17,7 @@ protected:
 
 protected:
     void checkStringList(const StringViewList &l1, const QStringList &l2);
+    void checkRuleFilters(const QString &text1, const QString &text2);
 };
 
 void RuleTextParserTest::SetUp() { }
@@ -34,6 +35,25 @@ void RuleTextParserTest::checkStringList(const StringViewList &l1, const QString
         if (s1 != QStringView(s2)) {
             ASSERT_EQ(s1.toString(), s2);
         }
+    }
+}
+
+void RuleTextParserTest::checkRuleFilters(const QString &text1, const QString &text2)
+{
+    RuleTextParser p1(text1);
+    RuleTextParser p2(text2);
+
+    ASSERT_TRUE(p1.parse());
+    ASSERT_TRUE(p2.parse());
+
+    const auto &ruleFilters1 = p1.ruleFilters();
+    const auto &ruleFilters2 = p2.ruleFilters();
+
+    ASSERT_EQ(ruleFilters1.size(), ruleFilters2.size());
+
+    for (int i = 0; i < ruleFilters1.size(); ++i) {
+        ASSERT_EQ(ruleFilters1[i].type, ruleFilters2[i].type);
+        ASSERT_EQ(ruleFilters1[i].values, ruleFilters2[i].values);
     }
 }
 
@@ -149,6 +169,21 @@ TEST_F(RuleTextParserTest, lineIpPortList)
         ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_PORT);
         checkStringList(rf.values, { "75" });
     }
+}
+
+TEST_F(RuleTextParserTest, lineCrLf)
+{
+    checkRuleFilters("# comment\r\n"
+                     "1.1.1.1:53\r\n"
+                     "dir(in):tcp(80)\r\n",
+            "# comment\n"
+            "1.1.1.1:53\n"
+            "dir(in):tcp(80)\n");
+}
+
+TEST_F(RuleTextParserTest, lineBom)
+{
+    checkRuleFilters(QChar(QChar::ByteOrderMark) + QString("1.1.1.1:53\n"), "1.1.1.1:53\n");
 }
 
 TEST_F(RuleTextParserTest, filterDirUdp)
@@ -345,6 +380,15 @@ TEST_F(RuleTextParserTest, badExtraFilterName)
 TEST_F(RuleTextParserTest, badBadSymbol)
 {
     RuleTextParser p("1\b");
+
+    ASSERT_FALSE(p.parse());
+
+    ASSERT_EQ(p.errorCode(), RuleTextParser::ErrorBadSymbol);
+}
+
+TEST_F(RuleTextParserTest, badNonLatin1Symbol)
+{
+    RuleTextParser p(QString("1.1.1.1") + QChar(0x2192)); // arrow
 
     ASSERT_FALSE(p.parse());
 
