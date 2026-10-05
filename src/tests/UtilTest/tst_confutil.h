@@ -395,8 +395,12 @@ TEST_F(ConfUtilTest, groupsRulesConnFiltered)
             .remote_ip = { .v4 = NetFormatUtil::textToIp4(ip) },
         };
 
-        return DriverCommon::confGroupsRulesConnFiltered(
-                groupsBuf.data(), rulesBuf.data(), &conn, groupsMask);
+        const DriverCommon::ConnFilterConf cf = {
+            .drvRules = rulesBuf.data(),
+            .drvGroups = groupsBuf.data(),
+        };
+
+        return DriverCommon::confGroupsRulesConnFiltered(cf, &conn, groupsMask);
     };
 
     ASSERT_EQ(filtered("1.1.1.1", 0), 0); // not in any Group

@@ -10,6 +10,21 @@
 
 namespace DriverCommon {
 
+enum ConnFilterResult : qint8 {
+    ConnFilterAllowed = 0,
+    ConnFilterBlocked,
+    ConnFilterAsk, // Ask to Connect: the driver pends the connection
+    ConnFilterIgnored, // Ignore: the other WFP filters decide
+};
+
+struct ConnFilterConf
+{
+    const void *drvConf = nullptr; // required
+    const void *drvZones = nullptr;
+    const void *drvRules = nullptr;
+    const void *drvGroups = nullptr;
+};
+
 QString deviceName();
 
 quint32 ioctlValidate();
@@ -87,11 +102,15 @@ bool wildMatchPath(const QString &pattern, const QString &path);
 
 bool confGroupsMaskBlocked(const void *drvGroups, quint32 groupsMask);
 quint16 confGroupsRulesConnFiltered(
-        const void *drvGroups, const void *drvRules, PFORT_CONF_META_CONN conn, quint32 groupsMask);
+        const ConnFilterConf &cf, PFORT_CONF_META_CONN conn, quint32 groupsMask);
 
 bool confRulesConnFiltered(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId,
         const void *drvZones = nullptr);
 bool confRulesConnBlocked(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId);
+
+// The conn's input: direction, IP version, profile, loopback, protocol, addresses and ports
+ConnFilterResult confConnFilter(
+        const ConnFilterConf &cf, PFORT_CONF_META_CONN conn, const FORT_APP_DATA &appData);
 
 bool confIoValid(const void *drvConfIo, quint32 len);
 bool confZonesValid(const void *drvZones, quint32 len);
