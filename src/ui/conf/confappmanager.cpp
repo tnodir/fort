@@ -72,7 +72,7 @@ const char *const sqlSelectAppById = "SELECT" SELECT_APP_FIELDS "  FROM app t"
 
 const char *const sqlSelectApps = "SELECT" SELECT_APP_FIELDS "  FROM app t"
                                   "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id"
-                                  "  ORDER BY t.path;";
+                                  "  ORDER BY t.is_wildcard, t.path;";
 
 const char *const sqlSelectAppsToPurge = "SELECT app_id, path FROM app"
                                          "  WHERE is_wildcard = 0 AND parked = 0;";
@@ -525,12 +525,12 @@ bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
     endTransaction(ok);
 
     if (ok && !resList.isEmpty()) {
-        if (resList.at(0).toBool()) {
-            isWildcard = true;
-        } else {
-            const QString appPath = resList.at(1).toString();
+        const bool appIsWildcard = resList.at(0).toBool();
+        const QString appPath = resList.at(1).toString();
 
-            updateDriverDeleteApp(appPath);
+        // The driver keeps the path listed by a wildcard app: update the full config
+        if (appIsWildcard || !updateDriverDeleteApp(appPath)) {
+            isWildcard = true;
         }
 
         emitAppsChanged();
@@ -926,7 +926,9 @@ bool ConfAppManager::updateDriverUpdateApp(const App &app, bool remove)
     auto driverManager = Fort::driverManager();
 
     if (!driverManager->writeApp(confBuf.buffer(), remove)) {
-        qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
+        if (driverManager->isDeviceError()) {
+            qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
+        }
         return false;
     }
 

@@ -353,8 +353,11 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
 {
     const QString appPath = FileUtil::normalizePath(app.appPath);
 
-    if (appsMap.contains(appPath))
+    const auto it = appsMap.find(appPath);
+    if (it != appsMap.end()) {
+        it->flags.has_wildcard_app |= app.isWildcard;
         return true;
+    }
 
     const int appPathSize = appPath.size();
 
@@ -384,6 +387,7 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
                 .kill_process = app.killProcess,
                 .is_new = isNew,
                 .found = true,
+                .has_wildcard_app = app.isWildcard,
         },
         .rule_id = app.ruleId,
         .speed_limits = app.activeSpeedLimits(),
