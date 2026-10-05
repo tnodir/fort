@@ -57,6 +57,19 @@ BOOL connRulesConnFiltered(void *ctx, PFORT_CONF_META_CONN conn, UINT16 rule_id)
     return DriverCommon::confRulesConnFiltered(cf->drvRules, conn, rule_id, cf->drvZones);
 }
 
+UINT16 connRulesGlobConnFiltered(void *ctx, PFORT_CONF_META_CONN conn, BOOL is_post)
+{
+    const ConnFilterConf *cf = connFilterConf(ctx);
+
+    PCFORT_CONF_RULES rules = PCFORT_CONF_RULES(cf->drvRules);
+    if (rules == nullptr)
+        return 0;
+
+    PCFORT_CONF_ZONES zones = PCFORT_CONF_ZONES(cf->drvZones);
+
+    return fort_conf_rules_glob_conn_filtered(rules, zones, conn, is_post);
+}
+
 BOOL connGroupsMaskBlocked(void *ctx, UINT32 groups_mask)
 {
     return DriverCommon::confGroupsMaskBlocked(connFilterConf(ctx)->drvGroups, groups_mask);
@@ -71,19 +84,10 @@ inline constexpr FORT_CONF_CONN_FILTER_FUNCS connFilterFuncs = {
     .zones_ip_included = &connZonesIpIncluded,
     .zones_conn_filtered = &connZonesConnFiltered,
     .rules_conn_filtered = &connRulesConnFiltered,
+    .rules_glob_conn_filtered = &connRulesGlobConnFiltered,
     .groups_mask_blocked = &connGroupsMaskBlocked,
     .groups_rules_conn_filtered = &connGroupsRulesConnFiltered,
 };
-
-inline constexpr FORT_CONF_RULES_GLOB connFilterNoRulesGlob = {};
-
-const FORT_CONF_RULES_GLOB *confRulesGlob(const void *drvRules)
-{
-    if (drvRules == nullptr)
-        return &connFilterNoRulesGlob;
-
-    return &PCFORT_CONF_RULES(drvRules)->glob;
-}
 
 FORT_CONF_META_CONN connFilterInput(PCFORT_CONF_META_CONN conn)
 {
@@ -472,7 +476,6 @@ ConnFilterResult confConnFilter(
 
     const FORT_CONF_CONN_FILTER filter = {
         .conf_flags = conf->flags,
-        .rules_glob = confRulesGlob(cf.drvRules),
         .conf = conf,
         .funcs = &connFilterFuncs,
         .ctx = const_cast<ConnFilterConf *>(&cf),

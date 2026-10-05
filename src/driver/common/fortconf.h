@@ -657,6 +657,13 @@ FORT_API BOOL fort_conf_rules_rt_conn_filtered(
 FORT_API BOOL fort_conf_rules_conn_filtered(PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones,
         PFORT_CONF_META_CONN conn, UINT16 rule_id);
 
+#define fort_conf_rules_glob_rule_id(glob, is_post)                                                \
+    ((is_post) ? (glob).post_rule_id : (glob).pre_rule_id)
+
+/* Returns the filtered Global Rule's id or 0 */
+FORT_API UINT16 fort_conf_rules_glob_conn_filtered(
+        PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones, PFORT_CONF_META_CONN conn, BOOL is_post);
+
 #define fort_conf_rules_rt_rule(rt, rule_id)                                                       \
     ((PFORT_CONF_RULE) ((rt)->rules_data + (rt)->rule_offsets[rule_id]))
 

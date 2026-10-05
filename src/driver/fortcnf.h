@@ -50,7 +50,7 @@ typedef struct fort_device_conf
 {
     UINT16 volatile flags;
 
-    FORT_CONF_RULES_GLOB volatile rules_glob;
+    FORT_CONF_RULES_GLOB volatile rules_glob; /* the unlocked hint of the rules->glob */
 
     FORT_DEVICE_CONF_FLAGS volatile conf_flags;
     PFORT_CONF_REF volatile ref;

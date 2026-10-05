@@ -62,3 +62,24 @@ FORT_API BOOL fort_devconf_rules_conn_filtered(
 
     return res;
 }
+
+FORT_API UINT16 fort_devconf_rules_glob_conn_filtered(
+        PFORT_DEVICE_CONF device_conf, PFORT_CONF_META_CONN conn, BOOL is_post)
+{
+    /* The unlocked hint: don't lock without the Global Rule */
+    const FORT_CONF_RULES_GLOB rules_glob = device_conf->rules_glob;
+    if (fort_conf_rules_glob_rule_id(rules_glob, is_post) == 0)
+        return 0;
+
+    UINT16 rule_id = 0;
+
+    /* The Rules may be replaced since the hint: take the Global Rule's id under the lock */
+    KIRQL oldIrql = ExAcquireSpinLockShared(&device_conf->lock);
+    PCFORT_CONF_RULES rules = device_conf->rules;
+    if (rules != NULL) {
+        rule_id = fort_conf_rules_glob_conn_filtered(rules, device_conf->zones, conn, is_post);
+    }
+    ExReleaseSpinLockShared(&device_conf->lock, oldIrql);
+
+    return rule_id;
+}

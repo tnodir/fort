@@ -334,6 +334,12 @@ static BOOL fort_callout_ale_rules_conn_filtered(
     return fort_devconf_rules_conn_filtered(ctx, conn, rule_id);
 }
 
+static UINT16 fort_callout_ale_rules_glob_conn_filtered(
+        void *ctx, PFORT_CONF_META_CONN conn, BOOL is_post)
+{
+    return fort_devconf_rules_glob_conn_filtered(ctx, conn, is_post);
+}
+
 static BOOL fort_callout_ale_groups_mask_blocked(void *ctx, UINT32 groups_mask)
 {
     return fort_devconf_groups_mask_blocked(ctx, groups_mask);
@@ -349,6 +355,7 @@ static const FORT_CONF_CONN_FILTER_FUNCS fort_callout_ale_filter_funcs = {
     .zones_ip_included = &fort_callout_ale_zones_ip_included,
     .zones_conn_filtered = &fort_callout_ale_zones_conn_filtered,
     .rules_conn_filtered = &fort_callout_ale_rules_conn_filtered,
+    .rules_glob_conn_filtered = &fort_callout_ale_rules_glob_conn_filtered,
     .groups_mask_blocked = &fort_callout_ale_groups_mask_blocked,
     .groups_rules_conn_filtered = &fort_callout_ale_groups_rules_conn_filtered,
 };
@@ -400,7 +407,6 @@ inline static void fort_callout_ale_check_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALL
 
     const FORT_CONF_CONN_FILTER filter = {
         .conf_flags = conf_flags,
-        .rules_glob = &fort_device()->conf.rules_glob,
         .conf = &conf_ref->conf,
         .funcs = &fort_callout_ale_filter_funcs,
         .ctx = &fort_device()->conf,

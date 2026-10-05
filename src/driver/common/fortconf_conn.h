@@ -9,6 +9,9 @@ typedef BOOL fort_conf_zones_conn_filtered_func(
 typedef BOOL fort_conf_rules_conn_filtered_func(
         void *ctx, PFORT_CONF_META_CONN conn, UINT16 rule_id);
 
+typedef UINT16 fort_conf_rules_glob_conn_filtered_func(
+        void *ctx, PFORT_CONF_META_CONN conn, BOOL is_post);
+
 typedef BOOL fort_conf_groups_mask_blocked_func(void *ctx, UINT32 groups_mask);
 
 typedef UINT16 fort_conf_groups_rules_conn_filtered_func(
@@ -20,6 +23,7 @@ typedef struct fort_conf_conn_filter_funcs
     fort_conf_zones_ip_included_func *zones_ip_included;
     fort_conf_zones_conn_filtered_func *zones_conn_filtered;
     fort_conf_rules_conn_filtered_func *rules_conn_filtered;
+    fort_conf_rules_glob_conn_filtered_func *rules_glob_conn_filtered;
     fort_conf_groups_mask_blocked_func *groups_mask_blocked;
     fort_conf_groups_rules_conn_filtered_func *groups_rules_conn_filtered;
 } FORT_CONF_CONN_FILTER_FUNCS, *PFORT_CONF_CONN_FILTER_FUNCS;
@@ -30,7 +34,6 @@ typedef struct fort_conf_conn_filter
 {
     FORT_CONF_FLAGS conf_flags;
 
-    const volatile FORT_CONF_RULES_GLOB *rules_glob; /* read on the Global Rules' check */
     PCFORT_CONF conf;
 
     PCFORT_CONF_CONN_FILTER_FUNCS funcs;

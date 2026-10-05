@@ -17,6 +17,9 @@ FORT_API void fort_conf_rule_flag_set(
 FORT_API BOOL fort_devconf_rules_conn_filtered(
         PFORT_DEVICE_CONF device_conf, PFORT_CONF_META_CONN conn, UINT16 rule_id);
 
+FORT_API UINT16 fort_devconf_rules_glob_conn_filtered(
+        PFORT_DEVICE_CONF device_conf, PFORT_CONF_META_CONN conn, BOOL is_post);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

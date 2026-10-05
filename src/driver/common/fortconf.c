@@ -1089,6 +1089,14 @@ FORT_API BOOL fort_conf_rules_conn_filtered(
     return fort_conf_rules_rt_conn_filtered(&rules_rt, conn, rule_id);
 }
 
+FORT_API UINT16 fort_conf_rules_glob_conn_filtered(
+        PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones, PFORT_CONF_META_CONN conn, BOOL is_post)
+{
+    const UINT16 rule_id = fort_conf_rules_glob_rule_id(rules->glob, is_post);
+
+    return fort_conf_rules_conn_filtered(rules, zones, conn, rule_id) ? rule_id : 0;
+}
+
 FORT_API FORT_CONF_RULES_RT fort_conf_rules_rt_make(
         PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones)
 {

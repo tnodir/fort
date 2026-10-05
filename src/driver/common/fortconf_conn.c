@@ -61,21 +61,38 @@ inline static BOOL fort_conf_conn_zone_filtered(
     return FALSE;
 }
 
-inline static BOOL fort_conf_conn_rule_filtered(
-        PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn, UINT16 rule_id, UCHAR reason)
+inline static BOOL fort_conf_conn_rule_id_filtered(
+        PFORT_CONF_META_CONN conn, UINT16 rule_id, UCHAR reason)
 {
     if (rule_id == 0)
         return FALSE;
 
-    if (filter->funcs->rules_conn_filtered(filter->ctx, conn, rule_id)) {
-        if (conn->rule_id == 0) {
-            conn->rule_id = rule_id;
-        }
-        conn->reason = reason;
-        return TRUE;
+    if (conn->rule_id == 0) {
+        conn->rule_id = rule_id;
     }
+    conn->reason = reason;
 
-    return FALSE;
+    return TRUE;
+}
+
+inline static BOOL fort_conf_conn_rule_filtered(
+        PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn, UINT16 rule_id)
+{
+    if (rule_id == 0)
+        return FALSE;
+
+    if (!filter->funcs->rules_conn_filtered(filter->ctx, conn, rule_id))
+        return FALSE;
+
+    return fort_conf_conn_rule_id_filtered(conn, rule_id, FORT_CONN_REASON_RULE);
+}
+
+inline static BOOL fort_conf_conn_glob_rule_filtered(
+        PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn, BOOL is_post, UCHAR reason)
+{
+    const UINT16 rule_id = filter->funcs->rules_glob_conn_filtered(filter->ctx, conn, is_post);
+
+    return fort_conf_conn_rule_id_filtered(conn, rule_id, reason);
 }
 
 inline static BOOL fort_conf_conn_app_flags_blocked(
@@ -110,15 +127,8 @@ inline static BOOL fort_conf_conn_groups_rule_filtered(
 {
     const UINT16 rule_id =
             filter->funcs->groups_rules_conn_filtered(filter->ctx, conn, groups_mask);
-    if (rule_id == 0)
-        return FALSE;
 
-    if (conn->rule_id == 0) {
-        conn->rule_id = rule_id;
-    }
-    conn->reason = FORT_CONN_REASON_RULE;
-
-    return TRUE; /* filtered by the Group's Rule */
+    return fort_conf_conn_rule_id_filtered(conn, rule_id, FORT_CONN_REASON_RULE);
 }
 
 static BOOL fort_conf_conn_app_filtered(
@@ -137,16 +147,14 @@ static BOOL fort_conf_conn_app_filtered(
     if (fort_conf_conn_groups_rule_filtered(filter, conn, app_data.groups))
         return TRUE; /* filtered by the Groups' Rules */
 
-    return fort_conf_conn_rule_filtered(filter, conn, app_data.rule_id, FORT_CONN_REASON_RULE);
+    return fort_conf_conn_rule_filtered(filter, conn, app_data.rule_id);
 }
 
 inline static void fort_conf_conn_app_filter(
         PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn, const FORT_APP_DATA app_data)
 {
-    const FORT_CONF_RULES_GLOB rules_glob = *filter->rules_glob;
-
-    if (fort_conf_conn_rule_filtered(
-                filter, conn, rules_glob.pre_rule_id, FORT_CONN_REASON_RULE_GLOB_PRE)) {
+    if (fort_conf_conn_glob_rule_filtered(
+                filter, conn, /*is_post=*/FALSE, FORT_CONN_REASON_RULE_GLOB_PRE)) {
         return; /* filtered by Global Rule Pre Apps */
     }
 
@@ -155,8 +163,8 @@ inline static void fort_conf_conn_app_filter(
         return; /* filtered by App or Filter Mode */
     }
 
-    if (fort_conf_conn_rule_filtered(
-                filter, conn, rules_glob.post_rule_id, FORT_CONN_REASON_RULE_GLOB_POST)) {
+    if (fort_conf_conn_glob_rule_filtered(
+                filter, conn, /*is_post=*/TRUE, FORT_CONN_REASON_RULE_GLOB_POST)) {
         return; /* filtered by Global Rule Post Apps */
     }
 
