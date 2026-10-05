@@ -73,6 +73,8 @@ public:
 
     QString outputPath() const { return m_outputPath; }
 
+    QString initialCurrentPath() const { return m_initialCurrentPath; }
+
     QString profileLogsPath() const { return profilePath() + "logs/"; }
 
     QString updatePath() const { return m_updatePath; }
@@ -184,6 +186,7 @@ private:
     QString m_userPath;
     QString m_logsPath;
     QString m_outputPath;
+    QString m_initialCurrentPath;
     QString m_updatePath;
     QString m_controlCommand;
     QStringList m_args;

@@ -65,6 +65,7 @@ enum Command : qint8 {
     Rpc_ConfRuleManager_deleteRule,
     Rpc_ConfRuleManager_updateRuleName,
     Rpc_ConfRuleManager_updateRuleEnabled,
+    Rpc_ConfRuleManager_updateRuleText,
     Rpc_ConfRuleManager_ruleAdded,
     Rpc_ConfRuleManager_ruleRemoved,
     Rpc_ConfRuleManager_ruleUpdated,

@@ -125,7 +125,7 @@ bool ControlManager::processCommandClient(ProcessCommandResult &r)
         return false;
     }
 
-    const QVariantList args = ControlWorker::buildArgs(settings->args());
+    QVariantList args = ControlWorker::buildArgs(settings->args());
     if (args.isEmpty()) {
         out.write({ "Empty arguments for command:", controlCommand });
         return false;
@@ -133,7 +133,7 @@ bool ControlManager::processCommandClient(ProcessCommandResult &r)
 
     OsUtil::allowOtherForegroundWindows(); // let the running instance to activate a window
 
-    const bool ok = postCommand(command, args, &r);
+    const bool ok = ControlCommandManager::processCommandClient(command, args, r);
 
     if (!r.errorMessage.isEmpty()) {
         out.write(QStringList { r.errorMessage });

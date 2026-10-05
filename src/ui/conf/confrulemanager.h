@@ -35,6 +35,7 @@ public:
     virtual bool deleteRule(quint16 ruleId);
     virtual bool updateRuleName(quint16 ruleId, const QString &ruleName);
     virtual bool updateRuleEnabled(quint16 ruleId, bool enabled);
+    virtual bool updateRuleText(quint16 ruleId, const QString &ruleText);
 
     bool walkRules(WalkRulesArgs &wra, const std::function<walkRulesCallback> &func) const override;
 

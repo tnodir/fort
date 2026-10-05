@@ -423,6 +423,11 @@ QString expandPath(const QString &path)
     return (n > 0 && n < maxPathSize) ? QString::fromUtf16((const char16_t *) buf) : QString();
 }
 
+QString currentDirectory()
+{
+    return QDir::currentPath();
+}
+
 bool setCurrentDirectory(const QString &path)
 {
     return QDir::setCurrent(path);

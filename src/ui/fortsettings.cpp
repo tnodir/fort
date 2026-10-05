@@ -136,6 +136,7 @@ void FortSettings::setupGlobal()
     const QFileInfo appFileInfo(FileUtil::nativeAppFilePath());
 
     // Set working directory
+    m_initialCurrentPath = FileUtil::currentDirectory();
     FileUtil::setCurrentDirectory(appFileInfo.path());
 
     // Is portable?

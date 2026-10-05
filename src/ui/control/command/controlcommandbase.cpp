@@ -6,6 +6,18 @@
 
 using namespace Fort;
 
+bool ControlCommandBase::prepareClientArgs(
+        QVariantList & /*args*/, ProcessCommandResult & /*r*/) const
+{
+    return true;
+}
+
+bool ControlCommandBase::processClientResult(
+        const QVariantList & /*args*/, ProcessCommandResult & /*r*/) const
+{
+    return true;
+}
+
 bool ControlCommandBase::checkCommandActionPassword(
         ProcessCommandResult &r, quint32 action, quint32 passwordNotRequiredActions)
 {

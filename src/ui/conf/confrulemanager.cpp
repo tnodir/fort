@@ -152,6 +152,9 @@ const char *const sqlUpdateRuleName = "UPDATE rule SET name = ?2 WHERE rule_id =
 
 const char *const sqlUpdateRuleEnabled = "UPDATE rule SET enabled = ?2 WHERE rule_id = ?1;";
 
+const char *const sqlUpdateRuleText = "UPDATE rule SET rule_text = ?2, mod_time = ?3"
+                                      "  WHERE rule_id = ?1;";
+
 bool driverWriteRules(ConfBuffer &confBuf, bool onlyFlags = false)
 {
     if (confBuf.hasError()) {
@@ -464,6 +467,27 @@ bool ConfRuleManager::updateRuleEnabled(quint16 ruleId, bool enabled)
         emit ruleUpdated(ruleId);
 
         updateDriverRuleFlag(ruleId, enabled);
+    }
+
+    return ok;
+}
+
+bool ConfRuleManager::updateRuleText(quint16 ruleId, const QString &ruleText)
+{
+    bool ok = false;
+
+    beginWriteTransaction();
+
+    const QVariantList vars = { ruleId, ruleText, DateUtil::now() };
+
+    DbQuery(sqliteDb(), &ok).sql(sqlUpdateRuleText).vars(vars).executeOk();
+
+    endTransaction(ok);
+
+    if (ok) {
+        updateDriverRules();
+
+        emit ruleUpdated(ruleId);
     }
 
     return ok;

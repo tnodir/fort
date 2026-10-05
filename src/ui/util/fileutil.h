@@ -73,6 +73,7 @@ QDateTime fileModTime(const QFileInfo &fileInfo);
 
 QString expandPath(const QString &path);
 
+QString currentDirectory();
 bool setCurrentDirectory(const QString &path);
 
 QString nativeAppFilePath();

@@ -1,6 +1,8 @@
 #include "controlcommandmanager.h"
 
+#include <control/controlmanager.h>
 #include <control/controlworker.h>
+#include <fortglobal.h>
 #include <rpc/rpcmanager.h>
 
 #include "controlcommandbackup.h"
@@ -52,6 +54,16 @@ const ControlCommandBase *commandByType(Control::Command command)
             command, commandList, Control::CommandHome, Control::CommandRule, &commandRpc);
 }
 
+}
+
+bool ControlCommandManager::processCommandClient(
+        Control::Command command, QVariantList &args, ProcessCommandResult &r)
+{
+    const ControlCommandBase *controlCommand = commandByType(command);
+
+    return controlCommand->prepareClientArgs(args, r)
+            && Fort::controlManager()->postCommand(command, args, &r)
+            && controlCommand->processClientResult(args, r);
 }
 
 bool ControlCommandManager::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)

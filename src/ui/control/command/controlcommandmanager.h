@@ -6,6 +6,10 @@
 class ControlCommandManager
 {
 public:
+    // Client: Prepare the arguments, post the command and process its result
+    static bool processCommandClient(
+            Control::Command command, QVariantList &args, ProcessCommandResult &r);
+
     static bool processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 };
 

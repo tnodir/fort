@@ -6,6 +6,10 @@
 class ControlCommandBase
 {
 public:
+    // Client: Read or write the files of the user
+    virtual bool prepareClientArgs(QVariantList &args, ProcessCommandResult &r) const;
+    virtual bool processClientResult(const QVariantList &args, ProcessCommandResult &r) const;
+
     virtual bool processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const = 0;
 
 protected:
