@@ -16,15 +16,15 @@ Fort is an effective firewall designed for Windows 7 and later versions, offerin
 
 ## Features
 
-  - Flexible network rules per application or global by addresses, ports, protocols etc
-  - Wildcards in application path names
-  - Parent process based rules
-  - Filter by `SvcHost.exe` service names
-  - Speed limit application groups
-  - Blocklists via "Zones"
-  - Saves traffic statistics
-  - Graphical display of the bandwidth
-  - Standalone firewall with own driver
+  - Standalone firewall with its own driver, independent of Windows Firewall
+  - Auto-Learn mode with alerts for new programs
+  - Flexible network rules per program or global by addresses, ports, protocols etc
+  - Programs by wildcard paths, parent process or `SvcHost.exe` service names
+  - Groups of programs, switchable from the tray or by Time Periods
+  - Per-program download/upload Speed Limits
+  - Blocklists via "Zones", auto-updated from URLs
+  - Connections log, traffic statistics and bandwidth graph
+  - Password protection and command-line management
 
 ## [System Requirements](https://github.com/tnodir/fort/wiki/User-Guide#system-requirements)
 
