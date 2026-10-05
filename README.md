@@ -17,7 +17,7 @@ Fort is an effective firewall designed for Windows 7 and later versions, offerin
 ## Features
 
   - Standalone firewall with its own driver, independent of Windows Firewall
-  - Auto-Learn mode with alerts for new programs
+  - Filter modes: Auto-Learn, Block or Allow if not listed; optional alerts for new programs
   - Flexible network rules per program or global by addresses, ports, protocols etc
   - Programs by wildcard paths, parent process or `SvcHost.exe` service names
   - Groups of programs, switchable from the tray or by Time Periods
