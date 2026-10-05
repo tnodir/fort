@@ -143,6 +143,8 @@ void WindowManager::setUp()
     setupMainWindow();
     setupConfManager();
 
+    qApp->installEventFilter(this);
+
     connect(qApp, &QCoreApplication::aboutToQuit, this, &WindowManager::quitApp);
 }
 
@@ -462,6 +464,16 @@ void WindowManager::quitApp()
     m_isAppQuitting = true;
 
     closeAll();
+}
+
+bool WindowManager::eventFilter(QObject *watched, QEvent *event)
+{
+    // The Quit event closes the windows as by the user: close them before as on quit
+    if (event->type() == QEvent::Quit) {
+        quitApp();
+    }
+
+    return QObject::eventFilter(watched, event);
 }
 
 void WindowManager::quit()
