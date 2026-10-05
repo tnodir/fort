@@ -23,6 +23,11 @@ bool WindowManagerFake::showProgramEditForm(const QString & /*appPath*/)
     return false;
 }
 
+bool WindowManagerFake::setGraphWindowVisible(const QVariant & /*visibleOrSwitch*/)
+{
+    return false;
+}
+
 bool WindowManagerFake::checkPassword(WindowCode /*code*/)
 {
     return !settings()->hasPassword();

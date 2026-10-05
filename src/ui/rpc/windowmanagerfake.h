@@ -18,6 +18,8 @@ public slots:
 
     bool showProgramEditForm(const QString &appPath) override;
 
+    bool setGraphWindowVisible(const QVariant &visibleOrSwitch = {}) override;
+
     bool checkPassword(WindowCode code = WindowNone) override;
 
     void showErrorBox(const QString &text, const QString &title = QString(),

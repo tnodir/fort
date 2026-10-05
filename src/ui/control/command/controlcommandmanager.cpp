@@ -8,6 +8,7 @@
 #include "controlcommandconf.h"
 #include "controlcommandfilter.h"
 #include "controlcommandfiltermode.h"
+#include "controlcommandgraph.h"
 #include "controlcommandgroup.h"
 #include "controlcommandhome.h"
 #include "controlcommandprog.h"
@@ -18,6 +19,7 @@ namespace {
 
 static const processCommand_func processCommand_funcList[] = {
     &ControlCommandHome::processCommand, // Control::CommandHome,
+    &ControlCommandGraph::processCommand, // Control::CommandGraph,
     &ControlCommandFilter::processCommand, // Control::CommandFilter,
     &ControlCommandFilterMode::processCommand, // Control::CommandFilterMode,
     &ControlCommandBlock::processCommand, // Control::CommandBlock,

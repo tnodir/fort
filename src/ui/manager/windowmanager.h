@@ -119,6 +119,9 @@ public slots:
     bool showTimePeriodsWindow() { return showWindowByCode(WindowTimePeriods); }
 
     bool showGraphWindow() { return showWindowByCode(WindowGraph, /*activate=*/false); }
+    bool closeGraphWindow() { return closeWindowByCode(WindowGraph); }
+
+    virtual bool setGraphWindowVisible(const QVariant &visibleOrSwitch = {});
 
     bool showWindowByCode(WindowCode code, bool activate = true);
     bool closeWindowByCode(WindowCode code);

@@ -100,6 +100,7 @@ bool ControlManager::processCommandClient(ProcessCommandResult &r)
 {
     static QHash<QString, Control::Command> g_commandsMap = {
         { "home", Control::CommandHome },
+        { "graph", Control::CommandGraph },
         { "filter", Control::CommandFilter },
         { "filter-mode", Control::CommandFilterMode },
         { "block", Control::CommandBlock },

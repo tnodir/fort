@@ -392,6 +392,19 @@ bool WindowManager::showOptionsWindowTab(int index)
     return true;
 }
 
+bool WindowManager::setGraphWindowVisible(const QVariant &visibleOrSwitch)
+{
+    const bool visible =
+            !visibleOrSwitch.isNull() ? visibleOrSwitch.toBool() : !isAnyWindowOpen(WindowGraph);
+
+    if (visible) {
+        return showGraphWindow();
+    }
+
+    closeGraphWindow();
+    return true;
+}
+
 bool WindowManager::showWindowByCode(WindowCode code, bool activate)
 {
     auto &form = formByCode(code);
