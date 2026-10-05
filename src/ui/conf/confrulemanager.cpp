@@ -83,8 +83,10 @@ const char *const sqlInsertRuleMenu = "INSERT INTO rule_menu(rule_id) VALUES(?1)
 
 const char *const sqlDeleteRuleMenu = "DELETE FROM rule_menu WHERE rule_id = ?1;";
 
-const char *const sqlSelectRuleMenuIds = "SELECT rule_id FROM rule_menu"
-                                         "  ORDER BY rule_id;";
+const char *const sqlSelectTrayMenuRules = "SELECT t.rule_id, r.enabled, r.name"
+                                           "  FROM rule_menu t"
+                                           "  JOIN rule r ON r.rule_id = t.rule_id"
+                                           "  ORDER BY t.rule_id;";
 
 const char *const sqlSelectRuleNameById = "SELECT name FROM rule WHERE rule_id = ?1;";
 
@@ -194,20 +196,24 @@ QString ConfRuleManager::ruleNameById(quint16 ruleId)
     return name;
 }
 
-QVector<quint16> ConfRuleManager::getRuleMenuIds() const
+QVector<Rule> ConfRuleManager::getTrayMenuRules() const
 {
-    QVector<quint16> ruleIdList;
+    QVector<Rule> ruleList;
 
     SqliteStmt stmt;
-    if (!DbQuery(sqliteDb()).sql(sqlSelectRuleMenuIds).prepare(stmt))
+    if (!DbQuery(sqliteDb()).sql(sqlSelectTrayMenuRules).prepare(stmt))
         return {};
 
     while (stmt.step() == SqliteStmt::StepRow) {
-        const quint16 ruleId = stmt.columnInt(0);
-        ruleIdList.append(ruleId);
+        Rule rule;
+        rule.ruleId = stmt.columnInt(0);
+        rule.enabled = stmt.columnBool(1);
+        rule.ruleName = stmt.columnText(2);
+
+        ruleList.append(rule);
     }
 
-    return ruleIdList;
+    return ruleList;
 }
 
 void ConfRuleManager::loadRuleSet(Rule &rule, QStringList &ruleSetNames)

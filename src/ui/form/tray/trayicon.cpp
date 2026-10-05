@@ -243,6 +243,8 @@ TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayCo
     connect(groupListModel(), &GroupListModel::dataChanged, this, &TrayIcon::updateGroupFlagActions,
             Qt::QueuedConnection);
 
+    connect(confRuleManager(), &ConfRuleManager::ruleUpdated, this, &TrayIcon::updateRuleActions,
+            Qt::QueuedConnection);
     connect(confRuleManager(), &ConfRuleManager::trayMenuUpdated, this,
             &TrayIcon::updateRuleActions, Qt::QueuedConnection);
 
@@ -749,23 +751,28 @@ void TrayIcon::updateGroupFlagActions()
 
 void TrayIcon::updateRuleActions()
 {
-    const auto ruleIds = confRuleManager()->getRuleMenuIds();
-    const int rulesCount = ruleIds.size();
+    const auto rules = confRuleManager()->getTrayMenuRules();
+    const int rulesCount = rules.size();
 
     for (int i = 0; i < MAX_RULE_ACTIONS_COUNT; ++i) {
         QAction *action = m_ruleActions.at(i);
 
         const bool visible = (i < rulesCount);
         quint16 ruleId = 0;
+        bool enabled = false;
         QString menuLabel;
 
         if (visible) {
-            ruleId = ruleIds[i];
-            menuLabel = confRuleManager()->ruleNameById(ruleId);
+            const auto &rule = rules[i];
+
+            ruleId = rule.ruleId;
+            enabled = rule.enabled;
+            menuLabel = rule.ruleName;
         }
 
         action->setText(menuLabel);
         action->setData(ruleId);
+        action->setChecked(enabled);
         action->setVisible(visible);
         action->setEnabled(visible);
     }
