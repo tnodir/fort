@@ -426,21 +426,12 @@ bool ConfAppManager::updateApp(App &app)
 
 bool ConfAppManager::updateAppName(qint64 appId, const QString &appName)
 {
-    bool ok = false;
+    if (!executeWrite(sqlUpdateAppName, { appId, appName }))
+        return false;
 
-    beginWriteTransaction();
+    emitAppUpdated();
 
-    const QVariantList vars = { appId, appName };
-
-    DbQuery(sqliteDb(), &ok).sql(sqlUpdateAppName).vars(vars).executeOk();
-
-    endTransaction(ok);
-
-    if (ok) {
-        emitAppUpdated();
-    }
-
-    return ok;
+    return true;
 }
 
 bool ConfAppManager::deleteApps(const QVector<qint64> &appIdList)

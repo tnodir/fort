@@ -205,42 +205,24 @@ bool ConfSpeedLimitManager::deleteSpeedLimit(quint8 limitId)
 
 bool ConfSpeedLimitManager::updateSpeedLimitName(quint8 limitId, const QString &name)
 {
-    bool ok = false;
+    if (!executeWrite(sqlUpdateSpeedLimitName, { limitId, name }))
+        return false;
 
-    beginWriteTransaction();
+    emit speedLimitUpdated();
 
-    const QVariantList vars = { limitId, name };
-
-    DbQuery(sqliteDb(), &ok).sql(sqlUpdateSpeedLimitName).vars(vars).executeOk();
-
-    endTransaction(ok);
-
-    if (ok) {
-        emit speedLimitUpdated();
-    }
-
-    return ok;
+    return true;
 }
 
 bool ConfSpeedLimitManager::updateSpeedLimitEnabled(quint8 limitId, bool enabled)
 {
-    bool ok = false;
+    if (!executeWrite(sqlUpdateSpeedLimitEnabled, { limitId, enabled }))
+        return false;
 
-    beginWriteTransaction();
+    emit speedLimitUpdated();
 
-    const QVariantList vars = { limitId, enabled };
+    updateDriverSpeedLimitFlags(); // the Speed Limit's Time Period may keep it inactive
 
-    DbQuery(sqliteDb(), &ok).sql(sqlUpdateSpeedLimitEnabled).vars(vars).executeOk();
-
-    endTransaction(ok);
-
-    if (ok) {
-        emit speedLimitUpdated();
-
-        updateDriverSpeedLimitFlags(); // the Speed Limit's Time Period may keep it inactive
-    }
-
-    return ok;
+    return true;
 }
 
 bool ConfSpeedLimitManager::walkSpeedLimits(

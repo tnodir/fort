@@ -219,42 +219,24 @@ bool ConfGroupManager::deleteGroup(quint8 groupId)
 
 bool ConfGroupManager::updateGroupName(quint8 groupId, const QString &groupName)
 {
-    bool ok = false;
+    if (!executeWrite(sqlUpdateGroupName, { groupId, groupName }))
+        return false;
 
-    beginWriteTransaction();
+    emit groupUpdated();
 
-    const QVariantList vars = { groupId, groupName };
-
-    DbQuery(sqliteDb(), &ok).sql(sqlUpdateGroupName).vars(vars).executeOk();
-
-    endTransaction(ok);
-
-    if (ok) {
-        emit groupUpdated();
-    }
-
-    return ok;
+    return true;
 }
 
 bool ConfGroupManager::updateGroupEnabled(quint8 groupId, bool enabled)
 {
-    bool ok = false;
+    if (!executeWrite(sqlUpdateGroupEnabled, { groupId, enabled }))
+        return false;
 
-    beginWriteTransaction();
+    emit groupUpdated();
 
-    const QVariantList vars = { groupId, enabled };
+    updateDriverGroupFlags(); // the Group's Time Period may keep it inactive
 
-    DbQuery(sqliteDb(), &ok).sql(sqlUpdateGroupEnabled).vars(vars).executeOk();
-
-    endTransaction(ok);
-
-    if (ok) {
-        emit groupUpdated();
-
-        updateDriverGroupFlags(); // the Group's Time Period may keep it inactive
-    }
-
-    return ok;
+    return true;
 }
 
 bool ConfGroupManager::loadGroupById(Group &group, int groupId) const

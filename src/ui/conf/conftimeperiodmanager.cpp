@@ -197,42 +197,24 @@ bool ConfTimePeriodManager::deleteTimePeriod(quint8 periodId)
 
 bool ConfTimePeriodManager::updateTimePeriodName(quint8 periodId, const QString &name)
 {
-    bool ok = false;
+    if (!executeWrite(sqlUpdateTimePeriodName, { periodId, name }))
+        return false;
 
-    beginWriteTransaction();
+    emit timePeriodUpdated();
 
-    const QVariantList vars = { periodId, name };
-
-    DbQuery(sqliteDb(), &ok).sql(sqlUpdateTimePeriodName).vars(vars).executeOk();
-
-    endTransaction(ok);
-
-    if (ok) {
-        emit timePeriodUpdated();
-    }
-
-    return ok;
+    return true;
 }
 
 bool ConfTimePeriodManager::updateTimePeriodEnabled(quint8 periodId, bool enabled)
 {
-    bool ok = false;
+    if (!executeWrite(sqlUpdateTimePeriodEnabled, { periodId, enabled }))
+        return false;
 
-    beginWriteTransaction();
+    emit timePeriodUpdated();
 
-    const QVariantList vars = { periodId, enabled };
+    checkActivePeriods();
 
-    DbQuery(sqliteDb(), &ok).sql(sqlUpdateTimePeriodEnabled).vars(vars).executeOk();
-
-    endTransaction(ok);
-
-    if (ok) {
-        emit timePeriodUpdated();
-
-        checkActivePeriods();
-    }
-
-    return ok;
+    return true;
 }
 
 bool ConfTimePeriodManager::loadTimePeriodIntervals(

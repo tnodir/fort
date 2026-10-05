@@ -214,50 +214,28 @@ bool ConfZoneManager::deleteZone(quint8 zoneId)
 
 bool ConfZoneManager::updateZoneName(quint8 zoneId, const QString &zoneName)
 {
-    bool ok = false;
+    if (!executeWrite(sqlUpdateZoneName, { zoneId, zoneName }))
+        return false;
 
-    beginWriteTransaction();
+    emit zoneUpdated();
 
-    const QVariantList vars = { zoneId, zoneName };
-
-    DbQuery(sqliteDb(), &ok).sql(sqlUpdateZoneName).vars(vars).executeOk();
-
-    endTransaction(ok);
-
-    if (ok) {
-        emit zoneUpdated();
-    }
-
-    return ok;
+    return true;
 }
 
 bool ConfZoneManager::updateZoneEnabled(quint8 zoneId, bool enabled)
 {
-    bool ok = false;
+    if (!executeWrite(sqlUpdateZoneEnabled, { zoneId, enabled }))
+        return false;
 
-    beginWriteTransaction();
+    emit zoneUpdated();
 
-    const QVariantList vars = { zoneId, enabled };
+    updateDriverZoneFlag(zoneId, enabled);
 
-    DbQuery(sqliteDb(), &ok).sql(sqlUpdateZoneEnabled).vars(vars).executeOk();
-
-    endTransaction(ok);
-
-    if (ok) {
-        emit zoneUpdated();
-
-        updateDriverZoneFlag(zoneId, enabled);
-    }
-
-    return ok;
+    return true;
 }
 
 bool ConfZoneManager::updateZoneResult(const Zone &zone)
 {
-    bool ok = false;
-
-    beginWriteTransaction();
-
     const QVariantList vars = {
         zone.zoneId,
         zone.addressCount,
@@ -268,15 +246,12 @@ bool ConfZoneManager::updateZoneResult(const Zone &zone)
         zone.lastSuccess,
     };
 
-    DbQuery(sqliteDb(), &ok).sql(sqlUpdateZoneResult).vars(vars).executeOk();
+    if (!executeWrite(sqlUpdateZoneResult, vars))
+        return false;
 
-    endTransaction(ok);
+    emit zoneUpdated();
 
-    if (ok) {
-        emit zoneUpdated();
-    }
-
-    return ok;
+    return true;
 }
 
 void ConfZoneManager::updateDriverZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
