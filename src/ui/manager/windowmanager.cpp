@@ -337,14 +337,7 @@ void WindowManager::showHomeWindowAbout()
 
 bool WindowManager::showProgramEditForm(const QString &appPath)
 {
-    if (!showProgramsWindow())
-        return false;
-
-    if (!progWindow()->editProgramByPath(appPath)) {
-        showErrorBox(tr("Please close already opened Edit Program window and try again."));
-        return false;
-    }
-
+    openProgramEditForm(appPath);
     return true;
 }
 

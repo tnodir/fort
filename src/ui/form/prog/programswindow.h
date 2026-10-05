@@ -80,7 +80,7 @@ private:
     {
         const App &app;
         const QVector<qint64> &appIdList;
-        FormWindow *parentForm;
+        FormWindow *parentForm = nullptr;
         ProgramEditDialog *&dialog;
     };
 

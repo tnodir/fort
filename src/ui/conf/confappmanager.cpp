@@ -354,6 +354,8 @@ App ConfAppManager::appByPath(const QString &appPath)
     if (!loadAppById(app, appId)) {
         app.appOriginPath = appPath;
         app.appPath = normPath;
+
+        app.isWildcard = ConfUtil::hasWildcard(appPath);
     }
     return app;
 }

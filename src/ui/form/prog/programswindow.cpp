@@ -689,13 +689,10 @@ bool ProgramsWindow::editProgramByPath(const QString &appPath)
     if (checkAppEditFormOpened())
         return false;
 
-    App app = confAppManager()->appByPath(appPath);
-
-    if (!app.isValid()) {
-        app.isWildcard = ConfUtil::hasWildcard(appPath);
-    }
+    const App app = confAppManager()->appByPath(appPath);
 
     openAppEditForm(app);
+
     return true;
 }
 
@@ -799,14 +796,17 @@ void ProgramsWindow::openAppEditDialog(const OpenAppEditDialogArgs &a)
     if (!a.dialog) {
         a.dialog = new ProgramEditDialog(a.parentForm);
 
-        a.dialog->setExcludeFromCapture(a.parentForm->excludeFromCapture());
+        a.dialog->setExcludeFromCapture(
+                a.parentForm ? a.parentForm->excludeFromCapture() : iniUser().excludeFromCapture());
     }
 
     a.dialog->initialize(a.app, a.appIdList);
 
     WidgetWindow::showWidget(a.dialog);
 
-    a.dialog->centerTo(a.parentForm);
+    if (a.parentForm) {
+        a.dialog->centerTo(a.parentForm);
+    }
 }
 
 void ProgramsWindow::updateSelectedApps(bool blocked, bool killProcess)
