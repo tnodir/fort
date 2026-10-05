@@ -35,6 +35,7 @@ private:
     void retranslateComboFilterMode();
     void retranslateTimedOptions();
     void retranslateEditPassword();
+    void retranslatePasswordLock();
 
     void setupUi();
     QLayout *setupColumn1();

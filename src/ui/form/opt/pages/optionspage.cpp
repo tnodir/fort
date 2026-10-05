@@ -166,8 +166,7 @@ void OptionsPage::onRetranslateUi()
     m_cbPassword->setText(tr("Password:"));
     retranslateEditPassword();
 
-    m_btPasswordLock->setText(tr("Lock the password (unlocked till \"%1\")")
-                    .arg(Fort::settings()->passwordUnlockedTillText()));
+    retranslatePasswordLock();
 
     m_cbLogApp->setText(tr("Collect New Programs"));
     m_cbRemoveLearntApps->setText(tr("Remove alerted programs on Auto-Learn Off"));
@@ -214,6 +213,12 @@ void OptionsPage::retranslateEditPassword()
 {
     m_editPassword->setPlaceholderText(
             Fort::settings()->hasPassword() ? tr("Installed") : tr("Not Installed"));
+}
+
+void OptionsPage::retranslatePasswordLock()
+{
+    m_btPasswordLock->setText(tr("Lock the password (unlocked till \"%1\")")
+                    .arg(Fort::settings()->passwordUnlockedTillText()));
 }
 
 void OptionsPage::setupUi()
@@ -487,6 +492,8 @@ void OptionsPage::setupPasswordLock()
     const auto refreshPasswordLock = [&] {
         m_btPasswordLock->setVisible(Fort::settings()->hasPassword()
                 && Fort::settings()->passwordUnlockType() > FortSettings::UnlockWindow);
+
+        retranslatePasswordLock();
     };
 
     refreshPasswordLock();

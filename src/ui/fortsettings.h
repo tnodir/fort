@@ -1,6 +1,8 @@
 #ifndef FORTSETTINGS_H
 #define FORTSETTINGS_H
 
+#include <QTimer>
+
 #include <conf/inioptions.h>
 #include <util/ini/settings.h>
 
@@ -21,6 +23,10 @@ public:
         UnlockWindow = 0,
         UnlockSession,
         UnlockApp,
+        Unlock5Minutes,
+        Unlock10Minutes,
+        Unlock30Minutes,
+        Unlock1Hour,
     };
 
     explicit FortSettings(QObject *parent = nullptr);
@@ -104,6 +110,7 @@ public:
     static QString defaultProfilePath(bool isService);
 
     static QStringList unlockTypeStrings();
+    static int unlockTypeMinutes(UnlockType unlockType);
 
     // COMPAT: The App. Groups' enabled bits by their indexes
     quint32 appGroupBits() const { return iniUInt("confFlags/appGroupBits", quint32(-1)); }
@@ -123,6 +130,9 @@ protected:
     void migrateIniOnWrite() override;
 
 private:
+    void setupPasswordUnlockTimer();
+    void startPasswordUnlockTimer();
+
     void processProfileOption(
             const QCommandLineParser &parser, const QCommandLineOption &profileOption);
     void processStatOption(const QCommandLineParser &parser, const QCommandLineOption &statOption);
@@ -164,6 +174,8 @@ private:
     uint m_passwordChecked : 1 = false;
 
     UnlockType m_passwordUnlockType = UnlockDisabled;
+
+    QTimer m_passwordUnlockTimer;
 
     QString m_defaultLanguage;
     QString m_profilePath;

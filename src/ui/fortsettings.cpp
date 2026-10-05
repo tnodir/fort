@@ -18,6 +18,8 @@ namespace {
 
 bool g_isPortable = false;
 
+inline constexpr int unlockMinutesList[] = { 5, 10, 30, 60 };
+
 QString pathSlash(const QString &path)
 {
     return FileUtil::pathSlash(FileUtil::absolutePath(path));
@@ -31,7 +33,10 @@ QString expandPath(const QString &path, EnvManager *envManager = nullptr)
 
 }
 
-FortSettings::FortSettings(QObject *parent) : Settings(parent), m_iniOpt(this) { }
+FortSettings::FortSettings(QObject *parent) : Settings(parent), m_iniOpt(this)
+{
+    setupPasswordUnlockTimer();
+}
 
 QString FortSettings::confFilePath() const
 {
@@ -55,6 +60,12 @@ QString FortSettings::cacheFilePath() const
 
 QString FortSettings::passwordUnlockedTillText() const
 {
+    if (m_passwordUnlockTimer.isActive()) {
+        const QTime tillTime =
+                DateUtil::currentTime().addMSecs(m_passwordUnlockTimer.remainingTime());
+        return QLocale().toString(tillTime, QLocale::ShortFormat);
+    }
+
     if (passwordUnlockType() == UnlockDisabled)
         return QString();
 
@@ -89,6 +100,8 @@ void FortSettings::setPasswordChecked(bool checked, UnlockType unlockType)
     m_passwordChecked = checked;
     m_passwordUnlockType = checked ? unlockType : UnlockDisabled;
 
+    startPasswordUnlockTimer();
+
     emit passwordCheckedChanged();
 }
 
@@ -98,6 +111,24 @@ void FortSettings::resetCheckedPassword(UnlockType unlockType)
         return;
 
     setPasswordChecked(false);
+}
+
+void FortSettings::setupPasswordUnlockTimer()
+{
+    m_passwordUnlockTimer.setSingleShot(true);
+
+    connect(&m_passwordUnlockTimer, &QTimer::timeout, this, [&] { setPasswordChecked(false); });
+}
+
+void FortSettings::startPasswordUnlockTimer()
+{
+    const int minutes = unlockTypeMinutes(m_passwordUnlockType);
+    if (minutes <= 0) {
+        m_passwordUnlockTimer.stop();
+        return;
+    }
+
+    m_passwordUnlockTimer.start(std::chrono::minutes(minutes));
 }
 
 void FortSettings::setupGlobal()
@@ -646,5 +677,14 @@ void FortSettings::migrateIniOnWrite()
 
 QStringList FortSettings::unlockTypeStrings()
 {
-    return { tr("Window closed"), tr("Session lockout"), tr("Program exit") };
+    return { tr("Window closed"), tr("Session lockout"), tr("Program exit"), tr("5 minutes"),
+        tr("10 minutes"), tr("30 minutes"), tr("1 hour") };
+}
+
+int FortSettings::unlockTypeMinutes(UnlockType unlockType)
+{
+    if (unlockType < Unlock5Minutes)
+        return 0;
+
+    return unlockMinutesList[unlockType - Unlock5Minutes];
 }
