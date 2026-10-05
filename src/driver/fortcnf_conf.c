@@ -120,7 +120,10 @@ static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref,
     /* Replace the app data */
     {
         PFORT_APP_ENTRY entry = node->app_entry;
+        const UINT16 has_wildcard_app = entry->app_data.flags.has_wildcard_app;
+
         entry->app_data = app_entry->app_data;
+        entry->app_data.flags.has_wildcard_app |= has_wildcard_app;
     }
 
     return STATUS_SUCCESS;
@@ -173,44 +176,59 @@ static void fort_conf_ref_exe_fill(PFORT_CONF_REF conf_ref, PCFORT_CONF conf)
     }
 }
 
-static void fort_conf_ref_exe_del_path(PFORT_CONF_REF conf_ref, PCFORT_APP_PATH path)
+static NTSTATUS fort_conf_ref_exe_del_path_locked(
+        PFORT_CONF_REF conf_ref, PCFORT_APP_PATH path, tommy_key_t path_hash)
+{
+    PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(conf_ref, path, path_hash);
+
+    if (node == NULL)
+        return STATUS_SUCCESS;
+
+    PFORT_APP_ENTRY entry = node->app_entry;
+
+    /* Keep the path listed by a wildcard app: the caller has to set the full conf */
+    if (entry->app_data.flags.has_wildcard_app)
+        return FORT_STATUS_USER_ERROR;
+
+    /* Delete from conf */
+    {
+        PFORT_CONF conf = &conf_ref->conf;
+        --conf->exe_apps_n;
+    }
+
+    /* Delete from pool */
+    fort_pool_free(&conf_ref->pool_list, entry);
+
+    /* Delete from exe map */
+    tommy_hashdyn_remove_existing(&conf_ref->exe_map, (tommy_hashdyn_node *) node);
+
+    tommy_list_insert_tail_check(&conf_ref->free_nodes, (tommy_node *) node);
+
+    return STATUS_SUCCESS;
+}
+
+static NTSTATUS fort_conf_ref_exe_del_path(PFORT_CONF_REF conf_ref, PCFORT_APP_PATH path)
 {
     const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path->buffer, path->len);
+    NTSTATUS status;
 
     KIRQL oldIrql = ExAcquireSpinLockExclusive(&conf_ref->conf_lock);
     {
-        PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(conf_ref, path, path_hash);
-
-        if (node != NULL) {
-            /* Delete from conf */
-            {
-                PFORT_CONF conf = &conf_ref->conf;
-                --conf->exe_apps_n;
-            }
-
-            /* Delete from pool */
-            {
-                PFORT_APP_ENTRY entry = node->app_entry;
-                fort_pool_free(&conf_ref->pool_list, entry);
-            }
-
-            /* Delete from exe map */
-            tommy_hashdyn_remove_existing(&conf_ref->exe_map, (tommy_hashdyn_node *) node);
-
-            tommy_list_insert_tail_check(&conf_ref->free_nodes, (tommy_node *) node);
-        }
+        status = fort_conf_ref_exe_del_path_locked(conf_ref, path, path_hash);
     }
     ExReleaseSpinLockExclusive(&conf_ref->conf_lock, oldIrql);
+
+    return status;
 }
 
-FORT_API void fort_conf_ref_exe_del_entry(PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY entry)
+FORT_API NTSTATUS fort_conf_ref_exe_del_entry(PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY entry)
 {
     const FORT_APP_PATH path = {
         .len = entry->path_len,
         .buffer = entry->path,
     };
 
-    fort_conf_ref_exe_del_path(conf_ref, &path);
+    return fort_conf_ref_exe_del_path(conf_ref, &path);
 }
 
 static void fort_conf_ref_init(PFORT_CONF_REF conf_ref)

@@ -355,7 +355,9 @@ typedef struct fort_app_flags
     UINT16 found : 1; /* is app data not empty? */
     UINT16 alerted : 1;
 
-    UINT16 reserved : 2; /* not used */
+    UINT16 has_wildcard_app : 1; /* is the path listed by a wildcard app? */
+
+    UINT16 reserved : 1; /* not used */
 } FORT_APP_FLAGS, *PFORT_APP_FLAGS;
 
 typedef struct fort_app_data

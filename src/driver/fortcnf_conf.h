@@ -15,7 +15,7 @@ FORT_API NTSTATUS fort_conf_ref_exe_add_path(
 FORT_API NTSTATUS fort_conf_ref_exe_add_entry(
         PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY entry, BOOL locked);
 
-FORT_API void fort_conf_ref_exe_del_entry(PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY entry);
+FORT_API NTSTATUS fort_conf_ref_exe_del_entry(PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY entry);
 
 FORT_API PFORT_CONF_REF fort_conf_ref_new(PCFORT_CONF conf, ULONG len);
 

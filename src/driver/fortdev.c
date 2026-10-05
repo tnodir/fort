@@ -238,16 +238,11 @@ static NTSTATUS fort_device_control_getlog(PFORT_DEVICE_CONTROL_ARG dca)
 inline static NTSTATUS fort_device_control_app_conf(
         PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY app_entry, BOOL is_adding)
 {
-    NTSTATUS status;
-
     if (is_adding) {
-        status = fort_conf_ref_exe_add_entry(conf_ref, app_entry, /*locked=*/FALSE);
+        return fort_conf_ref_exe_add_entry(conf_ref, app_entry, /*locked=*/FALSE);
     } else {
-        fort_conf_ref_exe_del_entry(conf_ref, app_entry);
-        status = STATUS_SUCCESS;
+        return fort_conf_ref_exe_del_entry(conf_ref, app_entry);
     }
-
-    return status;
 }
 
 static NTSTATUS fort_device_control_app(PFORT_DEVICE_CONTROL_ARG dca, BOOL is_adding)
