@@ -12,6 +12,9 @@ const char *const extraValueEndChars = "._-/:";
 
 int getCharIndex(const char *chars, const char c)
 {
+    if (c == '\0')
+        return -1; // strchr() finds the terminating null character too
+
     const char *cp = strchr(chars, c);
     return cp ? (cp - chars) : -1;
 }
