@@ -204,6 +204,13 @@ QAction *addAction(QWidget *widget, const AddActionArgs &a)
     return action;
 }
 
+void updateActionsEnabled(const QList<QAction *> &actions, bool editEnabled)
+{
+    for (QAction *action : actions) {
+        action->setEnabled(editEnabled && action->isVisible());
+    }
+}
+
 bool checkAlertFilterMode(const FirewallConf &conf, const IniUser &iniUser)
 {
     switch (conf.filterMode()) {
@@ -711,9 +718,8 @@ void TrayIcon::updateTrayMenuFlags()
         }
     }
 
-    for (QAction *action : std::as_const(m_groupFlagActions)) {
-        action->setEnabled(editEnabled && action->isVisible());
-    }
+    updateActionsEnabled(m_groupFlagActions, editEnabled);
+    updateActionsEnabled(m_ruleActions, editEnabled);
 }
 
 void TrayIcon::updateGroupFlagActions()
@@ -751,6 +757,8 @@ void TrayIcon::updateGroupFlagActions()
 
 void TrayIcon::updateRuleActions()
 {
+    const bool editEnabled = isEditEnabled();
+
     const auto rules = confRuleManager()->getTrayMenuRules();
     const int rulesCount = rules.size();
 
@@ -774,7 +782,7 @@ void TrayIcon::updateRuleActions()
         action->setData(ruleId);
         action->setChecked(enabled);
         action->setVisible(visible);
-        action->setEnabled(visible);
+        action->setEnabled(visible && editEnabled);
     }
 }
 
