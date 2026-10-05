@@ -4,6 +4,7 @@ HEADERS += \
     testconfwalkers.h \
     tst_bitutil.h \
     tst_confutil.h \
+    tst_connfilter.h \
     tst_dateutil.h \
     tst_fileutil.h \
     tst_ioccontainer.h \
