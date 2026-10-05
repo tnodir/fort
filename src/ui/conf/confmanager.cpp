@@ -936,6 +936,9 @@ bool ConfManager::exportBackup(const QString &path)
 
     const QString outPath = FileUtil::pathSlash(path);
 
+    // Save the windows' states to the User Ini
+    windowManager()->saveAllWindowStates();
+
     // Export User Ini
     if (!exportFile(userSettings()->filePath(), outPath))
         return false;
@@ -978,6 +981,9 @@ bool ConfManager::importBackup(const QString &path)
 
         if (!checkCanMigrate(settings))
             return false;
+
+        // The windows save their states to the User Ini on close
+        windowManager()->closeAllWindows(/*isAppQuitting=*/true);
 
         if (!importFile(settings->filePath(), inPath))
             return false;

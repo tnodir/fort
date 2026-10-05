@@ -153,8 +153,9 @@ void WindowManager::tearDown()
 
 void WindowManager::initialize()
 {
-    Q_ASSERT(!m_trayIcon);
-    m_trayIcon = new TrayIcon(this);
+    if (!m_trayIcon) {
+        m_trayIcon = new TrayIcon(this);
+    }
 
     const auto &ini = Fort::iniUser();
 
@@ -426,11 +427,22 @@ void WindowManager::switchWindowByCode(WindowCode code)
     }
 }
 
-void WindowManager::closeAllWindows()
+void WindowManager::saveAllWindowStates()
+{
+    for (int i = 0; i < WindowCount; ++i) {
+        const auto w = m_forms[i].window();
+        if (!w || !w->isVisible())
+            continue;
+
+        w->saveWindowState(/*wasVisible=*/true);
+    }
+}
+
+void WindowManager::closeAllWindows(bool isAppQuitting)
 {
     for (int i = 0; i < WindowCount; ++i) {
         auto &form = m_forms[i];
-        form.close();
+        form.close(isAppQuitting);
     }
 }
 

@@ -81,10 +81,6 @@ void ProgramsWindow::saveWindowState(bool /*wasVisible*/)
 {
     auto &iniUser = Fort::iniUser();
 
-    if (iniUser.progWindowAutoClearAlerts()) {
-        ctrl()->clearAlerts();
-    }
-
     iniUser.setProgWindowGeometry(stateWatcher()->geometry());
     iniUser.setProgWindowMaximized(stateWatcher()->maximized());
 
@@ -116,6 +112,13 @@ void ProgramsWindow::restoreWindowState()
         auto header = m_appListView->verticalHeader();
         header->setDefaultSectionSize(
                 qBound(7, iniUser.progAppsRowsHeight(header->defaultSectionSize()), 999));
+    }
+}
+
+void ProgramsWindow::onWindowClosed()
+{
+    if (iniUser().progWindowAutoClearAlerts()) {
+        ctrl()->clearAlerts();
     }
 }
 

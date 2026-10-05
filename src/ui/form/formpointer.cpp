@@ -93,7 +93,7 @@ bool FormPointer::show(bool activate)
     return true;
 }
 
-bool FormPointer::close()
+bool FormPointer::close(bool isAppQuitting)
 {
     auto w = this->window();
     if (!w) {
@@ -101,11 +101,13 @@ bool FormPointer::close()
     }
 
     auto windowManager = Fort::windowManager();
-    const bool isAppQuitting = windowManager->isAppQuitting();
+    isAppQuitting = isAppQuitting || windowManager->isAppQuitting();
 
     if (w->isVisible()) {
         w->saveWindowState(isAppQuitting);
         w->hide();
+
+        w->onWindowClosed();
 
         windowManager->windowClosed(code());
     }

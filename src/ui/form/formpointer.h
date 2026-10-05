@@ -16,7 +16,7 @@ public:
     FormWindow *initialize();
 
     bool show(bool activate = true);
-    bool close();
+    bool close(bool isAppQuitting = false);
 
 private:
     WindowCode m_code = WindowNone;

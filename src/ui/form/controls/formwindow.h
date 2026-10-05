@@ -41,6 +41,8 @@ public:
     virtual void saveWindowState(bool wasVisible) { Q_UNUSED(wasVisible); }
     virtual void restoreWindowState() { }
 
+    virtual void onWindowClosed() { }
+
 signals:
     void aboutToDelete();
 

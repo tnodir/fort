@@ -65,7 +65,7 @@ public:
     void setUp() override;
     void tearDown() override;
 
-    void initialize();
+    virtual void initialize();
 
     bool isWindowOpen(WindowCode code) const { return isAnyWindowOpen(code); }
 
@@ -127,7 +127,8 @@ public slots:
     bool closeWindowByCode(WindowCode code);
     void switchWindowByCode(WindowCode code);
 
-    void closeAllWindows();
+    void saveAllWindowStates();
+    void closeAllWindows(bool isAppQuitting = false);
 
     void quit();
 

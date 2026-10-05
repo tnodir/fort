@@ -438,7 +438,9 @@ void FortManager::setupConfManager()
     auto confManager = Fort::confManager();
 
     connect(confManager, &ConfManager::imported, this, [&] {
-        windowManager()->closeAllWindows();
+        // Close the windows as on quit and show them as on start
+        windowManager()->closeAllWindows(/*isAppQuitting=*/true);
+        windowManager()->initialize();
 
         // The Rules, Groups and Speed Limits are written to the driver on its setup only,
         // the Zones by their task

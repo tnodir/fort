@@ -13,6 +13,8 @@ public:
     void setUp() override { }
     void tearDown() override { }
 
+    void initialize() override { }
+
 public slots:
     bool exposeHomeWindow() override;
 
