@@ -67,7 +67,8 @@ bool processCommandFilterModeAction(
 
 }
 
-bool ControlCommandFilterMode::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
+bool ControlCommandFilterMode::processCommand(
+        const ProcessCommandArgs &p, ProcessCommandResult &r) const
 {
     bool report = false;
     const FirewallConf::FilterMode filterMode =

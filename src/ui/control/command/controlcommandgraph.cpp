@@ -5,7 +5,7 @@
 
 using namespace Fort;
 
-bool ControlCommandGraph::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
+bool ControlCommandGraph::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const
 {
     const auto commandText = p.args.value(0).toString();
 

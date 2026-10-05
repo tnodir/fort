@@ -48,7 +48,8 @@ bool processCommandBackupAction(BackupAction backupAction, const QString &dirPat
 
 }
 
-bool ControlCommandBackup::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
+bool ControlCommandBackup::processCommand(
+        const ProcessCommandArgs &p, ProcessCommandResult &r) const
 {
     const BackupAction backupAction = backupActionByText(p.args.value(0).toString());
     if (backupAction == BackupActionNone) {

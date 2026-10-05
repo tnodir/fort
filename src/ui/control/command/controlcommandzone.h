@@ -6,7 +6,7 @@
 class ControlCommandZone : public ControlCommandBase
 {
 public:
-    static bool processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
+    bool processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const override;
 };
 
 #endif // CONTROLCOMMANDZONE_H

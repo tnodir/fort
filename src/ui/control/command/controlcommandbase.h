@@ -5,6 +5,9 @@
 
 class ControlCommandBase
 {
+public:
+    virtual bool processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const = 0;
+
 protected:
     static bool checkCommandActionPassword(
             ProcessCommandResult &r, quint32 action, quint32 passwordNotRequiredActions = 0);

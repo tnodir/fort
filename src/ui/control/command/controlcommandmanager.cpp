@@ -17,33 +17,51 @@
 
 namespace {
 
-static const processCommand_func processCommand_funcList[] = {
-    &ControlCommandHome::processCommand, // Control::CommandHome,
-    &ControlCommandGraph::processCommand, // Control::CommandGraph,
-    &ControlCommandFilter::processCommand, // Control::CommandFilter,
-    &ControlCommandFilterMode::processCommand, // Control::CommandFilterMode,
-    &ControlCommandBlock::processCommand, // Control::CommandBlock,
-    &ControlCommandProg::processCommand, // Control::CommandProg,
-    &ControlCommandGroup::processCommand, // Control::CommandGroup,
-    &ControlCommandConf::processCommand, // Control::CommandConf,
-    &ControlCommandBackup::processCommand, // Control::CommandBackup,
-    &ControlCommandZone::processCommand, // Control::CommandZone,
+inline constexpr ControlCommandHome commandHome;
+inline constexpr ControlCommandGraph commandGraph;
+inline constexpr ControlCommandFilter commandFilter;
+inline constexpr ControlCommandFilterMode commandFilterMode;
+inline constexpr ControlCommandBlock commandBlock;
+inline constexpr ControlCommandProg commandProg;
+inline constexpr ControlCommandGroup commandGroup;
+inline constexpr ControlCommandConf commandConf;
+inline constexpr ControlCommandBackup commandBackup;
+inline constexpr ControlCommandZone commandZone;
+
+inline constexpr ControlCommandRpc commandRpc;
+
+inline constexpr const ControlCommandBase *commandList[] = {
+    &commandHome, // Control::CommandHome,
+    &commandGraph, // Control::CommandGraph,
+    &commandFilter, // Control::CommandFilter,
+    &commandFilterMode, // Control::CommandFilterMode,
+    &commandBlock, // Control::CommandBlock,
+    &commandProg, // Control::CommandProg,
+    &commandGroup, // Control::CommandGroup,
+    &commandConf, // Control::CommandConf,
+    &commandBackup, // Control::CommandBackup,
+    &commandZone, // Control::CommandZone,
 };
+
+const ControlCommandBase *commandByType(Control::Command command)
+{
+    return RpcManager::getProcessFunc<const ControlCommandBase>(
+            command, commandList, Control::CommandHome, Control::CommandZone, &commandRpc);
+}
 
 }
 
 bool ControlCommandManager::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
-    const processCommand_func func = RpcManager::getProcessFunc(p.command, processCommand_funcList,
-            Control::CommandHome, Control::CommandZone, &ControlCommandRpc::processCommand);
+    const ControlCommandBase *command = commandByType(p.command);
 
-    const bool ok = func(p, r);
+    const bool ok = command->processCommand(p, r);
 
     if (!ok && r.errorMessage.isEmpty()) {
         r.errorMessage = "Invalid command";
     }
 
-    if (func != &ControlCommandRpc::processCommand) {
+    if (command != &commandRpc) {
         r.ok = ok;
         r.isSendResult = true;
 

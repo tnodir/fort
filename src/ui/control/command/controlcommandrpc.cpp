@@ -5,7 +5,7 @@
 
 using namespace Fort;
 
-bool ControlCommandRpc::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
+bool ControlCommandRpc::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const
 {
     return rpcManager()->processCommandRpc(p, r);
 }

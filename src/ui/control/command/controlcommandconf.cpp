@@ -33,7 +33,7 @@ bool processCommandConfAction(ConfAction confAction)
 
 }
 
-bool ControlCommandConf::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
+bool ControlCommandConf::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const
 {
     const ConfAction confAction = confActionByText(p.args.value(0).toString());
     if (confAction == ConfActionNone) {

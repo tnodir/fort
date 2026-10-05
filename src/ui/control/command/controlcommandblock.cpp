@@ -67,7 +67,7 @@ bool processCommandBlockAction(
 
 }
 
-bool ControlCommandBlock::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
+bool ControlCommandBlock::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const
 {
     bool report = false;
     const FirewallConf::BlockTrafficType blockAction =

@@ -35,7 +35,7 @@ bool processCommandZoneAction(ZoneAction zoneAction)
 
 }
 
-bool ControlCommandZone::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
+bool ControlCommandZone::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const
 {
     const ZoneAction zoneAction = zoneActionByText(p.args.value(0).toString());
     if (zoneAction == ZoneActionNone) {

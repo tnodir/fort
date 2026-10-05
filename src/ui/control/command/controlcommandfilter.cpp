@@ -59,7 +59,8 @@ bool processCommandFilterAction(ProcessCommandResult &r, FilterAction filterActi
 
 }
 
-bool ControlCommandFilter::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
+bool ControlCommandFilter::processCommand(
+        const ProcessCommandArgs &p, ProcessCommandResult &r) const
 {
     bool report = false;
     const FilterAction filterAction = filterActionByText(p.args.value(0).toString(), report);

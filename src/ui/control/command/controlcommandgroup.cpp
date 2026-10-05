@@ -68,7 +68,7 @@ bool processCommandGroupAction(
 
 }
 
-bool ControlCommandGroup::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
+bool ControlCommandGroup::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const
 {
     bool report = false;
     const GroupAction groupAction = groupActionByText(p.args.value(0).toString(), report);

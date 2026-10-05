@@ -97,7 +97,7 @@ bool processCommandProgAction(
 
 }
 
-bool ControlCommandProg::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
+bool ControlCommandProg::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const
 {
     bool report = false;
     const ProgAction progAction = progActionByText(p.args.value(0).toString(), report);
