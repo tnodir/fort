@@ -19,6 +19,12 @@ int getCharIndex(const char *chars, const char c)
     return cp ? (cp - chars) : -1;
 }
 
+bool isSpaceChar(const QChar c)
+{
+    // The BOM is at the start of a file's text
+    return c.isSpace() || c == QChar::ByteOrderMark;
+}
+
 RuleCharType processChar(const QChar c, const char *extraChars = nullptr)
 {
     if (c.isLetter()) {
@@ -33,7 +39,7 @@ RuleCharType processChar(const QChar c, const char *extraChars = nullptr)
         return CharNewLine;
     }
 
-    if (c.isSpace()) {
+    if (isSpaceChar(c)) {
         return CharSpace;
     }
 
