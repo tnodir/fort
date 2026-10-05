@@ -386,6 +386,20 @@ bool migrateOldAppGroup(SqliteDb *db, OldAppGroup &appGroup)
     return ok;
 }
 
+bool migrateOldAppGroupAppsSpeedLimit(
+        SqliteDb *db, const OldAppGroup &appGroup, int limitId, bool inbound)
+{
+    const QString sql =
+            QString("UPDATE app SET %1 = ?2 WHERE app_id IN (%2);")
+                    .arg(inbound ? "in_limit_id" : "out_limit_id", oldAppGroupAppIdsSql());
+
+    bool ok = true;
+
+    DbQuery(db, &ok).sql(sql).vars({ appGroup.appGroupId, limitId }).executeOk();
+
+    return ok;
+}
+
 bool migrateOldAppGroupSpeedLimit(SqliteDb *db, const OldAppGroup &appGroup, bool inbound)
 {
     const quint32 kbps = inbound ? appGroup.speedLimitIn : appGroup.speedLimitOut;
@@ -431,13 +445,7 @@ bool migrateOldAppGroupSpeedLimit(SqliteDb *db, const OldAppGroup &appGroup, boo
     if (!ok)
         return false;
 
-    const QString sql =
-            QString("UPDATE app SET %1 = ?2 WHERE app_id IN (%2);")
-                    .arg(inbound ? "in_limit_id" : "out_limit_id", oldAppGroupAppIdsSql());
-
-    DbQuery(db, &ok).sql(sql).vars({ appGroup.appGroupId, limitId }).executeOk();
-
-    return ok;
+    return migrateOldAppGroupAppsSpeedLimit(db, appGroup, limitId, inbound);
 }
 
 // The App. Groups are replaced by the Groups and Speed Limits
