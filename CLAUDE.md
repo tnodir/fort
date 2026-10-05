@@ -117,8 +117,9 @@ No Qt SQL — a hand-rolled SQLite wrapper in `src/ui/3rdparty/sqlite/` (`Sqlite
 ## Conventions
 
 - Format with `src/_clang-format` (WebKit-based Qt style, 100 columns, `PointerBindsToType: false`, braces on their own line after functions/classes only).
+- Keep the UI compatible with Qt 6.1: guard newer APIs with `#if QT_VERSION >= QT_VERSION_CHECK(…)` (e.g. no `QFlags::toInt()`).
 - Keep each function's cyclomatic complexity below 9: CodeScene reports a "Complex Method" otherwise. Every `case`/`default` label, `if`, loop, `continue`, `&&`, `||` and `?:` adds one (`break` doesn't); split long `switch`es into helpers or a function table indexed by the enum (e.g. `fort_conf_rule_filter_check_funcList` in `driver/common/fortconf.c`). Likewise keep at most 4 arguments per function ("Excess Number of Function Arguments"), grouping them into a struct if needed (cf. `FORT_CALLOUT_ARG`), and at most one `&&`/`||` in an `if`/`while` condition ("Complex Conditional"): move the rest into a named helper or early returns. Nest a conditional or loop in at most one of a function's top-level branches/loop bodies ("Bumpy Road"); move the others into helpers.
 - Keep a form's code in the order of its controls: the members in the header, their creation in the `setup*Layout()` functions and their lines in `initialize()`, `retranslateUi()`, `fill*()`. Moving a control on the form moves all of them.
 - Commit subjects are prefixed by area: `UI:`, `Driver:`, `Tests:`, `Deploy:`, `Installer:`, `README:` — e.g. `UI: ConfManager: Refactor save()`.
-- User-visible changes get a line in `ChangeLog` under the release heading, referencing the GitHub issue number where applicable.
+- `ChangeLog` is maintained by hand at release time; don't edit it in feature commits.
 - App version lives in `src/version/fort_version.h` (`APP_VERSION_*` and `DRIVER_VERSION`).
