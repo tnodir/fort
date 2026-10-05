@@ -107,10 +107,15 @@ bool ControlCommandProg::processCommand(const ProcessCommandArgs &p, ProcessComm
         return false;
     }
 
+    const QString appPath = p.args.value(1).toString().trimmed();
+
+    if (progAction != ProgActionAdd && appPath.isEmpty()) {
+        r.errorMessage = "<app-path> is empty";
+        return false;
+    }
+
     if (!checkCommandActionPassword(r, progAction))
         return false;
-
-    const QString appPath = p.args.value(1).toString();
 
     const bool ok = processCommandProgAction(r, appPath, progAction, report);
 
