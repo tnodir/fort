@@ -102,7 +102,7 @@
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>速度制限</translation>
     </message>
     <message>
         <source>File Path</source>
@@ -313,7 +313,7 @@
     </message>
     <message>
         <source>Block Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>受信をブロック</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -625,7 +625,7 @@
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>備考 :</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -637,19 +637,19 @@
     </message>
     <message>
         <source>A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>プログラムは、排他的グループのいずれかが有効な場合にのみ有効になります。排他的グループがない場合は、いずれかのグループが有効であれば有効になります。</translation>
     </message>
     <message>
         <source>Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>ルール :</translation>
     </message>
     <message>
         <source>The Rule is applied to the Group&apos;s programs before their own Rule, while the Group is active.</source>
-        <translation type="unfinished"></translation>
+        <translation>グループがアクティブな間、グループのプログラムに対して独自のルールより先にこのルールが適用されます。</translation>
     </message>
     <message>
         <source>The Group is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>グループはこの時間帯でのみアクティブになります。</translation>
     </message>
     <message>
         <source>OK</source>
@@ -661,7 +661,7 @@
     </message>
     <message>
         <source>Edit Group</source>
-        <translation type="unfinished"></translation>
+        <translation>グループの編集</translation>
     </message>
 </context>
 <context>
@@ -679,19 +679,19 @@
     <name>GroupsController</name>
     <message>
         <source>Group Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>グループの設定エラー</translation>
     </message>
     <message>
         <source>Cannot edit Group</source>
-        <translation type="unfinished"></translation>
+        <translation>グループを編集できません</translation>
     </message>
     <message>
         <source>Cannot delete Group</source>
-        <translation type="unfinished"></translation>
+        <translation>グループを削除できません</translation>
     </message>
     <message>
         <source>Cannot update Group&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>グループの名前を更新できません</translation>
     </message>
 </context>
 <context>
@@ -699,7 +699,8 @@
     <message>
         <source>Select Groups.
 A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>グループを選択してください。
+プログラムは、排他的グループのいずれかが有効な場合にのみ有効になります。排他的グループがない場合は、いずれかのグループが有効であれば有効になります。</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -707,7 +708,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>(exclusive)</source>
-        <translation type="unfinished"></translation>
+        <translation>(排他的)</translation>
     </message>
 </context>
 <context>
@@ -730,7 +731,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Are you sure to remove selected group?</source>
-        <translation type="unfinished"></translation>
+        <translation>選択したグループを削除してもよろしいですか?</translation>
     </message>
 </context>
 <context>
@@ -1365,11 +1366,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block traffic for disabled Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>無効なグループのトラフィックをブロックする</translation>
     </message>
     <message>
         <source>Speed Limiter Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>速度制限を有効にする</translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
@@ -1725,15 +1726,15 @@ Make sure that you have a fresh backup.</source>
     <name>ProgNetworkPage</name>
     <message>
         <source>Block:</source>
-        <translation type="unfinished"></translation>
+        <translation>ブロック :</translation>
     </message>
     <message>
         <source>Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>受信</translation>
     </message>
     <message>
         <source>Block Inbound Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>受信接続をブロック</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -1753,7 +1754,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>No Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>制限なし</translation>
     </message>
 </context>
 <context>
@@ -1928,11 +1929,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>廃止済み</translation>
     </message>
     <message>
         <source>Filter by Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>グループでフィルタリング</translation>
     </message>
     <message>
         <source>Disable</source>
@@ -2353,15 +2354,15 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
-        <translation type="unfinished"></translation>
+        <translation>変更はシステムによってリセットされました。サービスを再度追跡可能にしてください。</translation>
     </message>
     <message>
         <source>Please restart the service to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>変更を適用するには、サービスを再起動してください。</translation>
     </message>
     <message>
         <source>Please restart the computer to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>変更を適用するには、コンピューターを再起動してください。</translation>
     </message>
 </context>
 <context>
@@ -2380,7 +2381,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Restart Service</source>
-        <translation type="unfinished"></translation>
+        <translation>サービスを再起動</translation>
     </message>
     <message>
         <source>Add Program</source>
@@ -2404,19 +2405,19 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Restart the service &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>サービス「%1」を再起動しますか?</translation>
     </message>
     <message>
         <source>Restart the service &quot;%1&quot; to apply the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>変更を適用するためにサービス「%1」を再起動しますか?</translation>
     </message>
     <message>
         <source>Please restart the computer to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>変更を適用するには、コンピューターを再起動してください。</translation>
     </message>
     <message>
         <source>Cannot restart the service &quot;%1&quot;.</source>
-        <translation type="unfinished"></translation>
+        <translation>サービス「%1」を再起動できません。</translation>
     </message>
 </context>
 <context>
@@ -2427,7 +2428,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>備考 :</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -2443,7 +2444,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Speed:</source>
-        <translation type="unfinished"></translation>
+        <translation>速度 :</translation>
     </message>
     <message>
         <source>Latency:</source>
@@ -2455,11 +2456,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>バッファサイズ :</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>速度制限はこの時間帯でのみアクティブになります。</translation>
     </message>
     <message>
         <source>OK</source>
@@ -2471,7 +2472,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Edit Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>速度制限の編集</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -2483,19 +2484,20 @@ Please check other program with the same path.</source>
     <message>
         <source>Buffer overflow: %1
 Packet loss: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>バッファオーバーフロー : %1
+パケット損失 : %2</translation>
     </message>
     <message>
         <source>Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>速度制限</translation>
     </message>
     <message>
         <source>Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>キュー</translation>
     </message>
     <message>
         <source>Dropped</source>
-        <translation type="unfinished"></translation>
+        <translation>破棄済み</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -2510,19 +2512,19 @@ Packet loss: %2</source>
     <name>SpeedLimitsController</name>
     <message>
         <source>Speed Limit Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>速度制限の設定エラー</translation>
     </message>
     <message>
         <source>Cannot edit Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>速度制限を編集できません</translation>
     </message>
     <message>
         <source>Cannot delete Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>速度制限を削除できません</translation>
     </message>
     <message>
         <source>Cannot update Speed Limit&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>速度制限の名前を更新できません</translation>
     </message>
 </context>
 <context>
@@ -2541,11 +2543,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>速度制限</translation>
     </message>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
-        <translation type="unfinished"></translation>
+        <translation>選択した速度制限を削除してもよろしいですか?</translation>
     </message>
 </context>
 <context>
@@ -2738,7 +2740,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>備考 :</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -2746,19 +2748,19 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>The disabled Time Period doesn&apos;t restrict its Groups and Speed Limits.</source>
-        <translation type="unfinished"></translation>
+        <translation>無効な時間帯は、そのグループと速度制限を制限しません。</translation>
     </message>
     <message>
         <source>Intervals:</source>
-        <translation type="unfinished"></translation>
+        <translation>間隔 :</translation>
     </message>
     <message>
         <source>The Time Period is active in ANY of its intervals.</source>
-        <translation type="unfinished"></translation>
+        <translation>時間帯はいずれかの間隔でアクティブになります。</translation>
     </message>
     <message>
         <source>Add Interval</source>
-        <translation type="unfinished"></translation>
+        <translation>間隔を追加</translation>
     </message>
     <message>
         <source>OK</source>
@@ -2770,18 +2772,18 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Edit Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>時間帯の編集</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodIntervalEdit</name>
     <message>
         <source>From</source>
-        <translation type="unfinished"></translation>
+        <translation>開始</translation>
     </message>
     <message>
         <source>To (the same time means the whole 24 hours)</source>
-        <translation type="unfinished"></translation>
+        <translation>終了 (同じ時刻は24時間全体を意味します)</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2792,11 +2794,11 @@ Packet loss: %2</source>
     <name>TimePeriodListModel</name>
     <message>
         <source>Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>時間帯</translation>
     </message>
     <message>
         <source>Intervals</source>
-        <translation type="unfinished"></translation>
+        <translation>間隔</translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -2807,34 +2809,34 @@ Packet loss: %2</source>
     <name>TimePeriodSelector</name>
     <message>
         <source>Time Period:</source>
-        <translation type="unfinished"></translation>
+        <translation>時間帯 :</translation>
     </message>
     <message>
         <source>No Period</source>
-        <translation type="unfinished"></translation>
+        <translation>時間帯なし</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>時間帯</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodsController</name>
     <message>
         <source>Time Period Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>時間帯の設定エラー</translation>
     </message>
     <message>
         <source>Cannot edit Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>時間帯を編集できません</translation>
     </message>
     <message>
         <source>Cannot delete Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>時間帯を削除できません</translation>
     </message>
     <message>
         <source>Cannot update Time Period&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>時間帯の名前を更新できません</translation>
     </message>
 </context>
 <context>
@@ -2853,11 +2855,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>時間帯</translation>
     </message>
     <message>
         <source>Are you sure to remove selected time period?</source>
-        <translation type="unfinished"></translation>
+        <translation>選択した時間帯を削除してもよろしいですか?</translation>
     </message>
 </context>
 <context>
@@ -2977,11 +2979,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>速度制限</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>時間帯</translation>
     </message>
     <message>
         <source>Traffic Graph</source>
@@ -2993,7 +2995,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Group Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>グループ修飾子</translation>
     </message>
     <message>
         <source>Quit</source>
@@ -3067,11 +3069,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Week Days</source>
-        <translation type="unfinished"></translation>
+        <translation>曜日</translation>
     </message>
     <message>
         <source>No Days</source>
-        <translation type="unfinished"></translation>
+        <translation>曜日なし</translation>
     </message>
 </context>
 <context>
