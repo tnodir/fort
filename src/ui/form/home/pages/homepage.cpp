@@ -384,9 +384,6 @@ void HomePage::updateIsUserAdmin()
     m_btInstallDriver->setEnabled(false);
     m_btRemoveDriver->setEnabled(false);
 
-    m_btInstallService->setEnabled(false);
-    m_btRemoveService->setEnabled(false);
-
     m_btUninstallPortable->setEnabled(false);
 }
 
@@ -411,7 +408,8 @@ void HomePage::updateHasService()
 
 void HomePage::setServiceInstalled(bool install)
 {
-    StartupUtil::setServiceInstalled(install);
+    if (!fortManager()->setServiceInstalled(install))
+        return;
 
     updateHasService();
 

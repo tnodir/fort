@@ -67,6 +67,25 @@ bool canInstallDriver(FortSettings *settings)
     return (canInstallDriver && isAdmin);
 }
 
+void installService()
+{
+    // The portable installation has no installer to install the driver
+    if (FortSettings::isPortable()) {
+        DriverManager::checkReinstallDriver();
+    }
+
+    StartupUtil::setServiceInstalled(true);
+}
+
+void uninstallService()
+{
+    StartupUtil::setServiceInstalled(false);
+
+    if (FortSettings::isPortable()) {
+        DriverManager::uninstallDriver();
+    }
+}
+
 inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
 {
     ioc->setService(new ConfManager(settings->confFilePath()));
@@ -287,7 +306,7 @@ void FortManager::install(const char *arg)
         StartupUtil::setAutoRunMode(StartupUtil::StartupAllUsers);
     } break;
     case 's': { // "service"
-        StartupUtil::setServiceInstalled(true);
+        installService();
     } break;
     case 'e': { // "explorer"
         StartupUtil::setExplorerIntegrated(true);
@@ -297,6 +316,11 @@ void FortManager::install(const char *arg)
 
 void FortManager::uninstall(const char *arg)
 {
+    if (arg && *arg == 's') { // "service"
+        uninstallService();
+        return;
+    }
+
     StartupUtil::setExplorerIntegrated(false); // Remove Windows Explorer integration
     if (arg && *arg == 'e') // "explorer"
         return;
@@ -312,6 +336,18 @@ void FortManager::uninstall(const char *arg)
 
         DriverCommon::provUnregister(); // Unregister booted provider
     }
+}
+
+bool FortManager::setServiceInstalled(bool install)
+{
+    if (settings()->isUserAdmin()) {
+        StartupUtil::setServiceInstalled(install);
+    } else {
+        // Request the Administrator's rights
+        OsUtil::runAsAdmin(install ? "-i service" : "-u service");
+    }
+
+    return (StartupUtil::isServiceInstalled() == install);
 }
 
 bool FortManager::installDriver()
@@ -416,11 +452,26 @@ void FortManager::checkDriverAccess()
     const bool hasService = settings->hasService();
     const bool isAdmin = settings->isUserAdmin();
 
-    if (!(hasService || isAdmin)) {
-        QMessageBox::warning(nullptr, QString(),
-                tr("Run Fort Firewall as Administrator or install its Windows Service"
-                   " to access the Driver!"));
-    }
+    if (hasService || isAdmin)
+        return;
+
+    // Ask after the windows' initialization
+    QMetaObject::invokeMethod(this, &FortManager::askInstallService, Qt::QueuedConnection);
+}
+
+void FortManager::askInstallService()
+{
+    const QString text = tr("Run Fort Firewall as Administrator or install its Windows Service"
+                            " to access the Driver!")
+            + "\n\n" + tr("Install the Windows Service now?");
+
+    windowManager()->showConfirmBox(
+            [&] {
+                if (setServiceInstalled(true)) {
+                    OsUtil::restart();
+                }
+            },
+            text);
 }
 
 void FortManager::setupEnvManager()

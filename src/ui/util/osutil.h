@@ -56,6 +56,7 @@ public:
     static void quit(const QString &reason);
 
     static bool runCommand(const QString &command, const QString &workingDir = {});
+    static bool runAsAdmin(const QString &args);
 };
 
 #endif // OSUTIL_H

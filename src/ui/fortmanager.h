@@ -27,6 +27,8 @@ signals:
     void aboutToDestroy();
 
 public slots:
+    bool setServiceInstalled(bool install);
+
     bool installDriver();
     bool removeDriver();
 
@@ -52,6 +54,7 @@ private:
     void checkReinstallDriver();
     void checkStartService();
     void checkDriverAccess();
+    void askInstallService();
 
     void setupEnvManager();
     void setupConfManager();

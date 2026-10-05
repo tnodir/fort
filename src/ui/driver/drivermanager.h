@@ -32,9 +32,9 @@ public:
 
     void setUp() override;
 
-    bool checkReinstallDriver();
-    bool reinstallDriver();
-    bool uninstallDriver();
+    static bool checkReinstallDriver();
+    static bool reinstallDriver();
+    static bool uninstallDriver();
 
 signals:
     void errorCodeChanged();

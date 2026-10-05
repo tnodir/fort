@@ -13,6 +13,7 @@
 
 #include <lmcons.h>
 #include <mmsystem.h>
+#include <shellapi.h>
 
 #include "fileutil.h"
 #include "processinfo.h"
@@ -247,4 +248,32 @@ bool OsUtil::runCommand(const QString &command, const QString &workingDir)
     qCDebug(LC) << "Run command:" << scriptPath << args;
 
     return QProcess::startDetached(scriptPath, args, workingDir);
+}
+
+bool OsUtil::runAsAdmin(const QString &args)
+{
+    const QString appFilePath = FileUtil::nativeAppFilePath();
+
+    qCDebug(LC) << "Run as admin:" << appFilePath << args;
+
+    SHELLEXECUTEINFOW sei = {
+        .cbSize = sizeof(SHELLEXECUTEINFOW),
+        .fMask = SEE_MASK_NOCLOSEPROCESS | SEE_MASK_NOASYNC,
+        .lpVerb = L"runas",
+        .lpFile = (LPCWSTR) appFilePath.utf16(),
+        .lpParameters = (LPCWSTR) args.utf16(),
+        .nShow = SW_HIDE,
+    };
+
+    if (!ShellExecuteExW(&sei) || !sei.hProcess)
+        return false; // The UAC prompt may be cancelled
+
+    WaitForSingleObject(sei.hProcess, INFINITE);
+
+    DWORD exitCode = 1;
+    GetExitCodeProcess(sei.hProcess, &exitCode);
+
+    CloseHandle(sei.hProcess);
+
+    return (exitCode == 0);
 }
