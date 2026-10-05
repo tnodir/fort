@@ -152,7 +152,7 @@ void TaskListModel::setupTaskRows()
         taskRow.setDelayStartup(taskInfo->delayStartup());
         taskRow.setMaxRetries(taskInfo->maxRetries());
         taskRow.setRetrySeconds(taskInfo->retrySeconds());
-        taskRow.setIntervalHours(taskInfo->intervalHours());
+        taskRow.setIntervalMinutes(taskInfo->intervalMinutes());
     }
 }
 

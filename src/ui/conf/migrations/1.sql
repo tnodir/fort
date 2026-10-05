@@ -175,7 +175,7 @@ CREATE TABLE task(
   delay_startup BOOLEAN NOT NULL DEFAULT 0,
   max_retries INTEGER NOT NULL DEFAULT 0,
   retry_seconds INTEGER NOT NULL DEFAULT 0,
-  interval_hours INTEGER NOT NULL,
+  interval_minutes INTEGER NOT NULL DEFAULT 1440,
   last_run INTEGER NOT NULL,
   last_success INTEGER NOT NULL,
   data BLOB

@@ -23,8 +23,8 @@ public:
     int retrySeconds() const { return m_retrySeconds; }
     void setRetrySeconds(int v) { m_retrySeconds = quint16(v); }
 
-    int intervalHours() const { return m_intervalHours; }
-    void setIntervalHours(int v) { m_intervalHours = quint16(v); }
+    int intervalMinutes() const { return m_intervalMinutes; }
+    void setIntervalMinutes(int v) { m_intervalMinutes = quint32(v); }
 
     quint64 value() const { return m_value; }
 
@@ -39,8 +39,7 @@ private:
             quint8 m_delayStartup : 1;
             quint8 m_maxRetries;
             quint16 m_retrySeconds;
-            quint16 m_intervalHours;
-            quint16 m_reserved; // not used
+            quint32 m_intervalMinutes;
         };
 
         quint64 m_value = 0;

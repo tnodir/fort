@@ -32,7 +32,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-inline constexpr int DATABASE_USER_VERSION = 60;
+inline constexpr int DATABASE_USER_VERSION = 61;
 
 const char *const sqlSelectAddressGroups = "SELECT addr_group_id, include_all, exclude_all,"
                                            "    include_zones, exclude_zones,"
@@ -54,21 +54,21 @@ const char *const sqlUpdateAddressGroup = "UPDATE address_group"
 
 const char *const sqlSelectTaskByName = "SELECT task_id, enabled,"
                                         "    run_on_startup, delay_startup,"
-                                        "    max_retries, retry_seconds, interval_hours,"
+                                        "    max_retries, retry_seconds, interval_minutes,"
                                         "    last_run, last_success, data"
                                         "  FROM task"
                                         "  WHERE name = ?1;";
 
 const char *const sqlInsertTask = "INSERT INTO task(task_id, name, enabled,"
                                   "    run_on_startup, delay_startup,"
-                                  "    max_retries, retry_seconds, interval_hours,"
+                                  "    max_retries, retry_seconds, interval_minutes,"
                                   "    last_run, last_success, data)"
                                   "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11);";
 
 const char *const sqlUpdateTask = "UPDATE task"
                                   "  SET name = ?2, enabled = ?3,"
                                   "    run_on_startup = ?4, delay_startup = ?5,"
-                                  "    max_retries = ?6, retry_seconds = ?7, interval_hours = ?8,"
+                                  "    max_retries = ?6, retry_seconds = ?7, interval_minutes = ?8,"
                                   "    last_run = ?9, last_success = ?10,"
                                   "    data = ?11"
                                   "  WHERE task_id = ?1;";
@@ -501,6 +501,16 @@ bool migrateGroupPeriods(SqliteDb *db)
     return true;
 }
 
+// The Tasks' intervals are in minutes instead of hours
+bool migrateTaskIntervals(SqliteDb *db)
+{
+    const QString sql = "UPDATE task SET interval_minutes ="
+                        "  (SELECT t.interval_hours * 60 FROM "
+            + oldEntityName("task") + " t WHERE t.task_id = task.task_id);";
+
+    return DbQuery(db).sql(sql).executeOk();
+}
+
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
     Q_UNUSED(ctx);
@@ -528,6 +538,11 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     // COMPAT: Migrate the Groups' periods to the Time Periods
     if (version >= 59 && version < 60) {
         migrateGroupPeriods(db);
+    }
+
+    // COMPAT: Migrate the Tasks' intervals from hours to minutes
+    if (version < 61) {
+        migrateTaskIntervals(db);
     }
 
     return true;
@@ -1149,7 +1164,7 @@ bool ConfManager::loadTask(TaskInfo *taskInfo)
     taskInfo->setDelayStartup(stmt.columnBool(3));
     taskInfo->setMaxRetries(stmt.columnInt(4));
     taskInfo->setRetrySeconds(stmt.columnInt(5));
-    taskInfo->setIntervalHours(stmt.columnInt(6));
+    taskInfo->setIntervalMinutes(stmt.columnInt(6));
     taskInfo->setLastRun(stmt.columnDateTime(7));
     taskInfo->setLastSuccess(stmt.columnDateTime(8));
     taskInfo->setData(stmt.columnBlob(9));
@@ -1169,7 +1184,7 @@ bool ConfManager::saveTask(TaskInfo *taskInfo)
         taskInfo->delayStartup(),
         taskInfo->maxRetries(),
         taskInfo->retrySeconds(),
-        taskInfo->intervalHours(),
+        taskInfo->intervalMinutes(),
         taskInfo->lastRun(),
         taskInfo->lastSuccess(),
         taskInfo->data(),

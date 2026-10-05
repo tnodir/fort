@@ -15,7 +15,7 @@ QVariant headerDataDisplayName(int /*role*/)
 
 QVariant headerDataDisplayInterval(int /*role*/)
 {
-    return TaskListModel::tr("Interval, hours");
+    return TaskListModel::tr("Interval, minutes");
 }
 
 QVariant headerDataDisplayStartup(int role)

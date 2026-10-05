@@ -13,5 +13,5 @@ void TaskEditInfo::resetToDefault()
     setDelayStartup(false);
     setMaxRetries(0);
     setRetrySeconds(0);
-    setIntervalHours(TaskDefaultIntervalHours);
+    setIntervalMinutes(TaskDefaultIntervalMinutes);
 }

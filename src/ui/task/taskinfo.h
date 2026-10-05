@@ -9,7 +9,7 @@
 class TaskManager;
 class TaskWorker;
 
-constexpr int TaskDefaultIntervalHours = 24;
+constexpr int TaskDefaultIntervalMinutes = 24 * 60;
 
 class TaskInfo : public QObject
 {
@@ -61,8 +61,8 @@ public:
     int retrySeconds() const { return m_retrySeconds; }
     void setRetrySeconds(int v) { m_retrySeconds = quint16(v); }
 
-    int intervalHours() const { return m_intervalHours; }
-    void setIntervalHours(int v) { m_intervalHours = quint16(v); }
+    int intervalMinutes() const { return m_intervalMinutes; }
+    void setIntervalMinutes(int v) { m_intervalMinutes = quint32(v); }
 
     QDateTime lastRun() const { return m_lastRun; }
     void setLastRun(const QDateTime &v) { m_lastRun = v; }
@@ -116,7 +116,7 @@ private:
     quint8 m_failedCount = 0; // transient
     quint8 m_maxRetries = 0;
     quint16 m_retrySeconds = 0;
-    quint16 m_intervalHours = TaskDefaultIntervalHours;
+    quint32 m_intervalMinutes = TaskDefaultIntervalMinutes;
 
     qint64 m_id = 0;
 

@@ -29,7 +29,8 @@ using namespace Fort;
 
 namespace {
 
-const std::array taskIntervalHourValues = { 3, 1, 6, 12, 24, 24 * 7, 24 * 30 };
+const std::array taskIntervalMinuteValues = { 60 * 3, 5, 15, 30, 60 * 1, 60 * 6, 60 * 12, 60 * 24,
+    60 * 24 * 7, 60 * 24 * 30 };
 const std::array taskRetrySecondsValues = { 3, 0, 20, 60, 2 * 60, 5 * 60, 10 * 60 };
 
 }
@@ -86,11 +87,12 @@ void SchedulePage::onRetranslateUi()
 
 void SchedulePage::retranslateTaskInterval()
 {
-    const QStringList list = { tr("Custom"), tr("Hourly"), tr("Each 6 hours"), tr("Each 12 hours"),
-        tr("Daily"), tr("Weekly"), tr("Monthly") };
+    const QStringList list = { tr("Custom"), tr("Each 5 minutes"), tr("Each 15 minutes"),
+        tr("Each 30 minutes"), tr("Hourly"), tr("Each 6 hours"), tr("Each 12 hours"), tr("Daily"),
+        tr("Weekly"), tr("Monthly") };
 
     m_cscTaskInterval->setNames(list);
-    m_cscTaskInterval->spinBox()->setSuffix(tr(" hour(s)"));
+    m_cscTaskInterval->spinBox()->setSuffix(tr(" minute(s)"));
 }
 
 void SchedulePage::retranslateTaskRetrySeconds()
@@ -200,8 +202,8 @@ void SchedulePage::setupTaskInterval()
 {
     m_cscTaskInterval = new CheckSpinCombo();
     m_cscTaskInterval->checkBox()->setFont(GuiUtil::fontBold());
-    m_cscTaskInterval->spinBox()->setRange(1, 24 * 30 * 12); // ~Year
-    m_cscTaskInterval->setValues(taskIntervalHourValues);
+    m_cscTaskInterval->spinBox()->setRange(1, 60 * 24 * 30 * 12); // ~Year
+    m_cscTaskInterval->setValues(taskIntervalMinuteValues);
 
     connect(m_cscTaskInterval->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
         auto &task = currentTaskRow();
@@ -215,10 +217,10 @@ void SchedulePage::setupTaskInterval()
     connect(m_cscTaskInterval->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
                 auto &task = currentTaskRow();
-                if (task.intervalHours() == value)
+                if (task.intervalMinutes() == value)
                     return;
 
-                task.setIntervalHours(value);
+                task.setIntervalMinutes(value);
                 setCurrentTaskRowEdited();
             });
 }
@@ -316,7 +318,7 @@ void SchedulePage::setupTableTasksChanged()
 
             m_cscTaskInterval->checkBox()->setChecked(task.enabled());
             m_cscTaskInterval->checkBox()->setText(taskInfo->title());
-            m_cscTaskInterval->spinBox()->setValue(task.intervalHours());
+            m_cscTaskInterval->spinBox()->setValue(task.intervalMinutes());
 
             m_cbTaskRunOnStartup->setChecked(task.runOnStartup());
             m_cbTaskDelayStartup->setChecked(task.delayStartup());

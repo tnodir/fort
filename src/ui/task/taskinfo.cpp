@@ -51,7 +51,7 @@ void TaskInfo::editFromVariant(const QVariant &v)
     setDelayStartup(task.delayStartup());
     setMaxRetries(task.maxRetries());
     setRetrySeconds(task.retrySeconds());
-    setIntervalHours(task.intervalHours());
+    setIntervalMinutes(task.intervalMinutes());
 }
 
 qint64 TaskInfo::secondsToRun(const QDateTime &now, bool isFirstRun)
@@ -69,7 +69,7 @@ qint64 TaskInfo::secondsToRun(const QDateTime &now, bool isFirstRun)
     if (!m_plannedRun.isNull()) {
         plannedRun = m_plannedRun;
     } else {
-        const qint64 delaySecs = (m_failedCount > 0) ? retrySeconds() : (intervalHours() * 60 * 60);
+        const qint64 delaySecs = (m_failedCount > 0) ? retrySeconds() : (intervalMinutes() * 60);
 
         plannedRun = lastRun().addSecs(delaySecs);
     }
