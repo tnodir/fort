@@ -30,6 +30,17 @@ void addVLine(QPainterPath &path, int x, int y1, int y2)
     path.lineTo(x, y2);
 }
 
+void addTicks(QPainterPath &path, const QVector<int> &ys, const QRect &axisRect, int length)
+{
+    const int left = axisRect.left();
+    const int right = axisRect.right() + 1;
+
+    for (const int y : ys) {
+        addHLine(path, left - length, left, y);
+        addHLine(path, right, right + length, y);
+    }
+}
+
 QGraphicsPathItem *createBars(QGraphicsItem *parent)
 {
     auto bars = new QGraphicsPathItem(parent);
@@ -102,6 +113,8 @@ void GraphPlot::setColors(const ColorArray &colors)
     m_axes->setPen(QPen(colors[ColorAxis], 0, Qt::SolidLine, Qt::SquareCap));
 
     m_tickLabelColor = colors[ColorTickLabel];
+
+    updateTickLabelsStyle();
 }
 
 void GraphPlot::setTickLabelSize(int pointSize)
@@ -115,6 +128,8 @@ void GraphPlot::setTickLabelSize(int pointSize)
     speedFont.setWeight(QFont::DemiBold);
 
     m_speedText->setFont(speedFont);
+
+    updateTickLabelsStyle();
 }
 
 void GraphPlot::addPoint(GraphPoint point, qint64 rangeLower)
@@ -141,14 +156,17 @@ void GraphPlot::replot()
     AxisTicks axisTicks;
     m_ticker.generate(m_valueUpper, axisTicks);
 
-    const int tickLabelsWidth = setupTickLabels(axisTicks);
+    const int tickLabelsWidth = setupTickLabels(axisTicks.labels);
     updateAxisRect(tickLabelsWidth);
 
-    updateGrid(axisTicks);
+    const QVector<int> tickYs = valuesToPixels(axisTicks.ticks);
+    const QVector<int> subTickYs = valuesToPixels(axisTicks.subTicks);
+
+    updateGrid(tickYs);
     updateBars(keyLower, keyRangeSize);
     updateSpeedBox();
-    updateAxes(axisTicks);
-    updateTickLabels(axisTicks);
+    updateAxes(tickYs, subTickYs);
+    updateTickLabels(tickYs);
 }
 
 void GraphPlot::resizeEvent(QResizeEvent *event)
@@ -322,24 +340,41 @@ quint64 GraphPlot::maxBits(qint64 keyLower) const
 
 void GraphPlot::updateValueRange(qint64 keyLower)
 {
+    if (m_fixedValueMax > 0) {
+        m_valueUpper = double(m_fixedValueMax);
+        return;
+    }
+
     // Keep the current range for empty traffic
     const quint64 bits = maxBits(keyLower);
     if (bits > 0) {
         m_valueUpper = double(bits);
     }
+}
 
-    if (m_fixedValueMax > 0) {
-        m_valueUpper = double(m_fixedValueMax);
+void GraphPlot::setupTickLabelStyle(QGraphicsSimpleTextItem *label) const
+{
+    label->setFont(m_tickLabelFont);
+    label->setBrush(m_tickLabelColor);
+}
+
+void GraphPlot::updateTickLabelsStyle()
+{
+    for (auto label : std::as_const(m_tickLabels)) {
+        setupTickLabelStyle(label);
     }
 }
 
-int GraphPlot::setupTickLabels(const AxisTicks &axisTicks)
+int GraphPlot::setupTickLabels(const QStringList &labels)
 {
-    const int count = axisTicks.labels.size();
+    const int count = labels.size();
 
     // Add missing labels
     while (m_tickLabels.size() < count) {
-        m_tickLabels.append(scene()->addSimpleText(QString()));
+        auto label = scene()->addSimpleText(QString());
+        setupTickLabelStyle(label);
+
+        m_tickLabels.append(label);
     }
 
     // Hide extra labels
@@ -351,9 +386,7 @@ int GraphPlot::setupTickLabels(const AxisTicks &axisTicks)
 
     for (int i = 0; i < count; ++i) {
         auto label = m_tickLabels.at(i);
-        label->setText(axisTicks.labels.at(i));
-        label->setFont(m_tickLabelFont);
-        label->setBrush(m_tickLabelColor);
+        label->setText(labels.at(i));
 
         maxWidth = qMax(maxWidth, qCeil(label->boundingRect().width()));
     }
@@ -372,12 +405,12 @@ void GraphPlot::updateAxisRect(int tickLabelsWidth)
     m_plotArea->setRect(m_axisRect);
 }
 
-void GraphPlot::updateGrid(const AxisTicks &axisTicks)
+void GraphPlot::updateGrid(const QVector<int> &tickYs)
 {
     QPainterPath path;
 
-    for (const double tick : axisTicks.ticks) {
-        addHLine(path, m_axisRect.left(), m_axisRect.right(), valueToPixel(tick));
+    for (const int y : tickYs) {
+        addHLine(path, m_axisRect.left(), m_axisRect.right(), y);
     }
 
     m_grid->setPath(path);
@@ -418,46 +451,34 @@ void GraphPlot::updateSpeedBox()
     m_speedBox->setPos(qRound(centerX - textRect.width() / 2), m_axisRect.top());
 }
 
-void GraphPlot::updateAxes(const AxisTicks &axisTicks)
+void GraphPlot::updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs)
 {
-    const int left = m_axisRect.left();
-    const int right = m_axisRect.right() + 1;
     const int bottom = m_axisRect.bottom();
     const int top = bottom - m_axisRect.height();
 
     QPainterPath path;
 
     // Base Lines
-    addVLine(path, left, bottom, top);
-    addVLine(path, right, bottom, top);
+    addVLine(path, m_axisRect.left(), bottom, top);
+    addVLine(path, m_axisRect.right() + 1, bottom, top);
 
     // Ticks
-    for (const double tick : axisTicks.ticks) {
-        const int y = valueToPixel(tick);
-        addHLine(path, left - tickLength, left, y);
-        addHLine(path, right, right + tickLength, y);
-    }
-
-    // Sub Ticks
-    for (const double subTick : axisTicks.subTicks) {
-        const int y = valueToPixel(subTick);
-        addHLine(path, left - subTickLength, left, y);
-        addHLine(path, right, right + subTickLength, y);
-    }
+    addTicks(path, tickYs, m_axisRect, tickLength);
+    addTicks(path, subTickYs, m_axisRect, subTickLength);
 
     m_axes->setPath(path);
 }
 
-void GraphPlot::updateTickLabels(const AxisTicks &axisTicks)
+void GraphPlot::updateTickLabels(const QVector<int> &tickYs)
 {
     const QRect viewRect = viewport()->rect();
     const int labelsRight = m_axisRect.left() - tickLength - tickLabelPadding;
-    const int count = axisTicks.ticks.size();
+    const int count = tickYs.size();
 
     for (int i = 0; i < count; ++i) {
         auto label = m_tickLabels.at(i);
         const QRectF rect = label->boundingRect();
-        const int y = qRound(valueToPixel(axisTicks.ticks.at(i)) - rect.height() / 2);
+        const int y = qRound(tickYs.at(i) - rect.height() / 2);
 
         label->setPos(qRound(labelsRight - rect.width()), y);
 
@@ -472,6 +493,18 @@ int GraphPlot::valueToPixel(double value) const
     const double ratio = qMin(value / m_valueUpper, 1.0);
 
     return qRound(m_axisRect.bottom() - ratio * m_axisRect.height());
+}
+
+QVector<int> GraphPlot::valuesToPixels(const QVector<double> &values) const
+{
+    QVector<int> pixels;
+    pixels.reserve(values.size());
+
+    for (const double value : values) {
+        pixels.append(valueToPixel(value));
+    }
+
+    return pixels;
 }
 
 QRectF GraphPlot::barRect(int x, quint64 bits) const

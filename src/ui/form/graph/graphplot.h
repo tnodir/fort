@@ -92,16 +92,20 @@ private:
     quint64 maxBits(qint64 keyLower) const;
     void updateValueRange(qint64 keyLower);
 
-    int setupTickLabels(const AxisTicks &axisTicks);
+    void setupTickLabelStyle(QGraphicsSimpleTextItem *label) const;
+    void updateTickLabelsStyle();
+
+    int setupTickLabels(const QStringList &labels);
     void updateAxisRect(int tickLabelsWidth);
 
-    void updateGrid(const AxisTicks &axisTicks);
+    void updateGrid(const QVector<int> &tickYs);
     void updateBars(qint64 keyLower, int keyRangeSize);
     void updateSpeedBox();
-    void updateAxes(const AxisTicks &axisTicks);
-    void updateTickLabels(const AxisTicks &axisTicks);
+    void updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs);
+    void updateTickLabels(const QVector<int> &tickYs);
 
     int valueToPixel(double value) const;
+    QVector<int> valuesToPixels(const QVector<double> &values) const;
     QRectF barRect(int x, quint64 bits) const;
 
 private:

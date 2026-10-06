@@ -178,6 +178,7 @@ void GraphWindow::updateFonts(const IniUser &ini)
 void GraphWindow::updateFormat(const IniUser &ini)
 {
     m_plot->setUnitFormat(FormatUtil::graphUnitFormat(ini.graphWindowTrafUnit()));
+    m_plot->setFixedValueMax(ini.graphWindowFixedSpeed() * 1024LL);
 }
 
 void GraphWindow::setupTimer()
@@ -324,8 +325,6 @@ void GraphWindow::updateGraph()
         return;
 
     updateSpeed(unixTime - 1); // the last complete second
-
-    m_plot->setFixedValueMax(iniUser().graphWindowFixedSpeed() * 1024LL);
 
     m_plot->replot();
 }
