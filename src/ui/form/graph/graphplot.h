@@ -2,6 +2,7 @@
 #define GRAPHPLOT_H
 
 #include <QGraphicsView>
+#include <QTimer>
 
 #include "axistickerspeed.h"
 
@@ -75,6 +76,8 @@ public slots:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    void hideEvent(QHideEvent *event) override;
+
     void mousePressEvent(QMouseEvent *event) override;
     void mouseDoubleClickEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
@@ -85,6 +88,7 @@ private:
 
     void setupView();
     void setupItems();
+    void setupScrollTimer();
 
     int pointIndex(qint64 unixTime) const;
     bool isPointAt(int index, qint64 unixTime) const;
@@ -108,7 +112,8 @@ private:
     void updateAxisRect(int tickLabelsWidth);
 
     void updateGrid(const QVector<int> &tickYs);
-    void updateBars(qint64 keyLower, int keyRangeSize);
+    void updateBars(qint64 keyLower);
+    void updateScroll();
     void updateSpeedBox();
     void updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs);
     void updateTickLabels(const QVector<int> &tickYs);
@@ -144,6 +149,8 @@ private:
     QFont m_tickLabelFont;
 
     AxisTickerSpeed m_ticker;
+
+    QTimer m_scrollTimer;
 
     QList<QGraphicsSimpleTextItem *> m_tickLabels;
     QList<GraphPoint> m_points;

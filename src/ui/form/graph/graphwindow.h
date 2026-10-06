@@ -56,6 +56,7 @@ private:
     void updateFormat(const IniUser &ini);
 
     void setupTimer();
+    void startUpdateTimer();
 
     void updateSpeed(qint64 unixTime);
     QString getSpeedText(qint64 unixTime) const;

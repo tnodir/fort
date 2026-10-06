@@ -1,6 +1,7 @@
 #include "graphwindow.h"
 
 #include <QApplication>
+#include <QDateTime>
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QScreen>
@@ -186,11 +187,22 @@ void GraphWindow::setupTimer()
 {
     connect(&m_hoverTimer, &QTimer::timeout, this, &GraphWindow::checkHoverLeave);
     connect(&m_updateTimer, &QTimer::timeout, this, &GraphWindow::updateGraph);
+    connect(&m_updateTimer, &QTimer::timeout, this, &GraphWindow::startUpdateTimer);
 
     m_hoverTimer.setInterval(300);
-    m_updateTimer.setInterval(1000); // 1 second
 
-    m_updateTimer.start();
+    m_updateTimer.setSingleShot(true);
+    m_updateTimer.setTimerType(Qt::PreciseTimer);
+
+    startUpdateTimer();
+}
+
+void GraphWindow::startUpdateTimer()
+{
+    // Update right after the next second's start
+    const int msecs = int(QDateTime::currentMSecsSinceEpoch() % 1000);
+
+    m_updateTimer.start(1000 - msecs + 10);
 }
 
 void GraphWindow::onMouseDoubleClick(QMouseEvent *event)

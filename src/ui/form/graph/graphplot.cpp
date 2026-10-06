@@ -1,5 +1,6 @@
 #include "graphplot.h"
 
+#include <QDateTime>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QMouseEvent>
@@ -14,6 +15,7 @@ inline constexpr int tickLength = 5;
 inline constexpr int subTickLength = 2;
 inline constexpr int tickLabelPadding = 2;
 inline constexpr int keyPixels = 4; // pixels per second
+inline constexpr int pixelMsecs = 1000 / keyPixels;
 inline constexpr int barWidth = 2;
 inline constexpr int speedBgAlpha = 130;
 inline constexpr int mouseMoveDistance = 3;
@@ -55,6 +57,7 @@ GraphPlot::GraphPlot(QWidget *parent) : QGraphicsView(parent)
 {
     setupView();
     setupItems();
+    setupScrollTimer();
 }
 
 void GraphPlot::setUnitFormat(FormatUtil::SizeFormat v)
@@ -172,8 +175,10 @@ void GraphPlot::replot()
         layoutAxes();
     }
 
-    updateBars(keyLower, keyRangeSize);
+    updateBars(keyLower);
     updateSpeedBox();
+
+    updateScroll();
 }
 
 void GraphPlot::resizeEvent(QResizeEvent *event)
@@ -185,6 +190,13 @@ void GraphPlot::resizeEvent(QResizeEvent *event)
     m_axesChanged = true;
 
     emit resized(event);
+}
+
+void GraphPlot::hideEvent(QHideEvent *event)
+{
+    QGraphicsView::hideEvent(event);
+
+    m_scrollTimer.stop(); // the hidden graph isn't replotted
 }
 
 void GraphPlot::mousePressEvent(QMouseEvent *event)
@@ -295,6 +307,14 @@ void GraphPlot::setupItems()
     m_tickLabelFont = font();
 }
 
+void GraphPlot::setupScrollTimer()
+{
+    m_scrollTimer.setSingleShot(true);
+    m_scrollTimer.setTimerType(Qt::PreciseTimer);
+
+    connect(&m_scrollTimer, &QTimer::timeout, this, &GraphPlot::updateScroll);
+}
+
 int GraphPlot::pointIndex(qint64 unixTime) const
 {
     const auto it = std::lower_bound(m_points.cbegin(), m_points.cend(), unixTime,
@@ -338,7 +358,8 @@ int GraphPlot::keyRangeSize() const
 {
     const int width = m_axisRect.isNull() ? viewport()->width() : m_axisRect.width();
 
-    return qMax(width / keyPixels, 1);
+    // Include the partially visible second
+    return qMax(width / keyPixels, 0) + 1;
 }
 
 quint64 GraphPlot::maxBits(qint64 keyLower) const
@@ -457,10 +478,11 @@ void GraphPlot::updateGrid(const QVector<int> &tickYs)
     m_grid->setPath(path);
 }
 
-void GraphPlot::updateBars(qint64 keyLower, int keyRangeSize)
+void GraphPlot::updateBars(qint64 keyLower)
 {
-    const int left = m_axisRect.left();
-    const double keyScale = double(m_axisRect.width()) / keyRangeSize;
+    // The last second is at the right edge
+    const int right = m_axisRect.left() + m_axisRect.width();
+    const qint64 keyUpper = lastUnixTime();
 
     QPainterPath pathIn;
     QPainterPath pathOut;
@@ -469,7 +491,7 @@ void GraphPlot::updateBars(qint64 keyLower, int keyRangeSize)
         if (point.unixTime < keyLower)
             continue;
 
-        const int x = left + qRound((point.unixTime - keyLower) * keyScale);
+        const int x = right - int(keyUpper - point.unixTime) * keyPixels;
 
         pathIn.addRect(barRect(x - barWidth, point.inBits));
         pathOut.addRect(barRect(x, point.outBits));
@@ -481,6 +503,20 @@ void GraphPlot::updateBars(qint64 keyLower, int keyRangeSize)
 
     m_barsIn->setPath(pathIn);
     m_barsOut->setPath(pathOut);
+}
+
+void GraphPlot::updateScroll()
+{
+    // Move the bars to the left smoothly: by a pixel, up to the next second
+    const qint64 msecs = QDateTime::currentMSecsSinceEpoch() - lastUnixTime() * 1000;
+    const int shift = int(qBound(qint64(0), msecs / pixelMsecs, qint64(keyPixels)));
+
+    m_barsIn->setX(-shift);
+    m_barsOut->setX(-shift);
+
+    if (shift < keyPixels) {
+        m_scrollTimer.start(pixelMsecs - int(msecs % pixelMsecs));
+    }
 }
 
 void GraphPlot::updateSpeedBox()
