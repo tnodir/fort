@@ -3,9 +3,11 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QFormLayout>
+#include <QGroupBox>
 #include <QLabel>
 #include <QPushButton>
 #include <QSpinBox>
+#include <QTimer>
 #include <QToolButton>
 #include <QVBoxLayout>
 
@@ -22,6 +24,7 @@
 #include <model/connlistmodel.h>
 #include <user/iniuser.h>
 #include <util/fileutil.h>
+#include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/net/netformatutil.h>
 #include <util/net/netutil.h>
@@ -36,6 +39,8 @@ namespace {
 
 inline constexpr int PORT_MAX = 65535;
 inline constexpr int IP_PROTO_MAX = 255;
+
+inline constexpr int SIMULATE_DELAY_MSEC = 150;
 
 const QSize resultIconSize(16, 16);
 
@@ -234,6 +239,7 @@ void FilterSimWindow::retranslateUi()
 {
     this->unsetLocale();
 
+    m_gbConn->setTitle(tr("Connection"));
     m_labelAppPath->setText(tr("Program Path:"));
     m_btSelectFile->setToolTip(tr("Select File"));
     m_labelDirection->setText(tr("Direction:"));
@@ -250,6 +256,7 @@ void FilterSimWindow::retranslateUi()
     m_labelProfile->setText(tr("Network Profile:"));
     retranslateComboProfile();
     m_btSimulate->setText(tr("Simulate"));
+    m_gbResult->setTitle(tr("Result"));
     m_labelAction->setText(tr("Action:"));
     m_labelReason->setText(tr("Reason:"));
     m_labelRule->setText(tr("Rule:"));
@@ -292,23 +299,25 @@ void FilterSimWindow::retranslateComboProfile()
 void FilterSimWindow::setupUi()
 {
     // Connection
-    auto connLayout = setupConnLayout();
+    m_gbConn = new QGroupBox();
+    m_gbConn->setLayout(setupConnLayout());
 
     // Simulate
     m_btSimulate = ControlUtil::createButton(":/icons/play.png", [&] { simulateConn(); });
 
     // Result
-    auto resultLayout = setupResultLayout();
+    m_gbResult = new QGroupBox();
+    m_gbResult->setLayout(setupResultLayout());
 
     // Note
     m_labelNote = ControlUtil::createLabel();
     m_labelNote->setWordWrap(true);
+    m_labelNote->setForegroundRole(QPalette::PlaceholderText);
 
     auto layout = ControlUtil::createVLayout(/*margin=*/6);
-    layout->addLayout(connLayout);
-    layout->addWidget(m_btSimulate, 0, Qt::AlignLeft);
-    layout->addWidget(ControlUtil::createHSeparator());
-    layout->addLayout(resultLayout);
+    layout->addWidget(m_gbConn);
+    layout->addWidget(m_btSimulate, 0, Qt::AlignCenter);
+    layout->addWidget(m_gbResult);
     layout->addStretch();
     layout->addWidget(m_labelNote);
 
@@ -473,6 +482,7 @@ QLayout *FilterSimWindow::setupResultActionLayout()
     m_iconAction->setFixedSize(resultIconSize);
 
     m_resultAction = createResultLabel();
+    m_resultAction->setFont(GuiUtil::fontBold());
 
     auto layout = new QHBoxLayout();
     layout->addWidget(m_iconAction);
@@ -482,6 +492,15 @@ QLayout *FilterSimWindow::setupResultActionLayout()
 }
 
 void FilterSimWindow::simulateConn()
+{
+    // Clear the result for a moment to show that the simulation is run again
+    m_simulated = false;
+    clearResult();
+
+    QTimer::singleShot(SIMULATE_DELAY_MSEC, this, &FilterSimWindow::simulateConnNow);
+}
+
+void FilterSimWindow::simulateConnNow()
 {
     FilterSimConn simConn;
 

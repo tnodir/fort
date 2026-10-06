@@ -5,6 +5,7 @@
 
 #include <conf/filtersimconn.h>
 
+QT_FORWARD_DECLARE_CLASS(QGroupBox)
 QT_FORWARD_DECLARE_CLASS(QSpinBox)
 
 class FilterSimController;
@@ -44,6 +45,7 @@ private:
     QLayout *setupResultActionLayout();
 
     void simulateConn();
+    void simulateConnNow();
 
     bool fillSimConn(FilterSimConn &simConn) const;
     bool fillConnAddresses(FORT_CONF_META_CONN &conn) const;
@@ -59,6 +61,7 @@ private:
 
     FilterSimController *m_ctrl = nullptr;
 
+    QGroupBox *m_gbConn = nullptr;
     QLabel *m_labelAppPath = nullptr;
     LineEdit *m_editAppPath = nullptr;
     QToolButton *m_btSelectFile = nullptr;
@@ -78,6 +81,7 @@ private:
     QLabel *m_labelProfile = nullptr;
     QComboBox *m_comboProfile = nullptr;
     QPushButton *m_btSimulate = nullptr;
+    QGroupBox *m_gbResult = nullptr;
     QLabel *m_labelAction = nullptr;
     QLabel *m_iconAction = nullptr;
     QLabel *m_resultAction = nullptr;
