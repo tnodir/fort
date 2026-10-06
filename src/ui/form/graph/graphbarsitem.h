@@ -37,7 +37,11 @@ private:
     void setupInnerRects();
     void setupNeighborBridges();
 
-    void appendBridge(const QRectF &left, const QRectF &right);
+    void joinBars(int leftIndex, int rightIndex, QVector<QRectF> &innerRects);
+    void appendNeighborBridge(const QRectF &left, const QRectF &right);
+
+    QRectF bridgeRect(const QRectF &left, const QRectF &right) const;
+    void appendSeam(const QRectF &bridge, qreal x);
     void appendInnerRect(const QRectF &rect);
 
 private:

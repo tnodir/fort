@@ -123,20 +123,23 @@ void GraphBarsItem::updateRects()
 void GraphBarsItem::setupInnerRects()
 {
     const qreal w = m_outlineWidth;
-    const QRectF *prevRect = nullptr;
+    const int count = int(m_rects.size());
 
-    m_innerRects.reserve(m_rects.size() * 2);
+    QVector<QRectF> innerRects;
+    innerRects.reserve(count);
 
     for (const QRectF &rect : std::as_const(m_rects)) {
-        // The thin bars are of the outline's color
-        appendInnerRect(rect.adjusted(w, w, -w, -w));
+        innerRects.append(rect.adjusted(w, w, -w, -w));
+    }
 
-        // Join the adjacent bars: the outline is around them
-        if (prevRect) {
-            appendBridge(*prevRect, rect);
-        }
+    // Join the adjacent bars: the outline is around them
+    for (int i = 1; i < count; ++i) {
+        joinBars(i - 1, i, innerRects);
+    }
 
-        prevRect = &rect;
+    // The thin bars are of the outline's color
+    for (const QRectF &rect : std::as_const(innerRects)) {
+        appendInnerRect(rect);
     }
 }
 
@@ -144,31 +147,61 @@ void GraphBarsItem::setupNeighborBridges()
 {
     for (const QRectF &neighbor : std::as_const(m_neighbors)) {
         for (const QRectF &rect : std::as_const(m_rects)) {
-            appendBridge(neighbor, rect);
-            appendBridge(rect, neighbor);
+            appendNeighborBridge(neighbor, rect);
+            appendNeighborBridge(rect, neighbor);
         }
     }
 }
 
-void GraphBarsItem::appendBridge(const QRectF &left, const QRectF &right)
+void GraphBarsItem::joinBars(int leftIndex, int rightIndex, QVector<QRectF> &innerRects)
 {
-    const qreal w = m_outlineWidth;
+    const QRectF &left = m_rects.at(leftIndex);
+    const QRectF &right = m_rects.at(rightIndex);
 
-    if (qAbs(right.left() - left.right()) > w / 2)
-        return; // not adjacent
+    const QRectF bridge = bridgeRect(left, right);
+    if (!bridge.isValid())
+        return;
 
-    // Over the outlines between the bars, inside their common height
-    const QPointF topLeft(left.right() - w, qMax(left.top(), right.top()) + w);
-    const QPointF bottomRight(right.left() + w, qMin(left.bottom(), right.bottom()) - w);
-    const QRectF bridge(topLeft, bottomRight);
+    appendSeam(bridge, right.left());
 
+    // Extend the lower bar's inner rectangle over the bridge: less rectangles to paint
+    if (right.top() >= left.top() && right.bottom() <= left.bottom()) {
+        innerRects[rightIndex].setLeft(bridge.left());
+    } else if (left.top() >= right.top() && left.bottom() <= right.bottom()) {
+        innerRects[leftIndex].setRight(bridge.right());
+    } else {
+        m_innerRects.append(bridge);
+    }
+}
+
+void GraphBarsItem::appendNeighborBridge(const QRectF &left, const QRectF &right)
+{
+    const QRectF bridge = bridgeRect(left, right);
     if (!bridge.isValid())
         return;
 
     m_innerRects.append(bridge);
 
+    appendSeam(bridge, right.left());
+}
+
+QRectF GraphBarsItem::bridgeRect(const QRectF &left, const QRectF &right) const
+{
+    const qreal w = m_outlineWidth;
+
+    if (qAbs(right.left() - left.right()) > w / 2)
+        return {}; // not adjacent
+
+    // Over the outlines between the bars, inside their common height
+    const QPointF topLeft(left.right() - w, qMax(left.top(), right.top()) + w);
+    const QPointF bottomRight(right.left() + w, qMin(left.bottom(), right.bottom()) - w);
+
+    return QRectF(topLeft, bottomRight);
+}
+
+void GraphBarsItem::appendSeam(const QRectF &bridge, qreal x)
+{
     // As in NetTraffic: the seconds are still visible
-    const qreal x = right.left();
     m_seams.append(QLineF(x, bridge.top(), x, bridge.bottom()));
 }
 
