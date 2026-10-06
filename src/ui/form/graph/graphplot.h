@@ -8,6 +8,8 @@
 #include "axistickerspeed.h"
 #include "graphanimation.h"
 
+class GraphBarsItem;
+
 class QGraphicsPathItem;
 class QGraphicsRectItem;
 class QGraphicsSimpleTextItem;
@@ -152,8 +154,8 @@ private:
     QGraphicsPathItem *m_grid = nullptr;
     QGraphicsRectItem *m_plotArea = nullptr;
     QGraphicsRectItem *m_bars = nullptr;
-    QGraphicsPathItem *m_barsIn = nullptr;
-    QGraphicsPathItem *m_barsOut = nullptr;
+    GraphBarsItem *m_barsIn = nullptr;
+    GraphBarsItem *m_barsOut = nullptr;
     QGraphicsRectItem *m_risingIn = nullptr;
     QGraphicsRectItem *m_risingOut = nullptr;
     QGraphicsRectItem *m_speedBox = nullptr;

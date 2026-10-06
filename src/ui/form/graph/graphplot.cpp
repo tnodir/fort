@@ -6,6 +6,8 @@
 #include <QMouseEvent>
 #include <QtMath>
 
+#include "graphbarsitem.h"
+
 namespace {
 
 inline constexpr int axisPadding = 2;
@@ -301,11 +303,11 @@ void GraphPlot::setupItems()
     m_bars = createNoPenItem<QGraphicsRectItem>(m_plotArea);
 
     // Graph Inbound
-    m_barsIn = createNoPenItem<QGraphicsPathItem>(m_bars);
+    m_barsIn = new GraphBarsItem(m_bars);
     m_risingIn = createNoPenItem<QGraphicsRectItem>(m_barsIn);
 
     // Graph Outbound
-    m_barsOut = createNoPenItem<QGraphicsPathItem>(m_bars);
+    m_barsOut = new GraphBarsItem(m_bars);
     m_risingOut = createNoPenItem<QGraphicsRectItem>(m_barsOut);
 
     // Text Speed
@@ -580,8 +582,8 @@ void GraphPlot::updateBars()
     const qint64 keyUpper = lastUnixTime();
     const qint64 keyLower = this->keyLower();
 
-    QPainterPath pathIn;
-    QPainterPath pathOut;
+    QVector<QRectF> rectsIn;
+    QVector<QRectF> rectsOut;
 
     m_risingInRect = {};
     m_risingOutRect = {};
@@ -601,16 +603,12 @@ void GraphPlot::updateBars()
             continue;
         }
 
-        pathIn.addRect(inRect);
-        pathOut.addRect(outRect);
+        rectsIn.append(inRect);
+        rectsOut.append(outRect);
     }
 
-    // Overlapping bars must not make holes
-    pathIn.setFillRule(Qt::WindingFill);
-    pathOut.setFillRule(Qt::WindingFill);
-
-    m_barsIn->setPath(pathIn);
-    m_barsOut->setPath(pathOut);
+    m_barsIn->setRects(rectsIn);
+    m_barsOut->setRects(rectsOut);
 }
 
 void GraphPlot::updateRisingBars()
