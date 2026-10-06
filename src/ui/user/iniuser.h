@@ -372,8 +372,11 @@ public:
     bool graphWindowShowSpeed() const { return valueBool("graphWindow/showSpeed"); }
     void setGraphWindowShowSpeed(bool on) { setValue("graphWindow/showSpeed", on); }
 
-    constexpr bool graphWindowAnimationDefault() const { return true; }
-    bool graphWindowAnimation() const { return valueBool("graphWindow/animation", true); }
+    constexpr bool graphWindowAnimationDefault() const { return false; }
+    bool graphWindowAnimation() const
+    {
+        return valueBool("graphWindow/animation", graphWindowAnimationDefault());
+    }
     void setGraphWindowAnimation(bool on) { setValue("graphWindow/animation", on); }
 
     constexpr bool graphWindowAxisTicksDefault() const { return false; }
