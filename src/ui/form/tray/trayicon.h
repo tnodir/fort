@@ -25,6 +25,7 @@ public:
 
     QMenu *menu() const { return m_menu; }
     QMenu *optionsMenu() const { return m_optionsMenu; }
+    QMenu *statisticsMenu() const { return m_statisticsMenu; }
 
     TrayController *ctrl() const { return m_ctrl; }
 

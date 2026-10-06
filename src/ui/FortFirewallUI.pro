@@ -84,6 +84,7 @@ SOURCES += \
     form/controls/sidebutton.cpp \
     form/controls/spinbox.cpp \
     form/controls/spincombo.cpp \
+    form/controls/statisticsbutton.cpp \
     form/controls/tabbar.cpp \
     form/controls/tableview.cpp \
     form/controls/textarea2splitter.cpp \
@@ -384,6 +385,7 @@ HEADERS += \
     form/controls/sidebutton.h \
     form/controls/spinbox.h \
     form/controls/spincombo.h \
+    form/controls/statisticsbutton.h \
     form/controls/tabbar.h \
     form/controls/tableview.h \
     form/controls/textarea2splitter.h \

@@ -132,6 +132,7 @@ public:
 
     static QPushButton *createMenuButton();
     static QToolButton *createOptionsButton(int tabIndex = 0);
+    static QToolButton *createStatisticsButton();
 
     static void deleteOnClose(QWidget *w);
 };
