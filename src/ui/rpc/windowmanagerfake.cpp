@@ -23,7 +23,8 @@ bool WindowManagerFake::showProgramEditForm(const QString & /*appPath*/)
     return false;
 }
 
-bool WindowManagerFake::setGraphWindowVisible(const QVariant & /*visibleOrSwitch*/)
+bool WindowManagerFake::setWindowVisibleByCode(
+        WindowCode /*code*/, const QVariant & /*visibleOrSwitch*/, bool /*activate*/)
 {
     return false;
 }

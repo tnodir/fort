@@ -401,16 +401,17 @@ bool WindowManager::showOptionsWindowTab(int index)
     return true;
 }
 
-bool WindowManager::setGraphWindowVisible(const QVariant &visibleOrSwitch)
+bool WindowManager::setWindowVisibleByCode(
+        WindowCode code, const QVariant &visibleOrSwitch, bool activate)
 {
     const bool visible =
-            !visibleOrSwitch.isNull() ? visibleOrSwitch.toBool() : !isAnyWindowOpen(WindowGraph);
+            !visibleOrSwitch.isNull() ? visibleOrSwitch.toBool() : !isAnyWindowOpen(code);
 
     if (visible) {
-        return showGraphWindow();
+        return showWindowByCode(code, activate);
     }
 
-    closeGraphWindow();
+    closeWindowByCode(code);
     return true;
 }
 

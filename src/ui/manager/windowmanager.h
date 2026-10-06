@@ -125,7 +125,13 @@ public slots:
     bool showGraphWindow() { return showWindowByCode(WindowGraph, /*activate=*/false); }
     bool closeGraphWindow() { return closeWindowByCode(WindowGraph); }
 
-    virtual bool setGraphWindowVisible(const QVariant &visibleOrSwitch = {});
+    bool setGraphWindowVisible(const QVariant &visibleOrSwitch = {})
+    {
+        return setWindowVisibleByCode(WindowGraph, visibleOrSwitch, /*activate=*/false);
+    }
+
+    virtual bool setWindowVisibleByCode(
+            WindowCode code, const QVariant &visibleOrSwitch = {}, bool activate = true);
 
     bool showWindowByCode(WindowCode code, bool activate = true);
     bool closeWindowByCode(WindowCode code);
