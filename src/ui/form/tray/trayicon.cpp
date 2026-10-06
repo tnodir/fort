@@ -48,7 +48,8 @@ const QString actionShowHome = QStringLiteral("Home");
 const QString actionShowPrograms = QStringLiteral("Programs");
 const QString actionShowProgramsOrAlert = QStringLiteral("ProgramsOrAlert");
 const QString actionShowOptions = QStringLiteral("Options");
-const QString actionShowStatistics = QStringLiteral("Statistics");
+const QString actionShowTraffic = QStringLiteral("Traffic");
+const QString actionShowConnections = QStringLiteral("Connections");
 const QString actionShowTrafficGraph = QStringLiteral("TrafficGraph");
 const QString actionSwitchFilterEnabled = QStringLiteral("FilterEnabled");
 const QString actionSwitchSnoozeAlerts = QStringLiteral("SnoozeAlerts");
@@ -84,7 +85,8 @@ QString actionNameByType(tray::ActionType actionType)
         actionShowPrograms,
         actionShowProgramsOrAlert,
         actionShowOptions,
-        actionShowStatistics,
+        actionShowTraffic,
+        actionShowConnections,
         actionShowTrafficGraph,
         actionSwitchFilterEnabled,
         actionSwitchSnoozeAlerts,
@@ -107,7 +109,9 @@ tray::ActionType actionTypeByName(const QString &name)
         { actionShowHome, tray::ActionShowHome }, { actionShowPrograms, tray::ActionShowPrograms },
         { actionShowProgramsOrAlert, tray::ActionShowProgramsOrAlert },
         { actionShowOptions, tray::ActionShowOptions },
-        { actionShowStatistics, tray::ActionShowStatistics },
+        { actionShowTraffic, tray::ActionShowTraffic },
+        { actionShowConnections, tray::ActionShowConnections },
+        { QStringLiteral("Statistics"), tray::ActionShowTraffic }, // COMPAT: v3.20.1
         { actionShowTrafficGraph, tray::ActionShowTrafficGraph },
         { actionSwitchFilterEnabled, tray::ActionSwitchFilterEnabled },
         { actionSwitchSnoozeAlerts, tray::ActionSwitchSnoozeAlerts },
@@ -131,7 +135,7 @@ tray::ActionType defaultActionTypeByClick(tray::ClickType clickType)
     case tray::DoubleClick:
         return tray::ActionIgnore;
     case tray::MiddleClick:
-        return tray::ActionShowStatistics;
+        return tray::ActionShowTraffic;
     case tray::RightClick:
         return tray::ActionShowTrayMenu;
     default:
@@ -1159,6 +1163,7 @@ QAction *TrayIcon::clickActionByType(tray::ActionType actionType) const
         m_programsOrAlertAction,
         m_optionsAction,
         m_trafficAction,
+        m_connectionsAction,
         m_graphAction,
         m_filterEnabledAction,
         m_snoozeAlertsAction,
