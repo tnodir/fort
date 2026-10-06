@@ -406,8 +406,10 @@ void ConnListModel::fillConnRow(ConnRow &connRow, const SqliteStmt &stmt)
     connRow.zoneId = stmt.columnInt(16);
     connRow.ruleId = stmt.columnInt(17);
 
-    connRow.confAppId = stmt.columnInt64(18);
-    connRow.appPath = stmt.columnText(19);
+    connRow.loopback = stmt.columnBool(18);
+
+    connRow.confAppId = stmt.columnInt64(19);
+    connRow.appPath = stmt.columnText(20);
 }
 
 void ConnListModel::fillConnIdRange(qint64 &idMin, qint64 &idMax)
@@ -460,6 +462,7 @@ QString ConnListModel::sqlBase() const
            "    t.remote_ip6,"
            "    t.zone_id,"
            "    t.rule_id,"
+           "    t.loopback,"
            "    a.conf_app_id,"
            "    a.path"
            "  FROM conn t"
@@ -566,6 +569,10 @@ QString ConnListModel::reasonDetailsText(const ConnRow &connRow)
         const QString zoneName = confZoneManager()->zoneNameById(connRow.zoneId);
 
         list << tr("Zone: %1").arg(zoneName);
+    }
+
+    if (connRow.loopback) {
+        list << tr("Loopback");
     }
 
     if (connRow.inherited) {

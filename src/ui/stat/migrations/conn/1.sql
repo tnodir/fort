@@ -19,6 +19,7 @@ CREATE TABLE conn(
   alerted BOOLEAN NOT NULL DEFAULT 0,
   inherited BOOLEAN NOT NULL,
   inbound BOOLEAN NOT NULL,
+  loopback BOOLEAN NOT NULL DEFAULT 0,
   ip_proto INTEGER NOT NULL,
   local_port INTEGER NOT NULL,
   remote_port INTEGER NOT NULL,

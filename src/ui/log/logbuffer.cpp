@@ -111,6 +111,7 @@ void LogBuffer::writeEntryConn(const LogEntryConn *logEntry)
     const FORT_CONF_META_CONN conn = {
         .inbound = logEntry->inbound(),
         .isIPv6 = logEntry->isIPv6(),
+        .is_loopback = logEntry->loopback(),
         .inherited = logEntry->inherited(),
         .act = {
             .blocked = logEntry->blocked(),
@@ -161,6 +162,7 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
     logEntry->setAlerted(conn.act.conn_alert);
     logEntry->setIsIPv6(conn.isIPv6);
     logEntry->setInbound(conn.inbound);
+    logEntry->setLoopback(conn.is_loopback);
     logEntry->setInherited(conn.inherited);
     logEntry->setReason(conn.reason);
     logEntry->setIpProto(conn.ip_proto);

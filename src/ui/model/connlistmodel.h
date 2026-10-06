@@ -16,6 +16,7 @@ struct ConnRow : TableRow
     bool alerted : 1 = false;
     bool inherited : 1 = false;
     bool inbound : 1 = false;
+    bool loopback : 1 = false;
 
     quint8 reason = 0;
 

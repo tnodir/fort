@@ -16,6 +16,9 @@ public:
     bool inbound() const { return m_inbound; }
     void setInbound(bool inbound) { m_inbound = inbound; }
 
+    bool loopback() const { return m_loopback; }
+    void setLoopback(bool loopback) { m_loopback = loopback; }
+
     bool inherited() const { return m_inherited; }
     void setInherited(bool inherited) { m_inherited = inherited; }
 
@@ -68,6 +71,7 @@ public:
 private:
     bool m_isIPv6 : 1 = false;
     bool m_inbound : 1 = false;
+    bool m_loopback : 1 = false;
     bool m_inherited : 1 = false;
     quint8 m_reason = 0;
     quint8 m_ipProto = 0;
