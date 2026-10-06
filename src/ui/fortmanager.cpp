@@ -624,10 +624,10 @@ bool FortManager::setupDriverConf()
 
     // Zones
     {
-        auto zd = taskManager()->taskInfoZoneDownloader();
+        const auto &zones = taskManager()->taskInfoZoneDownloader()->zones();
 
         confZoneManager()->updateDriverZones(
-                zd->dataZonesMask(), zd->enabledMask(), zd->dataSize(), zd->zonesData());
+                zones.dataZonesMask, zones.enabledMask, zones.dataSize, zones.zonesData);
     }
 
     // Rules

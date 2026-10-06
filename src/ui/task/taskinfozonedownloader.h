@@ -7,6 +7,16 @@
 
 class TaskZoneDownloader;
 
+struct ZonesData
+{
+    quint32 zonesMask = 0; // all Zones
+    quint32 dataZonesMask = 0;
+    quint32 enabledMask = 0;
+    quint32 dataSize = 0;
+
+    QList<QByteArray> zonesData;
+};
+
 class TaskInfoZoneDownloader : public TaskInfo
 {
     Q_OBJECT
@@ -14,21 +24,21 @@ class TaskInfoZoneDownloader : public TaskInfo
 public:
     explicit TaskInfoZoneDownloader(TaskManager &taskManager);
 
-    quint32 dataZonesMask() const { return m_dataZonesMask; }
-    quint32 enabledMask() const { return m_enabledMask; }
-    quint32 dataSize() const { return m_dataSize; }
-
     const QStringList &zoneNames() const { return m_zoneNames; }
-    const QList<QByteArray> &zonesData() const { return m_zonesData; }
+
+    const ZonesData &zones() const { return m_zones; }
 
     TaskZoneDownloader *zoneDownloader() const;
 
     void initialize() override;
 
+    // Loads the Zones' addresses from the cache
+    ZonesData loadZonesData() const;
+
 public slots:
     bool processResult(bool success) override;
 
-    bool saveZoneAsText(const QString &filePath, int zoneIndex);
+    bool saveZoneAsText(const QString &filePath, int zoneIndex) const;
 
 protected slots:
     void setupTaskWorker() override;
@@ -40,11 +50,13 @@ protected slots:
 
 private:
     void setupNextTaskWorker();
-    void setupTaskWorkerByZone(TaskZoneDownloader *worker);
+    void setupTaskWorkerByZone(TaskZoneDownloader *worker, int zoneIndex) const;
     void addSubResult(TaskZoneDownloader *worker, bool success);
 
-    void insertZoneId(quint32 &zonesMask, int zoneId);
-    bool containsZoneId(quint32 zonesMask, int zoneId) const;
+    static void addZoneData(ZonesData &zones, const TaskZoneDownloader &worker);
+
+    static void insertZoneId(quint32 &zonesMask, int zoneId);
+    static bool containsZoneId(quint32 zonesMask, int zoneId);
 
     void loadZones();
 
@@ -57,14 +69,10 @@ private:
 private:
     bool m_success = false;
     int m_zoneIndex = 0;
-    quint32 m_zonesMask = 0;
-
-    quint32 m_dataZonesMask = 0;
-    quint32 m_enabledMask = 0;
-    quint32 m_dataSize = 0;
 
     QStringList m_zoneNames;
-    QList<QByteArray> m_zonesData;
+
+    ZonesData m_zones;
 };
 
 #endif // TASKINFOZONEDOWNLOADER_H
