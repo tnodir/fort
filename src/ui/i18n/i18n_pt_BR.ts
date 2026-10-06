@@ -353,7 +353,7 @@
     </message>
 </context>
 <context>
-    <name>ConnectionsPage</name>
+    <name>ConnectionsWindow</name>
     <message>
         <source>Edit</source>
         <translation>Editar</translation>
@@ -413,6 +413,10 @@
     <message>
         <source>Lookup IP</source>
         <translation>Consultar IP</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Conexões</translation>
     </message>
 </context>
 <context>
@@ -2548,24 +2552,6 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>StatBasePage</name>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>Deixar esta aba ativa quando a janela abrir?</translation>
-    </message>
-</context>
-<context>
-    <name>StatMainPage</name>
-    <message>
-        <source>Traffic</source>
-        <translation>Tráfego</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>Conexões</translation>
-    </message>
-</context>
-<context>
     <name>StatisticsPage</name>
     <message>
         <source>Collect Traffic Statistics</source>
@@ -2678,13 +2664,6 @@ Packet loss: %2</source>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
         <translation>Limpar conexões ao sair (reduz gravações no disco)</translation>
-    </message>
-</context>
-<context>
-    <name>StatisticsWindow</name>
-    <message>
-        <source>Statistics</source>
-        <translation>Estatísticas</translation>
     </message>
 </context>
 <context>
@@ -2879,7 +2858,7 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>TrafficPage</name>
+    <name>TrafficWindow</name>
     <message>
         <source>Refresh</source>
         <translation>Atualizar</translation>
@@ -2951,6 +2930,14 @@ Packet loss: %2</source>
     <message>
         <source>Search</source>
         <translation>Buscar</translation>
+    </message>
+    <message>
+        <source>Make this tab active when window opens?</source>
+        <translation>Deixar esta aba ativa quando a janela abrir?</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>Tráfego</translation>
     </message>
 </context>
 <context>
@@ -3049,6 +3036,14 @@ Packet loss: %2</source>
     <message>
         <source>Rule Modifier</source>
         <translation>Ajuste de regra</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>Tráfego</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Conexões</translation>
     </message>
 </context>
 <context>

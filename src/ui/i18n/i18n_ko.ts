@@ -353,7 +353,7 @@
     </message>
 </context>
 <context>
-    <name>ConnectionsPage</name>
+    <name>ConnectionsWindow</name>
     <message>
         <source>Edit</source>
         <translation>편집</translation>
@@ -413,6 +413,10 @@
     <message>
         <source>Lookup IP</source>
         <translation>조회 IP</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>연결</translation>
     </message>
 </context>
 <context>
@@ -2549,24 +2553,6 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>StatBasePage</name>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>창이 열리면 이 탭을 활성화하시겠습니까?</translation>
-    </message>
-</context>
-<context>
-    <name>StatMainPage</name>
-    <message>
-        <source>Traffic</source>
-        <translation>트래픽</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>연결</translation>
-    </message>
-</context>
-<context>
     <name>StatisticsPage</name>
     <message>
         <source>Collect Traffic Statistics</source>
@@ -2679,13 +2665,6 @@ Packet loss: %2</source>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
         <translation>종료 시 연결 지우기 (디스크 쓰기 감소)</translation>
-    </message>
-</context>
-<context>
-    <name>StatisticsWindow</name>
-    <message>
-        <source>Statistics</source>
-        <translation>통계</translation>
     </message>
 </context>
 <context>
@@ -2880,7 +2859,7 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>TrafficPage</name>
+    <name>TrafficWindow</name>
     <message>
         <source>Refresh</source>
         <translation>새로 고침</translation>
@@ -2952,6 +2931,14 @@ Packet loss: %2</source>
     <message>
         <source>Search</source>
         <translation>검색</translation>
+    </message>
+    <message>
+        <source>Make this tab active when window opens?</source>
+        <translation>창이 열리면 이 탭을 활성화하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>트래픽</translation>
     </message>
 </context>
 <context>
@@ -3050,6 +3037,14 @@ Packet loss: %2</source>
     <message>
         <source>Rule Modifier</source>
         <translation>규칙 수정자</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>트래픽</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>연결</translation>
     </message>
 </context>
 <context>

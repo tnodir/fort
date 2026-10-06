@@ -353,7 +353,7 @@
     </message>
 </context>
 <context>
-    <name>ConnectionsPage</name>
+    <name>ConnectionsWindow</name>
     <message>
         <source>Edit</source>
         <translation>Изменить</translation>
@@ -413,6 +413,10 @@
     <message>
         <source>Lookup IP</source>
         <translation>Поиск IP</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Соединения</translation>
     </message>
 </context>
 <context>
@@ -2551,24 +2555,6 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>StatBasePage</name>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>Сделать эту вкладку активной при открытии окна?</translation>
-    </message>
-</context>
-<context>
-    <name>StatMainPage</name>
-    <message>
-        <source>Traffic</source>
-        <translation>Трафик</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>Соединения</translation>
-    </message>
-</context>
-<context>
     <name>StatisticsPage</name>
     <message>
         <source>Collect Traffic Statistics</source>
@@ -2681,13 +2667,6 @@ Packet loss: %2</source>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
         <translation>Очистить соединения при выходе (уменьшить записи на диск)</translation>
-    </message>
-</context>
-<context>
-    <name>StatisticsWindow</name>
-    <message>
-        <source>Statistics</source>
-        <translation>Статистика</translation>
     </message>
 </context>
 <context>
@@ -2882,7 +2861,7 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>TrafficPage</name>
+    <name>TrafficWindow</name>
     <message>
         <source>Refresh</source>
         <translation>Обновить</translation>
@@ -2954,6 +2933,14 @@ Packet loss: %2</source>
     <message>
         <source>Search</source>
         <translation>Поиск</translation>
+    </message>
+    <message>
+        <source>Make this tab active when window opens?</source>
+        <translation>Сделать эту вкладку активной при открытии окна?</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>Трафик</translation>
     </message>
 </context>
 <context>
@@ -3052,6 +3039,14 @@ Packet loss: %2</source>
     <message>
         <source>Rule Modifier</source>
         <translation>Модификатор правил</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>Трафик</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Соединения</translation>
     </message>
 </context>
 <context>

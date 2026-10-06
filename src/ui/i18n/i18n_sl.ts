@@ -353,7 +353,7 @@
     </message>
 </context>
 <context>
-    <name>ConnectionsPage</name>
+    <name>ConnectionsWindow</name>
     <message>
         <source>Edit</source>
         <translation>Uredi</translation>
@@ -413,6 +413,10 @@
     <message>
         <source>Lookup IP</source>
         <translation>Iskanje IP-ja</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Povezave</translation>
     </message>
 </context>
 <context>
@@ -2549,24 +2553,6 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>StatBasePage</name>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>Naj bo ta zavihek aktiven, ko se odpre okno?</translation>
-    </message>
-</context>
-<context>
-    <name>StatMainPage</name>
-    <message>
-        <source>Traffic</source>
-        <translation>Promet</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>Povezave</translation>
-    </message>
-</context>
-<context>
     <name>StatisticsPage</name>
     <message>
         <source>Collect Traffic Statistics</source>
@@ -2679,13 +2665,6 @@ Packet loss: %2</source>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
         <translation>Očistite povezave ob izhodu (zmanjšajte število zapisov na disk)</translation>
-    </message>
-</context>
-<context>
-    <name>StatisticsWindow</name>
-    <message>
-        <source>Statistics</source>
-        <translation>Statistika</translation>
     </message>
 </context>
 <context>
@@ -2880,7 +2859,7 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>TrafficPage</name>
+    <name>TrafficWindow</name>
     <message>
         <source>Refresh</source>
         <translation>Osveži</translation>
@@ -2952,6 +2931,14 @@ Packet loss: %2</source>
     <message>
         <source>Search</source>
         <translation>Poišči</translation>
+    </message>
+    <message>
+        <source>Make this tab active when window opens?</source>
+        <translation>Naj bo ta zavihek aktiven, ko se odpre okno?</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>Promet</translation>
     </message>
 </context>
 <context>
@@ -3050,6 +3037,14 @@ Packet loss: %2</source>
     <message>
         <source>Rule Modifier</source>
         <translation>Spreminjevalec pravil</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>Promet</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Povezave</translation>
     </message>
 </context>
 <context>

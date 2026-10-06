@@ -353,7 +353,7 @@
     </message>
 </context>
 <context>
-    <name>ConnectionsPage</name>
+    <name>ConnectionsWindow</name>
     <message>
         <source>Edit</source>
         <translation></translation>
@@ -412,6 +412,10 @@
     </message>
     <message>
         <source>Lookup IP</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Connections</source>
         <translation></translation>
     </message>
 </context>
@@ -2541,24 +2545,6 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>StatBasePage</name>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>StatMainPage</name>
-    <message>
-        <source>Traffic</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
     <name>StatisticsPage</name>
     <message>
         <source>Collect Traffic Statistics</source>
@@ -2670,13 +2656,6 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>StatisticsWindow</name>
-    <message>
-        <source>Statistics</source>
         <translation></translation>
     </message>
 </context>
@@ -2872,7 +2851,7 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>TrafficPage</name>
+    <name>TrafficWindow</name>
     <message>
         <source>Refresh</source>
         <translation></translation>
@@ -2943,6 +2922,14 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Search</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Make this tab active when window opens?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Traffic</source>
         <translation></translation>
     </message>
 </context>
@@ -3041,6 +3028,14 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Rule Modifier</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Connections</source>
         <translation></translation>
     </message>
 </context>

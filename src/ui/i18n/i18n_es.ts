@@ -353,7 +353,7 @@
     </message>
 </context>
 <context>
-    <name>ConnectionsPage</name>
+    <name>ConnectionsWindow</name>
     <message>
         <source>Edit</source>
         <translation>Editar</translation>
@@ -413,6 +413,10 @@
     <message>
         <source>Lookup IP</source>
         <translation>Consultar IP</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Conexiones</translation>
     </message>
 </context>
 <context>
@@ -2552,24 +2556,6 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>StatBasePage</name>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>¿Hacer esta pestaña activa al abrir la ventana?</translation>
-    </message>
-</context>
-<context>
-    <name>StatMainPage</name>
-    <message>
-        <source>Traffic</source>
-        <translation>Tráfico</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>Conexiones</translation>
-    </message>
-</context>
-<context>
     <name>StatisticsPage</name>
     <message>
         <source>Collect Traffic Statistics</source>
@@ -2682,13 +2668,6 @@ Packet loss: %2</source>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
         <translation>Cerrar conexiones al salir (reduce escrituras en disco)</translation>
-    </message>
-</context>
-<context>
-    <name>StatisticsWindow</name>
-    <message>
-        <source>Statistics</source>
-        <translation>Estadísticas</translation>
     </message>
 </context>
 <context>
@@ -2883,7 +2862,7 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>TrafficPage</name>
+    <name>TrafficWindow</name>
     <message>
         <source>Refresh</source>
         <translation>Actualizar</translation>
@@ -2955,6 +2934,14 @@ Packet loss: %2</source>
     <message>
         <source>Search</source>
         <translation>Buscar</translation>
+    </message>
+    <message>
+        <source>Make this tab active when window opens?</source>
+        <translation>¿Hacer esta pestaña activa al abrir la ventana?</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>Tráfico</translation>
     </message>
 </context>
 <context>
@@ -3053,6 +3040,14 @@ Packet loss: %2</source>
     <message>
         <source>Rule Modifier</source>
         <translation>Modificador de regla</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>Tráfico</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Conexiones</translation>
     </message>
 </context>
 <context>

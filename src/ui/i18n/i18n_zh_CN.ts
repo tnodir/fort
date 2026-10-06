@@ -353,7 +353,7 @@
     </message>
 </context>
 <context>
-    <name>ConnectionsPage</name>
+    <name>ConnectionsWindow</name>
     <message>
         <source>Edit</source>
         <translation>编辑</translation>
@@ -413,6 +413,10 @@
     <message>
         <source>Lookup IP</source>
         <translation>查找IP</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>连接</translation>
     </message>
 </context>
 <context>
@@ -2551,24 +2555,6 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>StatBasePage</name>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>当窗口打开时启用此标签吗？</translation>
-    </message>
-</context>
-<context>
-    <name>StatMainPage</name>
-    <message>
-        <source>Traffic</source>
-        <translation>数据流量</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>连接</translation>
-    </message>
-</context>
-<context>
     <name>StatisticsPage</name>
     <message>
         <source>Collect Traffic Statistics</source>
@@ -2681,13 +2667,6 @@ Packet loss: %2</source>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
         <translation>退出时清除连接（减少磁盘写入）</translation>
-    </message>
-</context>
-<context>
-    <name>StatisticsWindow</name>
-    <message>
-        <source>Statistics</source>
-        <translation>统计数据</translation>
     </message>
 </context>
 <context>
@@ -2882,7 +2861,7 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>TrafficPage</name>
+    <name>TrafficWindow</name>
     <message>
         <source>Refresh</source>
         <translation>刷新</translation>
@@ -2954,6 +2933,14 @@ Packet loss: %2</source>
     <message>
         <source>Search</source>
         <translation>搜索</translation>
+    </message>
+    <message>
+        <source>Make this tab active when window opens?</source>
+        <translation>当窗口打开时启用此标签吗？</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>数据流量</translation>
     </message>
 </context>
 <context>
@@ -3052,6 +3039,14 @@ Packet loss: %2</source>
     <message>
         <source>Rule Modifier</source>
         <translation>规则修改器</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>数据流量</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>连接</translation>
     </message>
 </context>
 <context>

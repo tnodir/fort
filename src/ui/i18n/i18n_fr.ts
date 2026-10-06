@@ -353,7 +353,7 @@
     </message>
 </context>
 <context>
-    <name>ConnectionsPage</name>
+    <name>ConnectionsWindow</name>
     <message>
         <source>Edit</source>
         <translation>Éditer</translation>
@@ -413,6 +413,10 @@
     <message>
         <source>Lookup IP</source>
         <translation>Consultation de l&apos;IP</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Connexions</translation>
     </message>
 </context>
 <context>
@@ -2551,24 +2555,6 @@ Perte de paquets : %2</translation>
     </message>
 </context>
 <context>
-    <name>StatBasePage</name>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>Rendre cet onglet actif quand la fenêtre s&apos;ouvre ?</translation>
-    </message>
-</context>
-<context>
-    <name>StatMainPage</name>
-    <message>
-        <source>Traffic</source>
-        <translation>Trafic</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>Connexions</translation>
-    </message>
-</context>
-<context>
     <name>StatisticsPage</name>
     <message>
         <source>Collect Traffic Statistics</source>
@@ -2681,13 +2667,6 @@ Perte de paquets : %2</translation>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
         <translation>Effacer les connexions en quittant (réduire les écritures sur le disque)</translation>
-    </message>
-</context>
-<context>
-    <name>StatisticsWindow</name>
-    <message>
-        <source>Statistics</source>
-        <translation>Statistiques</translation>
     </message>
 </context>
 <context>
@@ -2882,7 +2861,7 @@ Perte de paquets : %2</translation>
     </message>
 </context>
 <context>
-    <name>TrafficPage</name>
+    <name>TrafficWindow</name>
     <message>
         <source>Refresh</source>
         <translation>Actualiser</translation>
@@ -2954,6 +2933,14 @@ Perte de paquets : %2</translation>
     <message>
         <source>Search</source>
         <translation>Rechercher</translation>
+    </message>
+    <message>
+        <source>Make this tab active when window opens?</source>
+        <translation>Rendre cet onglet actif quand la fenêtre s&apos;ouvre ?</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>Trafic</translation>
     </message>
 </context>
 <context>
@@ -3052,6 +3039,14 @@ Perte de paquets : %2</translation>
     <message>
         <source>Rule Modifier</source>
         <translation>Modificateur de règle</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>Trafic</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Connexions</translation>
     </message>
 </context>
 <context>

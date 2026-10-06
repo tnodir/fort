@@ -353,7 +353,7 @@
     </message>
 </context>
 <context>
-    <name>ConnectionsPage</name>
+    <name>ConnectionsWindow</name>
     <message>
         <source>Copy</source>
         <translation>Sao chép</translation>
@@ -413,6 +413,10 @@
     <message>
         <source>Are you sure to remove all connections?</source>
         <translation>Bạn có chắc muốn xóa tất cả kết nối?</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Kết nối</translation>
     </message>
 </context>
 <context>
@@ -2548,24 +2552,6 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>StatBasePage</name>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>StatMainPage</name>
-    <message>
-        <source>Traffic</source>
-        <translation>Lưu lượng</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>Kết nối</translation>
-    </message>
-</context>
-<context>
     <name>StatisticsPage</name>
     <message>
         <source>Disabled</source>
@@ -2678,13 +2664,6 @@ Packet loss: %2</source>
     <message>
         <source>Alerted only</source>
         <translation>Chỉ cảnh báo</translation>
-    </message>
-</context>
-<context>
-    <name>StatisticsWindow</name>
-    <message>
-        <source>Statistics</source>
-        <translation>Thống kê</translation>
     </message>
 </context>
 <context>
@@ -2879,7 +2858,7 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>TrafficPage</name>
+    <name>TrafficWindow</name>
     <message>
         <source>Edit</source>
         <translation>Chỉnh sửa</translation>
@@ -2951,6 +2930,14 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to remove statistics for selected application?</source>
         <translation>Bạn có chắc muốn xóa thống kê của ứng dụng đã chọn?</translation>
+    </message>
+    <message>
+        <source>Make this tab active when window opens?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>Lưu lượng</translation>
     </message>
 </context>
 <context>
@@ -3049,6 +3036,14 @@ Packet loss: %2</source>
     <message>
         <source>Traffic Graph</source>
         <translation>Biểu đồ lưu lượng</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>Lưu lượng</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Kết nối</translation>
     </message>
 </context>
 <context>

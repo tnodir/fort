@@ -353,7 +353,7 @@
     </message>
 </context>
 <context>
-    <name>ConnectionsPage</name>
+    <name>ConnectionsWindow</name>
     <message>
         <source>Edit</source>
         <translation>編集</translation>
@@ -413,6 +413,10 @@
     <message>
         <source>Lookup IP</source>
         <translation>IP 検索</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>接続</translation>
     </message>
 </context>
 <context>
@@ -2551,24 +2555,6 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>StatBasePage</name>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>ウィンドウを開いた時にこのタブをアクティブにしますか？</translation>
-    </message>
-</context>
-<context>
-    <name>StatMainPage</name>
-    <message>
-        <source>Traffic</source>
-        <translation>トラフィック</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>接続</translation>
-    </message>
-</context>
-<context>
     <name>StatisticsPage</name>
     <message>
         <source>Collect Traffic Statistics</source>
@@ -2681,13 +2667,6 @@ Packet loss: %2</source>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
         <translation>終了時に接続を削除する(ディスク書き込みを削減)</translation>
-    </message>
-</context>
-<context>
-    <name>StatisticsWindow</name>
-    <message>
-        <source>Statistics</source>
-        <translation>統計</translation>
     </message>
 </context>
 <context>
@@ -2882,7 +2861,7 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
-    <name>TrafficPage</name>
+    <name>TrafficWindow</name>
     <message>
         <source>Refresh</source>
         <translation>更新</translation>
@@ -2954,6 +2933,14 @@ Packet loss: %2</source>
     <message>
         <source>Search</source>
         <translation>検索</translation>
+    </message>
+    <message>
+        <source>Make this tab active when window opens?</source>
+        <translation>ウィンドウを開いた時にこのタブをアクティブにしますか？</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>トラフィック</translation>
     </message>
 </context>
 <context>
@@ -3052,6 +3039,14 @@ Packet loss: %2</source>
     <message>
         <source>Rule Modifier</source>
         <translation>ルール編集ツール</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>トラフィック</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>接続</translation>
     </message>
 </context>
 <context>
