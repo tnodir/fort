@@ -1,11 +1,13 @@
 #ifndef GRAPHLINEITEM_H
 #define GRAPHLINEITEM_H
 
+#include <QBrush>
 #include <QColor>
 #include <QGraphicsItem>
 #include <QPainterPath>
 
-// Draws a smooth line of 2 device pixels through the points: it doesn't overshoot them
+// Draws a smooth line of 2 device pixels through the points: it doesn't overshoot them.
+// The area below the line may be filled by a gradient of its color.
 class GraphLineItem : public QGraphicsItem
 {
 public:
@@ -13,6 +15,9 @@ public:
 
     const QColor &color() const { return m_color; }
     void setColor(const QColor &v);
+
+    bool fillVisible() const { return m_fillVisible; }
+    void setFillVisible(bool v);
 
     const QVector<QPointF> &points() const { return m_points; }
     void setPoints(const QVector<QPointF> &v);
@@ -23,9 +28,20 @@ public:
             QWidget *widget = nullptr) override;
 
 private:
+    void updateFill();
+    void setupFill();
+
+    void paintFill(QPainter *painter);
+    void paintLine(QPainter *painter);
+
+private:
+    bool m_fillVisible = false;
+
     QColor m_color;
+    QBrush m_fillBrush;
     QRectF m_boundingRect;
     QPainterPath m_path;
+    QPainterPath m_fillPath;
     QVector<QPointF> m_points;
 };
 

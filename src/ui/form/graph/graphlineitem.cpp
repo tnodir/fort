@@ -5,6 +5,17 @@
 
 namespace {
 
+inline constexpr qreal fillTopOpacity = 0.4; // of the line's color
+inline constexpr qreal fillBottomOpacity = 0.1;
+
+QColor opacityColor(const QColor &color, qreal opacity)
+{
+    QColor c = color;
+    c.setAlphaF(color.alphaF() * opacity);
+
+    return c;
+}
+
 // Fritsch-Carlson: limit the tangents of a segment to keep the curve monotonic
 void limitTangents(qreal secant, qreal &tangent0, qreal &tangent1)
 {
@@ -100,7 +111,17 @@ void GraphLineItem::setColor(const QColor &v)
 
     m_color = v;
 
-    update();
+    updateFill();
+}
+
+void GraphLineItem::setFillVisible(bool v)
+{
+    if (m_fillVisible == v)
+        return;
+
+    m_fillVisible = v;
+
+    updateFill();
 }
 
 void GraphLineItem::setPoints(const QVector<QPointF> &v)
@@ -108,15 +129,52 @@ void GraphLineItem::setPoints(const QVector<QPointF> &v)
     if (m_points == v)
         return;
 
-    prepareGeometryChange();
-
     m_points = v;
     m_path = smoothPath(v);
 
+    updateFill();
+}
+
+void GraphLineItem::updateFill()
+{
+    prepareGeometryChange();
+
+    m_fillPath.clear();
+    m_fillBrush = QBrush();
+
+    if (m_fillVisible && m_points.size() >= 2) {
+        setupFill();
+    }
+
     // With the offset lines and the antialiasing
-    m_boundingRect = m_path.controlPointRect().adjusted(-1, -1, 2, 2);
+    const QRectF rect = m_path.controlPointRect() | m_fillPath.controlPointRect();
+    m_boundingRect = rect.adjusted(-1, -1, 2, 2);
 
     update();
+}
+
+void GraphLineItem::setupFill()
+{
+    // Down to the zero: the lowest point
+    qreal bottom = 0;
+    for (const QPointF &point : std::as_const(m_points)) {
+        bottom = qMax(bottom, point.y());
+    }
+    bottom += 2; // below the line, clipped by the plot area
+
+    m_fillPath = m_path;
+    m_fillPath.lineTo(m_points.constLast().x(), bottom);
+    m_fillPath.lineTo(m_points.constFirst().x(), bottom);
+    m_fillPath.closeSubpath();
+
+    // Fading to the bottom
+    const QRectF fillRect = m_fillPath.controlPointRect();
+
+    QLinearGradient gradient(0, fillRect.top(), 0, fillRect.bottom());
+    gradient.setColorAt(0, opacityColor(m_color, fillTopOpacity));
+    gradient.setColorAt(1, opacityColor(m_color, fillBottomOpacity));
+
+    m_fillBrush = QBrush(gradient);
 }
 
 void GraphLineItem::paint(
@@ -125,6 +183,23 @@ void GraphLineItem::paint(
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
+    paintFill(painter);
+    paintLine(painter);
+}
+
+void GraphLineItem::paintFill(QPainter *painter)
+{
+    if (!m_fillVisible)
+        return;
+
+    // Aliased: its top edge is below the line
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(m_fillBrush);
+    painter->drawPath(m_fillPath);
+}
+
+void GraphLineItem::paintLine(QPainter *painter)
+{
     // The cosmetic lines of a device pixel are ~10 times faster than a thick line:
     // draw them with offsets by a device pixel
     const qreal pixel = 1 / painter->device()->devicePixelRatioF();
