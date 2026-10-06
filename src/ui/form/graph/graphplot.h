@@ -50,6 +50,9 @@ public:
     qint64 fixedValueMax() const { return m_fixedValueMax; }
     void setFixedValueMax(qint64 v) { m_fixedValueMax = v; }
 
+    bool animated() const { return m_animated; }
+    void setAnimated(bool v);
+
     FormatUtil::SizeFormat unitFormat() const { return m_ticker.unitFormat(); }
     void setUnitFormat(FormatUtil::SizeFormat v);
 
@@ -140,6 +143,7 @@ private:
     bool m_mousePressed : 1 = false;
     bool m_mouseDragging : 1 = false;
     bool m_mouseHasMoved : 1 = false;
+    bool m_animated : 1 = true;
     bool m_axesChanged : 1 = true;
     bool m_barsEmpty : 1 = true;
 

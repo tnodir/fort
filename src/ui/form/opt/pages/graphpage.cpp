@@ -38,6 +38,7 @@ void GraphPage::onResetToDefault()
     m_cbGraphClickThrough->setChecked(iniUser.graphWindowClickThroughDefault());
     m_cbGraphHideOnHover->setChecked(iniUser.graphWindowHideOnHoverDefault());
     m_cbGraphShowSpeed->setChecked(iniUser.graphWindowShowSpeedDefault());
+    m_cbGraphAnimation->setChecked(iniUser.graphWindowAnimationDefault());
     m_graphOpacity->spinBox()->setValue(iniUser.graphWindowOpacityDefault());
     m_graphHoverOpacity->spinBox()->setValue(iniUser.graphWindowHoverOpacityDefault());
     m_graphTickLabelSize->spinBox()->setValue(iniUser.graphWindowTickLabelSizeDefault());
@@ -74,6 +75,7 @@ void GraphPage::onRetranslateUi()
     m_cbGraphClickThrough->setText(tr("Click through"));
     m_cbGraphHideOnHover->setText(tr("Hide on hover"));
     m_cbGraphShowSpeed->setText(tr("Show speed"));
+    m_cbGraphAnimation->setText(tr("Animation"));
     m_graphOpacity->label()->setText(tr("Opacity:"));
     m_graphHoverOpacity->label()->setText(tr("Hover opacity:"));
     m_graphTickLabelSize->label()->setText(tr("Tick label size:"));
@@ -172,6 +174,7 @@ void GraphPage::setupGraphBox()
             m_cbGraphClickThrough,
             m_cbGraphHideOnHover,
             m_cbGraphShowSpeed,
+            m_cbGraphAnimation,
             ControlUtil::createSeparator(),
             m_graphOpacity,
             m_graphHoverOpacity,
@@ -227,6 +230,13 @@ void GraphPage::setupGraphCheckboxes()
             ControlUtil::createCheckBox(iniUser().graphWindowShowSpeed(), [&](bool checked) {
                 if (iniUser().graphWindowShowSpeed() != checked) {
                     iniUser().setGraphWindowShowSpeed(checked);
+                    ctrl()->setIniUserEdited();
+                }
+            });
+    m_cbGraphAnimation =
+            ControlUtil::createCheckBox(iniUser().graphWindowAnimation(), [&](bool checked) {
+                if (iniUser().graphWindowAnimation() != checked) {
+                    iniUser().setGraphWindowAnimation(checked);
                     ctrl()->setIniUserEdited();
                 }
             });

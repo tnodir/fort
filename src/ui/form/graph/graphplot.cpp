@@ -76,6 +76,14 @@ GraphPlot::GraphPlot(QWidget *parent) : QGraphicsView(parent)
     setupScaleAnimation();
 }
 
+void GraphPlot::setAnimated(bool v)
+{
+    m_animated = v;
+
+    m_risingAnimation.setEnabled(v);
+    m_scaleAnimation.setEnabled(v);
+}
+
 void GraphPlot::setUnitFormat(FormatUtil::SizeFormat v)
 {
     m_ticker.setUnitFormat(v);
@@ -621,8 +629,9 @@ void GraphPlot::updateRisingBars()
 
 void GraphPlot::updateScroll()
 {
-    // The empty bars look the same when scrolled by a second: don't wake up for them
-    if (m_barsEmpty) {
+    // Without animation or for the empty bars, which look the same when scrolled by a second,
+    // don't wake up to scroll by pixels
+    if (!m_animated || m_barsEmpty) {
         m_bars->setX(0);
         return;
     }

@@ -14,6 +14,9 @@ class GraphAnimation : public QObject
 public:
     explicit GraphAnimation(QObject *parent = nullptr);
 
+    bool enabled() const { return m_enabled; }
+    void setEnabled(bool v);
+
     int duration() const { return m_duration; }
     void setDuration(int v) { m_duration = v; }
 
@@ -33,6 +36,8 @@ private:
     void updateValue();
 
 private:
+    bool m_enabled = true;
+
     int m_duration = 250;
 
     double m_startValue = 0;

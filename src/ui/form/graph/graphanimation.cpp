@@ -13,10 +13,28 @@ GraphAnimation::GraphAnimation(QObject *parent) : QObject(parent)
     connect(&m_frameTimer, &QTimer::timeout, this, &GraphAnimation::updateValue);
 }
 
+void GraphAnimation::setEnabled(bool v)
+{
+    m_enabled = v;
+
+    // Finish the running animation
+    if (!v && m_frameTimer.isActive()) {
+        m_frameTimer.stop();
+        setCurrentValue(m_endValue);
+    }
+}
+
 void GraphAnimation::start(double startValue, double endValue)
 {
     m_startValue = startValue;
     m_endValue = endValue;
+
+    // The disabled animation sets the end value at once
+    if (!m_enabled) {
+        stop();
+        setCurrentValue(endValue);
+        return;
+    }
 
     m_elapsedTimer.start();
     m_frameTimer.start();
