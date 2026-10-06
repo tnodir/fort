@@ -3,6 +3,7 @@
 
 #include <QMessageBox>
 #include <QObject>
+#include <QVariant>
 
 #include <form/form_types.h>
 #include <form/formpointer.h>
