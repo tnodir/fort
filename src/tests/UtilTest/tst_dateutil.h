@@ -35,3 +35,12 @@ TEST_F(DateUtilTest, checkPeriod)
     ASSERT_TRUE(DateUtil::isTimeInPeriod(x, { 15, 35 }, { 15, 36 }));
     ASSERT_FALSE(DateUtil::isTimeInPeriod(x, { 15, 34 }, { 15, 35 }));
 }
+
+TEST_F(DateUtilTest, formatMinutes)
+{
+    ASSERT_EQ(DateUtil::formatMinutes(15), "15m");
+    ASSERT_EQ(DateUtil::formatMinutes(6 * 60), "6h");
+    ASSERT_EQ(DateUtil::formatMinutes(24 * 60), "1d");
+    ASSERT_EQ(DateUtil::formatMinutes(25 * 60 + 30), "1d 1h 30m");
+    ASSERT_EQ(DateUtil::formatMinutes(24 * 60 + 5), "1d 5m");
+}
