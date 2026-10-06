@@ -10,7 +10,8 @@ struct AxisTicks
 {
     QVector<double> ticks;
     QVector<double> subTicks;
-    QStringList labels;
+    QStringList labels; // in the unit
+    QString unit;
 };
 
 class AxisTickerSpeed
@@ -27,7 +28,9 @@ public:
 private:
     static double getTickStep(double rangeSize);
 
-    QString getTickLabel(double tick) const;
+    void setupLabels(double tickStep, AxisTicks &axisTicks) const;
+
+    int getLabelPrecision(double unitTickStep) const;
 
 private:
     FormatUtil::SizeFormat m_unitFormat = FormatUtil::SpeedTraditionalFormat;

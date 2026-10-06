@@ -326,6 +326,10 @@ void GraphPlot::setupItems()
     // Axis
     m_axes = scene->addPath(QPainterPath());
 
+    // Unit Label: Vertical
+    m_unitLabel = scene->addSimpleText(QString());
+    m_unitLabel->setRotation(-90);
+
     m_tickLabelFont = font();
 }
 
@@ -487,6 +491,8 @@ void GraphPlot::layoutAxes()
     AxisTicks axisTicks;
     m_ticker.generate(m_valueUpper, axisTicks);
 
+    m_unitLabel->setText(axisTicks.unit);
+
     const int tickLabelsWidth = setupTickLabels(axisTicks.labels);
     updateAxisRect(tickLabelsWidth);
 
@@ -496,6 +502,7 @@ void GraphPlot::layoutAxes()
     updateGrid(tickYs);
     updateAxes(tickYs, subTickYs);
     updateTickLabels(tickYs);
+    updateUnitLabel();
 }
 
 void GraphPlot::setupTickLabelStyle(QGraphicsSimpleTextItem *label) const
@@ -509,6 +516,8 @@ void GraphPlot::updateTickLabelsStyle()
     for (auto label : std::as_const(m_tickLabels)) {
         setupTickLabelStyle(label);
     }
+
+    setupTickLabelStyle(m_unitLabel);
 }
 
 int GraphPlot::setupTickLabels(const QStringList &labels)
@@ -542,13 +551,20 @@ int GraphPlot::setupTickLabels(const QStringList &labels)
 
 void GraphPlot::updateAxisRect(int tickLabelsWidth)
 {
-    const int leftMargin = axisPadding + tickLength + tickLabelPadding + tickLabelsWidth;
+    const int leftMargin =
+            axisPadding + unitLabelWidth() + tickLength + tickLabelPadding + tickLabelsWidth;
     const int rightMargin = tickLength;
 
     m_axisRect =
             viewport()->rect().adjusted(leftMargin, axisMarginTop, -rightMargin, -axisMarginBottom);
 
     m_plotArea->setRect(m_axisRect);
+}
+
+int GraphPlot::unitLabelWidth() const
+{
+    // The vertical label's width is its text's height
+    return qCeil(m_unitLabel->boundingRect().height()) + tickLabelPadding;
 }
 
 void GraphPlot::updateGrid(const QVector<int> &tickYs)
@@ -693,6 +709,18 @@ void GraphPlot::updateTickLabels(const QVector<int> &tickYs)
         // Hide the label clipped by the view's border
         label->setVisible(y >= viewRect.top() && y + rect.height() <= viewRect.bottom());
     }
+}
+
+void GraphPlot::updateUnitLabel()
+{
+    const QRectF rect = m_unitLabel->boundingRect();
+    const double centerY = m_axisRect.top() + m_axisRect.height() / 2.0;
+
+    // The rotated label's text goes up from its position
+    m_unitLabel->setPos(axisPadding, qRound(centerY + rect.width() / 2));
+
+    // Hide the label clipped by the view's border
+    m_unitLabel->setVisible(rect.width() <= viewport()->height());
 }
 
 int GraphPlot::valueToPixel(double value) const

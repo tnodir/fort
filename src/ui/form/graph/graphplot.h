@@ -125,6 +125,7 @@ private:
 
     int setupTickLabels(const QStringList &labels);
     void updateAxisRect(int tickLabelsWidth);
+    int unitLabelWidth() const;
 
     void updateGrid(const QVector<int> &tickYs);
     void startRising(qint64 unixTime);
@@ -134,6 +135,7 @@ private:
     void updateSpeedBox();
     void updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs);
     void updateTickLabels(const QVector<int> &tickYs);
+    void updateUnitLabel();
 
     int valueToPixel(double value) const;
     QVector<int> valuesToPixels(const QVector<double> &values) const;
@@ -165,6 +167,7 @@ private:
     QGraphicsRectItem *m_speedBox = nullptr;
     QGraphicsSimpleTextItem *m_speedText = nullptr;
     QGraphicsPathItem *m_axes = nullptr;
+    QGraphicsSimpleTextItem *m_unitLabel = nullptr;
 
     QPoint m_mousePressPos;
     QRect m_axisRect;
