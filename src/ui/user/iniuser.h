@@ -14,9 +14,9 @@ const char *const groups = "groups";
 const char *const speedLimits = "speedLimits";
 const char *const timePeriods = "timePeriods";
 const char *const services = "services";
-const char *const filterSim = "filterSim";
 const char *const traffic = "traffic";
 const char *const connections = "connections";
+const char *const filterSim = "filterSim";
 const char *const graph = "graph";
 
 const char *const filter = "filter";

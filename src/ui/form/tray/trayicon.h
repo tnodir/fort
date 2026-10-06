@@ -158,10 +158,10 @@ private:
     QAction *m_speedLimitsAction = nullptr;
     QAction *m_timePeriodsAction = nullptr;
     QAction *m_servicesAction = nullptr;
-    QAction *m_filterSimAction = nullptr;
     QMenu *m_statisticsMenu = nullptr;
     QAction *m_trafficAction = nullptr;
     QAction *m_connectionsAction = nullptr;
+    QAction *m_filterSimAction = nullptr;
     QAction *m_graphAction = nullptr;
     QAction *m_filterEnabledAction = nullptr;
     QAction *m_snoozeAlertsAction = nullptr;

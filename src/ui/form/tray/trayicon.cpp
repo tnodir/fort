@@ -418,10 +418,10 @@ void TrayIcon::retranslateUi()
     m_speedLimitsAction->setText(tr("Speed Limits"));
     m_timePeriodsAction->setText(tr("Time Periods"));
     m_servicesAction->setText(tr("Services"));
-    m_filterSimAction->setText(tr("Filter Simulator"));
     m_statisticsMenu->setTitle(tr("Statistics"));
     m_trafficAction->setText(tr("Traffic"));
     m_connectionsAction->setText(tr("Connections"));
+    m_filterSimAction->setText(tr("Filter Simulator"));
     m_graphAction->setText(tr("Traffic Graph"));
 
     m_filterEnabledAction->setText(tr("Filter Enabled"));
@@ -574,12 +574,6 @@ void TrayIcon::setupTrayMenuOptions()
     addHotKey(m_servicesAction, HotKey::services);
 
     m_servicesAction->setEnabled(settings()->hasMasterAdmin());
-
-    m_optionsMenu->addSeparator();
-
-    m_filterSimAction = addAction(m_optionsMenu,
-            { ":/icons/filter.png", this, SLOT(onShowWindowAction()), WindowFilterSim });
-    addHotKey(m_filterSimAction, HotKey::filterSim);
 }
 
 void TrayIcon::setupTrayMenuStatistics()
@@ -594,6 +588,12 @@ void TrayIcon::setupTrayMenuStatistics()
     m_connectionsAction = addAction(m_statisticsMenu,
             { ":/icons/connect.png", this, SLOT(onShowWindowAction()), WindowConnections });
     addHotKey(m_connectionsAction, HotKey::connections);
+
+    m_statisticsMenu->addSeparator();
+
+    m_filterSimAction = addAction(m_statisticsMenu,
+            { ":/icons/filter.png", this, SLOT(onShowWindowAction()), WindowFilterSim });
+    addHotKey(m_filterSimAction, HotKey::filterSim);
 }
 
 void TrayIcon::setupTrayMenuBlockTraffic()
