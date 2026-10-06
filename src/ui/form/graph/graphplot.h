@@ -198,10 +198,10 @@ private:
     QGraphicsRectItem *m_bars = nullptr;
     GraphBarsItem *m_barsIn = nullptr;
     GraphBarsItem *m_barsOut = nullptr;
-    QGraphicsRectItem *m_risingIn = nullptr;
-    QGraphicsRectItem *m_risingOut = nullptr;
+    GraphBarsItem *m_risingIn = nullptr;
+    GraphBarsItem *m_risingOut = nullptr;
     GraphBarsItem *m_barsTotal = nullptr;
-    QGraphicsRectItem *m_risingTotal = nullptr;
+    GraphBarsItem *m_risingTotal = nullptr;
     QGraphicsRectItem *m_speedBox = nullptr;
     QGraphicsPathItem *m_speedInArrow = nullptr;
     QGraphicsSimpleTextItem *m_speedInText = nullptr;

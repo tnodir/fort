@@ -22,6 +22,7 @@ inline constexpr int keyPixels = 4; // pixels per second
 inline constexpr int risingMsecs = 400;
 inline constexpr int scaleMsecs = 400;
 inline constexpr int speedBgAlpha = 130;
+inline constexpr int barOutlineDarker = 150; // as in NetTraffic
 inline constexpr int speedArrowSpacing = 2;
 inline constexpr double speedArrowTop = 0.18; // of the text's height
 inline constexpr double speedArrowWidth = 0.55; // of the text's height
@@ -161,6 +162,20 @@ void appendBar(QVector<QRectF> &rects, const QRectF &rect)
     }
 }
 
+void setBarsColor(GraphBarsItem *item, const QColor &color)
+{
+    item->setBrush(color);
+    item->setOutlineBrush(color.darker(barOutlineDarker));
+}
+
+void setRisingBar(GraphBarsItem *item, const QRectF &rect)
+{
+    QVector<QRectF> rects;
+    appendBar(rects, rect);
+
+    item->setRects(rects);
+}
+
 }
 
 GraphPlot::GraphPlot(QWidget *parent) : QGraphicsView(parent)
@@ -250,16 +265,16 @@ void GraphPlot::setColors(const ColorArray &colors)
     }
 
     // Graph Inbound
-    m_barsIn->setBrush(colors[ColorIn]);
-    m_risingIn->setBrush(colors[ColorIn]);
+    setBarsColor(m_barsIn, colors[ColorIn]);
+    setBarsColor(m_risingIn, colors[ColorIn]);
 
     // Graph Outbound
-    m_barsOut->setBrush(colors[ColorOut]);
-    m_risingOut->setBrush(colors[ColorOut]);
+    setBarsColor(m_barsOut, colors[ColorOut]);
+    setBarsColor(m_risingOut, colors[ColorOut]);
 
     // Graph Total
-    m_barsTotal->setBrush(colors[ColorTotal]);
-    m_risingTotal->setBrush(colors[ColorTotal]);
+    setBarsColor(m_barsTotal, colors[ColorTotal]);
+    setBarsColor(m_risingTotal, colors[ColorTotal]);
 
     // Text Speed
     {
@@ -452,15 +467,15 @@ void GraphPlot::setupItems()
 
     // Graph Inbound
     m_barsIn = new GraphBarsItem(m_bars);
-    m_risingIn = createNoPenItem<QGraphicsRectItem>(m_barsIn);
+    m_risingIn = new GraphBarsItem(m_barsIn);
 
     // Graph Outbound
     m_barsOut = new GraphBarsItem(m_bars);
-    m_risingOut = createNoPenItem<QGraphicsRectItem>(m_barsOut);
+    m_risingOut = new GraphBarsItem(m_barsOut);
 
     // Graph Total: Over the bars
     m_barsTotal = new GraphBarsItem(m_bars);
-    m_risingTotal = createNoPenItem<QGraphicsRectItem>(m_barsTotal);
+    m_risingTotal = new GraphBarsItem(m_barsTotal);
 
     // Text Speed
     m_speedBox = createNoPenItem<QGraphicsRectItem>(m_plotArea);
@@ -812,9 +827,9 @@ void GraphPlot::updateRisingBars()
     const double ratio = m_risingAnimation.currentValue();
     const GraphColumnRects rects = columnRects(risingColumn(m_risingColumn, ratio));
 
-    m_risingIn->setRect(rects.in);
-    m_risingOut->setRect(rects.out);
-    m_risingTotal->setRect(rects.total);
+    setRisingBar(m_risingIn, rects.in);
+    setRisingBar(m_risingOut, rects.out);
+    setRisingBar(m_risingTotal, rects.total);
 }
 
 void GraphPlot::updateScroll()

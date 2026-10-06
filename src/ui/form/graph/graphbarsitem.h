@@ -13,6 +13,10 @@ public:
     const QBrush &brush() const { return m_brush; }
     void setBrush(const QBrush &v);
 
+    // A device pixel's outline inside the rectangles
+    const QBrush &outlineBrush() const { return m_outlineBrush; }
+    void setOutlineBrush(const QBrush &v);
+
     const QVector<QRectF> &rects() const { return m_rects; }
     void setRects(const QVector<QRectF> &v);
 
@@ -22,7 +26,11 @@ public:
             QWidget *widget = nullptr) override;
 
 private:
+    QVector<QRectF> innerRects(qreal lineWidth) const;
+
+private:
     QBrush m_brush;
+    QBrush m_outlineBrush;
     QRectF m_boundingRect;
     QVector<QRectF> m_rects;
 };
