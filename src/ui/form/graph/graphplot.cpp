@@ -97,6 +97,16 @@ void GraphPlot::setAnimated(bool v)
     m_scaleAnimation.setEnabled(v);
 }
 
+void GraphPlot::setAxisTicksVisible(bool v)
+{
+    if (m_axisTicksVisible == v)
+        return;
+
+    m_axisTicksVisible = v;
+
+    m_axesChanged = true;
+}
+
 void GraphPlot::setUnitFormat(FormatUtil::SizeFormat v)
 {
     m_ticker.setUnitFormat(v);
@@ -573,14 +583,20 @@ int GraphPlot::setupTickLabels(const QStringList &labels)
 
 void GraphPlot::updateAxisRect(int tickLabelsWidth)
 {
+    const int ticksWidth = axisTickLength();
     const int leftMargin =
-            axisPadding + unitLabelWidth() + tickLength + tickLabelPadding + tickLabelsWidth;
-    const int rightMargin = tickLength;
+            axisPadding + unitLabelWidth() + ticksWidth + tickLabelPadding + tickLabelsWidth;
+    const int rightMargin = ticksWidth; // the bars are up to the right edge without the ticks
 
     m_axisRect =
             viewport()->rect().adjusted(leftMargin, axisMarginTop, -rightMargin, -axisMarginBottom);
 
     m_plotArea->setRect(m_axisRect);
+}
+
+int GraphPlot::axisTickLength() const
+{
+    return m_axisTicksVisible ? tickLength : 0;
 }
 
 int GraphPlot::unitLabelWidth() const
@@ -707,12 +723,15 @@ void GraphPlot::updateAxes(const QVector<int> &tickYs, const QVector<int> &subTi
 
     // Base Lines
     addVLine(path, m_axisRect.left(), bottom, top);
-    addVLine(path, m_axisRect.right() + 1, bottom, top);
     addHLine(path, m_axisRect.left(), m_axisRect.right() + 1, bottom);
 
-    // Ticks
-    addTicks(path, tickYs, m_axisRect, tickLength);
-    addTicks(path, subTickYs, m_axisRect, subTickLength);
+    // Right Line and Ticks
+    if (m_axisTicksVisible) {
+        addVLine(path, m_axisRect.right() + 1, bottom, top);
+
+        addTicks(path, tickYs, m_axisRect, tickLength);
+        addTicks(path, subTickYs, m_axisRect, subTickLength);
+    }
 
     m_axes->setPath(path);
 }
@@ -720,7 +739,7 @@ void GraphPlot::updateAxes(const QVector<int> &tickYs, const QVector<int> &subTi
 void GraphPlot::updateTickLabels(const QVector<int> &tickYs)
 {
     const QRect viewRect = viewport()->rect();
-    const int labelsRight = m_axisRect.left() - tickLength - tickLabelPadding;
+    const int labelsRight = m_axisRect.left() - axisTickLength() - tickLabelPadding;
     const int count = tickYs.size();
 
     for (int i = 0; i < count; ++i) {

@@ -39,6 +39,7 @@ void GraphPage::onResetToDefault()
     m_cbGraphHideOnHover->setChecked(iniUser.graphWindowHideOnHoverDefault());
     m_cbGraphShowSpeed->setChecked(iniUser.graphWindowShowSpeedDefault());
     m_cbGraphAnimation->setChecked(iniUser.graphWindowAnimationDefault());
+    m_cbGraphAxisTicks->setChecked(iniUser.graphWindowAxisTicksDefault());
     m_graphOpacity->spinBox()->setValue(iniUser.graphWindowOpacityDefault());
     m_graphHoverOpacity->spinBox()->setValue(iniUser.graphWindowHoverOpacityDefault());
     m_graphTickLabelSize->spinBox()->setValue(iniUser.graphWindowTickLabelSizeDefault());
@@ -76,6 +77,7 @@ void GraphPage::onRetranslateUi()
     m_cbGraphHideOnHover->setText(tr("Hide on hover"));
     m_cbGraphShowSpeed->setText(tr("Show speed"));
     m_cbGraphAnimation->setText(tr("Animation"));
+    m_cbGraphAxisTicks->setText(tr("Axis ticks"));
     m_graphOpacity->label()->setText(tr("Opacity:"));
     m_graphHoverOpacity->label()->setText(tr("Hover opacity:"));
     m_graphTickLabelSize->label()->setText(tr("Tick label size:"));
@@ -161,6 +163,7 @@ QLayout *GraphPage::setupColumn2()
 void GraphPage::setupGraphBox()
 {
     setupGraphCheckboxes();
+    setupGraphViewCheckboxes();
     setupGraphOptions();
 
     // Traffic Units
@@ -175,6 +178,7 @@ void GraphPage::setupGraphBox()
             m_cbGraphHideOnHover,
             m_cbGraphShowSpeed,
             m_cbGraphAnimation,
+            m_cbGraphAxisTicks,
             ControlUtil::createSeparator(),
             m_graphOpacity,
             m_graphHoverOpacity,
@@ -226,6 +230,10 @@ void GraphPage::setupGraphCheckboxes()
                     ctrl()->setIniUserEdited();
                 }
             });
+}
+
+void GraphPage::setupGraphViewCheckboxes()
+{
     m_cbGraphShowSpeed =
             ControlUtil::createCheckBox(iniUser().graphWindowShowSpeed(), [&](bool checked) {
                 if (iniUser().graphWindowShowSpeed() != checked) {
@@ -237,6 +245,13 @@ void GraphPage::setupGraphCheckboxes()
             ControlUtil::createCheckBox(iniUser().graphWindowAnimation(), [&](bool checked) {
                 if (iniUser().graphWindowAnimation() != checked) {
                     iniUser().setGraphWindowAnimation(checked);
+                    ctrl()->setIniUserEdited();
+                }
+            });
+    m_cbGraphAxisTicks =
+            ControlUtil::createCheckBox(iniUser().graphWindowAxisTicks(), [&](bool checked) {
+                if (iniUser().graphWindowAxisTicks() != checked) {
+                    iniUser().setGraphWindowAxisTicks(checked);
                     ctrl()->setIniUserEdited();
                 }
             });

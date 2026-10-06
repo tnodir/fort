@@ -174,6 +174,7 @@ void GraphWindow::updateFonts(const IniUser &ini)
 {
     m_plot->setTickLabelSize(ini.graphWindowTickLabelSize());
     m_plot->setSpeedVisible(ini.graphWindowShowSpeed());
+    m_plot->setAxisTicksVisible(ini.graphWindowAxisTicks());
 }
 
 void GraphWindow::updateFormat(const IniUser &ini)

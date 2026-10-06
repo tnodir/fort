@@ -53,6 +53,9 @@ public:
     bool animated() const { return m_animated; }
     void setAnimated(bool v);
 
+    bool axisTicksVisible() const { return m_axisTicksVisible; }
+    void setAxisTicksVisible(bool v);
+
     FormatUtil::SizeFormat unitFormat() const { return m_ticker.unitFormat(); }
     void setUnitFormat(FormatUtil::SizeFormat v);
 
@@ -125,6 +128,7 @@ private:
 
     int setupTickLabels(const QStringList &labels);
     void updateAxisRect(int tickLabelsWidth);
+    int axisTickLength() const;
     int unitLabelWidth() const;
 
     void updateGrid(const QVector<int> &tickYs, const QVector<int> &subTickYs);
@@ -146,6 +150,7 @@ private:
     bool m_mouseDragging : 1 = false;
     bool m_mouseHasMoved : 1 = false;
     bool m_animated : 1 = true;
+    bool m_axisTicksVisible : 1 = false;
     bool m_axesChanged : 1 = true;
     bool m_barsEmpty : 1 = true;
 

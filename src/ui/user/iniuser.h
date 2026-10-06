@@ -376,6 +376,10 @@ public:
     bool graphWindowAnimation() const { return valueBool("graphWindow/animation", true); }
     void setGraphWindowAnimation(bool on) { setValue("graphWindow/animation", on); }
 
+    constexpr bool graphWindowAxisTicksDefault() const { return false; }
+    bool graphWindowAxisTicks() const { return valueBool("graphWindow/axisTicks"); }
+    void setGraphWindowAxisTicks(bool on) { setValue("graphWindow/axisTicks", on); }
+
     constexpr int graphWindowOpacityDefault() const { return 90; }
     int graphWindowOpacity() const { return valueInt("graphWindow/opacity", 90); }
     void setGraphWindowOpacity(int v) { setValue("graphWindow/opacity", v); }
