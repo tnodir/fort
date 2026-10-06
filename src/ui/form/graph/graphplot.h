@@ -50,7 +50,7 @@ public:
 
     void setSpeedText(const QString &text);
 
-    GraphPoint lastPoint() const;
+    GraphPoint pointAt(qint64 unixTime) const;
 
     void setColors(const GraphPlot::ColorArray &colors);
     void setTickLabelSize(int pointSize);
@@ -86,6 +86,7 @@ private:
     void removeOldPoints(qint64 unixTime, qint64 rangeLower);
     void mergeLastPoint(GraphPoint &point);
 
+    qint64 lastUnixTime() const;
     int keyRangeSize() const;
 
     quint64 maxBits(qint64 keyLower) const;

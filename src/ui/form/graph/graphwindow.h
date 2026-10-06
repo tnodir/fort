@@ -30,7 +30,7 @@ public slots:
 private slots:
     void checkHoverLeave();
 
-    void addEmptyTraffic();
+    void updateGraph();
 
 protected:
     static GraphPlot::ColorArray getColors(const IniUser &ini);
@@ -57,14 +57,16 @@ private:
 
     void setupTimer();
 
-    void updateSpeed();
-    QString getSpeedText() const;
+    void updateSpeed(qint64 unixTime);
+    QString getSpeedText(qint64 unixTime) const;
 
     void setWindowOpacityPercent(int percent);
 
     void checkWindowEdges();
 
 protected:
+    void showEvent(QShowEvent *event) override;
+
     void enterEvent(QEnterEvent *event) override;
     void leaveEvent(QEvent *event) override;
 
@@ -72,8 +74,6 @@ protected:
 
 private:
     bool m_mouseDragResize = false;
-
-    qint64 m_lastUnixTime = 0;
 
     GraphPlot *m_plot = nullptr;
 

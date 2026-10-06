@@ -61,9 +61,15 @@ void GraphPlot::setSpeedText(const QString &text)
     m_speedText->setText(text);
 }
 
-GraphPoint GraphPlot::lastPoint() const
+GraphPoint GraphPlot::pointAt(qint64 unixTime) const
 {
-    return m_points.isEmpty() ? GraphPoint() : m_points.constLast();
+    for (auto it = m_points.crbegin(); it != m_points.crend(); ++it) {
+        if (it->unixTime <= unixTime) {
+            return (it->unixTime == unixTime) ? *it : GraphPoint();
+        }
+    }
+
+    return {};
 }
 
 void GraphPlot::setColors(const ColorArray &colors)
@@ -128,7 +134,7 @@ void GraphPlot::cancelMousePressAndDragging()
 void GraphPlot::replot()
 {
     const int keyRangeSize = this->keyRangeSize();
-    const qint64 keyLower = lastPoint().unixTime - keyRangeSize;
+    const qint64 keyLower = lastUnixTime() - keyRangeSize;
 
     updateValueRange(keyLower);
 
@@ -287,6 +293,11 @@ void GraphPlot::mergeLastPoint(GraphPoint &point)
 
     point.inBits += lastPoint.inBits;
     point.outBits += lastPoint.outBits;
+}
+
+qint64 GraphPlot::lastUnixTime() const
+{
+    return m_points.isEmpty() ? 0 : m_points.constLast().unixTime;
 }
 
 int GraphPlot::keyRangeSize() const

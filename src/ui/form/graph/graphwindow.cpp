@@ -97,7 +97,7 @@ void GraphWindow::setupUi()
     m_plot = new GraphPlot();
 
     // Interactions
-    connect(m_plot, &GraphPlot::resized, this, &GraphWindow::addEmptyTraffic);
+    connect(m_plot, &GraphPlot::resized, this, &GraphWindow::updateGraph);
 
     connect(m_plot, &GraphPlot::mouseDoubleClick, this, &GraphWindow::onMouseDoubleClick);
     connect(m_plot, &GraphPlot::mouseRightClick, this, &GraphWindow::mouseRightClick);
@@ -144,6 +144,8 @@ void GraphWindow::updateFlagsAndColors(bool onlyFlags)
     updateColors(ini);
     updateFonts(ini);
     updateFormat(ini);
+
+    updateGraph();
 }
 
 void GraphWindow::updateWindowFlags(const IniUser &ini)
@@ -181,7 +183,7 @@ void GraphWindow::updateFormat(const IniUser &ini)
 void GraphWindow::setupTimer()
 {
     connect(&m_hoverTimer, &QTimer::timeout, this, &GraphWindow::checkHoverLeave);
-    connect(&m_updateTimer, &QTimer::timeout, this, &GraphWindow::addEmptyTraffic);
+    connect(&m_updateTimer, &QTimer::timeout, this, &GraphWindow::updateGraph);
 
     m_hoverTimer.setInterval(300);
     m_updateTimer.setInterval(1000); // 1 second
@@ -251,6 +253,13 @@ void GraphWindow::cancelMousePressAndDragging()
     m_plot->cancelMousePressAndDragging();
 }
 
+void GraphWindow::showEvent(QShowEvent *event)
+{
+    FormWindow::showEvent(event);
+
+    updateGraph(); // the hidden window isn't updated
+}
+
 void GraphWindow::enterEvent(QEnterEvent *event)
 {
     Q_UNUSED(event);
@@ -299,29 +308,29 @@ void GraphWindow::checkHoverLeave()
 
 void GraphWindow::addTraffic(qint64 unixTime, quint64 inBytes, quint64 outBytes)
 {
-    if (m_lastUnixTime != unixTime) {
-        m_lastUnixTime = unixTime;
-
-        updateSpeed();
-    }
-
-    const auto &ini = iniUser();
-
-    const qint64 rangeLower = unixTime - ini.graphWindowMaxSeconds();
+    const qint64 rangeLower = unixTime - iniUser().graphWindowMaxSeconds();
 
     m_plot->addPoint({ unixTime, inBytes * 8, outBytes * 8 }, rangeLower);
+}
 
-    m_plot->setFixedValueMax(ini.graphWindowFixedSpeed() * 1024LL);
+void GraphWindow::updateGraph()
+{
+    const qint64 unixTime = DateUtil::getUnixTime();
+
+    // Move the graph to the current time
+    addTraffic(unixTime, 0, 0);
+
+    if (!isVisible())
+        return;
+
+    updateSpeed(unixTime - 1); // the last complete second
+
+    m_plot->setFixedValueMax(iniUser().graphWindowFixedSpeed() * 1024LL);
 
     m_plot->replot();
 }
 
-void GraphWindow::addEmptyTraffic()
-{
-    addTraffic(DateUtil::getUnixTime(), 0, 0);
-}
-
-void GraphWindow::updateSpeed()
+void GraphWindow::updateSpeed(qint64 unixTime)
 {
     const bool showTextSpeed = m_plot->speedVisible();
     const bool showWindowSpeed = (windowFlags() & Qt::FramelessWindowHint) == 0;
@@ -329,7 +338,7 @@ void GraphWindow::updateSpeed()
     if (!(showTextSpeed || showWindowSpeed))
         return;
 
-    const auto text = getSpeedText();
+    const auto text = getSpeedText(unixTime);
 
     if (showTextSpeed) {
         m_plot->setSpeedText(text);
@@ -340,9 +349,9 @@ void GraphWindow::updateSpeed()
     }
 }
 
-QString GraphWindow::getSpeedText() const
+QString GraphWindow::getSpeedText(qint64 unixTime) const
 {
-    const GraphPoint point = m_plot->lastPoint();
+    const GraphPoint point = m_plot->pointAt(unixTime);
     const auto unitFormat = m_plot->unitFormat();
 
     return QChar(0x2193) // ↓
