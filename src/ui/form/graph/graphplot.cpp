@@ -15,7 +15,8 @@ inline constexpr int axisMarginTop = 2;
 inline constexpr int axisMarginBottom = 1;
 inline constexpr int tickLength = 5;
 inline constexpr int subTickLength = 2;
-inline constexpr int tickLabelPadding = 2;
+inline constexpr int tickLabelPadding = 4;
+inline constexpr int unitLabelPadding = 4;
 inline constexpr int keyPixels = 4; // pixels per second
 inline constexpr int barGapPixels = 1; // device pixels between the seconds' bars
 inline constexpr int risingMsecs = 400;
@@ -647,7 +648,7 @@ int GraphPlot::borderWidth() const
 int GraphPlot::unitLabelWidth() const
 {
     // The vertical label's width is its text's height
-    return qCeil(m_unitLabel->boundingRect().height()) + tickLabelPadding;
+    return qCeil(m_unitLabel->boundingRect().height()) + unitLabelPadding;
 }
 
 void GraphPlot::updateGrid(const QVector<int> &tickYs, const QVector<int> &subTickYs)
