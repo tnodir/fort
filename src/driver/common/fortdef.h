@@ -15,8 +15,9 @@ enum FortLogType {
 enum FortLogConnFlag {
     FORT_LOG_CONN_IP6 = (1 << 0),
     FORT_LOG_CONN_INBOUND = (1 << 1),
-    FORT_LOG_CONN_INHERITED = (1 << 2),
-    FORT_LOG_CONN_ALERTED = (1 << 3),
+    FORT_LOG_CONN_LOOPBACK = (1 << 2),
+    FORT_LOG_CONN_INHERITED = (1 << 3),
+    FORT_LOG_CONN_ALERTED = (1 << 4),
 };
 
 enum FortConnReason {
