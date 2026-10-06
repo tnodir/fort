@@ -20,6 +20,7 @@ inline constexpr int keyPixels = 4; // pixels per second
 inline constexpr int risingMsecs = 400;
 inline constexpr int scaleMsecs = 400;
 inline constexpr int speedBgAlpha = 130;
+inline constexpr double subGridOpacity = 0.5;
 inline constexpr int mouseMoveDistance = 3;
 
 void addHLine(QPainterPath &path, int x1, int x2, int y)
@@ -32,6 +33,18 @@ void addVLine(QPainterPath &path, int x, int y1, int y2)
 {
     path.moveTo(x, y1);
     path.lineTo(x, y2);
+}
+
+void addHLines(QPainterPath &path, const QVector<int> &ys, const QRect &axisRect)
+{
+    const int bottom = axisRect.bottom();
+
+    for (const int y : ys) {
+        // The bottom line is the axis
+        if (y < bottom) {
+            addHLine(path, axisRect.left(), axisRect.right(), y);
+        }
+    }
 }
 
 void addTicks(QPainterPath &path, const QVector<int> &ys, const QRect &axisRect, int length)
@@ -122,7 +135,15 @@ void GraphPlot::setColors(const ColorArray &colors)
     setBackgroundBrush(isTransparentBg ? QBrush(Qt::NoBrush) : QBrush(bgColor));
 
     // Grid
-    m_grid->setPen(QPen(colors[ColorGrid], 0, Qt::DotLine));
+    {
+        const QColor gridColor = colors[ColorGrid];
+
+        QColor subGridColor = gridColor;
+        subGridColor.setAlphaF(gridColor.alphaF() * subGridOpacity);
+
+        m_grid->setPen(QPen(gridColor, 0, Qt::DashLine));
+        m_subGrid->setPen(QPen(subGridColor, 0, Qt::DashLine));
+    }
 
     // Graph Inbound
     m_barsIn->setBrush(colors[ColorIn]);
@@ -302,6 +323,7 @@ void GraphPlot::setupItems()
 
     // Grid
     m_grid = scene->addPath(QPainterPath());
+    m_subGrid = scene->addPath(QPainterPath());
 
     // Plot Area: Clips the graphs and the text speed
     m_plotArea = scene->addRect(QRectF(), Qt::NoPen);
@@ -499,7 +521,7 @@ void GraphPlot::layoutAxes()
     const QVector<int> tickYs = valuesToPixels(axisTicks.ticks);
     const QVector<int> subTickYs = valuesToPixels(axisTicks.subTicks);
 
-    updateGrid(tickYs);
+    updateGrid(tickYs, subTickYs);
     updateAxes(tickYs, subTickYs);
     updateTickLabels(tickYs);
     updateUnitLabel();
@@ -567,15 +589,16 @@ int GraphPlot::unitLabelWidth() const
     return qCeil(m_unitLabel->boundingRect().height()) + tickLabelPadding;
 }
 
-void GraphPlot::updateGrid(const QVector<int> &tickYs)
+void GraphPlot::updateGrid(const QVector<int> &tickYs, const QVector<int> &subTickYs)
 {
     QPainterPath path;
+    addHLines(path, tickYs, m_axisRect);
 
-    for (const int y : tickYs) {
-        addHLine(path, m_axisRect.left(), m_axisRect.right(), y);
-    }
+    QPainterPath subPath;
+    addHLines(subPath, subTickYs, m_axisRect);
 
     m_grid->setPath(path);
+    m_subGrid->setPath(subPath);
 }
 
 void GraphPlot::startRising(qint64 unixTime)
@@ -685,6 +708,7 @@ void GraphPlot::updateAxes(const QVector<int> &tickYs, const QVector<int> &subTi
     // Base Lines
     addVLine(path, m_axisRect.left(), bottom, top);
     addVLine(path, m_axisRect.right() + 1, bottom, top);
+    addHLine(path, m_axisRect.left(), m_axisRect.right() + 1, bottom);
 
     // Ticks
     addTicks(path, tickYs, m_axisRect, tickLength);
