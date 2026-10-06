@@ -25,6 +25,9 @@ namespace {
 
 inline constexpr int stickyDistance = 30;
 
+inline constexpr QChar inArrow = QChar(0x2193); // Down
+inline constexpr QChar outArrow = QChar(0x2191); // Up
+
 inline void checkWindowHorizontalEdges(const QRect &screenRect, const QRect &winRect, QPoint &diff)
 {
     const int leftDiff = screenRect.x() - winRect.x();
@@ -351,25 +354,19 @@ void GraphWindow::updateSpeed(qint64 unixTime)
     if (!(showTextSpeed || showWindowSpeed))
         return;
 
-    const auto text = getSpeedText(unixTime);
-
-    if (showTextSpeed) {
-        m_plot->setSpeedText(text);
-    }
-
-    if (showWindowSpeed) {
-        setWindowTitle(text);
-    }
-}
-
-QString GraphWindow::getSpeedText(qint64 unixTime) const
-{
     const GraphPoint point = m_plot->pointAt(unixTime);
     const auto unitFormat = m_plot->unitFormat();
 
-    return QChar(0x2193) // ↓
-            + FormatUtil::formatSpeed(qint64(point.inBits), unitFormat) + "  " + QChar(0x2191) // ↑
-            + FormatUtil::formatSpeed(qint64(point.outBits), unitFormat);
+    const QString inText = FormatUtil::formatSpeed(qint64(point.inBits), unitFormat);
+    const QString outText = FormatUtil::formatSpeed(qint64(point.outBits), unitFormat);
+
+    if (showTextSpeed) {
+        m_plot->setSpeedText(inText, outText);
+    }
+
+    if (showWindowSpeed) {
+        setWindowTitle(inArrow + inText + "  " + outArrow + outText);
+    }
 }
 
 void GraphWindow::setWindowOpacityPercent(int percent)

@@ -59,7 +59,6 @@ private:
     void startUpdateTimer();
 
     void updateSpeed(qint64 unixTime);
-    QString getSpeedText(qint64 unixTime) const;
 
     void setWindowOpacityPercent(int percent);
 

@@ -84,7 +84,7 @@ public:
     bool speedVisible() const;
     void setSpeedVisible(bool v);
 
-    void setSpeedText(const QString &text);
+    void setSpeedText(const QString &inText, const QString &outText);
 
     GraphPoint pointAt(qint64 unixTime) const;
 
@@ -159,6 +159,7 @@ private:
     void updateBars();
     void updateRisingBars();
     void updateScroll();
+    void setupSpeedArrows(const QFont &font);
     void updateSpeedBox();
     void updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs);
     void updateTickLabels(const QVector<int> &tickYs);
@@ -201,7 +202,10 @@ private:
     GraphBarsItem *m_barsTotal = nullptr;
     QGraphicsRectItem *m_risingTotal = nullptr;
     QGraphicsRectItem *m_speedBox = nullptr;
-    QGraphicsSimpleTextItem *m_speedText = nullptr;
+    QGraphicsPathItem *m_speedInArrow = nullptr;
+    QGraphicsSimpleTextItem *m_speedInText = nullptr;
+    QGraphicsPathItem *m_speedOutArrow = nullptr;
+    QGraphicsSimpleTextItem *m_speedOutText = nullptr;
     QGraphicsPathItem *m_axes = nullptr;
     QGraphicsSimpleTextItem *m_unitLabel = nullptr;
     GraphBarsItem *m_border = nullptr;
