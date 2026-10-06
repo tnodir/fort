@@ -71,7 +71,7 @@ QVariant TaskListModel::data(const QModelIndex &index, int role) const
     case Qt::ToolTipRole:
         return dataDisplay(index, role);
 
-        // Icon
+    // Icon
     case Qt::DecorationRole:
         return dataDecoration(index, role);
 

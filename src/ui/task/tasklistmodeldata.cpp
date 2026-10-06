@@ -2,6 +2,7 @@
 
 #include <QFont>
 
+#include <util/dateutil.h>
 #include <util/iconcache.h>
 
 #include "taskinfo.h"
@@ -16,7 +17,7 @@ QVariant dataDisplayName(const TaskInfo *taskInfo, const TaskEditInfo & /*task*/
 
 QVariant dataDisplayInterval(const TaskInfo * /*taskInfo*/, const TaskEditInfo &task, int /*role*/)
 {
-    return task.intervalMinutes();
+    return DateUtil::formatMinutes(task.intervalMinutes());
 }
 
 QVariant dataDisplayStartup(const TaskInfo * /*taskInfo*/, const TaskEditInfo &task, int role)
