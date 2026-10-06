@@ -31,11 +31,6 @@ FORT_CONF_META_CONN connFilterConn(const char *ip, bool inbound = false)
     };
 }
 
-const char *connFilterBufData(const ConfBuffer &confBuf)
-{
-    return confBuf.buffer().isEmpty() ? nullptr : confBuf.data();
-}
-
 }
 
 class ConnFilterTest : public Test
@@ -146,9 +141,9 @@ DriverCommon::ConnFilterResult ConnFilterTest::connFilter(
 
     const DriverCommon::ConnFilterConf cf = {
         .drvConf = drvConf,
-        .drvZones = connFilterBufData(m_zonesBuf),
-        .drvRules = connFilterBufData(m_rulesBuf),
-        .drvGroups = connFilterBufData(m_groupsBuf),
+        .drvZones = m_zonesBuf.dataOrNull(),
+        .drvRules = m_rulesBuf.dataOrNull(),
+        .drvGroups = m_groupsBuf.dataOrNull(),
     };
 
     const FORT_APP_DATA appData = DriverCommon::confAppFind(drvConf, appPath);
