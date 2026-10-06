@@ -180,7 +180,10 @@ void GraphPlot::cancelMousePressAndDragging()
 
 void GraphPlot::replot()
 {
-    animateValueUpper(targetValueUpper(keyLower()));
+    const quint64 bits = maxBits(keyLower());
+    m_barsEmpty = (bits == 0);
+
+    animateValueUpper(targetValueUpper(bits));
     startRising(lastUnixTime() - 1); // the last complete second
 
     redraw();
@@ -415,14 +418,12 @@ quint64 GraphPlot::maxBits(qint64 keyLower) const
     return bits;
 }
 
-double GraphPlot::targetValueUpper(qint64 keyLower) const
+double GraphPlot::targetValueUpper(quint64 bits) const
 {
     if (m_fixedValueMax > 0)
         return double(m_fixedValueMax);
 
     // Keep the current range for empty traffic
-    const quint64 bits = maxBits(keyLower);
-
     return (bits > 0) ? double(bits) : m_valueTarget;
 }
 
@@ -565,6 +566,12 @@ void GraphPlot::startRising(qint64 unixTime)
     m_risingTime = unixTime;
 
     m_risingAnimation.stop();
+
+    // Nothing to rise for an empty traffic
+    const GraphPoint point = pointAt(unixTime);
+    if (point.inBits == 0 && point.outBits == 0)
+        return;
+
     m_risingAnimation.start();
 }
 
@@ -622,6 +629,12 @@ void GraphPlot::updateRisingBars()
 
 void GraphPlot::updateScroll()
 {
+    // The empty bars look the same when scrolled by a second: don't wake up for them
+    if (m_barsEmpty) {
+        m_bars->setX(0);
+        return;
+    }
+
     // Move the bars to the left smoothly: by a device pixel, up to the next second
     const int secondPixels = this->secondPixels();
     const qint64 msecs = QDateTime::currentMSecsSinceEpoch() - lastUnixTime() * 1000;

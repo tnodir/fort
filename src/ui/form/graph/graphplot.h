@@ -106,7 +106,7 @@ private:
     qint64 keyLower() const;
 
     quint64 maxBits(qint64 keyLower) const;
-    double targetValueUpper(qint64 keyLower) const;
+    double targetValueUpper(quint64 bits) const;
     void animateValueUpper(double v);
     void setValueUpper(double v);
     void updateScale(const QVariant &value);
@@ -139,6 +139,7 @@ private:
     bool m_mouseDragging : 1 = false;
     bool m_mouseHasMoved : 1 = false;
     bool m_axesChanged : 1 = true;
+    bool m_barsEmpty : 1 = true;
 
     int m_maxSeconds = 500;
 
