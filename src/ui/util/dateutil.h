@@ -48,6 +48,8 @@ public:
 
     static QTime timeLeft(const QDateTime &dateTime, const QDateTime &fromDateTime = now());
     static QString formatTimeLeft(const QTime &time);
+
+    static QString formatMinutes(int minutes);
 };
 
 #endif // DATEUTIL_H

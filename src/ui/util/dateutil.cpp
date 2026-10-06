@@ -15,6 +15,13 @@ quint8 parseTimeMinute(const QString &time)
     return quint8(QStringView(time).right(2).toUInt());
 }
 
+void addTimePart(QStringList &list, int value, const QString &text)
+{
+    if (value > 0) {
+        list << text.arg(value);
+    }
+}
+
 }
 
 QDateTime DateUtil::now()
@@ -183,19 +190,20 @@ QString DateUtil::formatTimeLeft(const QTime &time)
 
     QStringList list;
 
-    if (h > 0) {
-        list << tr("%1h").arg(h);
-    }
+    addTimePart(list, h, tr("%1h"));
+    addTimePart(list, time.minute(), tr("%1m"));
+    addTimePart(list, time.second(), tr("%1s"));
 
-    const int m = time.minute();
-    if (m > 0) {
-        list << tr("%1m").arg(m);
-    }
+    return list.join(' ');
+}
 
-    const int s = time.second();
-    if (s > 0) {
-        list << tr("%1s").arg(s);
-    }
+QString DateUtil::formatMinutes(int minutes)
+{
+    QStringList list;
+
+    addTimePart(list, minutes / (24 * 60), tr("%1d"));
+    addTimePart(list, (minutes / 60) % 24, tr("%1h"));
+    addTimePart(list, minutes % 60, tr("%1m"));
 
     return list.join(' ');
 }
