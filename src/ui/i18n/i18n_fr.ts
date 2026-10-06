@@ -329,7 +329,7 @@
     </message>
     <message>
         <source>Loopback</source>
-        <translation type="unfinished"></translation>
+        <translation>Boucle de retour</translation>
     </message>
     <message>
         <source>Local Host Name</source>
@@ -372,7 +372,7 @@
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulateur de filtre</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -384,7 +384,7 @@
     </message>
     <message>
         <source>Find</source>
-        <translation>Chercher</translation>
+        <translation>Trouver</translation>
     </message>
     <message>
         <source>Search</source>
@@ -396,15 +396,15 @@
     </message>
     <message>
         <source>Show host names</source>
-        <translation>Afficher les noms d&apos;hôte</translation>
+        <translation>Afficher les noms des hôtes</translation>
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
-        <translation>Êtes-vous sûr de supprimer les connexions jusqu&apos;à cette ligne?</translation>
+        <translation>Voulez-vous vraiment retirer les connexions jusqu&apos;à cette ligne ?</translation>
     </message>
     <message>
         <source>Are you sure to remove all connections?</source>
-        <translation>Êtes-vous sûr de retirerr toutes les connexions?</translation>
+        <translation>Voulez-vous vraiment retirer toutes les connexions ?</translation>
     </message>
     <message>
         <source>Options</source>
@@ -420,7 +420,7 @@
     </message>
     <message>
         <source>Lookup IP</source>
-        <translation>Consultation de l&apos;IP</translation>
+        <translation>Recherche IP</translation>
     </message>
     <message>
         <source>Connections</source>
@@ -447,7 +447,7 @@
     </message>
     <message>
         <source>%1d</source>
-        <translation type="unfinished"></translation>
+        <translation>%1d</translation>
     </message>
 </context>
 <context>
@@ -461,82 +461,82 @@
     <name>FilterSimController</name>
     <message>
         <source>Cannot simulate the connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de simuler la connexion</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulateur de filtre</translation>
     </message>
 </context>
 <context>
     <name>FilterSimWindow</name>
     <message>
         <source>Ask to Connect</source>
-        <translation>Demander à se connecter</translation>
+        <translation>Demander à connecter</translation>
     </message>
     <message>
         <source>Ignored: other firewalls decide</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignoré : d&apos;autres pare-feu décident</translation>
     </message>
     <message>
         <source>Not found</source>
-        <translation type="unfinished"></translation>
+        <translation>Introuvable</translation>
     </message>
     <message>
         <source>Connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Connexion</translation>
     </message>
     <message>
         <source>Program Path:</source>
-        <translation type="unfinished"></translation>
+        <translation>Chemin du programme:</translation>
     </message>
     <message>
         <source>Select File</source>
-        <translation>Sélectionner fichier</translation>
+        <translation>Choisir un fichier</translation>
     </message>
     <message>
         <source>Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>Direction :</translation>
     </message>
     <message>
         <source>Protocol:</source>
-        <translation type="unfinished"></translation>
+        <translation>Protocole :</translation>
     </message>
     <message>
         <source>Remote IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>IP distante :</translation>
     </message>
     <message>
         <source>Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Port :</translation>
     </message>
     <message>
         <source>Local IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>IP locale&#xa0;:</translation>
     </message>
     <message>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>N&apos;importe quel</translation>
     </message>
     <message>
         <source>Loopback</source>
-        <translation type="unfinished"></translation>
+        <translation>Boucle de retour</translation>
     </message>
     <message>
         <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
-        <translation type="unfinished"></translation>
+        <translation>La connexion à une adresse de cet ordinateur. Les adresses 127.0.0.0/8 et ::1 sont toujours des bouclages.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>Profil réseau :</translation>
     </message>
     <message>
         <source>Simulate</source>
-        <translation type="unfinished"></translation>
+        <translation>Simuler</translation>
     </message>
     <message>
         <source>Result</source>
-        <translation type="unfinished"></translation>
+        <translation>Résultat</translation>
     </message>
     <message>
         <source>Action:</source>
@@ -544,39 +544,39 @@
     </message>
     <message>
         <source>Reason:</source>
-        <translation type="unfinished"></translation>
+        <translation>Raison :</translation>
     </message>
     <message>
         <source>Rule:</source>
-        <translation>Règle:</translation>
+        <translation>Règle :</translation>
     </message>
     <message>
         <source>Zone:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zone :</translation>
     </message>
     <message>
         <source>Program:</source>
-        <translation type="unfinished"></translation>
+        <translation>Programme :</translation>
     </message>
     <message>
         <source>The program is checked by its path: the settings propagated from a parent process aren&apos;t taken into account.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le programme est vérifié par son chemin : les paramètres propagés par un processus parent sont&apos;t pris en compte.</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulateur de filtre</translation>
     </message>
     <message>
         <source>Public</source>
-        <translation type="unfinished"></translation>
+        <translation>Public</translation>
     </message>
     <message>
         <source>Private</source>
-        <translation type="unfinished"></translation>
+        <translation>Privé</translation>
     </message>
     <message>
         <source>Domain</source>
-        <translation type="unfinished"></translation>
+        <translation>Domaine</translation>
     </message>
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
@@ -584,15 +584,15 @@
     </message>
     <message>
         <source>Invalid remote IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresse IP distante invalide</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresse IP distante invalide</translation>
     </message>
     <message>
         <source>Invalid protocol</source>
-        <translation type="unfinished"></translation>
+        <translation>Protocole invalide</translation>
     </message>
 </context>
 <context>
@@ -646,7 +646,7 @@
     </message>
     <message>
         <source>Install the Windows Service now?</source>
-        <translation type="unfinished"></translation>
+        <translation>Installer le Service Windows maintenant ?</translation>
     </message>
     <message>
         <source>Quota Alert</source>
@@ -1277,11 +1277,11 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
     </message>
     <message>
         <source>Show Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher Trafic</translation>
     </message>
     <message>
         <source>Show Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher Connexions</translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
@@ -2485,19 +2485,19 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     </message>
     <message>
         <source>Each 5 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>Chaque 5 minutes</translation>
     </message>
     <message>
         <source>Each 15 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>Chaque 15 minutes</translation>
     </message>
     <message>
         <source>Each 30 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>Chaque 30 minutes</translation>
     </message>
     <message>
         <source> minute(s)</source>
-        <translation>minute(s)</translation>
+        <translation> minute(s)</translation>
     </message>
     <message>
         <source>20 seconds</source>
@@ -2890,7 +2890,7 @@ Perte de paquets : %2</translation>
     </message>
     <message>
         <source>Interval, minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>Intervalle, minutes</translation>
     </message>
     <message>
         <source>Maximum retries count</source>
@@ -3066,11 +3066,11 @@ Perte de paquets : %2</translation>
     </message>
     <message>
         <source>Units:</source>
-        <translation>Unités:</translation>
+        <translation>Unités :</translation>
     </message>
     <message>
         <source>Adaptive</source>
-        <translation>Adaptatif</translation>
+        <translation>Adaptative</translation>
     </message>
     <message>
         <source>Bytes</source>
@@ -3078,15 +3078,15 @@ Perte de paquets : %2</translation>
     </message>
     <message>
         <source>Hourly</source>
-        <translation>Toutes les heures</translation>
+        <translation>Horaire</translation>
     </message>
     <message>
         <source>Daily</source>
-        <translation>Quotidiennement</translation>
+        <translation>Quotidien</translation>
     </message>
     <message>
         <source>Monthly</source>
-        <translation>Mensuellement</translation>
+        <translation>Mensuel</translation>
     </message>
     <message>
         <source>Total</source>
@@ -3094,15 +3094,15 @@ Perte de paquets : %2</translation>
     </message>
     <message>
         <source>Are you sure to remove statistics for selected application?</source>
-        <translation>Êtes-vous sûr de retirer les statistiques de l&apos;application sélectionnée?</translation>
+        <translation>Voulez-vous vraiment retirer les statistiques de l&apos;application sélectionnée ?</translation>
     </message>
     <message>
         <source>Are you sure to reset total statistics?</source>
-        <translation>Êtes-vous sûr de réinitialiser les statistiques totales?</translation>
+        <translation>Voulez-vous vraiment réinitialiser les statistiques globales ?</translation>
     </message>
     <message>
         <source>Are you sure to clear all statistics?</source>
-        <translation>Êtes-vous sûr de vouloir effacer toutes les statistiques?</translation>
+        <translation>Voulez-vous vraiment effacer toutes les statistiques ?</translation>
     </message>
     <message>
         <source>Edit</source>
@@ -3114,7 +3114,7 @@ Perte de paquets : %2</translation>
     </message>
     <message>
         <source>Find</source>
-        <translation>Chercher</translation>
+        <translation>Trouver</translation>
     </message>
     <message>
         <source>Search</source>
@@ -3160,7 +3160,7 @@ Perte de paquets : %2</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulateur de filtre</translation>
     </message>
     <message>
         <source>Traffic Graph</source>
