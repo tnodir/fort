@@ -222,6 +222,7 @@ void IfacePage::retranslateComboHotKey()
         TrayIcon::tr("Speed Limits"),
         TrayIcon::tr("Time Periods"),
         TrayIcon::tr("Services"),
+        TrayIcon::tr("Filter Simulator"),
         TrayIcon::tr("Statistics"),
         TrayIcon::tr("Traffic Graph"),
         TrayIcon::tr("Filter Enabled"),

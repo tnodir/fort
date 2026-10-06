@@ -12,6 +12,7 @@
 #include <form/dialog/dialogutil.h>
 #include <form/dialog/passworddialog.h>
 #include <form/dialog/splashscreen.h>
+#include <form/filtersim/filtersimwindow.h>
 #include <form/graph/graphwindow.h>
 #include <form/group/groupswindow.h>
 #include <form/home/homewindow.h>
@@ -51,7 +52,7 @@ bool WindowManager::hasForm(WindowCode code)
 {
     constexpr quint32 windowForms = (WindowHome | WindowPrograms | WindowProgramAlert
             | WindowServices | WindowOptions | WindowRules | WindowStatistics | WindowZones
-            | WindowGroups | WindowSpeedLimits | WindowTimePeriods | WindowGraph);
+            | WindowGroups | WindowSpeedLimits | WindowTimePeriods | WindowFilterSim | WindowGraph);
 
     return (code & windowForms) != 0;
 }
@@ -129,6 +130,11 @@ SpeedLimitsWindow *WindowManager::speedLimitsWindow() const
 TimePeriodsWindow *WindowManager::timePeriodsWindow() const
 {
     return static_cast<TimePeriodsWindow *>(windowByCode(WindowTimePeriods));
+}
+
+FilterSimWindow *WindowManager::filterSimWindow() const
+{
+    return static_cast<FilterSimWindow *>(windowByCode(WindowFilterSim));
 }
 
 GraphWindow *WindowManager::graphWindow() const

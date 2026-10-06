@@ -10,6 +10,7 @@
 #include <util/ioc/iocservice.h>
 #include <util/taskbarbutton.h>
 
+class FilterSimWindow;
 class FormWindow;
 class FortSettings;
 class GraphWindow;
@@ -60,6 +61,7 @@ public:
     GroupsWindow *groupsWindow() const;
     SpeedLimitsWindow *speedLimitsWindow() const;
     TimePeriodsWindow *timePeriodsWindow() const;
+    FilterSimWindow *filterSimWindow() const;
     GraphWindow *graphWindow() const;
 
     void setUp() override;
@@ -117,6 +119,8 @@ public slots:
     bool showSpeedLimitsWindow() { return showWindowByCode(WindowSpeedLimits); }
 
     bool showTimePeriodsWindow() { return showWindowByCode(WindowTimePeriods); }
+
+    bool showFilterSimWindow() { return showWindowByCode(WindowFilterSim); }
 
     bool showGraphWindow() { return showWindowByCode(WindowGraph, /*activate=*/false); }
     bool closeGraphWindow() { return closeWindowByCode(WindowGraph); }
@@ -215,6 +219,7 @@ private:
         FormPointer(WindowGroups),
         FormPointer(WindowSpeedLimits),
         FormPointer(WindowTimePeriods),
+        FormPointer(WindowFilterSim),
         FormPointer(WindowGraph),
     };
 };

@@ -95,6 +95,8 @@ SOURCES += \
     form/dialog/dialogutil.cpp \
     form/dialog/passworddialog.cpp \
     form/dialog/splashscreen.cpp \
+    form/filtersim/filtersimcontroller.cpp \
+    form/filtersim/filtersimwindow.cpp \
     form/formpointer.cpp \
     form/graph/axistickerspeed.cpp \
     form/graph/graphplot.cpp \
@@ -395,6 +397,8 @@ HEADERS += \
     form/dialog/dialogutil.h \
     form/dialog/passworddialog.h \
     form/dialog/splashscreen.h \
+    form/filtersim/filtersimcontroller.h \
+    form/filtersim/filtersimwindow.h \
     form/form_types.h \
     form/formpointer.h \
     form/graph/axistickerspeed.h \

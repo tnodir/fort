@@ -1,5 +1,6 @@
 #include "formpointer.h"
 
+#include <form/filtersim/filtersimwindow.h>
 #include <form/graph/graphwindow.h>
 #include <form/group/groupswindow.h>
 #include <form/home/homewindow.h>
@@ -40,6 +41,7 @@ static const createWindow_func createWindow_funcList[] = {
     &createWindow<GroupsWindow>,
     &createWindow<SpeedLimitsWindow>,
     &createWindow<TimePeriodsWindow>,
+    &createWindow<FilterSimWindow>,
     &createWindow<GraphWindow>,
 };
 

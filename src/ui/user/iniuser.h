@@ -14,6 +14,7 @@ const char *const groups = "groups";
 const char *const speedLimits = "speedLimits";
 const char *const timePeriods = "timePeriods";
 const char *const services = "services";
+const char *const filterSim = "filterSim";
 const char *const statistics = "statistics";
 const char *const graph = "graph";
 
@@ -326,6 +327,14 @@ public:
 
     QByteArray zonesHeader() const { return valueByteArray("zoneWindow/zonesHeader"); }
     void setZonesHeader(const QByteArray &v) { setValue("zoneWindow/zonesHeader", v); }
+
+    static QString filterSimWindowGroup() { return "filterSimWindow"; }
+
+    QRect filterSimWindowGeometry() const { return value("filterSimWindow/geometry").toRect(); }
+    void setFilterSimWindowGeometry(const QRect &v) { setValue("filterSimWindow/geometry", v); }
+
+    bool filterSimWindowMaximized() const { return valueBool("filterSimWindow/maximized"); }
+    void setFilterSimWindowMaximized(bool on) { setValue("filterSimWindow/maximized", on); }
 
     static QString graphWindowGroup() { return "graphWindow"; }
 

@@ -14,6 +14,7 @@ const char *const list[] = {
     speedLimits,
     timePeriods,
     services,
+    filterSim,
     statistics,
     graph,
     filter,

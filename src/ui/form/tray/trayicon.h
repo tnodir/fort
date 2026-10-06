@@ -156,6 +156,7 @@ private:
     QAction *m_speedLimitsAction = nullptr;
     QAction *m_timePeriodsAction = nullptr;
     QAction *m_servicesAction = nullptr;
+    QAction *m_filterSimAction = nullptr;
     QAction *m_statisticsAction = nullptr;
     QAction *m_graphAction = nullptr;
     QAction *m_filterEnabledAction = nullptr;

@@ -414,6 +414,7 @@ void TrayIcon::retranslateUi()
     m_speedLimitsAction->setText(tr("Speed Limits"));
     m_timePeriodsAction->setText(tr("Time Periods"));
     m_servicesAction->setText(tr("Services"));
+    m_filterSimAction->setText(tr("Filter Simulator"));
     m_statisticsAction->setText(tr("Statistics"));
     m_graphAction->setText(tr("Traffic Graph"));
 
@@ -568,6 +569,12 @@ void TrayIcon::setupTrayMenuOptions()
     addHotKey(m_servicesAction, HotKey::services);
 
     m_servicesAction->setEnabled(settings()->hasMasterAdmin());
+
+    m_optionsMenu->addSeparator();
+
+    m_filterSimAction = addAction(m_optionsMenu,
+            { ":/icons/filter.png", this, SLOT(onShowWindowAction()), WindowFilterSim });
+    addHotKey(m_filterSimAction, HotKey::filterSim);
 }
 
 void TrayIcon::setupTrayMenuBlockTraffic()
