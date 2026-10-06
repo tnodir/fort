@@ -285,7 +285,6 @@ void GraphPlot::setupView()
     setAlignment(Qt::AlignLeft | Qt::AlignTop);
     setFocusPolicy(Qt::NoFocus);
     setInteractive(false);
-    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 
     viewport()->setAutoFillBackground(false);
 
