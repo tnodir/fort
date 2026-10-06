@@ -16,6 +16,8 @@ class ServiceInfoManager;
 class Settings;
 class TaskInfo;
 
+struct FilterSimConn;
+
 class ConfManager : public QObject, public IocService, public SqliteUtilBase
 {
     Q_OBJECT
@@ -59,6 +61,8 @@ public:
     virtual bool importMasterBackup(const QString &path);
 
     virtual bool checkPassword(const QString &password);
+
+    virtual bool simulateConn(FilterSimConn &simConn);
 
     bool validateDriver();
 

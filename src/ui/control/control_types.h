@@ -40,6 +40,7 @@ enum Command : qint8 {
     Rpc_ConfManager_exportMasterBackup,
     Rpc_ConfManager_importMasterBackup,
     Rpc_ConfManager_checkPassword,
+    Rpc_ConfManager_simulateConn,
     Rpc_ConfManager_confChanged,
     Rpc_ConfManager_imported,
 

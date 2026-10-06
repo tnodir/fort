@@ -34,6 +34,8 @@ public:
 
     bool walkGroups(const std::function<walkGroupsCallback> &func) const override;
 
+    quint32 activeGroupsMask() const;
+
     void updateDriverGroups();
     void updateDriverGroupFlags();
 
@@ -43,8 +45,6 @@ signals:
     void groupUpdated();
 
 private:
-    quint32 activeGroupsMask() const;
-
     void setupGroupNamesCache();
     void clearGroupNamesCache();
 

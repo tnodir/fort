@@ -8,6 +8,8 @@ class IniOptions;
 class RpcManager;
 class TaskManager;
 
+struct FilterSimConn;
+
 class ConfManagerRpc : public ConfManager
 {
     Q_OBJECT
@@ -24,7 +26,12 @@ public:
 
     bool checkPassword(const QString &password) override;
 
+    bool simulateConn(FilterSimConn &simConn) override;
+
     void onConfChanged(const QVariant &confVar);
+
+    static QVariantList simConnToVarList(const FilterSimConn &simConn);
+    static FilterSimConn varListToSimConn(const QVariantList &v);
 
     static bool processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 

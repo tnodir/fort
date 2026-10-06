@@ -38,6 +38,7 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(Rpc_ConfManager_exportMasterBackup),
     CASE_STRING(Rpc_ConfManager_importMasterBackup),
     CASE_STRING(Rpc_ConfManager_checkPassword),
+    CASE_STRING(Rpc_ConfManager_simulateConn),
     CASE_STRING(Rpc_ConfManager_confChanged),
     CASE_STRING(Rpc_ConfManager_imported),
 
@@ -194,6 +195,7 @@ static const RpcManager g_commandManagers[] = {
     Rpc_ConfManager, // Rpc_ConfManager_exportMasterBackup,
     Rpc_ConfManager, // Rpc_ConfManager_importMasterBackup,
     Rpc_ConfManager, // Rpc_ConfManager_checkPassword,
+    Rpc_ConfManager, // Rpc_ConfManager_simulateConn,
     Rpc_ConfManager, // Rpc_ConfManager_confChanged,
     Rpc_ConfManager, // Rpc_ConfManager_imported,
 
@@ -327,6 +329,7 @@ static const qint8 g_commandValidations[] = {
     true, // Rpc_ConfManager_exportMasterBackup,
     true, // Rpc_ConfManager_importMasterBackup,
     0, // Rpc_ConfManager_checkPassword,
+    true, // Rpc_ConfManager_simulateConn,
     0, // Rpc_ConfManager_confChanged,
     0, // Rpc_ConfManager_imported,
 

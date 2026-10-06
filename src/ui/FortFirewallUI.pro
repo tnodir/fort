@@ -325,6 +325,7 @@ HEADERS += \
     conf/confspeedlimitmanager.h \
     conf/conftimeperiodmanager.h \
     conf/confzonemanager.h \
+    conf/filtersimconn.h \
     conf/firewallconf.h \
     conf/group.h \
     conf/inioptions.h \
