@@ -326,7 +326,11 @@ QByteArrayView NetUtil::ip6ToArrayView(const ip6_addr_t &ip)
 
 const ip6_addr_t &NetUtil::arrayViewToIp6(const QByteArrayView &buf)
 {
-    Q_ASSERT(buf.size() == sizeof(ip6_addr_t));
+    static const ip6_addr_t zeroIp6 = {};
+
+    if (buf.size() != sizeof(ip6_addr_t))
+        return zeroIp6;
+
     return *reinterpret_cast<const ip6_addr_t *>(buf.data());
 }
 
