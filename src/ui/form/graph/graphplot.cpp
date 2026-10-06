@@ -499,6 +499,11 @@ void GraphPlot::setupItems()
     m_barsTotal = new GraphBarsItem(m_bars);
     m_risingTotal = new GraphBarsItem(m_barsTotal);
 
+    // The scrolled bars aren't repainted
+    for (auto item : { m_barsIn, m_barsOut, m_barsTotal }) {
+        item->setCached(true);
+    }
+
     // Graph Lines: The total is below, with the area's fill
     m_lineTotal = new GraphLineItem(m_bars);
     m_lineTotal->setFillVisible(true);

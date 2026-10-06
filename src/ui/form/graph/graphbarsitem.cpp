@@ -21,7 +21,7 @@ QPen seamPen(const QBrush &outlineBrush)
 
 }
 
-GraphBarsItem::GraphBarsItem(QGraphicsItem *parent) : QGraphicsItem(parent) { }
+GraphBarsItem::GraphBarsItem(QGraphicsItem *parent) : GraphCachedItem(parent) { }
 
 void GraphBarsItem::setBrush(const QBrush &v)
 {
@@ -30,7 +30,7 @@ void GraphBarsItem::setBrush(const QBrush &v)
 
     m_brush = v;
 
-    update();
+    invalidateCache();
 }
 
 void GraphBarsItem::setOutlineBrush(const QBrush &v)
@@ -65,12 +65,8 @@ void GraphBarsItem::setRects(const QVector<QRectF> &v, const QVector<QRectF> &ne
     updateRects();
 }
 
-void GraphBarsItem::paint(
-        QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void GraphBarsItem::paintItem(QPainter *painter)
 {
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
-
     painter->setPen(Qt::NoPen);
 
     if (!hasOutline()) {
@@ -117,7 +113,7 @@ void GraphBarsItem::updateRects()
         m_boundingRect |= rect;
     }
 
-    update();
+    invalidateCache();
 }
 
 void GraphBarsItem::setupInnerRects()

@@ -2,11 +2,12 @@
 #define GRAPHBARSITEM_H
 
 #include <QBrush>
-#include <QGraphicsItem>
 #include <QPen>
 
+#include "graphcacheditem.h"
+
 // Draws the bars' rectangles: it's much faster than filling a QPainterPath of them
-class GraphBarsItem : public QGraphicsItem
+class GraphBarsItem : public GraphCachedItem
 {
 public:
     explicit GraphBarsItem(QGraphicsItem *parent = nullptr);
@@ -27,8 +28,8 @@ public:
 
     QRectF boundingRect() const override { return m_boundingRect; }
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-            QWidget *widget = nullptr) override;
+protected:
+    void paintItem(QPainter *painter) override;
 
 private:
     bool hasOutline() const;

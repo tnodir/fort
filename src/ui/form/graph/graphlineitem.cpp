@@ -102,7 +102,11 @@ QPainterPath smoothPath(const QVector<QPointF> &points)
 
 }
 
-GraphLineItem::GraphLineItem(QGraphicsItem *parent) : QGraphicsItem(parent) { }
+GraphLineItem::GraphLineItem(QGraphicsItem *parent) : GraphCachedItem(parent)
+{
+    // The scrolled line isn't repainted
+    setCached(true);
+}
 
 void GraphLineItem::setColor(const QColor &v)
 {
@@ -141,7 +145,6 @@ void GraphLineItem::updateFill()
 
     m_fillPath.clear();
     m_fillBrush = QBrush();
-    m_cache = QPixmap();
 
     if (m_fillVisible && m_points.size() >= 2) {
         setupFill();
@@ -149,9 +152,9 @@ void GraphLineItem::updateFill()
 
     // With the offset lines and the antialiasing
     const QRectF rect = m_path.controlPointRect() | m_fillPath.controlPointRect();
-    m_boundingRect = rect.adjusted(-1, -1, 2, 2);
+    m_boundingRect = rect.isNull() ? QRectF() : rect.adjusted(-1, -1, 2, 2);
 
-    update();
+    invalidateCache();
 }
 
 void GraphLineItem::setupFill()
@@ -178,41 +181,13 @@ void GraphLineItem::setupFill()
     m_fillBrush = QBrush(gradient);
 }
 
-void GraphLineItem::paint(
-        QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void GraphLineItem::paintItem(QPainter *painter)
 {
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
-
     if (m_points.size() < 2)
         return;
 
-    const qreal dpr = painter->device()->devicePixelRatioF();
-
-    if (m_cache.isNull() || m_cache.devicePixelRatio() != dpr) {
-        updateCache(dpr);
-    }
-
-    painter->drawPixmap(m_cacheOrigin, m_cache);
-}
-
-void GraphLineItem::updateCache(qreal dpr)
-{
-    // Aligned to the device pixels: drawn without scaling, when scrolled by them
-    const QRectF deviceRect(m_boundingRect.topLeft() * dpr, m_boundingRect.size() * dpr);
-    const QRect alignedRect = deviceRect.toAlignedRect();
-
-    m_cacheOrigin = QPointF(alignedRect.topLeft()) / dpr;
-
-    m_cache = QPixmap(alignedRect.size());
-    m_cache.setDevicePixelRatio(dpr);
-    m_cache.fill(Qt::transparent);
-
-    QPainter painter(&m_cache);
-    painter.translate(-m_cacheOrigin);
-
-    paintFill(&painter);
-    paintLine(&painter);
+    paintFill(painter);
+    paintLine(painter);
 }
 
 void GraphLineItem::paintFill(QPainter *painter)

@@ -104,6 +104,7 @@ SOURCES += \
     form/graph/axistickerspeed.cpp \
     form/graph/graphanimation.cpp \
     form/graph/graphbarsitem.cpp \
+    form/graph/graphcacheditem.cpp \
     form/graph/graphlineitem.cpp \
     form/graph/graphplot.cpp \
     form/graph/graphwindow.cpp \
@@ -409,6 +410,7 @@ HEADERS += \
     form/graph/axistickerspeed.h \
     form/graph/graphanimation.h \
     form/graph/graphbarsitem.h \
+    form/graph/graphcacheditem.h \
     form/graph/graphlineitem.h \
     form/graph/graphplot.h \
     form/graph/graphwindow.h \
