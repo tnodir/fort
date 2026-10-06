@@ -38,6 +38,13 @@ struct GraphColumnRects
     QRectF total;
 };
 
+struct GraphBarsRects
+{
+    QVector<QRectF> in;
+    QVector<QRectF> out;
+    QVector<QRectF> total;
+};
+
 class GraphPlot : public QGraphicsView
 {
     Q_OBJECT
@@ -157,6 +164,7 @@ private:
     void updateGrid(const QVector<int> &tickYs);
     void startRising(qint64 unixTime);
     void updateBars();
+    void updateBarsOutline();
     void updateRisingBars();
     void updateScroll();
     void setupSpeedArrows(const QFont &font);
@@ -214,6 +222,7 @@ private:
     QRect m_axisRect;
 
     GraphColumn m_risingColumn;
+    GraphBarsRects m_risingNeighbors;
 
     QColor m_tickLabelColor;
     QFont m_tickLabelFont;

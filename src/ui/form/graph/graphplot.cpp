@@ -167,12 +167,19 @@ void setBarsColor(GraphBarsItem *item, const QColor &color)
     item->setOutlineBrush(color.darker(barOutlineDarker));
 }
 
-void setRisingBar(GraphBarsItem *item, const QRectF &rect)
+void appendColumn(GraphBarsRects &bars, const GraphColumnRects &rects)
+{
+    appendBar(bars.in, rects.in);
+    appendBar(bars.out, rects.out);
+    appendBar(bars.total, rects.total);
+}
+
+void setRisingBar(GraphBarsItem *item, const QRectF &rect, const QVector<QRectF> &neighbors)
 {
     QVector<QRectF> rects;
     appendBar(rects, rect);
 
-    item->setRects(rects);
+    item->setRects(rects, neighbors);
 }
 
 }
@@ -777,11 +784,12 @@ void GraphPlot::updateBars()
     const qint64 keyUpper = lastUnixTime();
     const qint64 keyLower = this->keyLower();
 
-    QVector<QRectF> rectsIn;
-    QVector<QRectF> rectsOut;
-    QVector<QRectF> rectsTotal;
+    GraphBarsRects bars;
 
     m_risingColumn = {};
+    m_risingNeighbors = {};
+
+    updateBarsOutline();
 
     for (const auto &point : std::as_const(m_points)) {
         if (point.unixTime < keyLower)
@@ -798,14 +806,27 @@ void GraphPlot::updateBars()
 
         const GraphColumnRects rects = columnRects(column);
 
-        appendBar(rectsIn, rects.in);
-        appendBar(rectsOut, rects.out);
-        appendBar(rectsTotal, rects.total);
+        // The rising bars are outlined with their neighbors
+        if (qAbs(point.unixTime - m_risingTime) == 1) {
+            appendColumn(m_risingNeighbors, rects);
+        }
+
+        appendColumn(bars, rects);
     }
 
-    m_barsIn->setRects(rectsIn);
-    m_barsOut->setRects(rectsOut);
-    m_barsTotal->setRects(rectsTotal);
+    m_barsIn->setRects(bars.in);
+    m_barsOut->setRects(bars.out);
+    m_barsTotal->setRects(bars.total);
+}
+
+void GraphPlot::updateBarsOutline()
+{
+    // A device pixel's outline
+    const qreal width = 1 / devicePixelRatioF();
+
+    for (auto item : { m_barsIn, m_barsOut, m_barsTotal, m_risingIn, m_risingOut, m_risingTotal }) {
+        item->setOutlineWidth(width);
+    }
 }
 
 void GraphPlot::updateRisingBars()
@@ -813,9 +834,9 @@ void GraphPlot::updateRisingBars()
     const double ratio = m_risingAnimation.currentValue();
     const GraphColumnRects rects = columnRects(risingColumn(m_risingColumn, ratio));
 
-    setRisingBar(m_risingIn, rects.in);
-    setRisingBar(m_risingOut, rects.out);
-    setRisingBar(m_risingTotal, rects.total);
+    setRisingBar(m_risingIn, rects.in, m_risingNeighbors.in);
+    setRisingBar(m_risingOut, rects.out, m_risingNeighbors.out);
+    setRisingBar(m_risingTotal, rects.total, m_risingNeighbors.total);
 }
 
 void GraphPlot::updateScroll()
