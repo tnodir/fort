@@ -177,6 +177,7 @@ void GraphWindow::updateFonts(const IniUser &ini)
 
 void GraphWindow::updateFormat(const IniUser &ini)
 {
+    m_plot->setMaxSeconds(ini.graphWindowMaxSeconds());
     m_plot->setUnitFormat(FormatUtil::graphUnitFormat(ini.graphWindowTrafUnit()));
     m_plot->setFixedValueMax(ini.graphWindowFixedSpeed() * 1024LL);
 }
@@ -309,9 +310,7 @@ void GraphWindow::checkHoverLeave()
 
 void GraphWindow::addTraffic(qint64 unixTime, quint64 inBytes, quint64 outBytes)
 {
-    const qint64 rangeLower = unixTime - iniUser().graphWindowMaxSeconds();
-
-    m_plot->addPoint({ unixTime, inBytes * 8, outBytes * 8 }, rangeLower);
+    m_plot->addPoint({ unixTime, inBytes * 8, outBytes * 8 });
 }
 
 void GraphWindow::updateGraph()

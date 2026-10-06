@@ -39,6 +39,9 @@ public:
     bool mousePressed() const { return m_mousePressed; }
     bool mouseDragging() const { return m_mouseDragging; }
 
+    int maxSeconds() const { return m_maxSeconds; }
+    void setMaxSeconds(int v) { m_maxSeconds = v; }
+
     qint64 fixedValueMax() const { return m_fixedValueMax; }
     void setFixedValueMax(qint64 v) { m_fixedValueMax = v; }
 
@@ -55,7 +58,7 @@ public:
     void setColors(const GraphPlot::ColorArray &colors);
     void setTickLabelSize(int pointSize);
 
-    void addPoint(GraphPoint point, qint64 rangeLower);
+    void addPoint(const GraphPoint &point);
 
     void cancelMousePressAndDragging();
 
@@ -83,8 +86,11 @@ private:
     void setupView();
     void setupItems();
 
-    void removeOldPoints(qint64 unixTime, qint64 rangeLower);
-    void mergeLastPoint(GraphPoint &point);
+    int pointIndex(qint64 unixTime) const;
+    bool isPointAt(int index, qint64 unixTime) const;
+
+    void removeOldPoints(qint64 unixTime);
+    void mergePoint(const GraphPoint &point);
 
     qint64 lastUnixTime() const;
     int keyRangeSize() const;
@@ -116,6 +122,8 @@ private:
     bool m_mouseDragging : 1 = false;
     bool m_mouseHasMoved : 1 = false;
     bool m_axesChanged : 1 = true;
+
+    int m_maxSeconds = 500;
 
     double m_valueUpper = 5;
 

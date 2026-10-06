@@ -81,13 +81,9 @@ void GraphPlot::setSpeedText(const QString &text)
 
 GraphPoint GraphPlot::pointAt(qint64 unixTime) const
 {
-    for (auto it = m_points.crbegin(); it != m_points.crend(); ++it) {
-        if (it->unixTime <= unixTime) {
-            return (it->unixTime == unixTime) ? *it : GraphPoint();
-        }
-    }
+    const int index = pointIndex(unixTime);
 
-    return {};
+    return isPointAt(index, unixTime) ? m_points.at(index) : GraphPoint();
 }
 
 void GraphPlot::setColors(const ColorArray &colors)
@@ -141,12 +137,20 @@ void GraphPlot::setTickLabelSize(int pointSize)
     m_axesChanged = true; // the tick labels' sizes are changed
 }
 
-void GraphPlot::addPoint(GraphPoint point, qint64 rangeLower)
+void GraphPlot::addPoint(const GraphPoint &point)
 {
-    removeOldPoints(point.unixTime, rangeLower);
-    mergeLastPoint(point);
+    const qint64 lastTime = lastUnixTime();
 
-    m_points.append(point);
+    if (point.unixTime > lastTime) {
+        removeOldPoints(point.unixTime);
+        m_points.append(point);
+    } else if (point.unixTime < lastTime - m_maxSeconds) {
+        // The clock is moved back too far
+        m_points = { point };
+    } else {
+        // The current or a delayed past second
+        mergePoint(point);
+    }
 }
 
 void GraphPlot::cancelMousePressAndDragging()
@@ -291,31 +295,38 @@ void GraphPlot::setupItems()
     m_tickLabelFont = font();
 }
 
-void GraphPlot::removeOldPoints(qint64 unixTime, qint64 rangeLower)
+int GraphPlot::pointIndex(qint64 unixTime) const
 {
-    if (m_points.isEmpty())
-        return;
+    const auto it = std::lower_bound(m_points.cbegin(), m_points.cend(), unixTime,
+            [](const GraphPoint &point, qint64 t) { return point.unixTime < t; });
 
-    const qint64 lastTime = m_points.constLast().unixTime;
-    if (rangeLower > lastTime || unixTime < lastTime) {
-        m_points.clear();
-        return;
-    }
-
-    while (m_points.constFirst().unixTime < rangeLower) {
-        m_points.removeFirst();
-    }
+    return int(it - m_points.cbegin());
 }
 
-void GraphPlot::mergeLastPoint(GraphPoint &point)
+bool GraphPlot::isPointAt(int index, qint64 unixTime) const
 {
-    if (m_points.isEmpty() || m_points.constLast().unixTime != point.unixTime)
+    return index < m_points.size() && m_points.at(index).unixTime == unixTime;
+}
+
+void GraphPlot::removeOldPoints(qint64 unixTime)
+{
+    const qint64 rangeLower = unixTime - m_maxSeconds;
+
+    m_points.remove(0, pointIndex(rangeLower));
+}
+
+void GraphPlot::mergePoint(const GraphPoint &point)
+{
+    const int index = pointIndex(point.unixTime);
+
+    if (!isPointAt(index, point.unixTime)) {
+        m_points.insert(index, point);
         return;
+    }
 
-    const GraphPoint lastPoint = m_points.takeLast();
-
-    point.inBits += lastPoint.inBits;
-    point.outBits += lastPoint.outBits;
+    GraphPoint &oldPoint = m_points[index];
+    oldPoint.inBits += point.inBits;
+    oldPoint.outBits += point.outBits;
 }
 
 qint64 GraphPlot::lastUnixTime() const
