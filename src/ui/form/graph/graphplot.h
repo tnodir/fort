@@ -21,6 +21,21 @@ struct GraphPoint
     quint64 outBits = 0;
 };
 
+// A second's bars: in and out are overlapped
+struct GraphColumn
+{
+    qreal x = 0;
+    qreal width = 0;
+    int inHeight = 0; // device pixels
+    int outHeight = 0; // device pixels
+};
+
+struct GraphColumnRects
+{
+    QRectF in;
+    QRectF out;
+};
+
 class GraphPlot : public QGraphicsView
 {
     Q_OBJECT
@@ -143,7 +158,10 @@ private:
 
     int valueToPixel(double value) const;
     QVector<int> valuesToPixels(const QVector<double> &values) const;
-    QRectF barRect(qreal x, qreal width, quint64 bits) const;
+    int barHeight(quint64 bits) const;
+    GraphColumn columnAt(qreal x, qreal width, const GraphPoint &point) const;
+    GraphColumnRects columnRects(const GraphColumn &column) const;
+    QRectF barRect(const GraphColumn &column, int fromHeight, int toHeight) const;
 
 private:
     bool m_mousePressed : 1 = false;
@@ -178,8 +196,7 @@ private:
     QPoint m_mousePressPos;
     QRect m_axisRect;
 
-    QRectF m_risingInRect;
-    QRectF m_risingOutRect;
+    GraphColumn m_risingColumn;
 
     QColor m_tickLabelColor;
     QFont m_tickLabelFont;

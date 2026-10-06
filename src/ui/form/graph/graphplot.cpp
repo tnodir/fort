@@ -17,6 +17,7 @@ inline constexpr int tickLength = 5;
 inline constexpr int subTickLength = 2;
 inline constexpr int tickLabelPadding = 2;
 inline constexpr int keyPixels = 4; // pixels per second
+inline constexpr int barGapPixels = 1; // device pixels between the seconds' bars
 inline constexpr int risingMsecs = 400;
 inline constexpr int scaleMsecs = 400;
 inline constexpr int speedBgAlpha = 130;
@@ -67,15 +68,25 @@ T *createNoPenItem(QGraphicsItem *parent)
     return item;
 }
 
-QRectF risingRect(const QRectF &rect, double ratio)
+int risingHeight(int height, double ratio)
 {
-    if (rect.isEmpty())
-        return rect;
+    return (height > 0) ? qMax(qRound(height * ratio), 1) : 0;
+}
 
-    // Keep the bar's bottom line
-    const int height = qMax(qRound(rect.height() * ratio), 1);
+GraphColumn risingColumn(const GraphColumn &column, double ratio)
+{
+    GraphColumn rising = column;
+    rising.inHeight = risingHeight(column.inHeight, ratio);
+    rising.outHeight = risingHeight(column.outHeight, ratio);
 
-    return QRectF(rect.left(), rect.bottom() - height, rect.width(), height);
+    return rising;
+}
+
+void appendBar(QVector<QRectF> &rects, const QRectF &rect)
+{
+    if (!rect.isEmpty()) {
+        rects.append(rect);
+    }
 }
 
 }
@@ -638,36 +649,35 @@ void GraphPlot::updateBars()
 {
     const qreal dpr = devicePixelRatioF();
     const int secondPixels = this->secondPixels();
-    const qreal barWidth = (secondPixels / 2) / dpr;
+    const qreal barWidth = qMax(secondPixels - barGapPixels, 1) / dpr;
 
-    // The last second is at the right edge, in device pixels
-    const int right = qFloor((m_axisRect.left() + m_axisRect.width()) * dpr);
+    // The last second's middle is at the right edge, in device pixels
+    const int right = qFloor((m_axisRect.left() + m_axisRect.width()) * dpr) - secondPixels / 2;
     const qint64 keyUpper = lastUnixTime();
     const qint64 keyLower = this->keyLower();
 
     QVector<QRectF> rectsIn;
     QVector<QRectF> rectsOut;
 
-    m_risingInRect = {};
-    m_risingOutRect = {};
+    m_risingColumn = {};
 
     for (const auto &point : std::as_const(m_points)) {
         if (point.unixTime < keyLower)
             continue;
 
         const qreal x = (right - int(keyUpper - point.unixTime) * secondPixels) / dpr;
-        const QRectF inRect = barRect(x - barWidth, barWidth, point.inBits);
-        const QRectF outRect = barRect(x, barWidth, point.outBits);
+        const GraphColumn column = columnAt(x, barWidth, point);
 
         // The rising bars are drawn separately
         if (point.unixTime == m_risingTime) {
-            m_risingInRect = inRect;
-            m_risingOutRect = outRect;
+            m_risingColumn = column;
             continue;
         }
 
-        rectsIn.append(inRect);
-        rectsOut.append(outRect);
+        const GraphColumnRects rects = columnRects(column);
+
+        appendBar(rectsIn, rects.in);
+        appendBar(rectsOut, rects.out);
     }
 
     m_barsIn->setRects(rectsIn);
@@ -677,9 +687,10 @@ void GraphPlot::updateBars()
 void GraphPlot::updateRisingBars()
 {
     const double ratio = m_risingAnimation.currentValue();
+    const GraphColumnRects rects = columnRects(risingColumn(m_risingColumn, ratio));
 
-    m_risingIn->setRect(risingRect(m_risingInRect, ratio));
-    m_risingOut->setRect(risingRect(m_risingOutRect, ratio));
+    m_risingIn->setRect(rects.in);
+    m_risingOut->setRect(rects.out);
 }
 
 void GraphPlot::updateScroll()
@@ -716,8 +727,9 @@ void GraphPlot::updateSpeedBox()
 
 void GraphPlot::updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs)
 {
-    const int bottom = m_axisRect.bottom();
-    const int top = bottom - m_axisRect.height();
+    // The bottom line is below the bars
+    const int bottom = m_axisRect.bottom() + 1;
+    const int top = m_axisRect.top() - 1;
 
     QPainterPath path;
 
@@ -786,10 +798,45 @@ QVector<int> GraphPlot::valuesToPixels(const QVector<double> &values) const
     return pixels;
 }
 
-QRectF GraphPlot::barRect(qreal x, qreal width, quint64 bits) const
+int GraphPlot::barHeight(quint64 bits) const
 {
-    const int bottom = m_axisRect.bottom();
-    const int y = qMin(valueToPixel(double(bits)), bottom);
+    if (bits == 0)
+        return 0;
 
-    return QRectF(x, y, width, bottom - y + 1);
+    // Values above the range are clipped anyway
+    const double ratio = qMin(bits / m_valueUpper, 1.0);
+    const int height = qRound(ratio * m_axisRect.height() * devicePixelRatioF());
+
+    // At least a pixel for the small traffic
+    return qMax(height, 1);
+}
+
+GraphColumn GraphPlot::columnAt(qreal x, qreal width, const GraphPoint &point) const
+{
+    return { x, width, barHeight(point.inBits), barHeight(point.outBits) };
+}
+
+GraphColumnRects GraphPlot::columnRects(const GraphColumn &column) const
+{
+    // The smaller bar is in front of the bigger one: the bigger one is visible above it only
+    const int frontHeight = qMin(column.inHeight, column.outHeight);
+    const int backHeight = qMax(column.inHeight, column.outHeight);
+
+    const QRectF frontRect = barRect(column, 0, frontHeight);
+    const QRectF backRect = barRect(column, frontHeight, backHeight);
+
+    if (column.inHeight <= column.outHeight) {
+        return { frontRect, backRect };
+    }
+
+    return { backRect, frontRect };
+}
+
+QRectF GraphPlot::barRect(const GraphColumn &column, int fromHeight, int toHeight) const
+{
+    // In device pixels: the adjacent bars have no gaps with a fractional scale
+    const qreal dpr = devicePixelRatioF();
+    const int bottom = qFloor((m_axisRect.bottom() + 1) * dpr);
+
+    return QRectF(column.x, (bottom - toHeight) / dpr, column.width, (toHeight - fromHeight) / dpr);
 }
