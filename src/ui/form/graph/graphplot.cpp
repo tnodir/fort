@@ -23,6 +23,7 @@ inline constexpr int risingMsecs = 400;
 inline constexpr int scaleMsecs = 400;
 inline constexpr int speedBgAlpha = 130;
 inline constexpr double subGridOpacity = 0.5;
+inline constexpr int gridLineWidth = 2;
 inline constexpr int mouseMoveDistance = 3;
 
 void addHLine(QPainterPath &path, int x1, int x2, int y)
@@ -47,6 +48,16 @@ void addHLines(QPainterPath &path, const QVector<int> &ys, const QRect &axisRect
             addHLine(path, axisRect.left(), axisRect.right(), y);
         }
     }
+}
+
+QPen gridPen(const QColor &color)
+{
+    QPen pen(color, gridLineWidth);
+    pen.setCosmetic(true);
+    pen.setDashPattern({ 2, 1 }); // in the line widths: as Qt::DashLine of 1 pixel's width
+    pen.setCapStyle(Qt::FlatCap); // the square caps fill the gaps
+
+    return pen;
 }
 
 void addTicks(QPainterPath &path, const QVector<int> &ys, const QRect &axisRect, int length)
@@ -174,8 +185,8 @@ void GraphPlot::setColors(const ColorArray &colors)
         QColor subGridColor = gridColor;
         subGridColor.setAlphaF(gridColor.alphaF() * subGridOpacity);
 
-        m_grid->setPen(QPen(gridColor, 0, Qt::DashLine));
-        m_subGrid->setPen(QPen(subGridColor, 0, Qt::DashLine));
+        m_grid->setPen(gridPen(gridColor));
+        m_subGrid->setPen(gridPen(subGridColor));
     }
 
     // Graph Inbound
