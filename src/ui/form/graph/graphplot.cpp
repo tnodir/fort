@@ -48,13 +48,8 @@ void addVLine(QPainterPath &path, int x, int y1, int y2)
 
 void addHLines(QPainterPath &path, const QVector<int> &ys, const QRect &axisRect)
 {
-    const int bottom = axisRect.bottom();
-
     for (const int y : ys) {
-        // The bottom line is the axis
-        if (y < bottom) {
-            addHLine(path, axisRect.left(), axisRect.right(), y);
-        }
+        addHLine(path, axisRect.left(), axisRect.right(), y);
     }
 }
 
@@ -869,15 +864,13 @@ void GraphPlot::updateSpeedBox()
 
 void GraphPlot::updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs)
 {
-    // The bottom line is below the bars
-    const int bottom = m_axisRect.bottom() + 1;
-    const int top = m_axisRect.top() - 1;
+    const int bottom = m_axisRect.bottom();
+    const int top = bottom - m_axisRect.height();
 
     QPainterPath path;
 
     // Base Lines
     addVLine(path, m_axisRect.left(), bottom, top);
-    addHLine(path, m_axisRect.left(), m_axisRect.right() + 1, bottom);
 
     // Right Line and Ticks
     if (m_axisTicksVisible) {
