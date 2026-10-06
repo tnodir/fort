@@ -1,6 +1,8 @@
 #include "graphwindow.h"
 
 #include <QApplication>
+#include <QKeyEvent>
+#include <QMouseEvent>
 #include <QScreen>
 #include <QStyleHints>
 #include <QVBoxLayout>
@@ -15,9 +17,6 @@
 #include <util/dateutil.h>
 #include <util/guiutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
-
-#include "axistickerspeed.h"
-#include "graphplot.h"
 
 using namespace Fort;
 
@@ -49,46 +48,6 @@ inline void checkWindowVerticalEdges(const QRect &screenRect, const QRect &winRe
             diff.setY(bottomDiff);
         }
     }
-}
-
-bool clearGraphData(
-        const QSharedPointer<QCPBarsDataContainer> &data, double rangeLowerKey, double unixTimeKey)
-{
-    if (data->isEmpty())
-        return true;
-
-    const auto hi = data->constEnd() - 1;
-    if (rangeLowerKey > hi->mainKey() || unixTimeKey < hi->mainKey()) {
-        data->clear();
-        return true;
-    }
-
-    const auto lo = data->constBegin();
-    if (lo->mainKey() < rangeLowerKey) {
-        data->removeBefore(rangeLowerKey);
-    }
-
-    return data->isEmpty();
-}
-
-void adjustGraphData(
-        const QSharedPointer<QCPBarsDataContainer> &data, double unixTimeKey, quint64 &bits)
-{
-    const auto hi = data->constEnd() - 1;
-
-    // Check existing key
-    if (qFuzzyCompare(unixTimeKey, hi->mainKey())) {
-        bits += quint64(hi->mainValue());
-    }
-
-    data->removeAfter(unixTimeKey);
-}
-
-QPen adjustPen(const QPen &pen, const QColor &color)
-{
-    QPen newPen(pen);
-    newPen.setColor(color);
-    return newPen;
 }
 
 }
@@ -147,69 +106,11 @@ void GraphWindow::setupUi()
     connect(m_plot, &GraphPlot::mouseDragMove, this, &GraphWindow::onMouseDragMove);
     connect(m_plot, &GraphPlot::mouseDragEnd, this, &GraphWindow::onMouseDragEnd);
 
-    // Axis
-    auto xAxis = m_plot->xAxis;
-    xAxis->setVisible(false);
-
-    auto yAxis = m_plot->yAxis;
-    setupYAxis(yAxis, /*padding=*/2);
-
-    auto yAxis2 = m_plot->yAxis2;
-    setupYAxis(yAxis2, /*padding=*/0, /*tickLabels=*/false);
-
-    // Axis Rect
-    auto axisRect = m_plot->axisRect();
-    axisRect->setMinimumMargins(QMargins(1, 2, 1, 1));
-
-    // Axis Ticker
-    m_ticker.reset(new AxisTickerSpeed());
-    yAxis->setTicker(m_ticker);
-    yAxis2->setTicker(m_ticker);
-
-    // Graph Inbound
-    m_graphIn = new QCPBars(m_plot->xAxis, m_plot->yAxis);
-    m_graphIn->setAntialiased(false);
-    m_graphIn->setWidthType(QCPBars::wtAbsolute);
-    m_graphIn->setWidth(1);
-
-    // Graph Outbound
-    m_graphOut = new QCPBars(m_plot->xAxis, m_plot->yAxis);
-    m_graphOut->setAntialiased(false);
-    m_graphOut->setWidthType(QCPBars::wtAbsolute);
-    m_graphOut->setWidth(1);
-
-    // Bars Group
-    auto group = new QCPBarsGroup(m_plot);
-    group->setSpacing(1);
-    group->append(m_graphIn);
-    group->append(m_graphOut);
-
-    // Text Speed
-    m_textSpeed = new QCPItemText(m_plot);
-    m_textSpeed->setPositionAlignment(Qt::AlignTop | Qt::AlignHCenter);
-    m_textSpeed->position->setType(QCPItemPosition::ptAxisRectRatio);
-    m_textSpeed->position->setCoords(0.5, 0);
-
     // Widget Layout
     auto layout = ControlUtil::createVLayoutByWidgets({ m_plot }, /*margin=*/0);
     setLayout(layout);
 
     setMinimumSize(QSize(30, 10));
-}
-
-void GraphWindow::setupYAxis(QCPAxis *yAxis, int padding, bool tickLabels)
-{
-    yAxis->setVisible(true);
-    yAxis->setPadding(padding);
-
-    yAxis->setTickLabels(tickLabels);
-    yAxis->setTickLabelPadding(2);
-
-    constexpr int tickLength = 5;
-    constexpr int subTickLength = 2;
-
-    yAxis->setTickLength(/*inside=*/0, /*outside=*/tickLength);
-    yAxis->setSubTickLength(/*inside=*/0, /*outside=*/subTickLength);
 }
 
 void GraphWindow::setupFlagsAndColors()
@@ -261,80 +162,20 @@ void GraphWindow::updateWindowFlags(const IniUser &ini)
 
 void GraphWindow::updateColors(const IniUser &ini)
 {
-    const auto colors = getColors(ini);
-
     setWindowOpacityPercent(ini.graphWindowOpacity());
 
-    // Background Color
-    {
-        const auto bgColor = colors[ColorBg];
-        const bool isTransparentBg = (bgColor == Qt::transparent);
-
-        m_plot->setBackground(isTransparentBg ? Qt::NoBrush : QBrush(bgColor));
-    }
-
-    // Axis
-    auto yAxis = m_plot->yAxis;
-    updateYAxisColor(yAxis, colors);
-
-    auto yAxis2 = m_plot->yAxis2;
-    updateYAxisColor(yAxis2, colors);
-
-    // Graph Inbound
-    m_graphIn->setPen(QPen(colors[ColorIn]));
-
-    // Graph Outbound
-    m_graphOut->setPen(QPen(colors[ColorOut]));
-
-    // Text Speed
-    {
-        QColor bgColor = colors[ColorBg];
-        bgColor.setAlpha(130);
-
-        m_textSpeed->setBrush(QBrush(bgColor));
-        m_textSpeed->setColor(colors[ColorLabel]);
-    }
+    m_plot->setColors(getColors(ini));
 }
 
 void GraphWindow::updateFonts(const IniUser &ini)
 {
-    // Axis
-    auto yAxis = m_plot->yAxis;
-
-    QFont tickLabelFont = yAxis->tickLabelFont();
-    tickLabelFont.setPointSize(ini.graphWindowTickLabelSize());
-
-    yAxis->setTickLabelFont(tickLabelFont);
-
-    // Text Speed
-    {
-        QFont font = tickLabelFont;
-        font.setPointSize(font.pointSize() + 1);
-        font.setWeight(QFont::DemiBold);
-
-        m_textSpeed->setFont(font);
-        m_textSpeed->setVisible(ini.graphWindowShowSpeed());
-    }
+    m_plot->setTickLabelSize(ini.graphWindowTickLabelSize());
+    m_plot->setSpeedVisible(ini.graphWindowShowSpeed());
 }
 
 void GraphWindow::updateFormat(const IniUser &ini)
 {
-    m_unitFormat = FormatUtil::graphUnitFormat(ini.graphWindowTrafUnit());
-
-    m_ticker->setUnitFormat(m_unitFormat);
-}
-
-void GraphWindow::updateYAxisColor(QCPAxis *yAxis, const ColorArray &colors)
-{
-    const QColor axisColor = colors[ColorAxis];
-    yAxis->setBasePen(adjustPen(yAxis->basePen(), axisColor));
-    yAxis->setTickPen(adjustPen(yAxis->tickPen(), axisColor));
-    yAxis->setSubTickPen(adjustPen(yAxis->subTickPen(), axisColor));
-
-    yAxis->setTickLabelColor(colors[ColorTickLabel]);
-    yAxis->setLabelColor(colors[ColorLabel]);
-
-    yAxis->grid()->setPen(adjustPen(yAxis->grid()->pen(), colors[ColorGrid]));
+    m_plot->setUnitFormat(FormatUtil::graphUnitFormat(ini.graphWindowTrafUnit()));
 }
 
 void GraphWindow::setupTimer()
@@ -464,40 +305,13 @@ void GraphWindow::addTraffic(qint64 unixTime, quint64 inBytes, quint64 outBytes)
         updateSpeed();
     }
 
-    const qint64 rangeLower = unixTime - iniUser().graphWindowMaxSeconds();
+    const auto &ini = iniUser();
 
-    const double rangeLowerKey = double(rangeLower);
-    const double unixTimeKey = double(unixTime);
+    const qint64 rangeLower = unixTime - ini.graphWindowMaxSeconds();
 
-    addData(m_graphIn, rangeLowerKey, unixTimeKey, inBytes);
-    addData(m_graphOut, rangeLowerKey, unixTimeKey, outBytes);
+    m_plot->addPoint({ unixTime, inBytes * 8, outBytes * 8 }, rangeLower);
 
-    m_plot->xAxis->setRange(unixTimeKey, qFloor(m_plot->axisRect()->width() / 4), Qt::AlignRight);
-
-    m_graphIn->rescaleValueAxis(false, true);
-    m_graphOut->rescaleValueAxis(true, true);
-
-    // Avoid negative Y range
-    {
-        auto yAxis = m_plot->yAxis;
-
-        QCPRange yRange = yAxis->range();
-        if (yRange.lower < 0) {
-            yRange.upper -= yRange.lower;
-            yRange.lower = 0;
-
-            yAxis->setRange(yRange);
-        }
-
-        const qint64 yRangeMax = iniUser().graphWindowFixedSpeed() * 1024LL;
-        if (yRangeMax > 0) {
-            yRange.upper = yRangeMax;
-
-            yAxis->setRange(yRange);
-        }
-
-        m_plot->yAxis2->setRange(yRange);
-    }
+    m_plot->setFixedValueMax(ini.graphWindowFixedSpeed() * 1024LL);
 
     m_plot->replot();
 }
@@ -507,22 +321,9 @@ void GraphWindow::addEmptyTraffic()
     addTraffic(DateUtil::getUnixTime(), 0, 0);
 }
 
-void GraphWindow::addData(QCPBars *graph, double rangeLowerKey, double unixTimeKey, quint64 bytes)
-{
-    auto data = graph->data();
-    quint64 bits = bytes * 8;
-
-    if (!clearGraphData(data, rangeLowerKey, unixTimeKey)) {
-        adjustGraphData(data, unixTimeKey, bits);
-    }
-
-    // Add data
-    data->add(QCPBarsData(unixTimeKey, bits));
-}
-
 void GraphWindow::updateSpeed()
 {
-    const bool showTextSpeed = m_textSpeed->visible();
+    const bool showTextSpeed = m_plot->speedVisible();
     const bool showWindowSpeed = (windowFlags() & Qt::FramelessWindowHint) == 0;
 
     if (!(showTextSpeed || showWindowSpeed))
@@ -531,7 +332,7 @@ void GraphWindow::updateSpeed()
     const auto text = getSpeedText();
 
     if (showTextSpeed) {
-        m_textSpeed->setText(text);
+        m_plot->setSpeedText(text);
     }
 
     if (showWindowSpeed) {
@@ -541,14 +342,12 @@ void GraphWindow::updateSpeed()
 
 QString GraphWindow::getSpeedText() const
 {
-    const auto inBits =
-            m_graphIn->data()->isEmpty() ? 0 : (m_graphIn->data()->constEnd() - 1)->mainValue();
-    const auto outBits =
-            m_graphOut->data()->isEmpty() ? 0 : (m_graphOut->data()->constEnd() - 1)->mainValue();
+    const GraphPoint point = m_plot->lastPoint();
+    const auto unitFormat = m_plot->unitFormat();
 
     return QChar(0x2193) // ↓
-            + FormatUtil::formatSpeed(quint64(inBits), m_unitFormat) + "  " + QChar(0x2191) // ↑
-            + FormatUtil::formatSpeed(quint64(outBits), m_unitFormat);
+            + FormatUtil::formatSpeed(qint64(point.inBits), unitFormat) + "  " + QChar(0x2191) // ↑
+            + FormatUtil::formatSpeed(qint64(point.outBits), unitFormat);
 }
 
 void GraphWindow::setWindowOpacityPercent(int percent)
@@ -574,9 +373,9 @@ void GraphWindow::checkWindowEdges()
     }
 }
 
-GraphWindow::ColorArray GraphWindow::getColors(const IniUser &ini)
+GraphPlot::ColorArray GraphWindow::getColors(const IniUser &ini)
 {
-    ColorArray colors;
+    GraphPlot::ColorArray colors;
 
     const bool isLightTheme =
 #if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)

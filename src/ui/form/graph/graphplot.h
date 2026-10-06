@@ -1,36 +1,135 @@
 #ifndef GRAPHPLOT_H
 #define GRAPHPLOT_H
 
-#include <qcustomplot.h>
+#include <QGraphicsView>
 
-class GraphPlot : public QCustomPlot
+#include "axistickerspeed.h"
+
+class QGraphicsPathItem;
+class QGraphicsRectItem;
+class QGraphicsSimpleTextItem;
+
+struct GraphPoint
+{
+    qint64 unixTime = 0;
+    quint64 inBits = 0;
+    quint64 outBits = 0;
+};
+
+class GraphPlot : public QGraphicsView
 {
     Q_OBJECT
 
 public:
+    enum ColorType : qint8 {
+        ColorBg = 0,
+        ColorIn,
+        ColorOut,
+        ColorAxis,
+        ColorTickLabel,
+        ColorLabel,
+        ColorGrid,
+        ColorCount
+    };
+
+    using ColorArray = QVarLengthArray<QColor, ColorCount>;
+
     explicit GraphPlot(QWidget *parent = nullptr);
 
     bool mousePressed() const { return m_mousePressed; }
     bool mouseDragging() const { return m_mouseDragging; }
 
+    qint64 fixedValueMax() const { return m_fixedValueMax; }
+    void setFixedValueMax(qint64 v) { m_fixedValueMax = v; }
+
+    FormatUtil::SizeFormat unitFormat() const { return m_ticker.unitFormat(); }
+    void setUnitFormat(FormatUtil::SizeFormat v) { m_ticker.setUnitFormat(v); }
+
+    bool speedVisible() const;
+    void setSpeedVisible(bool v);
+
+    void setSpeedText(const QString &text);
+
+    GraphPoint lastPoint() const;
+
+    void setColors(const GraphPlot::ColorArray &colors);
+    void setTickLabelSize(int pointSize);
+
+    void addPoint(GraphPoint point, qint64 rangeLower);
+
     void cancelMousePressAndDragging();
 
 signals:
     void resized(QResizeEvent *event);
+    void mouseDoubleClick(QMouseEvent *event);
     void mouseRightClick(QMouseEvent *event);
     void mouseDragBegin(QMouseEvent *event);
     void mouseDragMove(QMouseEvent *event);
     void mouseDragEnd(QMouseEvent *event);
 
+public slots:
+    void replot();
+
 protected:
     void resizeEvent(QResizeEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
 
 private:
+    bool checkMouseHasMoved(QMouseEvent *event);
+
+    void setupView();
+    void setupItems();
+
+    void removeOldPoints(qint64 unixTime, qint64 rangeLower);
+    void mergeLastPoint(GraphPoint &point);
+
+    int keyRangeSize() const;
+
+    quint64 maxBits(qint64 keyLower) const;
+    void updateValueRange(qint64 keyLower);
+
+    int setupTickLabels(const AxisTicks &axisTicks);
+    void updateAxisRect(int tickLabelsWidth);
+
+    void updateGrid(const AxisTicks &axisTicks);
+    void updateBars(qint64 keyLower, int keyRangeSize);
+    void updateSpeedBox();
+    void updateAxes(const AxisTicks &axisTicks);
+    void updateTickLabels(const AxisTicks &axisTicks);
+
+    int valueToPixel(double value) const;
+    QRectF barRect(int x, quint64 bits) const;
+
+private:
     bool m_mousePressed : 1 = false;
     bool m_mouseDragging : 1 = false;
+    bool m_mouseHasMoved : 1 = false;
+
+    double m_valueUpper = 5;
+
+    qint64 m_fixedValueMax = 0;
+
+    QGraphicsPathItem *m_grid = nullptr;
+    QGraphicsRectItem *m_plotArea = nullptr;
+    QGraphicsPathItem *m_barsIn = nullptr;
+    QGraphicsPathItem *m_barsOut = nullptr;
+    QGraphicsRectItem *m_speedBox = nullptr;
+    QGraphicsSimpleTextItem *m_speedText = nullptr;
+    QGraphicsPathItem *m_axes = nullptr;
+
+    QPoint m_mousePressPos;
+    QRect m_axisRect;
+
+    QColor m_tickLabelColor;
+    QFont m_tickLabelFont;
+
+    AxisTickerSpeed m_ticker;
+
+    QList<QGraphicsSimpleTextItem *> m_tickLabels;
+    QList<GraphPoint> m_points;
 };
 
 #endif // GRAPHPLOT_H

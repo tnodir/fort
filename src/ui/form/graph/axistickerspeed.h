@@ -1,24 +1,33 @@
 #ifndef AXISTICKERSPEED_H
 #define AXISTICKERSPEED_H
 
-#include <qcustomplot.h>
+#include <QStringList>
+#include <QVector>
 
 #include <util/formatutil.h>
 
-class AxisTickerSpeed : public QCPAxisTicker
+struct AxisTicks
 {
-    Q_GADGET
+    QVector<double> ticks;
+    QVector<double> subTicks;
+    QStringList labels;
+};
 
+class AxisTickerSpeed
+{
 public:
     explicit AxisTickerSpeed() = default;
 
     FormatUtil::SizeFormat unitFormat() const { return m_unitFormat; }
     void setUnitFormat(FormatUtil::SizeFormat v) { m_unitFormat = v; }
 
-protected:
-    double getTickStep(const QCPRange &range) override;
-    QString getTickLabel(
-            double tick, const QLocale &locale, QChar formatChar, int precision) override;
+    // Generates the ticks of the [0, rangeUpper] range
+    void generate(double rangeUpper, AxisTicks &axisTicks) const;
+
+private:
+    static double getTickStep(double rangeSize);
+
+    QString getTickLabel(double tick) const;
 
 private:
     FormatUtil::SizeFormat m_unitFormat = FormatUtil::SpeedTraditionalFormat;

@@ -4,14 +4,9 @@
 #include <QTimer>
 
 #include <form/controls/formwindow.h>
-#include <util/formatutil.h>
+#include <form/graph/graphplot.h>
 
-class AxisTickerSpeed;
-class GraphPlot;
 class IniUser;
-class QCPAxis;
-class QCPBars;
-class QCPItemText;
 
 class GraphWindow : public FormWindow
 {
@@ -38,20 +33,7 @@ private slots:
     void addEmptyTraffic();
 
 protected:
-    enum ColorType : qint8 {
-        ColorBg = 0,
-        ColorIn,
-        ColorOut,
-        ColorAxis,
-        ColorTickLabel,
-        ColorLabel,
-        ColorGrid,
-        ColorCount
-    };
-
-    using ColorArray = QVarLengthArray<QColor, ColorCount>;
-
-    static GraphWindow::ColorArray getColors(const IniUser &ini);
+    static GraphPlot::ColorArray getColors(const IniUser &ini);
 
 private:
     void onMouseDoubleClick(QMouseEvent *event);
@@ -63,7 +45,6 @@ private:
 
 private:
     void setupUi();
-    void setupYAxis(QCPAxis *yAxis, int padding = 0, bool tickLabels = true);
 
     void setupFlagsAndColors();
 
@@ -74,11 +55,7 @@ private:
     void updateFonts(const IniUser &ini);
     void updateFormat(const IniUser &ini);
 
-    void updateYAxisColor(QCPAxis *yAxis, const GraphWindow::ColorArray &colors);
-
     void setupTimer();
-
-    void addData(QCPBars *graph, double rangeLowerKey, double unixTimeKey, quint64 bytes);
 
     void updateSpeed();
     QString getSpeedText() const;
@@ -96,15 +73,9 @@ protected:
 private:
     bool m_mouseDragResize = false;
 
-    FormatUtil::SizeFormat m_unitFormat = FormatUtil::SpeedTraditionalFormat;
-
     qint64 m_lastUnixTime = 0;
 
     GraphPlot *m_plot = nullptr;
-    QSharedPointer<AxisTickerSpeed> m_ticker;
-    QCPBars *m_graphIn = nullptr;
-    QCPBars *m_graphOut = nullptr;
-    QCPItemText *m_textSpeed = nullptr;
 
     QPoint m_mousePressPoint;
     QPoint m_posOnMousePress;
