@@ -43,7 +43,7 @@ public:
     void setFixedValueMax(qint64 v) { m_fixedValueMax = v; }
 
     FormatUtil::SizeFormat unitFormat() const { return m_ticker.unitFormat(); }
-    void setUnitFormat(FormatUtil::SizeFormat v) { m_ticker.setUnitFormat(v); }
+    void setUnitFormat(FormatUtil::SizeFormat v);
 
     bool speedVisible() const;
     void setSpeedVisible(bool v);
@@ -90,7 +90,10 @@ private:
     int keyRangeSize() const;
 
     quint64 maxBits(qint64 keyLower) const;
+    void setValueUpper(double v);
     void updateValueRange(qint64 keyLower);
+
+    void layoutAxes();
 
     void setupTickLabelStyle(QGraphicsSimpleTextItem *label) const;
     void updateTickLabelsStyle();
@@ -112,6 +115,7 @@ private:
     bool m_mousePressed : 1 = false;
     bool m_mouseDragging : 1 = false;
     bool m_mouseHasMoved : 1 = false;
+    bool m_axesChanged : 1 = true;
 
     double m_valueUpper = 5;
 

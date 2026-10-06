@@ -57,6 +57,13 @@ GraphPlot::GraphPlot(QWidget *parent) : QGraphicsView(parent)
     setupItems();
 }
 
+void GraphPlot::setUnitFormat(FormatUtil::SizeFormat v)
+{
+    m_ticker.setUnitFormat(v);
+
+    m_axesChanged = true; // the tick labels are changed
+}
+
 bool GraphPlot::speedVisible() const
 {
     return m_speedBox->isVisible();
@@ -130,6 +137,8 @@ void GraphPlot::setTickLabelSize(int pointSize)
     m_speedText->setFont(speedFont);
 
     updateTickLabelsStyle();
+
+    m_axesChanged = true; // the tick labels' sizes are changed
 }
 
 void GraphPlot::addPoint(GraphPoint point, qint64 rangeLower)
@@ -153,20 +162,14 @@ void GraphPlot::replot()
 
     updateValueRange(keyLower);
 
-    AxisTicks axisTicks;
-    m_ticker.generate(m_valueUpper, axisTicks);
+    // The axes depend on the value range, the view's size and the tick labels only
+    if (m_axesChanged) {
+        m_axesChanged = false;
+        layoutAxes();
+    }
 
-    const int tickLabelsWidth = setupTickLabels(axisTicks.labels);
-    updateAxisRect(tickLabelsWidth);
-
-    const QVector<int> tickYs = valuesToPixels(axisTicks.ticks);
-    const QVector<int> subTickYs = valuesToPixels(axisTicks.subTicks);
-
-    updateGrid(tickYs);
     updateBars(keyLower, keyRangeSize);
     updateSpeedBox();
-    updateAxes(tickYs, subTickYs);
-    updateTickLabels(tickYs);
 }
 
 void GraphPlot::resizeEvent(QResizeEvent *event)
@@ -174,6 +177,8 @@ void GraphPlot::resizeEvent(QResizeEvent *event)
     QGraphicsView::resizeEvent(event);
 
     setSceneRect(viewport()->rect());
+
+    m_axesChanged = true;
 
     emit resized(event);
 }
@@ -338,18 +343,43 @@ quint64 GraphPlot::maxBits(qint64 keyLower) const
     return bits;
 }
 
+void GraphPlot::setValueUpper(double v)
+{
+    if (m_valueUpper == v)
+        return;
+
+    m_valueUpper = v;
+    m_axesChanged = true;
+}
+
 void GraphPlot::updateValueRange(qint64 keyLower)
 {
     if (m_fixedValueMax > 0) {
-        m_valueUpper = double(m_fixedValueMax);
+        setValueUpper(double(m_fixedValueMax));
         return;
     }
 
     // Keep the current range for empty traffic
     const quint64 bits = maxBits(keyLower);
     if (bits > 0) {
-        m_valueUpper = double(bits);
+        setValueUpper(double(bits));
     }
+}
+
+void GraphPlot::layoutAxes()
+{
+    AxisTicks axisTicks;
+    m_ticker.generate(m_valueUpper, axisTicks);
+
+    const int tickLabelsWidth = setupTickLabels(axisTicks.labels);
+    updateAxisRect(tickLabelsWidth);
+
+    const QVector<int> tickYs = valuesToPixels(axisTicks.ticks);
+    const QVector<int> subTickYs = valuesToPixels(axisTicks.subTicks);
+
+    updateGrid(tickYs);
+    updateAxes(tickYs, subTickYs);
+    updateTickLabels(tickYs);
 }
 
 void GraphPlot::setupTickLabelStyle(QGraphicsSimpleTextItem *label) const
