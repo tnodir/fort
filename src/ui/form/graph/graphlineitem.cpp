@@ -141,6 +141,7 @@ void GraphLineItem::updateFill()
 
     m_fillPath.clear();
     m_fillBrush = QBrush();
+    m_cache = QPixmap();
 
     if (m_fillVisible && m_points.size() >= 2) {
         setupFill();
@@ -183,8 +184,35 @@ void GraphLineItem::paint(
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-    paintFill(painter);
-    paintLine(painter);
+    if (m_points.size() < 2)
+        return;
+
+    const qreal dpr = painter->device()->devicePixelRatioF();
+
+    if (m_cache.isNull() || m_cache.devicePixelRatio() != dpr) {
+        updateCache(dpr);
+    }
+
+    painter->drawPixmap(m_cacheOrigin, m_cache);
+}
+
+void GraphLineItem::updateCache(qreal dpr)
+{
+    // Aligned to the device pixels: drawn without scaling, when scrolled by them
+    const QRectF deviceRect(m_boundingRect.topLeft() * dpr, m_boundingRect.size() * dpr);
+    const QRect alignedRect = deviceRect.toAlignedRect();
+
+    m_cacheOrigin = QPointF(alignedRect.topLeft()) / dpr;
+
+    m_cache = QPixmap(alignedRect.size());
+    m_cache.setDevicePixelRatio(dpr);
+    m_cache.fill(Qt::transparent);
+
+    QPainter painter(&m_cache);
+    painter.translate(-m_cacheOrigin);
+
+    paintFill(&painter);
+    paintLine(&painter);
 }
 
 void GraphLineItem::paintFill(QPainter *painter)
