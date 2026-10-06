@@ -14,7 +14,6 @@ namespace {
 
 inline constexpr int axisPadding = 2;
 inline constexpr int axisMarginTop = 2;
-inline constexpr int axisMarginBottom = 1;
 inline constexpr int tickLength = 5;
 inline constexpr int subTickLength = 2;
 inline constexpr int tickLabelPadding = 4;
@@ -48,8 +47,13 @@ void addVLine(QPainterPath &path, int x, int y1, int y2)
 
 void addHLines(QPainterPath &path, const QVector<int> &ys, const QRect &axisRect)
 {
+    const int bottom = axisRect.bottom();
+
     for (const int y : ys) {
-        addHLine(path, axisRect.left(), axisRect.right(), y);
+        // No line at the zero
+        if (y < bottom) {
+            addHLine(path, axisRect.left(), axisRect.right(), y);
+        }
     }
 }
 
@@ -707,10 +711,14 @@ void GraphPlot::updateAxisRect(int tickLabelsWidth)
     // The bars are up to the right edge without the ticks
     const int rightMargin = border + ticksWidth;
 
-    m_axisRect = viewport()->rect().adjusted(
-            leftMargin, border + axisMarginTop, -rightMargin, -(border + axisMarginBottom));
+    m_axisRect =
+            viewport()->rect().adjusted(leftMargin, border + axisMarginTop, -rightMargin, -border);
 
-    m_plotArea->setRect(m_axisRect);
+    // Clip the bars at their bottom in device pixels
+    QRectF plotRect = m_axisRect;
+    plotRect.setBottom(barsBottom() / devicePixelRatioF());
+
+    m_plotArea->setRect(plotRect);
 }
 
 int GraphPlot::axisTickLength() const
@@ -955,6 +963,12 @@ QVector<int> GraphPlot::valuesToPixels(const QVector<double> &values) const
     return pixels;
 }
 
+int GraphPlot::barsBottom() const
+{
+    // In device pixels: up to the view's bottom or to the border's line of a device pixel
+    return qRound(viewport()->height() * devicePixelRatioF()) - borderWidth();
+}
+
 int GraphPlot::barHeight(quint64 bits) const
 {
     if (bits == 0)
@@ -998,7 +1012,7 @@ QRectF GraphPlot::barRect(const GraphColumn &column, int fromHeight, int toHeigh
 {
     // In device pixels: the adjacent bars have no gaps with a fractional scale
     const qreal dpr = devicePixelRatioF();
-    const int bottom = qFloor((m_axisRect.bottom() + 1) * dpr);
+    const int bottom = barsBottom();
 
     return QRectF(column.x, (bottom - toHeight) / dpr, column.width, (toHeight - fromHeight) / dpr);
 }

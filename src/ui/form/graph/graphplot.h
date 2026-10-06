@@ -168,6 +168,7 @@ private:
 
     int valueToPixel(double value) const;
     QVector<int> valuesToPixels(const QVector<double> &values) const;
+    int barsBottom() const;
     int barHeight(quint64 bits) const;
     GraphColumn columnAt(qreal x, qreal width, const GraphPoint &point) const;
     GraphColumnRects columnRects(const GraphColumn &column) const;
