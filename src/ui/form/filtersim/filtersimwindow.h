@@ -22,6 +22,9 @@ public:
 
     FilterSimController *ctrl() const { return m_ctrl; }
 
+    // Fills the input by the connection and simulates it
+    void initialize(const FilterSimConn &simConn);
+
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
 

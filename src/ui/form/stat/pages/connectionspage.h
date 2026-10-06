@@ -76,6 +76,7 @@ private:
     QAction *m_actCopy = nullptr;
     QAction *m_actLookupIp = nullptr;
     QAction *m_actAddProgram = nullptr;
+    QAction *m_actFilterSim = nullptr;
     QAction *m_actRemoveConn = nullptr;
     QAction *m_actClearAll = nullptr;
     QAction *m_actFind = nullptr;

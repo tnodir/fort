@@ -189,6 +189,22 @@ FilterSimWindow::FilterSimWindow(QWidget *parent) :
     setupFormWindow(iniUser(), IniUser::filterSimWindowGroup());
 }
 
+void FilterSimWindow::initialize(const FilterSimConn &simConn)
+{
+    const FORT_CONF_META_CONN &conn = simConn.conn;
+
+    m_editAppPath->setText(simConn.appPath);
+    m_comboDirection->setCurrentIndex(conn.inbound ? 1 : 0);
+    m_comboProtocol->setCurrentText(NetUtil::protocolName(conn.ip_proto));
+    m_editRemoteIp->setText(NetFormatUtil::ipToText(conn.remote_ip, conn.isIPv6));
+    m_spinRemotePort->setValue(conn.remote_port);
+    m_editLocalIp->setText(NetFormatUtil::ipToText(conn.local_ip, conn.isIPv6));
+    m_spinLocalPort->setValue(conn.local_port);
+    m_cbLoopback->setChecked(conn.is_loopback);
+
+    simulateConn();
+}
+
 void FilterSimWindow::saveWindowState(bool /*wasVisible*/)
 {
     auto &iniUser = Fort::iniUser();

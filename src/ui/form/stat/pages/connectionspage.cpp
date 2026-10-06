@@ -10,9 +10,11 @@
 
 #include <appinfo/appinfocache.h>
 #include <conf/confmanager.h>
+#include <conf/filtersimconn.h>
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
+#include <form/filtersim/filtersimwindow.h>
 #include <form/stat/statisticscontroller.h>
 #include <form/stat/statisticswindow.h>
 #include <fortglobal.h>
@@ -28,6 +30,29 @@ using namespace Fort;
 namespace {
 
 inline constexpr int CONN_LIST_HEADER_VERSION = 5;
+
+void showFilterSimWindow(const ConnRow &connRow)
+{
+    auto windowManager = Fort::windowManager();
+
+    if (!windowManager->showFilterSimWindow())
+        return;
+
+    FilterSimConn simConn;
+    simConn.appPath = connRow.appPath;
+
+    FORT_CONF_META_CONN &conn = simConn.conn;
+    conn.inbound = connRow.inbound;
+    conn.isIPv6 = connRow.isIPv6;
+    conn.is_loopback = connRow.loopback;
+    conn.ip_proto = connRow.ipProto;
+    conn.local_port = connRow.localPort;
+    conn.remote_port = connRow.remotePort;
+    conn.local_ip = connRow.localIp;
+    conn.remote_ip = connRow.remoteIp;
+
+    windowManager->filterSimWindow()->initialize(simConn);
+}
 
 }
 
@@ -65,6 +90,7 @@ void ConnectionsPage::onRetranslateUi()
     m_actLookupIp->setText(tr("Lookup IP"));
 
     m_actAddProgram->setText(tr("Add Program"));
+    m_actFilterSim->setText(tr("Filter Simulator"));
     m_actRemoveConn->setText(tr("Remove"));
     m_actClearAll->setText(tr("Clear All"));
     m_actFind->setText(tr("Find"));
@@ -126,6 +152,8 @@ QLayout *ConnectionsPage::setupHeader()
     m_actAddProgram = menu->addAction(IconCache::icon(":/icons/application.png"), QString());
     m_actAddProgram->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
+    m_actFilterSim = menu->addAction(IconCache::icon(":/icons/filter.png"), QString());
+
     m_actRemoveConn = menu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveConn->setShortcut(Qt::Key_Delete);
 
@@ -184,6 +212,13 @@ void ConnectionsPage::setupHeaderConnections()
         if (!connRow.isNull()) {
             windowManager()->openProgramEditForm(
                     connRow.appPath, connRow.confAppId, windowManager()->statWindow());
+        }
+    });
+    connect(m_actFilterSim, &QAction::triggered, this, [&] {
+        const auto &connRow = currentConnRow();
+
+        if (!connRow.isNull()) {
+            showFilterSimWindow(connRow);
         }
     });
     connect(m_actRemoveConn, &QAction::triggered, this, [&] {
@@ -341,6 +376,7 @@ void ConnectionsPage::setupTableConnsChanged()
         m_actCopy->setEnabled(connSelected);
         m_actLookupIp->setEnabled(connSelected);
         m_actAddProgram->setEnabled(connSelected);
+        m_actFilterSim->setEnabled(connSelected);
 
         /* Removing till the row would remove the filtered out connections too */
         m_actRemoveConn->setEnabled(connSelected && !connListModel()->isFiltering());
