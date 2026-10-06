@@ -328,6 +328,10 @@
         <translation>Zone : %1</translation>
     </message>
     <message>
+        <source>Loopback</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Local Host Name</source>
         <translation>Nom de l&apos;hôte local</translation>
     </message>
@@ -365,6 +369,10 @@
     <message>
         <source>Add Program</source>
         <translation>Ajouter un programme</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Remove</source>
@@ -437,12 +445,154 @@
         <source>%1s</source>
         <translation>%1s</translation>
     </message>
+    <message>
+        <source>%1d</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DbErrorManager</name>
     <message>
         <source>Profile&apos;s drive mounted</source>
         <translation>Lecteur de profil&apos;s monté</translation>
+    </message>
+</context>
+<context>
+    <name>FilterSimController</name>
+    <message>
+        <source>Cannot simulate the connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FilterSimWindow</name>
+    <message>
+        <source>Ask to Connect</source>
+        <translation>Demander à se connecter</translation>
+    </message>
+    <message>
+        <source>Ignored: other firewalls decide</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Program Path:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select File</source>
+        <translation>Sélectionner fichier</translation>
+    </message>
+    <message>
+        <source>Direction:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Protocol:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote IP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Port:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local IP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Any</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loopback</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Profile:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Result</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation>Action :</translation>
+    </message>
+    <message>
+        <source>Reason:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rule:</source>
+        <translation>Règle:</translation>
+    </message>
+    <message>
+        <source>Zone:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Program:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The program is checked by its path: the settings propagated from a parent process aren&apos;t taken into account.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Public</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Private</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Domain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>Programmes (*.exe);;Tous les fichiers (*.*)</translation>
+    </message>
+    <message>
+        <source>Invalid remote IP address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid local IP address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid protocol</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -495,6 +645,10 @@
         <translation>L&apos;application est déjà en cours d&apos;exécution!</translation>
     </message>
     <message>
+        <source>Install the Windows Service now?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Quota Alert</source>
         <translation>Alerte de quota</translation>
     </message>
@@ -524,6 +678,22 @@
     <message>
         <source>Program exit</source>
         <translation>Quitter le programme</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 minutes</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 minutes</translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation>30 minutes</translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 heure</translation>
     </message>
 </context>
 <context>
@@ -1030,10 +1200,6 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
         <translation>Afficher les options</translation>
     </message>
     <message>
-        <source>Show Statistics</source>
-        <translation>Afficher les statistiques</translation>
-    </message>
-    <message>
         <source>Show/Hide Traffic Graph</source>
         <translation>Afficher/Masquer graphique du trafic</translation>
     </message>
@@ -1108,6 +1274,14 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
     <message>
         <source>Snooze Alerts</source>
         <translation>Alertes de répétition</translation>
+    </message>
+    <message>
+        <source>Show Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Connections</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
@@ -2290,10 +2464,6 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
         <translation>Mensuel</translation>
     </message>
     <message>
-        <source> hour(s)</source>
-        <translation> Heure(s)</translation>
-    </message>
-    <message>
         <source>Run On Startup</source>
         <translation>Lancer au démarrage</translation>
     </message>
@@ -2312,6 +2482,22 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     <message>
         <source>Delay seconds to retry:</source>
         <translation>Délai de secondes pour réessayer:</translation>
+    </message>
+    <message>
+        <source>Each 5 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Each 15 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Each 30 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation>minute(s)</translation>
     </message>
     <message>
         <source>20 seconds</source>
@@ -2691,10 +2877,6 @@ Perte de paquets : %2</translation>
         <translation>Nom</translation>
     </message>
     <message>
-        <source>Interval, hours</source>
-        <translation>Intervalle, heures</translation>
-    </message>
-    <message>
         <source>Last Run</source>
         <translation>Dernière exécution</translation>
     </message>
@@ -2705,6 +2887,10 @@ Perte de paquets : %2</translation>
     <message>
         <source>Run On Startup</source>
         <translation>Lancer au démarrage</translation>
+    </message>
+    <message>
+        <source>Interval, minutes</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Maximum retries count</source>
@@ -2973,6 +3159,10 @@ Perte de paquets : %2</translation>
         <translation>Périodes de temps</translation>
     </message>
     <message>
+        <source>Filter Simulator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Traffic Graph</source>
         <translation>Graphique du trafic</translation>
     </message>
@@ -3073,10 +3263,6 @@ Perte de paquets : %2</translation>
 </context>
 <context>
     <name>WindowManager</name>
-    <message>
-        <source>Please close already opened Edit Program window and try again.</source>
-        <translation>Veuillez fermer la fenêtre d&apos;édition du programme déjà ouverte et réessayer.</translation>
-    </message>
     <message>
         <source>Restart Now?</source>
         <translation>Redémarrer maintenant?</translation>

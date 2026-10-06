@@ -252,6 +252,10 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Loopback</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Local Host Name</source>
         <translation>Tên máy cục bộ</translation>
     </message>
@@ -375,6 +379,10 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Filter Simulator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Remove</source>
         <translation>Xóa</translation>
     </message>
@@ -437,12 +445,154 @@
         <source>%1s</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>%1d</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DbErrorManager</name>
     <message>
         <source>Profile&apos;s drive mounted</source>
         <translation>Ổ đĩa của hồ sơ đã được gắn</translation>
+    </message>
+</context>
+<context>
+    <name>FilterSimController</name>
+    <message>
+        <source>Cannot simulate the connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FilterSimWindow</name>
+    <message>
+        <source>Ask to Connect</source>
+        <translation>Hỏi khi kết nối</translation>
+    </message>
+    <message>
+        <source>Ignored: other firewalls decide</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Program Path:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select File</source>
+        <translation>Chọn tệp</translation>
+    </message>
+    <message>
+        <source>Direction:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Protocol:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote IP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Port:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local IP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Any</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loopback</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Profile:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Result</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation>Hành động:</translation>
+    </message>
+    <message>
+        <source>Reason:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rule:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zone:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Program:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The program is checked by its path: the settings propagated from a parent process aren&apos;t taken into account.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Public</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Private</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Domain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>Chương trình (*.exe);;Tất cả tệp (*.*)</translation>
+    </message>
+    <message>
+        <source>Invalid remote IP address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid local IP address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid protocol</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -495,6 +645,10 @@
         <translation>Ứng dụng đã đang chạy!</translation>
     </message>
     <message>
+        <source>Install the Windows Service now?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Zone Addresses Updated: %1.</source>
         <translation>Địa chỉ vùng đã được cập nhật: %1.</translation>
     </message>
@@ -524,6 +678,22 @@
     <message>
         <source>Session lockout</source>
         <translation>Khóa phiên</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 phút</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 phút</translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation>30 phút</translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 giờ</translation>
     </message>
 </context>
 <context>
@@ -985,6 +1155,14 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>Ngôn ngữ:</translation>
     </message>
     <message>
+        <source>Show Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Ignore</source>
         <translation>Bỏ qua</translation>
     </message>
@@ -1095,10 +1273,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Show/Hide Traffic Graph</source>
         <translation>Hiện/ẩn biểu đồ lưu lượng</translation>
-    </message>
-    <message>
-        <source>Show Statistics</source>
-        <translation>Hiển thị thống kê</translation>
     </message>
     <message>
         <source>Show Block Traffic Menu</source>
@@ -2260,8 +2434,24 @@ Việc này có thể khiến Windows hoạt động lỗi hoặc hoàn toàn kh
         <translation>Hủy</translation>
     </message>
     <message>
+        <source>Each 5 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Each 15 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Daily</source>
         <translation>Hàng ngày</translation>
+    </message>
+    <message>
+        <source>Each 30 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation> phút</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -2334,10 +2524,6 @@ Việc này có thể khiến Windows hoạt động lỗi hoặc hoàn toàn kh
     <message>
         <source>Each 12 hours</source>
         <translation>Mỗi 12 giờ</translation>
-    </message>
-    <message>
-        <source> hour(s)</source>
-        <translation> giờ</translation>
     </message>
 </context>
 <context>
@@ -2688,11 +2874,11 @@ Packet loss: %2</source>
         <translation>Số lần thử lại tối đa</translation>
     </message>
     <message>
-        <source>Interval, hours</source>
-        <translation>Khoảng thời gian, giờ</translation>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Name</source>
+        <source>Interval, minutes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3022,6 +3208,10 @@ Packet loss: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Filter Simulator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Snooze Alerts</source>
         <translation>Tạm dừng cảnh báo</translation>
     </message>
@@ -3073,10 +3263,6 @@ Packet loss: %2</source>
     <message>
         <source>Restart Required</source>
         <translation>Cần khởi động lại</translation>
-    </message>
-    <message>
-        <source>Please close already opened Edit Program window and try again.</source>
-        <translation>Vui lòng đóng cửa sổ Chỉnh sửa chương trình đang mở và thử lại.</translation>
     </message>
     <message>
         <source>Restart Now?</source>

@@ -328,6 +328,10 @@
         <translation>区域： %1</translation>
     </message>
     <message>
+        <source>Loopback</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Local Host Name</source>
         <translation>本地主机名称</translation>
     </message>
@@ -365,6 +369,10 @@
     <message>
         <source>Add Program</source>
         <translation>添加应用程序</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Remove</source>
@@ -437,12 +445,154 @@
         <source>%1s</source>
         <translation>%1秒</translation>
     </message>
+    <message>
+        <source>%1d</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DbErrorManager</name>
     <message>
         <source>Profile&apos;s drive mounted</source>
         <translation>配置文件的驱动器已挂载</translation>
+    </message>
+</context>
+<context>
+    <name>FilterSimController</name>
+    <message>
+        <source>Cannot simulate the connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FilterSimWindow</name>
+    <message>
+        <source>Ask to Connect</source>
+        <translation>请求连接</translation>
+    </message>
+    <message>
+        <source>Ignored: other firewalls decide</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Program Path:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select File</source>
+        <translation>选择文件</translation>
+    </message>
+    <message>
+        <source>Direction:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Protocol:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote IP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Port:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local IP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Any</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loopback</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Profile:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Result</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation>操作：</translation>
+    </message>
+    <message>
+        <source>Reason:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rule:</source>
+        <translation>规则:</translation>
+    </message>
+    <message>
+        <source>Zone:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Program:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The program is checked by its path: the settings propagated from a parent process aren&apos;t taken into account.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Public</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Private</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Domain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>应用程序 (*.exe);;所有文件 (*.*)</translation>
+    </message>
+    <message>
+        <source>Invalid remote IP address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid local IP address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid protocol</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -495,6 +645,10 @@
         <translation>应用程序已在运行！</translation>
     </message>
     <message>
+        <source>Install the Windows Service now?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Quota Alert</source>
         <translation>配额提示</translation>
     </message>
@@ -524,6 +678,22 @@
     <message>
         <source>Program exit</source>
         <translation>程序退出</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 分钟</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 分钟</translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation>30 分钟</translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 小时</translation>
     </message>
 </context>
 <context>
@@ -1030,10 +1200,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>显示选项</translation>
     </message>
     <message>
-        <source>Show Statistics</source>
-        <translation>显示统计</translation>
-    </message>
-    <message>
         <source>Show/Hide Traffic Graph</source>
         <translation>显示/隐藏流量图</translation>
     </message>
@@ -1108,6 +1274,14 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Snooze Alerts</source>
         <translation>稍后提醒</translation>
+    </message>
+    <message>
+        <source>Show Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Connections</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
@@ -2290,10 +2464,6 @@ Please check other program with the same path.</source>
         <translation>每月</translation>
     </message>
     <message>
-        <source> hour(s)</source>
-        <translation> 小时</translation>
-    </message>
-    <message>
         <source>Run On Startup</source>
         <translation>开机时运行</translation>
     </message>
@@ -2312,6 +2482,22 @@ Please check other program with the same path.</source>
     <message>
         <source>Delay seconds to retry:</source>
         <translation>重试的延迟时间（秒）：</translation>
+    </message>
+    <message>
+        <source>Each 5 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Each 15 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Each 30 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation> 分钟</translation>
     </message>
     <message>
         <source>20 seconds</source>
@@ -2691,10 +2877,6 @@ Packet loss: %2</source>
         <translation>名称</translation>
     </message>
     <message>
-        <source>Interval, hours</source>
-        <translation>间隔时间（小时）</translation>
-    </message>
-    <message>
         <source>Last Run</source>
         <translation>最后运行</translation>
     </message>
@@ -2705,6 +2887,10 @@ Packet loss: %2</source>
     <message>
         <source>Run On Startup</source>
         <translation>开机时运行</translation>
+    </message>
+    <message>
+        <source>Interval, minutes</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Maximum retries count</source>
@@ -2973,6 +3159,10 @@ Packet loss: %2</source>
         <translation>时间段</translation>
     </message>
     <message>
+        <source>Filter Simulator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Traffic Graph</source>
         <translation>流量图</translation>
     </message>
@@ -3073,10 +3263,6 @@ Packet loss: %2</source>
 </context>
 <context>
     <name>WindowManager</name>
-    <message>
-        <source>Please close already opened Edit Program window and try again.</source>
-        <translation>请关闭已打开的编辑应用程序窗口，然后重试。</translation>
-    </message>
     <message>
         <source>Restart Now?</source>
         <translation>立即重启？</translation>

@@ -328,6 +328,10 @@
         <translation>Зона: %1</translation>
     </message>
     <message>
+        <source>Loopback</source>
+        <translation>Loopback</translation>
+    </message>
+    <message>
         <source>Local Host Name</source>
         <translation>Локал. имя хоста</translation>
     </message>
@@ -365,6 +369,10 @@
     <message>
         <source>Add Program</source>
         <translation>Добавить программу</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation>Симулятор фильтра</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -437,12 +445,154 @@
         <source>%1s</source>
         <translation>%1с</translation>
     </message>
+    <message>
+        <source>%1d</source>
+        <translation>%1д</translation>
+    </message>
 </context>
 <context>
     <name>DbErrorManager</name>
     <message>
         <source>Profile&apos;s drive mounted</source>
         <translation>Том профиля был демонтирован</translation>
+    </message>
+</context>
+<context>
+    <name>FilterSimController</name>
+    <message>
+        <source>Cannot simulate the connection</source>
+        <translation>Не удалось смоделировать соединение</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation>Симулятор фильтра</translation>
+    </message>
+</context>
+<context>
+    <name>FilterSimWindow</name>
+    <message>
+        <source>Ask to Connect</source>
+        <translation>Спрашивать для соединения</translation>
+    </message>
+    <message>
+        <source>Ignored: other firewalls decide</source>
+        <translation>Пропущено: решают другие брандмауэры</translation>
+    </message>
+    <message>
+        <source>Not found</source>
+        <translation>Не найдена</translation>
+    </message>
+    <message>
+        <source>Connection</source>
+        <translation>Соединение</translation>
+    </message>
+    <message>
+        <source>Program Path:</source>
+        <translation>Путь программы:</translation>
+    </message>
+    <message>
+        <source>Select File</source>
+        <translation>Выбрать файл</translation>
+    </message>
+    <message>
+        <source>Direction:</source>
+        <translation>Направление:</translation>
+    </message>
+    <message>
+        <source>Protocol:</source>
+        <translation>Протокол:</translation>
+    </message>
+    <message>
+        <source>Remote IP:</source>
+        <translation>Удалённый IP:</translation>
+    </message>
+    <message>
+        <source>Port:</source>
+        <translation>Порт:</translation>
+    </message>
+    <message>
+        <source>Local IP:</source>
+        <translation>Локальный IP:</translation>
+    </message>
+    <message>
+        <source>Any</source>
+        <translation>Любой</translation>
+    </message>
+    <message>
+        <source>Loopback</source>
+        <translation>Loopback</translation>
+    </message>
+    <message>
+        <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
+        <translation>Соединение с адресом этого компьютера. Адреса 127.0.0.0/8 и ::1 всегда loopback.</translation>
+    </message>
+    <message>
+        <source>Network Profile:</source>
+        <translation>Сетевой профиль:</translation>
+    </message>
+    <message>
+        <source>Simulate</source>
+        <translation>Смоделировать</translation>
+    </message>
+    <message>
+        <source>Result</source>
+        <translation>Результат</translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation>Действие:</translation>
+    </message>
+    <message>
+        <source>Reason:</source>
+        <translation>Причина:</translation>
+    </message>
+    <message>
+        <source>Rule:</source>
+        <translation>Правило:</translation>
+    </message>
+    <message>
+        <source>Zone:</source>
+        <translation>Зона:</translation>
+    </message>
+    <message>
+        <source>Program:</source>
+        <translation>Программа:</translation>
+    </message>
+    <message>
+        <source>The program is checked by its path: the settings propagated from a parent process aren&apos;t taken into account.</source>
+        <translation>Программа проверяется по её пути: настройки, переданные от родительского процесса, не учитываются.</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation>Симулятор фильтра</translation>
+    </message>
+    <message>
+        <source>Public</source>
+        <translation>Общедоступный</translation>
+    </message>
+    <message>
+        <source>Private</source>
+        <translation>Частный</translation>
+    </message>
+    <message>
+        <source>Domain</source>
+        <translation>Доменный</translation>
+    </message>
+    <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>Программы (*.exe);;Все файлы (*.*)</translation>
+    </message>
+    <message>
+        <source>Invalid remote IP address</source>
+        <translation>Некорректный удалённый IP-адрес</translation>
+    </message>
+    <message>
+        <source>Invalid local IP address</source>
+        <translation>Некорректный локальный IP-адрес</translation>
+    </message>
+    <message>
+        <source>Invalid protocol</source>
+        <translation>Некорректный протокол</translation>
     </message>
 </context>
 <context>
@@ -495,6 +645,10 @@
         <translation>Приложение уже запущено!</translation>
     </message>
     <message>
+        <source>Install the Windows Service now?</source>
+        <translation>Установить службу Windows сейчас?</translation>
+    </message>
+    <message>
         <source>Quota Alert</source>
         <translation>Предупреждение о квоте трафика</translation>
     </message>
@@ -524,6 +678,22 @@
     <message>
         <source>Program exit</source>
         <translation>Выход из приложения</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 минут</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 минут</translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation>30 минут</translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 час</translation>
     </message>
 </context>
 <context>
@@ -1030,10 +1200,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>Показать Опции</translation>
     </message>
     <message>
-        <source>Show Statistics</source>
-        <translation>Показать Статистику</translation>
-    </message>
-    <message>
         <source>Show/Hide Traffic Graph</source>
         <translation>Показать/Скрыть График трафика</translation>
     </message>
@@ -1108,6 +1274,14 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Snooze Alerts</source>
         <translation>Отложить оповещения</translation>
+    </message>
+    <message>
+        <source>Show Traffic</source>
+        <translation>Показать Трафик</translation>
+    </message>
+    <message>
+        <source>Show Connections</source>
+        <translation>Показать Соединения</translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
@@ -1649,7 +1823,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source> minute(s)</source>
-        <translation>минут(ы)</translation>
+        <translation> минут(ы)</translation>
     </message>
     <message>
         <source>%1 minute(s)</source>
@@ -2290,10 +2464,6 @@ Please check other program with the same path.</source>
         <translation>Каждый месяц</translation>
     </message>
     <message>
-        <source> hour(s)</source>
-        <translation> час(ов)</translation>
-    </message>
-    <message>
         <source>Run On Startup</source>
         <translation>Запуск при старте</translation>
     </message>
@@ -2312,6 +2482,22 @@ Please check other program with the same path.</source>
     <message>
         <source>Delay seconds to retry:</source>
         <translation>Задержка в секундах для повторной попытки:</translation>
+    </message>
+    <message>
+        <source>Each 5 minutes</source>
+        <translation>Каждые 5 минут</translation>
+    </message>
+    <message>
+        <source>Each 15 minutes</source>
+        <translation>Каждые 15 минут</translation>
+    </message>
+    <message>
+        <source>Each 30 minutes</source>
+        <translation>Каждые 30 минут</translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation> минут(ы)</translation>
     </message>
     <message>
         <source>20 seconds</source>
@@ -2691,10 +2877,6 @@ Packet loss: %2</source>
         <translation>Наименование</translation>
     </message>
     <message>
-        <source>Interval, hours</source>
-        <translation>Интервал, часов</translation>
-    </message>
-    <message>
         <source>Last Run</source>
         <translation>Последний запуск</translation>
     </message>
@@ -2705,6 +2887,10 @@ Packet loss: %2</source>
     <message>
         <source>Run On Startup</source>
         <translation>Запуск при старте</translation>
+    </message>
+    <message>
+        <source>Interval, minutes</source>
+        <translation>Интервал, минуты</translation>
     </message>
     <message>
         <source>Maximum retries count</source>
@@ -2973,6 +3159,10 @@ Packet loss: %2</source>
         <translation>Периоды времени</translation>
     </message>
     <message>
+        <source>Filter Simulator</source>
+        <translation>Симулятор фильтра</translation>
+    </message>
+    <message>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
@@ -3073,10 +3263,6 @@ Packet loss: %2</source>
 </context>
 <context>
     <name>WindowManager</name>
-    <message>
-        <source>Please close already opened Edit Program window and try again.</source>
-        <translation>Закройте уже открытое окно Редактирования Программы и пробуйте снова.</translation>
-    </message>
     <message>
         <source>Restart Now?</source>
         <translation>Перезапустить сейчас?</translation>
