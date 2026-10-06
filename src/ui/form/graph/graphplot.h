@@ -3,6 +3,7 @@
 
 #include <QGraphicsView>
 #include <QTimer>
+#include <QVarLengthArray>
 #include <QVariantAnimation>
 
 #include "axistickerspeed.h"
@@ -102,6 +103,7 @@ private:
     qint64 lastUnixTime() const;
     int secondPixels() const;
     int keyRangeSize() const;
+    qint64 keyLower() const;
 
     quint64 maxBits(qint64 keyLower) const;
     double targetValueUpper(qint64 keyLower) const;
@@ -148,6 +150,7 @@ private:
 
     QGraphicsPathItem *m_grid = nullptr;
     QGraphicsRectItem *m_plotArea = nullptr;
+    QGraphicsRectItem *m_bars = nullptr;
     QGraphicsPathItem *m_barsIn = nullptr;
     QGraphicsPathItem *m_barsOut = nullptr;
     QGraphicsRectItem *m_risingIn = nullptr;

@@ -43,20 +43,13 @@ void addTicks(QPainterPath &path, const QVector<int> &ys, const QRect &axisRect,
     }
 }
 
-QGraphicsPathItem *createBars(QGraphicsItem *parent)
+template<typename T>
+T *createNoPenItem(QGraphicsItem *parent)
 {
-    auto bars = new QGraphicsPathItem(parent);
-    bars->setPen(Qt::NoPen);
+    auto item = new T(parent);
+    item->setPen(Qt::NoPen);
 
-    return bars;
-}
-
-QGraphicsRectItem *createRisingBar(QGraphicsItem *parent)
-{
-    auto bar = new QGraphicsRectItem(parent);
-    bar->setPen(Qt::NoPen);
-
-    return bar;
+    return item;
 }
 
 QRectF risingRect(const QRectF &rect, double ratio)
@@ -187,9 +180,7 @@ void GraphPlot::cancelMousePressAndDragging()
 
 void GraphPlot::replot()
 {
-    const qint64 keyLower = lastUnixTime() - keyRangeSize();
-
-    animateValueUpper(targetValueUpper(keyLower));
+    animateValueUpper(targetValueUpper(keyLower()));
     startRising(lastUnixTime() - 1); // the last complete second
 
     redraw();
@@ -303,17 +294,19 @@ void GraphPlot::setupItems()
     m_plotArea = scene->addRect(QRectF(), Qt::NoPen);
     m_plotArea->setFlag(QGraphicsItem::ItemClipsChildrenToShape);
 
+    // Bars: Scrolled together
+    m_bars = createNoPenItem<QGraphicsRectItem>(m_plotArea);
+
     // Graph Inbound
-    m_barsIn = createBars(m_plotArea);
-    m_risingIn = createRisingBar(m_barsIn);
+    m_barsIn = createNoPenItem<QGraphicsPathItem>(m_bars);
+    m_risingIn = createNoPenItem<QGraphicsRectItem>(m_barsIn);
 
     // Graph Outbound
-    m_barsOut = createBars(m_plotArea);
-    m_risingOut = createRisingBar(m_barsOut);
+    m_barsOut = createNoPenItem<QGraphicsPathItem>(m_bars);
+    m_risingOut = createNoPenItem<QGraphicsRectItem>(m_barsOut);
 
     // Text Speed
-    m_speedBox = new QGraphicsRectItem(m_plotArea);
-    m_speedBox->setPen(Qt::NoPen);
+    m_speedBox = createNoPenItem<QGraphicsRectItem>(m_plotArea);
 
     m_speedText = new QGraphicsSimpleTextItem(m_speedBox);
 
@@ -402,6 +395,11 @@ int GraphPlot::keyRangeSize() const
 
     // Include the partially visible second
     return qMax(widthPixels / secondPixels(), 0) + 1;
+}
+
+qint64 GraphPlot::keyLower() const
+{
+    return lastUnixTime() - keyRangeSize();
 }
 
 quint64 GraphPlot::maxBits(qint64 keyLower) const
@@ -579,7 +577,7 @@ void GraphPlot::updateBars()
     // The last second is at the right edge, in device pixels
     const int right = qFloor((m_axisRect.left() + m_axisRect.width()) * dpr);
     const qint64 keyUpper = lastUnixTime();
-    const qint64 keyLower = keyUpper - keyRangeSize();
+    const qint64 keyLower = this->keyLower();
 
     QPainterPath pathIn;
     QPainterPath pathOut;
@@ -628,10 +626,8 @@ void GraphPlot::updateScroll()
     const int secondPixels = this->secondPixels();
     const qint64 msecs = QDateTime::currentMSecsSinceEpoch() - lastUnixTime() * 1000;
     const int shift = int(qBound(qint64(0), msecs * secondPixels / 1000, qint64(secondPixels)));
-    const qreal x = -shift / devicePixelRatioF();
 
-    m_barsIn->setX(x);
-    m_barsOut->setX(x);
+    m_bars->setX(-shift / devicePixelRatioF());
 
     if (shift < secondPixels) {
         // Wait for the next pixel
