@@ -19,7 +19,6 @@ inline constexpr int subTickLength = 2;
 inline constexpr int tickLabelPadding = 4;
 inline constexpr int unitLabelPadding = 4;
 inline constexpr int keyPixels = 4; // pixels per second
-inline constexpr int barGapPixels = 1; // device pixels between the seconds' bars
 inline constexpr int risingMsecs = 400;
 inline constexpr int scaleMsecs = 400;
 inline constexpr int speedBgAlpha = 130;
@@ -770,7 +769,7 @@ void GraphPlot::updateBars()
 {
     const qreal dpr = devicePixelRatioF();
     const int secondPixels = this->secondPixels();
-    const qreal barWidth = qMax(secondPixels - barGapPixels, 1) / dpr;
+    const qreal barWidth = secondPixels / dpr; // without gaps
 
     // The last second's middle is at the right edge, in device pixels
     const int right = qFloor((m_axisRect.left() + m_axisRect.width()) * dpr) - secondPixels / 2;
