@@ -225,11 +225,11 @@ void GraphPlot::setTickLabelSize(int pointSize)
 {
     m_tickLabelFont = font();
     m_tickLabelFont.setPointSize(pointSize);
+    m_tickLabelFont.setWeight(QFont::DemiBold);
 
     // Text Speed
     QFont speedFont = m_tickLabelFont;
     speedFont.setPointSize(pointSize + 1);
-    speedFont.setWeight(QFont::DemiBold);
 
     m_speedText->setFont(speedFont);
 
