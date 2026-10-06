@@ -20,6 +20,7 @@ inline constexpr int tickLabelPadding = 4;
 inline constexpr int unitLabelPadding = 4;
 inline constexpr int risingMsecs = 400;
 inline constexpr int scaleMsecs = 400;
+inline constexpr qreal valueHeadroom = 1.1f; // the empty space above the highest bar
 inline constexpr int speedBgAlpha = 130;
 inline constexpr int barOutlineDarker = 150; // as in NetTraffic
 inline constexpr int speedArrowSpacing = 2;
@@ -597,7 +598,7 @@ double GraphPlot::targetValueUpper(quint64 bits) const
         return double(m_fixedValueMax);
 
     // Keep the current range for empty traffic
-    return (bits > 0) ? double(bits) : m_valueTarget;
+    return (bits > 0) ? (bits * valueHeadroom) : m_valueTarget;
 }
 
 void GraphPlot::animateValueUpper(double v)
