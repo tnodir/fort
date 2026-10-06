@@ -9,6 +9,7 @@
 #include "graphanimation.h"
 
 class GraphBarsItem;
+class GraphLineItem;
 
 class QGraphicsPathItem;
 class QGraphicsRectItem;
@@ -24,6 +25,7 @@ struct GraphPoint
 // A second's bars: in and out are overlapped
 struct GraphColumn
 {
+    qint64 unixTime = 0;
     qreal x = 0;
     qreal width = 0;
     int inHeight = 0; // device pixels
@@ -43,6 +45,13 @@ struct GraphBarsRects
     QVector<QRectF> in;
     QVector<QRectF> out;
     QVector<QRectF> total;
+};
+
+struct GraphLinePoints
+{
+    QVector<QPointF> in;
+    QVector<QPointF> out;
+    QVector<QPointF> total;
 };
 
 class GraphPlot : public QGraphicsView
@@ -65,6 +74,11 @@ public:
 
     using ColorArray = QVarLengthArray<QColor, ColorCount>;
 
+    enum GraphType : qint8 {
+        GraphTypeColumn = 0,
+        GraphTypeLine,
+    };
+
     explicit GraphPlot(QWidget *parent = nullptr);
 
     bool mousePressed() const { return m_mousePressed; }
@@ -72,6 +86,9 @@ public:
 
     int maxSeconds() const { return m_maxSeconds; }
     void setMaxSeconds(int v) { m_maxSeconds = v; }
+
+    GraphType graphType() const { return m_graphType; }
+    void setGraphType(GraphType v);
 
     int barWidth() const { return m_barWidth; }
     void setBarWidth(int v) { m_barWidth = v; }
@@ -169,6 +186,9 @@ private:
     void updateBars();
     void updateBarsOutline();
     void updateRisingBars();
+    void updateLines();
+    int lineStartIndex() const;
+    void appendLinePoints(GraphLinePoints &points, const GraphColumn &column) const;
     void updateScroll();
     void setupSpeedArrows(const QFont &font);
     void updateSpeedBox();
@@ -181,9 +201,11 @@ private:
     QVector<int> valuesToPixels(const QVector<double> &values) const;
     int barsBottom() const;
     int barHeight(quint64 bits) const;
+    QVector<GraphColumn> visibleColumns() const;
     GraphColumn columnAt(qreal x, qreal width, const GraphPoint &point) const;
     GraphColumnRects columnRects(const GraphColumn &column) const;
     QRectF barRect(const GraphColumn &column, int fromHeight, int toHeight) const;
+    QPointF linePoint(const GraphColumn &column, int height) const;
 
 private:
     bool m_mousePressed : 1 = false;
@@ -194,6 +216,8 @@ private:
     bool m_borderVisible : 1 = false;
     bool m_axesChanged : 1 = true;
     bool m_barsEmpty : 1 = true;
+
+    GraphType m_graphType = GraphTypeColumn;
 
     int m_maxSeconds = 500;
     int m_barWidth = 5; // pixels per second
@@ -213,6 +237,9 @@ private:
     GraphBarsItem *m_risingOut = nullptr;
     GraphBarsItem *m_barsTotal = nullptr;
     GraphBarsItem *m_risingTotal = nullptr;
+    GraphLineItem *m_lineTotal = nullptr;
+    GraphLineItem *m_lineIn = nullptr;
+    GraphLineItem *m_lineOut = nullptr;
     QGraphicsRectItem *m_speedBox = nullptr;
     QGraphicsPathItem *m_speedInArrow = nullptr;
     QGraphicsSimpleTextItem *m_speedInText = nullptr;
@@ -227,6 +254,8 @@ private:
 
     GraphColumn m_risingColumn;
     GraphBarsRects m_risingNeighbors;
+
+    QVector<GraphColumn> m_lineColumns;
 
     QColor m_tickLabelColor;
     QFont m_tickLabelFont;

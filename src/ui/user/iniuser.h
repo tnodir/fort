@@ -548,6 +548,13 @@ public:
     }
     void setGraphWindowTickLabelSize(int v) { setValue("graphWindow/tickLabelSize", v); }
 
+    constexpr int graphWindowGraphTypeDefault() const { return 0; }
+    int graphWindowGraphType() const
+    {
+        return valueInt("graphWindow/graphType", graphWindowGraphTypeDefault());
+    }
+    void setGraphWindowGraphType(int v) { setValue("graphWindow/graphType", v); }
+
     constexpr int graphWindowBarWidthDefault() const { return 5; }
     int graphWindowBarWidth() const
     {

@@ -22,6 +22,7 @@ protected slots:
 
 private:
     void retranslateFixedSpeedCombo();
+    void retranslateGraphTypeCombo();
 
     void setupUi();
     QLayout *setupColumns();
@@ -33,6 +34,7 @@ private:
     void setupGraphViewCheckboxes();
     void setupGraphOptions();
     void setupGraphFixedSpeed();
+    QLayout *setupGraphTypeLayout();
     QLayout *setupTrafUnitsLayout();
     void setupColorsBox();
     void setupGraphColors();
@@ -57,6 +59,8 @@ private:
     LabelSpin *m_graphBarWidth = nullptr;
     LabelSpin *m_graphMaxSeconds = nullptr;
     LabelSpinCombo *m_graphFixedSpeed = nullptr;
+    QLabel *m_labelGraphType = nullptr;
+    QComboBox *m_comboGraphType = nullptr;
     QLabel *m_traphUnits = nullptr;
     QComboBox *m_comboTrafUnit = nullptr;
 

@@ -9,6 +9,7 @@
 #include <QtMath>
 
 #include "graphbarsitem.h"
+#include "graphlineitem.h"
 
 namespace {
 
@@ -23,6 +24,7 @@ inline constexpr int scaleMsecs = 400;
 inline constexpr qreal valueHeadroom = 1.1f; // the empty space above the highest bar
 inline constexpr int speedBgAlpha = 130;
 inline constexpr int barOutlineDarker = 150; // as in NetTraffic
+inline constexpr qreal lineCenterOffset = 1.5; // device pixels: a line of 2 is above the value
 inline constexpr int speedArrowSpacing = 2;
 inline constexpr double speedArrowTop = 0.18; // of the text's height
 inline constexpr double speedArrowWidth = 0.55; // of the text's height
@@ -77,23 +79,6 @@ void addTicks(QPainterPath &path, const QVector<int> &ys, const QRect &axisRect,
     }
 }
 
-// Smooth, unlike the other items aligned to the pixels
-class SmoothPathItem : public QGraphicsPathItem
-{
-public:
-    using QGraphicsPathItem::QGraphicsPathItem;
-
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-            QWidget *widget = nullptr) override
-    {
-        const bool antialiased = painter->testRenderHint(QPainter::Antialiasing);
-
-        painter->setRenderHint(QPainter::Antialiasing);
-        QGraphicsPathItem::paint(painter, option, widget);
-        painter->setRenderHint(QPainter::Antialiasing, antialiased);
-    }
-};
-
 QPainterPath arrowPath(const QRectF &rect, bool down)
 {
     const qreal shaftHalf = rect.width() * speedArrowShaft / 2;
@@ -129,6 +114,23 @@ qreal layoutSpeedItem(QGraphicsItem *item, qreal x)
     // The items' rectangles start at 0
     return x + item->boundingRect().right();
 }
+
+// Smooth, unlike the other items aligned to the pixels
+class SmoothPathItem : public QGraphicsPathItem
+{
+public:
+    using QGraphicsPathItem::QGraphicsPathItem;
+
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+            QWidget *widget = nullptr) override
+    {
+        const bool antialiased = painter->testRenderHint(QPainter::Antialiasing);
+
+        painter->setRenderHint(QPainter::Antialiasing);
+        QGraphicsPathItem::paint(painter, option, widget);
+        painter->setRenderHint(QPainter::Antialiasing, antialiased);
+    }
+};
 
 template<typename T>
 T *createNoPenItem(QGraphicsItem *parent)
@@ -199,6 +201,24 @@ void GraphPlot::setAnimated(bool v)
 
     m_risingAnimation.setEnabled(v);
     m_scaleAnimation.setEnabled(v);
+}
+
+void GraphPlot::setGraphType(GraphType v)
+{
+    if (m_graphType == v)
+        return;
+
+    m_graphType = v;
+
+    const bool isLine = (v == GraphTypeLine);
+
+    for (auto item : { m_barsIn, m_barsOut, m_barsTotal }) {
+        item->setVisible(!isLine);
+    }
+
+    for (auto item : { m_lineTotal, m_lineIn, m_lineOut }) {
+        item->setVisible(isLine);
+    }
 }
 
 void GraphPlot::setAxisTicksVisible(bool v)
@@ -273,6 +293,11 @@ void GraphPlot::setColors(const ColorArray &colors)
     // Graph Total
     setBarsColor(m_barsTotal, colors[ColorTotal]);
     setBarsColor(m_risingTotal, colors[ColorTotal]);
+
+    // Graph Lines
+    m_lineTotal->setColor(colors[ColorTotal]);
+    m_lineIn->setColor(colors[ColorIn]);
+    m_lineOut->setColor(colors[ColorOut]);
 
     // Text Speed
     {
@@ -473,6 +498,15 @@ void GraphPlot::setupItems()
     // Graph Total: Over the bars
     m_barsTotal = new GraphBarsItem(m_bars);
     m_risingTotal = new GraphBarsItem(m_barsTotal);
+
+    // Graph Lines: The total is below
+    m_lineTotal = new GraphLineItem(m_bars);
+    m_lineIn = new GraphLineItem(m_bars);
+    m_lineOut = new GraphLineItem(m_bars);
+
+    for (auto item : { m_lineTotal, m_lineIn, m_lineOut }) {
+        item->setVisible(false);
+    }
 
     // Text Speed
     m_speedBox = createNoPenItem<QGraphicsRectItem>(m_plotArea);
@@ -775,14 +809,13 @@ void GraphPlot::startRising(qint64 unixTime)
 
 void GraphPlot::updateBars()
 {
-    const qreal dpr = devicePixelRatioF();
-    const int secondPixels = this->secondPixels();
-    const qreal barWidth = secondPixels / dpr; // without gaps
+    const QVector<GraphColumn> columns = visibleColumns();
 
-    // The last second's middle is at the right edge, in device pixels
-    const int right = qFloor((m_axisRect.left() + m_axisRect.width()) * dpr) - secondPixels / 2;
-    const qint64 keyUpper = lastUnixTime();
-    const qint64 keyLower = this->keyLower();
+    if (m_graphType == GraphTypeLine) {
+        m_lineColumns = columns;
+        updateLines();
+        return;
+    }
 
     GraphBarsRects bars;
 
@@ -791,15 +824,9 @@ void GraphPlot::updateBars()
 
     updateBarsOutline();
 
-    for (const auto &point : std::as_const(m_points)) {
-        if (point.unixTime < keyLower)
-            continue;
-
-        const qreal x = (right - int(keyUpper - point.unixTime) * secondPixels) / dpr;
-        const GraphColumn column = columnAt(x, barWidth, point);
-
+    for (const GraphColumn &column : columns) {
         // The rising bars are drawn separately
-        if (point.unixTime == m_risingTime) {
+        if (column.unixTime == m_risingTime) {
             m_risingColumn = column;
             continue;
         }
@@ -807,7 +834,7 @@ void GraphPlot::updateBars()
         const GraphColumnRects rects = columnRects(column);
 
         // The rising bars are outlined with their neighbors
-        if (qAbs(point.unixTime - m_risingTime) == 1) {
+        if (qAbs(column.unixTime - m_risingTime) == 1) {
             appendColumn(m_risingNeighbors, rects);
         }
 
@@ -831,12 +858,73 @@ void GraphPlot::updateBarsOutline()
 
 void GraphPlot::updateRisingBars()
 {
+    // The whole lines are changed with the rising point
+    if (m_graphType == GraphTypeLine) {
+        updateLines();
+        return;
+    }
+
     const double ratio = m_risingAnimation.currentValue();
     const GraphColumnRects rects = columnRects(risingColumn(m_risingColumn, ratio));
 
     setRisingBar(m_risingIn, rects.in, m_risingNeighbors.in);
     setRisingBar(m_risingOut, rects.out, m_risingNeighbors.out);
     setRisingBar(m_risingTotal, rects.total, m_risingNeighbors.total);
+}
+
+void GraphPlot::updateLines()
+{
+    const double ratio = m_risingAnimation.currentValue();
+
+    const int count = int(m_lineColumns.size());
+    const int startIndex = lineStartIndex();
+
+    GraphLinePoints points;
+
+    // Start from the zero at the column's left edge
+    if (startIndex < count) {
+        const GraphColumn &first = m_lineColumns.at(startIndex);
+        const GraphColumn start = { first.unixTime, first.x - first.width / 2, first.width };
+
+        appendLinePoints(points, start);
+    }
+
+    for (int i = startIndex; i < count; ++i) {
+        const GraphColumn &column = m_lineColumns.at(i);
+        const GraphColumn c =
+                (column.unixTime == m_risingTime) ? risingColumn(column, ratio) : column;
+
+        appendLinePoints(points, c);
+    }
+
+    m_lineIn->setPoints(points.in);
+    m_lineOut->setPoints(points.out);
+    m_lineTotal->setPoints(points.total);
+}
+
+int GraphPlot::lineStartIndex() const
+{
+    // Visible also when scrolled by a second
+    const int count = int(m_lineColumns.size());
+    int index = 0;
+
+    while (index < count) {
+        const GraphColumn &column = m_lineColumns.at(index);
+
+        if (column.x >= m_axisRect.left() + column.width)
+            break;
+
+        ++index;
+    }
+
+    return index;
+}
+
+void GraphPlot::appendLinePoints(GraphLinePoints &points, const GraphColumn &column) const
+{
+    points.in.append(linePoint(column, column.inHeight));
+    points.out.append(linePoint(column, column.outHeight));
+    points.total.append(linePoint(column, column.totalHeight));
 }
 
 void GraphPlot::updateScroll()
@@ -1003,9 +1091,34 @@ int GraphPlot::barHeight(quint64 bits) const
     return qMax(height, 1);
 }
 
+QVector<GraphColumn> GraphPlot::visibleColumns() const
+{
+    const qreal dpr = devicePixelRatioF();
+    const int secondPixels = this->secondPixels();
+    const qreal barWidth = secondPixels / dpr; // without gaps
+
+    // The last second's middle is at the right edge, in device pixels
+    const int right = qFloor((m_axisRect.left() + m_axisRect.width()) * dpr) - secondPixels / 2;
+    const qint64 keyUpper = lastUnixTime();
+    const qint64 keyLower = this->keyLower();
+
+    QVector<GraphColumn> columns;
+
+    for (const auto &point : std::as_const(m_points)) {
+        if (point.unixTime < keyLower)
+            continue;
+
+        const qreal x = (right - int(keyUpper - point.unixTime) * secondPixels) / dpr;
+
+        columns.append(columnAt(x, barWidth, point));
+    }
+
+    return columns;
+}
+
 GraphColumn GraphPlot::columnAt(qreal x, qreal width, const GraphPoint &point) const
 {
-    return { x, width, barHeight(point.inBits), barHeight(point.outBits),
+    return { point.unixTime, x, width, barHeight(point.inBits), barHeight(point.outBits),
         barHeight(point.inBits + point.outBits) };
 }
 
@@ -1036,4 +1149,11 @@ QRectF GraphPlot::barRect(const GraphColumn &column, int fromHeight, int toHeigh
     const int bottom = barsBottom();
 
     return QRectF(column.x, (bottom - toHeight) / dpr, column.width, (toHeight - fromHeight) / dpr);
+}
+
+QPointF GraphPlot::linePoint(const GraphColumn &column, int height) const
+{
+    const qreal y = (barsBottom() - lineCenterOffset - height) / devicePixelRatioF();
+
+    return { column.x + column.width / 2, y };
 }

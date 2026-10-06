@@ -46,6 +46,7 @@ void GraphPage::onResetToDefault()
     m_graphBarWidth->spinBox()->setValue(iniUser.graphWindowBarWidthDefault());
     m_graphMaxSeconds->spinBox()->setValue(iniUser.graphWindowMaxSecondsDefault());
     m_graphFixedSpeed->spinBox()->setValue(iniUser.graphWindowFixedSpeedDefault());
+    m_comboGraphType->setCurrentIndex(iniUser.graphWindowGraphTypeDefault());
     m_comboTrafUnit->setCurrentIndex(iniUser.graphWindowTrafUnitDefault());
 
     m_graphColor->setColor(iniUser.graphWindowColorDefault());
@@ -90,6 +91,8 @@ void GraphPage::onRetranslateUi()
     m_graphMaxSeconds->label()->setText(tr("Max seconds:"));
     m_graphFixedSpeed->label()->setText(tr("Fixed speed:"));
     retranslateFixedSpeedCombo();
+    m_labelGraphType->setText(tr("Graph type:"));
+    retranslateGraphTypeCombo();
     m_traphUnits->setText(tr("Units:"));
 
     m_graphColor->label()->setText(tr("Background:"));
@@ -111,6 +114,14 @@ void GraphPage::retranslateFixedSpeedCombo()
     names.replace(1, tr("Auto-scale"));
 
     m_graphFixedSpeed->setNames(names);
+}
+
+void GraphPage::retranslateGraphTypeCombo()
+{
+    // Sync with GraphPlot::GraphType
+    const QStringList list = { tr("Column"), tr("Line") };
+
+    ControlUtil::setComboBoxTexts(m_comboGraphType, list, iniUser().graphWindowGraphType());
 }
 
 void GraphPage::setupUi()
@@ -174,6 +185,9 @@ void GraphPage::setupGraphBox()
     setupGraphViewCheckboxes();
     setupGraphOptions();
 
+    // Graph Type
+    auto graphTypeLayout = setupGraphTypeLayout();
+
     // Traffic Units
     auto trafUnitsLayout = setupTrafUnitsLayout();
 
@@ -196,6 +210,7 @@ void GraphPage::setupGraphBox()
             m_graphFixedSpeed,
             ControlUtil::createSeparator(),
     });
+    layout->addLayout(graphTypeLayout);
     layout->addLayout(trafUnitsLayout);
 
     m_gbGraph = new QGroupBox();
@@ -331,6 +346,21 @@ void GraphPage::setupGraphFixedSpeed()
                 }
             });
     m_graphFixedSpeed->setNames(speedNames);
+}
+
+QLayout *GraphPage::setupGraphTypeLayout()
+{
+    m_labelGraphType = ControlUtil::createLabel();
+
+    m_comboGraphType = ControlUtil::createComboBox({}, [&](int index) {
+        if (index >= 0 && iniUser().graphWindowGraphType() != index) {
+            iniUser().setGraphWindowGraphType(index);
+            ctrl()->setIniUserEdited();
+        }
+    });
+    m_comboGraphType->setFixedWidth(110);
+
+    return ControlUtil::createRowLayout(m_labelGraphType, m_comboGraphType);
 }
 
 QLayout *GraphPage::setupTrafUnitsLayout()
