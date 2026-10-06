@@ -421,6 +421,13 @@ public:
     }
     void setGraphWindowColorOut(const QColor &v) { setColor("graphWindow/colorOut", v); }
 
+    constexpr QColor graphWindowTotalColorDefault() const { return QColor(245, 184, 0); }
+    QColor graphWindowTotalColor() const
+    {
+        return valueColor("graphWindow/totalColor", graphWindowTotalColorDefault());
+    }
+    void setGraphWindowTotalColor(const QColor &v) { setColor("graphWindow/totalColor", v); }
+
     constexpr QColor graphWindowAxisColorDefault() const { return QColor(108, 108, 108); }
     QColor graphWindowAxisColor() const
     {
@@ -472,6 +479,16 @@ public:
         return valueColor("graphWindow/darkColorOut", graphWindowDarkColorOutDefault());
     }
     void setGraphWindowDarkColorOut(const QColor &v) { setColor("graphWindow/darkColorOut", v); }
+
+    constexpr QColor graphWindowDarkTotalColorDefault() const { return QColor(245, 184, 0); }
+    QColor graphWindowDarkTotalColor() const
+    {
+        return valueColor("graphWindow/darkTotalColor", graphWindowDarkTotalColorDefault());
+    }
+    void setGraphWindowDarkTotalColor(const QColor &v)
+    {
+        setColor("graphWindow/darkTotalColor", v);
+    }
 
     constexpr QColor graphWindowDarkAxisColorDefault() const { return QColor(141, 141, 141); }
     QColor graphWindowDarkAxisColor() const

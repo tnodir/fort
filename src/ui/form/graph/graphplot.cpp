@@ -78,6 +78,7 @@ GraphColumn risingColumn(const GraphColumn &column, double ratio)
     GraphColumn rising = column;
     rising.inHeight = risingHeight(column.inHeight, ratio);
     rising.outHeight = risingHeight(column.outHeight, ratio);
+    rising.totalHeight = risingHeight(column.totalHeight, ratio);
 
     return rising;
 }
@@ -173,6 +174,10 @@ void GraphPlot::setColors(const ColorArray &colors)
     // Graph Outbound
     m_barsOut->setBrush(colors[ColorOut]);
     m_risingOut->setBrush(colors[ColorOut]);
+
+    // Graph Total
+    m_barsTotal->setBrush(colors[ColorTotal]);
+    m_risingTotal->setBrush(colors[ColorTotal]);
 
     // Text Speed
     {
@@ -361,6 +366,10 @@ void GraphPlot::setupItems()
     m_barsOut = new GraphBarsItem(m_bars);
     m_risingOut = createNoPenItem<QGraphicsRectItem>(m_barsOut);
 
+    // Graph Total: Over the bars
+    m_barsTotal = new GraphBarsItem(m_bars);
+    m_risingTotal = createNoPenItem<QGraphicsRectItem>(m_barsTotal);
+
     // Text Speed
     m_speedBox = createNoPenItem<QGraphicsRectItem>(m_plotArea);
 
@@ -465,7 +474,7 @@ quint64 GraphPlot::maxBits(qint64 keyLower) const
 
     for (const auto &point : m_points) {
         if (point.unixTime >= keyLower) {
-            bits = qMax(bits, qMax(point.inBits, point.outBits));
+            bits = qMax(bits, point.inBits + point.outBits); // the total is the highest
         }
     }
 
@@ -658,6 +667,7 @@ void GraphPlot::updateBars()
 
     QVector<QRectF> rectsIn;
     QVector<QRectF> rectsOut;
+    QVector<QRectF> rectsTotal;
 
     m_risingColumn = {};
 
@@ -678,10 +688,12 @@ void GraphPlot::updateBars()
 
         appendBar(rectsIn, rects.in);
         appendBar(rectsOut, rects.out);
+        appendBar(rectsTotal, rects.total);
     }
 
     m_barsIn->setRects(rectsIn);
     m_barsOut->setRects(rectsOut);
+    m_barsTotal->setRects(rectsTotal);
 }
 
 void GraphPlot::updateRisingBars()
@@ -691,6 +703,7 @@ void GraphPlot::updateRisingBars()
 
     m_risingIn->setRect(rects.in);
     m_risingOut->setRect(rects.out);
+    m_risingTotal->setRect(rects.total);
 }
 
 void GraphPlot::updateScroll()
@@ -813,7 +826,8 @@ int GraphPlot::barHeight(quint64 bits) const
 
 GraphColumn GraphPlot::columnAt(qreal x, qreal width, const GraphPoint &point) const
 {
-    return { x, width, barHeight(point.inBits), barHeight(point.outBits) };
+    return { x, width, barHeight(point.inBits), barHeight(point.outBits),
+        barHeight(point.inBits + point.outBits) };
 }
 
 GraphColumnRects GraphPlot::columnRects(const GraphColumn &column) const
@@ -825,11 +839,15 @@ GraphColumnRects GraphPlot::columnRects(const GraphColumn &column) const
     const QRectF frontRect = barRect(column, 0, frontHeight);
     const QRectF backRect = barRect(column, frontHeight, backHeight);
 
+    // The total (in + out) is above the bigger one
+    const int totalHeight = qMax(column.totalHeight, backHeight);
+    const QRectF totalRect = barRect(column, backHeight, totalHeight);
+
     if (column.inHeight <= column.outHeight) {
-        return { frontRect, backRect };
+        return { frontRect, backRect, totalRect };
     }
 
-    return { backRect, frontRect };
+    return { backRect, frontRect, totalRect };
 }
 
 QRectF GraphPlot::barRect(const GraphColumn &column, int fromHeight, int toHeight) const

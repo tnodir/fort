@@ -407,13 +407,14 @@ GraphPlot::ColorArray GraphWindow::getColors(const IniUser &ini)
 
     if (isLightTheme) {
         colors << ini.graphWindowColor() << ini.graphWindowColorIn() << ini.graphWindowColorOut()
-               << ini.graphWindowAxisColor() << ini.graphWindowTickLabelColor()
-               << ini.graphWindowLabelColor() << ini.graphWindowGridColor();
+               << ini.graphWindowTotalColor() << ini.graphWindowAxisColor()
+               << ini.graphWindowTickLabelColor() << ini.graphWindowLabelColor()
+               << ini.graphWindowGridColor();
     } else {
         colors << ini.graphWindowDarkColor() << ini.graphWindowDarkColorIn()
-               << ini.graphWindowDarkColorOut() << ini.graphWindowDarkAxisColor()
-               << ini.graphWindowDarkTickLabelColor() << ini.graphWindowDarkLabelColor()
-               << ini.graphWindowDarkGridColor();
+               << ini.graphWindowDarkColorOut() << ini.graphWindowDarkTotalColor()
+               << ini.graphWindowDarkAxisColor() << ini.graphWindowDarkTickLabelColor()
+               << ini.graphWindowDarkLabelColor() << ini.graphWindowDarkGridColor();
     }
 
     return colors;

@@ -50,6 +50,7 @@ void GraphPage::onResetToDefault()
     m_graphColor->setColor(iniUser.graphWindowColorDefault());
     m_graphColorIn->setColor(iniUser.graphWindowColorInDefault());
     m_graphColorOut->setColor(iniUser.graphWindowColorOutDefault());
+    m_graphTotalColor->setColor(iniUser.graphWindowTotalColorDefault());
     m_graphAxisColor->setColor(iniUser.graphWindowAxisColorDefault());
     m_graphTickLabelColor->setColor(iniUser.graphWindowTickLabelColorDefault());
     m_graphLabelColor->setColor(iniUser.graphWindowLabelColorDefault());
@@ -58,6 +59,7 @@ void GraphPage::onResetToDefault()
     m_graphColor->setDarkColor(iniUser.graphWindowDarkColorDefault());
     m_graphColorIn->setDarkColor(iniUser.graphWindowDarkColorInDefault());
     m_graphColorOut->setDarkColor(iniUser.graphWindowDarkColorOutDefault());
+    m_graphTotalColor->setDarkColor(iniUser.graphWindowDarkTotalColorDefault());
     m_graphAxisColor->setDarkColor(iniUser.graphWindowDarkAxisColorDefault());
     m_graphTickLabelColor->setDarkColor(iniUser.graphWindowDarkTickLabelColorDefault());
     m_graphLabelColor->setDarkColor(iniUser.graphWindowDarkLabelColorDefault());
@@ -89,6 +91,7 @@ void GraphPage::onRetranslateUi()
     m_graphColor->label()->setText(tr("Background:"));
     m_graphColorIn->label()->setText(tr("Download:"));
     m_graphColorOut->label()->setText(tr("Upload:"));
+    m_graphTotalColor->label()->setText(tr("Total:"));
     m_graphAxisColor->label()->setText(tr("Axis:"));
     m_graphTickLabelColor->label()->setText(tr("Tick label:"));
     m_graphLabelColor->label()->setText(tr("Label:"));
@@ -339,9 +342,9 @@ void GraphPage::setupColorsBox()
 {
     setupGraphColors();
 
-    auto layout =
-            ControlUtil::createVLayoutByWidgets({ m_graphColor, m_graphColorIn, m_graphColorOut,
-                    m_graphAxisColor, m_graphTickLabelColor, m_graphLabelColor, m_graphGridColor });
+    auto layout = ControlUtil::createVLayoutByWidgets(
+            { m_graphColor, m_graphColorIn, m_graphColorOut, m_graphTotalColor, m_graphAxisColor,
+                    m_graphTickLabelColor, m_graphLabelColor, m_graphGridColor });
 
     m_gbColors = new QGroupBox();
     m_gbColors->setLayout(layout);
@@ -385,6 +388,17 @@ void GraphPage::setupGraphColors1()
             },
             [&](const QColor &v) {
                 iniUser().setGraphWindowDarkColorOut(v);
+                ctrl()->setIniUserEdited();
+            });
+
+    m_graphTotalColor = ControlUtil::createLabelColor(
+            iniUser().graphWindowTotalColor(), iniUser().graphWindowDarkTotalColor(),
+            [&](const QColor &v) {
+                iniUser().setGraphWindowTotalColor(v);
+                ctrl()->setIniUserEdited();
+            },
+            [&](const QColor &v) {
+                iniUser().setGraphWindowDarkTotalColor(v);
                 ctrl()->setIniUserEdited();
             });
 }

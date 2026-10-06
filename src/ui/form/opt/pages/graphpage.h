@@ -62,6 +62,7 @@ private:
     LabelColor *m_graphColor = nullptr;
     LabelColor *m_graphColorIn = nullptr;
     LabelColor *m_graphColorOut = nullptr;
+    LabelColor *m_graphTotalColor = nullptr;
     LabelColor *m_graphAxisColor = nullptr;
     LabelColor *m_graphTickLabelColor = nullptr;
     LabelColor *m_graphLabelColor = nullptr;

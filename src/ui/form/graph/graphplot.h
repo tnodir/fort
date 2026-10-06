@@ -28,12 +28,14 @@ struct GraphColumn
     qreal width = 0;
     int inHeight = 0; // device pixels
     int outHeight = 0; // device pixels
+    int totalHeight = 0; // device pixels: of in + out
 };
 
 struct GraphColumnRects
 {
     QRectF in;
     QRectF out;
+    QRectF total;
 };
 
 class GraphPlot : public QGraphicsView
@@ -45,6 +47,7 @@ public:
         ColorBg = 0,
         ColorIn,
         ColorOut,
+        ColorTotal,
         ColorAxis,
         ColorTickLabel,
         ColorLabel,
@@ -188,6 +191,8 @@ private:
     GraphBarsItem *m_barsOut = nullptr;
     QGraphicsRectItem *m_risingIn = nullptr;
     QGraphicsRectItem *m_risingOut = nullptr;
+    GraphBarsItem *m_barsTotal = nullptr;
+    QGraphicsRectItem *m_risingTotal = nullptr;
     QGraphicsRectItem *m_speedBox = nullptr;
     QGraphicsSimpleTextItem *m_speedText = nullptr;
     QGraphicsPathItem *m_axes = nullptr;
