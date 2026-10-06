@@ -102,7 +102,7 @@
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>速度限制</translation>
     </message>
     <message>
         <source>File Path</source>
@@ -313,7 +313,7 @@
     </message>
     <message>
         <source>Block Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>阻止入站</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -625,7 +625,7 @@
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>注意：</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -637,19 +637,19 @@
     </message>
     <message>
         <source>A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>程序只有在以下情况下才会启用：它的任意一个独占组已启用；或者，在它没有独占组时，它的任意一个组已启用。</translation>
     </message>
     <message>
         <source>Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>规则:</translation>
     </message>
     <message>
         <source>The Rule is applied to the Group&apos;s programs before their own Rule, while the Group is active.</source>
-        <translation type="unfinished"></translation>
+        <translation>当组处于活动状态时，该组的规则将优先于组内程序自身的规则执行。</translation>
     </message>
     <message>
         <source>The Group is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>该组仅在此时间段内激活。</translation>
     </message>
     <message>
         <source>OK</source>
@@ -661,7 +661,7 @@
     </message>
     <message>
         <source>Edit Group</source>
-        <translation type="unfinished"></translation>
+        <translation>编辑组</translation>
     </message>
 </context>
 <context>
@@ -679,19 +679,19 @@
     <name>GroupsController</name>
     <message>
         <source>Group Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>组配置错误</translation>
     </message>
     <message>
         <source>Cannot edit Group</source>
-        <translation type="unfinished"></translation>
+        <translation>无法编辑组</translation>
     </message>
     <message>
         <source>Cannot delete Group</source>
-        <translation type="unfinished"></translation>
+        <translation>无法删除组</translation>
     </message>
     <message>
         <source>Cannot update Group&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>无法更新组名称</translation>
     </message>
 </context>
 <context>
@@ -699,7 +699,8 @@
     <message>
         <source>Select Groups.
 A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>选择组。
+程序只有在以下情况下才会启用：它的任意一个独占组已启用；或者，在它没有独占组时，它的任意一个组已启用。</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -707,7 +708,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>(exclusive)</source>
-        <translation type="unfinished"></translation>
+        <translation>(独有的)</translation>
     </message>
 </context>
 <context>
@@ -730,7 +731,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Are you sure to remove selected group?</source>
-        <translation type="unfinished"></translation>
+        <translation>您确定要删除选定的组吗？</translation>
     </message>
 </context>
 <context>
@@ -1365,11 +1366,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block traffic for disabled Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>阻止已禁用组的流量</translation>
     </message>
     <message>
         <source>Speed Limiter Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>限速器已启用</translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
@@ -1725,15 +1726,15 @@ Make sure that you have a fresh backup.</source>
     <name>ProgNetworkPage</name>
     <message>
         <source>Block:</source>
-        <translation type="unfinished"></translation>
+        <translation>阻止:</translation>
     </message>
     <message>
         <source>Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>入站</translation>
     </message>
     <message>
         <source>Block Inbound Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>阻止入站连接</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -1753,7 +1754,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>No Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>无限制</translation>
     </message>
 </context>
 <context>
@@ -1928,11 +1929,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>已废弃</translation>
     </message>
     <message>
         <source>Filter by Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>按组过滤</translation>
     </message>
     <message>
         <source>Disable</source>
@@ -2353,15 +2354,15 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
-        <translation type="unfinished"></translation>
+        <translation>更改已被系统重置。请重新设置服务为可跟踪。</translation>
     </message>
     <message>
         <source>Please restart the service to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>请重启服务以应用更改。</translation>
     </message>
     <message>
         <source>Please restart the computer to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>请重启计算机以应用更改。</translation>
     </message>
 </context>
 <context>
@@ -2380,7 +2381,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Restart Service</source>
-        <translation type="unfinished"></translation>
+        <translation>重启服务</translation>
     </message>
     <message>
         <source>Add Program</source>
@@ -2404,19 +2405,19 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Restart the service &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>重启服务 “%1” 吗？</translation>
     </message>
     <message>
         <source>Restart the service &quot;%1&quot; to apply the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>重启服务 “%1” 以应用更改吗？</translation>
     </message>
     <message>
         <source>Please restart the computer to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>请重启计算机以应用更改。</translation>
     </message>
     <message>
         <source>Cannot restart the service &quot;%1&quot;.</source>
-        <translation type="unfinished"></translation>
+        <translation>无法重启服务 “%1” 。</translation>
     </message>
 </context>
 <context>
@@ -2427,7 +2428,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>注意：</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -2443,7 +2444,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Speed:</source>
-        <translation type="unfinished"></translation>
+        <translation>速度:</translation>
     </message>
     <message>
         <source>Latency:</source>
@@ -2455,11 +2456,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>缓存大小：</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>速度限制仅在此时间段内激活。</translation>
     </message>
     <message>
         <source>OK</source>
@@ -2471,7 +2472,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Edit Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>编辑速度限制</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -2483,19 +2484,20 @@ Please check other program with the same path.</source>
     <message>
         <source>Buffer overflow: %1
 Packet loss: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>缓冲区溢出: %1
+包损失: %2</translation>
     </message>
     <message>
         <source>Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>速度限制</translation>
     </message>
     <message>
         <source>Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>队列</translation>
     </message>
     <message>
         <source>Dropped</source>
-        <translation type="unfinished"></translation>
+        <translation>已丢弃</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -2510,19 +2512,19 @@ Packet loss: %2</source>
     <name>SpeedLimitsController</name>
     <message>
         <source>Speed Limit Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>限速配置错误</translation>
     </message>
     <message>
         <source>Cannot edit Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>无法编辑速度限制</translation>
     </message>
     <message>
         <source>Cannot delete Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>不能删除速度限制</translation>
     </message>
     <message>
         <source>Cannot update Speed Limit&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>无法更新限速名称</translation>
     </message>
 </context>
 <context>
@@ -2541,11 +2543,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>速度限制</translation>
     </message>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
-        <translation type="unfinished"></translation>
+        <translation>您确定要删除所选的速度限制吗？</translation>
     </message>
 </context>
 <context>
@@ -2738,7 +2740,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>注意：</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -2746,19 +2748,19 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>The disabled Time Period doesn&apos;t restrict its Groups and Speed Limits.</source>
-        <translation type="unfinished"></translation>
+        <translation>已禁用的时间段，不会对其关联的组与速度限制产生约束。</translation>
     </message>
     <message>
         <source>Intervals:</source>
-        <translation type="unfinished"></translation>
+        <translation>间隔：</translation>
     </message>
     <message>
         <source>The Time Period is active in ANY of its intervals.</source>
-        <translation type="unfinished"></translation>
+        <translation>该时间段在其任意时间区间内均处于活跃状态。</translation>
     </message>
     <message>
         <source>Add Interval</source>
-        <translation type="unfinished"></translation>
+        <translation>添加时间间隔</translation>
     </message>
     <message>
         <source>OK</source>
@@ -2770,18 +2772,18 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Edit Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>编辑时间段</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodIntervalEdit</name>
     <message>
         <source>From</source>
-        <translation type="unfinished"></translation>
+        <translation>从</translation>
     </message>
     <message>
         <source>To (the same time means the whole 24 hours)</source>
-        <translation type="unfinished"></translation>
+        <translation>至（与起始时间相同即表示全天 24 小时）</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2792,11 +2794,11 @@ Packet loss: %2</source>
     <name>TimePeriodListModel</name>
     <message>
         <source>Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>时间周期</translation>
     </message>
     <message>
         <source>Intervals</source>
-        <translation type="unfinished"></translation>
+        <translation>时间间隔</translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -2807,34 +2809,34 @@ Packet loss: %2</source>
     <name>TimePeriodSelector</name>
     <message>
         <source>Time Period:</source>
-        <translation type="unfinished"></translation>
+        <translation>时间段：</translation>
     </message>
     <message>
         <source>No Period</source>
-        <translation type="unfinished"></translation>
+        <translation>无时间段</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>时间段</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodsController</name>
     <message>
         <source>Time Period Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>时间段配置错误</translation>
     </message>
     <message>
         <source>Cannot edit Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>无法编辑时间段</translation>
     </message>
     <message>
         <source>Cannot delete Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>无法删除时间段</translation>
     </message>
     <message>
         <source>Cannot update Time Period&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>无法更新时间段名称</translation>
     </message>
 </context>
 <context>
@@ -2853,11 +2855,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>时间段</translation>
     </message>
     <message>
         <source>Are you sure to remove selected time period?</source>
-        <translation type="unfinished"></translation>
+        <translation>您确定要删除选定的时间段吗？</translation>
     </message>
 </context>
 <context>
@@ -2977,11 +2979,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>速度限制</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>时间段</translation>
     </message>
     <message>
         <source>Traffic Graph</source>
@@ -2993,7 +2995,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Group Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>组修改器</translation>
     </message>
     <message>
         <source>Quit</source>
@@ -3067,11 +3069,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Week Days</source>
-        <translation type="unfinished"></translation>
+        <translation>星期</translation>
     </message>
     <message>
         <source>No Days</source>
-        <translation type="unfinished"></translation>
+        <translation>未设置日期</translation>
     </message>
 </context>
 <context>
