@@ -29,7 +29,6 @@ inline constexpr double speedArrowWidth = 0.55; // of the text's height
 inline constexpr double speedArrowHeight = 0.66; // of the text's height
 inline constexpr double speedArrowShaft = 0.36; // of the arrow's width
 inline constexpr double speedArrowHead = 0.45; // of the arrow's height
-inline constexpr double subGridOpacity = 0.5;
 inline constexpr int gridLineWidth = 2;
 inline constexpr int mouseMoveDistance = 3;
 
@@ -254,15 +253,7 @@ void GraphPlot::setColors(const ColorArray &colors)
     setBackgroundBrush(isTransparentBg ? QBrush(Qt::NoBrush) : QBrush(bgColor));
 
     // Grid
-    {
-        const QColor gridColor = colors[ColorGrid];
-
-        QColor subGridColor = gridColor;
-        subGridColor.setAlphaF(gridColor.alphaF() * subGridOpacity);
-
-        m_grid->setPen(gridPen(gridColor));
-        m_subGrid->setPen(gridPen(subGridColor));
-    }
+    m_grid->setPen(gridPen(colors[ColorGrid]));
 
     // Graph Inbound
     setBarsColor(m_barsIn, colors[ColorIn]);
@@ -456,7 +447,6 @@ void GraphPlot::setupItems()
 
     // Grid
     m_grid = scene->addPath(QPainterPath());
-    m_subGrid = scene->addPath(QPainterPath());
 
     // Plot Area: Clips the graphs and the text speed
     m_plotArea = scene->addRect(QRectF(), Qt::NoPen);
@@ -665,7 +655,7 @@ void GraphPlot::layoutAxes()
     const QVector<int> tickYs = valuesToPixels(axisTicks.ticks);
     const QVector<int> subTickYs = valuesToPixels(axisTicks.subTicks);
 
-    updateGrid(tickYs, subTickYs);
+    updateGrid(tickYs);
     updateAxes(tickYs, subTickYs);
     updateTickLabels(tickYs);
     updateUnitLabel();
@@ -751,16 +741,12 @@ int GraphPlot::unitLabelWidth() const
     return qCeil(m_unitLabel->boundingRect().height()) + unitLabelPadding;
 }
 
-void GraphPlot::updateGrid(const QVector<int> &tickYs, const QVector<int> &subTickYs)
+void GraphPlot::updateGrid(const QVector<int> &tickYs)
 {
     QPainterPath path;
     addHLines(path, tickYs, m_axisRect);
 
-    QPainterPath subPath;
-    addHLines(subPath, subTickYs, m_axisRect);
-
     m_grid->setPath(path);
-    m_subGrid->setPath(subPath);
 }
 
 void GraphPlot::startRising(qint64 unixTime)

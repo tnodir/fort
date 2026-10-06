@@ -154,7 +154,7 @@ private:
     int borderWidth() const;
     int unitLabelWidth() const;
 
-    void updateGrid(const QVector<int> &tickYs, const QVector<int> &subTickYs);
+    void updateGrid(const QVector<int> &tickYs);
     void startRising(qint64 unixTime);
     void updateBars();
     void updateRisingBars();
@@ -193,7 +193,6 @@ private:
     qint64 m_risingTime = 0;
 
     QGraphicsPathItem *m_grid = nullptr;
-    QGraphicsPathItem *m_subGrid = nullptr;
     QGraphicsRectItem *m_plotArea = nullptr;
     QGraphicsRectItem *m_bars = nullptr;
     GraphBarsItem *m_barsIn = nullptr;
