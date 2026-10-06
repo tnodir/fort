@@ -102,6 +102,7 @@ SOURCES += \
     form/filtersim/filtersimwindow.cpp \
     form/formpointer.cpp \
     form/graph/axistickerspeed.cpp \
+    form/graph/graphanimation.cpp \
     form/graph/graphplot.cpp \
     form/graph/graphwindow.cpp \
     form/group/groupeditdialog.cpp \
@@ -404,6 +405,7 @@ HEADERS += \
     form/form_types.h \
     form/formpointer.h \
     form/graph/axistickerspeed.h \
+    form/graph/graphanimation.h \
     form/graph/graphplot.h \
     form/graph/graphwindow.h \
     form/group/groupeditdialog.h \

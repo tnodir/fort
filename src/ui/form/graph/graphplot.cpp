@@ -329,13 +329,10 @@ void GraphPlot::setupScrollTimer()
 
 void GraphPlot::setupRisingAnimation()
 {
-    m_risingAnimation.setStartValue(0.0);
-    m_risingAnimation.setEndValue(1.0);
     m_risingAnimation.setDuration(risingMsecs);
     m_risingAnimation.setEasingCurve(QEasingCurve::OutCubic);
 
-    connect(&m_risingAnimation, &QVariantAnimation::valueChanged, this,
-            &GraphPlot::updateRisingBars);
+    connect(&m_risingAnimation, &GraphAnimation::valueChanged, this, &GraphPlot::updateRisingBars);
 }
 
 void GraphPlot::setupScaleAnimation()
@@ -343,7 +340,7 @@ void GraphPlot::setupScaleAnimation()
     m_scaleAnimation.setDuration(scaleMsecs);
     m_scaleAnimation.setEasingCurve(QEasingCurve::OutCubic);
 
-    connect(&m_scaleAnimation, &QVariantAnimation::valueChanged, this, &GraphPlot::updateScale);
+    connect(&m_scaleAnimation, &GraphAnimation::valueChanged, this, &GraphPlot::updateScale);
 }
 
 int GraphPlot::pointIndex(qint64 unixTime) const
@@ -441,10 +438,7 @@ void GraphPlot::animateValueUpper(double v)
     }
 
     // Change the scale smoothly from the shown one
-    m_scaleAnimation.stop();
-    m_scaleAnimation.setStartValue(m_valueUpper);
-    m_scaleAnimation.setEndValue(v);
-    m_scaleAnimation.start();
+    m_scaleAnimation.start(m_valueUpper, v);
 }
 
 void GraphPlot::setValueUpper(double v)
@@ -456,9 +450,9 @@ void GraphPlot::setValueUpper(double v)
     m_axesChanged = true;
 }
 
-void GraphPlot::updateScale(const QVariant &value)
+void GraphPlot::updateScale(double value)
 {
-    setValueUpper(value.toDouble());
+    setValueUpper(value);
 
     if (m_axesChanged) {
         redraw();
@@ -572,7 +566,7 @@ void GraphPlot::startRising(qint64 unixTime)
     if (point.inBits == 0 && point.outBits == 0)
         return;
 
-    m_risingAnimation.start();
+    m_risingAnimation.start(0.0, 1.0);
 }
 
 void GraphPlot::updateBars()
@@ -621,7 +615,7 @@ void GraphPlot::updateBars()
 
 void GraphPlot::updateRisingBars()
 {
-    const double ratio = m_risingAnimation.currentValue().toDouble();
+    const double ratio = m_risingAnimation.currentValue();
 
     m_risingIn->setRect(risingRect(m_risingInRect, ratio));
     m_risingOut->setRect(risingRect(m_risingOutRect, ratio));

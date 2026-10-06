@@ -4,9 +4,9 @@
 #include <QGraphicsView>
 #include <QTimer>
 #include <QVarLengthArray>
-#include <QVariantAnimation>
 
 #include "axistickerspeed.h"
+#include "graphanimation.h"
 
 class QGraphicsPathItem;
 class QGraphicsRectItem;
@@ -109,7 +109,7 @@ private:
     double targetValueUpper(quint64 bits) const;
     void animateValueUpper(double v);
     void setValueUpper(double v);
-    void updateScale(const QVariant &value);
+    void updateScale(double value);
 
     void redraw();
 
@@ -172,8 +172,8 @@ private:
     AxisTickerSpeed m_ticker;
 
     QTimer m_scrollTimer;
-    QVariantAnimation m_risingAnimation;
-    QVariantAnimation m_scaleAnimation;
+    GraphAnimation m_risingAnimation;
+    GraphAnimation m_scaleAnimation;
 
     QList<QGraphicsSimpleTextItem *> m_tickLabels;
     QList<GraphPoint> m_points;
