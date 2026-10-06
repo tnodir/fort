@@ -60,6 +60,7 @@ private:
     QComboBox *m_comboTrafUnit = nullptr;
 
     LabelColor *m_graphColor = nullptr;
+    LabelColor *m_graphBorderColor = nullptr;
     LabelColor *m_graphColorIn = nullptr;
     LabelColor *m_graphColorOut = nullptr;
     LabelColor *m_graphTotalColor = nullptr;

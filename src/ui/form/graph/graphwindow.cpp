@@ -175,6 +175,7 @@ void GraphWindow::updateFonts(const IniUser &ini)
     m_plot->setTickLabelSize(ini.graphWindowTickLabelSize());
     m_plot->setSpeedVisible(ini.graphWindowShowSpeed());
     m_plot->setAxisTicksVisible(ini.graphWindowAxisTicks());
+    m_plot->setBorderVisible(ini.graphWindowFrameless());
 }
 
 void GraphWindow::updateFormat(const IniUser &ini)
@@ -406,15 +407,16 @@ GraphPlot::ColorArray GraphWindow::getColors(const IniUser &ini)
 #endif
 
     if (isLightTheme) {
-        colors << ini.graphWindowColor() << ini.graphWindowColorIn() << ini.graphWindowColorOut()
-               << ini.graphWindowTotalColor() << ini.graphWindowAxisColor()
-               << ini.graphWindowTickLabelColor() << ini.graphWindowLabelColor()
-               << ini.graphWindowGridColor();
+        colors << ini.graphWindowColor() << ini.graphWindowBorderColor() << ini.graphWindowColorIn()
+               << ini.graphWindowColorOut() << ini.graphWindowTotalColor()
+               << ini.graphWindowAxisColor() << ini.graphWindowTickLabelColor()
+               << ini.graphWindowLabelColor() << ini.graphWindowGridColor();
     } else {
-        colors << ini.graphWindowDarkColor() << ini.graphWindowDarkColorIn()
-               << ini.graphWindowDarkColorOut() << ini.graphWindowDarkTotalColor()
-               << ini.graphWindowDarkAxisColor() << ini.graphWindowDarkTickLabelColor()
-               << ini.graphWindowDarkLabelColor() << ini.graphWindowDarkGridColor();
+        colors << ini.graphWindowDarkColor() << ini.graphWindowDarkBorderColor()
+               << ini.graphWindowDarkColorIn() << ini.graphWindowDarkColorOut()
+               << ini.graphWindowDarkTotalColor() << ini.graphWindowDarkAxisColor()
+               << ini.graphWindowDarkTickLabelColor() << ini.graphWindowDarkLabelColor()
+               << ini.graphWindowDarkGridColor();
     }
 
     return colors;

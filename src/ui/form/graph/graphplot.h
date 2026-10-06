@@ -45,6 +45,7 @@ class GraphPlot : public QGraphicsView
 public:
     enum ColorType : qint8 {
         ColorBg = 0,
+        ColorBorder,
         ColorIn,
         ColorOut,
         ColorTotal,
@@ -73,6 +74,9 @@ public:
 
     bool axisTicksVisible() const { return m_axisTicksVisible; }
     void setAxisTicksVisible(bool v);
+
+    bool borderVisible() const { return m_borderVisible; }
+    void setBorderVisible(bool v);
 
     FormatUtil::SizeFormat unitFormat() const { return m_ticker.unitFormat(); }
     void setUnitFormat(FormatUtil::SizeFormat v);
@@ -147,6 +151,7 @@ private:
     int setupTickLabels(const QStringList &labels);
     void updateAxisRect(int tickLabelsWidth);
     int axisTickLength() const;
+    int borderWidth() const;
     int unitLabelWidth() const;
 
     void updateGrid(const QVector<int> &tickYs, const QVector<int> &subTickYs);
@@ -158,6 +163,7 @@ private:
     void updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs);
     void updateTickLabels(const QVector<int> &tickYs);
     void updateUnitLabel();
+    void updateBorder();
 
     int valueToPixel(double value) const;
     QVector<int> valuesToPixels(const QVector<double> &values) const;
@@ -172,6 +178,7 @@ private:
     bool m_mouseHasMoved : 1 = false;
     bool m_animated : 1 = true;
     bool m_axisTicksVisible : 1 = false;
+    bool m_borderVisible : 1 = false;
     bool m_axesChanged : 1 = true;
     bool m_barsEmpty : 1 = true;
 
@@ -197,6 +204,7 @@ private:
     QGraphicsSimpleTextItem *m_speedText = nullptr;
     QGraphicsPathItem *m_axes = nullptr;
     QGraphicsSimpleTextItem *m_unitLabel = nullptr;
+    GraphBarsItem *m_border = nullptr;
 
     QPoint m_mousePressPos;
     QRect m_axisRect;

@@ -407,6 +407,13 @@ public:
     }
     void setGraphWindowColor(const QColor &v) { setColor("graphWindow/color", v); }
 
+    constexpr QColor graphWindowBorderColorDefault() const { return QColor(108, 108, 108); }
+    QColor graphWindowBorderColor() const
+    {
+        return valueColor("graphWindow/borderColor", graphWindowBorderColorDefault());
+    }
+    void setGraphWindowBorderColor(const QColor &v) { setColor("graphWindow/borderColor", v); }
+
     constexpr QColor graphWindowColorInDefault() const { return QColor(52, 196, 84); }
     QColor graphWindowColorIn() const
     {
@@ -465,6 +472,16 @@ public:
         return valueColor("graphWindow/darkColor", graphWindowDarkColorDefault());
     }
     void setGraphWindowDarkColor(const QColor &v) { setColor("graphWindow/darkColor", v); }
+
+    constexpr QColor graphWindowDarkBorderColorDefault() const { return QColor(141, 141, 141); }
+    QColor graphWindowDarkBorderColor() const
+    {
+        return valueColor("graphWindow/darkBorderColor", graphWindowDarkBorderColorDefault());
+    }
+    void setGraphWindowDarkBorderColor(const QColor &v)
+    {
+        setColor("graphWindow/darkBorderColor", v);
+    }
 
     constexpr QColor graphWindowDarkColorInDefault() const { return QColor(52, 196, 84); }
     QColor graphWindowDarkColorIn() const

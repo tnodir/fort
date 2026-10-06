@@ -119,6 +119,16 @@ void GraphPlot::setAxisTicksVisible(bool v)
     m_axesChanged = true;
 }
 
+void GraphPlot::setBorderVisible(bool v)
+{
+    if (m_borderVisible == v)
+        return;
+
+    m_borderVisible = v;
+
+    m_axesChanged = true;
+}
+
 void GraphPlot::setUnitFormat(FormatUtil::SizeFormat v)
 {
     m_ticker.setUnitFormat(v);
@@ -190,6 +200,9 @@ void GraphPlot::setColors(const ColorArray &colors)
 
     // Axis
     m_axes->setPen(QPen(colors[ColorAxis], 0, Qt::SolidLine, Qt::SquareCap));
+
+    // Border
+    m_border->setBrush(colors[ColorBorder]);
 
     m_tickLabelColor = colors[ColorTickLabel];
 
@@ -382,6 +395,10 @@ void GraphPlot::setupItems()
     m_unitLabel = scene->addSimpleText(QString());
     m_unitLabel->setRotation(-90);
 
+    // Border: Over all
+    m_border = new GraphBarsItem();
+    scene->addItem(m_border);
+
     m_tickLabelFont = font();
 }
 
@@ -555,6 +572,7 @@ void GraphPlot::layoutAxes()
     updateAxes(tickYs, subTickYs);
     updateTickLabels(tickYs);
     updateUnitLabel();
+    updateBorder();
 }
 
 void GraphPlot::setupTickLabelStyle(QGraphicsSimpleTextItem *label) const
@@ -603,13 +621,15 @@ int GraphPlot::setupTickLabels(const QStringList &labels)
 
 void GraphPlot::updateAxisRect(int tickLabelsWidth)
 {
+    const int border = borderWidth();
     const int ticksWidth = axisTickLength();
-    const int leftMargin =
-            axisPadding + unitLabelWidth() + ticksWidth + tickLabelPadding + tickLabelsWidth;
-    const int rightMargin = ticksWidth; // the bars are up to the right edge without the ticks
+    const int leftMargin = border + axisPadding + unitLabelWidth() + ticksWidth + tickLabelPadding
+            + tickLabelsWidth;
+    // The bars are up to the right edge without the ticks
+    const int rightMargin = border + ticksWidth;
 
-    m_axisRect =
-            viewport()->rect().adjusted(leftMargin, axisMarginTop, -rightMargin, -axisMarginBottom);
+    m_axisRect = viewport()->rect().adjusted(
+            leftMargin, border + axisMarginTop, -rightMargin, -(border + axisMarginBottom));
 
     m_plotArea->setRect(m_axisRect);
 }
@@ -617,6 +637,11 @@ void GraphPlot::updateAxisRect(int tickLabelsWidth)
 int GraphPlot::axisTickLength() const
 {
     return m_axisTicksVisible ? tickLength : 0;
+}
+
+int GraphPlot::borderWidth() const
+{
+    return m_borderVisible ? 1 : 0;
 }
 
 int GraphPlot::unitLabelWidth() const
@@ -785,10 +810,32 @@ void GraphPlot::updateUnitLabel()
     const double centerY = m_axisRect.top() + m_axisRect.height() / 2.0;
 
     // The rotated label's text goes up from its position
-    m_unitLabel->setPos(axisPadding, qRound(centerY + rect.width() / 2));
+    m_unitLabel->setPos(borderWidth() + axisPadding, qRound(centerY + rect.width() / 2));
 
     // Hide the label clipped by the view's border
     m_unitLabel->setVisible(rect.width() <= viewport()->height());
+}
+
+void GraphPlot::updateBorder()
+{
+    if (!m_borderVisible) {
+        m_border->setRects({});
+        return;
+    }
+
+    // A device pixel's lines at the view's edges
+    const qreal dpr = devicePixelRatioF();
+    const QSize size = viewport()->size();
+    const qreal width = qRound(size.width() * dpr) / dpr;
+    const qreal height = qRound(size.height() * dpr) / dpr;
+    const qreal line = 1 / dpr;
+
+    m_border->setRects({
+            QRectF(0, 0, width, line),
+            QRectF(0, height - line, width, line),
+            QRectF(0, 0, line, height),
+            QRectF(width - line, 0, line, height),
+    });
 }
 
 int GraphPlot::valueToPixel(double value) const

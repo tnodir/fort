@@ -48,6 +48,7 @@ void GraphPage::onResetToDefault()
     m_comboTrafUnit->setCurrentIndex(iniUser.graphWindowTrafUnitDefault());
 
     m_graphColor->setColor(iniUser.graphWindowColorDefault());
+    m_graphBorderColor->setColor(iniUser.graphWindowBorderColorDefault());
     m_graphColorIn->setColor(iniUser.graphWindowColorInDefault());
     m_graphColorOut->setColor(iniUser.graphWindowColorOutDefault());
     m_graphTotalColor->setColor(iniUser.graphWindowTotalColorDefault());
@@ -57,6 +58,7 @@ void GraphPage::onResetToDefault()
     m_graphGridColor->setColor(iniUser.graphWindowGridColorDefault());
 
     m_graphColor->setDarkColor(iniUser.graphWindowDarkColorDefault());
+    m_graphBorderColor->setDarkColor(iniUser.graphWindowDarkBorderColorDefault());
     m_graphColorIn->setDarkColor(iniUser.graphWindowDarkColorInDefault());
     m_graphColorOut->setDarkColor(iniUser.graphWindowDarkColorOutDefault());
     m_graphTotalColor->setDarkColor(iniUser.graphWindowDarkTotalColorDefault());
@@ -89,6 +91,7 @@ void GraphPage::onRetranslateUi()
     m_traphUnits->setText(tr("Units:"));
 
     m_graphColor->label()->setText(tr("Background:"));
+    m_graphBorderColor->label()->setText(tr("Border:"));
     m_graphColorIn->label()->setText(tr("Download:"));
     m_graphColorOut->label()->setText(tr("Upload:"));
     m_graphTotalColor->label()->setText(tr("Total:"));
@@ -343,8 +346,8 @@ void GraphPage::setupColorsBox()
     setupGraphColors();
 
     auto layout = ControlUtil::createVLayoutByWidgets(
-            { m_graphColor, m_graphColorIn, m_graphColorOut, m_graphTotalColor, m_graphAxisColor,
-                    m_graphTickLabelColor, m_graphLabelColor, m_graphGridColor });
+            { m_graphColor, m_graphBorderColor, m_graphColorIn, m_graphColorOut, m_graphTotalColor,
+                    m_graphAxisColor, m_graphTickLabelColor, m_graphLabelColor, m_graphGridColor });
 
     m_gbColors = new QGroupBox();
     m_gbColors->setLayout(layout);
@@ -366,6 +369,17 @@ void GraphPage::setupGraphColors1()
             },
             [&](const QColor &v) {
                 iniUser().setGraphWindowDarkColor(v);
+                ctrl()->setIniUserEdited();
+            });
+
+    m_graphBorderColor = ControlUtil::createLabelColor(
+            iniUser().graphWindowBorderColor(), iniUser().graphWindowDarkBorderColor(),
+            [&](const QColor &v) {
+                iniUser().setGraphWindowBorderColor(v);
+                ctrl()->setIniUserEdited();
+            },
+            [&](const QColor &v) {
+                iniUser().setGraphWindowDarkBorderColor(v);
                 ctrl()->setIniUserEdited();
             });
 
