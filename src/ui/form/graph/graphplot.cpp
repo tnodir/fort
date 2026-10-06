@@ -801,6 +801,10 @@ void GraphPlot::startRising(qint64 unixTime)
 
     m_risingAnimation.stop();
 
+    // The lines are changed at once: they are repainted entirely
+    if (m_graphType == GraphTypeLine)
+        return;
+
     // Nothing to rise for an empty traffic
     const GraphPoint point = pointAt(unixTime);
     if (point.inBits == 0 && point.outBits == 0)
@@ -860,11 +864,9 @@ void GraphPlot::updateBarsOutline()
 
 void GraphPlot::updateRisingBars()
 {
-    // The whole lines are changed with the rising point
-    if (m_graphType == GraphTypeLine) {
-        updateLines();
+    // The lines have no rising points
+    if (m_graphType == GraphTypeLine)
         return;
-    }
 
     const double ratio = m_risingAnimation.currentValue();
     const GraphColumnRects rects = columnRects(risingColumn(m_risingColumn, ratio));
@@ -876,8 +878,6 @@ void GraphPlot::updateRisingBars()
 
 void GraphPlot::updateLines()
 {
-    const double ratio = m_risingAnimation.currentValue();
-
     const int count = int(m_lineColumns.size());
     const int startIndex = lineStartIndex();
 
@@ -892,11 +892,7 @@ void GraphPlot::updateLines()
     }
 
     for (int i = startIndex; i < count; ++i) {
-        const GraphColumn &column = m_lineColumns.at(i);
-        const GraphColumn c =
-                (column.unixTime == m_risingTime) ? risingColumn(column, ratio) : column;
-
-        appendLinePoints(points, c);
+        appendLinePoints(points, m_lineColumns.at(i));
     }
 
     m_lineIn->setPoints(points.in);
