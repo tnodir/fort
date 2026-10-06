@@ -31,6 +31,8 @@ public:
     const char *data() const { return buffer().constData(); }
     char *data() { return m_buffer.data(); }
 
+    const char *dataOrNull() const { return buffer().isEmpty() ? nullptr : data(); }
+
 public slots:
     void writeVersion();
 
