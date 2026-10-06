@@ -25,8 +25,8 @@ class ProgramsWindow;
 class RulesWindow;
 class ServicesWindow;
 class SpeedLimitsWindow;
-class StatisticsWindow;
 class TimePeriodsWindow;
+class TrafficWindow;
 class TrayIcon;
 class WidgetWindow;
 class ZonesWindow;
@@ -56,7 +56,7 @@ public:
     ProgramAlertWindow *progAlertWindow() const;
     RulesWindow *rulesWindow() const;
     OptionsWindow *optWindow() const;
-    StatisticsWindow *statWindow() const;
+    TrafficWindow *trafWindow() const;
     ConnectionsWindow *connWindow() const;
     ServicesWindow *servicesWindow() const;
     ZonesWindow *zonesWindow() const;
@@ -112,7 +112,7 @@ public slots:
 
     bool showRulesWindow() { return showWindowByCode(WindowRules); }
 
-    bool showStatisticsWindow() { return showWindowByCode(WindowStatistics); }
+    bool showTrafficWindow() { return showWindowByCode(WindowTraffic); }
 
     bool showConnectionsWindow() { return showWindowByCode(WindowConnections); }
 
@@ -224,7 +224,7 @@ private:
         FormPointer(WindowServices),
         FormPointer(WindowOptions),
         FormPointer(WindowRules),
-        FormPointer(WindowStatistics),
+        FormPointer(WindowTraffic),
         FormPointer(WindowConnections),
         FormPointer(WindowZones),
         FormPointer(WindowGroups),

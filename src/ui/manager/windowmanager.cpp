@@ -22,9 +22,9 @@
 #include <form/prog/programswindow.h>
 #include <form/rule/ruleswindow.h>
 #include <form/speedlimit/speedlimitswindow.h>
-#include <form/stat/statisticswindow.h>
 #include <form/svc/serviceswindow.h>
 #include <form/timeperiod/timeperiodswindow.h>
+#include <form/traf/trafficwindow.h>
 #include <form/tray/trayicon.h>
 #include <form/zone/zoneswindow.h>
 #include <fortglobal.h>
@@ -51,10 +51,10 @@ WindowManager::WindowManager(QObject *parent) : QObject(parent) { }
 
 bool WindowManager::hasForm(WindowCode code)
 {
-    constexpr quint32 windowForms = (WindowHome | WindowPrograms | WindowProgramAlert
-            | WindowServices | WindowOptions | WindowRules | WindowStatistics | WindowConnections
-            | WindowZones | WindowGroups | WindowSpeedLimits | WindowTimePeriods | WindowFilterSim
-            | WindowGraph);
+    constexpr quint32 windowForms =
+            (WindowHome | WindowPrograms | WindowProgramAlert | WindowServices | WindowOptions
+                    | WindowRules | WindowTraffic | WindowConnections | WindowZones | WindowGroups
+                    | WindowSpeedLimits | WindowTimePeriods | WindowFilterSim | WindowGraph);
 
     return (code & windowForms) != 0;
 }
@@ -104,9 +104,9 @@ OptionsWindow *WindowManager::optWindow() const
     return static_cast<OptionsWindow *>(windowByCode(WindowOptions));
 }
 
-StatisticsWindow *WindowManager::statWindow() const
+TrafficWindow *WindowManager::trafWindow() const
 {
-    return static_cast<StatisticsWindow *>(windowByCode(WindowStatistics));
+    return static_cast<TrafficWindow *>(windowByCode(WindowTraffic));
 }
 
 ConnectionsWindow *WindowManager::connWindow() const

@@ -416,7 +416,7 @@ void TrayIcon::retranslateUi()
     m_servicesAction->setText(tr("Services"));
     m_filterSimAction->setText(tr("Filter Simulator"));
     m_statisticsMenu->setTitle(tr("Statistics"));
-    m_statisticsAction->setText(tr("Statistics"));
+    m_trafficAction->setText(tr("Traffic"));
     m_connectionsAction->setText(tr("Connections"));
     m_graphAction->setText(tr("Traffic Graph"));
 
@@ -583,9 +583,9 @@ void TrayIcon::setupTrayMenuStatistics()
     m_statisticsMenu = new QMenu(m_menu);
     m_statisticsMenu->setIcon(IconCache::icon(":/icons/chart_bar.png"));
 
-    m_statisticsAction = addAction(m_statisticsMenu,
-            { ":/icons/chart_bar.png", this, SLOT(onShowWindowAction()), WindowStatistics });
-    addHotKey(m_statisticsAction, HotKey::statistics);
+    m_trafficAction = addAction(m_statisticsMenu,
+            { ":/icons/chart_bar.png", this, SLOT(onShowWindowAction()), WindowTraffic });
+    addHotKey(m_trafficAction, HotKey::traffic);
 
     m_connectionsAction = addAction(m_statisticsMenu,
             { ":/icons/connect.png", this, SLOT(onShowWindowAction()), WindowConnections });
@@ -1158,7 +1158,7 @@ QAction *TrayIcon::clickActionByType(tray::ActionType actionType) const
         m_programsAction,
         m_programsOrAlertAction,
         m_optionsAction,
-        m_statisticsAction,
+        m_trafficAction,
         m_graphAction,
         m_filterEnabledAction,
         m_snoozeAlertsAction,

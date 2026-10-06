@@ -15,7 +15,7 @@ const char *const speedLimits = "speedLimits";
 const char *const timePeriods = "timePeriods";
 const char *const services = "services";
 const char *const filterSim = "filterSim";
-const char *const statistics = "statistics";
+const char *const traffic = "traffic";
 const char *const connections = "connections";
 const char *const graph = "graph";
 
@@ -513,10 +513,6 @@ public:
 
     bool statWindowMaximized() const { return valueBool("statWindow/maximized"); }
     void setStatWindowMaximized(bool on) { setValue("statWindow/maximized", on); }
-
-    static QString statTabIndexKey() { return "statWindow/tabIndex"; }
-    int statTabIndex() const { return valueInt(statTabIndexKey()); }
-    void setStatTabIndex(int v) { setValue(statTabIndexKey(), v); }
 
     static QString statTrafTabIndexKey() { return "statWindow/trafTabIndex"; }
     int statTrafTabIndex() const { return valueInt(statTrafTabIndexKey()); }

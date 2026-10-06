@@ -10,9 +10,9 @@
 #include <form/prog/programswindow.h>
 #include <form/rule/ruleswindow.h>
 #include <form/speedlimit/speedlimitswindow.h>
-#include <form/stat/statisticswindow.h>
 #include <form/svc/serviceswindow.h>
 #include <form/timeperiod/timeperiodswindow.h>
+#include <form/traf/trafficwindow.h>
 #include <form/zone/zoneswindow.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -37,7 +37,7 @@ static const createWindow_func createWindow_funcList[] = {
     &createWindow<ServicesWindow>,
     &createWindow<OptionsWindow>,
     &createWindow<RulesWindow>,
-    &createWindow<StatisticsWindow>,
+    &createWindow<TrafficWindow>,
     &createWindow<ConnectionsWindow>,
     &createWindow<ZonesWindow>,
     &createWindow<GroupsWindow>,

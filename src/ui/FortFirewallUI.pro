@@ -139,17 +139,14 @@ SOURCES += \
     form/speedlimit/speedlimiteditdialog.cpp \
     form/speedlimit/speedlimitscontroller.cpp \
     form/speedlimit/speedlimitswindow.cpp \
-    form/stat/pages/statbasepage.cpp \
-    form/stat/pages/statmainpage.cpp \
-    form/stat/pages/trafficpage.cpp \
-    form/stat/statisticscontroller.cpp \
-    form/stat/statisticswindow.cpp \
     form/svc/servicescontroller.cpp \
     form/svc/serviceswindow.cpp \
     form/timeperiod/timeperiodeditdialog.cpp \
     form/timeperiod/timeperiodintervaledit.cpp \
     form/timeperiod/timeperiodscontroller.cpp \
     form/timeperiod/timeperiodswindow.cpp \
+    form/traf/trafficcontroller.cpp \
+    form/traf/trafficwindow.cpp \
     form/tray/traycontroller.cpp \
     form/tray/trayicon.cpp \
     form/zone/zoneeditdialog.cpp \
@@ -443,17 +440,14 @@ HEADERS += \
     form/speedlimit/speedlimiteditdialog.h \
     form/speedlimit/speedlimitscontroller.h \
     form/speedlimit/speedlimitswindow.h \
-    form/stat/pages/statbasepage.h \
-    form/stat/pages/statmainpage.h \
-    form/stat/pages/trafficpage.h \
-    form/stat/statisticscontroller.h \
-    form/stat/statisticswindow.h \
     form/svc/servicescontroller.h \
     form/svc/serviceswindow.h \
     form/timeperiod/timeperiodeditdialog.h \
     form/timeperiod/timeperiodintervaledit.h \
     form/timeperiod/timeperiodscontroller.h \
     form/timeperiod/timeperiodswindow.h \
+    form/traf/trafficcontroller.h \
+    form/traf/trafficwindow.h \
     form/tray/traycontroller.h \
     form/tray/trayicon.h \
     form/tray/trayicon_types.h \

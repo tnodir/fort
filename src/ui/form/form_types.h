@@ -11,7 +11,7 @@ enum WindowCode {
     WindowServices = (1 << 3),
     WindowOptions = (1 << 4),
     WindowRules = (1 << 5),
-    WindowStatistics = (1 << 6),
+    WindowTraffic = (1 << 6),
     WindowConnections = (1 << 7),
     WindowZones = (1 << 8),
     WindowGroups = (1 << 9),
@@ -24,7 +24,7 @@ enum WindowCode {
 };
 
 constexpr quint32 WindowPasswordProtected = (WindowPrograms | WindowProgramAlert | WindowServices
-        | WindowOptions | WindowRules | WindowStatistics | WindowConnections | WindowZones
+        | WindowOptions | WindowRules | WindowTraffic | WindowConnections | WindowZones
         | WindowGroups | WindowSpeedLimits | WindowTimePeriods | WindowFilterSim);
 
 #endif // FORM_TYPES_H

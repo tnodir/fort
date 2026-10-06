@@ -81,6 +81,7 @@ void UserSettings::migrateIniOnLoad()
         setCacheValue("connWindow/maximized", iniValue("statWindow/maximized"));
         setCacheValue("connWindow/autoScroll", iniValue("statWindow/autoScroll"));
         setCacheValue("connWindow/showHostNames", iniValue("statWindow/showHostNames"));
+        setCacheValue("hotKey/traffic", iniValue("hotKey/statistics"));
     }
 }
 
@@ -143,9 +144,12 @@ void UserSettings::migrateIniOnWrite()
         removeIniKey("statWindow/connListHeaderVersion");
         removeIniKey("statWindow/autoScroll");
         removeIniKey("statWindow/showHostNames");
+        removeIniKey("statWindow/tabIndex");
+        removeIniKey("hotKey/statistics");
         ini()->setValue("connWindow/geometry", cacheValue("connWindow/geometry"));
         ini()->setValue("connWindow/maximized", cacheValue("connWindow/maximized"));
         ini()->setValue("connWindow/autoScroll", cacheValue("connWindow/autoScroll"));
         ini()->setValue("connWindow/showHostNames", cacheValue("connWindow/showHostNames"));
+        ini()->setValue("hotKey/traffic", cacheValue("hotKey/traffic"));
     }
 }
