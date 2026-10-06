@@ -3,6 +3,7 @@
 
 #include <QGraphicsView>
 #include <QTimer>
+#include <QVariantAnimation>
 
 #include "axistickerspeed.h"
 
@@ -89,6 +90,7 @@ private:
     void setupView();
     void setupItems();
     void setupScrollTimer();
+    void setupRisingAnimation();
 
     int pointIndex(qint64 unixTime) const;
     bool isPointAt(int index, qint64 unixTime) const;
@@ -112,7 +114,9 @@ private:
     void updateAxisRect(int tickLabelsWidth);
 
     void updateGrid(const QVector<int> &tickYs);
+    void startRising(qint64 unixTime);
     void updateBars(qint64 keyLower);
+    void updateRisingBars();
     void updateScroll();
     void updateSpeedBox();
     void updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs);
@@ -133,11 +137,14 @@ private:
     double m_valueUpper = 5;
 
     qint64 m_fixedValueMax = 0;
+    qint64 m_risingTime = 0;
 
     QGraphicsPathItem *m_grid = nullptr;
     QGraphicsRectItem *m_plotArea = nullptr;
     QGraphicsPathItem *m_barsIn = nullptr;
     QGraphicsPathItem *m_barsOut = nullptr;
+    QGraphicsRectItem *m_risingIn = nullptr;
+    QGraphicsRectItem *m_risingOut = nullptr;
     QGraphicsRectItem *m_speedBox = nullptr;
     QGraphicsSimpleTextItem *m_speedText = nullptr;
     QGraphicsPathItem *m_axes = nullptr;
@@ -145,12 +152,16 @@ private:
     QPoint m_mousePressPos;
     QRect m_axisRect;
 
+    QRectF m_risingInRect;
+    QRectF m_risingOutRect;
+
     QColor m_tickLabelColor;
     QFont m_tickLabelFont;
 
     AxisTickerSpeed m_ticker;
 
     QTimer m_scrollTimer;
+    QVariantAnimation m_risingAnimation;
 
     QList<QGraphicsSimpleTextItem *> m_tickLabels;
     QList<GraphPoint> m_points;

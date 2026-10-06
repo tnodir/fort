@@ -17,6 +17,7 @@ inline constexpr int tickLabelPadding = 2;
 inline constexpr int keyPixels = 4; // pixels per second
 inline constexpr int pixelMsecs = 1000 / keyPixels;
 inline constexpr int barWidth = 2;
+inline constexpr int risingMsecs = 400;
 inline constexpr int speedBgAlpha = 130;
 inline constexpr int mouseMoveDistance = 3;
 
@@ -51,6 +52,25 @@ QGraphicsPathItem *createBars(QGraphicsItem *parent)
     return bars;
 }
 
+QGraphicsRectItem *createRisingBar(QGraphicsItem *parent)
+{
+    auto bar = new QGraphicsRectItem(parent);
+    bar->setPen(Qt::NoPen);
+
+    return bar;
+}
+
+QRectF risingRect(const QRectF &rect, double ratio)
+{
+    if (rect.isEmpty())
+        return rect;
+
+    // Keep the bar's bottom line
+    const int height = qMax(qRound(rect.height() * ratio), 1);
+
+    return QRectF(rect.left(), rect.bottom() - height, rect.width(), height);
+}
+
 }
 
 GraphPlot::GraphPlot(QWidget *parent) : QGraphicsView(parent)
@@ -58,6 +78,7 @@ GraphPlot::GraphPlot(QWidget *parent) : QGraphicsView(parent)
     setupView();
     setupItems();
     setupScrollTimer();
+    setupRisingAnimation();
 }
 
 void GraphPlot::setUnitFormat(FormatUtil::SizeFormat v)
@@ -102,9 +123,11 @@ void GraphPlot::setColors(const ColorArray &colors)
 
     // Graph Inbound
     m_barsIn->setBrush(colors[ColorIn]);
+    m_risingIn->setBrush(colors[ColorIn]);
 
     // Graph Outbound
     m_barsOut->setBrush(colors[ColorOut]);
+    m_risingOut->setBrush(colors[ColorOut]);
 
     // Text Speed
     {
@@ -175,7 +198,9 @@ void GraphPlot::replot()
         layoutAxes();
     }
 
+    startRising(lastUnixTime() - 1); // the last complete second
     updateBars(keyLower);
+    updateRisingBars();
     updateSpeedBox();
 
     updateScroll();
@@ -291,9 +316,11 @@ void GraphPlot::setupItems()
 
     // Graph Inbound
     m_barsIn = createBars(m_plotArea);
+    m_risingIn = createRisingBar(m_barsIn);
 
     // Graph Outbound
     m_barsOut = createBars(m_plotArea);
+    m_risingOut = createRisingBar(m_barsOut);
 
     // Text Speed
     m_speedBox = new QGraphicsRectItem(m_plotArea);
@@ -313,6 +340,17 @@ void GraphPlot::setupScrollTimer()
     m_scrollTimer.setTimerType(Qt::PreciseTimer);
 
     connect(&m_scrollTimer, &QTimer::timeout, this, &GraphPlot::updateScroll);
+}
+
+void GraphPlot::setupRisingAnimation()
+{
+    m_risingAnimation.setStartValue(0.0);
+    m_risingAnimation.setEndValue(1.0);
+    m_risingAnimation.setDuration(risingMsecs);
+    m_risingAnimation.setEasingCurve(QEasingCurve::OutCubic);
+
+    connect(&m_risingAnimation, &QVariantAnimation::valueChanged, this,
+            &GraphPlot::updateRisingBars);
 }
 
 int GraphPlot::pointIndex(qint64 unixTime) const
@@ -478,6 +516,17 @@ void GraphPlot::updateGrid(const QVector<int> &tickYs)
     m_grid->setPath(path);
 }
 
+void GraphPlot::startRising(qint64 unixTime)
+{
+    if (m_risingTime == unixTime)
+        return; // keep rising on resize, options' change
+
+    m_risingTime = unixTime;
+
+    m_risingAnimation.stop();
+    m_risingAnimation.start();
+}
+
 void GraphPlot::updateBars(qint64 keyLower)
 {
     // The last second is at the right edge
@@ -487,14 +536,26 @@ void GraphPlot::updateBars(qint64 keyLower)
     QPainterPath pathIn;
     QPainterPath pathOut;
 
+    m_risingInRect = {};
+    m_risingOutRect = {};
+
     for (const auto &point : std::as_const(m_points)) {
         if (point.unixTime < keyLower)
             continue;
 
         const int x = right - int(keyUpper - point.unixTime) * keyPixels;
+        const QRectF inRect = barRect(x - barWidth, point.inBits);
+        const QRectF outRect = barRect(x, point.outBits);
 
-        pathIn.addRect(barRect(x - barWidth, point.inBits));
-        pathOut.addRect(barRect(x, point.outBits));
+        // The rising bars are drawn separately
+        if (point.unixTime == m_risingTime) {
+            m_risingInRect = inRect;
+            m_risingOutRect = outRect;
+            continue;
+        }
+
+        pathIn.addRect(inRect);
+        pathOut.addRect(outRect);
     }
 
     // Overlapping bars must not make holes
@@ -503,6 +564,14 @@ void GraphPlot::updateBars(qint64 keyLower)
 
     m_barsIn->setPath(pathIn);
     m_barsOut->setPath(pathOut);
+}
+
+void GraphPlot::updateRisingBars()
+{
+    const double ratio = m_risingAnimation.currentValue().toDouble();
+
+    m_risingIn->setRect(risingRect(m_risingInRect, ratio));
+    m_risingOut->setRect(risingRect(m_risingOutRect, ratio));
 }
 
 void GraphPlot::updateScroll()
