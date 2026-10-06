@@ -217,6 +217,9 @@ QLayout *ConnectionsWindow::setupHeader()
     // Options button
     m_btOptions = ControlUtil::createOptionsButton(3);
 
+    // Statistics button
+    m_btStatistics = ControlUtil::createStatisticsButton();
+
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
 
@@ -229,6 +232,7 @@ QLayout *ConnectionsWindow::setupHeader()
     layout->addWidget(m_btListOptions);
     layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btOptions);
+    layout->addWidget(m_btStatistics);
     layout->addWidget(m_btMenu);
 
     return layout;

@@ -59,6 +59,7 @@ private:
     QToolButton *m_btSaveAsText = nullptr;
     QToolButton *m_btUpdateZones = nullptr;
     QToolButton *m_btOptions = nullptr;
+    QToolButton *m_btStatistics = nullptr;
     QPushButton *m_btMenu = nullptr;
     TableView *m_zoneListView = nullptr;
 

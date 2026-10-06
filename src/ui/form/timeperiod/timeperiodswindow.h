@@ -54,6 +54,7 @@ private:
     QAction *m_actEditTimePeriod = nullptr;
     QAction *m_actRemoveTimePeriod = nullptr;
     QToolButton *m_btOptions = nullptr;
+    QToolButton *m_btStatistics = nullptr;
     QPushButton *m_btMenu = nullptr;
     TableView *m_timePeriodListView = nullptr;
 

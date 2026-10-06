@@ -151,12 +151,15 @@ QLayout *ZonesWindow::setupHeader()
     // Options button
     m_btOptions = ControlUtil::createOptionsButton();
 
+    // Statistics button
+    m_btStatistics = ControlUtil::createStatisticsButton();
+
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, ControlUtil::createVSeparator(),
             m_btSaveAsText, ControlUtil::createVSeparator(), m_btUpdateZones,
-            /*stretch*/ nullptr, m_btOptions, m_btMenu });
+            /*stretch*/ nullptr, m_btOptions, m_btStatistics, m_btMenu });
 
     return layout;
 }

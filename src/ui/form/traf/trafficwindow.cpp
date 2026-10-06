@@ -205,13 +205,16 @@ QLayout *TrafficWindow::setupHeader()
     // Options button
     m_btOptions = ControlUtil::createOptionsButton(3);
 
+    // Statistics button
+    m_btStatistics = ControlUtil::createStatisticsButton();
+
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, ControlUtil::createVSeparator(),
             m_editSearch, ControlUtil::createVSeparator(), m_btRefresh,
             /*stretch*/ nullptr, m_traphUnits, m_comboTrafUnit, ControlUtil::createVSeparator(),
-            m_btOptions, m_btMenu });
+            m_btOptions, m_btStatistics, m_btMenu });
 
     return layout;
 }

@@ -59,6 +59,7 @@ private:
     QAction *m_actEditSpeedLimit = nullptr;
     QAction *m_actRemoveSpeedLimit = nullptr;
     QToolButton *m_btOptions = nullptr;
+    QToolButton *m_btStatistics = nullptr;
     QPushButton *m_btMenu = nullptr;
     TableView *m_speedLimitListView = nullptr;
 

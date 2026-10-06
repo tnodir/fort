@@ -91,6 +91,7 @@ private:
     QLabel *m_traphUnits = nullptr;
     QComboBox *m_comboTrafUnit = nullptr;
     QToolButton *m_btOptions = nullptr;
+    QToolButton *m_btStatistics = nullptr;
     QPushButton *m_btMenu = nullptr;
     QSplitter *m_splitter = nullptr;
     TableView *m_appListView = nullptr;

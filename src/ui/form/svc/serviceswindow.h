@@ -64,6 +64,7 @@ private:
     QToolButton *m_btRefresh = nullptr;
     QLineEdit *m_editSearch = nullptr;
     QToolButton *m_btOptions = nullptr;
+    QToolButton *m_btStatistics = nullptr;
     QPushButton *m_btMenu = nullptr;
     TableView *m_serviceListView = nullptr;
 };

@@ -183,6 +183,7 @@ QWidget *HomeWindow::setupHeader()
     layout->addWidget(m_btPasswordLock);
     layout->addWidget(m_btPasswordUnlock);
     layout->addWidget(m_btOptions);
+    layout->addWidget(m_btStatistics);
     layout->addWidget(m_btMenu);
 
     frame->setLayout(layout);
@@ -197,6 +198,9 @@ void HomeWindow::setupHeaderButtons()
 
     // Options button
     m_btOptions = ControlUtil::createOptionsButton();
+
+    // Statistics button
+    m_btStatistics = ControlUtil::createStatisticsButton();
 
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();

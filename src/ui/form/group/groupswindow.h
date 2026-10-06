@@ -54,6 +54,7 @@ private:
     QAction *m_actEditGroup = nullptr;
     QAction *m_actRemoveGroup = nullptr;
     QToolButton *m_btOptions = nullptr;
+    QToolButton *m_btStatistics = nullptr;
     QPushButton *m_btMenu = nullptr;
     TableView *m_groupListView = nullptr;
 

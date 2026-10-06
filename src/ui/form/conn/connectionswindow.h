@@ -87,6 +87,7 @@ private:
     QCheckBox *m_cbAutoScroll = nullptr;
     QCheckBox *m_cbShowHostNames = nullptr;
     QToolButton *m_btOptions = nullptr;
+    QToolButton *m_btStatistics = nullptr;
     QPushButton *m_btMenu = nullptr;
     TableView *m_connListView = nullptr;
     AppInfoRow *m_appInfoRow = nullptr;

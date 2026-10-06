@@ -148,11 +148,14 @@ QLayout *SpeedLimitsWindow::setupHeader()
     // Options button
     m_btOptions = ControlUtil::createOptionsButton();
 
+    // Statistics button
+    m_btStatistics = ControlUtil::createStatisticsButton();
+
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
 
     auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_btEdit, /*stretch*/ nullptr, m_btOptions, m_btMenu });
+            { m_btEdit, /*stretch*/ nullptr, m_btOptions, m_btStatistics, m_btMenu });
 
     return layout;
 }

@@ -242,6 +242,9 @@ QLayout *ProgramsWindow::setupHeader()
     // Options button
     m_btOptions = ControlUtil::createOptionsButton();
 
+    // Statistics button
+    m_btStatistics = ControlUtil::createStatisticsButton();
+
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
 
@@ -256,6 +259,7 @@ QLayout *ProgramsWindow::setupHeader()
     layout->addLayout(sortStatesLayout);
     layout->addStretch();
     layout->addWidget(m_btOptions);
+    layout->addWidget(m_btStatistics);
     layout->addWidget(m_btMenu);
 
     return layout;
