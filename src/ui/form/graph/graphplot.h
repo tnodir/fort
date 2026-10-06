@@ -100,6 +100,7 @@ private:
     void mergePoint(const GraphPoint &point);
 
     qint64 lastUnixTime() const;
+    int secondPixels() const;
     int keyRangeSize() const;
 
     quint64 maxBits(qint64 keyLower) const;
@@ -129,7 +130,7 @@ private:
 
     int valueToPixel(double value) const;
     QVector<int> valuesToPixels(const QVector<double> &values) const;
-    QRectF barRect(int x, quint64 bits) const;
+    QRectF barRect(qreal x, qreal width, quint64 bits) const;
 
 private:
     bool m_mousePressed : 1 = false;

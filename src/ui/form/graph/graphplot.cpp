@@ -15,8 +15,6 @@ inline constexpr int tickLength = 5;
 inline constexpr int subTickLength = 2;
 inline constexpr int tickLabelPadding = 2;
 inline constexpr int keyPixels = 4; // pixels per second
-inline constexpr int pixelMsecs = 1000 / keyPixels;
-inline constexpr int barWidth = 2;
 inline constexpr int risingMsecs = 400;
 inline constexpr int scaleMsecs = 400;
 inline constexpr int speedBgAlpha = 130;
@@ -391,12 +389,19 @@ qint64 GraphPlot::lastUnixTime() const
     return m_points.isEmpty() ? 0 : m_points.constLast().unixTime;
 }
 
+int GraphPlot::secondPixels() const
+{
+    // Device pixels per second: the bars are aligned to them to keep their widths on scroll
+    return qMax(qRound(keyPixels * devicePixelRatioF()), 2);
+}
+
 int GraphPlot::keyRangeSize() const
 {
     const int width = m_axisRect.isNull() ? viewport()->width() : m_axisRect.width();
+    const int widthPixels = qFloor(width * devicePixelRatioF());
 
     // Include the partially visible second
-    return qMax(width / keyPixels, 0) + 1;
+    return qMax(widthPixels / secondPixels(), 0) + 1;
 }
 
 quint64 GraphPlot::maxBits(qint64 keyLower) const
@@ -567,8 +572,12 @@ void GraphPlot::startRising(qint64 unixTime)
 
 void GraphPlot::updateBars()
 {
-    // The last second is at the right edge
-    const int right = m_axisRect.left() + m_axisRect.width();
+    const qreal dpr = devicePixelRatioF();
+    const int secondPixels = this->secondPixels();
+    const qreal barWidth = (secondPixels / 2) / dpr;
+
+    // The last second is at the right edge, in device pixels
+    const int right = qFloor((m_axisRect.left() + m_axisRect.width()) * dpr);
     const qint64 keyUpper = lastUnixTime();
     const qint64 keyLower = keyUpper - keyRangeSize();
 
@@ -582,9 +591,9 @@ void GraphPlot::updateBars()
         if (point.unixTime < keyLower)
             continue;
 
-        const int x = right - int(keyUpper - point.unixTime) * keyPixels;
-        const QRectF inRect = barRect(x - barWidth, point.inBits);
-        const QRectF outRect = barRect(x, point.outBits);
+        const qreal x = (right - int(keyUpper - point.unixTime) * secondPixels) / dpr;
+        const QRectF inRect = barRect(x - barWidth, barWidth, point.inBits);
+        const QRectF outRect = barRect(x, barWidth, point.outBits);
 
         // The rising bars are drawn separately
         if (point.unixTime == m_risingTime) {
@@ -615,15 +624,19 @@ void GraphPlot::updateRisingBars()
 
 void GraphPlot::updateScroll()
 {
-    // Move the bars to the left smoothly: by a pixel, up to the next second
+    // Move the bars to the left smoothly: by a device pixel, up to the next second
+    const int secondPixels = this->secondPixels();
     const qint64 msecs = QDateTime::currentMSecsSinceEpoch() - lastUnixTime() * 1000;
-    const int shift = int(qBound(qint64(0), msecs / pixelMsecs, qint64(keyPixels)));
+    const int shift = int(qBound(qint64(0), msecs * secondPixels / 1000, qint64(secondPixels)));
+    const qreal x = -shift / devicePixelRatioF();
 
-    m_barsIn->setX(-shift);
-    m_barsOut->setX(-shift);
+    m_barsIn->setX(x);
+    m_barsOut->setX(x);
 
-    if (shift < keyPixels) {
-        m_scrollTimer.start(pixelMsecs - int(msecs % pixelMsecs));
+    if (shift < secondPixels) {
+        // Wait for the next pixel
+        const qint64 nextMsecs = ((shift + 1) * 1000 + secondPixels - 1) / secondPixels;
+        m_scrollTimer.start(int(nextMsecs - msecs));
     }
 }
 
@@ -692,10 +705,10 @@ QVector<int> GraphPlot::valuesToPixels(const QVector<double> &values) const
     return pixels;
 }
 
-QRectF GraphPlot::barRect(int x, quint64 bits) const
+QRectF GraphPlot::barRect(qreal x, qreal width, quint64 bits) const
 {
     const int bottom = m_axisRect.bottom();
     const int y = qMin(valueToPixel(double(bits)), bottom);
 
-    return QRectF(x, y, barWidth, bottom - y + 1);
+    return QRectF(x, y, width, bottom - y + 1);
 }
