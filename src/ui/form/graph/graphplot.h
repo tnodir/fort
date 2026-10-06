@@ -73,6 +73,9 @@ public:
     int maxSeconds() const { return m_maxSeconds; }
     void setMaxSeconds(int v) { m_maxSeconds = v; }
 
+    int barWidth() const { return m_barWidth; }
+    void setBarWidth(int v) { m_barWidth = v; }
+
     qint64 fixedValueMax() const { return m_fixedValueMax; }
     void setFixedValueMax(qint64 v) { m_fixedValueMax = v; }
 
@@ -193,6 +196,7 @@ private:
     bool m_barsEmpty : 1 = true;
 
     int m_maxSeconds = 500;
+    int m_barWidth = 5; // pixels per second
 
     double m_valueUpper = 5; // shown
     double m_valueTarget = 5;

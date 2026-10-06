@@ -548,6 +548,13 @@ public:
     }
     void setGraphWindowTickLabelSize(int v) { setValue("graphWindow/tickLabelSize", v); }
 
+    constexpr int graphWindowBarWidthDefault() const { return 5; }
+    int graphWindowBarWidth() const
+    {
+        return valueInt("graphWindow/barWidth", graphWindowBarWidthDefault());
+    }
+    void setGraphWindowBarWidth(int v) { setValue("graphWindow/barWidth", v); }
+
     static QString statWindowGroup() { return "statWindow"; }
 
     QRect statWindowGeometry() const { return value("statWindow/geometry").toRect(); }

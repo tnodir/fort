@@ -43,6 +43,7 @@ void GraphPage::onResetToDefault()
     m_graphOpacity->spinBox()->setValue(iniUser.graphWindowOpacityDefault());
     m_graphHoverOpacity->spinBox()->setValue(iniUser.graphWindowHoverOpacityDefault());
     m_graphTickLabelSize->spinBox()->setValue(iniUser.graphWindowTickLabelSizeDefault());
+    m_graphBarWidth->spinBox()->setValue(iniUser.graphWindowBarWidthDefault());
     m_graphMaxSeconds->spinBox()->setValue(iniUser.graphWindowMaxSecondsDefault());
     m_graphFixedSpeed->spinBox()->setValue(iniUser.graphWindowFixedSpeedDefault());
     m_comboTrafUnit->setCurrentIndex(iniUser.graphWindowTrafUnitDefault());
@@ -85,6 +86,7 @@ void GraphPage::onRetranslateUi()
     m_graphOpacity->label()->setText(tr("Opacity:"));
     m_graphHoverOpacity->label()->setText(tr("Hover opacity:"));
     m_graphTickLabelSize->label()->setText(tr("Tick label size:"));
+    m_graphBarWidth->label()->setText(tr("Bar width:"));
     m_graphMaxSeconds->label()->setText(tr("Max seconds:"));
     m_graphFixedSpeed->label()->setText(tr("Fixed speed:"));
     retranslateFixedSpeedCombo();
@@ -189,6 +191,7 @@ void GraphPage::setupGraphBox()
             m_graphOpacity,
             m_graphHoverOpacity,
             m_graphTickLabelSize,
+            m_graphBarWidth,
             m_graphMaxSeconds,
             m_graphFixedSpeed,
             ControlUtil::createSeparator(),
@@ -285,6 +288,14 @@ void GraphPage::setupGraphOptions()
             ControlUtil::createSpin(iniUser().graphWindowTickLabelSize(), 1, 99, {}, [&](int v) {
                 if (iniUser().graphWindowTickLabelSize() != v) {
                     iniUser().setGraphWindowTickLabelSize(v);
+                    ctrl()->setIniUserEdited();
+                }
+            });
+
+    m_graphBarWidth =
+            ControlUtil::createSpin(iniUser().graphWindowBarWidth(), 1, 99, " px", [&](int v) {
+                if (iniUser().graphWindowBarWidth() != v) {
+                    iniUser().setGraphWindowBarWidth(v);
                     ctrl()->setIniUserEdited();
                 }
             });

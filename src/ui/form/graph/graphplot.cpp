@@ -18,7 +18,6 @@ inline constexpr int tickLength = 5;
 inline constexpr int subTickLength = 2;
 inline constexpr int tickLabelPadding = 4;
 inline constexpr int unitLabelPadding = 4;
-inline constexpr int keyPixels = 4; // pixels per second
 inline constexpr int risingMsecs = 400;
 inline constexpr int scaleMsecs = 400;
 inline constexpr int speedBgAlpha = 130;
@@ -562,7 +561,7 @@ qint64 GraphPlot::lastUnixTime() const
 int GraphPlot::secondPixels() const
 {
     // Device pixels per second: the bars are aligned to them to keep their widths on scroll
-    return qMax(qRound(keyPixels * devicePixelRatioF()), 2);
+    return qMax(qRound(m_barWidth * devicePixelRatioF()), 1);
 }
 
 int GraphPlot::keyRangeSize() const

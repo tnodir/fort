@@ -54,6 +54,7 @@ private:
     LabelSpin *m_graphOpacity = nullptr;
     LabelSpin *m_graphHoverOpacity = nullptr;
     LabelSpin *m_graphTickLabelSize = nullptr;
+    LabelSpin *m_graphBarWidth = nullptr;
     LabelSpin *m_graphMaxSeconds = nullptr;
     LabelSpinCombo *m_graphFixedSpeed = nullptr;
     QLabel *m_traphUnits = nullptr;
