@@ -21,7 +21,7 @@ cd build-win10
 jom      :: or nmake
 ```
 
-- Qt is a **custom static build** (`<qt-static>` is the `-prefix` of the scripts below) — see `deploy/qt-build.bat` (win10 x64), `deploy/qt-build-win7.bat`, `deploy/qt-build-arm64.bat`. Many Qt features are disabled (`-no-feature-sql`, `-no-feature-printsupport`, no OpenGL/dbus/icu…), so do not use Qt SQL, QPrinter, QDial, QUndoStack, QMimeDatabase, QDockWidget, etc. It is configured `-release` only, and the release builds (as well as the `msvcbuild-*.bat` driver builds) define `NDEBUG`, so `assert()` isn't compiled at all and a typo inside one goes unnoticed. For a debug build (asserts on) use a regular Qt install (`QT_HOME`, which has the debug libs) in a separate build dir: `%QT_HOME%\bin\qmake.exe -o Makefile ..\src\FortFirewall.pro -spec win32-msvc "CONFIG+=debug" "CONFIG-=release" "CONFIG+=tests"` + `jom`; run its binaries with `%QT_HOME%\bin` in `PATH`.
+- Qt is a **custom static build** (`<qt-static>` is the `-prefix` of the scripts below) — see `deploy/qt-build.bat` (win10 x64), `deploy/qt-build-win7.bat`, `deploy/qt-build-arm64.bat`. Many Qt features are disabled (`-no-feature-sql`, `-no-feature-printsupport`, no OpenGL/dbus/icu…), so do not use Qt SQL, QPrinter, QDial, QUndoStack, QMimeDatabase, QDockWidget, etc. Only `qtbase` is built: no Qt Quick/QML (scene graph), Charts or other modules — draw with QPainter or Graphics View (`QGraphicsView`/`QGraphicsScene`, enabled). It is configured `-release` only, and the release builds (as well as the `msvcbuild-*.bat` driver builds) define `NDEBUG`, so `assert()` isn't compiled at all and a typo inside one goes unnoticed. For a debug build (asserts on) use a regular Qt install (`QT_HOME`, which has the debug libs) in a separate build dir: `%QT_HOME%\bin\qmake.exe -o Makefile ..\src\FortFirewall.pro -spec win32-msvc "CONFIG+=debug" "CONFIG-=release" "CONFIG+=tests"` + `jom`; run its binaries with `%QT_HOME%\bin` in `PATH`.
 - `CONFIG+=tests` adds the `driver` (user-mode driver test app) and `tests` subprojects; `CONFIG+=driver_payload` adds `driver_payload`. Without them only `ui` + `ui_bin` are built.
 - Subproject layout: `ui/` builds the static lib `FortFirewallUILib`, `ui_bin/` links it into `FortFirewall.exe`, tests link the same lib. **New .cpp/.h files must be added explicitly to `SOURCES`/`HEADERS` in `src/ui/FortFirewallUI.pro`.**
 
@@ -113,6 +113,8 @@ No Qt SQL — a hand-rolled SQLite wrapper in `src/ui/3rdparty/sqlite/` (`Sqlite
 ### UI layer
 
 `form/` uses a window + controller pair per feature area (`programswindow.cpp` / `programscontroller.cpp`, and likewise for rules, zones, groups, services, traffic, connections, opt, home), with `basecontroller.cpp` resolving IoC dependencies. Table content comes from `model/` (`TableSqlModel`/`TableItemModel` subclasses querying SQLite directly). Background work goes through `util/worker/` (`WorkerManager` + `WorkerObject` + `WorkerJob`) — used by `appinfo/`, `hostinfo/`, `task/` and `stat/`.
+
+The traffic graph (`form/graph/`) has no 3rd-party chart library: `GraphWindow` (the window, its flags and options) feeds `StatManager::trafficAdded` into `GraphPlot`, a `QGraphicsView` whose scene items (grid, axes, tick labels, in/out bars, text speed) are laid out in the viewport's pixels. It keeps the per-second points itself (a delayed second is merged, not cleared) and is replotted once per second by `GraphWindow`'s timer, not while hidden; the axes are re-laid out only when the value range, the size or the tick labels change.
 
 ## Conventions
 
