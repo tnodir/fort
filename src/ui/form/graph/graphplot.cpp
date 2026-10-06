@@ -18,6 +18,7 @@ inline constexpr int keyPixels = 4; // pixels per second
 inline constexpr int pixelMsecs = 1000 / keyPixels;
 inline constexpr int barWidth = 2;
 inline constexpr int risingMsecs = 400;
+inline constexpr int scaleMsecs = 400;
 inline constexpr int speedBgAlpha = 130;
 inline constexpr int mouseMoveDistance = 3;
 
@@ -79,6 +80,7 @@ GraphPlot::GraphPlot(QWidget *parent) : QGraphicsView(parent)
     setupItems();
     setupScrollTimer();
     setupRisingAnimation();
+    setupScaleAnimation();
 }
 
 void GraphPlot::setUnitFormat(FormatUtil::SizeFormat v)
@@ -187,22 +189,12 @@ void GraphPlot::cancelMousePressAndDragging()
 
 void GraphPlot::replot()
 {
-    const int keyRangeSize = this->keyRangeSize();
-    const qint64 keyLower = lastUnixTime() - keyRangeSize;
+    const qint64 keyLower = lastUnixTime() - keyRangeSize();
 
-    updateValueRange(keyLower);
-
-    // The axes depend on the value range, the view's size and the tick labels only
-    if (m_axesChanged) {
-        m_axesChanged = false;
-        layoutAxes();
-    }
-
+    animateValueUpper(targetValueUpper(keyLower));
     startRising(lastUnixTime() - 1); // the last complete second
-    updateBars(keyLower);
-    updateRisingBars();
-    updateSpeedBox();
 
+    redraw();
     updateScroll();
 }
 
@@ -353,6 +345,14 @@ void GraphPlot::setupRisingAnimation()
             &GraphPlot::updateRisingBars);
 }
 
+void GraphPlot::setupScaleAnimation()
+{
+    m_scaleAnimation.setDuration(scaleMsecs);
+    m_scaleAnimation.setEasingCurve(QEasingCurve::OutCubic);
+
+    connect(&m_scaleAnimation, &QVariantAnimation::valueChanged, this, &GraphPlot::updateScale);
+}
+
 int GraphPlot::pointIndex(qint64 unixTime) const
 {
     const auto it = std::lower_bound(m_points.cbegin(), m_points.cend(), unixTime,
@@ -413,6 +413,37 @@ quint64 GraphPlot::maxBits(qint64 keyLower) const
     return bits;
 }
 
+double GraphPlot::targetValueUpper(qint64 keyLower) const
+{
+    if (m_fixedValueMax > 0)
+        return double(m_fixedValueMax);
+
+    // Keep the current range for empty traffic
+    const quint64 bits = maxBits(keyLower);
+
+    return (bits > 0) ? double(bits) : m_valueTarget;
+}
+
+void GraphPlot::animateValueUpper(double v)
+{
+    if (m_valueTarget == v)
+        return;
+
+    m_valueTarget = v;
+
+    // The first layout isn't animated
+    if (m_axisRect.isNull()) {
+        setValueUpper(v);
+        return;
+    }
+
+    // Change the scale smoothly from the shown one
+    m_scaleAnimation.stop();
+    m_scaleAnimation.setStartValue(m_valueUpper);
+    m_scaleAnimation.setEndValue(v);
+    m_scaleAnimation.start();
+}
+
 void GraphPlot::setValueUpper(double v)
 {
     if (m_valueUpper == v)
@@ -422,18 +453,26 @@ void GraphPlot::setValueUpper(double v)
     m_axesChanged = true;
 }
 
-void GraphPlot::updateValueRange(qint64 keyLower)
+void GraphPlot::updateScale(const QVariant &value)
 {
-    if (m_fixedValueMax > 0) {
-        setValueUpper(double(m_fixedValueMax));
-        return;
+    setValueUpper(value.toDouble());
+
+    if (m_axesChanged) {
+        redraw();
+    }
+}
+
+void GraphPlot::redraw()
+{
+    // The axes depend on the value range, the view's size and the tick labels only
+    if (m_axesChanged) {
+        m_axesChanged = false;
+        layoutAxes();
     }
 
-    // Keep the current range for empty traffic
-    const quint64 bits = maxBits(keyLower);
-    if (bits > 0) {
-        setValueUpper(double(bits));
-    }
+    updateBars();
+    updateRisingBars();
+    updateSpeedBox();
 }
 
 void GraphPlot::layoutAxes()
@@ -527,11 +566,12 @@ void GraphPlot::startRising(qint64 unixTime)
     m_risingAnimation.start();
 }
 
-void GraphPlot::updateBars(qint64 keyLower)
+void GraphPlot::updateBars()
 {
     // The last second is at the right edge
     const int right = m_axisRect.left() + m_axisRect.width();
     const qint64 keyUpper = lastUnixTime();
+    const qint64 keyLower = keyUpper - keyRangeSize();
 
     QPainterPath pathIn;
     QPainterPath pathOut;

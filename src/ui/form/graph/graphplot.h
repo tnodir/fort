@@ -91,6 +91,7 @@ private:
     void setupItems();
     void setupScrollTimer();
     void setupRisingAnimation();
+    void setupScaleAnimation();
 
     int pointIndex(qint64 unixTime) const;
     bool isPointAt(int index, qint64 unixTime) const;
@@ -102,8 +103,12 @@ private:
     int keyRangeSize() const;
 
     quint64 maxBits(qint64 keyLower) const;
+    double targetValueUpper(qint64 keyLower) const;
+    void animateValueUpper(double v);
     void setValueUpper(double v);
-    void updateValueRange(qint64 keyLower);
+    void updateScale(const QVariant &value);
+
+    void redraw();
 
     void layoutAxes();
 
@@ -115,7 +120,7 @@ private:
 
     void updateGrid(const QVector<int> &tickYs);
     void startRising(qint64 unixTime);
-    void updateBars(qint64 keyLower);
+    void updateBars();
     void updateRisingBars();
     void updateScroll();
     void updateSpeedBox();
@@ -134,7 +139,8 @@ private:
 
     int m_maxSeconds = 500;
 
-    double m_valueUpper = 5;
+    double m_valueUpper = 5; // shown
+    double m_valueTarget = 5;
 
     qint64 m_fixedValueMax = 0;
     qint64 m_risingTime = 0;
@@ -162,6 +168,7 @@ private:
 
     QTimer m_scrollTimer;
     QVariantAnimation m_risingAnimation;
+    QVariantAnimation m_scaleAnimation;
 
     QList<QGraphicsSimpleTextItem *> m_tickLabels;
     QList<GraphPoint> m_points;
