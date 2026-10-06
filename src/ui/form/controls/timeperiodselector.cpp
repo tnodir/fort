@@ -63,6 +63,7 @@ void TimePeriodSelector::setupUi()
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { m_cbPeriodEnabled, m_comboPeriod, m_btTimePeriods }, /*margin=*/0);
+    layout->setSpacing(0);
 
     this->setLayout(layout);
 }
