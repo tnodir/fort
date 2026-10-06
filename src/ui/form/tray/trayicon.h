@@ -87,6 +87,7 @@ private:
     void setupTrayMenu();
     void setupTrayMenuTopActions();
     void setupTrayMenuOptions();
+    void setupTrayMenuStatistics();
     void setupTrayMenuBlockTraffic();
     void setupTrayMenuFilterMode();
     void setupTrayMenuGroupFlagActions();
@@ -157,7 +158,9 @@ private:
     QAction *m_timePeriodsAction = nullptr;
     QAction *m_servicesAction = nullptr;
     QAction *m_filterSimAction = nullptr;
+    QMenu *m_statisticsMenu = nullptr;
     QAction *m_statisticsAction = nullptr;
+    QAction *m_connectionsAction = nullptr;
     QAction *m_graphAction = nullptr;
     QAction *m_filterEnabledAction = nullptr;
     QAction *m_snoozeAlertsAction = nullptr;

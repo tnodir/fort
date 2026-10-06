@@ -11,7 +11,6 @@
 #include <user/iniuser.h>
 #include <util/iconcache.h>
 
-#include "connectionspage.h"
 #include "trafficpage.h"
 
 using namespace Fort;
@@ -36,7 +35,6 @@ void StatMainPage::onRestoreWindowState(IniUser &ini)
 void StatMainPage::onRetranslateUi()
 {
     m_tabWidget->setTabText(0, tr("Traffic"));
-    m_tabWidget->setTabText(1, tr("Connections"));
 }
 
 void StatMainPage::setupUi()
@@ -53,11 +51,9 @@ void StatMainPage::setupUi()
 void StatMainPage::setupTabBar()
 {
     auto statisticsPage = new TrafficPage(ctrl());
-    auto connectionsPage = new ConnectionsPage(ctrl());
 
     m_tabWidget = new QTabWidget();
     m_tabWidget->addTab(statisticsPage, IconCache::icon(":/icons/chart_bar.png"), QString());
-    m_tabWidget->addTab(connectionsPage, IconCache::icon(":/icons/connect.png"), QString());
 
     setupCornerWidget();
 

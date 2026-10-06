@@ -27,7 +27,7 @@ void UserSettings::migrateQtVerOnLoad()
     setCacheValue("ruleWindow/rulesHeader", emptyArray);
     setCacheValue("serviceWindow/servicesHeader", emptyArray);
     setCacheValue("zoneWindow/zonesHeader", emptyArray);
-    setCacheValue("statWindow/connListHeader", emptyArray);
+    setCacheValue("connWindow/connListHeader", emptyArray);
 }
 
 void UserSettings::migrateQtVerOnWrite()
@@ -72,6 +72,15 @@ void UserSettings::migrateIniOnLoad()
     // COMPAT: v3.13.6
     if (version < 0x031306) {
         setCacheValue("homeWindow/autoShowMenu", ini()->value("home/autoShowMenu"));
+    }
+
+    // COMPAT: v3.20.1: Statistics window ~> Traffic & Connections windows
+    if (version < 0x032001) {
+        // The cached values of the "statWindow" keys may be migrated from older versions
+        setCacheValue("connWindow/geometry", iniValue("statWindow/geometry"));
+        setCacheValue("connWindow/maximized", iniValue("statWindow/maximized"));
+        setCacheValue("connWindow/autoScroll", iniValue("statWindow/autoScroll"));
+        setCacheValue("connWindow/showHostNames", iniValue("statWindow/showHostNames"));
     }
 }
 
@@ -126,5 +135,17 @@ void UserSettings::migrateIniOnWrite()
     if (version < 0x031306) {
         removeIniKey("home/autoShowMenu");
         ini()->setValue("homeWindow/autoShowMenu", cacheValue("homeWindow/autoShowMenu"));
+    }
+
+    // COMPAT: v3.20.1: Statistics window ~> Traffic & Connections windows
+    if (version < 0x032001) {
+        removeIniKey("statWindow/connListHeader");
+        removeIniKey("statWindow/connListHeaderVersion");
+        removeIniKey("statWindow/autoScroll");
+        removeIniKey("statWindow/showHostNames");
+        ini()->setValue("connWindow/geometry", cacheValue("connWindow/geometry"));
+        ini()->setValue("connWindow/maximized", cacheValue("connWindow/maximized"));
+        ini()->setValue("connWindow/autoScroll", cacheValue("connWindow/autoScroll"));
+        ini()->setValue("connWindow/showHostNames", cacheValue("connWindow/showHostNames"));
     }
 }

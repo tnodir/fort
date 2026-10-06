@@ -415,7 +415,9 @@ void TrayIcon::retranslateUi()
     m_timePeriodsAction->setText(tr("Time Periods"));
     m_servicesAction->setText(tr("Services"));
     m_filterSimAction->setText(tr("Filter Simulator"));
+    m_statisticsMenu->setTitle(tr("Statistics"));
     m_statisticsAction->setText(tr("Statistics"));
+    m_connectionsAction->setText(tr("Connections"));
     m_graphAction->setText(tr("Traffic Graph"));
 
     m_filterEnabledAction->setText(tr("Filter Enabled"));
@@ -496,9 +498,8 @@ void TrayIcon::setupTrayMenuTopActions()
     setupTrayMenuOptions();
     m_menu->addMenu(m_optionsMenu);
 
-    m_statisticsAction = addAction(m_menu,
-            { ":/icons/chart_bar.png", this, SLOT(onShowWindowAction()), WindowStatistics });
-    addHotKey(m_statisticsAction, HotKey::statistics);
+    setupTrayMenuStatistics();
+    m_menu->addMenu(m_statisticsMenu);
 
     m_graphAction = addAction(m_menu,
             { ":/icons/action_log.png", this, SLOT(onShowWindowAction()), WindowGraph,
@@ -575,6 +576,20 @@ void TrayIcon::setupTrayMenuOptions()
     m_filterSimAction = addAction(m_optionsMenu,
             { ":/icons/filter.png", this, SLOT(onShowWindowAction()), WindowFilterSim });
     addHotKey(m_filterSimAction, HotKey::filterSim);
+}
+
+void TrayIcon::setupTrayMenuStatistics()
+{
+    m_statisticsMenu = new QMenu(m_menu);
+    m_statisticsMenu->setIcon(IconCache::icon(":/icons/chart_bar.png"));
+
+    m_statisticsAction = addAction(m_statisticsMenu,
+            { ":/icons/chart_bar.png", this, SLOT(onShowWindowAction()), WindowStatistics });
+    addHotKey(m_statisticsAction, HotKey::statistics);
+
+    m_connectionsAction = addAction(m_statisticsMenu,
+            { ":/icons/connect.png", this, SLOT(onShowWindowAction()), WindowConnections });
+    addHotKey(m_connectionsAction, HotKey::connections);
 }
 
 void TrayIcon::setupTrayMenuBlockTraffic()

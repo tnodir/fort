@@ -8,6 +8,7 @@
 #include <QStyleHints>
 
 #include <conf/confmanager.h>
+#include <form/conn/connectionswindow.h>
 #include <form/controls/mainwindow.h>
 #include <form/dialog/dialogutil.h>
 #include <form/dialog/passworddialog.h>
@@ -51,8 +52,9 @@ WindowManager::WindowManager(QObject *parent) : QObject(parent) { }
 bool WindowManager::hasForm(WindowCode code)
 {
     constexpr quint32 windowForms = (WindowHome | WindowPrograms | WindowProgramAlert
-            | WindowServices | WindowOptions | WindowRules | WindowStatistics | WindowZones
-            | WindowGroups | WindowSpeedLimits | WindowTimePeriods | WindowFilterSim | WindowGraph);
+            | WindowServices | WindowOptions | WindowRules | WindowStatistics | WindowConnections
+            | WindowZones | WindowGroups | WindowSpeedLimits | WindowTimePeriods | WindowFilterSim
+            | WindowGraph);
 
     return (code & windowForms) != 0;
 }
@@ -105,6 +107,11 @@ OptionsWindow *WindowManager::optWindow() const
 StatisticsWindow *WindowManager::statWindow() const
 {
     return static_cast<StatisticsWindow *>(windowByCode(WindowStatistics));
+}
+
+ConnectionsWindow *WindowManager::connWindow() const
+{
+    return static_cast<ConnectionsWindow *>(windowByCode(WindowConnections));
 }
 
 ServicesWindow *WindowManager::servicesWindow() const

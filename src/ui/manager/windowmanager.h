@@ -10,6 +10,7 @@
 #include <util/ioc/iocservice.h>
 #include <util/taskbarbutton.h>
 
+class ConnectionsWindow;
 class FilterSimWindow;
 class FormWindow;
 class FortSettings;
@@ -56,6 +57,7 @@ public:
     RulesWindow *rulesWindow() const;
     OptionsWindow *optWindow() const;
     StatisticsWindow *statWindow() const;
+    ConnectionsWindow *connWindow() const;
     ServicesWindow *servicesWindow() const;
     ZonesWindow *zonesWindow() const;
     GroupsWindow *groupsWindow() const;
@@ -111,6 +113,8 @@ public slots:
     bool showRulesWindow() { return showWindowByCode(WindowRules); }
 
     bool showStatisticsWindow() { return showWindowByCode(WindowStatistics); }
+
+    bool showConnectionsWindow() { return showWindowByCode(WindowConnections); }
 
     bool showZonesWindow() { return showWindowByCode(WindowZones); }
 
@@ -221,6 +225,7 @@ private:
         FormPointer(WindowOptions),
         FormPointer(WindowRules),
         FormPointer(WindowStatistics),
+        FormPointer(WindowConnections),
         FormPointer(WindowZones),
         FormPointer(WindowGroups),
         FormPointer(WindowSpeedLimits),

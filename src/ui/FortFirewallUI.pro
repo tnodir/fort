@@ -55,6 +55,8 @@ SOURCES += \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
     form/basecontroller.cpp \
+    form/conn/connectionscontroller.cpp \
+    form/conn/connectionswindow.cpp \
     form/controls/appinforow.cpp \
     form/controls/checkspincombo.cpp \
     form/controls/checktimeperiod.cpp \
@@ -137,7 +139,6 @@ SOURCES += \
     form/speedlimit/speedlimiteditdialog.cpp \
     form/speedlimit/speedlimitscontroller.cpp \
     form/speedlimit/speedlimitswindow.cpp \
-    form/stat/pages/connectionspage.cpp \
     form/stat/pages/statbasepage.cpp \
     form/stat/pages/statmainpage.cpp \
     form/stat/pages/trafficpage.cpp \
@@ -357,6 +358,8 @@ HEADERS += \
     driver/drivermanager.h \
     driver/driverworker.h \
     form/basecontroller.h \
+    form/conn/connectionscontroller.h \
+    form/conn/connectionswindow.h \
     form/controls/appinforow.h \
     form/controls/checkspincombo.h \
     form/controls/checktimeperiod.h \
@@ -440,7 +443,6 @@ HEADERS += \
     form/speedlimit/speedlimiteditdialog.h \
     form/speedlimit/speedlimitscontroller.h \
     form/speedlimit/speedlimitswindow.h \
-    form/stat/pages/connectionspage.h \
     form/stat/pages/statbasepage.h \
     form/stat/pages/statmainpage.h \
     form/stat/pages/trafficpage.h \

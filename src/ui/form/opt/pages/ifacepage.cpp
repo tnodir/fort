@@ -224,6 +224,7 @@ void IfacePage::retranslateComboHotKey()
         TrayIcon::tr("Services"),
         TrayIcon::tr("Filter Simulator"),
         TrayIcon::tr("Statistics"),
+        TrayIcon::tr("Connections"),
         TrayIcon::tr("Traffic Graph"),
         TrayIcon::tr("Filter Enabled"),
         TrayIcon::tr("Snooze Alerts"),

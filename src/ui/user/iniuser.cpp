@@ -16,6 +16,7 @@ const char *const list[] = {
     services,
     filterSim,
     statistics,
+    connections,
     graph,
     filter,
     snoozeAlerts,

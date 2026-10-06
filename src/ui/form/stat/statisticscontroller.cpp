@@ -1,7 +1,6 @@
 #include "statisticscontroller.h"
 
 #include <fortglobal.h>
-#include <stat/statconnmanager.h>
 #include <stat/statmanager.h>
 
 using namespace Fort;
@@ -21,9 +20,4 @@ void StatisticsController::deleteStatApp(qint64 appId)
 void StatisticsController::resetAppTotals()
 {
     statManager()->resetAppTrafTotals();
-}
-
-void StatisticsController::deleteConn(qint64 connIdTo)
-{
-    statConnManager()->deleteConn(connIdTo);
 }

@@ -16,6 +16,7 @@ const char *const timePeriods = "timePeriods";
 const char *const services = "services";
 const char *const filterSim = "filterSim";
 const char *const statistics = "statistics";
+const char *const connections = "connections";
 const char *const graph = "graph";
 
 const char *const filter = "filter";
@@ -533,17 +534,25 @@ public:
     QByteArray statAppListHeader() const { return valueByteArray("statWindow/appListHeader"); }
     void setStatAppListHeader(const QByteArray &v) { setValue("statWindow/appListHeader", v); }
 
-    int connListHeaderVersion() const { return valueInt("statWindow/connListHeaderVersion"); }
-    void setConnListHeaderVersion(int v) { setValue("statWindow/connListHeaderVersion", v); }
+    static QString connWindowGroup() { return "connWindow"; }
 
-    QByteArray connListHeader() const { return valueByteArray("statWindow/connListHeader"); }
-    void setConnListHeader(const QByteArray &v) { setValue("statWindow/connListHeader", v); }
+    QRect connWindowGeometry() const { return value("connWindow/geometry").toRect(); }
+    void setConnWindowGeometry(const QRect &v) { setValue("connWindow/geometry", v); }
 
-    bool statAutoScroll() const { return valueBool("statWindow/autoScroll"); }
-    void setStatAutoScroll(bool on) { setValue("statWindow/autoScroll", on); }
+    bool connWindowMaximized() const { return valueBool("connWindow/maximized"); }
+    void setConnWindowMaximized(bool on) { setValue("connWindow/maximized", on); }
 
-    bool statShowHostNames() const { return valueBool("statWindow/showHostNames"); }
-    void setStatShowHostNames(bool on) { setValue("statWindow/showHostNames", on); }
+    int connListHeaderVersion() const { return valueInt("connWindow/connListHeaderVersion"); }
+    void setConnListHeaderVersion(int v) { setValue("connWindow/connListHeaderVersion", v); }
+
+    QByteArray connListHeader() const { return valueByteArray("connWindow/connListHeader"); }
+    void setConnListHeader(const QByteArray &v) { setValue("connWindow/connListHeader", v); }
+
+    bool connAutoScroll() const { return valueBool("connWindow/autoScroll"); }
+    void setConnAutoScroll(bool on) { setValue("connWindow/autoScroll", on); }
+
+    bool connShowHostNames() const { return valueBool("connWindow/showHostNames"); }
+    void setConnShowHostNames(bool on) { setValue("connWindow/showHostNames", on); }
 
 public:
     void saveDefaultIni();

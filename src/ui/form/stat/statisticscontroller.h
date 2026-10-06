@@ -16,8 +16,6 @@ public:
     void deleteStatApp(qint64 appId);
     void resetAppTotals();
 
-    void deleteConn(qint64 connIdTo = 0);
-
 signals:
     void afterSaveWindowState(IniUser &ini);
     void afterRestoreWindowState(IniUser &ini);
