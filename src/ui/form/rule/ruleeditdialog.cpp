@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QRadioButton>
+#include <QTabWidget>
 #include <QToolButton>
 #include <QVBoxLayout>
 
@@ -86,6 +87,8 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
     m_cbLogAllowedConn->setChecked(ruleRow.logAllowedConn);
     m_cbLogBlockedConn->setChecked(ruleRow.logBlockedConn);
 
+    m_tabWidget->setCurrentIndex(0);
+
     initializeFocus();
 }
 
@@ -96,8 +99,6 @@ void RuleEditDialog::initializeRuleSet()
     confRuleManager()->loadRuleSet(m_ruleRow, ruleSetNames);
 
     ruleSetModel()->initialize(m_ruleRow, ruleSetNames);
-
-    updateRuleSetViewVisible();
 }
 
 void RuleEditDialog::initializeFocus()
@@ -117,6 +118,10 @@ void RuleEditDialog::setupController()
 void RuleEditDialog::retranslateUi()
 {
     this->unsetLocale();
+
+    m_tabWidget->setTabText(0, tr("General"));
+    m_tabWidget->setTabText(1, tr("Presets"));
+    m_tabWidget->setTabText(2, tr("More"));
 
     m_labelEditName->setText(tr("Name:"));
     m_editNotes->setPlaceholderText(tr("Notes"));
@@ -207,6 +212,33 @@ void RuleEditDialog::setupUi()
 
 QLayout *RuleEditDialog::setupMainLayout()
 {
+    // Tab Bar
+    setupTabBar();
+
+    // OK/Cancel
+    auto buttonsLayout = setupButtons();
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_tabWidget);
+    layout->addLayout(buttonsLayout);
+
+    return layout;
+}
+
+void RuleEditDialog::setupTabBar()
+{
+    auto generalTab = setupGeneralTab();
+    auto presetsTab = setupPresetsTab();
+    auto moreTab = setupMoreTab();
+
+    m_tabWidget = new QTabWidget();
+    m_tabWidget->addTab(generalTab, QString());
+    m_tabWidget->addTab(presetsTab, QString());
+    m_tabWidget->addTab(moreTab, QString());
+}
+
+QWidget *RuleEditDialog::setupGeneralTab()
+{
     // Form Layout
     auto formLayout = setupFormLayout();
 
@@ -219,6 +251,19 @@ QLayout *RuleEditDialog::setupMainLayout()
     // Rule Text
     setupEditRuleText();
 
+    auto layout = new QVBoxLayout();
+    layout->addLayout(formLayout);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addLayout(actionsLayout);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addLayout(zonesLayout);
+    layout->addWidget(m_editRuleText, 1);
+
+    return ControlUtil::wrapToWidget(layout);
+}
+
+QWidget *RuleEditDialog::setupPresetsTab()
+{
     // RuleSet Header
     auto ruleSetHeaderLayout = setupRuleSetHeaderLayout();
 
@@ -231,32 +276,25 @@ QLayout *RuleEditDialog::setupMainLayout()
     // Terminate Layout
     auto terminateLayout = setupTerminateLayout();
 
-    // Log Layout
-    auto logLayout = setupLogLayout();
-
-    // OK/Cancel
-    auto buttonsLayout = setupButtons();
-
     auto layout = new QVBoxLayout();
-    layout->addLayout(formLayout);
-    layout->addWidget(ControlUtil::createHSeparator());
-    layout->addStretch();
-    layout->addLayout(actionsLayout);
-    layout->addWidget(ControlUtil::createHSeparator());
-    layout->addLayout(zonesLayout);
-    layout->addWidget(m_editRuleText);
-    layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(ruleSetHeaderLayout);
     layout->addWidget(m_ruleSetView);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(terminateLayout);
-    layout->addWidget(ControlUtil::createHSeparator());
+
+    return ControlUtil::wrapToWidget(layout);
+}
+
+QWidget *RuleEditDialog::setupMoreTab()
+{
+    // Log Layout
+    auto logLayout = setupLogLayout();
+
+    auto layout = new QVBoxLayout();
     layout->addLayout(logLayout);
     layout->addStretch();
-    layout->addWidget(ControlUtil::createHSeparator());
-    layout->addLayout(buttonsLayout);
 
-    return layout;
+    return ControlUtil::wrapToWidget(layout);
 }
 
 QLayout *RuleEditDialog::setupFormLayout()
@@ -390,9 +428,6 @@ void RuleEditDialog::setupRuleSetView()
     m_ruleSetView->setModel(ruleSetModel());
 
     connect(m_ruleSetView, &ListView::doubleClicked, m_btEditPresetRule, &QToolButton::click);
-
-    connect(ruleSetModel(), &RuleSetModel::rowCountChanged, this,
-            &RuleEditDialog::updateRuleSetViewVisible);
 }
 
 void RuleEditDialog::setupRuleSetViewChanged()
@@ -447,8 +482,7 @@ QLayout *RuleEditDialog::setupLogLayout()
     m_cbLogAllowedConn = new QCheckBox();
     m_cbLogBlockedConn = new QCheckBox();
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbLogAllowedConn,
-            ControlUtil::createVSeparator(), m_cbLogBlockedConn, /*stretch*/ nullptr });
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbLogAllowedConn, m_cbLogBlockedConn });
 
     return layout;
 }
@@ -479,13 +513,6 @@ void RuleEditDialog::updateZonesLayout()
     const bool enabled = m_rbAllow->isChecked();
 
     m_cbExclusive->setEnabled(enabled);
-}
-
-void RuleEditDialog::updateRuleSetViewVisible()
-{
-    const int ruleSetSize = ruleSetModel()->rowCount();
-
-    m_ruleSetView->setVisible(ruleSetSize > 0);
 }
 
 int RuleEditDialog::ruleSetCurrentIndex() const
@@ -545,7 +572,7 @@ bool RuleEditDialog::validateFields() const
 bool RuleEditDialog::validateEditName() const
 {
     if (m_editName->text().isEmpty()) {
-        m_editName->setFocus();
+        focusGeneralField(m_editName);
         return false;
     }
 
@@ -558,7 +585,7 @@ bool RuleEditDialog::validateComboRuleType() const
     if (ruleType == Rule::GlobalBeforeAppsRule || ruleType == Rule::GlobalAfterAppsRule) {
         if (confRuleManager()->rulesCountByType(ruleType) >= ConfUtil::ruleGlobalMaxCount()) {
             windowManager()->showErrorBox(tr("Global rules count exceeded!"));
-            m_comboRuleType->setFocus();
+            focusGeneralField(m_comboRuleType);
             return false;
         }
     }
@@ -573,12 +600,18 @@ bool RuleEditDialog::validateEditRuleText() const
         ConfBuffer confBuf;
         if (!confBuf.validateRuleText(ruleText)) {
             windowManager()->showErrorBox(confBuf.errorMessage());
-            m_editRuleText->setFocus();
+            focusGeneralField(m_editRuleText);
             return false;
         }
     }
 
     return true;
+}
+
+void RuleEditDialog::focusGeneralField(QWidget *widget) const
+{
+    m_tabWidget->setCurrentIndex(0);
+    widget->setFocus();
 }
 
 void RuleEditDialog::fillRule(Rule &rule) const

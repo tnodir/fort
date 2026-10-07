@@ -10,6 +10,7 @@ QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QRadioButton)
+QT_FORWARD_DECLARE_CLASS(QTabWidget)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class LineEdit;
@@ -47,6 +48,10 @@ private:
 
     void setupUi();
     QLayout *setupMainLayout();
+    void setupTabBar();
+    QWidget *setupGeneralTab();
+    QWidget *setupPresetsTab();
+    QWidget *setupMoreTab();
     QLayout *setupFormLayout();
     QLayout *setupEnabledLayout();
     QLayout *setupActionsLayout();
@@ -61,7 +66,6 @@ private:
     QLayout *setupButtons();
 
     void updateZonesLayout();
-    void updateRuleSetViewVisible();
 
     int ruleSetCurrentIndex() const;
 
@@ -73,6 +77,8 @@ private:
     bool validateComboRuleType() const;
     bool validateEditRuleText() const;
 
+    void focusGeneralField(QWidget *widget) const;
+
     void fillRule(Rule &rule) const;
 
     void selectPresetRuleDialog();
@@ -82,6 +88,7 @@ private:
     RulesController *m_ctrl = nullptr;
     RuleSetModel *m_ruleSetModel = nullptr;
 
+    QTabWidget *m_tabWidget = nullptr;
     QLabel *m_labelEditName = nullptr;
     LineEdit *m_editName = nullptr;
     QLabel *m_labelEditNotes = nullptr;
