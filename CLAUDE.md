@@ -100,7 +100,7 @@ IPC is `QLocalServer`/`QLocalSocket` (`src/ui/control/`): `ControlManager` liste
 
 Programs belong to `Group`s (`conf/group.h`, max 32: enabled, exclusive, an optional Time Period and an optional Rule) by the `app.groups_mask` bit mask, and reference one-direction `SpeedLimit`s (`conf/speedlimit.h`, max 32) by `app.in_limit_id` / `app.out_limit_id`. They replace the old App. Groups, which `ConfManager`'s DB migration converts.
 
-Groups and Speed Limits may refer to a `TimePeriod` (`conf/timeperiod.h`, max 64: a list of intervals, each with its week days and time from/to) by `period_id`, applied while their `period_enabled` is set. Time Periods are UI-only: `ConfTimePeriodManager` tracks their activity by minutes and folds it into the Groups' and Speed Limits' enabled masks written to the driver (`writeGroupFlags()` / `writeSpeedLimitFlags()`), so the driver knows nothing about them.
+Groups, Speed Limits and Rules may refer to a `TimePeriod` (`conf/timeperiod.h`, max 64: a list of intervals, each with its week days and time from/to) by `period_id`, applied while their `period_enabled` is set. `ConfTimePeriodManager` tracks the Time Periods' activity by minutes. For the Groups and Speed Limits it is folded into their enabled masks written to the driver (`writeGroupFlags()` / `writeSpeedLimitFlags()`). The Rules are checked by the driver: a rule's `period_id` (0 - always active) against the active Time Periods' mask, sent in `FORT_CONF_IO.periods` with `SETCONF` and updated by `SETPERIODS` on the activity's change.
 
 ### Databases
 
