@@ -30,16 +30,19 @@ void GraphCachedItem::paint(
 
     const qreal dpr = painter->device()->devicePixelRatioF();
 
-    if (m_cache.isNull() || m_cache.devicePixelRatio() != dpr) {
+    if (!m_cacheValid || m_cache.devicePixelRatio() != dpr) {
         updateCache(dpr);
     }
 
-    painter->drawPixmap(m_cacheOrigin, m_cache);
+    // The used part of the pixmap
+    const QRectF sourceRect(QPointF(0, 0), QSizeF(m_cacheSize));
+
+    painter->drawPixmap(QRectF(m_cacheOrigin, sourceRect.size() / dpr), m_cache, sourceRect);
 }
 
 void GraphCachedItem::invalidateCache()
 {
-    m_cache = QPixmap();
+    m_cacheValid = false;
 
     update();
 }
@@ -52,13 +55,31 @@ void GraphCachedItem::updateCache(qreal dpr)
     const QRect alignedRect = deviceRect.toAlignedRect();
 
     m_cacheOrigin = QPointF(alignedRect.topLeft()) / dpr;
+    m_cacheSize = alignedRect.size();
 
-    m_cache = QPixmap(alignedRect.size());
-    m_cache.setDevicePixelRatio(dpr);
-    m_cache.fill(Qt::transparent);
+    preparePixmap(dpr);
 
     QPainter painter(&m_cache);
+
+    // Clear the used part of the reused pixmap
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.fillRect(QRectF(QPointF(0, 0), QSizeF(m_cacheSize) / dpr), Qt::transparent);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+
     painter.translate(-m_cacheOrigin);
 
     paintItem(&painter);
+
+    m_cacheValid = true;
+}
+
+void GraphCachedItem::preparePixmap(qreal dpr)
+{
+    // Reuse the big enough pixmap: the item's size is changed by its values
+    if (m_cache.devicePixelRatio() == dpr && m_cacheSize.boundedTo(m_cache.size()) == m_cacheSize)
+        return;
+
+    m_cache = QPixmap(m_cacheSize.expandedTo(m_cache.size()));
+    m_cache.setDevicePixelRatio(dpr);
+    m_cache.fill(Qt::transparent); // with the alpha channel
 }

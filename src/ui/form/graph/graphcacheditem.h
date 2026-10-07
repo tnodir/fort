@@ -25,10 +25,13 @@ protected:
 
 private:
     void updateCache(qreal dpr);
+    void preparePixmap(qreal dpr);
 
 private:
-    bool m_cached = false;
+    bool m_cached : 1 = false;
+    bool m_cacheValid : 1 = false;
 
+    QSize m_cacheSize; // device pixels: the used part of the pixmap
     QPointF m_cacheOrigin;
     QPixmap m_cache;
 };
