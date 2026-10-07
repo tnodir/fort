@@ -10,6 +10,7 @@
 
 #include <conf/confmanager.h>
 #include <conf/confrulemanager.h>
+#include <conf/conftimeperiodmanager.h>
 #include <fortglobal.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
@@ -37,6 +38,28 @@ QVariant dataDisplayName(const RuleRow &ruleRow, int role)
                                                                    : QString());
 }
 
+quint8 rulePeriodId(const RuleRow &ruleRow)
+{
+    return ruleRow.periodEnabled ? ruleRow.periodId : 0;
+}
+
+QVariant dataDisplayPeriod(const RuleRow &ruleRow, int role)
+{
+    if (role != Qt::ToolTipRole)
+        return {};
+
+    const quint8 periodId = rulePeriodId(ruleRow);
+    if (periodId == 0)
+        return {};
+
+    return confTimePeriodManager()->timePeriodNameById(periodId);
+}
+
+QIcon rulePeriodIcon(const RuleRow &ruleRow)
+{
+    return (rulePeriodId(ruleRow) != 0) ? IconCache::icon(":/icons/clock.png") : QIcon();
+}
+
 QString ruleStateIconPath(const RuleRow &ruleRow)
 {
     if (ruleRow.blocked)
@@ -60,10 +83,17 @@ SqliteDb *RuleListModel::sqliteDb() const
 void RuleListModel::initialize()
 {
     auto confRuleManager = Fort::confRuleManager();
+    auto confTimePeriodManager = Fort::confTimePeriodManager();
 
     connect(confRuleManager, &ConfRuleManager::ruleAdded, this, &TableItemModel::reset);
     connect(confRuleManager, &ConfRuleManager::ruleRemoved, this, &TableItemModel::reset);
     connect(confRuleManager, &ConfRuleManager::ruleUpdated, this, &TableItemModel::refresh);
+
+    // The Time Periods' names are shown, the deleted Time Period is cleared from the Rules
+    connect(confTimePeriodManager, &ConfTimePeriodManager::timePeriodRemoved, this,
+            &TableItemModel::refresh);
+    connect(confTimePeriodManager, &ConfTimePeriodManager::timePeriodUpdated, this,
+            &TableItemModel::refresh);
 }
 
 bool RuleListModel::isIndexRoot(const QModelIndex &index)
@@ -142,7 +172,7 @@ int RuleListModel::rowCount(const QModelIndex &parent) const
 
 int RuleListModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return 2;
+    return 3;
 }
 
 QVariant RuleListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -154,7 +184,11 @@ QVariant RuleListModel::headerData(int section, Qt::Orientation orientation, int
     // Label
     case Qt::DisplayRole:
     case Qt::ToolTipRole:
-        return headerDataDisplay(section);
+        return headerDataDisplay(section, role);
+
+    // Icon
+    case Qt::DecorationRole:
+        return headerDataDecoration(section);
     }
 
     return {};
@@ -211,15 +245,22 @@ QVariant RuleListModel::rootData(const QModelIndex &index, int role) const
     return {};
 }
 
-QVariant RuleListModel::headerDataDisplay(int section) const
+QVariant RuleListModel::headerDataDisplay(int section, int role) const
 {
     switch (section) {
     case 0:
         return tr("Rule");
     case 1:
+        return (role == Qt::ToolTipRole) ? tr("Time Period") : QVariant();
+    case 2:
         return tr("Change Time");
     }
     return {};
+}
+
+QVariant RuleListModel::headerDataDecoration(int section) const
+{
+    return (section == 1) ? IconCache::icon(":/icons/clock.png") : QVariant();
 }
 
 QVariant RuleListModel::dataDisplay(const QModelIndex &index, int role) const
@@ -230,6 +271,8 @@ QVariant RuleListModel::dataDisplay(const QModelIndex &index, int role) const
     case 0:
         return dataDisplayName(ruleRow, role);
     case 1:
+        return dataDisplayPeriod(ruleRow, role);
+    case 2:
         return ruleRow.modTime;
     }
 
@@ -245,6 +288,8 @@ QVariant RuleListModel::dataDecoration(const QModelIndex &index) const
     switch (index.column()) {
     case 0:
         return IconCache::icon(ruleStateIconPath(ruleRow));
+    case 1:
+        return rulePeriodIcon(ruleRow);
     }
 
     return {};

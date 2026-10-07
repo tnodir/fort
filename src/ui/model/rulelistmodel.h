@@ -76,7 +76,8 @@ protected:
 private:
     QVariant rootData(const QModelIndex &index, int role) const;
 
-    QVariant headerDataDisplay(int section) const;
+    QVariant headerDataDisplay(int section, int role) const;
+    QVariant headerDataDecoration(int section) const;
     QVariant dataDisplay(const QModelIndex &index, int role) const;
     QVariant dataDecoration(const QModelIndex &index) const;
     QVariant dataEnabled(const QModelIndex &index) const;
