@@ -194,8 +194,7 @@ void SchedulePage::setupTaskDetails()
     layout->addWidget(m_btTaskRun);
     layout->addWidget(m_btTaskAbort);
 
-    m_taskDetailsRow = new QWidget();
-    m_taskDetailsRow->setLayout(layout);
+    m_taskDetailsRow = ControlUtil::wrapToWidget(layout);
 }
 
 void SchedulePage::setupTaskInterval()

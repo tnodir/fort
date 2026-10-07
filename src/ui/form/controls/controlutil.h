@@ -113,6 +113,8 @@ public:
 
     static void clearLayout(QLayout *layout);
 
+    static QWidget *wrapToWidget(QLayout *layout);
+
     static QLayout *createScrollLayout(QLayout *content, bool isBgTransparent = true);
     static QWidget *wrapToScrollArea(QWidget *content, bool isBgTransparent = true);
 

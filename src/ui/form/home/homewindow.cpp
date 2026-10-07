@@ -162,13 +162,6 @@ void HomeWindow::setupUi()
 
 QWidget *HomeWindow::setupHeader()
 {
-    QPalette palette;
-    palette.setColor(QPalette::Window, QColor(0x26, 0x26, 0x26));
-
-    auto frame = new QWidget();
-    frame->setAutoFillBackground(true);
-    frame->setPalette(palette);
-
     // Logo Layout
     auto logoLayout = SplashScreen::createLogoLayout();
 
@@ -186,7 +179,12 @@ QWidget *HomeWindow::setupHeader()
     layout->addWidget(m_btStatistics);
     layout->addWidget(m_btMenu);
 
-    frame->setLayout(layout);
+    QPalette palette;
+    palette.setColor(QPalette::Window, QColor(0x26, 0x26, 0x26));
+
+    auto frame = ControlUtil::wrapToWidget(layout);
+    frame->setAutoFillBackground(true);
+    frame->setPalette(palette);
 
     return frame;
 }

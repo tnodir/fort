@@ -360,10 +360,17 @@ void ControlUtil::clearLayout(QLayout *layout)
     }
 }
 
+QWidget *ControlUtil::wrapToWidget(QLayout *layout)
+{
+    auto widget = new QWidget();
+    widget->setLayout(layout);
+
+    return widget;
+}
+
 QLayout *ControlUtil::createScrollLayout(QLayout *content, bool isBgTransparent)
 {
-    auto contentWidget = new QWidget();
-    contentWidget->setLayout(content);
+    auto contentWidget = wrapToWidget(content);
 
     auto scrollArea = wrapToScrollArea(contentWidget, isBgTransparent);
 

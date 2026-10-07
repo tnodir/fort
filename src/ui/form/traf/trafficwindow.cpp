@@ -404,8 +404,7 @@ void TrafficWindow::setupSplitter()
 {
     auto layout = ControlUtil::createVLayoutByWidgets({ m_tabBar, m_tableTraf }, /*margin=*/0);
 
-    auto trafWidget = new QWidget();
-    trafWidget->setLayout(layout);
+    auto trafWidget = ControlUtil::wrapToWidget(layout);
 
     m_splitter = new QSplitter();
     m_splitter->addWidget(m_appListView);
