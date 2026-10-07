@@ -19,7 +19,7 @@ enum ConnFilterResult : qint8 {
 
 struct ConnFilterConf
 {
-    const void *drvConf = nullptr; // required
+    const void *drvConfIo = nullptr; // required
     const void *drvZones = nullptr;
     const void *drvRules = nullptr;
     const void *drvGroups = nullptr;
@@ -43,6 +43,7 @@ quint32 ioctlSetGroupFlags();
 quint32 ioctlSetSpeedLimits();
 quint32 ioctlSetSpeedLimitFlags();
 quint32 ioctlGetSpeedLimitStatus();
+quint32 ioctlSetPeriods();
 
 quint32 userErrorCode();
 

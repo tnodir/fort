@@ -2,6 +2,8 @@
 
 #include "fortcnf_group.h"
 
+#include "fortcnf_rule.h"
+
 FORT_API PFORT_CONF_GROUPS fort_conf_groups_new(PCFORT_CONF_GROUPS groups, ULONG len)
 {
     return fort_conf_mem_alloc(groups, len);
@@ -58,7 +60,7 @@ FORT_API UINT16 fort_devconf_groups_rules_conn_filtered(
     PCFORT_CONF_GROUPS groups = device_conf->groups;
     PCFORT_CONF_RULES rules = device_conf->rules;
     if (groups != NULL && rules != NULL) {
-        const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, device_conf->zones);
+        const FORT_CONF_RULES_RT rules_rt = fort_devconf_rules_rt_make(device_conf, rules);
 
         rule_id = fort_conf_groups_rules_conn_filtered(groups, &rules_rt, conn, groups_mask);
     }

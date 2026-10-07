@@ -27,7 +27,8 @@ FORT_API void fort_conf_rules_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_RULE
 inline static void fort_conf_rule_flag_set_locked(
         PFORT_CONF_RULES rules, PCFORT_CONF_RULE_FLAG rule_flag)
 {
-    const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, /*zones=*/NULL);
+    const FORT_CONF_RULES_RT rules_rt =
+            fort_conf_rules_rt_make(rules, /*zones=*/NULL, /*active_periods_mask=*/0);
 
     if (!fort_conf_rules_rt_rule_exists(&rules_rt, rule_flag->rule_id))
         return;
@@ -48,6 +49,21 @@ FORT_API void fort_conf_rule_flag_set(
     ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 }
 
+FORT_API void fort_conf_periods_set(PFORT_DEVICE_CONF device_conf, PCFORT_CONF_PERIODS periods)
+{
+    KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->lock);
+    {
+        device_conf->active_periods_mask = periods->active_mask;
+    }
+    ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
+}
+
+FORT_API FORT_CONF_RULES_RT fort_devconf_rules_rt_make(
+        PFORT_DEVICE_CONF device_conf, PCFORT_CONF_RULES rules)
+{
+    return fort_conf_rules_rt_make(rules, device_conf->zones, device_conf->active_periods_mask);
+}
+
 FORT_API BOOL fort_devconf_rules_conn_filtered(
         PFORT_DEVICE_CONF device_conf, PFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
@@ -56,7 +72,9 @@ FORT_API BOOL fort_devconf_rules_conn_filtered(
     KIRQL oldIrql = ExAcquireSpinLockShared(&device_conf->lock);
     PFORT_CONF_RULES rules = device_conf->rules;
     if (rules != NULL) {
-        res = fort_conf_rules_conn_filtered(rules, device_conf->zones, conn, rule_id);
+        const FORT_CONF_RULES_RT rules_rt = fort_devconf_rules_rt_make(device_conf, rules);
+
+        res = fort_conf_rules_rt_conn_filtered(&rules_rt, conn, rule_id);
     }
     ExReleaseSpinLockShared(&device_conf->lock, oldIrql);
 
@@ -77,7 +95,9 @@ FORT_API UINT16 fort_devconf_rules_glob_conn_filtered(
     KIRQL oldIrql = ExAcquireSpinLockShared(&device_conf->lock);
     PCFORT_CONF_RULES rules = device_conf->rules;
     if (rules != NULL) {
-        rule_id = fort_conf_rules_glob_conn_filtered(rules, device_conf->zones, conn, is_post);
+        const FORT_CONF_RULES_RT rules_rt = fort_devconf_rules_rt_make(device_conf, rules);
+
+        rule_id = fort_conf_rules_glob_conn_filtered(&rules_rt, conn, is_post);
     }
     ExReleaseSpinLockShared(&device_conf->lock, oldIrql);
 

@@ -91,11 +91,12 @@ void ConfBuffer::writeServices(const QVector<ServiceInfo> &services, int process
     buffer().resize(outSize); // shrink to actual size
 }
 
-bool ConfBuffer::writeConf(
-        const FirewallConf &conf, const ConfAppsWalker *confAppsWalker, EnvManager *envManager)
+bool ConfBuffer::writeConf(const FirewallConf &conf, const ConfAppsWalker *confAppsWalker,
+        EnvManager *envManager, quint64 activePeriodsMask)
 {
     WriteConfArgs wca = {
         .conf = conf,
+        .activePeriodsMask = activePeriodsMask,
         .ad = { .addressRanges = addrranges_arr_t(conf.addressGroups().size()) },
     };
 
@@ -462,6 +463,8 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
     confRule.log_allowed_conn = rule.logAllowedConn;
     confRule.log_blocked_conn = rule.logBlockedConn;
 
+    confRule.period_id = rule.periodEnabled ? rule.periodId : 0;
+
     const bool hasZones = (rule.zones.accept_mask != 0 || rule.zones.reject_mask != 0);
     confRule.has_zones = hasZones;
 
@@ -712,4 +715,15 @@ void ConfBuffer::writeSpeedLimitFlags(quint32 enabledMask)
     PFORT_CONF_SPEED_LIMIT_FLAGS confLimitFlags = PFORT_CONF_SPEED_LIMIT_FLAGS(buffer().data());
 
     confLimitFlags->enabled_mask = enabledMask;
+}
+
+void ConfBuffer::writePeriods(quint64 activeMask)
+{
+    // Resize the buffer
+    buffer().resize(sizeof(FORT_CONF_PERIODS));
+
+    // Fill the buffer
+    PFORT_CONF_PERIODS confPeriods = PFORT_CONF_PERIODS(buffer().data());
+
+    confPeriods->active_mask = activeMask;
 }

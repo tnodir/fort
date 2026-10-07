@@ -45,7 +45,7 @@ protected:
 
     void setFilterMode(FirewallConf::FilterMode mode);
 
-    void writeConf();
+    void writeConf(quint64 activePeriodsMask = 0);
     void writeRules(const TestRuleList &rules);
     void writeGroups(const QList<Group> &groups, quint32 activeMask);
     void writeZone1(const QString &text);
@@ -92,14 +92,14 @@ void ConnFilterTest::setFilterMode(FirewallConf::FilterMode mode)
     flags->app_allow_all = (mode == FirewallConf::ModeAllowAll);
 }
 
-void ConnFilterTest::writeConf()
+void ConnFilterTest::writeConf(quint64 activePeriodsMask)
 {
     EnvManager envManager;
     const TestApps apps(m_apps);
 
     m_conf.resetEdited(FirewallConf::AllEdited);
 
-    if (!m_confBuf.writeConf(m_conf, &apps, &envManager)) {
+    if (!m_confBuf.writeConf(m_conf, &apps, &envManager, activePeriodsMask)) {
         qCritical() << "Error:" << m_confBuf.errorMessage();
         Q_UNREACHABLE();
     }
@@ -140,7 +140,7 @@ DriverCommon::ConnFilterResult ConnFilterTest::connFilter(
     const char *drvConf = m_confBuf.data() + DriverCommon::confIoConfOff();
 
     const DriverCommon::ConnFilterConf cf = {
-        .drvConf = drvConf,
+        .drvConfIo = m_confBuf.data(),
         .drvZones = m_zonesBuf.dataOrNull(),
         .drvRules = m_rulesBuf.dataOrNull(),
         .drvGroups = m_groupsBuf.dataOrNull(),
@@ -425,6 +425,47 @@ TEST_F(ConnFilterTest, appRule)
     ASSERT_TRUE(connAllowed("C:\\App\\rule.exe", conn));
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM);
     ASSERT_EQ(conn.rule_id, 0);
+}
+
+TEST_F(ConnFilterTest, rulePeriods)
+{
+    App ruleApp = wildcardApp("C:\\App\\rule.exe");
+    ruleApp.ruleId = 1;
+
+    App noPeriodApp = wildcardApp("C:\\App\\no-period.exe");
+    noPeriodApp.ruleId = 2;
+
+    m_apps << ruleApp << noPeriodApp;
+
+    writeRules(TestRuleList({
+            { .blocked = true, .periodId = 2, .ruleId = 1, .ruleText = "2.2.2.2" },
+            { .blocked = true,
+                    .periodEnabled = false, // the Time Period isn't applied
+                    .periodId = 2,
+                    .ruleId = 2,
+                    .ruleText = "2.2.2.2" },
+    }));
+
+    // The Rules' Time Period is inactive
+    writeConf(/*activePeriodsMask=*/0b01);
+
+    FORT_CONF_META_CONN conn = connFilterConn("2.2.2.2");
+    ASSERT_TRUE(connAllowed("C:\\App\\rule.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM);
+    ASSERT_EQ(conn.rule_id, 0);
+
+    conn = connFilterConn("2.2.2.2");
+    ASSERT_FALSE(connAllowed("C:\\App\\no-period.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_RULE);
+    ASSERT_EQ(conn.rule_id, 2);
+
+    // The Rules' Time Period is active
+    writeConf(/*activePeriodsMask=*/0b10);
+
+    conn = connFilterConn("2.2.2.2");
+    ASSERT_FALSE(connAllowed("C:\\App\\rule.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_RULE);
+    ASSERT_EQ(conn.rule_id, 1);
 }
 
 TEST_F(ConnFilterTest, globalRules)

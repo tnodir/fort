@@ -23,6 +23,7 @@
 #define FORT_CONF_ZONE_MAX              32
 #define FORT_CONF_GROUP_MAX             32
 #define FORT_CONF_SPEED_LIMIT_MAX       32
+#define FORT_CONF_PERIOD_MAX            64
 #define FORT_CONF_APPS_LEN_MAX          (64 * 1024 * 1024)
 #define FORT_CONF_APP_PATH_MAX          (2 * 1024)
 #define FORT_CONF_APP_PATH_MAX_SIZE     (FORT_CONF_APP_PATH_MAX * sizeof(WCHAR))
@@ -227,6 +228,8 @@ typedef struct fort_conf_rule
     UINT16 has_filters : 1;
     UINT16 reserved : 5; /* not used */
 
+    UCHAR period_id; /* the Time Period's id: the Rule is active in it, 0 - always */
+
     UCHAR set_count;
 } FORT_CONF_RULE, *PFORT_CONF_RULE;
 
@@ -292,6 +295,10 @@ typedef const FORT_CONF_ZONE_FLAG *PCFORT_CONF_ZONE_FLAG;
 typedef struct fort_conf_rules_rt
 {
     UINT16 max_rule_id;
+
+    FORT_CONF_RULES_GLOB glob;
+
+    UINT64 active_periods_mask;
 
     const UINT32 *rule_offsets;
     const char *rules_data;
@@ -553,8 +560,17 @@ typedef struct fort_conf_version
 
 typedef const FORT_CONF_VERSION *PCFORT_CONF_VERSION;
 
+typedef struct fort_conf_periods
+{
+    UINT64 active_mask; /* active Time Periods by id - 1 */
+} FORT_CONF_PERIODS, *PFORT_CONF_PERIODS;
+
+typedef const FORT_CONF_PERIODS *PCFORT_CONF_PERIODS;
+
 typedef struct fort_conf_io
 {
+    FORT_CONF_PERIODS periods;
+
     FORT_CONF conf;
 } FORT_CONF_IO, *PFORT_CONF_IO;
 
@@ -654,15 +670,12 @@ FORT_API FORT_APP_DATA fort_conf_app_find(PCFORT_CONF conf, PCFORT_APP_PATH path
 FORT_API BOOL fort_conf_rules_rt_conn_filtered(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id);
 
-FORT_API BOOL fort_conf_rules_conn_filtered(PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones,
-        PFORT_CONF_META_CONN conn, UINT16 rule_id);
-
 #define fort_conf_rules_glob_rule_id(glob, is_post)                                                \
     ((is_post) ? (glob).post_rule_id : (glob).pre_rule_id)
 
 /* Returns the filtered Global Rule's id or 0 */
 FORT_API UINT16 fort_conf_rules_glob_conn_filtered(
-        PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones, PFORT_CONF_META_CONN conn, BOOL is_post);
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, BOOL is_post);
 
 #define fort_conf_rules_rt_rule(rt, rule_id)                                                       \
     ((PFORT_CONF_RULE) ((rt)->rules_data + (rt)->rule_offsets[rule_id]))
@@ -672,7 +685,7 @@ FORT_API UINT16 fort_conf_rules_glob_conn_filtered(
     ((rule_id) != 0 && (rule_id) <= (rt)->max_rule_id && (rt)->rule_offsets[rule_id] != 0)
 
 FORT_API FORT_CONF_RULES_RT fort_conf_rules_rt_make(
-        PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones);
+        PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones, UINT64 active_periods_mask);
 
 #ifdef __cplusplus
 } // extern "C"

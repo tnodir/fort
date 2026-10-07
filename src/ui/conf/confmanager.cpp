@@ -28,6 +28,7 @@
 #include "confappmanager.h"
 #include "confgroupmanager.h"
 #include "confrulemanager.h"
+#include "conftimeperiodmanager.h"
 #include "filtersimconn.h"
 #include "timeperiod.h"
 
@@ -1071,7 +1072,8 @@ bool ConfManager::simulateConn(FilterSimConn &simConn)
 {
     // Write the buffers as for the driver
     ConfBuffer confBuf;
-    if (!confBuf.writeConf(conf(), confAppManager(), envManager())) {
+    if (!confBuf.writeConf(conf(), confAppManager(), envManager(),
+                confTimePeriodManager()->activePeriodsMask())) {
         qCWarning(LC) << "Filter Simulator: Conf error:" << confBuf.errorMessage();
         return false;
     }
@@ -1096,7 +1098,7 @@ bool ConfManager::simulateConn(FilterSimConn &simConn)
     const char *drvConf = confBuf.data() + DriverCommon::confIoConfOff();
 
     const DriverCommon::ConnFilterConf cf = {
-        .drvConf = drvConf,
+        .drvConfIo = confBuf.data(),
         .drvZones = zonesBuf.dataOrNull(),
         .drvRules = rulesBuf.dataOrNull(),
         .drvGroups = groupsBuf.dataOrNull(),

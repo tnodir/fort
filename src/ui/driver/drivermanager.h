@@ -53,6 +53,7 @@ public slots:
     bool writeRules(QByteArray &buf, bool onlyFlags = false);
     bool writeGroups(QByteArray &buf, bool onlyFlags = false);
     bool writeSpeedLimits(QByteArray &buf, bool onlyFlags = false);
+    bool writePeriods(QByteArray &buf);
 
     virtual bool readSpeedLimitStatus(QByteArray &buf);
 

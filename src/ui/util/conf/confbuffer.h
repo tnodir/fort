@@ -38,8 +38,8 @@ public slots:
 
     void writeServices(const QVector<ServiceInfo> &services, int processCount);
 
-    bool writeConf(
-            const FirewallConf &conf, const ConfAppsWalker *confAppsWalker, EnvManager *envManager);
+    bool writeConf(const FirewallConf &conf, const ConfAppsWalker *confAppsWalker,
+            EnvManager *envManager, quint64 activePeriodsMask = 0);
     void writeFlags(const FirewallConf &conf);
     bool writeAppEntry(const App &app, bool isNew = false);
 
@@ -60,6 +60,8 @@ public slots:
 
     void writeSpeedLimits(const ConfSpeedLimitsWalker &confSpeedLimitsWalker, quint32 activeMask);
     void writeSpeedLimitFlags(quint32 enabledMask);
+
+    void writePeriods(quint64 activeMask);
 
 private:
     void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }

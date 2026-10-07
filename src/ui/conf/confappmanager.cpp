@@ -23,6 +23,7 @@
 #include <util/variantutil.h>
 
 #include "confmanager.h"
+#include "conftimeperiodmanager.h"
 #include "firewallconf.h"
 
 using namespace Fort;
@@ -835,7 +836,8 @@ bool ConfAppManager::updateDriverConf(bool onlyFlags)
     const auto &conf = Fort::conf();
 
     const bool ok = onlyFlags ? (confBuf.writeFlags(conf), true)
-                              : confBuf.writeConf(conf, this, envManager());
+                              : confBuf.writeConf(conf, this, envManager(),
+                                        confTimePeriodManager()->activePeriodsMask());
 
     if (!ok) {
         qCWarning(LC) << "Driver config error:" << confBuf.errorMessage();

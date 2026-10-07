@@ -1045,6 +1045,19 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_check(
     return fort_conf_rules_rt_conn_filtered_sets(rules_rt, conn, rule, depth);
 }
 
+inline static BOOL fort_conf_rules_rt_rule_active(
+        PCFORT_CONF_RULES_RT rules_rt, PCFORT_CONF_RULE rule)
+{
+    if (!rule->enabled)
+        return FALSE;
+
+    const UCHAR period_id = rule->period_id;
+    if (period_id == 0)
+        return TRUE; /* no Time Period */
+
+    return (rules_rt->active_periods_mask & ((UINT64) 1 << (period_id - 1))) != 0;
+}
+
 static BOOL fort_conf_rules_rt_conn_filtered_depth(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id, int depth)
 {
@@ -1056,7 +1069,7 @@ static BOOL fort_conf_rules_rt_conn_filtered_depth(
 
     PCFORT_CONF_RULE rule = fort_conf_rules_rt_rule(rules_rt, rule_id);
 
-    if (!rule->enabled)
+    if (!fort_conf_rules_rt_rule_active(rules_rt, rule))
         return FALSE;
 
     const FORT_CONF_CONN_ACTIONS act = conn->act;
@@ -1081,27 +1094,21 @@ FORT_API BOOL fort_conf_rules_rt_conn_filtered(
     return fort_conf_rules_rt_conn_filtered_depth(rules_rt, conn, rule_id, /*depth=*/0);
 }
 
-FORT_API BOOL fort_conf_rules_conn_filtered(
-        PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones, PFORT_CONF_META_CONN conn, UINT16 rule_id)
-{
-    const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, zones);
-
-    return fort_conf_rules_rt_conn_filtered(&rules_rt, conn, rule_id);
-}
-
 FORT_API UINT16 fort_conf_rules_glob_conn_filtered(
-        PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones, PFORT_CONF_META_CONN conn, BOOL is_post)
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, BOOL is_post)
 {
-    const UINT16 rule_id = fort_conf_rules_glob_rule_id(rules->glob, is_post);
+    const UINT16 rule_id = fort_conf_rules_glob_rule_id(rules_rt->glob, is_post);
 
-    return fort_conf_rules_conn_filtered(rules, zones, conn, rule_id) ? rule_id : 0;
+    return fort_conf_rules_rt_conn_filtered(rules_rt, conn, rule_id) ? rule_id : 0;
 }
 
 FORT_API FORT_CONF_RULES_RT fort_conf_rules_rt_make(
-        PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones)
+        PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones, UINT64 active_periods_mask)
 {
     const FORT_CONF_RULES_RT rules_rt = {
         .max_rule_id = rules->max_rule_id,
+        .glob = rules->glob,
+        .active_periods_mask = active_periods_mask,
         .rule_offsets = (PUINT32) rules->data - 1, /* exclude zero index */
         .rules_data = rules->data,
         .zones = zones,

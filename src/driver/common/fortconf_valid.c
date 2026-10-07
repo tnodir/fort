@@ -306,6 +306,9 @@ static BOOL fort_conf_rule_valid(
 
     PCFORT_CONF_RULE rule = (PCFORT_CONF_RULE) (rules_rt->rules_data + rule_off);
 
+    if (rule->period_id > FORT_CONF_PERIOD_MAX)
+        return FALSE;
+
     UINT32 rule_size = FORT_CONF_RULE_SIZE(rule);
     if (rule_size > len)
         return FALSE;
@@ -352,7 +355,8 @@ FORT_API BOOL fort_conf_rules_valid(PCFORT_CONF_RULES rules, UINT32 len)
     if (rules_end > data_len)
         return FALSE;
 
-    const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, /*zones=*/NULL);
+    const FORT_CONF_RULES_RT rules_rt =
+            fort_conf_rules_rt_make(rules, /*zones=*/NULL, /*active_periods_mask=*/0);
 
     /* The rules follow their offsets ordered by id, so SETRULEFLAG changes only its rule */
     for (UINT16 rule_id = 1; rule_id <= max_rule_id; ++rule_id) {

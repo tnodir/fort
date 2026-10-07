@@ -1,16 +1,23 @@
 #include "conftimeperiodmanager.h"
 
+#include <QLoggingCategory>
+
 #include <sqlite/dbquery.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
+#include <driver/drivermanager.h>
 #include <fortglobal.h>
+#include <util/conf/confbuffer.h>
 #include <util/conf/confutil.h>
 #include <util/dateutil.h>
 
 #include "confmanager.h"
+#include "confrulemanager.h"
 
 namespace {
+
+const QLoggingCategory LC("confTimePeriod");
 
 inline constexpr int TIME_PERIODS_UPDATE_INTERVAL = 60 * 1000; // 1 minute
 
@@ -174,6 +181,7 @@ bool ConfTimePeriodManager::addOrUpdateTimePeriod(TimePeriod &period)
 bool ConfTimePeriodManager::deleteTimePeriod(quint8 periodId)
 {
     bool ok = false;
+    int rulePeriodsCount = 0;
 
     beginWriteTransaction();
 
@@ -186,17 +194,24 @@ bool ConfTimePeriodManager::deleteTimePeriod(quint8 periodId)
         DbQuery(sqliteDb(), &ok).sql(sqlDeleteGroupTimePeriod).vars(vars).executeOk();
         DbQuery(sqliteDb(), &ok).sql(sqlDeleteSpeedLimitTimePeriod).vars(vars).executeOk();
         DbQuery(sqliteDb(), &ok).sql(sqlDeleteRuleTimePeriod).vars(vars).executeOk();
+
+        rulePeriodsCount = sqliteDb()->changes();
     }
 
     endTransaction(ok);
 
-    if (ok) {
-        emit timePeriodRemoved(periodId);
+    if (!ok)
+        return false;
 
-        checkActivePeriods(/*forceChanged=*/true);
+    if (rulePeriodsCount > 0) {
+        Fort::confRuleManager()->updateDriverRules(); // the Time Period's id can be reused
     }
 
-    return ok;
+    emit timePeriodRemoved(periodId);
+
+    checkActivePeriods(/*forceChanged=*/true);
+
+    return true;
 }
 
 bool ConfTimePeriodManager::updateTimePeriodName(quint8 periodId, const QString &name)
@@ -276,6 +291,8 @@ void ConfTimePeriodManager::checkActivePeriods(bool forceChanged)
     startPeriodsTimer();
 
     if (changed) {
+        updateDriverPeriods();
+
         emit activePeriodsChanged();
     }
 }
@@ -303,6 +320,19 @@ quint64 ConfTimePeriodManager::calcActivePeriodsMask() const
     }
 
     return activeMask;
+}
+
+void ConfTimePeriodManager::updateDriverPeriods()
+{
+    ConfBuffer confBuf;
+
+    confBuf.writePeriods(m_activeMask);
+
+    auto driverManager = Fort::driverManager();
+
+    if (!driverManager->writePeriods(confBuf.buffer())) {
+        qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
+    }
 }
 
 void ConfTimePeriodManager::setupPeriodsTimer()

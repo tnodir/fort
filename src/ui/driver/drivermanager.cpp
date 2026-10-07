@@ -146,6 +146,11 @@ bool DriverManager::writeSpeedLimits(QByteArray &buf, bool onlyFlags)
     return writeData(code, buf);
 }
 
+bool DriverManager::writePeriods(QByteArray &buf)
+{
+    return writeData(DriverCommon::ioctlSetPeriods(), buf);
+}
+
 bool DriverManager::readSpeedLimitStatus(QByteArray &buf)
 {
     if (!isDeviceOpened())

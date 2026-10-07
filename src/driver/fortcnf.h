@@ -56,6 +56,8 @@ typedef struct fort_device_conf
     PFORT_CONF_REF volatile ref;
     KSPIN_LOCK ref_lock;
 
+    UINT64 active_periods_mask; /* the Rules' active Time Periods */
+
     PFORT_CONF_ZONES zones;
     PFORT_CONF_RULES rules;
     PFORT_CONF_GROUPS groups;

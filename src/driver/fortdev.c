@@ -170,6 +170,8 @@ inline static NTSTATUS fort_device_control_setconf_ref(
     PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
     const BOOL was_null_conf = (device_conf->ref == NULL);
 
+    fort_conf_periods_set(device_conf, &conf_io->periods);
+
     const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(device_conf, conf_ref);
 
     fort_shaper_conf_flags_update(&fort_device()->shaper, conf_io->conf.flags);
@@ -413,6 +415,24 @@ static NTSTATUS fort_device_control_setgroupflags(PFORT_DEVICE_CONTROL_ARG dca)
     return STATUS_UNSUCCESSFUL;
 }
 
+static NTSTATUS fort_device_control_setperiods(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    PCFORT_CONF_PERIODS periods = dca->buffer;
+    const ULONG len = dca->in_len;
+
+    if (len == sizeof(FORT_CONF_PERIODS)) {
+        PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
+
+        fort_conf_periods_set(device_conf, periods);
+
+        fort_device_conf_reauth_queue(device_conf);
+
+        return STATUS_SUCCESS;
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
 static NTSTATUS fort_device_control_setspeedlimits(PFORT_DEVICE_CONTROL_ARG dca)
 {
     PCFORT_CONF_SPEED_LIMITS speed_limits = dca->buffer;
@@ -479,6 +499,7 @@ static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
     &fort_device_control_setspeedlimits, // FORT_IOCTL_SETSPEEDLIMITS
     &fort_device_control_setspeedlimitflags, // FORT_IOCTL_SETSPEEDLIMITFLAGS
     &fort_device_control_getspeedlimitstatus, // FORT_IOCTL_GETSPEEDLIMITSTATUS
+    &fort_device_control_setperiods, // FORT_IOCTL_SETPERIODS
 };
 
 static NTSTATUS fort_device_control_process(PFORT_DEVICE_CONTROL_ARG dca)

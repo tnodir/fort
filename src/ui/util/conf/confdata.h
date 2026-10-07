@@ -31,6 +31,8 @@ struct WriteConfArgs
 {
     const FirewallConf &conf;
 
+    quint64 activePeriodsMask = 0;
+
     ParseAddressGroupsArgs ad;
 };
 

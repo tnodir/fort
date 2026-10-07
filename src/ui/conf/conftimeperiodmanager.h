@@ -32,6 +32,7 @@ public:
 
     // The Time Periods' activity is tracked since the first call
     bool isTimePeriodActive(bool periodEnabled, quint8 periodId);
+    quint64 activePeriodsMask();
 
 signals:
     void timePeriodAdded();
@@ -42,10 +43,10 @@ signals:
     void activePeriodsChanged();
 
 private:
-    quint64 activePeriodsMask();
-
     void checkActivePeriods(bool forceChanged = false);
     quint64 calcActivePeriodsMask() const;
+
+    void updateDriverPeriods();
 
     void setupPeriodsTimer();
     void startPeriodsTimer();

@@ -19,6 +19,8 @@ void ConfData::writeConf(const WriteConfArgs &wca, AppParseOptions &opt)
     PFORT_CONF_IO drvConfIo = PFORT_CONF_IO(m_data);
     PFORT_CONF drvConf = &drvConfIo->conf;
 
+    drvConfIo->periods.active_mask = wca.activePeriodsMask;
+
     quint32 addrGroupsOff;
     quint32 wildAppsOff, prefixAppsOff, exeAppsOff;
 
