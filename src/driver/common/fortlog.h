@@ -27,10 +27,15 @@
 
 #define FORT_IP_ADDR_SIZE(isIPv6) ((isIPv6) ? sizeof(ip6_addr_t) : sizeof(UINT32))
 
-#define FORT_LOG_CONN_HEADER_SIZE(isIPv6) (6 * sizeof(UINT32) + 2 * FORT_IP_ADDR_SIZE(isIPv6))
+#define FORT_LOG_CONN_HEADER_SIZE(isIPv6) (7 * sizeof(UINT32) + 2 * FORT_IP_ADDR_SIZE(isIPv6))
 
-#define FORT_LOG_CONN_SIZE(path_len, isIPv6)                                                       \
-    FORT_ALIGN_SIZE(FORT_LOG_CONN_HEADER_SIZE(isIPv6) + (path_len), FORT_LOG_ALIGN)
+/* The inherited process's name follows the aligned path */
+#define FORT_LOG_CONN_INHERIT_PATH_OFFSET(path_len, isIPv6)                                        \
+    (FORT_LOG_CONN_HEADER_SIZE(isIPv6) + FORT_ALIGN_SIZE(path_len, FORT_LOG_ALIGN))
+
+#define FORT_LOG_CONN_SIZE(path_len, inherit_path_len, isIPv6)                                     \
+    (FORT_LOG_CONN_INHERIT_PATH_OFFSET(path_len, isIPv6)                                           \
+            + FORT_ALIGN_SIZE(inherit_path_len, FORT_LOG_ALIGN))
 
 #define FORT_LOG_PROC_NEW_HEADER_SIZE (3 * sizeof(UINT32))
 
@@ -61,11 +66,14 @@ FORT_API void fort_log_app_write(char *p, BOOL blocked, UINT32 pid, PCFORT_APP_P
 
 FORT_API void fort_log_app_header_read(const char *p, BOOL *blocked, UINT32 *pid, UINT16 *path_len);
 
-FORT_API void fort_log_conn_header_write(char *p, PCFORT_CONF_META_CONN conn, UINT16 path_len);
+FORT_API void fort_log_conn_header_write(
+        char *p, PCFORT_CONF_META_CONN conn, UINT16 path_len, UINT16 inherit_path_len);
 
-FORT_API void fort_log_conn_write(char *p, PCFORT_CONF_META_CONN conn, PCFORT_APP_PATH path);
+FORT_API void fort_log_conn_write(
+        char *p, PCFORT_CONF_META_CONN conn, PCFORT_APP_PATH path, PCFORT_APP_PATH inherit_path);
 
-FORT_API void fort_log_conn_header_read(const char *p, PFORT_CONF_META_CONN conn, UINT16 *path_len);
+FORT_API void fort_log_conn_header_read(
+        const char *p, PFORT_CONF_META_CONN conn, UINT16 *path_len, UINT16 *inherit_path_len);
 
 FORT_API void fort_log_proc_new_header_write(char *p, UINT32 app_id, UINT32 pid, UINT16 path_len);
 

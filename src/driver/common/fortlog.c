@@ -43,21 +43,23 @@ FORT_API void fort_log_app_header_read(const char *p, BOOL *blocked, UINT32 *pid
     *pid = *up;
 }
 
-FORT_API void fort_log_conn_header_write(char *p, PCFORT_CONF_META_CONN conn, UINT16 path_len)
+FORT_API void fort_log_conn_header_write(
+        char *p, PCFORT_CONF_META_CONN conn, UINT16 path_len, UINT16 inherit_path_len)
 {
     UINT32 *up = (UINT32 *) p;
 
     *up++ = fort_log_flag_type(FORT_LOG_TYPE_CONN)
-            | (conn->act.blocked ? FORT_LOG_FLAG_OPT_BLOCKED : 0) | path_len;
-    *up++ = (conn->isIPv6 ? FORT_LOG_CONN_IP6 : 0) | (conn->inbound ? FORT_LOG_CONN_INBOUND : 0)
+            | (conn->act.blocked ? FORT_LOG_FLAG_OPT_BLOCKED : 0)
+            | (conn->isIPv6 ? FORT_LOG_CONN_IP6 : 0) | (conn->inbound ? FORT_LOG_CONN_INBOUND : 0)
             | (conn->is_loopback ? FORT_LOG_CONN_LOOPBACK : 0)
             | (conn->inherited ? FORT_LOG_CONN_INHERITED : 0)
-            | (conn->act.conn_alert ? FORT_LOG_CONN_ALERTED : 0) | ((UINT32) conn->reason << 8)
-            | ((UINT32) conn->ip_proto << 16);
+            | (conn->act.conn_alert ? FORT_LOG_CONN_ALERTED : 0);
+    *up++ = conn->reason | ((UINT32) conn->ip_proto << 8);
     *up++ = ((UINT32) conn->rule_id) | ((UINT32) conn->act.zone_id << 16);
     *up++ = conn->local_port | ((UINT32) conn->remote_port << 16);
     *up++ = conn->app_data.app_id;
     *up++ = conn->process_id;
+    *up++ = path_len | ((UINT32) inherit_path_len << 16);
 
     const int ip_size = FORT_IP_ADDR_SIZE(conn->isIPv6);
 
@@ -69,33 +71,35 @@ FORT_API void fort_log_conn_header_write(char *p, PCFORT_CONF_META_CONN conn, UI
     RtlCopyMemory(up, conn->remote_ip.data, ip_size);
 }
 
-FORT_API void fort_log_conn_write(char *p, PCFORT_CONF_META_CONN conn, PCFORT_APP_PATH path)
+FORT_API void fort_log_conn_write(
+        char *p, PCFORT_CONF_META_CONN conn, PCFORT_APP_PATH path, PCFORT_APP_PATH inherit_path)
 {
     const UINT16 path_len = path->len;
+    const BOOL isIPv6 = conn->isIPv6;
 
-    fort_log_conn_header_write(p, conn, path_len);
+    fort_log_conn_header_write(p, conn, path_len, inherit_path->len);
 
-    fort_log_path_write(p + FORT_LOG_CONN_HEADER_SIZE(conn->isIPv6), path);
+    fort_log_path_write(p + FORT_LOG_CONN_HEADER_SIZE(isIPv6), path);
+    fort_log_path_write(p + FORT_LOG_CONN_INHERIT_PATH_OFFSET(path_len, isIPv6), inherit_path);
 }
 
-FORT_API void fort_log_conn_header_read(const char *p, PFORT_CONF_META_CONN conn, UINT16 *path_len)
+FORT_API void fort_log_conn_header_read(
+        const char *p, PFORT_CONF_META_CONN conn, UINT16 *path_len, UINT16 *inherit_path_len)
 {
     const UINT32 *up = (const UINT32 *) p;
 
     UINT32 v;
     v = *up++;
     conn->act.blocked = (v & FORT_LOG_FLAG_OPT_BLOCKED) != 0;
-    *path_len = (v & ~FORT_LOG_FLAG_EX_MASK);
+    conn->isIPv6 = (v & FORT_LOG_CONN_IP6) != 0;
+    conn->inbound = (v & FORT_LOG_CONN_INBOUND) != 0;
+    conn->is_loopback = (v & FORT_LOG_CONN_LOOPBACK) != 0;
+    conn->inherited = (v & FORT_LOG_CONN_INHERITED) != 0;
+    conn->act.conn_alert = (v & FORT_LOG_CONN_ALERTED) != 0;
 
     v = *up++;
-    const UCHAR flags = (UCHAR) v;
-    conn->isIPv6 = (flags & FORT_LOG_CONN_IP6) != 0;
-    conn->inbound = (flags & FORT_LOG_CONN_INBOUND) != 0;
-    conn->is_loopback = (flags & FORT_LOG_CONN_LOOPBACK) != 0;
-    conn->inherited = (flags & FORT_LOG_CONN_INHERITED) != 0;
-    conn->act.conn_alert = (flags & FORT_LOG_CONN_ALERTED) != 0;
-    conn->reason = (UCHAR) (v >> 8);
-    conn->ip_proto = (UCHAR) (v >> 16);
+    conn->reason = (UCHAR) v;
+    conn->ip_proto = (UCHAR) (v >> 8);
 
     v = *up++;
     conn->act.zone_id = (UCHAR) (v >> 16);
@@ -110,6 +114,10 @@ FORT_API void fort_log_conn_header_read(const char *p, PFORT_CONF_META_CONN conn
 
     v = *up++;
     conn->process_id = v;
+
+    v = *up++;
+    *path_len = (UINT16) v;
+    *inherit_path_len = (UINT16) (v >> 16);
 
     const int ip_size = FORT_IP_ADDR_SIZE(conn->isIPv6);
 

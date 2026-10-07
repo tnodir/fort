@@ -22,6 +22,11 @@ public:
     bool inherited() const { return m_inherited; }
     void setInherited(bool inherited) { m_inherited = inherited; }
 
+    QString inheritKernelPath() const { return m_inheritKernelPath; }
+    void setInheritKernelPath(const QString &v) { m_inheritKernelPath = v; }
+
+    QString inheritPath() const;
+
     quint8 reason() const { return m_reason; }
     void setReason(quint8 reason) { m_reason = reason; }
 
@@ -83,6 +88,7 @@ private:
     qint64 m_connTime = 0;
     ip_addr_t m_localIp;
     ip_addr_t m_remoteIp;
+    QString m_inheritKernelPath;
 };
 
 #endif // LOGENTRYCONN_H

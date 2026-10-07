@@ -191,6 +191,50 @@ TEST_F(LogBufferTest, blockedIp6WriteRead)
     ASSERT_EQ(index, testCount);
 }
 
+TEST_F(LogBufferTest, inheritedConnWriteRead)
+{
+    const QString path("C:\\ch.exe");
+    const QString inheritPath("C:\\parent.exe");
+
+    const int pathLen = path.size() * int(sizeof(wchar_t));
+    const int inheritPathLen = inheritPath.size() * int(sizeof(wchar_t));
+    ASSERT_EQ(pathLen % 4, 2); // the inherited path is aligned after it
+
+    const int entrySize = DriverCommon::logConnSize(pathLen, inheritPathLen);
+    ASSERT_EQ(entrySize, DriverCommon::logConnHeaderSize() + (pathLen + 2) + (inheritPathLen + 2));
+
+    const int testCount = 4;
+
+    LogBuffer buf(entrySize * testCount);
+
+    LogEntryConn entry;
+    entry.setKernelPath(path);
+
+    // Write
+    for (int i = 0; i < testCount; ++i) {
+        const bool inherited = (i & 1) != 0;
+        entry.setInherited(inherited);
+        entry.setInheritKernelPath(inherited ? inheritPath : QString());
+        entry.setPid(i + 1);
+
+        buf.writeEntryConn(&entry);
+    }
+
+    // Read
+    int index = 0;
+    while (buf.peekEntryType() == FORT_LOG_TYPE_CONN) {
+        buf.readEntryConn(&entry);
+
+        const bool inherited = (index & 1) != 0;
+        ASSERT_EQ(entry.inherited(), inherited);
+        ASSERT_EQ(entry.inheritKernelPath(), inherited ? inheritPath : QString());
+        ASSERT_EQ(entry.pid(), ++index);
+        ASSERT_EQ(entry.kernelPath(), path);
+    }
+    ASSERT_EQ(index, testCount);
+    ASSERT_EQ(buf.offset(), buf.top());
+}
+
 TEST_F(LogBufferTest, timeWriteRead)
 {
     const int entrySize = DriverCommon::logTimeSize();

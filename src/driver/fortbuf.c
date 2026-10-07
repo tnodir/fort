@@ -196,12 +196,8 @@ FORT_API NTSTATUS fort_buffer_prepare(
     return fort_buffer_prepare_new(buf, len, out);
 }
 
-inline static FORT_APP_PATH fort_buffer_conn_write_path(
-        PCFORT_CONF_META_CONN conn, const FORT_BUFFER_CONN_WRITE_TYPE log_type)
+inline static FORT_APP_PATH fort_buffer_log_path(FORT_APP_PATH log_path)
 {
-    FORT_APP_PATH log_path =
-            (log_type == FORT_BUFFER_CONN_WRITE_APP) ? conn->path : conn->real_path;
-
     if (log_path.len > FORT_LOG_PATH_MAX) {
         log_path.len = 0; /* drop too long path */
     }
@@ -209,14 +205,32 @@ inline static FORT_APP_PATH fort_buffer_conn_write_path(
     return log_path;
 }
 
+inline static FORT_APP_PATH fort_buffer_conn_write_path(
+        PCFORT_CONF_META_CONN conn, const FORT_BUFFER_CONN_WRITE_TYPE log_type)
+{
+    return fort_buffer_log_path(
+            (log_type == FORT_BUFFER_CONN_WRITE_APP) ? conn->path : conn->real_path);
+}
+
+/* The inherited process's name, by which the connection's app is found */
+inline static FORT_APP_PATH fort_buffer_conn_write_inherit_path(PCFORT_CONF_META_CONN conn)
+{
+    if (!conn->inherited) {
+        const FORT_APP_PATH empty_path = { 0 };
+        return empty_path;
+    }
+
+    return fort_buffer_log_path(conn->path);
+}
+
 inline static UINT32 fort_buffer_conn_write_len(PCFORT_CONF_META_CONN conn, const UINT32 path_len,
-        const FORT_BUFFER_CONN_WRITE_TYPE log_type)
+        const UINT32 inherit_path_len, const FORT_BUFFER_CONN_WRITE_TYPE log_type)
 {
     switch (log_type) {
     case FORT_BUFFER_CONN_WRITE_APP:
         return FORT_LOG_APP_SIZE(path_len);
     case FORT_BUFFER_CONN_WRITE_CONN:
-        return FORT_LOG_CONN_SIZE(path_len, conn->isIPv6);
+        return FORT_LOG_CONN_SIZE(path_len, inherit_path_len, conn->isIPv6);
     case FORT_BUFFER_CONN_WRITE_PROC_NEW:
         return FORT_LOG_PROC_NEW_SIZE(path_len);
     default:
@@ -230,8 +244,9 @@ FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN
     NTSTATUS status;
 
     const FORT_APP_PATH log_path = fort_buffer_conn_write_path(conn, log_type);
+    const FORT_APP_PATH inherit_path = fort_buffer_conn_write_inherit_path(conn);
 
-    const UINT32 len = fort_buffer_conn_write_len(conn, log_path.len, log_type);
+    const UINT32 len = fort_buffer_conn_write_len(conn, log_path.len, inherit_path.len, log_type);
     if (len == 0)
         return STATUS_INVALID_PARAMETER;
 
@@ -249,7 +264,7 @@ FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN
                 fort_log_app_write(out, blocked, conn->process_id, &log_path);
             } break;
             case FORT_BUFFER_CONN_WRITE_CONN: {
-                fort_log_conn_write(out, conn, &log_path);
+                fort_log_conn_write(out, conn, &log_path, &inherit_path);
             } break;
             case FORT_BUFFER_CONN_WRITE_PROC_NEW: {
                 fort_log_proc_new_write(out, conn->app_data.app_id, conn->process_id, &log_path);

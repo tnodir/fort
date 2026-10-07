@@ -1,6 +1,12 @@
 #include "logentryconn.h"
 
+#include <util/fileutil.h>
 #include <util/net/netutil.h>
+
+QString LogEntryConn::inheritPath() const
+{
+    return FileUtil::kernelPathToPath(m_inheritKernelPath);
+}
 
 void LogEntryConn::setLocalIp4(quint32 ip)
 {

@@ -269,9 +269,14 @@ quint32 logConnHeaderSize(bool isIPv6)
     return FORT_LOG_CONN_HEADER_SIZE(isIPv6);
 }
 
-quint32 logConnSize(quint16 pathLen, bool isIPv6)
+quint32 logConnInheritPathOffset(quint16 pathLen, bool isIPv6)
 {
-    return FORT_LOG_CONN_SIZE(pathLen, isIPv6);
+    return FORT_LOG_CONN_INHERIT_PATH_OFFSET(pathLen, isIPv6);
+}
+
+quint32 logConnSize(quint16 pathLen, quint16 inheritPathLen, bool isIPv6)
+{
+    return FORT_LOG_CONN_SIZE(pathLen, inheritPathLen, isIPv6);
 }
 
 quint32 logProcNewHeaderSize()
@@ -324,14 +329,16 @@ void logAppHeaderRead(const char *input, int *blocked, quint32 *pid, quint16 *pa
     fort_log_app_header_read(input, blocked, pid, pathLen);
 }
 
-void logConnHeaderWrite(char *output, PCFORT_CONF_META_CONN conn, quint16 pathLen)
+void logConnHeaderWrite(
+        char *output, PCFORT_CONF_META_CONN conn, quint16 pathLen, quint16 inheritPathLen)
 {
-    fort_log_conn_header_write(output, conn, pathLen);
+    fort_log_conn_header_write(output, conn, pathLen, inheritPathLen);
 }
 
-void logConnHeaderRead(const char *input, PFORT_CONF_META_CONN conn, quint16 *pathLen)
+void logConnHeaderRead(
+        const char *input, PFORT_CONF_META_CONN conn, quint16 *pathLen, quint16 *inheritPathLen)
 {
-    fort_log_conn_header_read(input, conn, pathLen);
+    fort_log_conn_header_read(input, conn, pathLen, inheritPathLen);
 }
 
 void logProcNewHeaderWrite(char *output, quint32 appId, quint32 pid, quint16 pathLen)

@@ -59,7 +59,8 @@ quint32 logAppHeaderSize();
 quint32 logAppSize(quint16 pathLen);
 
 quint32 logConnHeaderSize(bool isIPv6 = false);
-quint32 logConnSize(quint16 pathLen, bool isIPv6 = false);
+quint32 logConnInheritPathOffset(quint16 pathLen, bool isIPv6 = false);
+quint32 logConnSize(quint16 pathLen, quint16 inheritPathLen, bool isIPv6 = false);
 
 quint32 logProcNewHeaderSize();
 quint32 logProcNewSize(quint16 pathLen);
@@ -77,8 +78,10 @@ quint8 logType(const char *input);
 void logAppHeaderWrite(char *output, bool blocked, quint32 pid, quint16 pathLen);
 void logAppHeaderRead(const char *input, int *blocked, quint32 *pid, quint16 *pathLen);
 
-void logConnHeaderWrite(char *output, PCFORT_CONF_META_CONN conn, quint16 pathLen);
-void logConnHeaderRead(const char *input, PFORT_CONF_META_CONN conn, quint16 *pathLen);
+void logConnHeaderWrite(
+        char *output, PCFORT_CONF_META_CONN conn, quint16 pathLen, quint16 inheritPathLen);
+void logConnHeaderRead(
+        const char *input, PFORT_CONF_META_CONN conn, quint16 *pathLen, quint16 *inheritPathLen);
 
 void logProcNewHeaderWrite(char *output, quint32 appId, quint32 pid, quint16 pathLen);
 void logProcNewHeaderRead(const char *input, quint32 *appId, quint32 *pid, quint16 *pathLen);

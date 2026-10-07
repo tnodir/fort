@@ -9,6 +9,18 @@
 #include "logentrystattraf.h"
 #include "logentrytime.h"
 
+namespace {
+
+QString readPath(const char *input, quint16 pathLen)
+{
+    if (pathLen == 0)
+        return {};
+
+    return QString::fromWCharArray((const wchar_t *) input, pathLen / int(sizeof(wchar_t)));
+}
+
+}
+
 LogBuffer::LogBuffer(int bufferSize, QObject *parent) :
     QObject(parent),
     m_array(bufferSize ? bufferSize : DriverCommon::bufferSize(), Qt::Initialization::Uninitialized)
@@ -83,11 +95,7 @@ void LogBuffer::readEntryApp(LogEntryApp *logEntry)
     quint16 pathLen;
     DriverCommon::logAppHeaderRead(input, &blocked, &pid, &pathLen);
 
-    QString path;
-    if (pathLen > 0) {
-        input += DriverCommon::logAppHeaderSize();
-        path = QString::fromWCharArray((const wchar_t *) input, pathLen / int(sizeof(wchar_t)));
-    }
+    const QString path = readPath(input + DriverCommon::logAppHeaderSize(), pathLen);
 
     logEntry->setBlocked(blocked);
     logEntry->setPid(pid);
@@ -102,8 +110,11 @@ void LogBuffer::writeEntryConn(const LogEntryConn *logEntry)
     const QString path = logEntry->kernelPath();
     const quint32 pathLen = quint32(path.size()) * sizeof(wchar_t);
 
+    const QString inheritPath = logEntry->inheritKernelPath();
+    const quint32 inheritPathLen = quint32(inheritPath.size()) * sizeof(wchar_t);
+
     const bool isIPv6 = logEntry->isIPv6();
-    const int entrySize = int(DriverCommon::logConnSize(pathLen, isIPv6));
+    const int entrySize = int(DriverCommon::logConnSize(pathLen, inheritPathLen, isIPv6));
     prepareFor(entrySize);
 
     char *output = this->output();
@@ -131,12 +142,11 @@ void LogBuffer::writeEntryConn(const LogEntryConn *logEntry)
         },
     };
 
-    DriverCommon::logConnHeaderWrite(output, &conn, pathLen);
+    DriverCommon::logConnHeaderWrite(output, &conn, pathLen, inheritPathLen);
 
-    if (pathLen) {
-        output += DriverCommon::logConnHeaderSize(logEntry->isIPv6());
-        path.toWCharArray((wchar_t *) output);
-    }
+    path.toWCharArray((wchar_t *) (output + DriverCommon::logConnHeaderSize(isIPv6)));
+    inheritPath.toWCharArray(
+            (wchar_t *) (output + DriverCommon::logConnInheritPathOffset(pathLen, isIPv6)));
 
     m_top += entrySize;
 }
@@ -149,14 +159,13 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
 
     FORT_CONF_META_CONN conn;
     quint16 pathLen;
+    quint16 inheritPathLen;
 
-    DriverCommon::logConnHeaderRead(input, &conn, &pathLen);
+    DriverCommon::logConnHeaderRead(input, &conn, &pathLen, &inheritPathLen);
 
-    QString path;
-    if (pathLen > 0) {
-        input += DriverCommon::logConnHeaderSize(conn.isIPv6);
-        path = QString::fromWCharArray((const wchar_t *) input, pathLen / int(sizeof(wchar_t)));
-    }
+    const QString path = readPath(input + DriverCommon::logConnHeaderSize(conn.isIPv6), pathLen);
+    const QString inheritPath = readPath(
+            input + DriverCommon::logConnInheritPathOffset(pathLen, conn.isIPv6), inheritPathLen);
 
     logEntry->setBlocked(conn.act.blocked);
     logEntry->setAlerted(conn.act.conn_alert);
@@ -164,6 +173,7 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
     logEntry->setInbound(conn.inbound);
     logEntry->setLoopback(conn.is_loopback);
     logEntry->setInherited(conn.inherited);
+    logEntry->setInheritKernelPath(inheritPath);
     logEntry->setReason(conn.reason);
     logEntry->setIpProto(conn.ip_proto);
     logEntry->setZoneId(conn.act.zone_id);
@@ -176,7 +186,7 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
     logEntry->setPid(conn.process_id);
     logEntry->setKernelPath(path);
 
-    const int entrySize = int(DriverCommon::logConnSize(pathLen, conn.isIPv6));
+    const int entrySize = int(DriverCommon::logConnSize(pathLen, inheritPathLen, conn.isIPv6));
     m_offset += entrySize;
 }
 
@@ -211,11 +221,7 @@ void LogBuffer::readEntryProcNew(LogEntryProcNew *logEntry)
     quint16 pathLen;
     DriverCommon::logProcNewHeaderRead(input, &appId, &pid, &pathLen);
 
-    QString path;
-    if (pathLen > 0) {
-        input += DriverCommon::logProcNewHeaderSize();
-        path = QString::fromWCharArray((const wchar_t *) input, pathLen / sizeof(wchar_t));
-    }
+    const QString path = readPath(input + DriverCommon::logProcNewHeaderSize(), pathLen);
 
     logEntry->setAppId(appId);
     logEntry->setPid(pid);
