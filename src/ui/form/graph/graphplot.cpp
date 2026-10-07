@@ -910,19 +910,10 @@ void GraphPlot::updateLines()
 int GraphPlot::lineStartIndex() const
 {
     // Visible also when scrolled by a second
-    const int count = int(m_lineColumns.size());
-    int index = 0;
+    const auto it = std::partition_point(m_lineColumns.cbegin(), m_lineColumns.cend(),
+            [&](const GraphColumn &column) { return column.x < m_axisRect.left() + column.width; });
 
-    while (index < count) {
-        const GraphColumn &column = m_lineColumns.at(index);
-
-        if (column.x >= m_axisRect.left() + column.width)
-            break;
-
-        ++index;
-    }
-
-    return index;
+    return int(it - m_lineColumns.cbegin());
 }
 
 void GraphPlot::appendLinePoints(GraphLinePoints &points, const GraphColumn &column) const
