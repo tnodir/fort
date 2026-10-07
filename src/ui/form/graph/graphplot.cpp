@@ -336,6 +336,8 @@ void GraphPlot::setTickLabelSize(int pointSize)
     m_speedInText->setFont(speedFont);
     m_speedOutText->setFont(speedFont);
 
+    m_speedSpacing = QFontMetricsF(speedFont).horizontalAdvance(QLatin1String("  "));
+
     setupSpeedArrows(speedFont);
 
     updateTickLabelsStyle();
@@ -960,11 +962,8 @@ void GraphPlot::setupSpeedArrows(const QFont &font)
 void GraphPlot::updateSpeedBox()
 {
     // The arrows are colored by their bars
-    const qreal spacing =
-            QFontMetricsF(m_speedInText->font()).horizontalAdvance(QLatin1String("  "));
-
     qreal width = layoutSpeedItem(m_speedInArrow, 0) + speedArrowSpacing;
-    width = layoutSpeedItem(m_speedInText, width) + spacing;
+    width = layoutSpeedItem(m_speedInText, width) + m_speedSpacing;
     width = layoutSpeedItem(m_speedOutArrow, width) + speedArrowSpacing;
     width = layoutSpeedItem(m_speedOutText, width);
 

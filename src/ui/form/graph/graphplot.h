@@ -230,6 +230,8 @@ private:
     double m_valueUpper = 5; // shown
     double m_valueTarget = 5;
 
+    qreal m_speedSpacing = 0; // between the in and out texts
+
     qint64 m_fixedValueMax = 0;
     qint64 m_risingTime = 0;
 
