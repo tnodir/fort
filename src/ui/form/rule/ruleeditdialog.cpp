@@ -19,6 +19,7 @@
 #include <form/controls/plaintextedit.h>
 #include <form/controls/timeperiodselector.h>
 #include <form/controls/zonesselector.h>
+#include <form/dialog/dialogutil.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/rulesetmodel.h>
@@ -27,7 +28,9 @@
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/osutil.h>
+#include <util/textareautil.h>
 
+#include "filtereditdialog.h"
 #include "rulescontroller.h"
 #include "ruleswindow.h"
 
@@ -141,6 +144,7 @@ void RuleEditDialog::retranslateUi()
     m_cbExclusive->setText(tr("Exclusive"));
     m_btZones->retranslateUi();
     m_cbInlineZones->setText(tr("Inline Zones"));
+    m_btAddFilter->setToolTip(tr("Add Filter"));
 
     retranslateRulePlaceholderText();
     m_actRuleHelp->setText(tr("Help"));
@@ -389,8 +393,13 @@ QLayout *RuleEditDialog::setupZonesLayout()
     // Inline Zones
     m_cbInlineZones = new QCheckBox();
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbExclusive,
-            ControlUtil::createVSeparator(), m_btZones, m_cbInlineZones, /*stretch*/ nullptr });
+    // Add Filter
+    m_btAddFilter =
+            ControlUtil::createIconToolButton(":/icons/filter.png", [&] { openFilterEditForm(); });
+
+    auto layout =
+            ControlUtil::createHLayoutByWidgets({ m_cbExclusive, ControlUtil::createVSeparator(),
+                    m_btZones, m_cbInlineZones, /*stretch*/ nullptr, m_btAddFilter });
 
     return layout;
 }
@@ -656,6 +665,20 @@ void RuleEditDialog::fillRule(Rule &rule) const
 
     rule.ruleSetEdited = ruleSetModel()->edited();
     rule.ruleSet = ruleSetModel()->ruleSet();
+}
+
+void RuleEditDialog::openFilterEditForm()
+{
+    auto w = new FilterEditDialog(/*isRuleFilter=*/true, this);
+    ControlUtil::deleteOnClose(w);
+
+    connect(w, &FilterEditDialog::filterSaved, this, [&](const QString &filterText) {
+        TextAreaUtil::appendText(m_editRuleText, filterText);
+    });
+
+    w->initialize(QString());
+
+    DialogUtil::showDialog(w);
 }
 
 void RuleEditDialog::selectPresetRuleDialog()

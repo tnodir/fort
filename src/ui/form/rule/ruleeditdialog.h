@@ -82,6 +82,8 @@ private:
 
     void fillRule(Rule &rule) const;
 
+    void openFilterEditForm();
+
     void selectPresetRuleDialog();
     void editCurrentPresetRuleDialog();
 
@@ -103,6 +105,7 @@ private:
     QCheckBox *m_cbExclusive = nullptr;
     ZonesSelector *m_btZones = nullptr;
     QCheckBox *m_cbInlineZones = nullptr;
+    QToolButton *m_btAddFilter = nullptr;
     QAction *m_actRuleHelp = nullptr;
     PlainTextEdit *m_editRuleText = nullptr;
     TimePeriodSelector *m_periodSelector = nullptr;
