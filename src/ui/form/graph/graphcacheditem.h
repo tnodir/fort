@@ -18,6 +18,8 @@ public:
             QWidget *widget = nullptr) override;
 
 protected:
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+
     // Call on the painting's change
     void invalidateCache();
 

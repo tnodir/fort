@@ -40,6 +40,17 @@ void GraphCachedItem::paint(
     painter->drawPixmap(QRectF(m_cacheOrigin, sourceRect.size() / dpr), m_cache, sourceRect);
 }
 
+QVariant GraphCachedItem::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+    // Free the hidden item's cache
+    if (change == ItemVisibleHasChanged && !value.toBool()) {
+        m_cache = QPixmap();
+        m_cacheValid = false;
+    }
+
+    return QGraphicsItem::itemChange(change, value);
+}
+
 void GraphCachedItem::invalidateCache()
 {
     m_cacheValid = false;
