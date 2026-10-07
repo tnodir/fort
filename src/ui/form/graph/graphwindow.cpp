@@ -184,7 +184,7 @@ void GraphWindow::updateFonts(const IniUser &ini)
 void GraphWindow::updateFormat(const IniUser &ini)
 {
     m_plot->setMaxSeconds(ini.graphWindowMaxSeconds());
-    m_plot->setGraphType(GraphPlot::GraphType(ini.graphWindowGraphType()));
+    m_plot->setGraphType(GraphPlot::graphTypeByIndex(ini.graphWindowGraphType()));
     m_plot->setBarWidth(ini.graphWindowBarWidth());
     m_plot->setUnitFormat(FormatUtil::graphUnitFormat(ini.graphWindowTrafUnit()));
     m_plot->setFixedValueMax(ini.graphWindowFixedSpeed() * 1024LL);

@@ -90,6 +90,11 @@ public:
     GraphType graphType() const { return m_graphType; }
     void setGraphType(GraphType v);
 
+    static GraphType graphTypeByIndex(int index)
+    {
+        return GraphType(qBound(int(GraphTypeColumn), index, int(GraphTypeLine)));
+    }
+
     int barWidth() const { return m_barWidth; }
     void setBarWidth(int v) { m_barWidth = v; }
 
