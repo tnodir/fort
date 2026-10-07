@@ -23,6 +23,7 @@ public:
     bool isSpeedLimitsEqual(const App &o) const;
     bool isPathsEqual(const App &o) const;
     bool isScheduleEqual(const App &o) const;
+    bool isTextsEqual(const App &o) const;
     bool isOptionsEqual(const App &o) const;
     bool isNameEqual(const App &o) const;
 
@@ -70,6 +71,7 @@ public:
     QString iconPath;
     QString appName;
     QString notes;
+    QString filtersText;
 
     QDateTime scheduleTime;
     QDateTime creatTime;

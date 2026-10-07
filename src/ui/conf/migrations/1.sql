@@ -100,7 +100,7 @@ CREATE TABLE app(
   accept_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
   reject_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
   rule_id INTEGER,
-  private_rule_id INTEGER,
+  filters_text TEXT,
   creat_time INTEGER NOT NULL,
   end_action INTEGER NOT NULL DEFAULT 0,
   end_time INTEGER
@@ -111,7 +111,6 @@ CREATE INDEX app_name_idx ON app(lower(name));
 CREATE INDEX app_in_limit_id_idx ON app(in_limit_id);
 CREATE INDEX app_out_limit_id_idx ON app(out_limit_id);
 CREATE INDEX app_rule_id_idx ON app(rule_id);
-CREATE INDEX app_private_rule_id_idx ON app(private_rule_id);
 CREATE INDEX app_end_time_idx ON app(end_time);
 
 CREATE TABLE app_alert(

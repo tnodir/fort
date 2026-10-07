@@ -41,10 +41,15 @@ bool App::isScheduleEqual(const App &o) const
     return scheduleAction == o.scheduleAction && scheduleTime == o.scheduleTime;
 }
 
+bool App::isTextsEqual(const App &o) const
+{
+    return notes == o.notes && filtersText == o.filtersText;
+}
+
 bool App::isOptionsEqual(const App &o) const
 {
     return isFlagsEqual(o) && isZonesEqual(o) && isSpeedLimitsEqual(o) && groups == o.groups
-            && ruleId == o.ruleId && notes == o.notes && isPathsEqual(o) && isScheduleEqual(o);
+            && ruleId == o.ruleId && isTextsEqual(o) && isPathsEqual(o) && isScheduleEqual(o);
 }
 
 bool App::isNameEqual(const App &o) const

@@ -265,10 +265,11 @@ bool AppListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
     m_appRow.zones.accept_mask = stmt.columnUInt(24);
     m_appRow.zones.reject_mask = stmt.columnUInt(25);
     m_appRow.ruleId = stmt.columnUInt(26);
-    m_appRow.scheduleAction = stmt.columnInt(27);
-    m_appRow.scheduleTime = stmt.columnDateTime(28);
-    m_appRow.creatTime = stmt.columnDateTime(29);
-    m_appRow.alerted = stmt.columnBool(30);
+    m_appRow.filtersText = stmt.columnText(27);
+    m_appRow.scheduleAction = stmt.columnInt(28);
+    m_appRow.scheduleTime = stmt.columnDateTime(29);
+    m_appRow.creatTime = stmt.columnDateTime(30);
+    m_appRow.alerted = stmt.columnBool(31);
 
     return true;
 }
@@ -303,6 +304,7 @@ QString AppListModel::sqlBase() const
            "    t.accept_zones,"
            "    t.reject_zones,"
            "    t.rule_id,"
+           "    t.filters_text,"
            "    t.end_action,"
            "    t.end_time,"
            "    t.creat_time,"
