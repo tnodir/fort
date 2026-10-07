@@ -885,13 +885,13 @@ void GraphPlot::startRising(qint64 unixTime)
 
 void GraphPlot::updateBars()
 {
-    const QVector<GraphColumn> columns = visibleColumns();
-
     if (m_graphType == GraphTypeLine) {
-        m_lineColumns = columns;
-        updateLines();
+        // A second beyond the left edge keeps the clipped curve's shape on scroll
+        updateLines(visibleColumns(keyLower() - 1));
         return;
     }
+
+    const QVector<GraphColumn> columns = visibleColumns(keyLower());
 
     GraphBarsRects bars;
 
@@ -946,23 +946,15 @@ void GraphPlot::updateRisingBars()
     setRisingBar(m_risingTotal, rects.total, m_risingNeighbors.total);
 }
 
-void GraphPlot::updateLines()
+void GraphPlot::updateLines(const QVector<GraphColumn> &columns)
 {
-    const int count = int(m_lineColumns.size());
-    const int startIndex = lineStartIndex();
-
+    // The lines are clipped by the plot area's left edge
     GraphLinePoints points;
 
-    // Start from the zero at the column's left edge
-    if (startIndex < count) {
-        const GraphColumn &first = m_lineColumns.at(startIndex);
-        const GraphColumn start = { first.unixTime, first.x - first.width / 2, first.width };
+    appendLineStart(points, columns);
 
-        appendLinePoints(points, start);
-    }
-
-    for (int i = startIndex; i < count; ++i) {
-        appendLinePoints(points, m_lineColumns.at(i));
+    for (const GraphColumn &column : columns) {
+        appendLinePoints(points, column);
     }
 
     m_lineIn->setPoints(points.in);
@@ -972,13 +964,17 @@ void GraphPlot::updateLines()
     m_fillOut->setPoints(points.out);
 }
 
-int GraphPlot::lineStartIndex() const
+void GraphPlot::appendLineStart(GraphLinePoints &points, const QVector<GraphColumn> &columns) const
 {
-    // Visible also when scrolled by a second
-    const auto it = std::partition_point(m_lineColumns.cbegin(), m_lineColumns.cend(),
-            [&](const GraphColumn &column) { return column.x < m_axisRect.left() + column.width; });
+    // Only the lines started inside the plot, without older points, rise from the zero
+    if (columns.isEmpty() || columns.constFirst().unixTime != m_points.constFirst().unixTime)
+        return;
 
-    return int(it - m_lineColumns.cbegin());
+    // From the first column's left edge
+    const GraphColumn &first = columns.constFirst();
+    const GraphColumn start = { first.unixTime, first.x - first.width / 2, first.width };
+
+    appendLinePoints(points, start);
 }
 
 void GraphPlot::appendLinePoints(GraphLinePoints &points, const GraphColumn &column) const
@@ -1149,7 +1145,7 @@ int GraphPlot::barHeight(quint64 bits) const
     return qMax(height, 1);
 }
 
-QVector<GraphColumn> GraphPlot::visibleColumns() const
+QVector<GraphColumn> GraphPlot::visibleColumns(qint64 keyLower) const
 {
     const qreal dpr = devicePixelRatioF();
     const int secondPixels = this->secondPixels();
@@ -1158,7 +1154,6 @@ QVector<GraphColumn> GraphPlot::visibleColumns() const
     // The last second's middle is at the right edge, in device pixels
     const int right = qFloor((m_axisRect.left() + m_axisRect.width()) * dpr) - secondPixels / 2;
     const qint64 keyUpper = lastUnixTime();
-    const qint64 keyLower = this->keyLower();
 
     QVector<GraphColumn> columns;
 

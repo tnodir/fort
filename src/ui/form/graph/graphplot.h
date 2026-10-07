@@ -213,8 +213,8 @@ private:
     void updateBars();
     void updateBarsOutline();
     void updateRisingBars();
-    void updateLines();
-    int lineStartIndex() const;
+    void updateLines(const QVector<GraphColumn> &columns);
+    void appendLineStart(GraphLinePoints &points, const QVector<GraphColumn> &columns) const;
     void appendLinePoints(GraphLinePoints &points, const GraphColumn &column) const;
     void updateScroll();
     void setupSpeedArrows(const QFont &font);
@@ -228,7 +228,7 @@ private:
     QVector<int> valuesToPixels(const QVector<double> &values) const;
     int barsBottom() const;
     int barHeight(quint64 bits) const;
-    QVector<GraphColumn> visibleColumns() const;
+    QVector<GraphColumn> visibleColumns(qint64 keyLower) const;
     GraphColumn columnAt(qreal x, qreal width, const GraphPoint &point) const;
     GraphColumnRects columnRects(const GraphColumn &column) const;
     QRectF barRect(const GraphColumn &column, int fromHeight, int toHeight) const;
@@ -288,8 +288,6 @@ private:
 
     GraphColumn m_risingColumn;
     GraphBarsRects m_risingNeighbors;
-
-    QVector<GraphColumn> m_lineColumns;
 
     QColor m_tickLabelColor;
     QFont m_tickLabelFont;
