@@ -50,7 +50,7 @@ build-win10\tests\UtilTest\UtilTest.exe
 build-win10\tests\UtilTest\UtilTest.exe --gtest_filter=ConfUtilTest.*   :: single test/suite
 ```
 
-Suites: `UtilTest` (bitutil, confutil, connfilter, dateutil, fileutil, filterline, formatutil, ioccontainer, netutil, ruletextparser, stringutil, timeperiod, wildmatch), `StatTest`, `LogBufferTest`, `LogReaderTest`. `LogReaderTest` needs the loaded kernel driver: run it only manually from a console, never as part of an automated test run. Each `tst_*.h` is included from the suite's `tst_main.cpp` and must also be listed in the suite's `.pro`.
+Suites: `UtilTest` (bitutil, confutil, connfilter, dateutil, fileutil, filterline, formatutil, ioccontainer, netutil, ruletextparser, stringutil, timeperiod, wildmatch), `StatTest`, `LogBufferTest`, `LogReaderTest`. `LogReaderTest` needs the loaded kernel driver: run it only manually from a console, never as part of an automated test run. Each `tst_*.h` is included from the suite's `tst_main.cpp` and must also be listed in the suite's `.pro`. Run a test executable with its build folder as the current directory: `UtilTest` writes files (`zones/`) relative to it.
 
 ### Testing the real driver (test-mode VM)
 
@@ -90,7 +90,7 @@ One executable, several roles selected by command line / settings (`FortSettings
 
 `setupServices()` in `src/ui/fortmanager.cpp` is the key place to read: for a **master** it registers the real managers (`ConfManager`, `StatManager`, `DriverManager`, …); for a **client** it registers `*Rpc` subclasses from `src/ui/rpc/` that implement the same interface by marshalling calls over IPC to the service. **Any new manager method that a client can invoke needs a matching override in its `…Rpc` class and a `Control::Command` entry.**
 
-IPC is `QLocalServer`/`QLocalSocket` (`src/ui/control/`): `ControlManager` listens (world-accessible when running as service), `ControlWorker` frames requests, `RpcManager` dispatches them, `src/ui/control/command/controlcommand*.cpp` implement the user-facing CLI commands.
+IPC is `QLocalServer`/`QLocalSocket` (`src/ui/control/`): `ControlManager` listens (world-accessible when running as service), `ControlWorker` frames requests, `RpcManager` dispatches them, `src/ui/control/command/controlcommand*.cpp` implement the user-facing CLI commands. `ControlManager::connectToAnyServer()` tries the UI process first, so with a service and a running tray a `-c` command runs in the UI **client** (the `*Rpc` managers, a read-only conf DB): a manager method that a `ControlCommand*` calls to change state must have its `…Rpc` override; test the control commands with the tray running too.
 
 ### Configuration pipeline (UI → driver)
 
@@ -104,6 +104,8 @@ A Program's Network Filters are rule text lines in `app.filters_text` (one filte
 
 Groups, Speed Limits and Rules may refer to a `TimePeriod` (`conf/timeperiod.h`, max 64: a list of intervals, each with its week days and time from/to) by `period_id`, applied while their `period_enabled` is set. `ConfTimePeriodManager` tracks the Time Periods' activity by minutes. For the Groups and Speed Limits it is folded into their enabled masks written to the driver (`writeGroupFlags()` / `writeSpeedLimitFlags()`). The Rules are checked by the driver: a rule's `period_id` (0 - always active) against the active Time Periods' mask, sent in `FORT_CONF_IO.periods` with `SETCONF` and updated by `SETPERIODS` on the activity's change.
 
+The Global Before/After Apps rules are sent to the driver as two synthetic rules (`ConfRuleManager::walkRules()`) with the ids after the max rule id (up to `FORT_CONF_RULE_ID_MAX`): don't reuse the deleted rules' free ids for them.
+
 ### Databases
 
 No Qt SQL — a hand-rolled SQLite wrapper in `src/ui/3rdparty/sqlite/` (`SqliteDb`, `SqliteStmt`, `DbQuery`) over the amalgamation in `src/3rdparty/sqlite/`. Separate DBs for conf, traffic stats, connections and the app-info cache; schema versions are applied from `.sql` migrations embedded as Qt resources (`ui/conf/migrations/`, `ui/stat/migrations/*/`, `ui/appinfo/migrations/`).
@@ -111,6 +113,8 @@ No Qt SQL — a hand-rolled SQLite wrapper in `src/ui/3rdparty/sqlite/` (`Sqlite
 ### Driver internals (`src/driver/`)
 
 `fortdrv.c` entry point; `fortcout.c` WFP callouts registration, `fortcout_ale.c` ALE and `fortcout_pkt.c` packet classify callouts; `common/fortconf_conn.c` the ALE connection's decision (local addresses, flags, addresses, Filter Mode, App, Zones, Rules, Groups), shared with the UI (`DriverCommon::confConnFilter()`, used by the Filter Simulator: `ConfManager::simulateConn()` writes the conf buffers as for the driver, a client asks the service by RPC) and accessing the conf via callbacks, so the driver keeps its locks; `fortcnf*.c` the live configuration (conf/rules/groups/zones) with reader-writer locks; `fortbuf.c` the log ring buffer read back by the UI; `fortpkt.c` packets' cloning and re-injection, `fortpkt_shaper.c` the Speed Limits' shaper queues, `fortpkt_pending.c` the pended (Ask to Connect) packets; `fortstat.c` traffic accounting; `fortps.c` process tracking; `fortpool.c`/`forttlsf.c` allocators (TLSF from `src/3rdparty/tlsf`); `fortmod.c` + `loader/` the self-loading module (fortfwdl.sys unpacks the signed payload); `proxycb/` callout trampolines (with .asm variants per arch).
+
+The WFP sublayers' weights seem to be made unique by BFE (a requested weight 0 became 10: 0…8 are built-in, a third-party one took 9), so the traffic is counted in `FWPM_SUBLAYER_INSPECTION` (`common/fortprov.c`), after the other callouts. Only `FWP_ACTION_CALLOUT_INSPECTION` filters without `FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED` are allowed there (else `STATUS_FWP_INVALID_FLAGS`); packets taken by another shaper come there as BLOCK without the write right.
 
 ### UI layer
 
@@ -124,6 +128,10 @@ The traffic graph (`form/graph/`) has no 3rd-party chart library: `GraphWindow` 
 - Keep the UI compatible with Qt 6.1: guard newer APIs with `#if QT_VERSION >= QT_VERSION_CHECK(…)` (e.g. no `QFlags::toInt()`).
 - Keep each function's cyclomatic complexity below 9: CodeScene reports a "Complex Method" otherwise. Every `case`/`default` label, `if`, loop, `continue`, `&&`, `||` and `?:` adds one (`break` doesn't); split long `switch`es into helpers or a function table indexed by the enum (e.g. `fort_conf_rule_filter_check_funcList` in `driver/common/fortconf.c`). Likewise keep at most 4 arguments per function ("Excess Number of Function Arguments"), grouping them into a struct if needed (cf. `FORT_CALLOUT_ARG`), and at most one `&&`/`||` in an `if`/`while` condition ("Complex Conditional"): move the rest into a named helper or early returns. Nest a conditional or loop in at most one of a function's top-level branches/loop bodies ("Bumpy Road"); move the others into helpers.
 - Build on the existing code instead of duplicating it: reuse or split an existing function rather than adding a near-copy, and work with the existing parsers' objects (e.g. `RuleTextParser`'s `RuleFilter`s for a rule text) rather than adding own enums, name tables or value structs for the same data; extend the existing class a little if needed (cf. `RuleTextParser::setText()`).
+- Order a class's or struct's data members by ascending size: `bool`s and other 1-byte ones first (check an enum's underlying type: many are `: qint8`), then `quint16`, 32-bit ints/enums, pointers, objects (`QString`, containers, structs).
+- Put the activating one of paired functions first, in the header and in the .cpp alike: start → stop, open → close, enable → disable, show → hide, setUp → tearDown.
+- Wrap an `if` body in braces when it returns a computed expression (incl. a struct field); simple returns (`return;`, a constant, a plain local variable) stay without braces. The blank line after the `{` of an `if` with a multi-line condition comes from clang-format: don't add or remove it by hand.
+- Declare a constant in an anonymous `namespace { }` as `inline constexpr` (Qt Creator's navigation finds it then); function-local constants stay plain `constexpr`.
 - Keep a form's code in the order of its controls: the members in the header, their creation in the `setup*Layout()` functions and their lines in `initialize()`, `retranslateUi()`, `fill*()`. Moving a control on the form moves all of them.
 - Commit subjects are prefixed by area: `UI:`, `Driver:`, `Tests:`, `Deploy:`, `Installer:`, `README:` — e.g. `UI: ConfManager: Refactor save()`.
 - `ChangeLog` is maintained by hand at release time; don't edit it in feature commits.
