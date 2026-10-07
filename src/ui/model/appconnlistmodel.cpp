@@ -7,12 +7,14 @@
 
 namespace {
 
-const char *const sqlSelectAppConnIds = "SELECT conn_id"
+const char *const sqlSelectAppConnIds = "WITH a AS ("
+                                        "  SELECT app_id FROM app"
+                                        "    WHERE conf_app_id = ?1 OR path = ?2"
+                                        ")"
+                                        "SELECT conn_id"
                                         "  FROM conn"
-                                        "  WHERE app_id IN ("
-                                        "    SELECT app_id FROM app"
-                                        "      WHERE conf_app_id = ?1 OR path = ?2"
-                                        "  )"
+                                        "  WHERE app_id IN (SELECT app_id FROM a)"
+                                        "    OR inherit_app_id IN (SELECT app_id FROM a)"
                                         "  ORDER BY conn_id DESC"
                                         "  LIMIT 100;";
 
