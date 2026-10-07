@@ -98,6 +98,8 @@ public:
     GraphType graphType() const { return m_graphType; }
     void setGraphType(GraphType v);
 
+    bool isLine() const { return m_graphType == GraphTypeLine; }
+
     static GraphType graphTypeByIndex(int index)
     {
         return GraphType(qBound(int(GraphTypeColumn), index, int(GraphTypeLine)));

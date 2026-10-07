@@ -589,11 +589,9 @@ void GraphPlot::setupScaleAnimation()
 
 void GraphPlot::updateItemsVisible()
 {
-    const bool isLine = (m_graphType == GraphTypeLine);
-
     // The hidden graphs' bars are empty
     for (auto item : { m_barsIn, m_barsOut, m_barsTotal }) {
-        item->setVisible(!isLine);
+        item->setVisible(!isLine());
     }
 
     updateLinesVisible();
@@ -601,7 +599,7 @@ void GraphPlot::updateItemsVisible()
 
 void GraphPlot::updateLinesVisible()
 {
-    const bool isLine = (m_graphType == GraphTypeLine);
+    const bool isLine = this->isLine();
     const bool isInOutFilled = isLine && !m_totalVisible;
 
     m_lineTotal->setVisible(isLine && m_totalVisible);
@@ -873,7 +871,7 @@ void GraphPlot::startRising(qint64 unixTime)
     m_risingAnimation.stop();
 
     // The lines are changed at once: they are repainted entirely
-    if (m_graphType == GraphTypeLine)
+    if (isLine())
         return;
 
     // Nothing to rise for an empty traffic
@@ -885,7 +883,7 @@ void GraphPlot::startRising(qint64 unixTime)
 
 void GraphPlot::updateBars()
 {
-    if (m_graphType == GraphTypeLine) {
+    if (isLine()) {
         // A second beyond the left edge keeps the clipped curve's shape on scroll
         updateLines(visibleColumns(keyLower() - 1));
         return;
@@ -935,7 +933,7 @@ void GraphPlot::updateBarsOutline()
 void GraphPlot::updateRisingBars()
 {
     // The lines have no rising points
-    if (m_graphType == GraphTypeLine)
+    if (isLine())
         return;
 
     const double ratio = m_risingAnimation.currentValue();
