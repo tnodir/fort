@@ -252,6 +252,7 @@ SOURCES += \
     util/conf/confdata.cpp \
     util/conf/confrodata.cpp \
     util/conf/confutil.cpp \
+    util/conf/filterline.cpp \
     util/conf/ruletextparser.cpp \
     util/consoleoutput.cpp \
     util/dateutil.cpp \
@@ -569,6 +570,7 @@ HEADERS += \
     util/conf/confruleswalker.h \
     util/conf/confspeedlimitswalker.h \
     util/conf/confutil.h \
+    util/conf/filterline.h \
     util/conf/ruletextparser.h \
     util/consoleoutput.h \
     util/dateutil.h \
