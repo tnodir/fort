@@ -81,7 +81,10 @@ public:
     };
     Q_ENUM(ErrorCode)
 
-    explicit RuleTextParser(const QString &text, QObject *parent = nullptr);
+    explicit RuleTextParser(const QString &text = {}, QObject *parent = nullptr);
+
+    // Resets the parsed state
+    void setText(const QString &text);
 
     ErrorCode errorCode() const { return m_errorCode; }
     const QString &errorMessage() const { return m_errorMessage; }

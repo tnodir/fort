@@ -96,9 +96,23 @@ bool RuleFilter::hasDefaultValue() const
     return type == FORT_RULE_FILTER_TYPE_ZONES && hasFilterName;
 }
 
-RuleTextParser::RuleTextParser(const QString &text, QObject *parent) : QObject(parent), m_text(text)
+RuleTextParser::RuleTextParser(const QString &text, QObject *parent) : QObject(parent)
 {
+    setText(text);
+}
+
+void RuleTextParser::setText(const QString &text)
+{
+    m_text = text;
     setupCharPtr();
+
+    m_listDepth = 0;
+    m_charType = CharNone;
+    resetParsedCharTypes();
+    setError(ErrorNone, QString());
+
+    m_ruleFilter = {};
+    m_ruleFilters.clear();
 }
 
 void RuleTextParser::setupCharPtr()

@@ -93,6 +93,20 @@ TEST_F(RuleTextParserTest, emptyComment)
     ASSERT_EQ(p.ruleFilters().size(), 0);
 }
 
+TEST_F(RuleTextParserTest, setText)
+{
+    RuleTextParser p("{1.1.1.1:53");
+
+    ASSERT_FALSE(p.parse());
+
+    p.setText("1.1.1.1:53");
+
+    ASSERT_EQ(p.errorCode(), RuleTextParser::ErrorNone);
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 4);
+}
+
 TEST_F(RuleTextParserTest, lineIpPort)
 {
     RuleTextParser p("1.1.1.1:53");
