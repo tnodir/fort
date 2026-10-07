@@ -7,6 +7,7 @@ HEADERS += \
     tst_connfilter.h \
     tst_dateutil.h \
     tst_fileutil.h \
+    tst_formatutil.h \
     tst_ioccontainer.h \
     tst_netutil.h \
     tst_ruletextparser.h \

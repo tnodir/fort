@@ -3,6 +3,7 @@
 #include "tst_connfilter.h"
 #include "tst_dateutil.h"
 #include "tst_fileutil.h"
+#include "tst_formatutil.h"
 #include "tst_ioccontainer.h"
 #include "tst_netutil.h"
 #include "tst_ruletextparser.h"
