@@ -59,12 +59,16 @@ void LogConnJob::emitFinished()
 
 bool LogConnJob::processEntry(const LogEntryConn &entry)
 {
-    const qint64 appId = getOrCreateAppId(entry.path(), entry.appId(), entry.connTime());
-    if (appId == INVALID_APP_ID)
-        return false;
-
+    // A child process of the same program inherits its own path: create it with the conf app id
     const qint64 inheritAppId = getOrCreateInheritAppId(entry);
     if (inheritAppId == INVALID_APP_ID)
+        return false;
+
+    // The inherited connection's app is found by the inherited process's name
+    const quint32 confAppId = entry.inherited() ? 0 : entry.appId();
+
+    const qint64 appId = getOrCreateAppId(entry.path(), confAppId, entry.connTime());
+    if (appId == INVALID_APP_ID)
         return false;
 
     const qint64 connId = insertConn(entry, appId, inheritAppId);
