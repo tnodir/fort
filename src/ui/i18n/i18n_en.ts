@@ -715,6 +715,30 @@
         <translation></translation>
     </message>
     <message>
+        <source>Animation</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Opacity:</source>
         <translation></translation>
     </message>
@@ -723,11 +747,23 @@
         <translation></translation>
     </message>
     <message>
+        <source>Bar width:</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Max seconds:</source>
         <translation></translation>
     </message>
     <message>
+        <source>Graph type:</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Background:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Border:</source>
         <translation></translation>
     </message>
     <message>
@@ -736,6 +772,10 @@
     </message>
     <message>
         <source>Upload:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Total:</source>
         <translation></translation>
     </message>
     <message>
@@ -752,6 +792,14 @@
     </message>
     <message>
         <source>Grid:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Column</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Line</source>
         <translation></translation>
     </message>
     <message>

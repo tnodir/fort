@@ -715,6 +715,30 @@
         <translation>Скрыть при наведении</translation>
     </message>
     <message>
+        <source>Animation</source>
+        <translation>Анимация</translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation>Деления на осях</translation>
+    </message>
+    <message>
+        <source>Show:</source>
+        <translation>Показать:</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Общая</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Загрузка</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>Отдача</translation>
+    </message>
+    <message>
         <source>Opacity:</source>
         <translation>Непрозрачность:</translation>
     </message>
@@ -723,12 +747,24 @@
         <translation>Непрозрачность при наведении:</translation>
     </message>
     <message>
+        <source>Bar width:</source>
+        <translation>Ширина столбца:</translation>
+    </message>
+    <message>
         <source>Max seconds:</source>
         <translation>Количество секунд:</translation>
     </message>
     <message>
+        <source>Graph type:</source>
+        <translation>Тип графика:</translation>
+    </message>
+    <message>
         <source>Background:</source>
         <translation>Фон:</translation>
+    </message>
+    <message>
+        <source>Border:</source>
+        <translation>Рамка:</translation>
     </message>
     <message>
         <source>Download:</source>
@@ -737,6 +773,10 @@
     <message>
         <source>Upload:</source>
         <translation>Отдача:</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Общая:</translation>
     </message>
     <message>
         <source>Axis:</source>
@@ -753,6 +793,14 @@
     <message>
         <source>Grid:</source>
         <translation>Сетка:</translation>
+    </message>
+    <message>
+        <source>Column</source>
+        <translation>Столбцы</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation>Линии</translation>
     </message>
     <message>
         <source>Window</source>

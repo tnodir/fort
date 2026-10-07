@@ -715,6 +715,30 @@
         <translation>Fareyle Üzerine Gelindiğinde Gizle</translation>
     </message>
     <message>
+        <source>Animation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Toplam</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>İndir</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>Yükle</translation>
+    </message>
+    <message>
         <source>Opacity:</source>
         <translation>Saydamlık:</translation>
     </message>
@@ -723,12 +747,24 @@
         <translation>Fareyle Üzerine Gelindiğinde Saydamlık: </translation>
     </message>
     <message>
+        <source>Bar width:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Max seconds:</source>
         <translation>Maksimum Saniyeler:</translation>
     </message>
     <message>
+        <source>Graph type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Background:</source>
         <translation>Arka Plan:</translation>
+    </message>
+    <message>
+        <source>Border:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Download:</source>
@@ -737,6 +773,10 @@
     <message>
         <source>Upload:</source>
         <translation>Yükle:</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Axis:</source>
@@ -753,6 +793,14 @@
     <message>
         <source>Grid:</source>
         <translation>Izgara:</translation>
+    </message>
+    <message>
+        <source>Column</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Window</source>

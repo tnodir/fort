@@ -715,6 +715,30 @@
         <translation>悬停时隐藏</translation>
     </message>
     <message>
+        <source>Animation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>总计</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>下载</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>上传</translation>
+    </message>
+    <message>
         <source>Opacity:</source>
         <translation>不透明度：</translation>
     </message>
@@ -723,12 +747,24 @@
         <translation>悬停不透明度：</translation>
     </message>
     <message>
+        <source>Bar width:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Max seconds:</source>
         <translation>最大秒数：</translation>
     </message>
     <message>
+        <source>Graph type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Background:</source>
         <translation>背景：</translation>
+    </message>
+    <message>
+        <source>Border:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Download:</source>
@@ -737,6 +773,10 @@
     <message>
         <source>Upload:</source>
         <translation>上传：</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Axis:</source>
@@ -753,6 +793,14 @@
     <message>
         <source>Grid:</source>
         <translation>网格：</translation>
+    </message>
+    <message>
+        <source>Column</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Window</source>

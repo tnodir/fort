@@ -715,6 +715,42 @@
         <translation>Cho phép nhấp xuyên</translation>
     </message>
     <message>
+        <source>Animation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Tổng</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bar width:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Graph type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Download:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -723,8 +759,20 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Total:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Auto-scale</source>
         <translation>Tự động co giãn</translation>
+    </message>
+    <message>
+        <source>Column</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Tick label size:</source>

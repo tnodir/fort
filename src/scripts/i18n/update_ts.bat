@@ -4,3 +4,5 @@
 cd %~dp0..\..\ui
 
 for /r %%f in (i18n\*.ts) do %QT_HOME%\bin\lupdate -no-obsolete -locations none .\ -ts %%f
+
+sed -i "s/<translation type=\x22unfinished\x22>\([^<]\)/<translation>\1/" i18n/*.ts
