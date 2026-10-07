@@ -216,7 +216,7 @@ private:
     bool m_mousePressed : 1 = false;
     bool m_mouseDragging : 1 = false;
     bool m_mouseHasMoved : 1 = false;
-    bool m_animated : 1 = true;
+    bool m_animated : 1 = false;
     bool m_axisTicksVisible : 1 = false;
     bool m_borderVisible : 1 = false;
     bool m_axesChanged : 1 = true;

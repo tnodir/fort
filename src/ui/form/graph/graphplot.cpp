@@ -547,6 +547,7 @@ void GraphPlot::setupScrollTimer()
 
 void GraphPlot::setupRisingAnimation()
 {
+    m_risingAnimation.setEnabled(m_animated);
     m_risingAnimation.setDuration(risingMsecs);
     m_risingAnimation.setEasingCurve(QEasingCurve::OutCubic);
 
@@ -555,6 +556,7 @@ void GraphPlot::setupRisingAnimation()
 
 void GraphPlot::setupScaleAnimation()
 {
+    m_scaleAnimation.setEnabled(m_animated);
     m_scaleAnimation.setDuration(scaleMsecs);
     m_scaleAnimation.setEasingCurve(QEasingCurve::OutCubic);
 
