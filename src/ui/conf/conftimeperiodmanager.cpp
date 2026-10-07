@@ -36,6 +36,9 @@ const char *const sqlDeleteGroupTimePeriod = "UPDATE app_group SET period_id = N
 const char *const sqlDeleteSpeedLimitTimePeriod = "UPDATE speed_limit SET period_id = NULL"
                                                   "  WHERE period_id = ?1;";
 
+const char *const sqlDeleteRuleTimePeriod = "UPDATE rule SET period_id = NULL"
+                                            "  WHERE period_id = ?1;";
+
 const char *const sqlUpdateTimePeriodEnabled =
         "UPDATE time_period SET enabled = ?2 WHERE period_id = ?1;";
 
@@ -179,9 +182,10 @@ bool ConfTimePeriodManager::deleteTimePeriod(quint8 periodId)
     if (DbQuery(sqliteDb(), &ok).sql(sqlDeleteTimePeriod).vars(vars).executeOk()) {
         DbQuery(sqliteDb(), &ok).sql(sqlDeleteTimePeriodIntervals).vars(vars).executeOk();
 
-        // Delete the Time Period from Groups and Speed Limits
+        // Delete the Time Period from Groups, Speed Limits and Rules
         DbQuery(sqliteDb(), &ok).sql(sqlDeleteGroupTimePeriod).vars(vars).executeOk();
         DbQuery(sqliteDb(), &ok).sql(sqlDeleteSpeedLimitTimePeriod).vars(vars).executeOk();
+        DbQuery(sqliteDb(), &ok).sql(sqlDeleteRuleTimePeriod).vars(vars).executeOk();
     }
 
     endTransaction(ok);

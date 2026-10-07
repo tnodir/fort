@@ -321,7 +321,9 @@ bool RuleListModel::updateRuleRow(
     ruleRow.zones.accept_mask = stmt.columnUInt(14);
     ruleRow.zones.reject_mask = stmt.columnUInt(15);
     ruleRow.modTime = stmt.columnDateTime(16);
-    ruleRow.trayMenu = stmt.columnBool(17);
+    ruleRow.periodEnabled = stmt.columnBool(17);
+    ruleRow.periodId = stmt.columnInt(18);
+    ruleRow.trayMenu = stmt.columnBool(19);
 
     return true;
 }
@@ -346,6 +348,8 @@ QString RuleListModel::sqlBase() const
            "    t.accept_zones,"
            "    t.reject_zones,"
            "    t.mod_time,"
+           "    t.period_enabled,"
+           "    t.period_id,"
            "    (menu.rule_id IS NOT NULL) AS tray_menu"
            "  FROM rule t"
            "  LEFT JOIN rule_menu menu ON menu.rule_id = t.rule_id"

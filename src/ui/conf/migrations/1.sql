@@ -129,10 +129,12 @@ CREATE TABLE rule(
   term_alert BOOLEAN NOT NULL DEFAULT 0,
   log_allowed_conn BOOLEAN NOT NULL DEFAULT 1,
   log_blocked_conn BOOLEAN NOT NULL DEFAULT 1,
+  period_enabled BOOLEAN NOT NULL DEFAULT 1,
   name TEXT NOT NULL,
   notes TEXT,
   rule_text TEXT NOT NULL,
   rule_type INTEGER NOT NULL, -- app rules, global before/after apps, preset rules
+  period_id INTEGER,
   accept_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
   reject_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
   mod_time INTEGER NOT NULL

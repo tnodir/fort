@@ -32,6 +32,7 @@ public:
     bool isTerminateFlagsEqual(const Rule &o) const;
     bool isLogFlagsEqual(const Rule &o) const;
     bool isZonesEqual(const Rule &o) const;
+    bool isPeriodEqual(const Rule &o) const;
 
     int terminateActionType() const;
     void setTerminateActionType(qint8 v);
@@ -47,9 +48,12 @@ public:
     bool terminateAlert : 1 = false;
     bool logAllowedConn : 1 = true;
     bool logBlockedConn : 1 = true;
+    bool periodEnabled : 1 = true;
     bool ruleSetEdited : 1 = false; // transient
 
     RuleType ruleType = AppRule;
+
+    quint8 periodId = 0;
 
     quint16 ruleId = 0;
 

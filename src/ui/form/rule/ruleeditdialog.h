@@ -19,6 +19,7 @@ class PlainTextEdit;
 class Rule;
 class RuleSetModel;
 class RulesController;
+class TimePeriodSelector;
 class ZonesSelector;
 
 class RuleEditDialog : public QDialog
@@ -104,6 +105,7 @@ private:
     QCheckBox *m_cbInlineZones = nullptr;
     QAction *m_actRuleHelp = nullptr;
     PlainTextEdit *m_editRuleText = nullptr;
+    TimePeriodSelector *m_periodSelector = nullptr;
     QToolButton *m_btAddPresetRule = nullptr;
     QToolButton *m_btRemovePresetRule = nullptr;
     QToolButton *m_btEditPresetRule = nullptr;

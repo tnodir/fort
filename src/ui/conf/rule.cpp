@@ -8,7 +8,7 @@ bool Rule::isNameEqual(const Rule &o) const
 bool Rule::isOptionsEqual(const Rule &o) const
 {
     return isFlagsEqual(o) && isTerminateFlagsEqual(o) && isLogFlagsEqual(o) && isZonesEqual(o)
-            && notes == o.notes && ruleText == o.ruleText;
+            && isPeriodEqual(o) && notes == o.notes && ruleText == o.ruleText;
 }
 
 bool Rule::isFlagsEqual(const Rule &o) const
@@ -31,6 +31,11 @@ bool Rule::isLogFlagsEqual(const Rule &o) const
 bool Rule::isZonesEqual(const Rule &o) const
 {
     return zones.accept_mask == o.zones.accept_mask && zones.reject_mask == o.zones.reject_mask;
+}
+
+bool Rule::isPeriodEqual(const Rule &o) const
+{
+    return periodEnabled == o.periodEnabled && periodId == o.periodId;
 }
 
 int Rule::terminateActionType() const

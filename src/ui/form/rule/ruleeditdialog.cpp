@@ -17,6 +17,7 @@
 #include <form/controls/lineedit.h>
 #include <form/controls/listview.h>
 #include <form/controls/plaintextedit.h>
+#include <form/controls/timeperiodselector.h>
 #include <form/controls/zonesselector.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -80,6 +81,9 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
 
     m_cbInlineZones->setChecked(ruleRow.inlineZones);
 
+    m_periodSelector->setPeriodEnabled(ruleRow.periodEnabled);
+    m_periodSelector->setPeriodId(ruleRow.periodId);
+
     m_cbTerminate->setChecked(ruleRow.terminate);
     m_comboTerminateAction->setCurrentIndex(ruleRow.terminateActionType());
     m_cbTerminateAlert->setChecked(ruleRow.terminateAlert);
@@ -140,6 +144,9 @@ void RuleEditDialog::retranslateUi()
 
     retranslateRulePlaceholderText();
     m_actRuleHelp->setText(tr("Help"));
+
+    m_periodSelector->retranslateUi();
+    m_periodSelector->setToolTip(tr("The Rule is active only in this Time Period."));
 
     m_btAddPresetRule->setText(tr("Add Preset Rule"));
     m_btRemovePresetRule->setText(tr("Remove"));
@@ -251,6 +258,9 @@ QWidget *RuleEditDialog::setupGeneralTab()
     // Rule Text
     setupEditRuleText();
 
+    // Time Period
+    m_periodSelector = new TimePeriodSelector();
+
     auto layout = new QVBoxLayout();
     layout->addLayout(formLayout);
     layout->addWidget(ControlUtil::createHSeparator());
@@ -258,6 +268,8 @@ QWidget *RuleEditDialog::setupGeneralTab()
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(zonesLayout);
     layout->addWidget(m_editRuleText, 1);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addWidget(m_periodSelector, 0, Qt::AlignLeft);
 
     return ControlUtil::wrapToWidget(layout);
 }
@@ -634,6 +646,9 @@ void RuleEditDialog::fillRule(Rule &rule) const
     rule.zones.reject_mask = m_btZones->uncheckedZones();
 
     rule.inlineZones = m_cbInlineZones->isChecked();
+
+    rule.periodEnabled = m_periodSelector->periodEnabled();
+    rule.periodId = m_periodSelector->periodId();
 
     rule.ruleName = m_editName->text();
     rule.notes = m_editNotes->toPlainText();
