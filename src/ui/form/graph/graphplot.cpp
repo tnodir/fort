@@ -210,15 +210,28 @@ void GraphPlot::setGraphType(GraphType v)
 
     m_graphType = v;
 
-    const bool isLine = (v == GraphTypeLine);
+    updateItemsVisible();
+}
 
-    for (auto item : { m_barsIn, m_barsOut, m_barsTotal }) {
-        item->setVisible(!isLine);
-    }
+void GraphPlot::setTotalVisible(bool v)
+{
+    m_totalVisible = v;
 
-    for (auto item : { m_lineTotal, m_lineIn, m_lineOut }) {
-        item->setVisible(isLine);
-    }
+    updateItemsVisible();
+}
+
+void GraphPlot::setInVisible(bool v)
+{
+    m_inVisible = v;
+
+    updateItemsVisible();
+}
+
+void GraphPlot::setOutVisible(bool v)
+{
+    m_outVisible = v;
+
+    updateItemsVisible();
 }
 
 void GraphPlot::setAxisTicksVisible(bool v)
@@ -296,6 +309,8 @@ void GraphPlot::setColors(const ColorArray &colors)
 
     // Graph Lines
     m_lineTotal->setColor(colors[ColorTotal]);
+    m_fillIn->setColor(colors[ColorIn]);
+    m_fillOut->setColor(colors[ColorOut]);
     m_lineIn->setColor(colors[ColorIn]);
     m_lineOut->setColor(colors[ColorOut]);
 
@@ -510,12 +525,19 @@ void GraphPlot::setupItems()
     m_lineTotal = new GraphLineItem(m_bars);
     m_lineTotal->setFillVisible(true);
 
+    // Without the total: the in and out areas' fills are below both lines
+    m_fillIn = new GraphLineItem(m_bars);
+    m_fillOut = new GraphLineItem(m_bars);
+
+    for (auto item : { m_fillIn, m_fillOut }) {
+        item->setLineVisible(false);
+        item->setFillVisible(true);
+    }
+
     m_lineIn = new GraphLineItem(m_bars);
     m_lineOut = new GraphLineItem(m_bars);
 
-    for (auto item : { m_lineTotal, m_lineIn, m_lineOut }) {
-        item->setVisible(false);
-    }
+    updateItemsVisible();
 
     // Text Speed
     m_speedBox = createNoPenItem<QGraphicsRectItem>(m_plotArea);
@@ -563,6 +585,30 @@ void GraphPlot::setupScaleAnimation()
     m_scaleAnimation.setEasingCurve(QEasingCurve::OutCubic);
 
     connect(&m_scaleAnimation, &GraphAnimation::valueChanged, this, &GraphPlot::updateScale);
+}
+
+void GraphPlot::updateItemsVisible()
+{
+    const bool isLine = (m_graphType == GraphTypeLine);
+
+    // The hidden graphs' bars are empty
+    for (auto item : { m_barsIn, m_barsOut, m_barsTotal }) {
+        item->setVisible(!isLine);
+    }
+
+    updateLinesVisible();
+}
+
+void GraphPlot::updateLinesVisible()
+{
+    const bool isLine = (m_graphType == GraphTypeLine);
+    const bool isInOutFilled = isLine && !m_totalVisible;
+
+    m_lineTotal->setVisible(isLine && m_totalVisible);
+    m_fillIn->setVisible(isInOutFilled && m_inVisible);
+    m_fillOut->setVisible(isInOutFilled && m_outVisible);
+    m_lineIn->setVisible(isLine && m_inVisible);
+    m_lineOut->setVisible(isLine && m_outVisible);
 }
 
 int GraphPlot::pointIndex(qint64 unixTime) const
@@ -624,13 +670,29 @@ qint64 GraphPlot::keyLower() const
     return lastUnixTime() - keyRangeSize();
 }
 
+GraphBits GraphPlot::visibleBits(const GraphPoint &point) const
+{
+    return {
+        m_inVisible ? point.inBits : 0,
+        m_outVisible ? point.outBits : 0,
+        m_totalVisible ? (point.inBits + point.outBits) : 0,
+    };
+}
+
+quint64 GraphPlot::visibleMaxBits(const GraphPoint &point) const
+{
+    const GraphBits bits = visibleBits(point);
+
+    return std::max({ bits.in, bits.out, bits.total });
+}
+
 quint64 GraphPlot::maxBits(qint64 keyLower) const
 {
     quint64 bits = 0;
 
     for (const auto &point : m_points) {
         if (point.unixTime >= keyLower) {
-            bits = qMax(bits, point.inBits + point.outBits); // the total is the highest
+            bits = qMax(bits, visibleMaxBits(point));
         }
     }
 
@@ -815,8 +877,7 @@ void GraphPlot::startRising(qint64 unixTime)
         return;
 
     // Nothing to rise for an empty traffic
-    const GraphPoint point = pointAt(unixTime);
-    if (point.inBits == 0 && point.outBits == 0)
+    if (visibleMaxBits(pointAt(unixTime)) == 0)
         return;
 
     m_risingAnimation.start(0.0, 1.0);
@@ -907,6 +968,8 @@ void GraphPlot::updateLines()
     m_lineIn->setPoints(points.in);
     m_lineOut->setPoints(points.out);
     m_lineTotal->setPoints(points.total);
+    m_fillIn->setPoints(points.in);
+    m_fillOut->setPoints(points.out);
 }
 
 int GraphPlot::lineStartIndex() const
@@ -1113,8 +1176,10 @@ QVector<GraphColumn> GraphPlot::visibleColumns() const
 
 GraphColumn GraphPlot::columnAt(qreal x, qreal width, const GraphPoint &point) const
 {
-    return { point.unixTime, x, width, barHeight(point.inBits), barHeight(point.outBits),
-        barHeight(point.inBits + point.outBits) };
+    const GraphBits bits = visibleBits(point);
+
+    return { point.unixTime, x, width, barHeight(bits.in), barHeight(bits.out),
+        barHeight(bits.total) };
 }
 
 GraphColumnRects GraphPlot::columnRects(const GraphColumn &column) const

@@ -22,6 +22,14 @@ struct GraphPoint
     quint64 outBits = 0;
 };
 
+// A second's bits of the visible graphs, else 0
+struct GraphBits
+{
+    quint64 in = 0;
+    quint64 out = 0;
+    quint64 total = 0;
+};
+
 // A second's bars: in and out are overlapped
 struct GraphColumn
 {
@@ -95,6 +103,15 @@ public:
         return GraphType(qBound(int(GraphTypeColumn), index, int(GraphTypeLine)));
     }
 
+    bool totalVisible() const { return m_totalVisible; }
+    void setTotalVisible(bool v);
+
+    bool inVisible() const { return m_inVisible; }
+    void setInVisible(bool v);
+
+    bool outVisible() const { return m_outVisible; }
+    void setOutVisible(bool v);
+
     int barWidth() const { return m_barWidth; }
     void setBarWidth(int v) { m_barWidth = v; }
 
@@ -156,6 +173,9 @@ private:
     void setupRisingAnimation();
     void setupScaleAnimation();
 
+    void updateItemsVisible();
+    void updateLinesVisible();
+
     int pointIndex(qint64 unixTime) const;
     bool isPointAt(int index, qint64 unixTime) const;
 
@@ -167,6 +187,8 @@ private:
     int keyRangeSize() const;
     qint64 keyLower() const;
 
+    GraphBits visibleBits(const GraphPoint &point) const;
+    quint64 visibleMaxBits(const GraphPoint &point) const;
     quint64 maxBits(qint64 keyLower) const;
     double targetValueUpper(quint64 bits) const;
     void animateValueUpper(double v);
@@ -221,6 +243,9 @@ private:
     bool m_borderVisible : 1 = false;
     bool m_axesChanged : 1 = true;
     bool m_barsEmpty : 1 = true;
+    bool m_totalVisible : 1 = false;
+    bool m_inVisible : 1 = true;
+    bool m_outVisible : 1 = true;
 
     GraphType m_graphType = GraphTypeColumn;
 
@@ -245,6 +270,8 @@ private:
     GraphBarsItem *m_barsTotal = nullptr;
     GraphBarsItem *m_risingTotal = nullptr;
     GraphLineItem *m_lineTotal = nullptr;
+    GraphLineItem *m_fillIn = nullptr;
+    GraphLineItem *m_fillOut = nullptr;
     GraphLineItem *m_lineIn = nullptr;
     GraphLineItem *m_lineOut = nullptr;
     QGraphicsRectItem *m_speedBox = nullptr;

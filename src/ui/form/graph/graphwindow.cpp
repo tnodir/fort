@@ -183,6 +183,9 @@ void GraphWindow::updateFormat(const IniUser &ini)
 {
     m_plot->setMaxSeconds(ini.graphWindowMaxSeconds());
     m_plot->setGraphType(GraphPlot::graphTypeByIndex(ini.graphWindowGraphType()));
+    m_plot->setTotalVisible(ini.graphWindowShowTotal());
+    m_plot->setInVisible(ini.graphWindowShowIn());
+    m_plot->setOutVisible(ini.graphWindowShowOut());
     m_plot->setBarWidth(ini.graphWindowBarWidth());
     m_plot->setAxisTicksVisible(ini.graphWindowAxisTicks());
     m_plot->setBorderVisible(ini.graphWindowFrameless());

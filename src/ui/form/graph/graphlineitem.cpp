@@ -118,6 +118,16 @@ void GraphLineItem::setColor(const QColor &v)
     updateFill();
 }
 
+void GraphLineItem::setLineVisible(bool v)
+{
+    if (m_lineVisible == v)
+        return;
+
+    m_lineVisible = v;
+
+    invalidateCache();
+}
+
 void GraphLineItem::setFillVisible(bool v)
 {
     if (m_fillVisible == v)
@@ -203,6 +213,9 @@ void GraphLineItem::paintFill(QPainter *painter)
 
 void GraphLineItem::paintLine(QPainter *painter)
 {
+    if (!m_lineVisible)
+        return;
+
     // The cosmetic lines of a device pixel are ~10 times faster than a thick line:
     // draw them with offsets by a device pixel
     const qreal pixel = 1 / painter->device()->devicePixelRatioF();

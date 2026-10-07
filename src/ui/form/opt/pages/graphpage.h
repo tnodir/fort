@@ -32,6 +32,8 @@ private:
     void setupGraphBox();
     void setupGraphCheckboxes();
     void setupGraphViewCheckboxes();
+    QLayout *setupGraphShowLayout();
+    void setupGraphShowCheckboxes();
     void setupGraphOptions();
     void setupGraphFixedSpeed();
     QLayout *setupGraphTypeLayout();
@@ -53,6 +55,10 @@ private:
     QCheckBox *m_cbGraphShowSpeed = nullptr;
     QCheckBox *m_cbGraphAnimation = nullptr;
     QCheckBox *m_cbGraphAxisTicks = nullptr;
+    QLabel *m_labelGraphShow = nullptr;
+    QCheckBox *m_cbGraphShowTotal = nullptr;
+    QCheckBox *m_cbGraphShowIn = nullptr;
+    QCheckBox *m_cbGraphShowOut = nullptr;
     LabelSpin *m_graphOpacity = nullptr;
     LabelSpin *m_graphHoverOpacity = nullptr;
     LabelSpin *m_graphTickLabelSize = nullptr;

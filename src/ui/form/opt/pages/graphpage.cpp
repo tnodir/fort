@@ -40,6 +40,9 @@ void GraphPage::onResetToDefault()
     m_cbGraphShowSpeed->setChecked(iniUser.graphWindowShowSpeedDefault());
     m_cbGraphAnimation->setChecked(iniUser.graphWindowAnimationDefault());
     m_cbGraphAxisTicks->setChecked(iniUser.graphWindowAxisTicksDefault());
+    m_cbGraphShowTotal->setChecked(iniUser.graphWindowShowTotalDefault());
+    m_cbGraphShowIn->setChecked(iniUser.graphWindowShowInDefault());
+    m_cbGraphShowOut->setChecked(iniUser.graphWindowShowOutDefault());
     m_graphOpacity->spinBox()->setValue(iniUser.graphWindowOpacityDefault());
     m_graphHoverOpacity->spinBox()->setValue(iniUser.graphWindowHoverOpacityDefault());
     m_graphTickLabelSize->spinBox()->setValue(iniUser.graphWindowTickLabelSizeDefault());
@@ -84,6 +87,10 @@ void GraphPage::onRetranslateUi()
     m_cbGraphShowSpeed->setText(tr("Show speed"));
     m_cbGraphAnimation->setText(tr("Animation"));
     m_cbGraphAxisTicks->setText(tr("Axis ticks"));
+    m_labelGraphShow->setText(tr("Show:"));
+    m_cbGraphShowTotal->setText(tr("Total"));
+    m_cbGraphShowIn->setText(tr("Download"));
+    m_cbGraphShowOut->setText(tr("Upload"));
     m_graphOpacity->label()->setText(tr("Opacity:"));
     m_graphHoverOpacity->label()->setText(tr("Hover opacity:"));
     m_graphTickLabelSize->label()->setText(tr("Tick label size:"));
@@ -183,6 +190,10 @@ void GraphPage::setupGraphBox()
 {
     setupGraphCheckboxes();
     setupGraphViewCheckboxes();
+
+    // Graphs to Show
+    auto graphShowLayout = setupGraphShowLayout();
+
     setupGraphOptions();
 
     // Graph Type
@@ -202,14 +213,13 @@ void GraphPage::setupGraphBox()
             m_cbGraphAnimation,
             m_cbGraphAxisTicks,
             ControlUtil::createSeparator(),
-            m_graphOpacity,
-            m_graphHoverOpacity,
-            m_graphTickLabelSize,
-            m_graphBarWidth,
-            m_graphMaxSeconds,
-            m_graphFixedSpeed,
-            ControlUtil::createSeparator(),
     });
+    layout->addLayout(graphShowLayout);
+
+    ControlUtil::fillLayoutByWidgets(layout,
+            { ControlUtil::createSeparator(), m_graphOpacity, m_graphHoverOpacity,
+                    m_graphTickLabelSize, m_graphBarWidth, m_graphMaxSeconds, m_graphFixedSpeed,
+                    ControlUtil::createSeparator() });
     layout->addLayout(graphTypeLayout);
     layout->addLayout(trafUnitsLayout);
 
@@ -276,6 +286,42 @@ void GraphPage::setupGraphViewCheckboxes()
             ControlUtil::createCheckBox(iniUser().graphWindowAxisTicks(), [&](bool checked) {
                 if (iniUser().graphWindowAxisTicks() != checked) {
                     iniUser().setGraphWindowAxisTicks(checked);
+                    ctrl()->setIniUserEdited();
+                }
+            });
+}
+
+QLayout *GraphPage::setupGraphShowLayout()
+{
+    m_labelGraphShow = ControlUtil::createLabel();
+
+    setupGraphShowCheckboxes();
+
+    return ControlUtil::createHLayoutByWidgets(
+            { m_labelGraphShow, /*stretch*/ nullptr, m_cbGraphShowTotal, m_cbGraphShowIn,
+                    m_cbGraphShowOut },
+            /*margin=*/0);
+}
+
+void GraphPage::setupGraphShowCheckboxes()
+{
+    m_cbGraphShowTotal =
+            ControlUtil::createCheckBox(iniUser().graphWindowShowTotal(), [&](bool checked) {
+                if (iniUser().graphWindowShowTotal() != checked) {
+                    iniUser().setGraphWindowShowTotal(checked);
+                    ctrl()->setIniUserEdited();
+                }
+            });
+    m_cbGraphShowIn = ControlUtil::createCheckBox(iniUser().graphWindowShowIn(), [&](bool checked) {
+        if (iniUser().graphWindowShowIn() != checked) {
+            iniUser().setGraphWindowShowIn(checked);
+            ctrl()->setIniUserEdited();
+        }
+    });
+    m_cbGraphShowOut =
+            ControlUtil::createCheckBox(iniUser().graphWindowShowOut(), [&](bool checked) {
+                if (iniUser().graphWindowShowOut() != checked) {
+                    iniUser().setGraphWindowShowOut(checked);
                     ctrl()->setIniUserEdited();
                 }
             });

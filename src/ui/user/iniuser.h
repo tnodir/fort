@@ -565,6 +565,27 @@ public:
     }
     void setGraphWindowBarWidth(int v) { setValue("graphWindow/barWidth", v); }
 
+    constexpr bool graphWindowShowTotalDefault() const { return false; }
+    bool graphWindowShowTotal() const
+    {
+        return valueBool("graphWindow/showTotal", graphWindowShowTotalDefault());
+    }
+    void setGraphWindowShowTotal(bool on) { setValue("graphWindow/showTotal", on); }
+
+    constexpr bool graphWindowShowInDefault() const { return true; }
+    bool graphWindowShowIn() const
+    {
+        return valueBool("graphWindow/showIn", graphWindowShowInDefault());
+    }
+    void setGraphWindowShowIn(bool on) { setValue("graphWindow/showIn", on); }
+
+    constexpr bool graphWindowShowOutDefault() const { return true; }
+    bool graphWindowShowOut() const
+    {
+        return valueBool("graphWindow/showOut", graphWindowShowOutDefault());
+    }
+    void setGraphWindowShowOut(bool on) { setValue("graphWindow/showOut", on); }
+
     static QString statWindowGroup() { return "statWindow"; }
 
     QRect statWindowGeometry() const { return value("statWindow/geometry").toRect(); }

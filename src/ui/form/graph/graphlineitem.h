@@ -8,7 +8,7 @@
 #include "graphcacheditem.h"
 
 // Draws a smooth line of 2 device pixels through the points: it doesn't overshoot them.
-// The area below the line may be filled by a gradient of its color.
+// The area below the line may be filled by a gradient of its color, the line may be hidden.
 class GraphLineItem : public GraphCachedItem
 {
 public:
@@ -16,6 +16,9 @@ public:
 
     const QColor &color() const { return m_color; }
     void setColor(const QColor &v);
+
+    bool lineVisible() const { return m_lineVisible; }
+    void setLineVisible(bool v);
 
     bool fillVisible() const { return m_fillVisible; }
     void setFillVisible(bool v);
@@ -36,6 +39,7 @@ private:
     void paintLine(QPainter *painter);
 
 private:
+    bool m_lineVisible = true;
     bool m_fillVisible = false;
 
     QColor m_color;
