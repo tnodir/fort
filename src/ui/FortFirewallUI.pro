@@ -138,6 +138,7 @@ SOURCES += \
     form/prog/programeditdialog.cpp \
     form/prog/programscontroller.cpp \
     form/prog/programswindow.cpp \
+    form/rule/filtereditdialog.cpp \
     form/rule/ruleeditdialog.cpp \
     form/rule/rulescontroller.cpp \
     form/rule/ruleswindow.cpp \
@@ -445,6 +446,7 @@ HEADERS += \
     form/prog/programeditdialog.h \
     form/prog/programscontroller.h \
     form/prog/programswindow.h \
+    form/rule/filtereditdialog.h \
     form/rule/ruleeditdialog.h \
     form/rule/rulescontroller.h \
     form/rule/ruleswindow.h \

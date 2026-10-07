@@ -3,13 +3,18 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QLabel>
+#include <QToolButton>
 
 #include <conf/app.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/listview.h>
 #include <form/controls/ruleselector.h>
 #include <form/controls/zonesselector.h>
+#include <form/dialog/dialogutil.h>
+#include <form/rule/filtereditdialog.h>
 #include <fortglobal.h>
 #include <model/speedlimitlistmodel.h>
+#include <util/model/stringlistmodel.h>
 
 using namespace Fort;
 
@@ -36,7 +41,7 @@ QComboBox *createComboSpeedLimit(QCheckBox *cb)
 }
 
 ProgNetworkPage::ProgNetworkPage(ProgramEditController *ctrl, QWidget *parent) :
-    ProgBasePage(ctrl, parent)
+    ProgBasePage(ctrl, parent), m_filterListModel(new StringListModel(this))
 {
     setupUi();
 }
@@ -50,6 +55,7 @@ void ProgNetworkPage::onPageInitialize(const App &app)
 
     initializeRuleField(isSingleSelection());
     initializeSpeedLimitFields();
+    initializeFilters(isSingleSelection());
 }
 
 void ProgNetworkPage::onRetranslateUi()
@@ -67,6 +73,8 @@ void ProgNetworkPage::onRetranslateUi()
     m_cbSpeedLimitOut->setText(tr("Upload:"));
 
     retranslateSpeedLimitFields();
+
+    retranslateFilters();
 }
 
 void ProgNetworkPage::initializeRuleField(bool isSingleSelection)
@@ -88,12 +96,29 @@ void ProgNetworkPage::initializeSpeedLimitFields()
     selectComboSpeedLimit(m_comboSpeedLimitOut, speedLimits.out_limit_id);
 }
 
+void ProgNetworkPage::initializeFilters(bool isSingleSelection)
+{
+    m_filterListModel->setList(app().filtersText.split('\n', Qt::SkipEmptyParts));
+
+    m_btAddFilter->setEnabled(isSingleSelection);
+    m_filterListView->setEnabled(isSingleSelection);
+}
+
 void ProgNetworkPage::retranslateSpeedLimitFields()
 {
     const QString noLimitText = tr("No Limit");
 
     m_comboSpeedLimitIn->setItemText(0, noLimitText);
     m_comboSpeedLimitOut->setItemText(0, noLimitText);
+}
+
+void ProgNetworkPage::retranslateFilters()
+{
+    m_btAddFilter->setText(tr("Add Filter"));
+    m_btRemoveFilter->setText(tr("Remove"));
+    m_btEditFilter->setText(tr("Edit"));
+    m_btUpFilter->setToolTip(tr("Move Up"));
+    m_btDownFilter->setToolTip(tr("Move Down"));
 }
 
 void ProgNetworkPage::setupUi()
@@ -104,13 +129,23 @@ void ProgNetworkPage::setupUi()
     // Zones/Rule
     auto zonesRuleLayout = setupZonesRuleLayout();
 
+    // Filters Header
+    auto filtersHeaderLayout = setupFiltersHeaderLayout();
+
+    // Filter List View
+    setupFilterListView();
+
+    // Actions on filter list view's current changed
+    setupFilterListViewChanged();
+
     // Main Layout
     auto layout = new QVBoxLayout();
     layout->addLayout(speedLimitsLayout);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(zonesRuleLayout);
     layout->addWidget(ControlUtil::createSeparator());
-    layout->addStretch();
+    layout->addLayout(filtersHeaderLayout);
+    layout->addWidget(m_filterListView, 1);
 
     this->setLayout(layout);
 }
@@ -181,6 +216,54 @@ void ProgNetworkPage::setupSpeedLimitsChanged()
             });
 }
 
+QLayout *ProgNetworkPage::setupFiltersHeaderLayout()
+{
+    m_btAddFilter =
+            ControlUtil::createFlatToolButton(":/icons/add.png", [&] { openFilterEditForm(); });
+    m_btRemoveFilter = ControlUtil::createFlatToolButton(
+            ":/icons/delete.png", [&] { m_filterListModel->remove(filterListCurrentIndex()); });
+    m_btEditFilter =
+            ControlUtil::createFlatToolButton(":/icons/pencil.png", [&] { editCurrentFilter(); });
+    m_btUpFilter = ControlUtil::createIconToolButton(
+            ":/icons/bullet_arrow_up.png", [&] { moveCurrentFilter(-1); });
+    m_btDownFilter = ControlUtil::createIconToolButton(
+            ":/icons/bullet_arrow_down.png", [&] { moveCurrentFilter(1); });
+
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_btAddFilter, m_btRemoveFilter,
+            m_btEditFilter, ControlUtil::createVSeparator(), m_btUpFilter, m_btDownFilter,
+            /*stretch*/ nullptr });
+
+    return layout;
+}
+
+void ProgNetworkPage::setupFilterListView()
+{
+    m_filterListView = new ListView();
+    m_filterListView->setFlow(QListView::TopToBottom);
+    m_filterListView->setViewMode(QListView::ListMode);
+    m_filterListView->setUniformItemSizes(true);
+    m_filterListView->setAlternatingRowColors(true);
+
+    m_filterListView->setModel(m_filterListModel);
+
+    connect(m_filterListView, &ListView::doubleClicked, m_btEditFilter, &QToolButton::click);
+}
+
+void ProgNetworkPage::setupFilterListViewChanged()
+{
+    const auto refreshFilterListViewChanged = [&] {
+        const bool filterSelected = (filterListCurrentIndex() >= 0);
+        m_btRemoveFilter->setEnabled(filterSelected);
+        m_btEditFilter->setEnabled(filterSelected);
+        m_btUpFilter->setEnabled(filterSelected);
+        m_btDownFilter->setEnabled(filterSelected);
+    };
+
+    refreshFilterListViewChanged();
+
+    connect(m_filterListView, &ListView::currentIndexChanged, this, refreshFilterListViewChanged);
+}
+
 void ProgNetworkPage::updateSpeedLimitCombos()
 {
     const quint8 inLimitId = m_comboSpeedLimitIn->currentData().toUInt();
@@ -224,4 +307,54 @@ void ProgNetworkPage::fillApp(App &app) const
 
     app.speedLimits.in_limit_id = m_comboSpeedLimitIn->currentData().toUInt();
     app.speedLimits.out_limit_id = m_comboSpeedLimitOut->currentData().toUInt();
+
+    app.filtersText = m_filterListModel->list().join('\n');
+}
+
+int ProgNetworkPage::filterListCurrentIndex() const
+{
+    return m_filterListView->currentRow();
+}
+
+void ProgNetworkPage::openFilterEditForm(const QString &filterText, int row)
+{
+    auto w = new FilterEditDialog(/*isRuleFilter=*/false, this);
+    ControlUtil::deleteOnClose(w);
+
+    connect(w, &FilterEditDialog::filterSaved, this, &ProgNetworkPage::saveFilter);
+
+    w->initialize(filterText, row);
+
+    DialogUtil::showDialog(w);
+}
+
+void ProgNetworkPage::editCurrentFilter()
+{
+    const int row = filterListCurrentIndex();
+    if (row < 0)
+        return;
+
+    openFilterEditForm(m_filterListModel->list().at(row), row);
+}
+
+void ProgNetworkPage::moveCurrentFilter(int offset)
+{
+    const int row = filterListCurrentIndex();
+    const int toRow = row + offset;
+
+    if (m_filterListModel->canMove(row, toRow)) {
+        m_filterListModel->move(row, toRow);
+    }
+}
+
+void ProgNetworkPage::saveFilter(const QString &filterText, int row)
+{
+    if (row < 0) {
+        row = m_filterListModel->rowCount();
+        m_filterListModel->insert(filterText, row);
+    } else {
+        m_filterListModel->replace(filterText, row);
+    }
+
+    m_filterListView->setCurrentIndex(m_filterListModel->index(row));
 }
