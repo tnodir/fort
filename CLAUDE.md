@@ -50,7 +50,7 @@ build-win10\tests\UtilTest\UtilTest.exe
 build-win10\tests\UtilTest\UtilTest.exe --gtest_filter=ConfUtilTest.*   :: single test/suite
 ```
 
-Suites: `UtilTest` (bitutil, confutil, connfilter, dateutil, fileutil, formatutil, ioccontainer, netutil, ruletextparser, stringutil, timeperiod, wildmatch), `StatTest`, `LogBufferTest`, `LogReaderTest`. `LogReaderTest` needs the loaded kernel driver: run it only manually from a console, never as part of an automated test run. Each `tst_*.h` is included from the suite's `tst_main.cpp` and must also be listed in the suite's `.pro`.
+Suites: `UtilTest` (bitutil, confutil, connfilter, dateutil, fileutil, filterline, formatutil, ioccontainer, netutil, ruletextparser, stringutil, timeperiod, wildmatch), `StatTest`, `LogBufferTest`, `LogReaderTest`. `LogReaderTest` needs the loaded kernel driver: run it only manually from a console, never as part of an automated test run. Each `tst_*.h` is included from the suite's `tst_main.cpp` and must also be listed in the suite's `.pro`.
 
 ### Testing the real driver (test-mode VM)
 
@@ -99,6 +99,8 @@ IPC is `QLocalServer`/`QLocalSocket` (`src/ui/control/`): `ControlManager` liste
 `src/driver/common/` is compiled into **both** the UI and the driver (via `src/driver/Driver.pri`). It is the shared contract: changing the `fortconf.h` layout, the IOCTL set, or the log record format requires updating both sides and bumping `DRIVER_VERSION` in `src/version/fort_version.h` (checked in `driver/fortdev.c` against the value written by `confbuffer.cpp`).
 
 Programs belong to `Group`s (`conf/group.h`, max 32: enabled, exclusive, an optional Time Period and an optional Rule) by the `app.groups_mask` bit mask, and reference one-direction `SpeedLimit`s (`conf/speedlimit.h`, max 32) by `app.in_limit_id` / `app.out_limit_id`. They replace the old App. Groups, which `ConfManager`'s DB migration converts.
+
+A Program's Network Filters are rule text lines in `app.filters_text` (one filter per line; not applied by the driver yet), edited by `FilterEditDialog` (`form/rule/`; the Edit Rule dialog uses it too, to append a line to the Rule's text). Its fields build the read-only line by `FilterLine` (`util/conf/filterline.h`: named sections, e.g. `IP(1.1.1.1):Port(80):Act(Block)`), which also parses a line by its `RuleTextParser` and gives the `RuleFilter`s by type to fill the fields. The Program's Terminating Rule (`TerminatingRuleSelector`, as in the Edit Rule dialog; Allow, Block or Drop, with an alert) is the last line, after the `# Terminating` comment line, e.g. `Act(Block):Opt(Alert)`.
 
 Groups, Speed Limits and Rules may refer to a `TimePeriod` (`conf/timeperiod.h`, max 64: a list of intervals, each with its week days and time from/to) by `period_id`, applied while their `period_enabled` is set. `ConfTimePeriodManager` tracks the Time Periods' activity by minutes. For the Groups and Speed Limits it is folded into their enabled masks written to the driver (`writeGroupFlags()` / `writeSpeedLimitFlags()`). The Rules are checked by the driver: a rule's `period_id` (0 - always active) against the active Time Periods' mask, sent in `FORT_CONF_IO.periods` with `SETCONF` and updated by `SETPERIODS` on the activity's change.
 
