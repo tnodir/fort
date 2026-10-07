@@ -36,6 +36,18 @@ public:
     static QString formatDataSize(
             qint64 bytes, int precision = 2, SizeFormat format = SizeTraditionalFormat);
 
+    // The speeds are in bits per second, shown in bits or bytes by the format
+    static int getSpeedPower(qint64 bitsPerSecond, SizeFormat format = SpeedTraditionalFormat);
+
+    static qreal speedInUnit(
+            qreal bitsPerSecond, int power, SizeFormat format = SpeedTraditionalFormat);
+
+    // A number in the unit, without the trailing zeros: for a common unit of several speeds
+    static QString formatSpeedValue(qreal bitsPerSecond, int power, int precision,
+            SizeFormat format = SpeedTraditionalFormat);
+
+    static QString formatSpeedUnit(int power, SizeFormat format = SpeedTraditionalFormat);
+
     static QString formatSpeed(qint64 bitsPerSecond, SizeFormat format = SpeedTraditionalFormat);
 
     static QStringList graphUnitNames();

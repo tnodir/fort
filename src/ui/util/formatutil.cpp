@@ -16,6 +16,18 @@ bool isBits(FormatUtil::SizeFormat format)
     return (format & FormatUtil::SizeBits) != 0;
 }
 
+qreal powerValue(int power, FormatUtil::SizeFormat format)
+{
+    const qreal base = isBase1000(format) ? 1000 : 1024;
+
+    return qPow(base, power);
+}
+
+qint64 speedSize(qint64 bitsPerSecond, FormatUtil::SizeFormat format)
+{
+    return isBits(format) ? bitsPerSecond : bitsPerSecond / 8;
+}
+
 }
 
 int FormatUtil::getPower(qint64 value, SizeFormat format)
@@ -42,10 +54,7 @@ QString FormatUtil::formatSize(qint64 value, int power, int precision, SizeForma
         return QLocale().toString(value);
     }
 
-    const qreal base = isBase1000(format) ? 1000 : 1024;
-    const qreal powerValue = qPow(base, power);
-
-    const qreal result = value / powerValue;
+    const qreal result = value / powerValue(power, format);
 
     if (precision == -1) {
         precision = qFuzzyCompare(result, qRound(result)) ? 0 : 1;
@@ -80,15 +89,39 @@ QString FormatUtil::formatDataSize(qint64 bytes, int precision, SizeFormat forma
     return sizeStr + ' ' + unitStr;
 }
 
+int FormatUtil::getSpeedPower(qint64 bitsPerSecond, SizeFormat format)
+{
+    return getPower(speedSize(bitsPerSecond, format), format);
+}
+
+qreal FormatUtil::speedInUnit(qreal bitsPerSecond, int power, SizeFormat format)
+{
+    const qreal unitBits = isBits(format) ? 1 : 8;
+
+    return bitsPerSecond / unitBits / powerValue(power, format);
+}
+
+QString FormatUtil::formatSpeedValue(
+        qreal bitsPerSecond, int power, int precision, SizeFormat format)
+{
+    const qreal factor = qPow(10, precision);
+    const qreal value = std::round(speedInUnit(bitsPerSecond, power, format) * factor) / factor;
+
+    return QLocale().toString(value, 'f', QLocale::FloatingPointShortest);
+}
+
+QString FormatUtil::formatSpeedUnit(int power, SizeFormat format)
+{
+    return formatPowerUnit(power, format) + "/s";
+}
+
 QString FormatUtil::formatSpeed(qint64 bitsPerSecond, SizeFormat format)
 {
-    if (!isBits(format)) {
-        bitsPerSecond /= 8;
-    }
+    const qint64 value = speedSize(bitsPerSecond, format);
+    const int power = getPower(value, format);
 
-    const auto text = formatDataSize(bitsPerSecond, /*precision=*/-1, format);
-
-    return text + "/s";
+    return formatSize(value, power, /*precision=*/-1, format) + ' '
+            + formatSpeedUnit(power, format);
 }
 
 QStringList FormatUtil::graphUnitNames()

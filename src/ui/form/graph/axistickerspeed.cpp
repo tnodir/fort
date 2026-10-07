@@ -1,21 +1,11 @@
 #include "axistickerspeed.h"
 
-#include <QLocale>
 #include <QtMath>
 
 namespace {
 
 inline constexpr int tickCount = 5;
 inline constexpr int tickStepBase = 2;
-
-QString formatTickLabel(double value, int precision)
-{
-    const double factor = qPow(10, precision);
-    const double roundedValue = std::round(value * factor) / factor;
-
-    // Without the trailing zeros
-    return QLocale().toString(roundedValue, 'f', QLocale::FloatingPointShortest);
-}
 
 }
 
@@ -53,22 +43,17 @@ double AxisTickerSpeed::getTickStep(double rangeSize)
 
 void AxisTickerSpeed::setupLabels(double tickStep, AxisTicks &axisTicks) const
 {
-    // The ticks are in bits
-    const double unitBits = (m_unitFormat & FormatUtil::SizeBits) ? 1 : 8;
-    const double base = (m_unitFormat & FormatUtil::SizeBase1000) ? 1000 : 1024;
-
     // The common unit of the labels is by the last tick
-    const double lastTick = axisTicks.ticks.constLast() / unitBits;
-    const int power = FormatUtil::getPower(qint64(lastTick), m_unitFormat);
-    const double powerBits = qPow(base, power) * unitBits;
+    const qint64 lastTick = qint64(axisTicks.ticks.constLast());
+    const int power = FormatUtil::getSpeedPower(lastTick, m_unitFormat);
 
-    const int precision = getLabelPrecision(tickStep / powerBits);
+    const int precision = getLabelPrecision(FormatUtil::speedInUnit(tickStep, power, m_unitFormat));
 
     for (const double tick : std::as_const(axisTicks.ticks)) {
-        axisTicks.labels.append(formatTickLabel(tick / powerBits, precision));
+        axisTicks.labels.append(FormatUtil::formatSpeedValue(tick, power, precision, m_unitFormat));
     }
 
-    axisTicks.unit = FormatUtil::formatPowerUnit(power, m_unitFormat) + "/s";
+    axisTicks.unit = FormatUtil::formatSpeedUnit(power, m_unitFormat);
 }
 
 int AxisTickerSpeed::getLabelPrecision(double unitTickStep) const
