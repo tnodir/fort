@@ -410,6 +410,7 @@ void ConnListModel::fillConnRow(ConnRow &connRow, const SqliteStmt &stmt)
 
     connRow.confAppId = stmt.columnInt64(19);
     connRow.appPath = stmt.columnText(20);
+    connRow.inheritAppPath = stmt.columnText(21);
 }
 
 void ConnListModel::fillConnIdRange(qint64 &idMin, qint64 &idMax)
@@ -464,9 +465,11 @@ QString ConnListModel::sqlBase() const
            "    t.rule_id,"
            "    t.loopback,"
            "    a.conf_app_id,"
-           "    a.path"
+           "    a.path,"
+           "    ia.path"
            "  FROM conn t"
-           "    JOIN app a ON a.app_id = t.app_id";
+           "    JOIN app a ON a.app_id = t.app_id"
+           "    LEFT JOIN app ia ON ia.app_id = t.inherit_app_id";
 }
 
 QString ConnListModel::sqlWhere() const
@@ -576,10 +579,21 @@ QString ConnListModel::reasonDetailsText(const ConnRow &connRow)
     }
 
     if (connRow.inherited) {
-        list << tr("Inherited");
+        list << inheritedText(connRow);
     }
 
     return list.join('\n');
+}
+
+QString ConnListModel::inheritedText(const ConnRow &connRow)
+{
+    const QString &inheritAppPath = connRow.inheritAppPath;
+
+    // A child process of the same program inherits its own path
+    if (inheritAppPath.isEmpty() || inheritAppPath == connRow.appPath)
+        return tr("Inherited");
+
+    return tr("Inherited from: %1").arg(inheritAppPath);
 }
 
 QString ConnListModel::directionText(bool inbound)

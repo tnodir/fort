@@ -161,9 +161,9 @@ const char *const StatSql::sqlDeleteAllTraffic = "DELETE FROM traffic_app;"
 const char *const StatSql::sqlInsertConn =
         "INSERT INTO conn(app_id, conn_time, process_id, reason, blocked, alerted,"
         "    inherited, inbound, ip_proto, local_port, remote_port, local_ip, remote_ip,"
-        "    local_ip6, remote_ip6, zone_id, rule_id, loopback)"
+        "    local_ip6, remote_ip6, zone_id, rule_id, loopback, inherit_app_id)"
         "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17,"
-        "    ?18);";
+        "    ?18, ?19);";
 
 const char *const StatSql::sqlSelectMinMaxConnId = "SELECT MIN(conn_id), MAX(conn_id) FROM conn;";
 
@@ -173,6 +173,8 @@ const char *const StatSql::sqlDeleteConnApps =
         "DELETE FROM app as t"
         "  WHERE NOT EXISTS ("
         "    SELECT 1 FROM conn c WHERE c.app_id = t.app_id LIMIT 1"
+        "  ) AND NOT EXISTS ("
+        "    SELECT 1 FROM conn c WHERE c.inherit_app_id = t.app_id LIMIT 1"
         "  );";
 
 const char *const StatSql::sqlDeleteAllConn = "DELETE FROM conn;";

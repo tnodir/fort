@@ -63,7 +63,11 @@ bool LogConnJob::processEntry(const LogEntryConn &entry)
     if (appId == INVALID_APP_ID)
         return false;
 
-    const qint64 connId = insertConn(entry, appId);
+    const qint64 inheritAppId = getOrCreateInheritAppId(entry);
+    if (inheritAppId == INVALID_APP_ID)
+        return false;
+
+    const qint64 connId = insertConn(entry, appId, inheritAppId);
     if (connId <= 0)
         return false;
 
@@ -117,7 +121,16 @@ qint64 LogConnJob::getOrCreateAppId(const QString &appPath, quint32 confAppId, q
     return appId;
 }
 
-qint64 LogConnJob::insertConn(const LogEntryConn &entry, qint64 appId)
+qint64 LogConnJob::getOrCreateInheritAppId(const LogEntryConn &entry)
+{
+    const QString inheritPath = entry.inheritPath();
+    if (inheritPath.isEmpty())
+        return 0;
+
+    return getOrCreateAppId(inheritPath, entry.appId(), entry.connTime());
+}
+
+qint64 LogConnJob::insertConn(const LogEntryConn &entry, qint64 appId, qint64 inheritAppId)
 {
     SqliteStmt *stmt = getStmt(StatSql::sqlInsertConn);
 
@@ -148,6 +161,7 @@ qint64 LogConnJob::insertConn(const LogEntryConn &entry, qint64 appId)
     stmt->bindInt(16, entry.zoneId());
     stmt->bindInt(17, entry.ruleId());
     stmt->bindBool(18, entry.loopback());
+    stmt->bindVar(19, DbVar::nullable(inheritAppId));
 
     if (sqliteDb()->done(stmt)) {
         return sqliteDb()->lastInsertRowid();

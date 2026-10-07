@@ -29,8 +29,9 @@ private:
     qint64 getAppId(const QString &appPath);
     qint64 createAppId(const QString &appPath, quint32 confAppId, qint64 unixTime);
     qint64 getOrCreateAppId(const QString &appPath, quint32 confAppId, qint64 unixTime = 0);
+    qint64 getOrCreateInheritAppId(const LogEntryConn &entry);
 
-    qint64 insertConn(const LogEntryConn &entry, qint64 appId);
+    qint64 insertConn(const LogEntryConn &entry, qint64 appId, qint64 inheritAppId);
 
 private:
     qint64 m_connId = 0;

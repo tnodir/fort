@@ -35,6 +35,7 @@ struct ConnRow : TableRow
     qint64 appId = 0;
 
     QString appPath;
+    QString inheritAppPath;
 
     QDateTime connTime;
 };
@@ -65,6 +66,7 @@ public:
 
     static QString reasonText(FortConnReason reason);
     static QString reasonDetailsText(const ConnRow &connRow);
+    static QString inheritedText(const ConnRow &connRow);
 
     static QString directionText(bool inbound);
     static QString directionIconPath(bool inbound);

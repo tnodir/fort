@@ -18,6 +18,7 @@ CREATE TABLE conn(
   blocked BOOLEAN NOT NULL,
   alerted BOOLEAN NOT NULL DEFAULT 0,
   inherited BOOLEAN NOT NULL,
+  inherit_app_id INTEGER,
   inbound BOOLEAN NOT NULL,
   loopback BOOLEAN NOT NULL DEFAULT 0,
   ip_proto INTEGER NOT NULL,
@@ -32,3 +33,4 @@ CREATE TABLE conn(
 );
 
 CREATE INDEX conn_app_id_idx ON conn(app_id);
+CREATE INDEX conn_inherit_app_id_idx ON conn(inherit_app_id) WHERE inherit_app_id IS NOT NULL;
