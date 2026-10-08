@@ -594,10 +594,11 @@ void FilterEditDialog::updateTextByFields()
 
 void FilterEditDialog::updateClearButtons()
 {
-    m_btDirectionClear->setVisible(m_comboDirection->currentIndex() != 0);
-    m_btProtocolClear->setVisible(m_scProtocol->spinBox()->value() != anyProtocol);
-    m_btAreaClear->setVisible(m_comboArea->currentIndex() != 0);
-    m_btRemoteIpsClear->setVisible(!m_editRemoteIps->toPlainText().isEmpty());
+    ControlUtil::setVisibleAnimated(m_btDirectionClear, m_comboDirection->currentIndex() != 0);
+    ControlUtil::setVisibleAnimated(
+            m_btProtocolClear, m_scProtocol->spinBox()->value() != anyProtocol);
+    ControlUtil::setVisibleAnimated(m_btAreaClear, m_comboArea->currentIndex() != 0);
+    ControlUtil::setVisibleAnimated(m_btRemoteIpsClear, !m_editRemoteIps->toPlainText().isEmpty());
 }
 
 QString FilterEditDialog::filterText() const
