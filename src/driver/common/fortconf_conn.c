@@ -108,6 +108,24 @@ inline static BOOL fort_conf_conn_app_rule_filtered(PFORT_CONF_META_CONN conn)
     return TRUE;
 }
 
+inline static BOOL fort_conf_conn_app_direction_blocked(
+        PFORT_CONF_META_CONN conn, const FORT_APP_FLAGS app_flags)
+{
+    if (conn->inbound) {
+        if (!app_flags.block_inbound)
+            return FALSE;
+
+        conn->reason = FORT_CONN_REASON_BLOCK_INBOUND;
+        return TRUE; /* block Inbound */
+    }
+
+    if (!app_flags.block_outbound)
+        return FALSE;
+
+    conn->reason = FORT_CONN_REASON_BLOCK_OUTBOUND;
+    return TRUE; /* block Outbound */
+}
+
 inline static BOOL fort_conf_conn_app_flags_blocked(
         PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn, const FORT_APP_DATA app_data)
 {
@@ -116,10 +134,8 @@ inline static BOOL fort_conf_conn_app_flags_blocked(
         return TRUE; /* block Program */
     }
 
-    if (app_data.flags.block_inbound && conn->inbound) {
-        conn->reason = FORT_CONN_REASON_BLOCK_INBOUND;
-        return TRUE; /* block Inbound */
-    }
+    if (fort_conf_conn_app_direction_blocked(conn, app_data.flags))
+        return TRUE;
 
     if (app_data.flags.lan_only && !conn->is_local_net) {
         conn->reason = FORT_CONN_REASON_LAN_ONLY;

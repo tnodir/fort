@@ -350,6 +350,7 @@ typedef struct fort_app_flags
     UINT16 apply_spec_child : 1;
     UINT16 kill_child : 1;
     UINT16 block_inbound : 1;
+    UINT16 block_outbound : 1;
     UINT16 lan_only : 1;
 
     UINT16 log_stat : 1;
@@ -364,8 +365,6 @@ typedef struct fort_app_flags
     UINT16 alerted : 1;
 
     UINT16 has_wildcard_app : 1; /* is the path listed by a wildcard app? */
-
-    UINT16 reserved : 1; /* not used */
 } FORT_APP_FLAGS, *PFORT_APP_FLAGS;
 
 typedef struct fort_app_data
