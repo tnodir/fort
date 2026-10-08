@@ -18,6 +18,7 @@ QT_FORWARD_DECLARE_CLASS(QToolButton)
 class LineEdit;
 class PlainTextEdit;
 class RuleFilter;
+class SpinCombo;
 
 class FilterEditDialog : public QDialog
 {
@@ -39,7 +40,9 @@ signals:
 
 private:
     void retranslateUi();
+    void retranslateProtocolNames();
     void retranslateNotCheckBoxes();
+    void retranslateClearButtons();
 
     void setupUi();
     QLayout *setupMainLayout();
@@ -47,11 +50,15 @@ private:
     QLayout *setupActionsLayout();
     QRadioButton *createActionButton(const QString &iconPath, int actionId);
     QComboBox *createFieldCombo(const QStringList &values);
+    SpinCombo *createProtocolSpinCombo();
     QCheckBox *createFieldCheckBox();
     LineEdit *createValuesEdit();
     PlainTextEdit *createValuesArea();
+    QToolButton *createComboClearButton(QComboBox *combo);
     QLabel *addWidgetsRow(
             QFormLayout *layout, const QString &labelText, const QList<QWidget *> &widgets);
+    QLabel *addAreaRow(QFormLayout *layout, const QString &labelText,
+            const QList<QWidget *> &widgets, QWidget *area);
     QLabel *addNotRow(
             QFormLayout *layout, const QString &labelText, QCheckBox *cbNot, QWidget *field);
     QLayout *setupOptionsLayout();
@@ -85,14 +92,18 @@ private:
     QLabel *m_labelDirection = nullptr;
     QCheckBox *m_cbDirectionNot = nullptr;
     QComboBox *m_comboDirection = nullptr;
+    QToolButton *m_btDirectionClear = nullptr;
     QLabel *m_labelProtocol = nullptr;
     QCheckBox *m_cbProtocolNot = nullptr;
-    QComboBox *m_comboProtocol = nullptr;
+    SpinCombo *m_scProtocol = nullptr;
+    QToolButton *m_btProtocolClear = nullptr;
     QLabel *m_labelArea = nullptr;
     QCheckBox *m_cbAreaNot = nullptr;
     QComboBox *m_comboArea = nullptr;
+    QToolButton *m_btAreaClear = nullptr;
     QLabel *m_labelRemoteIps = nullptr;
     QCheckBox *m_cbRemoteIpsNot = nullptr;
+    QToolButton *m_btRemoteIpsClear = nullptr;
     PlainTextEdit *m_editRemoteIps = nullptr;
     QLabel *m_labelRemotePorts = nullptr;
     QCheckBox *m_cbRemotePortsNot = nullptr;

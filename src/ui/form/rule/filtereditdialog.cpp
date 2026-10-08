@@ -23,6 +23,7 @@
 #include <util/conf/ruletextparser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
+#include <util/textareautil.h>
 
 using namespace Fort;
 
@@ -155,6 +156,7 @@ void FilterEditDialog::retranslateUi()
     m_comboArea->setToolTip(tr("LAN: by the \"Local Area Network\" addresses in Options"));
 
     retranslateNotCheckBoxes();
+    retranslateClearButtons();
 
     const QString anyText = tr("Any");
 
@@ -195,6 +197,16 @@ void FilterEditDialog::retranslateNotCheckBoxes()
                  m_cbRemotePortsNot, m_cbLocalIpsNot, m_cbLocalPortsNot }) {
         cb->setText(text);
         cb->setToolTip(toolTip);
+    }
+}
+
+void FilterEditDialog::retranslateClearButtons()
+{
+    const QString toolTip = tr("Clear");
+
+    for (QToolButton *bt :
+            { m_btDirectionClear, m_btProtocolClear, m_btAreaClear, m_btRemoteIpsClear }) {
+        bt->setToolTip(toolTip);
     }
 }
 
@@ -255,28 +267,37 @@ QLayout *FilterEditDialog::setupFormLayout()
     // Direction
     m_cbDirectionNot = createFieldCheckBox();
     m_comboDirection = createFieldCombo({ QString(), "In", "Out" });
+    m_btDirectionClear = createComboClearButton(m_comboDirection);
 
-    m_labelDirection = addWidgetsRow(layout, "Direction:", { m_cbDirectionNot, m_comboDirection });
+    m_labelDirection = addWidgetsRow(
+            layout, "Direction:", { m_cbDirectionNot, m_comboDirection, m_btDirectionClear });
 
     // Protocol
     m_cbProtocolNot = createFieldCheckBox();
     m_comboProtocol = createFieldCombo({ QString(), "TCP", "UDP", "ICMP", "ICMPv6" });
+    m_btProtocolClear = createComboClearButton(m_comboProtocol);
 
-    m_labelProtocol = addWidgetsRow(layout, "Protocol:", { m_cbProtocolNot, m_comboProtocol });
+    m_labelProtocol = addWidgetsRow(
+            layout, "Protocol:", { m_cbProtocolNot, m_comboProtocol, m_btProtocolClear });
 
     layout->addRow(ControlUtil::createHSeparator());
 
     // Area
     m_cbAreaNot = createFieldCheckBox();
     m_comboArea = createFieldCombo({ QString(), "Localhost", "LAN", "Internet" });
+    m_btAreaClear = createComboClearButton(m_comboArea);
 
-    m_labelArea = addWidgetsRow(layout, "Area:", { m_cbAreaNot, m_comboArea });
+    m_labelArea = addWidgetsRow(layout, "Area:", { m_cbAreaNot, m_comboArea, m_btAreaClear });
 
     // Remote IP
     m_cbRemoteIpsNot = createFieldCheckBox();
+    m_btRemoteIpsClear =
+            ControlUtil::createClearButton([&] { TextAreaUtil::clearArea(m_editRemoteIps); });
     m_editRemoteIps = createValuesArea();
 
-    m_labelRemoteIps = addNotRow(layout, "Remote IP:", m_cbRemoteIpsNot, m_editRemoteIps);
+    m_labelRemoteIps = addAreaRow(layout,
+            "Remote IP:", { m_cbRemoteIpsNot, /*stretch*/ nullptr, m_btRemoteIpsClear },
+            m_editRemoteIps);
 
     // Remote Port
     m_cbRemotePortsNot = createFieldCheckBox();
@@ -383,12 +404,34 @@ PlainTextEdit *FilterEditDialog::createValuesArea()
     return c;
 }
 
+// Selects the combo's "Any" value
+QToolButton *FilterEditDialog::createComboClearButton(QComboBox *combo)
+{
+    return ControlUtil::createClearButton([=, this] {
+        combo->setCurrentIndex(0);
+        updateTextByFields();
+    });
+}
+
 // The row's widgets are on the left
 QLabel *FilterEditDialog::addWidgetsRow(
         QFormLayout *layout, const QString &labelText, const QList<QWidget *> &widgets)
 {
     auto rowLayout = ControlUtil::createHLayoutByWidgets(widgets, /*margin=*/0);
     rowLayout->addStretch();
+
+    layout->addRow(labelText, rowLayout);
+
+    return ControlUtil::formRowLabel(layout, rowLayout);
+}
+
+// The area is below the row's widgets, only it grows vertically
+QLabel *FilterEditDialog::addAreaRow(QFormLayout *layout, const QString &labelText,
+        const QList<QWidget *> &widgets, QWidget *area)
+{
+    auto rowLayout = ControlUtil::createVLayout();
+    rowLayout->addLayout(ControlUtil::createHLayoutByWidgets(widgets, /*margin=*/0));
+    rowLayout->addWidget(area);
 
     layout->addRow(labelText, rowLayout);
 

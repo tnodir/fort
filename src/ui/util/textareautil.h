@@ -16,6 +16,9 @@ public:
     static QString selectedText(QPlainTextEdit *area);
     static void removeSelectedText(QPlainTextEdit *area);
 
+    // Undoable, unlike QPlainTextEdit::clear()
+    static void clearArea(QPlainTextEdit *area);
+
     static void appendText(QPlainTextEdit *area, const QString &text);
 
     static void moveAllLines(QPlainTextEdit *srcArea, QPlainTextEdit *dstArea);

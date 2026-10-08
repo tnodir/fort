@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QScrollArea>
 #include <QStandardItemModel>
+#include <QStyle>
 #include <QToolButton>
 #include <QWidgetAction>
 
@@ -219,6 +220,13 @@ QToolButton *ControlUtil::createIconToolButton(
 {
     auto c = createFlatToolButton(iconPath, onClicked);
     c->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    return c;
+}
+
+QToolButton *ControlUtil::createClearButton(const std::function<void()> &onClicked)
+{
+    auto c = createIconToolButton(QString(), onClicked);
+    c->setIcon(c->style()->standardIcon(QStyle::SP_LineEditClearButton));
     return c;
 }
 

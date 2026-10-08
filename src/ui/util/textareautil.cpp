@@ -29,6 +29,12 @@ void TextAreaUtil::removeSelectedText(QPlainTextEdit *area)
     c.removeSelectedText();
 }
 
+void TextAreaUtil::clearArea(QPlainTextEdit *area)
+{
+    area->selectAll();
+    removeSelectedText(area);
+}
+
 void TextAreaUtil::appendText(QPlainTextEdit *area, const QString &text)
 {
     if (text.isEmpty())
