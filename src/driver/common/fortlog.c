@@ -50,6 +50,7 @@ FORT_API void fort_log_conn_header_write(
 
     *up++ = fort_log_flag_type(FORT_LOG_TYPE_CONN)
             | (conn->act.blocked ? FORT_LOG_FLAG_OPT_BLOCKED : 0)
+            | (conn->act.drop_blocked ? FORT_LOG_FLAG_OPT_DROPPED : 0)
             | (conn->isIPv6 ? FORT_LOG_CONN_IP6 : 0) | (conn->inbound ? FORT_LOG_CONN_INBOUND : 0)
             | (conn->is_loopback ? FORT_LOG_CONN_LOOPBACK : 0)
             | (conn->inherited ? FORT_LOG_CONN_INHERITED : 0)
@@ -91,6 +92,7 @@ FORT_API void fort_log_conn_header_read(
     UINT32 v;
     v = *up++;
     conn->act.blocked = (v & FORT_LOG_FLAG_OPT_BLOCKED) != 0;
+    conn->act.drop_blocked = (v & FORT_LOG_FLAG_OPT_DROPPED) != 0;
     conn->isIPv6 = (v & FORT_LOG_CONN_IP6) != 0;
     conn->inbound = (v & FORT_LOG_CONN_INBOUND) != 0;
     conn->is_loopback = (v & FORT_LOG_CONN_LOOPBACK) != 0;
