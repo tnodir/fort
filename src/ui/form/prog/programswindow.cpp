@@ -410,15 +410,15 @@ void ProgramsWindow::setupFilter()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btFilter = ControlUtil::createButton(":/icons/filter.png");
+    m_btFilter = ControlUtil::createButton(":/icons/table_tab_search.png");
     m_btFilter->setMenu(menu);
 
     const auto refreshFilter = [&] {
         const auto isEmpty = !appListModel()->hasFilters();
 
         m_btFilter->setIcon(isEmpty
-                        ? IconCache::icon(":/icons/filter.png")
-                        : GuiUtil::overlayIcon(":/icons/filter.png", ":/icons/tick.png"));
+                        ? IconCache::icon(":/icons/table_tab_search.png")
+                        : GuiUtil::overlayIcon(":/icons/table_tab_search.png", ":/icons/tick.png"));
     };
 
     refreshFilter();
