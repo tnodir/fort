@@ -5,20 +5,27 @@
 #include <QLabel>
 #include <QToolButton>
 
+#include <common/fortconf.h>
+
 #include <conf/app.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/listview.h>
 #include <form/controls/ruleselector.h>
+#include <form/controls/terminatingruleselector.h>
 #include <form/controls/zonesselector.h>
 #include <form/dialog/dialogutil.h>
 #include <form/rule/filtereditdialog.h>
 #include <fortglobal.h>
 #include <model/speedlimitlistmodel.h>
+#include <util/conf/filterline.h>
 #include <util/model/stringlistmodel.h>
 
 using namespace Fort;
 
 namespace {
+
+// The Terminating Rule's line follows it in the filters' text
+inline constexpr char terminatingRuleComment[] = "# Terminating";
 
 void selectComboSpeedLimit(QComboBox *combo, quint8 limitId)
 {
@@ -98,10 +105,35 @@ void ProgNetworkPage::initializeSpeedLimitFields()
 
 void ProgNetworkPage::initializeFilters(bool isSingleSelection)
 {
-    m_filterListModel->setList(app().filtersText.split('\n', Qt::SkipEmptyParts));
+    const QStringList lines = app().filtersText.split('\n', Qt::SkipEmptyParts);
+
+    const int terminatingIndex = lines.indexOf(terminatingRuleComment);
+
+    initializeTerminatingRule(
+            (terminatingIndex >= 0) ? lines.value(terminatingIndex + 1) : QString());
+
+    m_filterListModel->setList(lines.mid(0, terminatingIndex)); // -1: all lines
 
     m_btAddFilter->setEnabled(isSingleSelection);
     m_filterListView->setEnabled(isSingleSelection);
+    m_terminatingRuleSelector->setEnabled(isSingleSelection);
+}
+
+// e.g. "Act(Block):Opt(Alert)"
+void ProgNetworkPage::initializeTerminatingRule(const QString &text)
+{
+    FilterLine line(text);
+    line.parse();
+
+    const QString action = FilterLine::values(line.filter(FORT_RULE_FILTER_TYPE_ACTION)).value(0);
+    const QStringList options = FilterLine::values(line.filter(FORT_RULE_FILTER_TYPE_OPTION));
+
+    const bool blocked = (action.compare("Allow", Qt::CaseInsensitive) != 0);
+    const bool drop = (action.compare("Drop", Qt::CaseInsensitive) == 0);
+
+    m_terminatingRuleSelector->setTerminate(!action.isEmpty());
+    m_terminatingRuleSelector->setTerminateAction(blocked, drop);
+    m_terminatingRuleSelector->setTerminateAlert(options.contains("Alert", Qt::CaseInsensitive));
 }
 
 void ProgNetworkPage::retranslateSpeedLimitFields()
@@ -119,6 +151,8 @@ void ProgNetworkPage::retranslateFilters()
     m_btEditFilter->setText(tr("Edit"));
     m_btUpFilter->setToolTip(tr("Move Up"));
     m_btDownFilter->setToolTip(tr("Move Down"));
+
+    m_terminatingRuleSelector->retranslateUi();
 }
 
 void ProgNetworkPage::setupUi()
@@ -138,6 +172,9 @@ void ProgNetworkPage::setupUi()
     // Actions on filter list view's current changed
     setupFilterListViewChanged();
 
+    // Terminating Rule
+    m_terminatingRuleSelector = new TerminatingRuleSelector();
+
     // Main Layout
     auto layout = new QVBoxLayout();
     layout->addLayout(speedLimitsLayout);
@@ -146,6 +183,7 @@ void ProgNetworkPage::setupUi()
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(filtersHeaderLayout);
     layout->addWidget(m_filterListView, 1);
+    layout->addWidget(m_terminatingRuleSelector);
 
     this->setLayout(layout);
 }
@@ -308,12 +346,36 @@ void ProgNetworkPage::fillApp(App &app) const
     app.speedLimits.in_limit_id = m_comboSpeedLimitIn->currentData().toUInt();
     app.speedLimits.out_limit_id = m_comboSpeedLimitOut->currentData().toUInt();
 
-    app.filtersText = m_filterListModel->list().join('\n');
+    QStringList lines = m_filterListModel->list();
+
+    const QString terminatingText = terminatingRuleText();
+    if (!terminatingText.isEmpty()) {
+        lines << terminatingRuleComment << terminatingText;
+    }
+
+    app.filtersText = lines.join('\n');
 }
 
 int ProgNetworkPage::filterListCurrentIndex() const
 {
     return m_filterListView->currentRow();
+}
+
+QString ProgNetworkPage::terminatingRuleText() const
+{
+    const auto selector = m_terminatingRuleSelector;
+    if (!selector->terminate())
+        return {};
+
+    const QString action = !selector->terminateBlocked()
+            ? "Allow"
+            : (selector->terminateDrop() ? "Drop" : "Block");
+
+    FilterLine line;
+    line.addFilter(FORT_RULE_FILTER_TYPE_ACTION, action);
+    line.addFilter(FORT_RULE_FILTER_TYPE_OPTION, selector->terminateAlert() ? "Alert" : QString());
+
+    return line.text();
 }
 
 void ProgNetworkPage::openFilterEditForm(const QString &filterText, int row)

@@ -62,3 +62,16 @@ const RuleFilter *FilterLine::filter(qint8 type) const
 
     return (index >= 0) ? &m_parser.ruleFilters()[index] : nullptr;
 }
+
+QStringList FilterLine::values(const RuleFilter *filter)
+{
+    if (!filter)
+        return {};
+
+    QStringList list;
+    for (const QStringView value : filter->values) {
+        list << value.toString();
+    }
+
+    return list;
+}

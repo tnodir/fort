@@ -1,7 +1,7 @@
 #ifndef FILTERLINE_H
 #define FILTERLINE_H
 
-#include <QString>
+#include <QStringList>
 #include <QVector>
 
 #include "ruletextparser.h"
@@ -20,6 +20,8 @@ public:
     bool parse();
 
     const RuleFilter *filter(qint8 type) const; // nullptr - no filter
+
+    static QStringList values(const RuleFilter *filter);
 
 private:
     QString m_text;

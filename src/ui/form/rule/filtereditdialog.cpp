@@ -51,19 +51,6 @@ void setComboTexts(QComboBox *c, const QStringList &texts)
     }
 }
 
-QStringList filterValues(const RuleFilter *filter)
-{
-    if (!filter)
-        return {};
-
-    QStringList list;
-    for (const QStringView value : filter->values) {
-        list << value.toString();
-    }
-
-    return list;
-}
-
 bool filterIsNot(const RuleFilter *filter)
 {
     return filter && filter->isNot;
@@ -79,7 +66,7 @@ void setComboFilter(QCheckBox *cbNot, QComboBox *c, const RuleFilter *filter)
     cbNot->setChecked(filterIsNot(filter));
 
     const int index =
-            c->findData(filterValues(filter).value(0), Qt::UserRole, Qt::MatchFixedString);
+            c->findData(FilterLine::values(filter).value(0), Qt::UserRole, Qt::MatchFixedString);
 
     c->setCurrentIndex(qMax(index, 0));
 }
@@ -92,7 +79,7 @@ void addEditFilter(FilterLine &line, qint8 type, QCheckBox *cbNot, LineEdit *edi
 void setEditFilter(QCheckBox *cbNot, LineEdit *edit, const RuleFilter *filter)
 {
     cbNot->setChecked(filterIsNot(filter));
-    edit->setStartText(filterValues(filter).join(", "));
+    edit->setStartText(FilterLine::values(filter).join(", "));
 }
 
 // The area's lines are the values, the filter's text is a line
@@ -117,7 +104,7 @@ void setAreaFilter(QCheckBox *cbNot, PlainTextEdit *area, const RuleFilter *filt
 
     const QSignalBlocker blocker(area); // textChanged() isn't by the user only
 
-    area->setText(filterValues(filter).join('\n'));
+    area->setText(FilterLine::values(filter).join('\n'));
 }
 }
 
@@ -525,7 +512,7 @@ void FilterEditDialog::setFilterLine(const FilterLine &line)
 
 void FilterEditDialog::setActionFilter(const RuleFilter *filter)
 {
-    const int actionId = indexOfValue(actionNames, filterValues(filter).value(0));
+    const int actionId = indexOfValue(actionNames, FilterLine::values(filter).value(0));
 
     QAbstractButton *button = m_buttonGroupAction->button(actionId);
     if (button) {
@@ -555,7 +542,7 @@ QString FilterEditDialog::optionValues() const
 
 void FilterEditDialog::setOptionFilter(const RuleFilter *filter)
 {
-    const QStringList values = filterValues(filter);
+    const QStringList values = FilterLine::values(filter);
 
     const auto checkBoxes = optionCheckBoxes();
     for (int i = 0, n = checkBoxes.size(); i < n; ++i) {

@@ -6,6 +6,7 @@
 class ListView;
 class RuleSelector;
 class StringListModel;
+class TerminatingRuleSelector;
 class ZonesSelector;
 
 class ProgNetworkPage : public ProgBasePage
@@ -27,6 +28,7 @@ private:
     void initializeRuleField(bool isSingleSelection);
     void initializeSpeedLimitFields();
     void initializeFilters(bool isSingleSelection);
+    void initializeTerminatingRule(const QString &text);
 
     void retranslateSpeedLimitFields();
     void retranslateFilters();
@@ -42,6 +44,8 @@ private:
     void updateSpeedLimitCombos();
 
     int filterListCurrentIndex() const;
+
+    QString terminatingRuleText() const;
 
     void openFilterEditForm(const QString &filterText = {}, int row = -1);
     void editCurrentFilter();
@@ -66,6 +70,7 @@ private:
     QToolButton *m_btUpFilter = nullptr;
     QToolButton *m_btDownFilter = nullptr;
     ListView *m_filterListView = nullptr;
+    TerminatingRuleSelector *m_terminatingRuleSelector = nullptr;
 };
 
 #endif // PROGNETWORKPAGE_H
