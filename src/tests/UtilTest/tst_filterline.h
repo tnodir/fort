@@ -89,3 +89,32 @@ TEST_F(FilterLineTest, connText)
             ":Local_Port(50000):Act(Allow)");
     ASSERT_TRUE(FilterLine(line2).parse());
 }
+
+TEST_F(FilterLineTest, connAddressesText)
+{
+    Conn conn;
+    conn.ipProto = 6; // TCP
+    conn.localPort = 50000;
+    conn.remotePort = 443;
+    conn.localIp.v4 = NetFormatUtil::textToIp4("192.168.1.2");
+    conn.remoteIp.v4 = NetFormatUtil::textToIp4("1.1.1.1");
+
+    FilterLineText line;
+    line.addConnAddresses(conn);
+    ASSERT_EQ(line.text(),
+            "Dir(Out):Proto(TCP):IP(1.1.1.1):Port(443):Local_IP(192.168.1.2)"
+            ":Local_Port(50000)");
+    ASSERT_TRUE(FilterLine(line).parse());
+
+    conn.isIPv6 = true;
+    conn.inbound = true;
+    conn.ipProto = 58; // ICMPv6
+    conn.localPort = 0;
+    conn.remotePort = 0;
+    conn.localIp.v6 = NetFormatUtil::textToIp6("fe80::1");
+    conn.remoteIp.v6 = NetFormatUtil::textToIp6("fe80::2");
+
+    FilterLineText line2;
+    line2.addConnAddresses(conn);
+    ASSERT_EQ(line2.text(), "Dir(In):Proto(ICMPv6):IP([fe80::2]):Local_IP([fe80::1])");
+}
