@@ -19,6 +19,7 @@ class PlainTextEdit;
 class Rule;
 class RuleSetModel;
 class RulesController;
+class TerminatingRuleSelector;
 class TimePeriodSelector;
 class ZonesSelector;
 
@@ -45,7 +46,6 @@ private:
     void retranslateUi();
     void retranslateComboRuleType();
     void retranslateRulePlaceholderText();
-    void retranslateComboTerminate();
 
     void setupUi();
     QLayout *setupMainLayout();
@@ -61,8 +61,6 @@ private:
     QLayout *setupRuleSetHeaderLayout();
     void setupRuleSetView();
     void setupRuleSetViewChanged();
-    QLayout *setupTerminateLayout();
-    void setupCbTerminate();
     QLayout *setupLogLayout();
     QLayout *setupButtons();
 
@@ -108,6 +106,7 @@ private:
     QToolButton *m_btAddFilter = nullptr;
     QAction *m_actRuleHelp = nullptr;
     PlainTextEdit *m_editRuleText = nullptr;
+    TerminatingRuleSelector *m_terminatingRuleSelector = nullptr;
     TimePeriodSelector *m_periodSelector = nullptr;
     QToolButton *m_btAddPresetRule = nullptr;
     QToolButton *m_btRemovePresetRule = nullptr;
@@ -115,9 +114,6 @@ private:
     QToolButton *m_btUpPresetRule = nullptr;
     QToolButton *m_btDownPresetRule = nullptr;
     ListView *m_ruleSetView = nullptr;
-    QCheckBox *m_cbTerminate = nullptr;
-    QComboBox *m_comboTerminateAction = nullptr;
-    QCheckBox *m_cbTerminateAlert = nullptr;
     QCheckBox *m_cbLogAllowedConn = nullptr;
     QCheckBox *m_cbLogBlockedConn = nullptr;
     QPushButton *m_btOk = nullptr;

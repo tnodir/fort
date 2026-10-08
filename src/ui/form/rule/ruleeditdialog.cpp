@@ -17,6 +17,7 @@
 #include <form/controls/lineedit.h>
 #include <form/controls/listview.h>
 #include <form/controls/plaintextedit.h>
+#include <form/controls/terminatingruleselector.h>
 #include <form/controls/timeperiodselector.h>
 #include <form/controls/zonesselector.h>
 #include <form/dialog/dialogutil.h>
@@ -84,12 +85,12 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
 
     m_cbInlineZones->setChecked(ruleRow.inlineZones);
 
+    m_terminatingRuleSelector->setTerminate(ruleRow.terminate);
+    m_terminatingRuleSelector->setTerminateAction(ruleRow.terminateBlocked, ruleRow.terminateDrop);
+    m_terminatingRuleSelector->setTerminateAlert(ruleRow.terminateAlert);
+
     m_periodSelector->setPeriodEnabled(ruleRow.periodEnabled);
     m_periodSelector->setPeriodId(ruleRow.periodId);
-
-    m_cbTerminate->setChecked(ruleRow.terminate);
-    m_comboTerminateAction->setCurrentIndex(ruleRow.terminateActionType());
-    m_cbTerminateAlert->setChecked(ruleRow.terminateAlert);
 
     m_cbLogAllowedConn->setChecked(ruleRow.logAllowedConn);
     m_cbLogBlockedConn->setChecked(ruleRow.logBlockedConn);
@@ -149,6 +150,8 @@ void RuleEditDialog::retranslateUi()
     retranslateRulePlaceholderText();
     m_actRuleHelp->setText(tr("Help"));
 
+    m_terminatingRuleSelector->retranslateUi();
+
     m_periodSelector->retranslateUi();
     m_periodSelector->setToolTip(tr("The Rule is active only in this Time Period."));
 
@@ -157,10 +160,6 @@ void RuleEditDialog::retranslateUi()
     m_btEditPresetRule->setText(tr("Edit"));
     m_btUpPresetRule->setToolTip(tr("Move Up"));
     m_btDownPresetRule->setToolTip(tr("Move Down"));
-
-    m_cbTerminate->setText(tr("Terminating Rule:"));
-    retranslateComboTerminate();
-    m_cbTerminateAlert->setText(tr("Alert"));
 
     m_cbLogAllowedConn->setText(tr("Collect allowed connections"));
     m_cbLogBlockedConn->setText(tr("Collect blocked connections"));
@@ -187,16 +186,6 @@ void RuleEditDialog::retranslateRulePlaceholderText()
               "\n1.1.1.1:80:dir(in)";
 
     m_editRuleText->setPlaceholderText(placeholderText);
-}
-
-void RuleEditDialog::retranslateComboTerminate()
-{
-    const QStringList list = { tr("Allow"), tr("Block") };
-
-    ControlUtil::setComboBoxTexts(m_comboTerminateAction, list);
-
-    ControlUtil::setComboBoxIcons(
-            m_comboTerminateAction, { ":/icons/accept.png", ":/icons/deny.png" });
 }
 
 void RuleEditDialog::setupUi()
@@ -262,6 +251,9 @@ QWidget *RuleEditDialog::setupGeneralTab()
     // Rule Text
     setupEditRuleText();
 
+    // Terminating Rule
+    m_terminatingRuleSelector = new TerminatingRuleSelector();
+
     // Time Period
     m_periodSelector = new TimePeriodSelector();
 
@@ -272,6 +264,8 @@ QWidget *RuleEditDialog::setupGeneralTab()
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(zonesLayout);
     layout->addWidget(m_editRuleText, 1);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addWidget(m_terminatingRuleSelector);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addWidget(m_periodSelector, 0, Qt::AlignLeft);
 
@@ -289,14 +283,9 @@ QWidget *RuleEditDialog::setupPresetsTab()
     // Actions on rule set view's current changed
     setupRuleSetViewChanged();
 
-    // Terminate Layout
-    auto terminateLayout = setupTerminateLayout();
-
     auto layout = new QVBoxLayout();
     layout->addLayout(ruleSetHeaderLayout);
     layout->addWidget(m_ruleSetView);
-    layout->addWidget(ControlUtil::createHSeparator());
-    layout->addLayout(terminateLayout);
 
     return ControlUtil::wrapToWidget(layout);
 }
@@ -466,38 +455,6 @@ void RuleEditDialog::setupRuleSetViewChanged()
     connect(m_ruleSetView, &ListView::currentIndexChanged, this, refreshRuleSetViewChanged);
 }
 
-QLayout *RuleEditDialog::setupTerminateLayout()
-{
-    // Terminate Action
-    m_comboTerminateAction = ControlUtil::createComboBox();
-    m_comboTerminateAction->setMinimumWidth(100);
-
-    // Terminate Alert
-    m_cbTerminateAlert = new QCheckBox();
-
-    // Terminate Check Box
-    setupCbTerminate();
-
-    auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_cbTerminate, m_comboTerminateAction, m_cbTerminateAlert, /*stretch*/ nullptr });
-
-    return layout;
-}
-
-void RuleEditDialog::setupCbTerminate()
-{
-    m_cbTerminate = new QCheckBox();
-
-    const auto refreshTerminateEnabled = [&](bool checked) {
-        m_comboTerminateAction->setEnabled(checked);
-        m_cbTerminateAlert->setEnabled(checked);
-    };
-
-    refreshTerminateEnabled(false);
-
-    connect(m_cbTerminate, &QCheckBox::toggled, this, refreshTerminateEnabled);
-}
-
 QLayout *RuleEditDialog::setupLogLayout()
 {
     m_cbLogAllowedConn = new QCheckBox();
@@ -644,9 +601,10 @@ void RuleEditDialog::fillRule(Rule &rule) const
     rule.blocked = !m_rbAllow->isChecked();
     rule.exclusive = m_cbExclusive->isChecked();
 
-    rule.terminate = m_cbTerminate->isChecked();
-    rule.setTerminateActionType(m_comboTerminateAction->currentIndex());
-    rule.terminateAlert = m_cbTerminateAlert->isChecked();
+    rule.terminate = m_terminatingRuleSelector->terminate();
+    rule.terminateBlocked = m_terminatingRuleSelector->terminateBlocked();
+    rule.terminateDrop = m_terminatingRuleSelector->terminateDrop();
+    rule.terminateAlert = m_terminatingRuleSelector->terminateAlert();
 
     rule.logAllowedConn = m_cbLogAllowedConn->isChecked();
     rule.logBlockedConn = m_cbLogBlockedConn->isChecked();

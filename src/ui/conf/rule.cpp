@@ -37,13 +37,3 @@ bool Rule::isPeriodEqual(const Rule &o) const
 {
     return periodEnabled == o.periodEnabled && periodId == o.periodId;
 }
-
-int Rule::terminateActionType() const
-{
-    return terminateBlocked ? TerminateBlock : TerminateAllow;
-}
-
-void Rule::setTerminateActionType(qint8 v)
-{
-    terminateBlocked = (v == TerminateBlock);
-}

@@ -87,6 +87,7 @@ SOURCES += \
     form/controls/statisticsbutton.cpp \
     form/controls/tabbar.cpp \
     form/controls/tableview.cpp \
+    form/controls/terminatingruleselector.cpp \
     form/controls/textarea2splitter.cpp \
     form/controls/textarea2splitterhandle.cpp \
     form/controls/timeperiodselector.cpp \
@@ -394,6 +395,7 @@ HEADERS += \
     form/controls/statisticsbutton.h \
     form/controls/tabbar.h \
     form/controls/tableview.h \
+    form/controls/terminatingruleselector.h \
     form/controls/textarea2splitter.h \
     form/controls/textarea2splitterhandle.h \
     form/controls/timeperiodselector.h \

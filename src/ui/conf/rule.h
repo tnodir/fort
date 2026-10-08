@@ -21,11 +21,6 @@ public:
         RuleTypeCount
     };
 
-    enum TerminateActionType : qint8 {
-        TerminateAllow = 0,
-        TerminateBlock,
-    };
-
     bool isNameEqual(const Rule &o) const;
     bool isOptionsEqual(const Rule &o) const;
     bool isFlagsEqual(const Rule &o) const;
@@ -33,9 +28,6 @@ public:
     bool isLogFlagsEqual(const Rule &o) const;
     bool isZonesEqual(const Rule &o) const;
     bool isPeriodEqual(const Rule &o) const;
-
-    int terminateActionType() const;
-    void setTerminateActionType(qint8 v);
 
 public:
     bool enabled : 1 = true;
