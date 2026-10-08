@@ -317,7 +317,7 @@
     </message>
     <message>
         <source>Program&apos;s Network Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre réseau du programme&apos;s</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -337,7 +337,7 @@
     </message>
     <message>
         <source>Inherited from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Hérité de : %1</translation>
     </message>
     <message>
         <source>Dropped</source>
@@ -477,27 +477,27 @@
     </message>
     <message>
         <source>By &amp;Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Par &amp;Règle</translation>
     </message>
     <message>
         <source>The Rule&apos;s action is applied</source>
-        <translation type="unfinished"></translation>
+        <translation>L&apos;action de la règle&apos;s est appliquée</translation>
     </message>
     <message>
         <source>&amp;Allow</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Autoriser</translation>
     </message>
     <message>
         <source>&amp;Block</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Bloquer</translation>
     </message>
     <message>
         <source>&amp;Drop</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Lâcher</translation>
     </message>
     <message>
         <source>Block silently, without a response</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer en silence, sans réponse</translation>
     </message>
     <message>
         <source>Direction:</source>
@@ -513,7 +513,7 @@
     </message>
     <message>
         <source>Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Sortant</translation>
     </message>
     <message>
         <source>Protocol:</source>
@@ -521,11 +521,11 @@
     </message>
     <message>
         <source>Area:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zone :</translation>
     </message>
     <message>
         <source>Localhost</source>
-        <translation type="unfinished"></translation>
+        <translation>Hôte local</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -533,7 +533,7 @@
     </message>
     <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN: par les adresses &quot;Réseau local&quot; dans les Options</translation>
     </message>
     <message>
         <source>Remote IP:</source>
@@ -541,7 +541,7 @@
     </message>
     <message>
         <source>Remote Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Port distant :</translation>
     </message>
     <message>
         <source>Local IP:</source>
@@ -549,27 +549,27 @@
     </message>
     <message>
         <source>Local Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Port local&#xa0;:</translation>
     </message>
     <message>
         <source>Options:</source>
-        <translation type="unfinished"></translation>
+        <translation>Options :</translation>
     </message>
     <message>
         <source>Log</source>
-        <translation type="unfinished"></translation>
+        <translation>Journal</translation>
     </message>
     <message>
         <source>Collect the connection, even if the Rule doesn&apos;t</source>
-        <translation type="unfinished"></translation>
+        <translation>Récupérer la connexion, même si la Règle ne le fait pas&apos;t</translation>
     </message>
     <message>
         <source>No Log</source>
-        <translation type="unfinished"></translation>
+        <translation>Aucun journal</translation>
     </message>
     <message>
         <source>Don&apos;t collect the connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Don&apos;ne récupère pas la connexion</translation>
     </message>
     <message>
         <source>Alert</source>
@@ -577,19 +577,19 @@
     </message>
     <message>
         <source>Collect the connection as alerted, also with &quot;Alerted only&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Collecter la connexion comme alerte, également avec &quot;Alerté seulement&quot;</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Texte</translation>
     </message>
     <message>
         <source>Copy Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Copier le texte</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -597,27 +597,27 @@
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter filtre</translation>
     </message>
     <message>
         <source>Edit Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Éditer filtre</translation>
     </message>
     <message>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation>Personnalisé</translation>
     </message>
     <message>
         <source>Not</source>
-        <translation type="unfinished"></translation>
+        <translation>Aucun</translation>
     </message>
     <message>
         <source>All, except these</source>
-        <translation type="unfinished"></translation>
+        <translation>Tous, sauf ceux-ci</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>Effacer</translation>
     </message>
 </context>
 <context>
@@ -879,15 +879,15 @@
     </message>
     <message>
         <source>Animation</source>
-        <translation type="unfinished"></translation>
+        <translation>Animation</translation>
     </message>
     <message>
         <source>Axis ticks</source>
-        <translation type="unfinished"></translation>
+        <translation>Grilles d&apos;axe</translation>
     </message>
     <message>
         <source>Show:</source>
-        <translation type="unfinished"></translation>
+        <translation>Voir :</translation>
     </message>
     <message>
         <source>Total</source>
@@ -899,7 +899,7 @@
     </message>
     <message>
         <source>Upload</source>
-        <translation>Chargement</translation>
+        <translation>Charger</translation>
     </message>
     <message>
         <source>Opacity:</source>
@@ -911,7 +911,7 @@
     </message>
     <message>
         <source>Bar width:</source>
-        <translation type="unfinished"></translation>
+        <translation>Largeur de la barre&#xa0;:</translation>
     </message>
     <message>
         <source>Max seconds:</source>
@@ -919,7 +919,7 @@
     </message>
     <message>
         <source>Graph type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Type de graphique :</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -927,7 +927,7 @@
     </message>
     <message>
         <source>Border:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bordure&#xa0;:</translation>
     </message>
     <message>
         <source>Download:</source>
@@ -939,7 +939,7 @@
     </message>
     <message>
         <source>Total:</source>
-        <translation type="unfinished"></translation>
+        <translation>Total :</translation>
     </message>
     <message>
         <source>Axis:</source>
@@ -959,11 +959,11 @@
     </message>
     <message>
         <source>Column</source>
-        <translation type="unfinished"></translation>
+        <translation>Colonne</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Ligne</translation>
     </message>
     <message>
         <source>Window</source>
@@ -1875,7 +1875,7 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     <name>ProgConnListPage</name>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter filtre</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -2151,7 +2151,7 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter filtre</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2446,11 +2446,11 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter filtre</translation>
     </message>
     <message>
         <source>The Rule is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>La Règle n&apos;est active que durant cette Période de temps.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -2486,7 +2486,7 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     </message>
     <message>
         <source>Presets</source>
-        <translation type="unfinished"></translation>
+        <translation>Préréglages</translation>
     </message>
     <message>
         <source>More</source>
@@ -3152,7 +3152,7 @@ Perte de paquets : %2</translation>
     <name>TerminatingRuleSelector</name>
     <message>
         <source>Terminating Rule:</source>
-        <translation>Règle de résiliation :</translation>
+        <translation>Règle de terminaison :</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -3164,7 +3164,7 @@ Perte de paquets : %2</translation>
     </message>
     <message>
         <source>Drop</source>
-        <translation type="unfinished"></translation>
+        <translation>Lâcher</translation>
     </message>
     <message>
         <source>Alert</source>
