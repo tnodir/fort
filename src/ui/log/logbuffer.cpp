@@ -137,8 +137,10 @@ void LogBuffer::writeEntryConn(const LogEntryConn *logEntry)
         .process_id = logEntry->pid(),
         .local_ip = logEntry->localIp(),
         .remote_ip = logEntry->remoteIp(),
-        .app_data = {
-            .app_id = logEntry->appId(),
+        .app = {
+            .data = {
+                .app_id = logEntry->appId(),
+            },
         },
     };
 
@@ -182,7 +184,7 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
     logEntry->setRemotePort(conn.remote_port);
     logEntry->setLocalIp(conn.local_ip);
     logEntry->setRemoteIp(conn.remote_ip);
-    logEntry->setAppId(conn.app_data.app_id);
+    logEntry->setAppId(conn.app.data.app_id);
     logEntry->setPid(conn.process_id);
     logEntry->setKernelPath(path);
 

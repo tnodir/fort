@@ -95,6 +95,19 @@ inline static BOOL fort_conf_conn_glob_rule_filtered(
     return fort_conf_conn_rule_id_filtered(conn, rule_id, reason);
 }
 
+inline static BOOL fort_conf_conn_app_rule_filtered(PFORT_CONF_META_CONN conn)
+{
+    PCFORT_CONF_RULE rule = conn->app.rule;
+    if (rule == NULL)
+        return FALSE;
+
+    if (!fort_conf_app_rule_conn_filtered(rule, conn))
+        return FALSE;
+
+    conn->reason = FORT_CONN_REASON_PROGRAM_FILTER;
+    return TRUE;
+}
+
 inline static BOOL fort_conf_conn_app_flags_blocked(
         PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn, const FORT_APP_DATA app_data)
 {
@@ -147,7 +160,10 @@ static BOOL fort_conf_conn_app_filtered(
     if (fort_conf_conn_groups_rule_filtered(filter, conn, app_data.groups))
         return TRUE; /* filtered by the Groups' Rules */
 
-    return fort_conf_conn_rule_filtered(filter, conn, app_data.rule_id);
+    if (fort_conf_conn_rule_filtered(filter, conn, app_data.rule_id))
+        return TRUE; /* filtered by the Program's Rule */
+
+    return fort_conf_conn_app_rule_filtered(conn);
 }
 
 inline static void fort_conf_conn_app_filter(

@@ -415,15 +415,13 @@ typedef struct fort_conf_app_find_loop_opt
 
 typedef const FORT_CONF_APP_FIND_LOOP_OPT *PCFORT_CONF_APP_FIND_LOOP_OPT;
 
-static FORT_APP_DATA fort_conf_app_find_loop(
+static PCFORT_APP_ENTRY fort_conf_app_find_loop(
         PCFORT_CONF conf, PCFORT_APP_PATH path, PCFORT_CONF_APP_FIND_LOOP_OPT opt)
 {
-    const FORT_APP_DATA app_data = { 0 };
-
     UINT16 apps_n = opt->apps_n;
 
     if (apps_n == 0)
-        return app_data;
+        return NULL;
 
     const char *app_entries = (const char *) (conf->data + opt->apps_off);
 
@@ -433,15 +431,28 @@ static FORT_APP_DATA fort_conf_app_find_loop(
         PCFORT_APP_ENTRY app_entry = (PCFORT_APP_ENTRY) app_entries;
 
         if (app_equal_func(app_entry, path))
-            return app_entry->app_data;
+            return app_entry;
 
-        app_entries += FORT_CONF_APP_ENTRY_SIZE(app_entry->path_len);
+        app_entries += fort_conf_app_entry_size(app_entry);
     } while (--apps_n != 0);
 
-    return app_data;
+    return NULL;
 }
 
-FORT_API FORT_APP_DATA fort_conf_app_exe_find(PCFORT_CONF conf, PVOID context, PCFORT_APP_PATH path)
+FORT_API FORT_CONF_APP_FIND_RESULT fort_conf_app_entry_find_result(PCFORT_APP_ENTRY app_entry)
+{
+    FORT_CONF_APP_FIND_RESULT app = { 0 };
+
+    if (app_entry != NULL) {
+        app.data = app_entry->app_data;
+        app.rule = fort_conf_app_entry_rule(app_entry);
+    }
+
+    return app;
+}
+
+FORT_API FORT_CONF_APP_FIND_RESULT fort_conf_app_exe_find(
+        PCFORT_CONF conf, PVOID context, PCFORT_APP_PATH path)
 {
     UNUSED(context);
 
@@ -451,10 +462,10 @@ FORT_API FORT_APP_DATA fort_conf_app_exe_find(PCFORT_CONF conf, PVOID context, P
         .app_equal_func = fort_conf_app_exe_equal,
     };
 
-    return fort_conf_app_find_loop(conf, path, &opt);
+    return fort_conf_app_entry_find_result(fort_conf_app_find_loop(conf, path, &opt));
 }
 
-inline static FORT_APP_DATA fort_conf_app_wild_find(PCFORT_CONF conf, PCFORT_APP_PATH path)
+inline static PCFORT_APP_ENTRY fort_conf_app_wild_find(PCFORT_CONF conf, PCFORT_APP_PATH path)
 {
     const FORT_CONF_APP_FIND_LOOP_OPT opt = {
         .apps_off = conf->wild_apps_off,
@@ -514,13 +525,11 @@ static BOOL fort_conf_app_prefix_find_entry(PFORT_CONF_APP_PREFIX_FIND_ARG pfa)
     return res;
 }
 
-inline static FORT_APP_DATA fort_conf_app_prefix_find(PCFORT_CONF conf, PCFORT_APP_PATH path)
+inline static PCFORT_APP_ENTRY fort_conf_app_prefix_find(PCFORT_CONF conf, PCFORT_APP_PATH path)
 {
-    const FORT_APP_DATA app_data = { 0 };
-
     const UINT16 count = conf->prefix_apps_n;
     if (count == 0)
-        return app_data;
+        return NULL;
 
     const UINT32 *app_offsets = (const UINT32 *) (conf->data + conf->prefix_apps_off);
 
@@ -535,7 +544,7 @@ inline static FORT_APP_DATA fort_conf_app_prefix_find(PCFORT_CONF conf, PCFORT_A
     while (fort_conf_app_prefix_find_entry(&pfa)) {
         /* The greatest prefix of the path is the longest one */
         if (pfa.common_n == pfa.app_entry->path_len / sizeof(WCHAR)) {
-            return pfa.app_entry->app_data;
+            return pfa.app_entry;
         }
 
         /* Shorter prefixes are prefixes of the common part too and are less than the entry */
@@ -543,25 +552,22 @@ inline static FORT_APP_DATA fort_conf_app_prefix_find(PCFORT_CONF conf, PCFORT_A
         pfa.high = pfa.index - 1;
     }
 
-    return app_data;
+    return NULL;
 }
 
-FORT_API FORT_APP_DATA fort_conf_app_find(PCFORT_CONF conf, PCFORT_APP_PATH path,
+FORT_API FORT_CONF_APP_FIND_RESULT fort_conf_app_find(PCFORT_CONF conf, PCFORT_APP_PATH path,
         fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context)
 {
-    FORT_APP_DATA app_data;
+    const FORT_CONF_APP_FIND_RESULT app = exe_find_func(conf, exe_context, path);
+    if (app.data.flags.found != 0)
+        return app;
 
-    app_data = exe_find_func(conf, exe_context, path);
-    if (app_data.flags.found != 0)
-        return app_data;
+    PCFORT_APP_ENTRY app_entry = fort_conf_app_wild_find(conf, path);
+    if (app_entry == NULL) {
+        app_entry = fort_conf_app_prefix_find(conf, path);
+    }
 
-    app_data = fort_conf_app_wild_find(conf, path);
-    if (app_data.flags.found != 0)
-        return app_data;
-
-    app_data = fort_conf_app_prefix_find(conf, path);
-
-    return app_data;
+    return fort_conf_app_entry_find_result(app_entry);
 }
 
 inline static BOOL fort_conf_rules_rt_conn_filtered_zones_result(PFORT_CONF_META_CONN conn,
@@ -1058,20 +1064,9 @@ inline static BOOL fort_conf_rules_rt_rule_active(
     return (rules_rt->active_periods_mask & ((UINT64) 1 << (period_id - 1))) != 0;
 }
 
-static BOOL fort_conf_rules_rt_conn_filtered_depth(
-        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id, int depth)
+static BOOL fort_conf_rules_rt_rule_conn_filtered(
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule, int depth)
 {
-    if (depth > FORT_CONF_RULE_SET_LOOP_DEPTH_MAX)
-        return FALSE;
-
-    if (!fort_conf_rules_rt_rule_exists(rules_rt, rule_id))
-        return FALSE;
-
-    PCFORT_CONF_RULE rule = fort_conf_rules_rt_rule(rules_rt, rule_id);
-
-    if (!fort_conf_rules_rt_rule_active(rules_rt, rule))
-        return FALSE;
-
     const FORT_CONF_CONN_ACTIONS act = conn->act;
 
     if (!fort_conf_rules_rt_conn_filtered_check(rules_rt, conn, rule, depth)) {
@@ -1088,10 +1083,35 @@ static BOOL fort_conf_rules_rt_conn_filtered_depth(
     return TRUE;
 }
 
+static BOOL fort_conf_rules_rt_conn_filtered_depth(
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id, int depth)
+{
+    if (depth > FORT_CONF_RULE_SET_LOOP_DEPTH_MAX)
+        return FALSE;
+
+    if (!fort_conf_rules_rt_rule_exists(rules_rt, rule_id))
+        return FALSE;
+
+    PCFORT_CONF_RULE rule = fort_conf_rules_rt_rule(rules_rt, rule_id);
+
+    if (!fort_conf_rules_rt_rule_active(rules_rt, rule))
+        return FALSE;
+
+    return fort_conf_rules_rt_rule_conn_filtered(rules_rt, conn, rule, depth);
+}
+
 FORT_API BOOL fort_conf_rules_rt_conn_filtered(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
     return fort_conf_rules_rt_conn_filtered_depth(rules_rt, conn, rule_id, /*depth=*/0);
+}
+
+FORT_API BOOL fort_conf_app_rule_conn_filtered(PCFORT_CONF_RULE rule, PFORT_CONF_META_CONN conn)
+{
+    /* The Program's rule has no zones and set to look up */
+    const FORT_CONF_RULES_RT rules_rt = { 0 };
+
+    return fort_conf_rules_rt_rule_conn_filtered(&rules_rt, conn, rule, /*depth=*/0);
 }
 
 FORT_API UINT16 fort_conf_rules_glob_conn_filtered(

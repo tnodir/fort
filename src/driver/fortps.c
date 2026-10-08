@@ -545,8 +545,11 @@ inline static FORT_APP_DATA fort_pstree_find_app_data(PFORT_CONF_REF conf_ref, P
 {
     PCFORT_CONF conf = &conf_ref->conf;
 
-    return conf->proc_wild ? fort_conf_app_find(conf, path, fort_conf_exe_find, conf_ref)
-                           : fort_conf_exe_find(conf, conf_ref, path);
+    const FORT_CONF_APP_FIND_RESULT app = conf->proc_wild
+            ? fort_conf_app_find(conf, path, fort_conf_exe_find, conf_ref)
+            : fort_conf_exe_find(conf, conf_ref, path);
+
+    return app.data;
 }
 
 static void fort_pstree_check_proc_inheritance(

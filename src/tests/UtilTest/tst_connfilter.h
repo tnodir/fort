@@ -146,9 +146,9 @@ DriverCommon::ConnFilterResult ConnFilterTest::connFilter(
         .drvGroups = m_groupsBuf.dataOrNull(),
     };
 
-    const FORT_APP_DATA appData = DriverCommon::confAppFind(drvConf, appPath);
+    const FORT_CONF_APP_FIND_RESULT app = DriverCommon::confAppFind(drvConf, appPath);
 
-    return DriverCommon::confConnFilter(cf, &conn, appData);
+    return DriverCommon::confConnFilter(cf, &conn, app);
 }
 
 bool ConnFilterTest::connAllowed(const QString &appPath, FORT_CONF_META_CONN &conn)
@@ -538,6 +538,58 @@ TEST_F(ConnFilterTest, globalRules)
     conn = connFilterConn("2.2.2.2");
     ASSERT_FALSE(connAllowed("C:\\App\\unknown.exe", conn));
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_RULE_GLOB_POST);
+}
+
+TEST_F(ConnFilterTest, appFilters)
+{
+    App filtersApp = wildcardApp("C:\\App\\filters.exe");
+    filtersApp.filtersText = "IP(1.1.1.1):Act(Block)\n"
+                             "IP(2.2.2.2):Act(Allow)\n"
+                             "# Terminating\n"
+                             "Act(Drop):Opt(Alert)";
+
+    App prefixApp = wildcardApp("C:\\Prefix\\**");
+    prefixApp.filtersText = "IP(1.1.1.1):Act(Block)";
+
+    App ruleApp = wildcardApp("C:\\App\\rule.exe");
+    ruleApp.ruleId = 1;
+    ruleApp.filtersText = "IP(1.1.1.1):Act(Block)";
+
+    m_apps << filtersApp << prefixApp << ruleApp;
+    writeConf();
+
+    writeRules(TestRuleList({ { .ruleId = 1, .ruleText = "1.1.1.1" } }));
+
+    // Filters
+    FORT_CONF_META_CONN conn = connFilterConn("1.1.1.1");
+    ASSERT_FALSE(connAllowed("C:\\App\\filters.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM_FILTER);
+    ASSERT_FALSE(conn.act.drop_blocked);
+
+    conn = connFilterConn("2.2.2.2");
+    ASSERT_TRUE(connAllowed("C:\\App\\filters.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM_FILTER);
+
+    // Terminating Rule
+    conn = connFilterConn("3.3.3.3");
+    ASSERT_FALSE(connAllowed("C:\\App\\filters.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM_FILTER);
+    ASSERT_TRUE(conn.act.drop_blocked);
+    ASSERT_TRUE(conn.act.conn_alert);
+
+    // Prefix app's filters, without the Terminating Rule
+    conn = connFilterConn("1.1.1.1");
+    ASSERT_FALSE(connAllowed("C:\\Prefix\\app.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM_FILTER);
+
+    conn = connFilterConn("3.3.3.3");
+    ASSERT_TRUE(connAllowed("C:\\Prefix\\app.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM);
+
+    // The Program's Rule is checked before its filters
+    conn = connFilterConn("1.1.1.1");
+    ASSERT_TRUE(connAllowed("C:\\App\\rule.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_RULE);
 }
 
 TEST_F(ConnFilterTest, appZones)

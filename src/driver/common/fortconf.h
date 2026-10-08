@@ -389,6 +389,10 @@ typedef struct fort_app_entry
 {
     FORT_APP_DATA app_data;
 
+    /* The Program's Network Filters: the rule without zones, set and Time Period, after the path,
+     * 0 - none */
+    UINT32 rule_size;
+
     UINT16 path_len;
 
     WCHAR path[2];
@@ -397,8 +401,25 @@ typedef struct fort_app_entry
 typedef const FORT_APP_ENTRY *PCFORT_APP_ENTRY;
 
 #define FORT_CONF_APP_ENTRY_PATH_OFF offsetof(FORT_APP_ENTRY, path)
-#define FORT_CONF_APP_ENTRY_SIZE(path_len)                                                         \
+#define FORT_CONF_APP_ENTRY_RULE_OFF(path_len)                                                     \
     (FORT_CONF_APP_ENTRY_PATH_OFF + (path_len) + sizeof(WCHAR)) /* include terminating zero */
+#define FORT_CONF_APP_ENTRY_SIZE(path_len, rule_size)                                              \
+    (FORT_CONF_APP_ENTRY_RULE_OFF(path_len) + (rule_size))
+
+#define fort_conf_app_entry_size(app_entry)                                                        \
+    FORT_CONF_APP_ENTRY_SIZE((app_entry)->path_len, (app_entry)->rule_size)
+
+#define fort_conf_app_entry_rule(app_entry)                                                        \
+    ((app_entry)->rule_size == 0 ? NULL                                                            \
+                                 : (PCFORT_CONF_RULE) ((PCCH) (app_entry)                          \
+                                           + FORT_CONF_APP_ENTRY_RULE_OFF((app_entry)->path_len)))
+
+typedef struct fort_conf_app_find_result
+{
+    FORT_APP_DATA data;
+
+    PCFORT_CONF_RULE rule; /* the Program's Network Filters, NULL - none */
+} FORT_CONF_APP_FIND_RESULT, *PFORT_CONF_APP_FIND_RESULT;
 
 #define FORT_PATH_BUFFER_DATA_MIN      (128 + 32)
 #define FORT_PATH_BUFFER_DATA_MIN_SIZE (FORT_PATH_BUFFER_DATA_MIN * sizeof(WCHAR))
@@ -463,7 +484,7 @@ typedef struct fort_conf_meta_conn
     ip_addr_t local_ip;
     ip_addr_t remote_ip;
 
-    FORT_APP_DATA app_data;
+    FORT_CONF_APP_FIND_RESULT app;
 
     FORT_APP_PATH path;
     FORT_APP_PATH real_path;
@@ -616,7 +637,7 @@ typedef struct fort_conf_zones_conn_filtered_opt
 #define FORT_CONF_ADDR_LIST_SIZE(ip4_n, pair4_n, ip6_n, pair6_n)                                   \
     (FORT_CONF_ADDR4_LIST_SIZE(ip4_n, pair4_n) + FORT_CONF_ADDR6_LIST_SIZE(ip6_n, pair6_n))
 
-typedef FORT_APP_DATA fort_conf_app_exe_find_func(
+typedef FORT_CONF_APP_FIND_RESULT fort_conf_app_exe_find_func(
         PCFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);
 
 typedef BOOL fort_conf_zones_ip_included_func(
@@ -662,14 +683,19 @@ FORT_API UINT16 fort_conf_groups_rules_conn_filtered(PCFORT_CONF_GROUPS groups,
 
 FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path);
 
-FORT_API FORT_APP_DATA fort_conf_app_exe_find(
+FORT_API FORT_CONF_APP_FIND_RESULT fort_conf_app_entry_find_result(PCFORT_APP_ENTRY app_entry);
+
+FORT_API FORT_CONF_APP_FIND_RESULT fort_conf_app_exe_find(
         PCFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);
 
-FORT_API FORT_APP_DATA fort_conf_app_find(PCFORT_CONF conf, PCFORT_APP_PATH path,
+FORT_API FORT_CONF_APP_FIND_RESULT fort_conf_app_find(PCFORT_CONF conf, PCFORT_APP_PATH path,
         fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context);
 
 FORT_API BOOL fort_conf_rules_rt_conn_filtered(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id);
+
+/* Checks the Program's Network Filters' rule */
+FORT_API BOOL fort_conf_app_rule_conn_filtered(PCFORT_CONF_RULE rule, PFORT_CONF_META_CONN conn);
 
 #define fort_conf_rules_glob_rule_id(glob, is_post)                                                \
     ((is_post) ? (glob).post_rule_id : (glob).pre_rule_id)

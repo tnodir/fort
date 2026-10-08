@@ -259,7 +259,7 @@ FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN
         if (NT_SUCCESS(status)) {
             switch (log_type) {
             case FORT_BUFFER_CONN_WRITE_APP: {
-                const BOOL blocked = conn->app_data.flags.blocked;
+                const BOOL blocked = conn->app.data.flags.blocked;
 
                 fort_log_app_write(out, blocked, conn->process_id, &log_path);
             } break;
@@ -267,7 +267,7 @@ FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN
                 fort_log_conn_write(out, conn, &log_path, &inherit_path);
             } break;
             case FORT_BUFFER_CONN_WRITE_PROC_NEW: {
-                fort_log_proc_new_write(out, conn->app_data.app_id, conn->process_id, &log_path);
+                fort_log_proc_new_write(out, conn->app.data.app_id, conn->process_id, &log_path);
             } break;
             }
         }

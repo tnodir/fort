@@ -32,26 +32,28 @@ static PFORT_CONF_EXE_NODE fort_conf_ref_exe_find_node(
     return NULL;
 }
 
-FORT_API FORT_APP_DATA fort_conf_exe_find(PCFORT_CONF conf, PVOID context, PCFORT_APP_PATH path)
+FORT_API FORT_CONF_APP_FIND_RESULT fort_conf_exe_find(
+        PCFORT_CONF conf, PVOID context, PCFORT_APP_PATH path)
 {
     UNUSED(conf);
 
     PFORT_CONF_REF conf_ref = context;
     const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path->buffer, path->len);
 
-    FORT_APP_DATA app_data = { 0 };
+    FORT_CONF_APP_FIND_RESULT app = { 0 };
 
     KIRQL oldIrql = ExAcquireSpinLockShared(&conf_ref->conf_lock);
     {
         PCFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(conf_ref, path, path_hash);
 
         if (node != NULL) {
-            app_data = node->app_entry->app_data;
+            /* The entry with the Program's Network Filters is kept till the conf's deletion */
+            app = fort_conf_app_entry_find_result(node->app_entry);
         }
     }
     ExReleaseSpinLockShared(&conf_ref->conf_lock, oldIrql);
 
-    return app_data;
+    return app;
 }
 
 static void fort_conf_ref_exe_new_path(
@@ -79,18 +81,20 @@ static void fort_conf_ref_exe_new_path(
     ++conf->exe_apps_n;
 }
 
-static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY app_entry,
-        PCFORT_APP_PATH path, tommy_key_t path_hash)
+static PFORT_APP_ENTRY fort_conf_ref_exe_alloc_entry(
+        PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
 {
     const UINT16 path_len = path->len;
+    const UINT32 rule_size = app_entry->rule_size;
 
-    const UINT32 entry_size = FORT_CONF_APP_ENTRY_SIZE(path_len);
+    const UINT32 entry_size = FORT_CONF_APP_ENTRY_SIZE(path_len, rule_size);
     PFORT_APP_ENTRY entry = fort_pool_malloc(&conf_ref->pool_list, entry_size);
 
     if (entry == NULL)
-        return STATUS_INSUFFICIENT_RESOURCES;
+        return NULL;
 
     entry->app_data = app_entry->app_data;
+    entry->rule_size = rule_size;
     entry->path_len = path_len;
 
     /* Copy the path */
@@ -99,8 +103,58 @@ static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref, PCFORT_APP_
         entry->path[path_len / sizeof(WCHAR)] = L'\0';
     }
 
+    /* Copy the Program's Network Filters */
+    if (rule_size != 0) {
+        RtlCopyMemory((PCHAR) entry + FORT_CONF_APP_ENTRY_RULE_OFF(path_len),
+                fort_conf_app_entry_rule(app_entry), rule_size);
+    }
+
+    return entry;
+}
+
+static void fort_conf_ref_exe_free_entry(PFORT_CONF_REF conf_ref, PFORT_APP_ENTRY entry)
+{
+    /* The Program's Network Filters are checked without the lock: free them with the conf */
+    if (entry->rule_size != 0)
+        return;
+
+    fort_pool_free(&conf_ref->pool_list, entry);
+}
+
+static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY app_entry,
+        PCFORT_APP_PATH path, tommy_key_t path_hash)
+{
+    PFORT_APP_ENTRY entry = fort_conf_ref_exe_alloc_entry(conf_ref, app_entry, path);
+
+    if (entry == NULL)
+        return STATUS_INSUFFICIENT_RESOURCES;
+
     /* Add exe node */
     fort_conf_ref_exe_new_path(conf_ref, entry, path_hash);
+
+    return STATUS_SUCCESS;
+}
+
+static NTSTATUS fort_conf_ref_exe_replace_entry(PFORT_CONF_REF conf_ref, PFORT_CONF_EXE_NODE node,
+        PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
+{
+    PFORT_APP_ENTRY entry = node->app_entry;
+    const UINT16 has_wildcard_app = entry->app_data.flags.has_wildcard_app;
+
+    /* An entry's Network Filters are not changed in place */
+    if (entry->rule_size != 0 || app_entry->rule_size != 0) {
+        PFORT_APP_ENTRY new_entry = fort_conf_ref_exe_alloc_entry(conf_ref, app_entry, path);
+
+        if (new_entry == NULL)
+            return STATUS_INSUFFICIENT_RESOURCES;
+
+        fort_conf_ref_exe_free_entry(conf_ref, entry);
+
+        node->app_entry = entry = new_entry;
+    }
+
+    entry->app_data = app_entry->app_data;
+    entry->app_data.flags.has_wildcard_app |= has_wildcard_app;
 
     return STATUS_SUCCESS;
 }
@@ -108,7 +162,7 @@ static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref, PCFORT_APP_
 static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref,
         PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path, tommy_key_t path_hash)
 {
-    PCFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(conf_ref, path, path_hash);
+    PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(conf_ref, path, path_hash);
 
     if (node == NULL) {
         return fort_conf_ref_exe_new_entry(conf_ref, app_entry, path, path_hash);
@@ -117,16 +171,7 @@ static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref,
     if (app_entry->app_data.flags.is_new)
         return FORT_STATUS_USER_ERROR;
 
-    /* Replace the app data */
-    {
-        PFORT_APP_ENTRY entry = node->app_entry;
-        const UINT16 has_wildcard_app = entry->app_data.flags.has_wildcard_app;
-
-        entry->app_data = app_entry->app_data;
-        entry->app_data.flags.has_wildcard_app |= has_wildcard_app;
-    }
-
-    return STATUS_SUCCESS;
+    return fort_conf_ref_exe_replace_entry(conf_ref, node, app_entry, path);
 }
 
 FORT_API NTSTATUS fort_conf_ref_exe_add_path(
@@ -172,7 +217,7 @@ static void fort_conf_ref_exe_fill(PFORT_CONF_REF conf_ref, PCFORT_CONF conf)
 
         fort_conf_ref_exe_add_entry(conf_ref, entry, TRUE);
 
-        app_entries += FORT_CONF_APP_ENTRY_SIZE(entry->path_len);
+        app_entries += fort_conf_app_entry_size(entry);
     }
 }
 
@@ -197,7 +242,7 @@ static NTSTATUS fort_conf_ref_exe_del_path_locked(
     }
 
     /* Delete from pool */
-    fort_pool_free(&conf_ref->pool_list, entry);
+    fort_conf_ref_exe_free_entry(conf_ref, entry);
 
     /* Delete from exe map */
     tommy_hashdyn_remove_existing(&conf_ref->exe_map, (tommy_hashdyn_node *) node);

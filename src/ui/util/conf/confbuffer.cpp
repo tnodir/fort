@@ -378,7 +378,7 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
 
     const auto it = appsMap.find(appPath);
     if (it != appsMap.end()) {
-        it->flags.has_wildcard_app |= app.isWildcard;
+        it->appData.flags.has_wildcard_app |= app.isWildcard;
         return true;
     }
 
@@ -390,8 +390,12 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
         return false;
     }
 
+    QByteArray ruleData;
+    if (!parseAppRule(app, ruleData))
+        return false;
+
     const quint16 appPathLen = quint16(appPathSize * sizeof(wchar_t));
-    const quint32 appSize = FORT_CONF_APP_ENTRY_SIZE(appPathLen);
+    const quint32 appSize = FORT_CONF_APP_ENTRY_SIZE(appPathLen, quint32(ruleData.size()));
 
     appsSize += appSize;
 
@@ -419,7 +423,29 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
         .zones = app.zones,
     };
 
-    appsMap.insert(appPath, appData);
+    appsMap.insert(appPath, { appData, ruleData });
+
+    return true;
+}
+
+bool ConfBuffer::parseAppRule(const App &app, QByteArray &ruleData)
+{
+    if (app.filtersText.isEmpty())
+        return true; // no Network Filters
+
+    Rule rule;
+    ConfUtil::parseAppFiltersText(app.filtersText, rule);
+
+    if (rule.ruleText.isEmpty() && !rule.terminate)
+        return true; // no Network Filters
+
+    ConfBuffer ruleBuf;
+    if (!ruleBuf.writeRuleData(rule)) {
+        setErrorMessage(ruleBuf.errorMessage());
+        return false;
+    }
+
+    ruleData = ruleBuf.buffer();
 
     return true;
 }

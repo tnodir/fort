@@ -21,7 +21,7 @@ inline static void fort_callout_ale_set_app_flags(
         PFORT_CONF_META_CONN conn, const FORT_APP_DATA app_data)
 {
     conn->app_data_filled = TRUE;
-    conn->app_data = app_data;
+    conn->app.data = app_data;
 }
 
 inline static void fort_callout_ale_fill_meta_path_real(PFORT_CONF_META_CONN conn,
@@ -140,17 +140,15 @@ static FORT_APP_DATA fort_callout_ale_conf_app_data(
         PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn, PFORT_CONF_REF conf_ref)
 {
     if (conn->app_data_filled) {
-        return conn->app_data;
+        return conn->app.data;
     }
 
     fort_callout_ale_fill_meta_path(ca, conn);
 
-    const FORT_APP_DATA app_data =
-            fort_conf_app_find(&conf_ref->conf, &conn->path, fort_conf_exe_find, conf_ref);
+    conn->app = fort_conf_app_find(&conf_ref->conf, &conn->path, fort_conf_exe_find, conf_ref);
+    conn->app_data_filled = TRUE;
 
-    fort_callout_ale_set_app_flags(conn, app_data);
-
-    return app_data;
+    return conn->app.data;
 }
 
 inline static void fort_callout_ale_associate_flow_log(

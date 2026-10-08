@@ -91,19 +91,20 @@ TEST_F(ConfUtilTest, confWriteRead)
     ASSERT_TRUE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("::ffff:0:2")));
     ASSERT_FALSE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("65::")));
 
-    ASSERT_TRUE(DriverCommon::confAppFind(data, "System").flags.found);
+    ASSERT_TRUE(DriverCommon::confAppFind(data, "System").data.flags.found);
 
     ASSERT_TRUE(DriverCommon::confAppFind(data, "C:\\Program Files\\Skype\\Phone\\Skype.exe")
-                    .flags.found);
-    ASSERT_TRUE(DriverCommon::confAppFind(data, "C:\\Utils\\Dev\\Git\\git.exe").flags.found);
-    ASSERT_TRUE(DriverCommon::confAppFind(data, "D:\\Utils\\Dev\\Git\\bin\\git.exe").flags.found);
-    ASSERT_TRUE(DriverCommon::confAppFind(data, "D:\\My\\Programs\\Test.exe").flags.found);
+                    .data.flags.found);
+    ASSERT_TRUE(DriverCommon::confAppFind(data, "C:\\Utils\\Dev\\Git\\git.exe").data.flags.found);
+    ASSERT_TRUE(
+            DriverCommon::confAppFind(data, "D:\\Utils\\Dev\\Git\\bin\\git.exe").data.flags.found);
+    ASSERT_TRUE(DriverCommon::confAppFind(data, "D:\\My\\Programs\\Test.exe").data.flags.found);
 
-    ASSERT_FALSE(DriverCommon::confAppFind(data, "C:\\Program Files\\Test.exe").flags.found);
+    ASSERT_FALSE(DriverCommon::confAppFind(data, "C:\\Program Files\\Test.exe").data.flags.found);
 
     const auto firefoxData =
             DriverCommon::confAppFind(data, "C:\\Utils\\Firefox\\Bin\\firefox.exe");
-    ASSERT_EQ(firefoxData.groups, 0u); // in no Group
+    ASSERT_EQ(firefoxData.data.groups, 0u); // in no Group
 }
 
 TEST_F(ConfUtilTest, stringCmp)
@@ -182,22 +183,22 @@ TEST_F(ConfUtilTest, confAppPrefixFind)
     const auto appFind = [&](const QString &path) { return DriverCommon::confAppFind(data, path); };
 
     // Nested prefixes
-    ASSERT_TRUE(appFind("C:\\A\\e.exe").flags.found);
-    ASSERT_FALSE(appFind("C:\\A\\e.exe").flags.blocked);
+    ASSERT_TRUE(appFind("C:\\A\\e.exe").data.flags.found);
+    ASSERT_FALSE(appFind("C:\\A\\e.exe").data.flags.blocked);
 
-    ASSERT_TRUE(appFind("C:\\A\\B\\x.exe").flags.blocked);
-    ASSERT_TRUE(appFind("C:\\A\\Z\\y.exe").flags.blocked);
+    ASSERT_TRUE(appFind("C:\\A\\B\\x.exe").data.flags.blocked);
+    ASSERT_TRUE(appFind("C:\\A\\Z\\y.exe").data.flags.blocked);
 
     // Non-Latin prefix is sorted by UTF-16 code units
-    ASSERT_TRUE(appFind("C:\\Я\\x.exe").flags.found);
-    ASSERT_FALSE(appFind("C:\\Я\\x.exe").flags.blocked);
+    ASSERT_TRUE(appFind("C:\\Я\\x.exe").data.flags.found);
+    ASSERT_FALSE(appFind("C:\\Я\\x.exe").data.flags.blocked);
 
-    ASSERT_TRUE(appFind("C:\\Z\\x.exe").flags.blocked);
+    ASSERT_TRUE(appFind("C:\\Z\\x.exe").data.flags.blocked);
 
     // Path shorter than the prefix
-    ASSERT_FALSE(appFind("C:\\A").flags.found);
+    ASSERT_FALSE(appFind("C:\\A").data.flags.found);
 
-    ASSERT_FALSE(appFind("C:\\B\\x.exe").flags.found);
+    ASSERT_FALSE(appFind("C:\\B\\x.exe").data.flags.found);
 }
 
 TEST_F(ConfUtilTest, checkEnvManager)
@@ -1336,6 +1337,64 @@ TEST_F(ConfUtilTest, appFiltersText)
     ASSERT_FALSE(rule.terminate);
 
     ASSERT_EQ(ConfUtil::appFiltersText(rule), "Port(80)");
+}
+
+TEST_F(ConfUtilTest, appFiltersValid)
+{
+    App app;
+    app.appPath = "C:\\App\\filters.exe";
+    app.filtersText = "IP(1.1.1.1):Act(Block)\n# Terminating\nAct(Block)";
+
+    ConfBuffer confBuf;
+    ASSERT_TRUE(confBuf.writeAppEntry(app));
+
+    const QByteArray buf = confBuf.buffer();
+
+    const auto appEntryValid = [](const QByteArray &buf) {
+        return DriverCommon::confAppEntryValid(buf.data(), quint32(buf.size()));
+    };
+
+    const auto appEntry = [](QByteArray &buf) { return PFORT_APP_ENTRY(buf.data()); };
+
+    ASSERT_TRUE(appEntryValid(buf));
+    ASSERT_EQ(quint32(buf.size()), fort_conf_app_entry_size(PCFORT_APP_ENTRY(buf.data())));
+
+    PCFORT_CONF_RULE rule = fort_conf_app_entry_rule(PCFORT_APP_ENTRY(buf.data()));
+    ASSERT_NE(rule, nullptr);
+    ASSERT_TRUE(rule->has_filters);
+    ASSERT_TRUE(rule->terminate);
+
+    // Truncated
+    ASSERT_FALSE(appEntryValid(buf.left(buf.size() - 2)));
+
+    // Invalid rule's size
+    {
+        QByteArray badBuf = buf;
+        appEntry(badBuf)->rule_size -= 2;
+
+        ASSERT_FALSE(appEntryValid(badBuf));
+
+        // Less than the rule's header
+        appEntry(badBuf)->rule_size = 2;
+
+        ASSERT_FALSE(appEntryValid(badBuf));
+    }
+
+    // The rule's set
+    {
+        QByteArray badBuf = buf;
+        PFORT_CONF_RULE badRule = PFORT_CONF_RULE(fort_conf_app_entry_rule(appEntry(badBuf)));
+        badRule->set_count = 1;
+
+        ASSERT_FALSE(appEntryValid(badBuf));
+    }
+
+    // No filters
+    app.filtersText = "# Terminating";
+
+    ConfBuffer noFiltersBuf;
+    ASSERT_TRUE(noFiltersBuf.writeAppEntry(app));
+    ASSERT_EQ(PCFORT_APP_ENTRY(noFiltersBuf.data())->rule_size, 0u);
 }
 
 TEST_F(ConfUtilTest, zonesValid)

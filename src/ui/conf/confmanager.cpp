@@ -1104,10 +1104,10 @@ bool ConfManager::simulateConn(FilterSimConn &simConn)
         .drvGroups = groupsBuf.dataOrNull(),
     };
 
-    const FORT_APP_DATA appData = DriverCommon::confAppFind(drvConf, simConn.appPath);
+    const FORT_CONF_APP_FIND_RESULT app = DriverCommon::confAppFind(drvConf, simConn.appPath);
 
-    simConn.result = DriverCommon::confConnFilter(cf, &simConn.conn, appData);
-    simConn.conn.app_data = appData;
+    simConn.result = DriverCommon::confConnFilter(cf, &simConn.conn, app);
+    simConn.conn.app.rule = nullptr; // points into the local conf buffer
 
     return true;
 }

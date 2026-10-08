@@ -68,10 +68,11 @@ QString reasonIconPath(const ConnRow &connRow)
         ":/icons/script_code_red.png",
         ":/icons/help.png",
         ":/icons/ip_block.png",
+        ":/icons/filter.png",
     };
 
     if (connRow.reason >= FORT_CONN_REASON_IP_INET
-            && connRow.reason <= FORT_CONN_REASON_BLOCK_INBOUND) {
+            && connRow.reason <= FORT_CONN_REASON_PROGRAM_FILTER) {
         const int index = connRow.reason - FORT_CONN_REASON_IP_INET;
         return reasonIcons[index];
     }
@@ -548,9 +549,10 @@ QString ConnListModel::reasonText(FortConnReason reason)
         QT_TR_NOOP("Global Rule after App Rules"),
         QT_TR_NOOP("Limit of Ask to Connect"),
         QT_TR_NOOP("Block Inbound"),
+        QT_TR_NOOP("Program's Network Filter"),
     };
 
-    if (reason >= FORT_CONN_REASON_IP_INET && reason <= FORT_CONN_REASON_BLOCK_INBOUND) {
+    if (reason >= FORT_CONN_REASON_IP_INET && reason <= FORT_CONN_REASON_PROGRAM_FILTER) {
         const int index = reason - FORT_CONN_REASON_IP_INET;
         return tr(reasonTexts[index]);
     }

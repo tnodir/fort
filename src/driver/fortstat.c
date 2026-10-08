@@ -317,7 +317,7 @@ inline static void fort_flow_opt_set(PCFORT_FLOW_ADD_ARG faa)
     PFORT_FLOW flow = faa->flow;
     PCFORT_CONF_META_CONN conn = faa->conn;
 
-    const FORT_SPEED_LIMIT_IDS speed_limits = conn->app_data.speed_limits;
+    const FORT_SPEED_LIMIT_IDS speed_limits = conn->app.data.speed_limits;
 
     const UCHAR speed_limit = fort_flow_speed_limit_flags(speed_limits);
 
@@ -366,7 +366,7 @@ inline static NTSTATUS fort_flow_add_old(
     assert(faa->flow->opt.proc_index == proc->proc_index);
 
     const FORT_SPEED_LIMIT_IDS speed_limits = faa->flow->speed_limits;
-    const FORT_SPEED_LIMIT_IDS new_speed_limits = conn->app_data.speed_limits;
+    const FORT_SPEED_LIMIT_IDS new_speed_limits = conn->app.data.speed_limits;
 
     /* Keep the changed Speed Limits: their queues may have the flow's packets */
     if (speed_limits.in_limit_id != new_speed_limits.in_limit_id
@@ -528,7 +528,7 @@ FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, PCFORT_CONF_META_CONN con
             proc->proc_stat = TRUE;
 
             /* The not found (e.g. new) app's traffic is collected too */
-            const FORT_APP_FLAGS app_flags = conn->app_data.flags;
+            const FORT_APP_FLAGS app_flags = conn->app.data.flags;
 
             proc->log_stat = (app_flags.found == 0 || app_flags.log_stat);
         } else if (is_new_proc) {

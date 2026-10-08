@@ -417,7 +417,7 @@ bool confIp6InRange(const void *drvConf, const ip6_addr_t ip, bool included, int
     return fort_conf_ip_inlist(addr_list, ip_addr, /*isIPv6=*/true);
 }
 
-FORT_APP_DATA confAppFind(const void *drvConf, const QString &appPath)
+FORT_CONF_APP_FIND_RESULT confAppFind(const void *drvConf, const QString &appPath)
 {
     PCFORT_CONF conf = PCFORT_CONF(drvConf);
     const QString normPath = FileUtil::normalizePath(appPath);
@@ -427,10 +427,7 @@ FORT_APP_DATA confAppFind(const void *drvConf, const QString &appPath)
         .buffer = normPath.utf16(),
     };
 
-    const FORT_APP_DATA app_data =
-            fort_conf_app_find(conf, &path, fort_conf_app_exe_find, /*exe_context=*/nullptr);
-
-    return app_data;
+    return fort_conf_app_find(conf, &path, fort_conf_app_exe_find, /*exe_context=*/nullptr);
 }
 
 bool wildMatch(const QString &pattern, const QString &text)
@@ -491,9 +488,11 @@ bool confRulesConnBlocked(const void *drvRules, PFORT_CONF_META_CONN conn, quint
 }
 
 ConnFilterResult confConnFilter(
-        const ConnFilterConf &cf, PFORT_CONF_META_CONN conn, const FORT_APP_DATA &appData)
+        const ConnFilterConf &cf, PFORT_CONF_META_CONN conn, const FORT_CONF_APP_FIND_RESULT &app)
 {
     *conn = connFilterInput(conn); // reset the results
+
+    conn->app = app;
 
     PCFORT_CONF conf = &PCFORT_CONF_IO(cf.drvConfIo)->conf;
 
@@ -508,7 +507,7 @@ ConnFilterResult confConnFilter(
     };
 
     if (!fort_conf_conn_flags_filtered(&filter, conn)) {
-        fort_conf_conn_app_allowed(&filter, conn, appData);
+        fort_conf_conn_app_allowed(&filter, conn, app.data);
     }
 
     return connFilterResult(conn);
@@ -517,6 +516,11 @@ ConnFilterResult confConnFilter(
 bool confIoValid(const void *drvConfIo, quint32 len)
 {
     return fort_conf_io_valid(PCFORT_CONF_IO(drvConfIo), len);
+}
+
+bool confAppEntryValid(const void *drvAppEntry, quint32 len)
+{
+    return fort_conf_app_entry_valid(PCFORT_APP_ENTRY(drvAppEntry), len);
 }
 
 bool confZonesValid(const void *drvZones, quint32 len)

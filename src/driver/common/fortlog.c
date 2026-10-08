@@ -57,7 +57,7 @@ FORT_API void fort_log_conn_header_write(
     *up++ = conn->reason | ((UINT32) conn->ip_proto << 8);
     *up++ = ((UINT32) conn->rule_id) | ((UINT32) conn->act.zone_id << 16);
     *up++ = conn->local_port | ((UINT32) conn->remote_port << 16);
-    *up++ = conn->app_data.app_id;
+    *up++ = conn->app.data.app_id;
     *up++ = conn->process_id;
     *up++ = path_len | ((UINT32) inherit_path_len << 16);
 
@@ -110,7 +110,7 @@ FORT_API void fort_log_conn_header_read(
     conn->remote_port = (UINT16) (v >> 16);
 
     v = *up++;
-    conn->app_data.app_id = v;
+    conn->app.data.app_id = v;
 
     v = *up++;
     conn->process_id = v;

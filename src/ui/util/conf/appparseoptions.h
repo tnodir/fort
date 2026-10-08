@@ -9,8 +9,15 @@
 
 #include "addressrange.h"
 
+struct AppEntryData
+{
+    FORT_APP_DATA appData;
+
+    QByteArray ruleData; // the Program's Network Filters' rule, written after the path
+};
+
 using addrranges_arr_t = QVarLengthArray<AddressRange, 2>;
-using appdata_map_t = QMap<QString, FORT_APP_DATA>;
+using appdata_map_t = QMap<QString, AppEntryData>;
 
 class AppParseOptions
 {

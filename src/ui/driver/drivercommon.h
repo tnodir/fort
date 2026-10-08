@@ -99,7 +99,7 @@ bool confIp4InRange(const void *drvConf, quint32 ip, bool included = false, int 
 bool confIp6InRange(
         const void *drvConf, const ip6_addr_t ip, bool included = false, int addrGroupIndex = 0);
 
-FORT_APP_DATA confAppFind(const void *drvConf, const QString &appPath);
+FORT_CONF_APP_FIND_RESULT confAppFind(const void *drvConf, const QString &appPath);
 
 bool wildMatch(const QString &pattern, const QString &text);
 bool wildMatchPath(const QString &pattern, const QString &path);
@@ -114,9 +114,10 @@ bool confRulesConnBlocked(const void *drvRules, PFORT_CONF_META_CONN conn, quint
 
 // The conn's input: direction, IP version, profile, loopback, protocol, addresses and ports
 ConnFilterResult confConnFilter(
-        const ConnFilterConf &cf, PFORT_CONF_META_CONN conn, const FORT_APP_DATA &appData);
+        const ConnFilterConf &cf, PFORT_CONF_META_CONN conn, const FORT_CONF_APP_FIND_RESULT &app);
 
 bool confIoValid(const void *drvConfIo, quint32 len);
+bool confAppEntryValid(const void *drvAppEntry, quint32 len);
 bool confZonesValid(const void *drvZones, quint32 len);
 bool confRulesValid(const void *drvRules, quint32 len);
 

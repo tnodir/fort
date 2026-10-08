@@ -7,7 +7,8 @@
 extern "C" {
 #endif
 
-FORT_API FORT_APP_DATA fort_conf_exe_find(PCFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);
+FORT_API FORT_CONF_APP_FIND_RESULT fort_conf_exe_find(
+        PCFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);
 
 FORT_API NTSTATUS fort_conf_ref_exe_add_path(
         PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path);

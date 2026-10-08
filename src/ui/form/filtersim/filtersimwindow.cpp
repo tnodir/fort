@@ -581,7 +581,7 @@ void FilterSimWindow::updateResult()
     m_resultReason->setText(ConnListModel::reasonText(FortConnReason(conn.reason)));
     m_resultRule->setText(ruleText(conn.rule_id));
     m_resultZone->setText(zoneText(conn.act.zone_id));
-    m_resultProgram->setText(appText(conn.app_data));
+    m_resultProgram->setText(appText(conn.app.data));
 }
 
 void FilterSimWindow::clearResult()

@@ -252,24 +252,29 @@ void ConfData::writeApps(const appdata_map_t &appsMap, bool useHeader)
     }
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
-    for (const auto &[kernelPath, appData] : appsMap.asKeyValueRange()) {
+    for (const auto &[kernelPath, appEntryData] : appsMap.asKeyValueRange()) {
 #else
     auto it = appsMap.constBegin();
     for (; it != appsMap.constEnd(); ++it) {
         const auto &kernelPath = it.key();
-        const auto &appData = it.value();
+        const auto &appEntryData = it.value();
 #endif
         const int kernelPathSize = kernelPath.size();
+        const QByteArray &ruleData = appEntryData.ruleData;
+        const quint32 ruleSize = quint32(ruleData.size());
 
         const quint16 appPathLen = quint16(kernelPathSize * sizeof(wchar_t));
-        const quint32 appSize = FORT_CONF_APP_ENTRY_SIZE(appPathLen);
+        const quint32 appSize = FORT_CONF_APP_ENTRY_SIZE(appPathLen, ruleSize);
 
         PFORT_APP_ENTRY entry = PFORT_APP_ENTRY(p);
-        entry->app_data = appData;
+        entry->app_data = appEntryData.appData;
+        entry->rule_size = ruleSize;
         entry->path_len = appPathLen;
 
         kernelPath.toWCharArray(entry->path);
         entry->path[kernelPathSize] = L'\0';
+
+        memcpy(p + FORT_CONF_APP_ENTRY_RULE_OFF(appPathLen), ruleData.constData(), ruleSize);
 
         off += appSize;
         if (useHeader) {

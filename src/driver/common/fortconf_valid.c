@@ -83,6 +83,24 @@ static BOOL fort_conf_addr_groups_valid(const char *data, UINT32 len)
     return TRUE;
 }
 
+static BOOL fort_conf_rule_data_valid(PCFORT_CONF_RULE rule, UINT32 len, UINT32 *rule_size);
+
+static BOOL fort_conf_app_entry_rule_valid(PCFORT_APP_ENTRY app_entry)
+{
+    const UINT32 rule_size = app_entry->rule_size;
+    if (rule_size == 0)
+        return TRUE;
+
+    PCFORT_CONF_RULE rule = fort_conf_app_entry_rule(app_entry);
+
+    UINT32 size;
+    if (!fort_conf_rule_data_valid(rule, rule_size, &size) || size != rule_size)
+        return FALSE;
+
+    /* The Program's rule has no zones and set */
+    return !rule->has_zones && rule->set_count == 0;
+}
+
 FORT_API BOOL fort_conf_app_entry_valid(PCFORT_APP_ENTRY app_entry, UINT32 len)
 {
     if (len < FORT_CONF_APP_ENTRY_PATH_OFF)
@@ -90,8 +108,14 @@ FORT_API BOOL fort_conf_app_entry_valid(PCFORT_APP_ENTRY app_entry, UINT32 len)
 
     const UINT16 path_len = app_entry->path_len;
 
-    return FORT_CONF_APP_ENTRY_SIZE(path_len) <= len
-            && app_entry->path[path_len / sizeof(WCHAR)] == L'\0';
+    const UINT32 rule_off = FORT_CONF_APP_ENTRY_RULE_OFF(path_len);
+    if (rule_off > len || app_entry->rule_size > len - rule_off)
+        return FALSE;
+
+    if (app_entry->path[path_len / sizeof(WCHAR)] != L'\0')
+        return FALSE;
+
+    return fort_conf_app_entry_rule_valid(app_entry);
 }
 
 static BOOL fort_conf_app_entries_valid(const char *data, UINT32 len, UINT16 count)
@@ -102,7 +126,7 @@ static BOOL fort_conf_app_entries_valid(const char *data, UINT32 len, UINT16 cou
         if (!fort_conf_app_entry_valid(app_entry, len))
             return FALSE;
 
-        const UINT32 entry_size = FORT_CONF_APP_ENTRY_SIZE(app_entry->path_len);
+        const UINT32 entry_size = fort_conf_app_entry_size(app_entry);
 
         data += entry_size;
         len -= entry_size;
@@ -296,31 +320,40 @@ static BOOL fort_conf_rule_filter_valid(
     return fort_conf_rule_filter_values_valid(filter_type, data, data_len);
 }
 
-static BOOL fort_conf_rule_valid(
-        PCFORT_CONF_RULES_RT rules_rt, UINT32 rule_off, UINT32 data_len, UINT32 *rule_end)
+static BOOL fort_conf_rule_data_valid(PCFORT_CONF_RULE rule, UINT32 len, UINT32 *rule_size)
 {
-    const UINT32 len = data_len - rule_off;
-
     if (len < sizeof(FORT_CONF_RULE))
         return FALSE;
-
-    PCFORT_CONF_RULE rule = (PCFORT_CONF_RULE) (rules_rt->rules_data + rule_off);
 
     if (rule->period_id > FORT_CONF_PERIOD_MAX)
         return FALSE;
 
-    UINT32 rule_size = FORT_CONF_RULE_SIZE(rule);
-    if (rule_size > len)
+    UINT32 size = FORT_CONF_RULE_SIZE(rule);
+    if (size > len)
         return FALSE;
 
     if (rule->has_filters) {
-        PCFORT_CONF_RULE_FILTER rule_filter = (PCFORT_CONF_RULE_FILTER) ((PCCH) rule + rule_size);
+        PCFORT_CONF_RULE_FILTER rule_filter = (PCFORT_CONF_RULE_FILTER) ((PCCH) rule + size);
 
-        if (!fort_conf_rule_filter_valid(rule_filter, len - rule_size, /*list_depth=*/0))
+        if (!fort_conf_rule_filter_valid(rule_filter, len - size, /*list_depth=*/0))
             return FALSE;
 
-        rule_size += rule_filter->size;
+        size += rule_filter->size;
     }
+
+    *rule_size = size;
+
+    return TRUE;
+}
+
+static BOOL fort_conf_rule_valid(
+        PCFORT_CONF_RULES_RT rules_rt, UINT32 rule_off, UINT32 data_len, UINT32 *rule_end)
+{
+    PCFORT_CONF_RULE rule = (PCFORT_CONF_RULE) (rules_rt->rules_data + rule_off);
+
+    UINT32 rule_size;
+    if (!fort_conf_rule_data_valid(rule, data_len - rule_off, &rule_size))
+        return FALSE;
 
     *rule_end = rule_off + rule_size;
 
