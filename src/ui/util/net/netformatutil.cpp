@@ -84,3 +84,14 @@ QString NetFormatUtil::ipToText(const ip_addr_t ip, bool isIPv6)
 {
     return isIPv6 ? ip6ToText(ip.v6) : ip4ToText(ip.v4);
 }
+
+QString NetFormatUtil::ipToAddressText(const ip_addr_t ip, bool isIPv6)
+{
+    const QString text = ipToText(ip, isIPv6);
+
+    if (isIPv6) {
+        return '[' + text + ']';
+    }
+
+    return text;
+}

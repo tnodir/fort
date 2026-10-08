@@ -28,20 +28,14 @@ const QLoggingCategory LC("connListModel");
 
 QString formatIp(const ip_addr_t ip, bool isIPv6, bool resolveAddress = false)
 {
-    QString address = NetFormatUtil::ipToText(ip, isIPv6);
-
     if (resolveAddress) {
-        const QString hostName = hostInfoCache()->hostName(address);
+        const QString hostName = hostInfoCache()->hostName(NetFormatUtil::ipToText(ip, isIPv6));
         if (!hostName.isEmpty()) {
             return hostName;
         }
     }
 
-    if (isIPv6) {
-        address = '[' + address + ']';
-    }
-
-    return address;
+    return NetFormatUtil::ipToAddressText(ip, isIPv6);
 }
 
 QString formatPort(const quint16 port, int role)

@@ -48,6 +48,17 @@ TEST_F(NetUtilTest, ip6Text)
     ASSERT_EQ(NetFormatUtil::ip6ToText(NetFormatUtil::textToIp6(ip6Str)), ip6Str);
 }
 
+TEST_F(NetUtilTest, ipAddressText)
+{
+    ip_addr_t ip;
+
+    ip.v4 = NetFormatUtil::textToIp4("172.16.0.1");
+    ASSERT_EQ(NetFormatUtil::ipToAddressText(ip), "172.16.0.1");
+
+    ip.v6 = NetFormatUtil::textToIp6("::1");
+    ASSERT_EQ(NetFormatUtil::ipToAddressText(ip, /*isIPv6=*/true), "[::1]");
+}
+
 TEST_F(NetUtilTest, ip6Bytes01)
 {
     const ip6_addr_t ip = NetFormatUtil::textToIp6("ff02::1:3");
