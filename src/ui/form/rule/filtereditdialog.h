@@ -119,7 +119,7 @@ private:
     QCheckBox *m_cbOptionNoLog = nullptr;
     QCheckBox *m_cbOptionAlert = nullptr;
     QGroupBox *m_gbText = nullptr;
-    LineEdit *m_editText = nullptr;
+    PlainTextEdit *m_editText = nullptr;
     QToolButton *m_btCopyText = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;

@@ -165,7 +165,7 @@ void FilterEditDialog::initialize(const FilterLineText &lineText, int row)
 
     const FilterLineText startText = isNewProgramFilter ? FilterLineText("Act(Allow)") : lineText;
 
-    m_editText->setStartText(startText.text());
+    m_editText->setText(startText.text());
 
     setFilterLine(startText);
 
@@ -539,14 +539,17 @@ QLayout *FilterEditDialog::setupOptionsLayout()
 void FilterEditDialog::setupTextBox()
 {
     // Text
-    m_editText = new LineEdit();
+    m_editText = new PlainTextEdit();
     m_editText->setReadOnly(true); // by the fields
+    m_editText->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+    m_editText->setFixedHeight(60); // 3 lines
 
     // Copy Text
     m_btCopyText = ControlUtil::createIconToolButton(
-            ":/icons/page_copy.png", [&] { GuiUtil::setClipboardData(m_editText->text()); });
+            ":/icons/page_copy.png", [&] { GuiUtil::setClipboardData(m_editText->toPlainText()); });
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_editText, m_btCopyText });
+    layout->setAlignment(m_btCopyText, Qt::AlignTop);
 
     m_gbText = new QGroupBox();
     m_gbText->setLayout(layout);
@@ -575,7 +578,7 @@ QLayout *FilterEditDialog::setupButtons()
 
 void FilterEditDialog::updateTextByFields()
 {
-    m_editText->setStartText(filterText());
+    m_editText->setText(filterText());
 }
 
 QString FilterEditDialog::filterText() const
@@ -664,14 +667,14 @@ bool FilterEditDialog::save()
     if (!validateEditText())
         return false;
 
-    emit filterSaved(m_editText->text().trimmed(), m_row);
+    emit filterSaved(m_editText->toPlainText().trimmed(), m_row);
 
     return true;
 }
 
 bool FilterEditDialog::validateEditText() const
 {
-    const QString text = m_editText->text().trimmed();
+    const QString text = m_editText->toPlainText().trimmed();
 
     if (text.isEmpty()) {
         m_editRemoteIps->setFocus();
