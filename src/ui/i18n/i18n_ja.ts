@@ -317,7 +317,7 @@
     </message>
     <message>
         <source>Program&apos;s Network Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>プログラムのネットワークフィルター</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -333,11 +333,11 @@
     </message>
     <message>
         <source>Loopback</source>
-        <translation type="unfinished"></translation>
+        <translation>ループバック</translation>
     </message>
     <message>
         <source>Inherited from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>継承元 : %1</translation>
     </message>
     <message>
         <source>Dropped</source>
@@ -384,7 +384,7 @@
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルターシミュレーター</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -459,7 +459,7 @@
     </message>
     <message>
         <source>%1d</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 日</translation>
     </message>
 </context>
 <context>
@@ -477,35 +477,35 @@
     </message>
     <message>
         <source>By &amp;Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>ルールによる(&amp;R)</translation>
     </message>
     <message>
         <source>The Rule&apos;s action is applied</source>
-        <translation type="unfinished"></translation>
+        <translation>ルールのアクションが適用されます</translation>
     </message>
     <message>
         <source>&amp;Allow</source>
-        <translation type="unfinished"></translation>
+        <translation>許可(&amp;A)</translation>
     </message>
     <message>
         <source>&amp;Block</source>
-        <translation type="unfinished"></translation>
+        <translation>ブロック(&amp;B)</translation>
     </message>
     <message>
         <source>&amp;Drop</source>
-        <translation type="unfinished"></translation>
+        <translation>破棄(&amp;D)</translation>
     </message>
     <message>
         <source>Block silently, without a response</source>
-        <translation type="unfinished"></translation>
+        <translation>応答なしでサイレントにブロックする</translation>
     </message>
     <message>
         <source>Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>方向 :</translation>
     </message>
     <message>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>すべて</translation>
     </message>
     <message>
         <source>Inbound</source>
@@ -513,19 +513,19 @@
     </message>
     <message>
         <source>Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>送信</translation>
     </message>
     <message>
         <source>Protocol:</source>
-        <translation type="unfinished"></translation>
+        <translation>プロトコル :</translation>
     </message>
     <message>
         <source>Area:</source>
-        <translation type="unfinished"></translation>
+        <translation>エリア :</translation>
     </message>
     <message>
         <source>Localhost</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルホスト</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -533,43 +533,43 @@
     </message>
     <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN : オプションの「ローカルエリアネットワーク」アドレスによる</translation>
     </message>
     <message>
         <source>Remote IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>リモート IP :</translation>
     </message>
     <message>
         <source>Remote Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>リモートポート :</translation>
     </message>
     <message>
         <source>Local IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカル IP :</translation>
     </message>
     <message>
         <source>Local Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルポート :</translation>
     </message>
     <message>
         <source>Options:</source>
-        <translation type="unfinished"></translation>
+        <translation>オプション :</translation>
     </message>
     <message>
         <source>Log</source>
-        <translation type="unfinished"></translation>
+        <translation>ログ</translation>
     </message>
     <message>
         <source>Collect the connection, even if the Rule doesn&apos;t</source>
-        <translation type="unfinished"></translation>
+        <translation>ルールが収集しない場合でも接続を収集する</translation>
     </message>
     <message>
         <source>No Log</source>
-        <translation type="unfinished"></translation>
+        <translation>ログなし</translation>
     </message>
     <message>
         <source>Don&apos;t collect the connection</source>
-        <translation type="unfinished"></translation>
+        <translation>接続を収集しない</translation>
     </message>
     <message>
         <source>Alert</source>
@@ -577,15 +577,15 @@
     </message>
     <message>
         <source>Collect the connection as alerted, also with &quot;Alerted only&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>接続を警告として収集する (「警告のみ」の場合も)</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation>テキスト</translation>
     </message>
     <message>
         <source>Copy Text</source>
-        <translation type="unfinished"></translation>
+        <translation>テキストをコピー</translation>
     </message>
     <message>
         <source>OK</source>
@@ -597,11 +597,11 @@
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルターを追加</translation>
     </message>
     <message>
         <source>Edit Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルターの編集</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -609,26 +609,26 @@
     </message>
     <message>
         <source>Not</source>
-        <translation type="unfinished"></translation>
+        <translation>除外</translation>
     </message>
     <message>
         <source>All, except these</source>
-        <translation type="unfinished"></translation>
+        <translation>これら以外のすべて</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>消去</translation>
     </message>
 </context>
 <context>
     <name>FilterSimController</name>
     <message>
         <source>Cannot simulate the connection</source>
-        <translation type="unfinished"></translation>
+        <translation>接続をシミュレートできません</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルターシミュレーター</translation>
     </message>
 </context>
 <context>
@@ -639,19 +639,19 @@
     </message>
     <message>
         <source>Ignored: other firewalls decide</source>
-        <translation type="unfinished"></translation>
+        <translation>無視 : 他のファイアウォールが決定します</translation>
     </message>
     <message>
         <source>Not found</source>
-        <translation type="unfinished"></translation>
+        <translation>見つかりません</translation>
     </message>
     <message>
         <source>Connection</source>
-        <translation type="unfinished"></translation>
+        <translation>接続</translation>
     </message>
     <message>
         <source>Program Path:</source>
-        <translation type="unfinished"></translation>
+        <translation>プログラムのパス :</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -659,47 +659,47 @@
     </message>
     <message>
         <source>Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>方向 :</translation>
     </message>
     <message>
         <source>Protocol:</source>
-        <translation type="unfinished"></translation>
+        <translation>プロトコル :</translation>
     </message>
     <message>
         <source>Remote IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>リモート IP :</translation>
     </message>
     <message>
         <source>Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>ポート :</translation>
     </message>
     <message>
         <source>Local IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカル IP :</translation>
     </message>
     <message>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>すべて</translation>
     </message>
     <message>
         <source>Loopback</source>
-        <translation type="unfinished"></translation>
+        <translation>ループバック</translation>
     </message>
     <message>
         <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
-        <translation type="unfinished"></translation>
+        <translation>このコンピューターのアドレスへの接続。アドレス 127.0.0.0/8 と ::1 は常にループバックです。</translation>
     </message>
     <message>
         <source>Network Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>ネットワークプロファイル :</translation>
     </message>
     <message>
         <source>Simulate</source>
-        <translation type="unfinished"></translation>
+        <translation>シミュレート</translation>
     </message>
     <message>
         <source>Result</source>
-        <translation type="unfinished"></translation>
+        <translation>結果</translation>
     </message>
     <message>
         <source>Action:</source>
@@ -707,7 +707,7 @@
     </message>
     <message>
         <source>Reason:</source>
-        <translation type="unfinished"></translation>
+        <translation>理由 :</translation>
     </message>
     <message>
         <source>Rule:</source>
@@ -715,31 +715,31 @@
     </message>
     <message>
         <source>Zone:</source>
-        <translation type="unfinished"></translation>
+        <translation>ゾーン :</translation>
     </message>
     <message>
         <source>Program:</source>
-        <translation type="unfinished"></translation>
+        <translation>プログラム :</translation>
     </message>
     <message>
         <source>The program is checked by its path: the settings propagated from a parent process aren&apos;t taken into account.</source>
-        <translation type="unfinished"></translation>
+        <translation>プログラムはそのパスで確認されます。親プロセスから継承された設定は考慮されません。</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルターシミュレーター</translation>
     </message>
     <message>
         <source>Public</source>
-        <translation type="unfinished"></translation>
+        <translation>パブリック</translation>
     </message>
     <message>
         <source>Private</source>
-        <translation type="unfinished"></translation>
+        <translation>プライベート</translation>
     </message>
     <message>
         <source>Domain</source>
-        <translation type="unfinished"></translation>
+        <translation>ドメイン</translation>
     </message>
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
@@ -747,15 +747,15 @@
     </message>
     <message>
         <source>Invalid remote IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>無効なリモート IP アドレス</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>無効なローカル IP アドレス</translation>
     </message>
     <message>
         <source>Invalid protocol</source>
-        <translation type="unfinished"></translation>
+        <translation>無効なプロトコル</translation>
     </message>
 </context>
 <context>
@@ -809,7 +809,7 @@
     </message>
     <message>
         <source>Install the Windows Service now?</source>
-        <translation type="unfinished"></translation>
+        <translation>今すぐ Windows サービスをインストールしますか?</translation>
     </message>
     <message>
         <source>Quota Alert</source>
@@ -879,15 +879,15 @@
     </message>
     <message>
         <source>Animation</source>
-        <translation type="unfinished"></translation>
+        <translation>アニメーション</translation>
     </message>
     <message>
         <source>Axis ticks</source>
-        <translation type="unfinished"></translation>
+        <translation>軸目盛り</translation>
     </message>
     <message>
         <source>Show:</source>
-        <translation type="unfinished"></translation>
+        <translation>表示 :</translation>
     </message>
     <message>
         <source>Total</source>
@@ -911,7 +911,7 @@
     </message>
     <message>
         <source>Bar width:</source>
-        <translation type="unfinished"></translation>
+        <translation>バー幅 :</translation>
     </message>
     <message>
         <source>Max seconds:</source>
@@ -919,7 +919,7 @@
     </message>
     <message>
         <source>Graph type:</source>
-        <translation type="unfinished"></translation>
+        <translation>グラフの種類 :</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -927,7 +927,7 @@
     </message>
     <message>
         <source>Border:</source>
-        <translation type="unfinished"></translation>
+        <translation>境界線 :</translation>
     </message>
     <message>
         <source>Download:</source>
@@ -939,7 +939,7 @@
     </message>
     <message>
         <source>Total:</source>
-        <translation type="unfinished"></translation>
+        <translation>合計 :</translation>
     </message>
     <message>
         <source>Axis:</source>
@@ -959,11 +959,11 @@
     </message>
     <message>
         <source>Column</source>
-        <translation type="unfinished"></translation>
+        <translation>縦棒</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation type="unfinished"></translation>
+        <translation>折れ線</translation>
     </message>
     <message>
         <source>Window</source>
@@ -1488,11 +1488,11 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Show Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>トラフィックを表示</translation>
     </message>
     <message>
         <source>Show Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>接続を表示</translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
@@ -1875,7 +1875,7 @@ Make sure that you have a fresh backup.</source>
     <name>ProgConnListPage</name>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルターを追加</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -2151,7 +2151,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルターを追加</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2446,11 +2446,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルターを追加</translation>
     </message>
     <message>
         <source>The Rule is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>ルールはこの時間帯でのみアクティブになります。</translation>
     </message>
     <message>
         <source>OK</source>
@@ -2486,7 +2486,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Presets</source>
-        <translation type="unfinished"></translation>
+        <translation>プリセット</translation>
     </message>
     <message>
         <source>More</source>
@@ -2736,15 +2736,15 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Each 5 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>5分ごと</translation>
     </message>
     <message>
         <source>Each 15 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>15分ごと</translation>
     </message>
     <message>
         <source>Each 30 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>30分ごと</translation>
     </message>
     <message>
         <source> minute(s)</source>
@@ -3141,7 +3141,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Interval, minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>間隔、分</translation>
     </message>
     <message>
         <source>Maximum retries count</source>
@@ -3164,7 +3164,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Drop</source>
-        <translation type="unfinished"></translation>
+        <translation>破棄</translation>
     </message>
     <message>
         <source>Alert</source>
@@ -3434,7 +3434,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルターシミュレーター</translation>
     </message>
     <message>
         <source>Traffic Graph</source>
