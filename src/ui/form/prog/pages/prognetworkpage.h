@@ -60,6 +60,7 @@ private:
 
     QLabel *m_labelBlock = nullptr;
     QCheckBox *m_cbBlockInbound = nullptr;
+    QCheckBox *m_cbBlockOutbound = nullptr;
     QCheckBox *m_cbLanOnly = nullptr;
     ZonesSelector *m_btZones = nullptr;
     RuleSelector *m_ruleSelector = nullptr;

@@ -406,6 +406,7 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
                 .apply_spec_child = app.applySpecChild,
                 .kill_child = app.killChild,
                 .block_inbound = app.blockInbound,
+                .block_outbound = app.blockOutbound,
                 .lan_only = app.lanOnly,
                 .log_stat = app.logStat,
                 .log_allowed_conn = app.logAllowedConn,

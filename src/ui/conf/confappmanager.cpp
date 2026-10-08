@@ -48,6 +48,7 @@ inline constexpr int APP_END_TIMER_INTERVAL_MAX = 24 * 60 * 60 * 1000; // 1 day
     "    t.apply_spec_child,"                                                                      \
     "    t.kill_child,"                                                                            \
     "    t.block_inbound,"                                                                         \
+    "    t.block_outbound,"                                                                        \
     "    t.lan_only,"                                                                              \
     "    t.parked,"                                                                                \
     "    t.log_stat,"                                                                              \
@@ -96,43 +97,43 @@ const char *const sqlSelectAppIdByPath = "SELECT app_id FROM app WHERE path = ?1
 const char *const sqlUpsertApp = "INSERT INTO app(origin_path, path,"
                                  "    icon_path, name, notes, is_wildcard,"
                                  "    apply_parent, apply_child, apply_spec_child, kill_child,"
-                                 "    block_inbound, lan_only, parked, log_stat, log_allowed_conn,"
-                                 "    log_blocked_conn, blocked, kill_process,"
+                                 "    block_inbound, block_outbound, lan_only, parked, log_stat,"
+                                 "    log_allowed_conn, log_blocked_conn, blocked, kill_process,"
                                  "    groups_mask, in_limit_enabled, out_limit_enabled,"
                                  "    in_limit_id, out_limit_id,"
                                  "    accept_zones, reject_zones, rule_id, filters_text,"
                                  "    end_action, end_time, creat_time)"
                                  "  VALUES(?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13,"
                                  "    ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25,"
-                                 "    ?26, ?27, ?28, ?29, ?30, ?31)"
+                                 "    ?26, ?27, ?28, ?29, ?30, ?31, ?32)"
                                  "  ON CONFLICT(path) DO UPDATE"
                                  "  SET origin_path = ?2, icon_path = ?4,"
                                  "    name = ?5, notes = ?6, is_wildcard = ?7,"
                                  "    apply_parent = ?8, apply_child = ?9, apply_spec_child = ?10,"
-                                 "    kill_child = ?11, block_inbound = ?12,"
-                                 "    lan_only = ?13, parked = ?14,"
-                                 "    log_stat = ?15, log_allowed_conn = ?16,"
-                                 "    log_blocked_conn = ?17, blocked = ?18, kill_process = ?19,"
-                                 "    groups_mask = ?20, in_limit_enabled = ?21,"
-                                 "    out_limit_enabled = ?22, in_limit_id = ?23,"
-                                 "    out_limit_id = ?24, accept_zones = ?25, reject_zones = ?26,"
-                                 "    rule_id = ?27, filters_text = ?28,"
-                                 "    end_action = ?29, end_time = ?30"
+                                 "    kill_child = ?11, block_inbound = ?12, block_outbound = ?13,"
+                                 "    lan_only = ?14, parked = ?15,"
+                                 "    log_stat = ?16, log_allowed_conn = ?17,"
+                                 "    log_blocked_conn = ?18, blocked = ?19, kill_process = ?20,"
+                                 "    groups_mask = ?21, in_limit_enabled = ?22,"
+                                 "    out_limit_enabled = ?23, in_limit_id = ?24,"
+                                 "    out_limit_id = ?25, accept_zones = ?26, reject_zones = ?27,"
+                                 "    rule_id = ?28, filters_text = ?29,"
+                                 "    end_action = ?30, end_time = ?31"
                                  "  RETURNING app_id;";
 
 const char *const sqlUpdateApp = "UPDATE app"
                                  "  SET origin_path = ?2, path = ?3,"
                                  "    icon_path = ?4, name = ?5, notes = ?6, is_wildcard = ?7,"
                                  "    apply_parent = ?8, apply_child = ?9, apply_spec_child = ?10,"
-                                 "    kill_child = ?11, block_inbound = ?12,"
-                                 "    lan_only = ?13, parked = ?14,"
-                                 "    log_stat = ?15, log_allowed_conn = ?16,"
-                                 "    log_blocked_conn = ?17, blocked = ?18, kill_process = ?19,"
-                                 "    groups_mask = ?20, in_limit_enabled = ?21,"
-                                 "    out_limit_enabled = ?22, in_limit_id = ?23,"
-                                 "    out_limit_id = ?24, accept_zones = ?25, reject_zones = ?26,"
-                                 "    rule_id = ?27, filters_text = ?28,"
-                                 "    end_action = ?29, end_time = ?30"
+                                 "    kill_child = ?11, block_inbound = ?12, block_outbound = ?13,"
+                                 "    lan_only = ?14, parked = ?15,"
+                                 "    log_stat = ?16, log_allowed_conn = ?17,"
+                                 "    log_blocked_conn = ?18, blocked = ?19, kill_process = ?20,"
+                                 "    groups_mask = ?21, in_limit_enabled = ?22,"
+                                 "    out_limit_enabled = ?23, in_limit_id = ?24,"
+                                 "    out_limit_id = ?25, accept_zones = ?26, reject_zones = ?27,"
+                                 "    rule_id = ?28, filters_text = ?29,"
+                                 "    end_action = ?30, end_time = ?31"
                                  "  WHERE app_id = ?1"
                                  "  RETURNING app_id;";
 
@@ -271,6 +272,7 @@ void ConfAppManager::beginAddOrUpdateApp(App &app, bool onlyUpdate, bool &ok)
         app.applySpecChild,
         app.killChild,
         app.blockInbound,
+        app.blockOutbound,
         app.lanOnly,
         app.parked,
         app.logStat,
@@ -795,9 +797,9 @@ bool ConfAppManager::importAppsBackup(const QString &path)
 
     const QString columnNames = "origin_path, path, name, notes, is_wildcard,"
                                 " apply_parent, apply_child, apply_spec_child, kill_child,"
-                                " block_inbound, lan_only, parked, log_stat, log_allowed_conn,"
-                                " log_blocked_conn, blocked, kill_process, end_action, end_time,"
-                                " creat_time";
+                                " block_inbound, block_outbound, lan_only, parked, log_stat,"
+                                " log_allowed_conn, log_blocked_conn, blocked, kill_process,"
+                                " end_action, end_time, creat_time";
 
     const QString sql = "INSERT INTO app(" + columnNames + ") SELECT " + columnNames + " FROM "
             + schemaApp + " ba WHERE NOT EXISTS (SELECT 1 FROM app WHERE path = ba.path);";
@@ -883,25 +885,26 @@ void ConfAppManager::fillApp(App &app, const SqliteStmt &stmt)
     app.applySpecChild = stmt.columnBool(9);
     app.killChild = stmt.columnBool(10);
     app.blockInbound = stmt.columnBool(11);
-    app.lanOnly = stmt.columnBool(12);
-    app.parked = stmt.columnBool(13);
-    app.logStat = stmt.columnBool(14);
-    app.logAllowedConn = stmt.columnBool(15);
-    app.logBlockedConn = stmt.columnBool(16);
-    app.blocked = stmt.columnBool(17);
-    app.killProcess = stmt.columnBool(18);
-    app.groups = stmt.columnUInt(19);
-    app.inLimitEnabled = stmt.columnBool(20);
-    app.outLimitEnabled = stmt.columnBool(21);
-    app.speedLimits.in_limit_id = stmt.columnUInt(22);
-    app.speedLimits.out_limit_id = stmt.columnUInt(23);
-    app.zones.accept_mask = stmt.columnUInt(24);
-    app.zones.reject_mask = stmt.columnUInt(25);
-    app.ruleId = stmt.columnUInt(26);
-    app.filtersText = stmt.columnText(27);
-    app.scheduleAction = stmt.columnInt(28);
-    app.scheduleTime = stmt.columnDateTime(29);
-    app.alerted = stmt.columnBool(30);
+    app.blockOutbound = stmt.columnBool(12);
+    app.lanOnly = stmt.columnBool(13);
+    app.parked = stmt.columnBool(14);
+    app.logStat = stmt.columnBool(15);
+    app.logAllowedConn = stmt.columnBool(16);
+    app.logBlockedConn = stmt.columnBool(17);
+    app.blocked = stmt.columnBool(18);
+    app.killProcess = stmt.columnBool(19);
+    app.groups = stmt.columnUInt(20);
+    app.inLimitEnabled = stmt.columnBool(21);
+    app.outLimitEnabled = stmt.columnBool(22);
+    app.speedLimits.in_limit_id = stmt.columnUInt(23);
+    app.speedLimits.out_limit_id = stmt.columnUInt(24);
+    app.zones.accept_mask = stmt.columnUInt(25);
+    app.zones.reject_mask = stmt.columnUInt(26);
+    app.ruleId = stmt.columnUInt(27);
+    app.filtersText = stmt.columnText(28);
+    app.scheduleAction = stmt.columnInt(29);
+    app.scheduleTime = stmt.columnDateTime(30);
+    app.alerted = stmt.columnBool(31);
 }
 
 bool ConfAppManager::updateDriverDeleteApp(const QString &appPath)

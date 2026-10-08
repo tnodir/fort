@@ -9,7 +9,8 @@ bool App::isBaseFlagsEqual(const App &o) const
 {
     return isWildcard == o.isWildcard && applyParent == o.applyParent && applyChild == o.applyChild
             && applySpecChild == o.applySpecChild && killChild == o.killChild
-            && blockInbound == o.blockInbound && lanOnly == o.lanOnly;
+            && blockInbound == o.blockInbound && blockOutbound == o.blockOutbound
+            && lanOnly == o.lanOnly;
 }
 
 bool App::isExtraFlagsEqual(const App &o) const

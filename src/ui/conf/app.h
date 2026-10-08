@@ -43,6 +43,7 @@ public:
     bool applySpecChild : 1 = false;
     bool killChild : 1 = false;
     bool blockInbound : 1 = false;
+    bool blockOutbound : 1 = false;
     bool lanOnly : 1 = false;
     bool parked : 1 = false;
     bool logStat : 1 = true;
