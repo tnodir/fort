@@ -45,6 +45,7 @@ public:
     bool inlineZones : 1 = false;
     bool terminate : 1 = false;
     bool terminateBlocked : 1 = true;
+    bool terminateDrop : 1 = false;
     bool terminateAlert : 1 = false;
     bool logAllowedConn : 1 = true;
     bool logBlockedConn : 1 = true;

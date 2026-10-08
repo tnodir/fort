@@ -116,7 +116,7 @@ QVariantList ConfRuleManagerRpc::ruleToVarList(const Rule &rule)
         rule.terminate, rule.terminateBlocked, rule.terminateAlert, rule.logAllowedConn,
         rule.logBlockedConn, rule.periodEnabled, rule.ruleSetEdited, rule.ruleType, rule.periodId,
         rule.ruleId, rule.zones.accept_mask, rule.zones.reject_mask, rule.ruleName, rule.notes,
-        rule.ruleText, ruleSetList };
+        rule.ruleText, ruleSetList, rule.terminateDrop };
 }
 
 Rule ConfRuleManagerRpc::varListToRule(const QVariantList &v)
@@ -143,6 +143,7 @@ Rule ConfRuleManagerRpc::varListToRule(const QVariantList &v)
     rule.notes = v.value(18).toString();
     rule.ruleText = v.value(19).toString();
     VariantUtil::listToVector(v.value(20).toList(), rule.ruleSet);
+    rule.terminateDrop = v.value(21).toBool();
     return rule;
 }
 

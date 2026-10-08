@@ -427,6 +427,37 @@ TEST_F(ConnFilterTest, appRule)
     ASSERT_EQ(conn.rule_id, 0);
 }
 
+TEST_F(ConnFilterTest, terminatingRule)
+{
+    App ruleApp = wildcardApp("C:\\App\\rule.exe");
+    ruleApp.ruleId = 1;
+
+    m_apps << ruleApp;
+    writeConf();
+
+    // The Rule filters nothing, so it terminates
+    writeRules(TestRuleList({ { .terminate = true, .ruleId = 1, .ruleText = "1.1.1.1" } }));
+
+    FORT_CONF_META_CONN conn = connFilterConn("2.2.2.2");
+    ASSERT_FALSE(connAllowed("C:\\App\\rule.exe", conn));
+    ASSERT_FALSE(conn.act.drop_blocked);
+
+    writeRules(TestRuleList(
+            { { .terminate = true, .terminateDrop = true, .ruleId = 1, .ruleText = "1.1.1.1" } }));
+
+    conn = connFilterConn("2.2.2.2");
+    ASSERT_FALSE(connAllowed("C:\\App\\rule.exe", conn));
+    ASSERT_TRUE(conn.act.drop_blocked);
+
+    writeRules(TestRuleList({ { .terminate = true,
+            .terminateBlocked = false,
+            .ruleId = 1,
+            .ruleText = "1.1.1.1" } }));
+
+    conn = connFilterConn("2.2.2.2");
+    ASSERT_TRUE(connAllowed("C:\\App\\rule.exe", conn));
+}
+
 TEST_F(ConnFilterTest, rulePeriods)
 {
     App ruleApp = wildcardApp("C:\\App\\rule.exe");

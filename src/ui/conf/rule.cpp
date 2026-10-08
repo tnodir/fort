@@ -20,7 +20,7 @@ bool Rule::isFlagsEqual(const Rule &o) const
 bool Rule::isTerminateFlagsEqual(const Rule &o) const
 {
     return terminate == o.terminate && terminateBlocked == o.terminateBlocked
-            && terminateAlert == o.terminateAlert;
+            && terminateDrop == o.terminateDrop && terminateAlert == o.terminateAlert;
 }
 
 bool Rule::isLogFlagsEqual(const Rule &o) const

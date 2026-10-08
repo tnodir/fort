@@ -356,19 +356,20 @@ bool RuleListModel::updateRuleRow(
     ruleRow.inlineZones = stmt.columnBool(4);
     ruleRow.terminate = stmt.columnBool(5);
     ruleRow.terminateBlocked = stmt.columnBool(6);
-    ruleRow.terminateAlert = stmt.columnBool(7);
-    ruleRow.logAllowedConn = stmt.columnBool(8);
-    ruleRow.logBlockedConn = stmt.columnBool(9);
-    ruleRow.ruleName = stmt.columnText(10);
-    ruleRow.notes = stmt.columnText(11);
-    ruleRow.ruleText = stmt.columnText(12);
-    ruleRow.ruleType = Rule::RuleType(stmt.columnInt(13));
-    ruleRow.zones.accept_mask = stmt.columnUInt(14);
-    ruleRow.zones.reject_mask = stmt.columnUInt(15);
-    ruleRow.modTime = stmt.columnDateTime(16);
-    ruleRow.periodEnabled = stmt.columnBool(17);
-    ruleRow.periodId = stmt.columnInt(18);
-    ruleRow.trayMenu = stmt.columnBool(19);
+    ruleRow.terminateDrop = stmt.columnBool(7);
+    ruleRow.terminateAlert = stmt.columnBool(8);
+    ruleRow.logAllowedConn = stmt.columnBool(9);
+    ruleRow.logBlockedConn = stmt.columnBool(10);
+    ruleRow.ruleName = stmt.columnText(11);
+    ruleRow.notes = stmt.columnText(12);
+    ruleRow.ruleText = stmt.columnText(13);
+    ruleRow.ruleType = Rule::RuleType(stmt.columnInt(14));
+    ruleRow.zones.accept_mask = stmt.columnUInt(15);
+    ruleRow.zones.reject_mask = stmt.columnUInt(16);
+    ruleRow.modTime = stmt.columnDateTime(17);
+    ruleRow.periodEnabled = stmt.columnBool(18);
+    ruleRow.periodId = stmt.columnInt(19);
+    ruleRow.trayMenu = stmt.columnBool(20);
 
     return true;
 }
@@ -383,6 +384,7 @@ QString RuleListModel::sqlBase() const
            "    t.inline_zones,"
            "    t.terminate,"
            "    t.term_blocked,"
+           "    t.term_drop,"
            "    t.term_alert,"
            "    t.log_allowed_conn,"
            "    t.log_blocked_conn,"
