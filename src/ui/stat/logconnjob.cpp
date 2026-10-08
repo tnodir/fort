@@ -143,29 +143,30 @@ qint64 LogConnJob::insertConn(const LogEntryConn &entry, qint64 appId, qint64 in
     stmt->bindInt(3, entry.pid());
     stmt->bindInt(4, entry.reason());
     stmt->bindBool(5, entry.blocked());
-    stmt->bindBool(6, entry.alerted());
-    stmt->bindBool(7, entry.inherited());
-    stmt->bindBool(8, entry.inbound());
-    stmt->bindInt(9, entry.ipProto());
-    stmt->bindInt(10, entry.localPort());
-    stmt->bindInt(11, entry.remotePort());
+    stmt->bindBool(6, entry.dropped());
+    stmt->bindBool(7, entry.alerted());
+    stmt->bindBool(8, entry.inherited());
+    stmt->bindBool(9, entry.inbound());
+    stmt->bindInt(10, entry.ipProto());
+    stmt->bindInt(11, entry.localPort());
+    stmt->bindInt(12, entry.remotePort());
 
     if (!entry.isIPv6()) {
-        stmt->bindInt(12, entry.localIp4());
-        stmt->bindInt(13, entry.remoteIp4());
-        stmt->bindNull(14);
+        stmt->bindInt(13, entry.localIp4());
+        stmt->bindInt(14, entry.remoteIp4());
         stmt->bindNull(15);
+        stmt->bindNull(16);
     } else {
-        stmt->bindNull(12);
         stmt->bindNull(13);
-        stmt->bindBlobView(14, entry.localIp6View());
-        stmt->bindBlobView(15, entry.remoteIp6View());
+        stmt->bindNull(14);
+        stmt->bindBlobView(15, entry.localIp6View());
+        stmt->bindBlobView(16, entry.remoteIp6View());
     }
 
-    stmt->bindInt(16, entry.zoneId());
-    stmt->bindInt(17, entry.ruleId());
-    stmt->bindBool(18, entry.loopback());
-    stmt->bindVar(19, DbVar::nullable(inheritAppId));
+    stmt->bindInt(17, entry.zoneId());
+    stmt->bindInt(18, entry.ruleId());
+    stmt->bindBool(19, entry.loopback());
+    stmt->bindVar(20, DbVar::nullable(inheritAppId));
 
     if (sqliteDb()->done(stmt)) {
         return sqliteDb()->lastInsertRowid();

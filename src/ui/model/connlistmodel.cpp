@@ -382,30 +382,31 @@ void ConnListModel::fillConnRow(ConnRow &connRow, const SqliteStmt &stmt)
     connRow.pid = stmt.columnInt(3);
     connRow.reason = stmt.columnInt(4);
     connRow.blocked = stmt.columnBool(5);
-    connRow.alerted = stmt.columnBool(6);
-    connRow.inherited = stmt.columnBool(7);
-    connRow.inbound = stmt.columnBool(8);
-    connRow.ipProto = stmt.columnInt(9);
-    connRow.localPort = stmt.columnInt(10);
-    connRow.remotePort = stmt.columnInt(11);
+    connRow.dropped = stmt.columnBool(6);
+    connRow.alerted = stmt.columnBool(7);
+    connRow.inherited = stmt.columnBool(8);
+    connRow.inbound = stmt.columnBool(9);
+    connRow.ipProto = stmt.columnInt(10);
+    connRow.localPort = stmt.columnInt(11);
+    connRow.remotePort = stmt.columnInt(12);
 
-    connRow.isIPv6 = stmt.columnIsNull(12);
+    connRow.isIPv6 = stmt.columnIsNull(13);
     if (!connRow.isIPv6) {
-        connRow.localIp.v4 = stmt.columnInt(12);
-        connRow.remoteIp.v4 = stmt.columnInt(13);
+        connRow.localIp.v4 = stmt.columnInt(13);
+        connRow.remoteIp.v4 = stmt.columnInt(14);
     } else {
-        connRow.localIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(14, /*isView=*/true));
-        connRow.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(15, /*isView=*/true));
+        connRow.localIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(15, /*isView=*/true));
+        connRow.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(16, /*isView=*/true));
     }
 
-    connRow.zoneId = stmt.columnInt(16);
-    connRow.ruleId = stmt.columnInt(17);
+    connRow.zoneId = stmt.columnInt(17);
+    connRow.ruleId = stmt.columnInt(18);
 
-    connRow.loopback = stmt.columnBool(18);
+    connRow.loopback = stmt.columnBool(19);
 
-    connRow.confAppId = stmt.columnInt64(19);
-    connRow.appPath = stmt.columnText(20);
-    connRow.inheritAppPath = stmt.columnText(21);
+    connRow.confAppId = stmt.columnInt64(20);
+    connRow.appPath = stmt.columnText(21);
+    connRow.inheritAppPath = stmt.columnText(22);
 }
 
 void ConnListModel::fillConnIdRange(qint64 &idMin, qint64 &idMax)
@@ -446,6 +447,7 @@ QString ConnListModel::sqlBase() const
            "    t.process_id,"
            "    t.reason,"
            "    t.blocked,"
+           "    t.dropped,"
            "    t.alerted,"
            "    t.inherited,"
            "    t.inbound,"

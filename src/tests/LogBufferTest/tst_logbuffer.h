@@ -86,7 +86,7 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
 
     const int entrySize = DriverCommon::logConnHeaderSize() + pathSize * sizeof(wchar_t);
 
-    const int testCount = 3;
+    const int testCount = 16; // all the flags' combinations
 
     LogBuffer buf(entrySize * testCount);
 
@@ -98,7 +98,8 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
         int v = i;
         entry.setInbound((v & 1) != 0);
         entry.setBlocked((v & 2) != 0);
-        entry.setAlerted((v & 4) != 0);
+        entry.setDropped((v & 4) != 0);
+        entry.setAlerted((v & 8) != 0);
         entry.setReason(++v);
         entry.setIpProto(++v);
         entry.setLocalPort(++v);
@@ -120,7 +121,8 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
         ASSERT_FALSE(entry.isIPv6());
         ASSERT_EQ(entry.inbound(), (v & 1) != 0);
         ASSERT_EQ(entry.blocked(), (v & 2) != 0);
-        ASSERT_EQ(entry.alerted(), (v & 4) != 0);
+        ASSERT_EQ(entry.dropped(), (v & 4) != 0);
+        ASSERT_EQ(entry.alerted(), (v & 8) != 0);
         ASSERT_EQ(entry.reason(), ++v);
         ASSERT_EQ(entry.ipProto(), ++v);
         ASSERT_EQ(entry.localPort(), ++v);
@@ -143,7 +145,7 @@ TEST_F(LogBufferTest, blockedIp6WriteRead)
     constexpr bool isIPv6 = true;
     const int entrySize = DriverCommon::logConnHeaderSize(isIPv6) + pathSize * sizeof(wchar_t);
 
-    const int testCount = 3;
+    const int testCount = 16; // all the flags' combinations
 
     LogBuffer buf(entrySize * testCount);
 
@@ -156,7 +158,8 @@ TEST_F(LogBufferTest, blockedIp6WriteRead)
         int v = i;
         entry.setInbound((v & 1) != 0);
         entry.setBlocked((v & 2) != 0);
-        entry.setAlerted((v & 4) != 0);
+        entry.setDropped((v & 4) != 0);
+        entry.setAlerted((v & 8) != 0);
         entry.setReason(++v);
         entry.setIpProto(++v);
         entry.setLocalPort(++v);
@@ -178,7 +181,8 @@ TEST_F(LogBufferTest, blockedIp6WriteRead)
         ASSERT_TRUE(entry.isIPv6());
         ASSERT_EQ(entry.inbound(), (v & 1) != 0);
         ASSERT_EQ(entry.blocked(), (v & 2) != 0);
-        ASSERT_EQ(entry.alerted(), (v & 4) != 0);
+        ASSERT_EQ(entry.dropped(), (v & 4) != 0);
+        ASSERT_EQ(entry.alerted(), (v & 8) != 0);
         ASSERT_EQ(entry.reason(), ++v);
         ASSERT_EQ(entry.ipProto(), ++v);
         ASSERT_EQ(entry.localPort(), ++v);

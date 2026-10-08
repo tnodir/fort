@@ -126,6 +126,7 @@ void LogBuffer::writeEntryConn(const LogEntryConn *logEntry)
         .inherited = logEntry->inherited(),
         .act = {
             .blocked = logEntry->blocked(),
+            .drop_blocked = logEntry->dropped(),
             .conn_alert = logEntry->alerted(),
             .zone_id = logEntry->zoneId(),
         },
@@ -170,6 +171,7 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
             input + DriverCommon::logConnInheritPathOffset(pathLen, conn.isIPv6), inheritPathLen);
 
     logEntry->setBlocked(conn.act.blocked);
+    logEntry->setDropped(conn.act.drop_blocked);
     logEntry->setAlerted(conn.act.conn_alert);
     logEntry->setIsIPv6(conn.isIPv6);
     logEntry->setInbound(conn.inbound);

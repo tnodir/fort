@@ -10,6 +10,9 @@ class LogEntryConn : public LogEntryApp
 public:
     FortLogType type() const override { return FORT_LOG_TYPE_CONN; }
 
+    bool dropped() const { return m_dropped; }
+    void setDropped(bool v) { m_dropped = v; }
+
     bool isIPv6() const { return m_isIPv6; }
     void setIsIPv6(bool isIPv6) { m_isIPv6 = isIPv6; }
 
@@ -74,6 +77,7 @@ public:
     bool isAskPending() const;
 
 private:
+    bool m_dropped : 1 = false;
     bool m_isIPv6 : 1 = false;
     bool m_inbound : 1 = false;
     bool m_loopback : 1 = false;
