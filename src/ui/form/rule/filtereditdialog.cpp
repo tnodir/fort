@@ -66,14 +66,14 @@ bool filterIsNot(const RuleFilter *filter)
     return filter && filter->isNot;
 }
 
-void addComboFilter(FilterLineText &line, qint8 type, QCheckBox *cbNot, QComboBox *c)
+void addComboFilter(FilterLineText &line, qint8 type, QToolButton *btNot, QComboBox *c)
 {
-    line.addFilter(type, c->currentData().toString(), cbNot->isChecked());
+    line.addFilter(type, c->currentData().toString(), btNot->isChecked());
 }
 
-void setComboFilter(QCheckBox *cbNot, QComboBox *c, const RuleFilter *filter)
+void setComboFilter(QToolButton *btNot, QComboBox *c, const RuleFilter *filter)
 {
-    cbNot->setChecked(filterIsNot(filter));
+    btNot->setChecked(filterIsNot(filter));
 
     const int index =
             c->findData(FilterLine::values(filter).value(0), Qt::UserRole, Qt::MatchFixedString);
@@ -81,12 +81,12 @@ void setComboFilter(QCheckBox *cbNot, QComboBox *c, const RuleFilter *filter)
     c->setCurrentIndex(qMax(index, 0));
 }
 
-void addProtocolFilter(FilterLineText &line, QCheckBox *cbNot, SpinCombo *sc)
+void addProtocolFilter(FilterLineText &line, QToolButton *btNot, SpinCombo *sc)
 {
     const int value = sc->spinBox()->value();
 
     line.addFilter(FORT_RULE_FILTER_TYPE_PROTOCOL,
-            (value == anyProtocol) ? QString() : NetUtil::protocolName(value), cbNot->isChecked());
+            (value == anyProtocol) ? QString() : NetUtil::protocolName(value), btNot->isChecked());
 }
 
 // The first protocol's number by its name or number
@@ -99,9 +99,9 @@ int protocolValue(const RuleFilter *filter)
     return (range.protoSize() > 0) ? range.protoAt(0) : anyProtocol;
 }
 
-void setProtocolFilter(QCheckBox *cbNot, SpinCombo *sc, const RuleFilter *filter)
+void setProtocolFilter(QToolButton *btNot, SpinCombo *sc, const RuleFilter *filter)
 {
-    cbNot->setChecked(filterIsNot(filter));
+    btNot->setChecked(filterIsNot(filter));
 
     const int value = protocolValue(filter);
 
@@ -111,19 +111,19 @@ void setProtocolFilter(QCheckBox *cbNot, SpinCombo *sc, const RuleFilter *filter
     sc->comboBox()->setCurrentIndex(sc->getIndexByValue(value));
 }
 
-void addEditFilter(FilterLineText &line, qint8 type, QCheckBox *cbNot, LineEdit *edit)
+void addEditFilter(FilterLineText &line, qint8 type, QToolButton *btNot, LineEdit *edit)
 {
-    line.addFilter(type, edit->text().trimmed(), cbNot->isChecked());
+    line.addFilter(type, edit->text().trimmed(), btNot->isChecked());
 }
 
-void setEditFilter(QCheckBox *cbNot, LineEdit *edit, const RuleFilter *filter)
+void setEditFilter(QToolButton *btNot, LineEdit *edit, const RuleFilter *filter)
 {
-    cbNot->setChecked(filterIsNot(filter));
+    btNot->setChecked(filterIsNot(filter));
     edit->setStartText(FilterLine::values(filter).join(", "));
 }
 
 // The area's lines are the values, the filter's text is a line
-void addAreaFilter(FilterLineText &line, qint8 type, QCheckBox *cbNot, PlainTextEdit *area)
+void addAreaFilter(FilterLineText &line, qint8 type, QToolButton *btNot, PlainTextEdit *area)
 {
     QStringList values;
 
@@ -135,12 +135,12 @@ void addAreaFilter(FilterLineText &line, qint8 type, QCheckBox *cbNot, PlainText
         }
     }
 
-    line.addFilter(type, values.join(", "), cbNot->isChecked());
+    line.addFilter(type, values.join(", "), btNot->isChecked());
 }
 
-void setAreaFilter(QCheckBox *cbNot, PlainTextEdit *area, const RuleFilter *filter)
+void setAreaFilter(QToolButton *btNot, PlainTextEdit *area, const RuleFilter *filter)
 {
-    cbNot->setChecked(filterIsNot(filter));
+    btNot->setChecked(filterIsNot(filter));
 
     const QSignalBlocker blocker(area); // textChanged() isn't by the user only
 
@@ -194,7 +194,7 @@ void FilterEditDialog::retranslateUi()
     setComboTexts(m_comboArea, { tr("Any"), tr("Localhost"), "LAN", tr("Internet") });
     m_comboArea->setToolTip(tr("LAN: by the \"Local Area Network\" addresses in Options"));
 
-    retranslateNotCheckBoxes();
+    retranslateNotButtons();
     retranslateClearButtons();
 
     const QString anyText = tr("Any");
@@ -240,15 +240,13 @@ void FilterEditDialog::retranslateProtocolNames()
     m_scProtocol->setNames(list);
 }
 
-void FilterEditDialog::retranslateNotCheckBoxes()
+void FilterEditDialog::retranslateNotButtons()
 {
-    const QString text = tr("Not");
     const QString toolTip = tr("All, except these");
 
-    for (QCheckBox *cb : { m_cbDirectionNot, m_cbProtocolNot, m_cbAreaNot, m_cbRemoteIpsNot,
-                 m_cbRemotePortsNot, m_cbLocalIpsNot, m_cbLocalPortsNot }) {
-        cb->setText(text);
-        cb->setToolTip(toolTip);
+    for (QToolButton *bt : { m_btDirectionNot, m_btProtocolNot, m_btAreaNot, m_btRemoteIpsNot,
+                 m_btRemotePortsNot, m_btLocalIpsNot, m_btLocalPortsNot }) {
+        bt->setToolTip(toolTip);
     }
 }
 
@@ -317,60 +315,60 @@ QLayout *FilterEditDialog::setupFormLayout()
     layout->addRow(ControlUtil::createHSeparator());
 
     // Direction
-    m_cbDirectionNot = createFieldCheckBox();
+    m_btDirectionNot = createNotButton();
     m_comboDirection = createFieldCombo({ QString(), "In", "Out" });
     m_btDirectionClear = createComboClearButton(m_comboDirection);
 
     m_labelDirection = addWidgetsRow(
-            layout, "Direction:", { m_cbDirectionNot, m_comboDirection, m_btDirectionClear });
+            layout, "Direction:", { m_btDirectionNot, m_comboDirection, m_btDirectionClear });
 
     // Protocol
-    m_cbProtocolNot = createFieldCheckBox();
+    m_btProtocolNot = createNotButton();
     m_scProtocol = createProtocolSpinCombo();
     m_btProtocolClear =
             ControlUtil::createClearButton([&] { m_scProtocol->spinBox()->setValue(anyProtocol); });
 
     m_labelProtocol = addWidgetsRow(
-            layout, "Protocol:", { m_cbProtocolNot, m_scProtocol, m_btProtocolClear });
+            layout, "Protocol:", { m_btProtocolNot, m_scProtocol, m_btProtocolClear });
 
     layout->addRow(ControlUtil::createHSeparator());
 
     // Area
-    m_cbAreaNot = createFieldCheckBox();
+    m_btAreaNot = createNotButton();
     m_comboArea = createFieldCombo({ QString(), "Localhost", "LAN", "Internet" });
     m_btAreaClear = createComboClearButton(m_comboArea);
 
-    m_labelArea = addWidgetsRow(layout, "Area:", { m_cbAreaNot, m_comboArea, m_btAreaClear });
+    m_labelArea = addWidgetsRow(layout, "Area:", { m_btAreaNot, m_comboArea, m_btAreaClear });
 
     // Remote IP
-    m_cbRemoteIpsNot = createFieldCheckBox();
+    m_btRemoteIpsNot = createNotButton();
     m_btRemoteIpsClear =
             ControlUtil::createClearButton([&] { TextAreaUtil::clearArea(m_editRemoteIps); });
     m_editRemoteIps = createValuesArea();
 
     m_labelRemoteIps = addAreaRow(layout,
-            "Remote IP:", { m_cbRemoteIpsNot, /*stretch*/ nullptr, m_btRemoteIpsClear },
+            "Remote IP:", { m_btRemoteIpsNot, /*stretch*/ nullptr, m_btRemoteIpsClear },
             m_editRemoteIps);
 
     // Remote Port
-    m_cbRemotePortsNot = createFieldCheckBox();
+    m_btRemotePortsNot = createNotButton();
     m_editRemotePorts = createValuesEdit();
 
-    m_labelRemotePorts = addNotRow(layout, "Remote Port:", m_cbRemotePortsNot, m_editRemotePorts);
+    m_labelRemotePorts = addNotRow(layout, "Remote Port:", m_btRemotePortsNot, m_editRemotePorts);
 
     layout->addRow(ControlUtil::createHSeparator());
 
     // Local IP
-    m_cbLocalIpsNot = createFieldCheckBox();
+    m_btLocalIpsNot = createNotButton();
     m_editLocalIps = createValuesEdit();
 
-    m_labelLocalIps = addNotRow(layout, "Local IP:", m_cbLocalIpsNot, m_editLocalIps);
+    m_labelLocalIps = addNotRow(layout, "Local IP:", m_btLocalIpsNot, m_editLocalIps);
 
     // Local Port
-    m_cbLocalPortsNot = createFieldCheckBox();
+    m_btLocalPortsNot = createNotButton();
     m_editLocalPorts = createValuesEdit();
 
-    m_labelLocalPorts = addNotRow(layout, "Local Port:", m_cbLocalPortsNot, m_editLocalPorts);
+    m_labelLocalPorts = addNotRow(layout, "Local Port:", m_btLocalPortsNot, m_editLocalPorts);
 
     layout->addRow(ControlUtil::createHSeparator());
 
@@ -453,6 +451,18 @@ QCheckBox *FilterEditDialog::createFieldCheckBox()
     return c;
 }
 
+QToolButton *FilterEditDialog::createNotButton()
+{
+    auto c = ControlUtil::createFlatToolButton(QString(), [&] { updateTextByFields(); });
+    c->setCheckable(true);
+    c->setText("=");
+
+    connect(c, &QToolButton::toggled, c,
+            [=](bool checked) { c->setText(checked ? QChar(0x2260) /* ≠ */ : QChar('=')); });
+
+    return c;
+}
+
 LineEdit *FilterEditDialog::createValuesEdit()
 {
     auto c = new LineEdit();
@@ -507,10 +517,9 @@ QLabel *FilterEditDialog::addAreaRow(QFormLayout *layout, const QString &labelTe
 }
 
 QLabel *FilterEditDialog::addNotRow(
-        QFormLayout *layout, const QString &labelText, QCheckBox *cbNot, QWidget *field)
+        QFormLayout *layout, const QString &labelText, QToolButton *btNot, QWidget *field)
 {
-    auto rowLayout = ControlUtil::createRowLayout(cbNot, field, /*stretch1=*/0);
-    rowLayout->setAlignment(cbNot, Qt::AlignTop);
+    auto rowLayout = ControlUtil::createHLayoutByWidgets({ btNot, field }, /*margin=*/0);
 
     layout->addRow(labelText, rowLayout);
 
@@ -585,13 +594,13 @@ QString FilterEditDialog::filterText() const
 {
     FilterLineText line;
 
-    addComboFilter(line, FORT_RULE_FILTER_TYPE_DIRECTION, m_cbDirectionNot, m_comboDirection);
-    addProtocolFilter(line, m_cbProtocolNot, m_scProtocol);
-    addComboFilter(line, FORT_RULE_FILTER_TYPE_AREA, m_cbAreaNot, m_comboArea);
-    addAreaFilter(line, FORT_RULE_FILTER_TYPE_ADDRESS, m_cbRemoteIpsNot, m_editRemoteIps);
-    addEditFilter(line, FORT_RULE_FILTER_TYPE_PORT, m_cbRemotePortsNot, m_editRemotePorts);
-    addEditFilter(line, FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS, m_cbLocalIpsNot, m_editLocalIps);
-    addEditFilter(line, FORT_RULE_FILTER_TYPE_LOCAL_PORT, m_cbLocalPortsNot, m_editLocalPorts);
+    addComboFilter(line, FORT_RULE_FILTER_TYPE_DIRECTION, m_btDirectionNot, m_comboDirection);
+    addProtocolFilter(line, m_btProtocolNot, m_scProtocol);
+    addComboFilter(line, FORT_RULE_FILTER_TYPE_AREA, m_btAreaNot, m_comboArea);
+    addAreaFilter(line, FORT_RULE_FILTER_TYPE_ADDRESS, m_btRemoteIpsNot, m_editRemoteIps);
+    addEditFilter(line, FORT_RULE_FILTER_TYPE_PORT, m_btRemotePortsNot, m_editRemotePorts);
+    addEditFilter(line, FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS, m_btLocalIpsNot, m_editLocalIps);
+    addEditFilter(line, FORT_RULE_FILTER_TYPE_LOCAL_PORT, m_btLocalPortsNot, m_editLocalPorts);
     line.addFilter(FORT_RULE_FILTER_TYPE_OPTION, optionValues());
 
     // The action is the last: the empty name of the Rule's action
@@ -609,15 +618,15 @@ void FilterEditDialog::setFilterLine(const FilterLineText &lineText)
     setActionFilter(line.filter(FORT_RULE_FILTER_TYPE_ACTION));
 
     setComboFilter(
-            m_cbDirectionNot, m_comboDirection, line.filter(FORT_RULE_FILTER_TYPE_DIRECTION));
-    setProtocolFilter(m_cbProtocolNot, m_scProtocol, line.filter(FORT_RULE_FILTER_TYPE_PROTOCOL));
-    setComboFilter(m_cbAreaNot, m_comboArea, line.filter(FORT_RULE_FILTER_TYPE_AREA));
-    setAreaFilter(m_cbRemoteIpsNot, m_editRemoteIps, line.filter(FORT_RULE_FILTER_TYPE_ADDRESS));
-    setEditFilter(m_cbRemotePortsNot, m_editRemotePorts, line.filter(FORT_RULE_FILTER_TYPE_PORT));
+            m_btDirectionNot, m_comboDirection, line.filter(FORT_RULE_FILTER_TYPE_DIRECTION));
+    setProtocolFilter(m_btProtocolNot, m_scProtocol, line.filter(FORT_RULE_FILTER_TYPE_PROTOCOL));
+    setComboFilter(m_btAreaNot, m_comboArea, line.filter(FORT_RULE_FILTER_TYPE_AREA));
+    setAreaFilter(m_btRemoteIpsNot, m_editRemoteIps, line.filter(FORT_RULE_FILTER_TYPE_ADDRESS));
+    setEditFilter(m_btRemotePortsNot, m_editRemotePorts, line.filter(FORT_RULE_FILTER_TYPE_PORT));
     setEditFilter(
-            m_cbLocalIpsNot, m_editLocalIps, line.filter(FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS));
+            m_btLocalIpsNot, m_editLocalIps, line.filter(FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS));
     setEditFilter(
-            m_cbLocalPortsNot, m_editLocalPorts, line.filter(FORT_RULE_FILTER_TYPE_LOCAL_PORT));
+            m_btLocalPortsNot, m_editLocalPorts, line.filter(FORT_RULE_FILTER_TYPE_LOCAL_PORT));
 
     setOptionFilter(line.filter(FORT_RULE_FILTER_TYPE_OPTION));
 }

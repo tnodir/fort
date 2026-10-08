@@ -41,7 +41,7 @@ signals:
 private:
     void retranslateUi();
     void retranslateProtocolNames();
-    void retranslateNotCheckBoxes();
+    void retranslateNotButtons();
     void retranslateClearButtons();
 
     void setupUi();
@@ -52,6 +52,7 @@ private:
     QComboBox *createFieldCombo(const QStringList &values);
     SpinCombo *createProtocolSpinCombo();
     QCheckBox *createFieldCheckBox();
+    QToolButton *createNotButton();
     LineEdit *createValuesEdit();
     PlainTextEdit *createValuesArea();
     QToolButton *createComboClearButton(QComboBox *combo);
@@ -60,7 +61,7 @@ private:
     QLabel *addAreaRow(QFormLayout *layout, const QString &labelText,
             const QList<QWidget *> &widgets, QWidget *area);
     QLabel *addNotRow(
-            QFormLayout *layout, const QString &labelText, QCheckBox *cbNot, QWidget *field);
+            QFormLayout *layout, const QString &labelText, QToolButton *btNot, QWidget *field);
     QLayout *setupOptionsLayout();
     void setupTextBox();
     QLayout *setupButtons();
@@ -90,29 +91,29 @@ private:
     QRadioButton *m_rbBlock = nullptr;
     QRadioButton *m_rbDrop = nullptr;
     QLabel *m_labelDirection = nullptr;
-    QCheckBox *m_cbDirectionNot = nullptr;
+    QToolButton *m_btDirectionNot = nullptr;
     QComboBox *m_comboDirection = nullptr;
     QToolButton *m_btDirectionClear = nullptr;
     QLabel *m_labelProtocol = nullptr;
-    QCheckBox *m_cbProtocolNot = nullptr;
+    QToolButton *m_btProtocolNot = nullptr;
     SpinCombo *m_scProtocol = nullptr;
     QToolButton *m_btProtocolClear = nullptr;
     QLabel *m_labelArea = nullptr;
-    QCheckBox *m_cbAreaNot = nullptr;
+    QToolButton *m_btAreaNot = nullptr;
     QComboBox *m_comboArea = nullptr;
     QToolButton *m_btAreaClear = nullptr;
     QLabel *m_labelRemoteIps = nullptr;
-    QCheckBox *m_cbRemoteIpsNot = nullptr;
+    QToolButton *m_btRemoteIpsNot = nullptr;
     QToolButton *m_btRemoteIpsClear = nullptr;
     PlainTextEdit *m_editRemoteIps = nullptr;
     QLabel *m_labelRemotePorts = nullptr;
-    QCheckBox *m_cbRemotePortsNot = nullptr;
+    QToolButton *m_btRemotePortsNot = nullptr;
     LineEdit *m_editRemotePorts = nullptr;
     QLabel *m_labelLocalIps = nullptr;
-    QCheckBox *m_cbLocalIpsNot = nullptr;
+    QToolButton *m_btLocalIpsNot = nullptr;
     LineEdit *m_editLocalIps = nullptr;
     QLabel *m_labelLocalPorts = nullptr;
-    QCheckBox *m_cbLocalPortsNot = nullptr;
+    QToolButton *m_btLocalPortsNot = nullptr;
     LineEdit *m_editLocalPorts = nullptr;
     QLabel *m_labelOptions = nullptr;
     QCheckBox *m_cbOptionLog = nullptr;
