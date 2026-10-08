@@ -48,6 +48,28 @@ int writeServiceInfo(char *data, const ServiceInfo &serviceInfo)
     return FORT_SERVICE_INFO_NAME_OFF + FORT_CONF_STR_DATA_SIZE(nameLen);
 }
 
+FORT_CONF_RULE confRuleFlags(const Rule &rule)
+{
+    FORT_CONF_RULE confRule {}; /* zero the reserved bits */
+    confRule.enabled = rule.enabled;
+    confRule.blocked = rule.blocked;
+    confRule.exclusive = rule.exclusive;
+    confRule.inline_zones = rule.inlineZones;
+    confRule.terminate = rule.terminate;
+    confRule.term_blocked = rule.terminateBlocked;
+    confRule.term_alert = rule.terminateAlert;
+    confRule.term_drop = rule.terminateDrop;
+    confRule.log_allowed_conn = rule.logAllowedConn;
+    confRule.log_blocked_conn = rule.logBlockedConn;
+
+    confRule.has_zones = (rule.zones.accept_mask != 0 || rule.zones.reject_mask != 0);
+    confRule.has_filters = !rule.ruleText.isEmpty();
+
+    confRule.period_id = rule.periodEnabled ? rule.periodId : 0;
+
+    return confRule;
+}
+
 }
 
 ConfBuffer::ConfBuffer(const QByteArray &buffer, QObject *parent) :
@@ -452,27 +474,27 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
     const quint16 ruleId = rule.ruleId;
     const auto ruleSetInfo = wra.ruleSetMap[ruleId];
 
-    FORT_CONF_RULE confRule {}; /* zero the reserved bits */
-    confRule.enabled = rule.enabled;
-    confRule.blocked = rule.blocked;
-    confRule.exclusive = rule.exclusive;
-    confRule.inline_zones = rule.inlineZones;
-    confRule.terminate = rule.terminate;
-    confRule.term_blocked = rule.terminateBlocked;
-    confRule.term_alert = rule.terminateAlert;
-    confRule.term_drop = rule.terminateDrop;
-    confRule.log_allowed_conn = rule.logAllowedConn;
-    confRule.log_blocked_conn = rule.logBlockedConn;
+    // Write the rule's offset
+    {
+        int *ruleOffsets = (int *) (data() + FORT_CONF_RULES_DATA_OFF) - 1; // exclude zero index
+        ruleOffsets[ruleId] = int(buffer().size() - FORT_CONF_RULES_DATA_OFF);
+    }
 
-    confRule.period_id = rule.periodEnabled ? rule.periodId : 0;
+    const char *setIndexes = (const char *) (wra.ruleSetIds.constData() + ruleSetInfo.index);
+    const auto ruleSet = QByteArray::fromRawData(
+            setIndexes, FORT_CONF_RULES_SET_INDEXES_SIZE(ruleSetInfo.count));
 
-    const bool hasZones = (rule.zones.accept_mask != 0 || rule.zones.reject_mask != 0);
-    confRule.has_zones = hasZones;
+    return writeRuleData(rule, ruleSet);
+}
 
-    const bool hasFilters = !rule.ruleText.isEmpty();
-    confRule.has_filters = hasFilters;
+bool ConfBuffer::writeRuleData(const Rule &rule, const QByteArray &ruleSet)
+{
+    FORT_CONF_RULE confRule = confRuleFlags(rule);
 
-    const int ruleSetCount = ruleSetInfo.count;
+    const bool hasZones = confRule.has_zones;
+    const bool hasFilters = confRule.has_filters;
+
+    const int ruleSetCount = int(ruleSet.size() / sizeof(quint16));
     confRule.set_count = ruleSetCount;
 
     // Resize the buffer
@@ -481,15 +503,7 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
     buffer().resize(oldSize + FORT_CONF_RULE_SIZE(&confRule));
 
     // Fill the buffer
-    char *data = this->data();
-
-    // Write the rule's offset
-    {
-        int *ruleOffsets = (int *) (data + FORT_CONF_RULES_DATA_OFF) - 1; // exclude zero index
-        ruleOffsets[ruleId] = oldSize - FORT_CONF_RULES_DATA_OFF;
-
-        data += oldSize;
-    }
+    char *data = this->data() + oldSize;
 
     // Write the rule
     {
@@ -508,11 +522,7 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
 
     // Write the rule's set
     if (ruleSetCount != 0) {
-        const char *setIndexes = (const char *) &wra.ruleSetIds[ruleSetInfo.index];
-        const auto array =
-                QByteArray::fromRawData(setIndexes, FORT_CONF_RULES_SET_INDEXES_SIZE(ruleSetCount));
-
-        ConfData(data).writeArray(array);
+        ConfData(data).writeArray(ruleSet);
     }
 
     // Write the rule's text

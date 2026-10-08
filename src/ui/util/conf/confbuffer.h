@@ -80,6 +80,7 @@ private:
     bool addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint32 &appsSize);
 
     bool writeRule(const Rule &rule, const WalkRulesArgs &wra);
+    bool writeRuleData(const Rule &rule, const QByteArray &ruleSet = {});
     bool writeRuleText(const QString &ruleText, int &filtersCount);
     bool writeRuleFilter(const RuleFilter &ruleFilter);
     bool writeRuleFilterList(const RuleFilter &ruleListFilter);
