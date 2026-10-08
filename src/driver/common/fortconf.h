@@ -220,13 +220,14 @@ typedef struct fort_conf_rule
     UINT16 inline_zones : 1;
     UINT16 terminate : 1;
     UINT16 term_blocked : 1;
+    UINT16 term_drop : 1; /* the blocking Terminating Rule drops the connection */
     UINT16 term_alert : 1;
     UINT16 log_allowed_conn : 1;
     UINT16 log_blocked_conn : 1;
 
     UINT16 has_zones : 1;
     UINT16 has_filters : 1;
-    UINT16 reserved : 5; /* not used */
+    UINT16 reserved : 4; /* not used */
 
     UCHAR period_id; /* the Time Period's id: the Rule is active in it, 0 - always */
 

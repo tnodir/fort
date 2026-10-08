@@ -1020,7 +1020,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_terminate(
     /* Terminating Rule? */
     if (rule->terminate) {
         conn->act.blocked = (UCHAR) rule->term_blocked;
-        conn->act.drop_blocked = FALSE;
+        conn->act.drop_blocked = (UCHAR) rule->term_drop;
         conn->act.conn_alert = (UCHAR) rule->term_alert;
         return TRUE;
     }
