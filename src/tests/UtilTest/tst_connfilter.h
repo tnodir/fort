@@ -335,10 +335,13 @@ TEST_F(ConnFilterTest, appFlags)
     App inboundApp = wildcardApp("C:\\App\\inbound.exe");
     inboundApp.blockInbound = true;
 
+    App outboundApp = wildcardApp("C:\\App\\outbound.exe");
+    outboundApp.blockOutbound = true;
+
     App lanApp = wildcardApp("C:\\App\\lan.exe");
     lanApp.lanOnly = true;
 
-    m_apps << blockedApp << inboundApp << lanApp;
+    m_apps << blockedApp << inboundApp << outboundApp << lanApp;
     writeConf();
 
     confFlags()->filter_local_net = true;
@@ -354,6 +357,15 @@ TEST_F(ConnFilterTest, appFlags)
 
     conn = connFilterConn("8.8.8.8");
     ASSERT_TRUE(connAllowed("C:\\App\\inbound.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM);
+
+    // Block Outbound
+    conn = connFilterConn("8.8.8.8");
+    ASSERT_FALSE(connAllowed("C:\\App\\outbound.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_BLOCK_OUTBOUND);
+
+    conn = connFilterConn("8.8.8.8", /*inbound=*/true);
+    ASSERT_TRUE(connAllowed("C:\\App\\outbound.exe", conn));
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM);
 
     // LAN Only
