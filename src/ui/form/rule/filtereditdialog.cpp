@@ -588,6 +588,16 @@ QLayout *FilterEditDialog::setupButtons()
 void FilterEditDialog::updateTextByFields()
 {
     m_editText->setText(filterText());
+
+    updateClearButtons();
+}
+
+void FilterEditDialog::updateClearButtons()
+{
+    m_btDirectionClear->setVisible(m_comboDirection->currentIndex() != 0);
+    m_btProtocolClear->setVisible(m_scProtocol->spinBox()->value() != anyProtocol);
+    m_btAreaClear->setVisible(m_comboArea->currentIndex() != 0);
+    m_btRemoteIpsClear->setVisible(!m_editRemoteIps->toPlainText().isEmpty());
 }
 
 QString FilterEditDialog::filterText() const
@@ -629,6 +639,8 @@ void FilterEditDialog::setFilterLine(const FilterLineText &lineText)
             m_btLocalPortsNot, m_editLocalPorts, line.filter(FORT_RULE_FILTER_TYPE_LOCAL_PORT));
 
     setOptionFilter(line.filter(FORT_RULE_FILTER_TYPE_OPTION));
+
+    updateClearButtons();
 }
 
 void FilterEditDialog::setActionFilter(const RuleFilter *filter)

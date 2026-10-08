@@ -67,6 +67,7 @@ private:
     QLayout *setupButtons();
 
     void updateTextByFields();
+    void updateClearButtons();
 
     QString filterText() const;
     void setFilterLine(const FilterLineText &lineText);
