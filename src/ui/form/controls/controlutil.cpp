@@ -2,8 +2,10 @@
 
 #include <QCheckBox>
 #include <QFormLayout>
+#include <QGraphicsOpacityEffect>
 #include <QLabel>
 #include <QMenu>
+#include <QPropertyAnimation>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QStandardItemModel>
@@ -28,6 +30,51 @@
 #include "spinbox.h"
 #include "statisticsbutton.h"
 #include "toolbutton.h"
+
+namespace {
+
+inline constexpr int opacityAnimationDuration = 160; // as the line edits' Clear button
+
+// The animation leads to the full transparency
+bool isFadeOut(QPropertyAnimation *anim)
+{
+    return qFuzzyIsNull(anim->endValue().toReal());
+}
+
+// The widget's opacity effect and its animation are created once
+QPropertyAnimation *opacityAnimation(QWidget *w)
+{
+    auto effect = qobject_cast<QGraphicsOpacityEffect *>(w->graphicsEffect());
+    if (effect) {
+        return effect->findChild<QPropertyAnimation *>();
+    }
+
+    effect = new QGraphicsOpacityEffect();
+    w->setGraphicsEffect(effect);
+
+    auto anim = new QPropertyAnimation(effect, "opacity", effect);
+    anim->setDuration(opacityAnimationDuration);
+
+    QObject::connect(anim, &QPropertyAnimation::finished, w, [=] {
+        if (isFadeOut(anim)) {
+            w->hide();
+        }
+    });
+
+    return anim;
+}
+
+// The visibility, which the running animation leads to
+bool isVisibleTarget(QWidget *w, QPropertyAnimation *anim)
+{
+    if (anim->state() == QAbstractAnimation::Running) {
+        return !isFadeOut(anim);
+    }
+
+    return !w->isHidden();
+}
+
+}
 
 QCheckBox *ControlUtil::createCheckBox(const QString &iconPath)
 {
@@ -502,4 +549,25 @@ QToolButton *ControlUtil::createStatisticsButton()
 void ControlUtil::deleteOnClose(QWidget *w)
 {
     w->setAttribute(Qt::WA_DeleteOnClose);
+}
+
+void ControlUtil::setVisibleAnimated(QWidget *w, bool visible)
+{
+    auto anim = opacityAnimation(w);
+    if (isVisibleTarget(w, anim) == visible)
+        return;
+
+    if (w->isHidden()) {
+        static_cast<QGraphicsOpacityEffect *>(anim->targetObject())->setOpacity(0.0);
+        w->show();
+    }
+
+    anim->stop();
+    anim->setEndValue(visible ? 1.0 : 0.0);
+    anim->start();
+
+    // At once while the window is hidden
+    if (!w->window()->isVisible()) {
+        anim->setCurrentTime(anim->duration());
+    }
 }

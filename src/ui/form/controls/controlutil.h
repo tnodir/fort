@@ -140,6 +140,9 @@ public:
     static QToolButton *createStatisticsButton();
 
     static void deleteOnClose(QWidget *w);
+
+    // Fades in/out as the line edits' Clear button
+    static void setVisibleAnimated(QWidget *w, bool visible);
 };
 
 #endif // CONTROLUTIL_H
