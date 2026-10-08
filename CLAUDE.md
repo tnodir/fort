@@ -134,6 +134,7 @@ The traffic graph (`form/graph/`) has no 3rd-party chart library: `GraphWindow` 
 - Wrap an `if` body in braces when it returns a computed expression (incl. a struct field); simple returns (`return;`, a constant, a plain local variable) stay without braces. The blank line after the `{` of an `if` with a multi-line condition comes from clang-format: don't add or remove it by hand.
 - Declare a constant in an anonymous `namespace { }` as `inline constexpr` (Qt Creator's navigation finds it then); function-local constants stay plain `constexpr`.
 - Keep a form's code in the order of its controls: the members in the header, their creation in the `setup*Layout()` functions and their lines in `initialize()`, `retranslateUi()`, `fill*()`. Moving a control on the form moves all of them.
+- Implement the requested UI behavior only: ask before adding a convenience nobody asked for (switching tabs, moving the focus or selection, enabling/disabling controls by other state, guessed defaults or values derived from heuristics), even if it seems obvious; mention it as an option instead.
 - Commit subjects are prefixed by area: `UI:`, `Driver:`, `Tests:`, `Deploy:`, `Installer:`, `README:` — e.g. `UI: ConfManager: Refactor save()`.
 - `ChangeLog` is maintained by hand at release time; don't edit it in feature commits.
 - App version lives in `src/version/fort_version.h` (`APP_VERSION_*` and `DRIVER_VERSION`).
