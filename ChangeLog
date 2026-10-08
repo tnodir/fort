@@ -1,5 +1,13 @@
 Fort Firewall ChangeLog
 
+v3.20.2, 2026-10-08:
+- UI: Edit Program: Improve Network Filters tab.
+- UI: Rules: Add Time Period.
+- UI: Improve the Edit Rule dialog.
+- UI: Improve the Graph window.
+- UI: Connections: Show the inherited program (#400).
+- Driver: Filter by the Programs' Network Filters.
+
 v3.20.1, 2026-10-06:
 - UI: Add Filter Simulator: Show the driver's decision on a connection (also from the Connections window).
 - UI: Split the Statistics window into the Traffic and Connections windows.
