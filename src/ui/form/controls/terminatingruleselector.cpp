@@ -3,6 +3,7 @@
 #include <QCheckBox>
 #include <QComboBox>
 
+#include <conf/rule.h>
 #include <form/controls/controlutil.h>
 
 namespace {
@@ -18,6 +19,21 @@ enum ActionIndex : qint8 {
 TerminatingRuleSelector::TerminatingRuleSelector(QWidget *parent) : QWidget(parent)
 {
     setupUi();
+}
+
+void TerminatingRuleSelector::initialize(const Rule &rule)
+{
+    setTerminate(rule.terminate);
+    setTerminateAction(rule.terminateBlocked, rule.terminateDrop);
+    setTerminateAlert(rule.terminateAlert);
+}
+
+void TerminatingRuleSelector::fillRule(Rule &rule) const
+{
+    rule.terminate = terminate();
+    rule.terminateBlocked = terminateBlocked();
+    rule.terminateDrop = terminateDrop();
+    rule.terminateAlert = terminateAlert();
 }
 
 bool TerminatingRuleSelector::terminate() const

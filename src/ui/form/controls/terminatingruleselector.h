@@ -6,12 +6,18 @@
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
 
+class Rule;
+
 class TerminatingRuleSelector : public QWidget
 {
     Q_OBJECT
 
 public:
     explicit TerminatingRuleSelector(QWidget *parent = nullptr);
+
+    // By the Rule's Terminating flags
+    void initialize(const Rule &rule);
+    void fillRule(Rule &rule) const;
 
     bool terminate() const;
     void setTerminate(bool v);

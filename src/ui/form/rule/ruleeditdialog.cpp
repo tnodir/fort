@@ -85,9 +85,7 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
 
     m_cbInlineZones->setChecked(ruleRow.inlineZones);
 
-    m_terminatingRuleSelector->setTerminate(ruleRow.terminate);
-    m_terminatingRuleSelector->setTerminateAction(ruleRow.terminateBlocked, ruleRow.terminateDrop);
-    m_terminatingRuleSelector->setTerminateAlert(ruleRow.terminateAlert);
+    m_terminatingRuleSelector->initialize(ruleRow);
 
     m_periodSelector->setPeriodEnabled(ruleRow.periodEnabled);
     m_periodSelector->setPeriodId(ruleRow.periodId);
@@ -601,10 +599,7 @@ void RuleEditDialog::fillRule(Rule &rule) const
     rule.blocked = !m_rbAllow->isChecked();
     rule.exclusive = m_cbExclusive->isChecked();
 
-    rule.terminate = m_terminatingRuleSelector->terminate();
-    rule.terminateBlocked = m_terminatingRuleSelector->terminateBlocked();
-    rule.terminateDrop = m_terminatingRuleSelector->terminateDrop();
-    rule.terminateAlert = m_terminatingRuleSelector->terminateAlert();
+    m_terminatingRuleSelector->fillRule(rule);
 
     rule.logAllowedConn = m_cbLogAllowedConn->isChecked();
     rule.logBlockedConn = m_cbLogBlockedConn->isChecked();
