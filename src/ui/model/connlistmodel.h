@@ -46,7 +46,7 @@ public:
 
     static QString directionText(bool inbound);
     static QString directionIconPath(bool inbound);
-    static QString actionText(bool blocked);
+    static QString actionText(bool blocked, bool dropped = false);
 
     static QString columnName(const ConnListColumn column);
 

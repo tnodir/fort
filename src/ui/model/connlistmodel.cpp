@@ -141,7 +141,7 @@ QVariant dataDisplayAction(const ConnRow &connRow, int role)
     if (role != Qt::ToolTipRole)
         return {};
 
-    return ConnListModel::actionText(connRow.blocked);
+    return ConnListModel::actionText(connRow.blocked, connRow.dropped);
 }
 
 QVariant dataDisplayReason(const ConnRow &connRow, int role)
@@ -604,9 +604,12 @@ QString ConnListModel::directionIconPath(bool inbound)
     return inbound ? ":/icons/green_down.png" : ":/icons/blue_up.png";
 }
 
-QString ConnListModel::actionText(bool blocked)
+QString ConnListModel::actionText(bool blocked, bool dropped)
 {
-    return blocked ? tr("Blocked") : tr("Allowed");
+    if (!blocked)
+        return tr("Allowed");
+
+    return dropped ? tr("Dropped") : tr("Blocked");
 }
 
 QString ConnListModel::columnName(const ConnListColumn column)
