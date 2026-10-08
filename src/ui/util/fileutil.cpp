@@ -8,7 +8,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
-#include <winioctl.h>
 
 namespace FileUtil {
 
@@ -54,23 +53,18 @@ quint32 driveMask()
     return GetLogicalDrives();
 }
 
+// Unlike FSCTL_IS_VOLUME_MOUNTED on the opened volume, it does not require the admin rights
 static bool isDriveMounted(WCHAR drive)
 {
-    const WCHAR volume[] = { L'\\', L'\\', L'.', L'\\', drive, L':', L'\0' };
+    const WCHAR rootPath[] = { drive, L':', L'\\', L'\0' };
 
-    constexpr DWORD shareMode = FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE;
+    DWORD oldErrorMode;
+    SetThreadErrorMode(SEM_FAILCRITICALERRORS, &oldErrorMode);
 
-    const HANDLE volumeHandle =
-            CreateFileW(volume, GENERIC_READ, shareMode, nullptr, OPEN_EXISTING, 0, nullptr);
+    const bool ok =
+            GetVolumeInformationW(rootPath, nullptr, 0, nullptr, nullptr, nullptr, nullptr, 0);
 
-    if (volumeHandle == INVALID_HANDLE_VALUE)
-        return false;
-
-    DWORD nr;
-    const bool ok = DeviceIoControl(
-            volumeHandle, FSCTL_IS_VOLUME_MOUNTED, nullptr, 0, nullptr, 0, &nr, nullptr);
-
-    CloseHandle(volumeHandle);
+    SetThreadErrorMode(oldErrorMode, nullptr);
 
     return ok;
 }
