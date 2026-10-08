@@ -181,7 +181,7 @@ QLayout *ProgNetworkPage::setupZonesRuleLayout()
     m_cbBlockOutbound = ControlUtil::createCheckBox();
 
     // LAN Only
-    m_cbLanOnly = ControlUtil::createCheckBox(":/icons/hostname.png");
+    m_cbLanOnly = ControlUtil::createCheckBox();
 
     // Zones
     m_btZones = new ZonesSelector();
