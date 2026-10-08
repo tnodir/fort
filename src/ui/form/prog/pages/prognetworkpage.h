@@ -28,7 +28,6 @@ private:
     void initializeRuleField(bool isSingleSelection);
     void initializeSpeedLimitFields();
     void initializeFilters(bool isSingleSelection);
-    void initializeTerminatingRule(const QString &text);
 
     void retranslateSpeedLimitFields();
     void retranslateFilters();
@@ -44,8 +43,6 @@ private:
     void updateSpeedLimitCombos();
 
     int filterListCurrentIndex() const;
-
-    QString terminatingRuleText() const;
 
     void openFilterEditForm(const QString &filterText = {}, int row = -1);
     void editCurrentFilter();

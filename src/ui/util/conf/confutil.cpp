@@ -2,7 +2,58 @@
 
 #include <common/fortconf.h>
 
+#include <conf/rule.h>
+#include <util/net/actionrange.h>
+#include <util/net/optionrange.h>
 #include <util/stringutil.h>
+
+#include "filterline.h"
+
+namespace {
+
+// The Terminating Rule's line follows it in the Program's filters' text
+inline constexpr char terminatingRuleComment[] = "# Terminating";
+
+void parseFilterRange(const RuleFilter *filter, ValueRange &range)
+{
+    if (filter) {
+        range.fromList(filter->values);
+    }
+}
+
+// e.g. "Act(Block):Opt(Alert)"
+void parseTerminatingRuleLine(const QString &text, Rule &rule)
+{
+    FilterLine line(text);
+    line.parse();
+
+    ActionRange actionRange;
+    parseFilterRange(line.filter(FORT_RULE_FILTER_TYPE_ACTION), actionRange);
+
+    OptionRange optionRange;
+    parseFilterRange(line.filter(FORT_RULE_FILTER_TYPE_OPTION), optionRange);
+
+    const quint8 actionTypeId = actionRange.actionTypeId();
+
+    rule.terminate = (actionTypeId != 0);
+    rule.terminateBlocked = (actionTypeId != FORT_RULE_FILTER_ACTION_ALLOW);
+    rule.terminateDrop = (actionTypeId == FORT_RULE_FILTER_ACTION_DROP);
+    rule.terminateAlert = (optionRange.optionTypeIds() & FORT_CONN_FILTER_RESULT_CONN_ALERT) != 0;
+}
+
+QString terminatingRuleLine(const Rule &rule)
+{
+    const QString action =
+            !rule.terminateBlocked ? "Allow" : (rule.terminateDrop ? "Drop" : "Block");
+
+    FilterLine line;
+    line.addFilter(FORT_RULE_FILTER_TYPE_ACTION, action);
+    line.addFilter(FORT_RULE_FILTER_TYPE_OPTION, rule.terminateAlert ? "Alert" : QString());
+
+    return line.text();
+}
+
+}
 
 int ConfUtil::zoneMaxCount()
 {
@@ -90,4 +141,31 @@ QString ConfUtil::parseAppPath(const QStringView line, bool &isWild, bool &isPre
     }
 
     return path.toString();
+}
+
+void ConfUtil::parseAppFiltersText(const QString &filtersText, Rule &rule)
+{
+    const QStringList lines = filtersText.split('\n', Qt::SkipEmptyParts);
+
+    const int terminatingIndex = lines.indexOf(terminatingRuleComment);
+
+    rule.ruleText = lines.mid(0, terminatingIndex).join('\n'); // -1: all lines
+
+    parseTerminatingRuleLine(
+            (terminatingIndex >= 0) ? lines.value(terminatingIndex + 1) : QString(), rule);
+}
+
+QString ConfUtil::appFiltersText(const Rule &rule)
+{
+    QStringList lines;
+
+    if (!rule.ruleText.isEmpty()) {
+        lines << rule.ruleText;
+    }
+
+    if (rule.terminate) {
+        lines << terminatingRuleComment << terminatingRuleLine(rule);
+    }
+
+    return lines.join('\n');
 }

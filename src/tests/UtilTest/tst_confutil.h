@@ -19,6 +19,7 @@
 #include <util/conf/confgroupswalker.h>
 #include <util/conf/confruleswalker.h>
 #include <util/conf/confspeedlimitswalker.h>
+#include <util/conf/confutil.h>
 #include <util/fileutil.h>
 #include <util/net/iprange.h>
 #include <util/net/netformatutil.h>
@@ -1296,6 +1297,45 @@ TEST_F(ConfUtilTest, confValid)
 
         ASSERT_FALSE(confValid(badBuf, badBuf.size()));
     }
+}
+
+TEST_F(ConfUtilTest, appFiltersText)
+{
+    const QString filtersText = "IP(1.1.1.1):Act(Block)\n"
+                                "Port(80)\n"
+                                "# Terminating\n"
+                                "Act(Drop):Opt(Alert)";
+
+    Rule rule;
+    ConfUtil::parseAppFiltersText(filtersText, rule);
+
+    ASSERT_EQ(rule.ruleText, "IP(1.1.1.1):Act(Block)\nPort(80)");
+    ASSERT_TRUE(rule.terminate);
+    ASSERT_TRUE(rule.terminateBlocked);
+    ASSERT_TRUE(rule.terminateDrop);
+    ASSERT_TRUE(rule.terminateAlert);
+
+    ASSERT_EQ(ConfUtil::appFiltersText(rule), filtersText);
+
+    // Only the Terminating Rule
+    rule = {};
+    ConfUtil::parseAppFiltersText("# Terminating\nAct(Allow)", rule);
+
+    ASSERT_TRUE(rule.ruleText.isEmpty());
+    ASSERT_TRUE(rule.terminate);
+    ASSERT_FALSE(rule.terminateBlocked);
+    ASSERT_FALSE(rule.terminateAlert);
+
+    ASSERT_EQ(ConfUtil::appFiltersText(rule), "# Terminating\nAct(Allow)");
+
+    // No Terminating Rule
+    rule = {};
+    ConfUtil::parseAppFiltersText("Port(80)", rule);
+
+    ASSERT_EQ(rule.ruleText, "Port(80)");
+    ASSERT_FALSE(rule.terminate);
+
+    ASSERT_EQ(ConfUtil::appFiltersText(rule), "Port(80)");
 }
 
 TEST_F(ConfUtilTest, zonesValid)
