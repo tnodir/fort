@@ -4,8 +4,11 @@
 
 #include <common/fortconf.h>
 
+#include <util/conf/conn.h>
 #include <util/conf/filterline.h>
+#include <util/conf/filterlinetext.h>
 #include <util/conf/ruletextparser.h>
+#include <util/net/netformatutil.h>
 
 class FilterLineTest : public Test
 {
@@ -62,4 +65,27 @@ TEST_F(FilterLineTest, parse)
     FilterLine line4("1.1.1.1:(");
     ASSERT_FALSE(line4.parse());
     ASSERT_EQ(line4.filter(FORT_RULE_FILTER_TYPE_ADDRESS), nullptr);
+}
+
+TEST_F(FilterLineTest, connText)
+{
+    Conn conn;
+    conn.ipProto = 6; // TCP
+    conn.localPort = 50000;
+    conn.remotePort = 443;
+    conn.localIp.v4 = NetFormatUtil::textToIp4("192.168.1.2");
+    conn.remoteIp.v4 = NetFormatUtil::textToIp4("1.1.1.1");
+
+    FilterLineText line(conn);
+    ASSERT_EQ(line.text(),
+            "Dir(Out):Proto(TCP):IP(1.1.1.1):Port(443):Local_IP(192.168.1.2)"
+            ":Local_Port(50000):Act(Block)");
+
+    conn.blocked = true;
+
+    FilterLineText line2(conn);
+    ASSERT_EQ(line2.text(),
+            "Dir(Out):Proto(TCP):IP(1.1.1.1):Port(443):Local_IP(192.168.1.2)"
+            ":Local_Port(50000):Act(Allow)");
+    ASSERT_TRUE(FilterLine(line2).parse());
 }

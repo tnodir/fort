@@ -30,6 +30,7 @@ void ProgConnListPage::onPageInitialize(const App &app)
 
 void ProgConnListPage::onRetranslateUi()
 {
+    m_actAddFilter->setText(tr("Add Filter"));
     m_actCopyAsFilter->setText(tr("Copy as Filter"));
     m_actCopy->setText(tr("Copy"));
     m_actLookupIp->setText(tr("Lookup IP"));
@@ -77,6 +78,10 @@ void ProgConnListPage::setupConnListMenu()
 {
     auto menu = ControlUtil::createMenu(m_connListView);
 
+    m_actAddFilter = menu->addAction(IconCache::icon(":/icons/filter.png"), QString());
+
+    menu->addSeparator();
+
     m_actCopyAsFilter = menu->addAction(IconCache::icon(":/icons/script.png"), QString());
     m_actCopyAsFilter->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_C);
 
@@ -86,6 +91,8 @@ void ProgConnListPage::setupConnListMenu()
     m_actLookupIp = menu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
     m_actLookupIp->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_L);
 
+    connect(m_actAddFilter, &QAction::triggered, this,
+            [&] { emit addFilterRequested(connListCurrentRow()); });
     connect(m_actCopyAsFilter, &QAction::triggered, this, [&] {
         const auto rows = m_connListView->selectedRows();
         const auto text = appConnListModel()->rowsAsFilter(rows);
@@ -164,6 +171,7 @@ void ProgConnListPage::setupTableConnListChanged()
     const auto refreshTableConnListChanged = [&] {
         const int connIndex = m_connListView->currentRow();
         const bool connSelected = (connIndex >= 0);
+        m_actAddFilter->setEnabled(connSelected);
         m_actCopyAsFilter->setEnabled(connSelected);
         m_actCopy->setEnabled(connSelected);
         m_actLookupIp->setEnabled(connSelected);

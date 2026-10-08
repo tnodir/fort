@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+#include <util/conf/filterlinetext.h>
+
 QT_FORWARD_DECLARE_CLASS(QButtonGroup)
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
@@ -13,7 +15,6 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QRadioButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
-class FilterLine;
 class LineEdit;
 class PlainTextEdit;
 class RuleFilter;
@@ -31,7 +32,7 @@ public:
     bool isEmpty() const { return m_row < 0; }
 
     // The row < 0 adds a new filter
-    void initialize(const QString &filterText, int row = -1);
+    void initialize(const FilterLineText &lineText = {}, int row = -1);
 
 signals:
     void filterSaved(const QString &filterText, int row);
@@ -58,10 +59,9 @@ private:
     QLayout *setupButtons();
 
     void updateTextByFields();
-    void updateFieldsByText();
 
     QString filterText() const;
-    void setFilterLine(const FilterLine &line);
+    void setFilterLine(const FilterLineText &lineText);
     void setActionFilter(const RuleFilter *filter);
 
     QList<QCheckBox *> optionCheckBoxes() const;

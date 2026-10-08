@@ -56,7 +56,7 @@ bool filterIsNot(const RuleFilter *filter)
     return filter && filter->isNot;
 }
 
-void addComboFilter(FilterLine &line, qint8 type, QCheckBox *cbNot, QComboBox *c)
+void addComboFilter(FilterLineText &line, qint8 type, QCheckBox *cbNot, QComboBox *c)
 {
     line.addFilter(type, c->currentData().toString(), cbNot->isChecked());
 }
@@ -71,7 +71,7 @@ void setComboFilter(QCheckBox *cbNot, QComboBox *c, const RuleFilter *filter)
     c->setCurrentIndex(qMax(index, 0));
 }
 
-void addEditFilter(FilterLine &line, qint8 type, QCheckBox *cbNot, LineEdit *edit)
+void addEditFilter(FilterLineText &line, qint8 type, QCheckBox *cbNot, LineEdit *edit)
 {
     line.addFilter(type, edit->text().trimmed(), cbNot->isChecked());
 }
@@ -83,7 +83,7 @@ void setEditFilter(QCheckBox *cbNot, LineEdit *edit, const RuleFilter *filter)
 }
 
 // The area's lines are the values, the filter's text is a line
-void addAreaFilter(FilterLine &line, qint8 type, QCheckBox *cbNot, PlainTextEdit *area)
+void addAreaFilter(FilterLineText &line, qint8 type, QCheckBox *cbNot, PlainTextEdit *area)
 {
     QStringList values;
 
@@ -114,17 +114,20 @@ FilterEditDialog::FilterEditDialog(bool isRuleFilter, QWidget *parent) :
     setupUi();
 }
 
-void FilterEditDialog::initialize(const QString &filterText, int row)
+void FilterEditDialog::initialize(const FilterLineText &lineText, int row)
 {
     m_row = row;
 
     retranslateUi();
 
     // The new Program's filter allows
-    const bool isNewProgramFilter = filterText.isEmpty() && !isRuleFilter();
+    const bool isNewProgramFilter = lineText.isEmpty() && !isRuleFilter();
 
-    m_editText->setStartText(isNewProgramFilter ? "Act(Allow)" : filterText);
-    updateFieldsByText();
+    const FilterLineText startText = isNewProgramFilter ? FilterLineText("Act(Allow)") : lineText;
+
+    m_editText->setStartText(startText.text());
+
+    setFilterLine(startText);
 
     m_editRemoteIps->setFocus();
 }
@@ -464,17 +467,9 @@ void FilterEditDialog::updateTextByFields()
     m_editText->setStartText(filterText());
 }
 
-void FilterEditDialog::updateFieldsByText()
-{
-    FilterLine line(m_editText->text());
-    line.parse();
-
-    setFilterLine(line);
-}
-
 QString FilterEditDialog::filterText() const
 {
-    FilterLine line;
+    FilterLineText line;
 
     addComboFilter(line, FORT_RULE_FILTER_TYPE_DIRECTION, m_cbDirectionNot, m_comboDirection);
     addComboFilter(line, FORT_RULE_FILTER_TYPE_PROTOCOL, m_cbProtocolNot, m_comboProtocol);
@@ -492,8 +487,11 @@ QString FilterEditDialog::filterText() const
     return line.text();
 }
 
-void FilterEditDialog::setFilterLine(const FilterLine &line)
+void FilterEditDialog::setFilterLine(const FilterLineText &lineText)
 {
+    FilterLine line(lineText);
+    line.parse();
+
     setActionFilter(line.filter(FORT_RULE_FILTER_TYPE_ACTION));
 
     setComboFilter(

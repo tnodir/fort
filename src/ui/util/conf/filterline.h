@@ -4,6 +4,7 @@
 #include <QStringList>
 #include <QVector>
 
+#include "filterlinetext.h"
 #include "ruletextparser.h"
 
 // A rule text line of filters by their types (FORT_RULE_FILTER_TYPE_*), parsed by RuleTextParser
@@ -11,11 +12,7 @@ class FilterLine
 {
 public:
     explicit FilterLine(const QString &text = {});
-
-    const QString &text() const { return m_text; }
-
-    // Adds the filter's section with its name to the text: the values are e.g. "80, 443"
-    void addFilter(qint8 type, const QString &values, bool isNot = false);
+    explicit FilterLine(const FilterLineText &text);
 
     bool parse();
 
@@ -24,7 +21,7 @@ public:
     static QStringList values(const RuleFilter *filter);
 
 private:
-    QString m_text;
+    FilterLineText m_text;
 
     RuleTextParser m_parser;
 

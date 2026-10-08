@@ -629,7 +629,7 @@ void RuleEditDialog::openFilterEditForm()
         TextAreaUtil::appendText(m_editRuleText, filterText);
     });
 
-    w->initialize(QString());
+    w->initialize();
 
     DialogUtil::showDialog(w);
 }

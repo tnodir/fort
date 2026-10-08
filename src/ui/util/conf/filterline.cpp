@@ -4,41 +4,23 @@
 
 namespace {
 
-// By FORT_RULE_FILTER_TYPE_*
-const char *const filterNames[] = { "IP", "Port", "Local_IP", "Local_Port", "Proto", "IP_Ver",
-    "Dir", "Zones", "Area", "Profile", "Act", "Opt" };
-
-inline constexpr int filterTypesCount = std::size(filterNames);
-
-static_assert(filterTypesCount == FORT_RULE_FILTER_TYPE_PORT_TCP, "Filter names mismatch");
+// The types of the named filters, by FORT_RULE_FILTER_TYPE_*
+inline constexpr int filterTypesCount = FORT_RULE_FILTER_TYPE_PORT_TCP;
 
 }
 
-FilterLine::FilterLine(const QString &text) :
-    m_text(text), m_filterIndexes(filterTypesCount, -1) { }
+FilterLine::FilterLine(const QString &text) : FilterLine(FilterLineText(text)) { }
 
-void FilterLine::addFilter(qint8 type, const QString &values, bool isNot)
+FilterLine::FilterLine(const FilterLineText &text) :
+    m_text(text), m_filterIndexes(filterTypesCount, -1)
 {
-    if (values.isEmpty())
-        return;
-
-    if (!m_text.isEmpty()) {
-        m_text += ':';
-    }
-
-    // e.g. "IP(1.1.1.1)", "!Port(80, 443)"
-    if (isNot) {
-        m_text += '!';
-    }
-
-    m_text += QLatin1String(filterNames[type]) + '(' + values + ')';
 }
 
 bool FilterLine::parse()
 {
     m_filterIndexes.fill(-1);
 
-    m_parser.setText(m_text);
+    m_parser.setText(m_text.text());
     if (!m_parser.parse())
         return false;
 

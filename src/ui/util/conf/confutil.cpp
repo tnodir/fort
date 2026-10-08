@@ -46,7 +46,7 @@ QString terminatingRuleLine(const Rule &rule)
     const QString action =
             !rule.terminateBlocked ? "Allow" : (rule.terminateDrop ? "Drop" : "Block");
 
-    FilterLine line;
+    FilterLineText line;
     line.addFilter(FORT_RULE_FILTER_TYPE_ACTION, action);
     line.addFilter(FORT_RULE_FILTER_TYPE_OPTION, rule.terminateAlert ? "Alert" : QString());
 

@@ -5,6 +5,7 @@
 
 class AppConnListModel;
 class AppInfoRow;
+class Conn;
 class TableView;
 
 struct ConnRow;
@@ -17,6 +18,9 @@ public:
     explicit ProgConnListPage(ProgramEditController *ctrl = nullptr, QWidget *parent = nullptr);
 
     AppConnListModel *appConnListModel() const { return m_appConnListModel; }
+
+signals:
+    void addFilterRequested(const Conn &conn);
 
 protected slots:
     void onPageInitialize(const App &app) override;
@@ -41,6 +45,7 @@ private:
     AppConnListModel *m_appConnListModel = nullptr;
 
     TableView *m_connListView = nullptr;
+    QAction *m_actAddFilter = nullptr;
     QAction *m_actCopyAsFilter = nullptr;
     QAction *m_actCopy = nullptr;
     QAction *m_actLookupIp = nullptr;

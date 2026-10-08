@@ -336,16 +336,21 @@ int ProgNetworkPage::filterListCurrentIndex() const
     return m_filterListView->currentRow();
 }
 
-void ProgNetworkPage::openFilterEditForm(const QString &filterText, int row)
+void ProgNetworkPage::openFilterEditForm(const FilterLineText &lineText, int row)
 {
     auto w = new FilterEditDialog(/*isRuleFilter=*/false, this);
     ControlUtil::deleteOnClose(w);
 
     connect(w, &FilterEditDialog::filterSaved, this, &ProgNetworkPage::saveFilter);
 
-    w->initialize(filterText, row);
+    w->initialize(lineText, row);
 
     DialogUtil::showDialog(w);
+}
+
+void ProgNetworkPage::openConnFilterForm(const Conn &conn)
+{
+    openFilterEditForm(FilterLineText(conn));
 }
 
 void ProgNetworkPage::editCurrentFilter()

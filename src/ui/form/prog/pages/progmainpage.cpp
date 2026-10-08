@@ -121,6 +121,10 @@ void ProgMainPage::setupTabBar()
 
     connect(m_tabWidget, &QTabWidget::currentChanged, this,
             [&](int tabIndex) { pageAt(tabIndex)->onPageActivated(); });
+
+    // Add a Connection's filter on the Network Filters tab
+    connect(connsPage, &ProgConnListPage::addFilterRequested, networkPage,
+            &ProgNetworkPage::openConnFilterForm);
 }
 
 QLayout *ProgMainPage::setupButtonsLayout()

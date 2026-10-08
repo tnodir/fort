@@ -255,6 +255,7 @@ SOURCES += \
     util/conf/confrodata.cpp \
     util/conf/confutil.cpp \
     util/conf/filterline.cpp \
+    util/conf/filterlinetext.cpp \
     util/conf/ruletextparser.cpp \
     util/consoleoutput.cpp \
     util/dateutil.cpp \
@@ -576,6 +577,7 @@ HEADERS += \
     util/conf/confutil.h \
     util/conf/conn.h \
     util/conf/filterline.h \
+    util/conf/filterlinetext.h \
     util/conf/ruletextparser.h \
     util/consoleoutput.h \
     util/dateutil.h \

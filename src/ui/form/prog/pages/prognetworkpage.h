@@ -1,8 +1,11 @@
 #ifndef PROGNETWORKPAGE_H
 #define PROGNETWORKPAGE_H
 
+#include <util/conf/filterlinetext.h>
+
 #include "progbasepage.h"
 
+class Conn;
 class ListView;
 class RuleSelector;
 class StringListModel;
@@ -15,6 +18,9 @@ class ProgNetworkPage : public ProgBasePage
 
 public:
     explicit ProgNetworkPage(ProgramEditController *ctrl = nullptr, QWidget *parent = nullptr);
+
+    // Adds the connection's filter
+    void openConnFilterForm(const Conn &conn);
 
 public slots:
     void fillApp(App &app) const override;
@@ -44,7 +50,7 @@ private:
 
     int filterListCurrentIndex() const;
 
-    void openFilterEditForm(const QString &filterText = {}, int row = -1);
+    void openFilterEditForm(const FilterLineText &lineText = {}, int row = -1);
     void editCurrentFilter();
     void moveCurrentFilter(int offset);
     void saveFilter(const QString &filterText, int row);
