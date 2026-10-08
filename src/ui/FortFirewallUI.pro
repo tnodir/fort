@@ -574,6 +574,7 @@ HEADERS += \
     util/conf/confruleswalker.h \
     util/conf/confspeedlimitswalker.h \
     util/conf/confutil.h \
+    util/conf/conn.h \
     util/conf/filterline.h \
     util/conf/ruletextparser.h \
     util/consoleoutput.h \

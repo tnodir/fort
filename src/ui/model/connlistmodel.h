@@ -1,43 +1,19 @@
 #ifndef CONNLISTMODEL_H
 #define CONNLISTMODEL_H
 
-#include <QDateTime>
-
-#include <common/common_types.h>
 #include <common/fortdef.h>
+#include <util/conf/conn.h>
 #include <util/model/tablesqlmodel.h>
 
 #include "connlistcolumn.h"
 
-struct ConnRow : TableRow
+// The connection with its ids in the databases
+struct ConnRow : TableRow, Conn
 {
-    bool isIPv6 : 1 = false;
-    bool blocked : 1 = false;
-    bool alerted : 1 = false;
-    bool inherited : 1 = false;
-    bool inbound : 1 = false;
-    bool loopback : 1 = false;
-
-    quint8 reason = 0;
-
-    quint8 ipProto = 0;
-    quint8 zoneId = 0;
-    quint16 ruleId = 0;
-    quint16 localPort = 0;
-    quint16 remotePort = 0;
-    ip_addr_t localIp;
-    ip_addr_t remoteIp;
-
     quint32 confAppId = 0;
-    quint32 pid = 0;
 
     qint64 connId = 0;
     qint64 appId = 0;
-
-    QString appPath;
-    QString inheritAppPath;
-
-    QDateTime connTime;
 };
 
 class ConnListModel : public TableSqlModel
