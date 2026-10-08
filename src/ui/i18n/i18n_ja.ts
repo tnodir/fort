@@ -316,6 +316,10 @@
         <translation>受信をブロック</translation>
     </message>
     <message>
+        <source>Program&apos;s Network Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>不明</translation>
     </message>
@@ -330,6 +334,14 @@
     <message>
         <source>Loopback</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inherited from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dropped</source>
+        <translation>破棄済み</translation>
     </message>
     <message>
         <source>Local Host Name</source>
@@ -455,6 +467,157 @@
     <message>
         <source>Profile&apos;s drive mounted</source>
         <translation>プロファイルのドライブがマウントされました</translation>
+    </message>
+</context>
+<context>
+    <name>FilterEditDialog</name>
+    <message>
+        <source>Action:</source>
+        <translation>操作 :</translation>
+    </message>
+    <message>
+        <source>By &amp;Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Rule&apos;s action is applied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Allow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Block</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Drop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block silently, without a response</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Any</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>受信</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Protocol:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Area:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Localhost</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>インターネット</translation>
+    </message>
+    <message>
+        <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote IP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote Port:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local IP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local Port:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Collect the connection, even if the Rule doesn&apos;t</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t collect the connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation>警告</translation>
+    </message>
+    <message>
+        <source>Collect the connection as alerted, also with &quot;Alerted only&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>キャンセル</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>カスタム</translation>
+    </message>
+    <message>
+        <source>Not</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All, except these</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1711,6 +1874,10 @@ Make sure that you have a fresh backup.</source>
 <context>
     <name>ProgConnListPage</name>
     <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Copy as Filter</source>
         <translation>フィルターとしてコピー</translation>
     </message>
@@ -1981,6 +2148,26 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>No Limit</source>
         <translation>制限なし</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>削除</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>編集</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>上へ移動</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>下へ移動</translation>
     </message>
 </context>
 <context>
@@ -2258,6 +2445,14 @@ Please check other program with the same path.</source>
         <translation>排他的</translation>
     </message>
     <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Rule is active only in this Time Period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -2286,6 +2481,18 @@ Please check other program with the same path.</source>
         <translation>プリセット ルールの追加</translation>
     </message>
     <message>
+        <source>General</source>
+        <translation>全般</translation>
+    </message>
+    <message>
+        <source>Presets</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation>その他</translation>
+    </message>
+    <message>
         <source>Remove</source>
         <translation>削除</translation>
     </message>
@@ -2310,20 +2517,12 @@ Please check other program with the same path.</source>
         <translation>ヘルプ</translation>
     </message>
     <message>
-        <source>Terminating Rule:</source>
-        <translation>強制終了ルール :</translation>
-    </message>
-    <message>
         <source>Tray Menu</source>
         <translation>トレイメニュー</translation>
     </message>
     <message>
         <source>Inline Zones</source>
         <translation>インライン ゾーン</translation>
-    </message>
-    <message>
-        <source>Alert</source>
-        <translation>警告</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
@@ -2339,6 +2538,10 @@ Please check other program with the same path.</source>
     <message>
         <source>Rule</source>
         <translation>ルール</translation>
+    </message>
+    <message>
+        <source>Time Period</source>
+        <translation>時間帯</translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -2943,6 +3146,29 @@ Packet loss: %2</source>
     <message>
         <source>Maximum retries count</source>
         <translation>最大再試行回数</translation>
+    </message>
+</context>
+<context>
+    <name>TerminatingRuleSelector</name>
+    <message>
+        <source>Terminating Rule:</source>
+        <translation>強制終了ルール :</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>許可</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>ブロック</translation>
+    </message>
+    <message>
+        <source>Drop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation>警告</translation>
     </message>
 </context>
 <context>

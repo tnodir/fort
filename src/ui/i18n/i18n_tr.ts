@@ -316,6 +316,10 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Program&apos;s Network Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>Bilinmeyen</translation>
     </message>
@@ -329,6 +333,14 @@
     </message>
     <message>
         <source>Loopback</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inherited from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dropped</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -455,6 +467,157 @@
     <message>
         <source>Profile&apos;s drive mounted</source>
         <translation>&apos; Profilin Sürücüsü Bağlandı</translation>
+    </message>
+</context>
+<context>
+    <name>FilterEditDialog</name>
+    <message>
+        <source>Action:</source>
+        <translation>Eylem:</translation>
+    </message>
+    <message>
+        <source>By &amp;Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Rule&apos;s action is applied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Allow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Block</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Drop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block silently, without a response</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Any</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Protocol:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Area:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Localhost</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>İnternet</translation>
+    </message>
+    <message>
+        <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote IP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote Port:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local IP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local Port:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Collect the connection, even if the Rule doesn&apos;t</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t collect the connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation>Uyarı</translation>
+    </message>
+    <message>
+        <source>Collect the connection as alerted, also with &quot;Alerted only&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Tamam</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>İptal Et</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Özel</translation>
+    </message>
+    <message>
+        <source>Not</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All, except these</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1710,6 +1873,10 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
 <context>
     <name>ProgConnListPage</name>
     <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Copy as Filter</source>
         <translation>Filtre Olarak Kopyala</translation>
     </message>
@@ -1980,6 +2147,26 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     <message>
         <source>No Limit</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Kaldır</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Düzenle</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>Yukarıya Taşı</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>Aşağıya Taşı</translation>
     </message>
 </context>
 <context>
@@ -2256,6 +2443,14 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <translation>Ayrıcalıklı</translation>
     </message>
     <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Rule is active only in this Time Period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>Tamam</translation>
     </message>
@@ -2284,6 +2479,18 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <translation>Önceden Ayarlanmış Kural Ekle</translation>
     </message>
     <message>
+        <source>General</source>
+        <translation>Genel</translation>
+    </message>
+    <message>
+        <source>Presets</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation>Diğer</translation>
+    </message>
+    <message>
         <source>Remove</source>
         <translation>Kaldır</translation>
     </message>
@@ -2308,20 +2515,12 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <translation>Yardım</translation>
     </message>
     <message>
-        <source>Terminating Rule:</source>
-        <translation>Sonlandırma Kuralı:</translation>
-    </message>
-    <message>
         <source>Tray Menu</source>
         <translation>Tepsi Menüsü</translation>
     </message>
     <message>
         <source>Inline Zones</source>
         <translation>Sıralı Bölgeler</translation>
-    </message>
-    <message>
-        <source>Alert</source>
-        <translation>Uyarı</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
@@ -2337,6 +2536,10 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
     <message>
         <source>Rule</source>
         <translation>Kural</translation>
+    </message>
+    <message>
+        <source>Time Period</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -2940,6 +3143,29 @@ Packet loss: %2</source>
     <message>
         <source>Maximum retries count</source>
         <translation>Maksimum Yeniden Deneme Sayısı </translation>
+    </message>
+</context>
+<context>
+    <name>TerminatingRuleSelector</name>
+    <message>
+        <source>Terminating Rule:</source>
+        <translation>Sonlandırma Kuralı:</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Engelle </translation>
+    </message>
+    <message>
+        <source>Drop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation>Uyarı</translation>
     </message>
 </context>
 <context>

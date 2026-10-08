@@ -248,11 +248,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Program&apos;s Network Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Zone: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Loopback</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inherited from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dropped</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -455,6 +467,157 @@
     <message>
         <source>Profile&apos;s drive mounted</source>
         <translation>Ổ đĩa của hồ sơ đã được gắn</translation>
+    </message>
+</context>
+<context>
+    <name>FilterEditDialog</name>
+    <message>
+        <source>Action:</source>
+        <translation>Hành động:</translation>
+    </message>
+    <message>
+        <source>By &amp;Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Rule&apos;s action is applied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Allow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Block</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Drop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block silently, without a response</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Any</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Protocol:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Area:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Localhost</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote IP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote Port:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local IP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local Port:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Collect the connection, even if the Rule doesn&apos;t</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t collect the connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Collect the connection as alerted, also with &quot;Alerted only&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Hủy</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Tùy chỉnh</translation>
+    </message>
+    <message>
+        <source>Not</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All, except these</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1710,6 +1873,10 @@ Hãy đảm bảo bạn đã có bản sao lưu mới.</translation>
 <context>
     <name>ProgConnListPage</name>
     <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Copy</source>
         <translation>Sao chép</translation>
     </message>
@@ -1981,6 +2148,26 @@ Hãy đảm bảo bạn đã có bản sao lưu mới.</translation>
         <source>No Limit</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>Di chuyển lên</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>Di chuyển xuống</translation>
+    </message>
 </context>
 <context>
     <name>ProgramAlertWindow</name>
@@ -2240,6 +2427,18 @@ Việc này có thể khiến Windows hoạt động lỗi hoặc hoàn toàn kh
         <translation>Trợ giúp</translation>
     </message>
     <message>
+        <source>General</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Presets</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2268,10 +2467,6 @@ Việc này có thể khiến Windows hoạt động lỗi hoặc hoàn toàn kh
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Alert</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2282,6 +2477,14 @@ Việc này có thể khiến Windows hoạt động lỗi hoặc hoàn toàn kh
     <message>
         <source>Collect blocked connections</source>
         <translation>Thu thập các kết nối bị chặn</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Rule is active only in this Time Period.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Move Up</source>
@@ -2306,10 +2509,6 @@ Việc này có thể khiến Windows hoạt động lỗi hoặc hoàn toàn kh
     <message>
         <source>Collect allowed connections</source>
         <translation>Thu thập các kết nối được phép</translation>
-    </message>
-    <message>
-        <source>Terminating Rule:</source>
-        <translation>Quy tắc kết thúc:</translation>
     </message>
     <message>
         <source>Add Preset Rule</source>
@@ -2337,6 +2536,10 @@ Việc này có thể khiến Windows hoạt động lỗi hoặc hoàn toàn kh
     <message>
         <source>Rule</source>
         <translation>Quy tắc</translation>
+    </message>
+    <message>
+        <source>Time Period</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Global Rules, applied after App Rules</source>
@@ -2940,6 +3143,29 @@ Packet loss: %2</source>
     <message>
         <source>Last Success</source>
         <translation>Lần thành công gần nhất</translation>
+    </message>
+</context>
+<context>
+    <name>TerminatingRuleSelector</name>
+    <message>
+        <source>Terminating Rule:</source>
+        <translation>Quy tắc kết thúc:</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Cho phép</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Chặn</translation>
+    </message>
+    <message>
+        <source>Drop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

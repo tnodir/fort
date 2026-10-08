@@ -316,6 +316,10 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Program&apos;s Network Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>Sconosciuto</translation>
     </message>
@@ -329,6 +333,14 @@
     </message>
     <message>
         <source>Loopback</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inherited from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dropped</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -455,6 +467,157 @@
     <message>
         <source>Profile&apos;s drive mounted</source>
         <translation>Drive di profilo montato</translation>
+    </message>
+</context>
+<context>
+    <name>FilterEditDialog</name>
+    <message>
+        <source>Action:</source>
+        <translation>Azione:</translation>
+    </message>
+    <message>
+        <source>By &amp;Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Rule&apos;s action is applied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Allow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Block</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Drop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block silently, without a response</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Any</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Protocol:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Area:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Localhost</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>Internet</translation>
+    </message>
+    <message>
+        <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote IP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote Port:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local IP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local Port:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Collect the connection, even if the Rule doesn&apos;t</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t collect the connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation>Avviso</translation>
+    </message>
+    <message>
+        <source>Collect the connection as alerted, also with &quot;Alerted only&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All, except these</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1710,6 +1873,10 @@ Assicurati di avere un nuovo backup.</translation>
 <context>
     <name>ProgConnListPage</name>
     <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Copy as Filter</source>
         <translation>Copia come filtro</translation>
     </message>
@@ -1980,6 +2147,26 @@ Assicurati di avere un nuovo backup.</translation>
     <message>
         <source>No Limit</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Rimuovi</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Modifica</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>Sposta su</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>Sposta giù</translation>
     </message>
 </context>
 <context>
@@ -2257,6 +2444,14 @@ Controllare un altro programma con lo stesso percorso.</translation>
         <translation>Esclusivo</translation>
     </message>
     <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Rule is active only in this Time Period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>Ok</translation>
     </message>
@@ -2285,6 +2480,18 @@ Controllare un altro programma con lo stesso percorso.</translation>
         <translation>Aggiungi regola preimpostata</translation>
     </message>
     <message>
+        <source>General</source>
+        <translation>Generale</translation>
+    </message>
+    <message>
+        <source>Presets</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation>Altro</translation>
+    </message>
+    <message>
         <source>Remove</source>
         <translation>Rimuovi</translation>
     </message>
@@ -2309,20 +2516,12 @@ Controllare un altro programma con lo stesso percorso.</translation>
         <translation>Aiuto</translation>
     </message>
     <message>
-        <source>Terminating Rule:</source>
-        <translation>Regola terminante:</translation>
-    </message>
-    <message>
         <source>Tray Menu</source>
         <translation>Menu&apos; Vassoio</translation>
     </message>
     <message>
         <source>Inline Zones</source>
         <translation>Zone incluse</translation>
-    </message>
-    <message>
-        <source>Alert</source>
-        <translation>Avviso</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
@@ -2338,6 +2537,10 @@ Controllare un altro programma con lo stesso percorso.</translation>
     <message>
         <source>Rule</source>
         <translation>Regola</translation>
+    </message>
+    <message>
+        <source>Time Period</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -2941,6 +3144,29 @@ Packet loss: %2</source>
     <message>
         <source>Maximum retries count</source>
         <translation>Numero massimo tentativi</translation>
+    </message>
+</context>
+<context>
+    <name>TerminatingRuleSelector</name>
+    <message>
+        <source>Terminating Rule:</source>
+        <translation>Regola terminante:</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Consenti</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Blocca</translation>
+    </message>
+    <message>
+        <source>Drop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation>Avviso</translation>
     </message>
 </context>
 <context>

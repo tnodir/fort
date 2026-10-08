@@ -316,6 +316,10 @@
         <translation>Блокировать входящие</translation>
     </message>
     <message>
+        <source>Program&apos;s Network Filter</source>
+        <translation>Сетевой фильтр программы</translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>Неизвестно</translation>
     </message>
@@ -330,6 +334,14 @@
     <message>
         <source>Loopback</source>
         <translation>Loopback</translation>
+    </message>
+    <message>
+        <source>Inherited from: %1</source>
+        <translation>Унаследовано от: %1</translation>
+    </message>
+    <message>
+        <source>Dropped</source>
+        <translation>Отброшено</translation>
     </message>
     <message>
         <source>Local Host Name</source>
@@ -455,6 +467,157 @@
     <message>
         <source>Profile&apos;s drive mounted</source>
         <translation>Том профиля был демонтирован</translation>
+    </message>
+</context>
+<context>
+    <name>FilterEditDialog</name>
+    <message>
+        <source>Action:</source>
+        <translation>Действие:</translation>
+    </message>
+    <message>
+        <source>By &amp;Rule</source>
+        <translation>По &amp;правилу</translation>
+    </message>
+    <message>
+        <source>The Rule&apos;s action is applied</source>
+        <translation>Применяется действие Правила</translation>
+    </message>
+    <message>
+        <source>&amp;Allow</source>
+        <translation>&amp;Разрешить</translation>
+    </message>
+    <message>
+        <source>&amp;Block</source>
+        <translation>&amp;Блокировать</translation>
+    </message>
+    <message>
+        <source>&amp;Drop</source>
+        <translation>&amp;Отбросить</translation>
+    </message>
+    <message>
+        <source>Block silently, without a response</source>
+        <translation>Блокировать молча, без ответа</translation>
+    </message>
+    <message>
+        <source>Direction:</source>
+        <translation>Направление:</translation>
+    </message>
+    <message>
+        <source>Any</source>
+        <translation>Любой</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Входящие</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>Исходящие</translation>
+    </message>
+    <message>
+        <source>Protocol:</source>
+        <translation>Протокол:</translation>
+    </message>
+    <message>
+        <source>Area:</source>
+        <translation>Область:</translation>
+    </message>
+    <message>
+        <source>Localhost</source>
+        <translation>Localhost</translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>Интернет</translation>
+    </message>
+    <message>
+        <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
+        <translation>Локальная сеть: по адресам &quot;Локальная сеть&quot; в Опциях</translation>
+    </message>
+    <message>
+        <source>Remote IP:</source>
+        <translation>Удалённый IP:</translation>
+    </message>
+    <message>
+        <source>Remote Port:</source>
+        <translation>Удалённый порт:</translation>
+    </message>
+    <message>
+        <source>Local IP:</source>
+        <translation>Локальный IP:</translation>
+    </message>
+    <message>
+        <source>Local Port:</source>
+        <translation>Локальный порт:</translation>
+    </message>
+    <message>
+        <source>Options:</source>
+        <translation>Опции:</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation>Лог</translation>
+    </message>
+    <message>
+        <source>Collect the connection, even if the Rule doesn&apos;t</source>
+        <translation>Собирать соединение, даже если Правило не собирает</translation>
+    </message>
+    <message>
+        <source>No Log</source>
+        <translation>Без лога</translation>
+    </message>
+    <message>
+        <source>Don&apos;t collect the connection</source>
+        <translation>Не собирать соединение</translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation>Оповещение</translation>
+    </message>
+    <message>
+        <source>Collect the connection as alerted, also with &quot;Alerted only&quot;</source>
+        <translation>Собирать соединение как оповещение, также с &quot;Только оповещения&quot;</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation>Текст</translation>
+    </message>
+    <message>
+        <source>Copy Text</source>
+        <translation>Копировать текст</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>ОК</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Отмена</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>Добавить фильтр</translation>
+    </message>
+    <message>
+        <source>Edit Filter</source>
+        <translation>Редактирование фильтра</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Нестандартный</translation>
+    </message>
+    <message>
+        <source>Not</source>
+        <translation>Не</translation>
+    </message>
+    <message>
+        <source>All, except these</source>
+        <translation>Все, кроме этих</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>Очистить</translation>
     </message>
 </context>
 <context>
@@ -1711,6 +1874,10 @@ Make sure that you have a fresh backup.</source>
 <context>
     <name>ProgConnListPage</name>
     <message>
+        <source>Add Filter</source>
+        <translation>Добавить фильтр</translation>
+    </message>
+    <message>
         <source>Copy as Filter</source>
         <translation>Копировать как фильтр</translation>
     </message>
@@ -1981,6 +2148,26 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>No Limit</source>
         <translation>Без ограничения</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>Добавить фильтр</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Изменить</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>Передвинуть вверх</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>Передвинуть вниз</translation>
     </message>
 </context>
 <context>
@@ -2258,6 +2445,14 @@ Please check other program with the same path.</source>
         <translation>Эксклюзив</translation>
     </message>
     <message>
+        <source>Add Filter</source>
+        <translation>Добавить фильтр</translation>
+    </message>
+    <message>
+        <source>The Rule is active only in this Time Period.</source>
+        <translation>Правило активно только в этот Период времени.</translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>ОК</translation>
     </message>
@@ -2286,6 +2481,18 @@ Please check other program with the same path.</source>
         <translation>Добавить заданное правило</translation>
     </message>
     <message>
+        <source>General</source>
+        <translation>Общий</translation>
+    </message>
+    <message>
+        <source>Presets</source>
+        <translation>Заданные</translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation>Больше</translation>
+    </message>
+    <message>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
@@ -2310,20 +2517,12 @@ Please check other program with the same path.</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <source>Terminating Rule:</source>
-        <translation>Завершающее правило:</translation>
-    </message>
-    <message>
         <source>Tray Menu</source>
         <translation>Меню в трее</translation>
     </message>
     <message>
         <source>Inline Zones</source>
         <translation>Встроить зоны</translation>
-    </message>
-    <message>
-        <source>Alert</source>
-        <translation>Оповещение</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
@@ -2339,6 +2538,10 @@ Please check other program with the same path.</source>
     <message>
         <source>Rule</source>
         <translation>Правило</translation>
+    </message>
+    <message>
+        <source>Time Period</source>
+        <translation>Период времени</translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -2943,6 +3146,29 @@ Packet loss: %2</source>
     <message>
         <source>Maximum retries count</source>
         <translation>Максимальное количество повторных попыток</translation>
+    </message>
+</context>
+<context>
+    <name>TerminatingRuleSelector</name>
+    <message>
+        <source>Terminating Rule:</source>
+        <translation>Завершающее правило:</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Разрешить</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Блокировать</translation>
+    </message>
+    <message>
+        <source>Drop</source>
+        <translation>Отбросить</translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation>Оповещение</translation>
     </message>
 </context>
 <context>
