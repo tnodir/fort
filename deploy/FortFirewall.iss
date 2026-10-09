@@ -80,10 +80,10 @@ Name: "{app}\Data"; Flags: uninsneveruninstall; Permissions: users-modify; Tasks
 [Icons]
 ; Start menu shortcut
 Name: "{group}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"; \
-  Parameters: "--lang {code:LanguageName}"
+  Parameters: "--lang {code:LanguageName}"; Tasks: not portable
 
 ; Uninstaller shortcut
-Name: "{group}\{cm:UninstallProgram,{#APP_NAME}}"; Filename: "{uninstallexe}"
+Name: "{group}\{cm:UninstallProgram,{#APP_NAME}}"; Filename: "{uninstallexe}"; Tasks: not portable
 
 ; Desktop shortcut
 Name: "{commondesktop}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"; \
