@@ -89,7 +89,7 @@ bool HomeWindow::checkAboutToClose()
     if (windowManager->isAppQuitting())
         return true;
 
-    trayIcon->quitProgram();
+    emit windowManager->requestQuit();
 
     return false;
 }

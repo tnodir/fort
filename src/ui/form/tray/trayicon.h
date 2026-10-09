@@ -47,8 +47,6 @@ public slots:
 
     void updateTrayMenu(bool onlyFlags = false);
 
-    void quitProgram();
-
     void processMouseClick(Qt::MouseButton button, Qt::KeyboardModifiers modifiers);
 
 protected slots:

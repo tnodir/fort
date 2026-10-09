@@ -32,6 +32,8 @@ class TrayIcon;
 class WidgetWindow;
 class ZonesWindow;
 
+struct MessageBoxArg;
+
 class WindowManager : public QObject, public IocService
 {
     Q_OBJECT
@@ -78,6 +80,8 @@ public:
 
 signals:
     void windowVisibilityChanged(WindowCode code, bool isVisible);
+
+    void requestQuit();
 
 public slots:
     void showTrayIcon();
@@ -162,6 +166,8 @@ public slots:
             const QString &title = QString(), QWidget *parent = nullptr);
     void showQuestionBox(const std::function<void(bool confirmed)> &onFinished, const QString &text,
             const QString &title = QString(), QWidget *parent = nullptr);
+    void showChoiceBox(const std::function<void(int button)> &onFinished, const MessageBoxArg &ba,
+            QWidget *parent = nullptr);
 
     static void showMessageBox(QMessageBox::Icon icon, const QString &text,
             const QString &title = QString(), QWidget *parent = nullptr);

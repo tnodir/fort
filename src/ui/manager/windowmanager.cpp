@@ -563,19 +563,24 @@ void WindowManager::showConfirmBox(const std::function<void()> &onConfirmed, con
 void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &onFinished,
         const QString &text, const QString &title, QWidget *parent)
 {
-    auto box = DialogUtil::createMessageBox({ .icon = QMessageBox::Question,
-                                                    .buttons = QMessageBox::Yes | QMessageBox::No,
-                                                    .text = text,
-                                                    .title = title },
-            parent);
-
-    connect(
-            box, &QMessageBox::finished, this,
-            [=](int result) {
-                const bool confirmed = (result == QMessageBox::Yes);
+    showChoiceBox(
+            [=](int button) {
+                const bool confirmed = (button == QMessageBox::Yes);
                 onFinished(confirmed);
             },
-            Qt::QueuedConnection);
+            { .icon = QMessageBox::Question,
+                    .buttons = QMessageBox::Yes | QMessageBox::No,
+                    .text = text,
+                    .title = title },
+            parent);
+}
+
+void WindowManager::showChoiceBox(
+        const std::function<void(int button)> &onFinished, const MessageBoxArg &ba, QWidget *parent)
+{
+    auto box = DialogUtil::createMessageBox(ba, parent);
+
+    connect(box, &QMessageBox::finished, this, onFinished, Qt::QueuedConnection);
 
     DialogUtil::showDialog(box);
 }

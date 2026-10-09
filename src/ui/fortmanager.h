@@ -32,6 +32,8 @@ public slots:
     bool installDriver();
     bool removeDriver();
 
+    void quitProgram();
+
     void processRestartRequired(const QString &info = {});
 
     static void setupPortableResource();
@@ -56,6 +58,9 @@ private:
     void checkDriverAccess();
     void askInstallService();
 
+    bool canAskRemoveService() const;
+    void askRemoveServiceAndQuit();
+
     void setupEnvManager();
     void setupConfManager();
     void setupConfRuleManager();
@@ -64,6 +69,7 @@ private:
     void setupQuotaManager();
     void setupTaskManager();
     void setupServiceInfoManager();
+    void setupWindowManager();
 
     void loadConf();
 

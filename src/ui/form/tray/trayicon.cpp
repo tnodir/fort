@@ -368,16 +368,6 @@ void TrayIcon::updateTrayMenu(bool onlyFlags)
     updateHotKeys();
 }
 
-void TrayIcon::quitProgram()
-{
-    if (iniUser().confirmQuit()) {
-        windowManager()->showConfirmBox(
-                [&] { windowManager()->quit(); }, tr("Are you sure you want to quit the program?"));
-    } else {
-        windowManager()->quit();
-    }
-}
-
 void TrayIcon::switchTrayMenu(bool /*checked*/)
 {
     showTrayMenu(QCursor::pos());
@@ -701,7 +691,8 @@ void TrayIcon::setupTrayMenuRuleActions()
 
 void TrayIcon::setupTrayMenuBottomActions()
 {
-    m_quitAction = addAction(m_menu, { ":/icons/standby.png", this, SLOT(quitProgram()) });
+    m_quitAction =
+            addAction(m_menu, { ":/icons/standby.png", windowManager(), SIGNAL(requestQuit()) });
     addHotKey(m_quitAction, HotKey::quit);
 
     m_trayMenuAction = addAction(

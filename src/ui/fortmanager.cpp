@@ -11,6 +11,7 @@
 #include <conf/firewallconf.h>
 #include <control/controlmanager.h>
 #include <driver/drivercommon.h>
+#include <form/dialog/dialogutil.h>
 #include <form/dialog/passworddialog.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
@@ -46,6 +47,7 @@
 #include <rpc/taskmanagerrpc.h>
 #include <rpc/windowmanagerfake.h>
 #include <task/taskinfozonedownloader.h>
+#include <user/iniuser.h>
 #include <user/usersettings.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
@@ -222,6 +224,7 @@ void FortManager::initialize()
     setupQuotaManager();
     setupTaskManager();
     setupServiceInfoManager();
+    setupWindowManager();
 
     checkReinstallDriver();
     checkStartService();
@@ -474,6 +477,51 @@ void FortManager::askInstallService()
             text);
 }
 
+void FortManager::quitProgram()
+{
+    // The portable installation's Service is removed on request
+    if (canAskRemoveService()) {
+        askRemoveServiceAndQuit();
+        return;
+    }
+
+    if (iniUser().confirmQuit()) {
+        windowManager()->showConfirmBox(
+                [&] { windowManager()->quit(); }, tr("Are you sure you want to quit the program?"));
+    } else {
+        windowManager()->quit();
+    }
+}
+
+bool FortManager::canAskRemoveService() const
+{
+    const auto settings = Fort::settings();
+
+    // The Service is installed as Administrator from a non-admin portable UI
+    if (settings->isUserAdmin())
+        return false;
+
+    return settings->isPortable() && StartupUtil::isServiceInstalled();
+}
+
+void FortManager::askRemoveServiceAndQuit()
+{
+    windowManager()->showChoiceBox(
+            [&](int button) {
+                if (button == QMessageBox::Cancel)
+                    return;
+
+                // The UAC prompt may be cancelled
+                if (button == QMessageBox::Yes && !setServiceInstalled(false))
+                    return;
+
+                windowManager()->quit();
+            },
+            { .icon = QMessageBox::Question,
+                    .buttons = QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel,
+                    .text = tr("Remove the Windows Service and the Driver before quitting?") });
+}
+
 void FortManager::setupEnvManager()
 {
     auto envManager = Fort::envManager();
@@ -581,6 +629,11 @@ void FortManager::setupServiceInfoManager()
 {
     connect(serviceInfoManager(), &ServiceInfoManager::servicesStarted, confManager(),
             &ConfManager::updateDriverServices);
+}
+
+void FortManager::setupWindowManager()
+{
+    connect(windowManager(), &WindowManager::requestQuit, this, &FortManager::quitProgram);
 }
 
 void FortManager::processRestartRequired(const QString &info)
