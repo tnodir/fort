@@ -30,7 +30,7 @@ AppPublisherURL={#APP_URL}
 AppSupportURL={#APP_URL}
 AppUpdatesURL={#APP_UPDATES_URL}
 DefaultGroupName={#APP_NAME}
-DefaultDirName={param:PATH|{commonpf}\{#APP_NAME}}
+DefaultDirName={param:PATH|{code:DefaultAppDir}}
 AlwaysShowDirOnReadyPage=yes
 AlwaysShowGroupOnReadyPage=yes
 AllowNoIcons=yes
@@ -75,6 +75,8 @@ Source: "data\qt.conf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "data\inst.tmp"; DestDir: "{app}"; Flags: ignoreversion deleteafterinstall
 
 [Dirs]
+; Also when taken over from an install of the 32-bit install mode
+Name: "{app}"; Flags: uninsalwaysuninstall
 Name: "{app}\Data"; Flags: uninsneveruninstall; Permissions: users-modify; Tasks: portable
 
 [Icons]
@@ -196,14 +198,32 @@ begin
   Result := ActiveLanguage;
 end;
 
-function GetUninstallString(): String;
-var
-  UninstallKey: String;
+function UninstallKey(): String;
 begin
-  UninstallKey := ExpandConstant('Software\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppName")}_is1');
+  Result := ExpandConstant('Software\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppName")}_is1');
+end;
 
-  if not RegQueryStringValue(HKLM, UninstallKey, 'UninstallString', Result) then
-    RegQueryStringValue(HKCU, UninstallKey, 'UninstallString', Result);
+function GetUninstallString(): String;
+begin
+  if RegQueryStringValue(HKLM, UninstallKey(), 'UninstallString', Result) then
+    Exit;
+
+  { An install of the 32-bit install mode, e.g. an old one on Windows 10 ARM64 }
+  if RegQueryStringValue(HKLM32, UninstallKey(), 'UninstallString', Result) then
+    Exit;
+
+  RegQueryStringValue(HKCU, UninstallKey(), 'UninstallString', Result);
+end;
+
+function DefaultAppDir(Param: String): String;
+begin
+  { Upgrade an install of the 32-bit install mode (e.g. an old one on Windows 10 ARM64)
+    in its directory }
+  if Is64BitInstallMode()
+      and RegQueryStringValue(HKLM32, UninstallKey(), 'Inno Setup: App Path', Result) then
+    Exit;
+
+  Result := ExpandConstant('{commonpf}\{#APP_NAME}');
 end;
 
 procedure SetupIsUpgrade();
@@ -491,9 +511,28 @@ begin
   Result := CheckPasswordHash();
 end;
 
+procedure UnregisterPrevious32BitInstall();
+var
+  AppPath: String;
+begin
+  { Inno Setup keeps an install of the 32-bit install mode (e.g. an old one on Windows 10 ARM64)
+    registered apart: drop its registration, the 64-bit one takes its files over }
+  if not Is64BitInstallMode()
+      or not RegQueryStringValue(HKLM32, UninstallKey(), 'Inno Setup: App Path', AppPath) then
+    Exit;
+
+  if CompareText(AppPath, ExpandConstant('{app}')) <> 0 then
+    Exit;
+
+  RegDeleteKeyIncludingSubkeys(HKLM32, UninstallKey());
+  DelTree(AppPath + '\uninst', True, True, True);
+end;
+
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 begin
   StopFortService(True);
+
+  UnregisterPrevious32BitInstall();
 
   Result := '';
 end;
