@@ -41,6 +41,8 @@ With an EWDK instead of an installed WDK, set up the environment non-interactive
 
 `src/driver/FortFirewallDriver.pro` builds the driver code as a **user-mode** console app (`driver/test/main.c` plus the `wdm/um_*.c` shims that emulate the kernel APIs) — that is how driver logic is exercised without loading a real driver.
 
+The driver writes its errors to the System event log by `TRACE(event_code, status, error_value, sequence)` (`forttrace.c`; the Config info events only with the "Trace Driver Events" option). The event codes are defined in `driver/evt/fortevt.mc` (a facility's MessageIds start at its number × 10): after a change regenerate `fortevt.h` and `FORTEVT_MSG00001.bin` by `mc -z FORTEVT fortevt.mc` in `driver/evt/` (`mcbuild.bat`) and convert the header's CRLF to LF. `driver/common/` is compiled into the UI too, so `TRACE` there is guarded by `FORT_DRIVER` (cf. `fortprov.c`). A user's events: `wevtutil qe System "/q:*[System[Provider[@Name='fortfw']]]" /f:xml /rd:true /c:50`; in an event's `<Binary>` (the `IO_ERROR_LOG_PACKET` header, little-endian) the 4th DWORD is the event code, the 5th `error_value`, the 6th `status` (e.g. `0D0000C0` = `STATUS_INVALID_PARAMETER`).
+
 ### Tests
 
 GoogleTest/GoogleMock; requires the `GOOGLETEST_DIR` env var pointing at a googletest checkout, otherwise the test subprojects are skipped silently.
