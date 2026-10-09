@@ -66,6 +66,7 @@ public:
     static const char *const sqlInsertConn;
 
     static const char *const sqlSelectMinMaxConnId;
+    static const char *const sqlSelectAppConnIds;
 
     static const char *const sqlDeleteConn;
     static const char *const sqlDeleteConnApps;

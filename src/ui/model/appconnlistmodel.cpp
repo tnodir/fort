@@ -5,18 +5,11 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
+#include <stat/statsql.h>
+
 namespace {
 
-const char *const sqlSelectAppConnIds = "WITH a AS ("
-                                        "  SELECT app_id FROM app"
-                                        "    WHERE conf_app_id = ?1 OR path = ?2"
-                                        ")"
-                                        "SELECT conn_id"
-                                        "  FROM conn"
-                                        "  WHERE app_id IN (SELECT app_id FROM a)"
-                                        "    OR inherit_app_id IN (SELECT app_id FROM a)"
-                                        "  ORDER BY conn_id DESC"
-                                        "  LIMIT 100;";
+inline constexpr int appConnsMax = 100;
 
 }
 
@@ -28,10 +21,12 @@ void AppConnListModel::fillConnIdRange(qint64 &idMin, qint64 &idMax)
 
     SqliteStmt stmt;
     if (!DbQuery(sqliteDb())
-                    .sql(sqlSelectAppConnIds)
+                    .sql(StatSql::sqlSelectAppConnIds)
                     .vars({
                             DbVar::nullable(confAppId()),
                             DbVar::nullable(appPath()),
+                            appConnsMax,
+                            0,
                     })
                     .prepare(stmt))
         return;

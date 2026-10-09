@@ -29,14 +29,27 @@ protected slots:
     void clearConnRows() override;
 
 protected:
+    static constexpr int searchConnsMax = 5000;
+
     bool updateTableRow(const QVariantHash &vars, int row) const override;
 
     int doSqlCount() const override;
+
+    /* The rows are searched and loaded */
+    virtual bool isSearching() const { return isFiltering(); }
+
+    /* The first of the last connections to search */
+    virtual qint64 lastConnsIdMin(qint64 idMax) const;
+
+    virtual QString sqlSearchWhere() const;
+    virtual void fillSearchVars(QVariantList & /*vars*/) const { }
 
 private slots:
     void updateSearch();
 
 private:
+    qint64 searchConnIdMin();
+
     void removeConnRowsBefore(qint64 idMin);
     void removeFirstConnRows(int count);
     void appendConnRows(qint64 connIdFrom);

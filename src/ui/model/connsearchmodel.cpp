@@ -18,7 +18,6 @@ using namespace Fort;
 namespace {
 
 inline constexpr int searchTimerInterval = 150;
-inline constexpr int searchConnsMax = 5000;
 
 using AppTextHash = QHash<QString, QString>; // by app path
 
@@ -55,6 +54,16 @@ QString connRowSearchText(const ConnRow &connRow, const QString &appText)
     return list.join('\n');
 }
 
+bool isConnRowMatched(const TextMatcher &textMatcher, const ConnRow &connRow, AppTextHash &appTexts)
+{
+    if (textMatcher.isEmpty())
+        return true;
+
+    const QString &appText = appSearchText(appTexts, connRow.appPath);
+
+    return textMatcher.isMatched(connRowSearchText(connRow, appText));
+}
+
 }
 
 ConnSearchModel::ConnSearchModel(QObject *parent) :
@@ -80,16 +89,12 @@ void ConnSearchModel::updateSearchLater()
 
 void ConnSearchModel::updateConnIdRange()
 {
-    if (!isFiltering()) {
+    if (!isSearching()) {
         ConnListModel::updateConnIdRange();
         return;
     }
 
-    qint64 idMin = 0, idMax = 0;
-    fillConnIdRange(idMin, idMax);
-
-    /* Search in the last connections only */
-    const qint64 searchIdMin = qMax(idMin, idMax - searchConnsMax + 1);
+    const qint64 searchIdMin = searchConnIdMin();
 
     removeConnRowsBefore(searchIdMin);
 
@@ -98,7 +103,7 @@ void ConnSearchModel::updateConnIdRange()
 
 void ConnSearchModel::clearConnRows()
 {
-    if (!isFiltering()) {
+    if (!isSearching()) {
         ConnListModel::clearConnRows();
         return;
     }
@@ -110,7 +115,7 @@ void ConnSearchModel::clearConnRows()
 
 bool ConnSearchModel::updateTableRow(const QVariantHash &vars, int row) const
 {
-    if (!isFiltering())
+    if (!isSearching())
         return ConnListModel::updateTableRow(vars, row);
 
     if (!isAscendingOrder()) {
@@ -127,7 +132,7 @@ bool ConnSearchModel::updateTableRow(const QVariantHash &vars, int row) const
 
 int ConnSearchModel::doSqlCount() const
 {
-    return isFiltering() ? m_connRows.size() : ConnListModel::doSqlCount();
+    return isSearching() ? m_connRows.size() : ConnListModel::doSqlCount();
 }
 
 void ConnSearchModel::updateSearch()
@@ -137,7 +142,7 @@ void ConnSearchModel::updateSearch()
     m_connRows.clear();
     m_lastConnId = 0;
 
-    if (isFiltering()) {
+    if (isSearching()) {
         reset();
         updateConnIdRange();
         return;
@@ -147,6 +152,25 @@ void ConnSearchModel::updateSearch()
     fillConnIdRange(idMin, idMax);
 
     resetConnRows(idMin, idMax);
+}
+
+qint64 ConnSearchModel::lastConnsIdMin(qint64 idMax) const
+{
+    return idMax - searchConnsMax + 1;
+}
+
+QString ConnSearchModel::sqlSearchWhere() const
+{
+    return " WHERE t.conn_id > ?1";
+}
+
+qint64 ConnSearchModel::searchConnIdMin()
+{
+    qint64 idMin = 0, idMax = 0;
+    fillConnIdRange(idMin, idMax);
+
+    /* Search in the last connections only */
+    return qMax(idMin, lastConnsIdMin(idMax));
 }
 
 void ConnSearchModel::removeConnRowsBefore(qint64 idMin)
@@ -189,10 +213,13 @@ void ConnSearchModel::appendConnRows(qint64 connIdFrom)
 
 void ConnSearchModel::loadConnRows(qint64 connIdFrom, QVector<ConnRow> &connRows)
 {
-    const QString sql = sqlBase() + " WHERE t.conn_id > ?1 ORDER BY t.conn_id LIMIT ?2;";
+    const QString sql = sqlBase() + sqlSearchWhere() + " ORDER BY t.conn_id LIMIT ?2;";
+
+    QVariantList vars = { connIdFrom, searchConnsMax };
+    fillSearchVars(vars);
 
     SqliteStmt stmt;
-    if (!DbQuery(sqliteDb()).sql(sql).vars({ connIdFrom, searchConnsMax }).prepare(stmt))
+    if (!DbQuery(sqliteDb()).sql(sql).vars(vars).prepare(stmt))
         return;
 
     ConnRow connRow;
@@ -203,9 +230,7 @@ void ConnSearchModel::loadConnRows(qint64 connIdFrom, QVector<ConnRow> &connRows
 
         m_lastConnId = connRow.connId;
 
-        const QString &appText = appSearchText(appTexts, connRow.appPath);
-
-        if (m_textMatcher.isMatched(connRowSearchText(connRow, appText))) {
+        if (isConnRowMatched(m_textMatcher, connRow, appTexts)) {
             connRows.append(connRow);
         }
     }

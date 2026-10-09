@@ -58,20 +58,25 @@ void showFilterSimWindow(const ConnRow &connRow)
 }
 
 ConnectionsWindow::ConnectionsWindow(QWidget *parent) :
-    FormWindow(parent),
-    m_ctrl(new ConnectionsController(this)),
-    m_connListModel(new ConnSearchModel(this))
+    ConnectionsWindow(new ConnSearchModel(), parent, {})
 {
+    initialize();
+
+    setupFormWindow(iniUser(), IniUser::connWindowGroup());
+}
+
+ConnectionsWindow::ConnectionsWindow(
+        ConnSearchModel *connListModel, QWidget *parent, Qt::WindowFlags f) :
+    FormWindow(parent, f), m_ctrl(new ConnectionsController(this)), m_connListModel(connListModel)
+{
+    connListModel->setParent(this);
+
     setupUi();
 
     updateAutoScroll();
     updateShowHostNames();
 
-    connListModel()->initialize();
-
     setupController();
-
-    setupFormWindow(iniUser(), IniUser::connWindowGroup());
 }
 
 void ConnectionsWindow::saveWindowState(bool /*wasVisible*/)
@@ -101,11 +106,34 @@ void ConnectionsWindow::restoreWindowState()
     }
 }
 
+void ConnectionsWindow::initialize()
+{
+    connListModel()->initialize();
+
+    emit ctrl()->retranslateUi();
+}
+
+void ConnectionsWindow::hideEditing()
+{
+    for (auto w : m_editWidgets) {
+        w->hide();
+    }
+
+    m_actAddProgram->setVisible(false);
+    m_actRemoveConn->setVisible(false);
+    m_actClearAll->setVisible(false);
+
+    disconnect(m_connListView, &TableView::doubleClicked, m_actAddProgram, &QAction::trigger);
+}
+
+void ConnectionsWindow::retranslateWindowTitle()
+{
+    this->setWindowTitle(tr("Connections"));
+}
+
 void ConnectionsWindow::setupController()
 {
     connect(ctrl(), &ConnectionsController::retranslateUi, this, &ConnectionsWindow::retranslateUi);
-
-    emit ctrl()->retranslateUi();
 }
 
 void ConnectionsWindow::retranslateUi()
@@ -135,7 +163,7 @@ void ConnectionsWindow::retranslateUi()
 
     m_appInfoRow->retranslateUi();
 
-    this->setWindowTitle(tr("Connections"));
+    retranslateWindowTitle();
 }
 
 void ConnectionsWindow::setupUi()
@@ -223,17 +251,26 @@ QLayout *ConnectionsWindow::setupHeader()
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
 
+    const auto editSeparator = ControlUtil::createVSeparator();
+    const auto clearAllSeparator = ControlUtil::createVSeparator();
+    const auto listOptionsSeparator = ControlUtil::createVSeparator();
+
+    m_editWidgets = { m_btEdit, editSeparator, m_btClearAll, clearAllSeparator, m_btListOptions,
+        listOptionsSeparator };
+
     layout->addWidget(m_btEdit);
-    layout->addWidget(ControlUtil::createVSeparator());
+    layout->addWidget(editSeparator);
     layout->addWidget(m_btClearAll);
-    layout->addWidget(ControlUtil::createVSeparator());
+    layout->addWidget(clearAllSeparator);
     layout->addWidget(m_editSearch);
     layout->addStretch();
     layout->addWidget(m_btListOptions);
-    layout->addWidget(ControlUtil::createVSeparator());
+    layout->addWidget(listOptionsSeparator);
     layout->addWidget(m_btOptions);
     layout->addWidget(m_btStatistics);
     layout->addWidget(m_btMenu);
+
+    m_headerLayout = layout;
 
     return layout;
 }

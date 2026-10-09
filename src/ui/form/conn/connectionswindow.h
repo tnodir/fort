@@ -5,6 +5,7 @@
 
 #include <form/controls/formwindow.h>
 
+QT_FORWARD_DECLARE_CLASS(QHBoxLayout)
 QT_FORWARD_DECLARE_CLASS(QHeaderView)
 
 class AppInfoRow;
@@ -29,6 +30,22 @@ public:
 
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
+
+protected:
+    ConnectionsWindow(ConnSearchModel *connListModel, QWidget *parent, Qt::WindowFlags f);
+
+    QHBoxLayout *headerLayout() const { return m_headerLayout; }
+    TableView *connListView() const { return m_connListView; }
+
+    void initialize();
+
+    void hideEditing();
+
+    int connListCurrentIndex() const;
+    const ConnRow &currentConnRow() const;
+
+protected slots:
+    virtual void retranslateWindowTitle();
 
 private:
     void setupController();
@@ -63,15 +80,13 @@ private:
 
     void deleteConn(int row);
 
-    int connListCurrentIndex() const;
-    const ConnRow &currentConnRow() const;
-
 private:
     int m_topRowOffset = 0;
 
     ConnectionsController *m_ctrl = nullptr;
     ConnSearchModel *m_connListModel = nullptr;
 
+    QHBoxLayout *m_headerLayout = nullptr;
     QPushButton *m_btEdit = nullptr;
     QAction *m_actCopyAsFilter = nullptr;
     QAction *m_actCopy = nullptr;
@@ -93,6 +108,8 @@ private:
     AppInfoRow *m_appInfoRow = nullptr;
 
     QPersistentModelIndex m_topRowIndex;
+
+    QList<QWidget *> m_editWidgets; // the Edit, Clear All and List Options buttons
 };
 
 #endif // CONNECTIONSWINDOW_H

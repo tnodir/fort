@@ -55,6 +55,7 @@ SOURCES += \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
     form/basecontroller.cpp \
+    form/conn/appconnswindow.cpp \
     form/conn/connectionscontroller.cpp \
     form/conn/connectionswindow.cpp \
     form/controls/appinforow.cpp \
@@ -186,6 +187,7 @@ SOURCES += \
     manager/translationmanager.cpp \
     manager/windowmanager.cpp \
     model/appconnlistmodel.cpp \
+    model/appconnsearchmodel.cpp \
     model/applistmodel.cpp \
     model/applistmodeldata.cpp \
     model/applistmodelheaderdata.cpp \
@@ -364,6 +366,7 @@ HEADERS += \
     driver/drivermanager.h \
     driver/driverworker.h \
     form/basecontroller.h \
+    form/conn/appconnswindow.h \
     form/conn/connectionscontroller.h \
     form/conn/connectionswindow.h \
     form/controls/appinforow.h \
@@ -497,6 +500,7 @@ HEADERS += \
     manager/translationmanager.h \
     manager/windowmanager.h \
     model/appconnlistmodel.h \
+    model/appconnsearchmodel.h \
     model/applistcolumn.h \
     model/applistmodel.h \
     model/applistmodeldata.h \

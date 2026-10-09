@@ -83,6 +83,9 @@ signals:
 
     void requestQuit();
 
+    /* The windows without a code, e.g. the Program Connections, close on it */
+    void aboutToCloseAllWindows();
+
 public slots:
     void showTrayIcon();
     void closeTrayIcon();

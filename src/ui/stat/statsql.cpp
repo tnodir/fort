@@ -167,6 +167,17 @@ const char *const StatSql::sqlInsertConn =
 
 const char *const StatSql::sqlSelectMinMaxConnId = "SELECT MIN(conn_id), MAX(conn_id) FROM conn;";
 
+const char *const StatSql::sqlSelectAppConnIds = "WITH a AS ("
+                                                 "  SELECT app_id FROM app"
+                                                 "    WHERE conf_app_id = ?1 OR path = ?2"
+                                                 ")"
+                                                 "SELECT conn_id"
+                                                 "  FROM conn"
+                                                 "  WHERE app_id IN (SELECT app_id FROM a)"
+                                                 "    OR inherit_app_id IN (SELECT app_id FROM a)"
+                                                 "  ORDER BY conn_id DESC"
+                                                 "  LIMIT ?3 OFFSET ?4;";
+
 const char *const StatSql::sqlDeleteConn = "DELETE FROM conn WHERE conn_id <= ?1;";
 
 const char *const StatSql::sqlDeleteConnApps =

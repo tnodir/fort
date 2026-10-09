@@ -16,6 +16,7 @@
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <form/conn/appconnswindow.h>
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/groupsselector.h>
@@ -149,6 +150,7 @@ void ProgramsWindow::retranslateUi()
 
     m_actAppCopyPath->setText(tr("Copy Path"));
     m_actAppOpenFolder->setText(tr("Open Folder"));
+    m_actAppConns->setText(tr("Connections"));
 
     m_actReviewAlerts->setText(tr("Review Alerts"));
     m_actDeleteAlertedApps->setText(tr("Remove Alerted Programs"));
@@ -320,6 +322,8 @@ void ProgramsWindow::setupEditMenu()
     m_actAppOpenFolder = menu->addAction(IconCache::icon(":/icons/folder.png"), QString());
     m_actAppOpenFolder->setShortcut(QKeyCombination(Qt::CTRL | Qt::SHIFT, Qt::Key_O));
 
+    m_actAppConns = menu->addAction(IconCache::icon(":/icons/connect.png"), QString());
+
     menu->addSeparator();
 
     m_actReviewAlerts = menu->addAction(IconCache::icon(":/icons/error.png"), QString());
@@ -347,6 +351,7 @@ void ProgramsWindow::setupEditMenu()
 
     connect(m_actAppCopyPath, &QAction::triggered, this, [&] { m_appInfoRow->appCopyPath(); });
     connect(m_actAppOpenFolder, &QAction::triggered, this, [&] { m_appInfoRow->appOpenFolder(); });
+    connect(m_actAppConns, &QAction::triggered, this, &ProgramsWindow::openAppConnsWindow);
 
     connect(m_actReviewAlerts, &QAction::triggered, this,
             [&] { windowManager()->showProgramAlertWindow(); });
@@ -596,6 +601,7 @@ void ProgramsWindow::setupTableAppsChanged()
         m_actRemoveApp->setEnabled(appSelected);
         m_actAppCopyPath->setEnabled(appSelected);
         m_actAppOpenFolder->setEnabled(appSelected);
+        m_actAppConns->setEnabled(appSelected);
         m_btAllowApp->setEnabled(appSelected);
         m_btBlockApp->setEnabled(appSelected);
         m_btRemoveApp->setEnabled(appSelected);
@@ -775,6 +781,20 @@ void ProgramsWindow::editSelectedPrograms()
         return;
 
     openAppEditForm(appRow, appIdList);
+}
+
+void ProgramsWindow::openAppConnsWindow()
+{
+    const auto &appRow = appListCurrentRow();
+    if (appRow.isNull())
+        return;
+
+    auto connsWindow = new AppConnsWindow(appRow);
+    ControlUtil::deleteOnClose(connsWindow);
+
+    connect(windowManager(), &WindowManager::aboutToCloseAllWindows, connsWindow, &QWidget::close);
+
+    WidgetWindow::showWidget(connsWindow);
 }
 
 bool ProgramsWindow::checkAppEditFormOpened() const

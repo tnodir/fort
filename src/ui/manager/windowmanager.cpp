@@ -456,6 +456,8 @@ void WindowManager::saveAllWindowStates()
 
 void WindowManager::closeAllWindows(bool isAppQuitting)
 {
+    emit aboutToCloseAllWindows();
+
     for (int i = 0; i < WindowCount; ++i) {
         auto &form = m_forms[i];
         form.close(isAppQuitting);

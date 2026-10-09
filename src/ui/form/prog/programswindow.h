@@ -74,6 +74,7 @@ private:
     void addNewProgram();
     void addNewWildcard();
     void editSelectedPrograms();
+    void openAppConnsWindow();
 
     bool checkAppEditFormOpened() const;
     void openAppEditForm(const App &app, const QVector<qint64> &appIdList = {});
@@ -116,6 +117,7 @@ private:
     QAction *m_actRemoveApp = nullptr;
     QAction *m_actAppCopyPath = nullptr;
     QAction *m_actAppOpenFolder = nullptr;
+    QAction *m_actAppConns = nullptr;
     QAction *m_actReviewAlerts = nullptr;
     QAction *m_actDeleteAlertedApps = nullptr;
     QAction *m_actClearAlerts = nullptr;
