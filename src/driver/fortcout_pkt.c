@@ -53,6 +53,16 @@ inline static BOOL fort_callout_transport_classify_blocked(const FWPS_CLASSIFY_O
             && classifyOut->actionType == FWP_ACTION_BLOCK;
 }
 
+inline static BOOL fort_callout_transport_classify_skip_reinjected(PCFORT_CALLOUT_ARG ca)
+{
+    /* Skip the packet re-injected by another driver: its original packet is counted */
+    const FORT_CONF_FLAGS conf_flags = fort_device_conf_flags(&fort_device()->conf);
+    if (conf_flags.log_stat_reinjected)
+        return FALSE;
+
+    return fort_packet_injected_by_other(ca);
+}
+
 static void fort_callout_transport_classify_stat(
         const FWPS_CLASSIFY_OUT0 *classifyOut, PCFORT_CALLOUT_ARG ca)
 {
@@ -60,8 +70,7 @@ static void fort_callout_transport_classify_stat(
     if (fort_callout_transport_classify_blocked(classifyOut))
         return;
 
-    /* Skip the packet re-injected by another driver: its original packet is counted */
-    if (fort_packet_injected_by_other(ca))
+    if (fort_callout_transport_classify_skip_reinjected(ca))
         return;
 
     PFORT_STAT stat = &fort_device()->stat;

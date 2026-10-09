@@ -32,6 +32,7 @@ private:
     void setupTrafficBox();
     void setupLogStat();
     void setupLogStatNoFilter();
+    void setupLogStatReinjected();
     void setupActivePeriod();
     void setupMonthStart();
     void setupTrafKeep();
@@ -45,6 +46,7 @@ private:
 
     QCheckBox *m_cbLogStat = nullptr;
     QCheckBox *m_cbLogStatNoFilter = nullptr;
+    QCheckBox *m_cbLogStatReinjected = nullptr;
     CheckTimePeriod *m_ctpActivePeriod = nullptr;
     LabelSpinCombo *m_lscMonthStart = nullptr;
     LabelSpinCombo *m_lscTrafHourKeepDays = nullptr;

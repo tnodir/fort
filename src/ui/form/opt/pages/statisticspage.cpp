@@ -50,6 +50,7 @@ void StatisticsPage::onResetToDefault()
 {
     m_cbLogStat->setChecked(true);
     m_cbLogStatNoFilter->setChecked(true);
+    m_cbLogStatReinjected->setChecked(false);
 
     m_ctpActivePeriod->checkBox()->setChecked(false);
 
@@ -76,6 +77,7 @@ void StatisticsPage::onRetranslateUi()
 
     m_cbLogStat->setText(tr("Collect Traffic Statistics"));
     m_cbLogStatNoFilter->setText(tr("Collect Traffic, when Filter Disabled"));
+    m_cbLogStatReinjected->setText(tr("Collect Traffic re-injected by other drivers"));
     m_ctpActivePeriod->checkBox()->setText(tr("Active time period:"));
     m_lscMonthStart->label()->setText(tr("Month starts on:"));
 
@@ -192,6 +194,7 @@ void StatisticsPage::setupTrafficBox()
 {
     setupLogStat();
     setupLogStatNoFilter();
+    setupLogStatReinjected();
     setupActivePeriod();
     setupMonthStart();
     setupTrafKeep();
@@ -199,10 +202,10 @@ void StatisticsPage::setupTrafficBox()
 
     // Layout
     auto layout = ControlUtil::createVLayoutByWidgets(
-            { m_cbLogStat, m_cbLogStatNoFilter, m_ctpActivePeriod, m_lscMonthStart,
-                    ControlUtil::createSeparator(), m_lscTrafHourKeepDays, m_lscTrafDayKeepDays,
-                    m_lscTrafMonthKeepMonths, ControlUtil::createSeparator(), m_lscQuotaDayMb,
-                    m_lscQuotaMonthMb, m_cbQuotaBlockInternet });
+            { m_cbLogStat, m_cbLogStatNoFilter, m_cbLogStatReinjected, m_ctpActivePeriod,
+                    m_lscMonthStart, ControlUtil::createSeparator(), m_lscTrafHourKeepDays,
+                    m_lscTrafDayKeepDays, m_lscTrafMonthKeepMonths, ControlUtil::createSeparator(),
+                    m_lscQuotaDayMb, m_lscQuotaMonthMb, m_cbQuotaBlockInternet });
 
     m_gbTraffic = new QGroupBox();
     m_gbTraffic->setLayout(layout);
@@ -228,6 +231,17 @@ void StatisticsPage::setupLogStatNoFilter()
             ctrl()->setFlagsEdited();
         }
     });
+}
+
+void StatisticsPage::setupLogStatReinjected()
+{
+    m_cbLogStatReinjected =
+            ControlUtil::createCheckBox(conf().logStatReinjected(), [&](bool checked) {
+                if (conf().logStatReinjected() != checked) {
+                    conf().setLogStatReinjected(checked);
+                    ctrl()->setFlagsEdited();
+                }
+            });
 }
 
 void StatisticsPage::setupActivePeriod()

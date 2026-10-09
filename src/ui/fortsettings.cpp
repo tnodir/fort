@@ -470,6 +470,7 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setSpeedLimiterEnabled(iniBool("speedLimiterEnabled", true));
     conf.setLogStat(iniBool("logStat", true));
     conf.setLogStatNoFilter(iniBool("logStatNoFilter", true));
+    conf.setLogStatReinjected(iniBool("logStatReinjected"));
     conf.setLogApp(iniBool("logApp", true));
     conf.setLogAllowedConn(iniBool("logAllowedConn"));
     conf.setLogBlockedConn(iniBool("logBlockedConn", true));
@@ -517,6 +518,7 @@ void FortSettings::writeConfIni(const FirewallConf &conf, IniOptions &iniOpt)
         setIniValue("speedLimiterEnabled", conf.speedLimiterEnabled());
         setIniValue("logStat", conf.logStat());
         setIniValue("logStatNoFilter", conf.logStatNoFilter());
+        setIniValue("logStatReinjected", conf.logStatReinjected());
         setIniValue("logApp", conf.logApp());
         setIniValue("logAllowedConn", conf.logAllowedConn());
         setIniValue("logBlockedConn", conf.logBlockedConn());

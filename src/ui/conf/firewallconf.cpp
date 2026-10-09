@@ -152,6 +152,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
 
     m_logStat = o.logStat();
     m_logStatNoFilter = o.logStatNoFilter();
+    m_logStatReinjected = o.logStatReinjected();
     m_logApp = o.logApp();
 
     m_logAllowedConn = o.logAllowedConn();
@@ -197,6 +198,7 @@ QVariant FirewallConf::flagsToVariant() const
 
     map["logStat"] = logStat();
     map["logStatNoFilter"] = logStatNoFilter();
+    map["logStatReinjected"] = logStatReinjected();
     map["logApp"] = logApp();
 
     map["logAllowedConn"] = logAllowedConn();
@@ -234,6 +236,7 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_logApp = map["logApp"].toBool();
     m_logStat = map["logStat"].toBool();
     m_logStatNoFilter = map["logStatNoFilter"].toBool();
+    m_logStatReinjected = map["logStatReinjected"].toBool();
 
     m_logAllowedConn = map["logAllowedConn"].toBool();
     m_logBlockedConn = map["logBlockedConn"].toBool();

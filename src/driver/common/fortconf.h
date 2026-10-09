@@ -57,13 +57,14 @@ typedef struct fort_conf_flags
 
     UINT32 log_stat : 1;
     UINT32 log_stat_no_filter : 1;
+    UINT32 log_stat_reinjected : 1;
     UINT32 log_app : 1;
 
     UINT32 log_allowed_conn : 1;
     UINT32 log_blocked_conn : 1;
     UINT32 log_alerted_conn : 1;
 
-    UINT32 reserved_flags : 8; /* not used */
+    UINT32 reserved_flags : 7; /* not used */
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
 
 typedef const FORT_CONF_FLAGS *PCFORT_CONF_FLAGS;

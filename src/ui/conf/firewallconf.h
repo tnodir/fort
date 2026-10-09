@@ -112,6 +112,9 @@ public:
     bool logStatNoFilter() const { return m_logStatNoFilter; }
     void setLogStatNoFilter(bool v) { m_logStatNoFilter = v; }
 
+    bool logStatReinjected() const { return m_logStatReinjected; }
+    void setLogStatReinjected(bool v) { m_logStatReinjected = v; }
+
     bool logApp() const { return m_logApp; }
     void setLogApp(bool v) { m_logApp = v; }
 
@@ -195,6 +198,7 @@ private:
 
     uint m_logStat : 1 = false;
     uint m_logStatNoFilter : 1 = false;
+    uint m_logStatReinjected : 1 = false;
     uint m_logApp : 1 = false;
 
     uint m_logAllowedConn : 1 = false;
