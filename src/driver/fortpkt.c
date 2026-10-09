@@ -19,18 +19,27 @@ inline static HANDLE fort_packet_injection_id(BOOL isIPv6, BOOL inbound)
                        : pending->injection_transport4_out_id);
 }
 
-FORT_API BOOL fort_packet_injected_by_self(PCFORT_CALLOUT_ARG ca)
+inline static FWPS_PACKET_INJECTION_STATE fort_packet_injection_state(PCFORT_CALLOUT_ARG ca)
 {
     if (ca->netBufList == NULL)
-        return FALSE;
+        return FWPS_PACKET_NOT_INJECTED;
 
     const HANDLE injection_id = fort_packet_injection_id(ca->isIPv6, ca->inbound);
 
-    const FWPS_PACKET_INJECTION_STATE state =
-            FwpsQueryPacketInjectionState0(injection_id, ca->netBufList, NULL);
+    return FwpsQueryPacketInjectionState0(injection_id, ca->netBufList, NULL);
+}
+
+FORT_API BOOL fort_packet_injected_by_self(PCFORT_CALLOUT_ARG ca)
+{
+    const FWPS_PACKET_INJECTION_STATE state = fort_packet_injection_state(ca);
 
     return (state == FWPS_PACKET_INJECTED_BY_SELF
             || state == FWPS_PACKET_PREVIOUSLY_INJECTED_BY_SELF);
+}
+
+FORT_API BOOL fort_packet_injected_by_other(PCFORT_CALLOUT_ARG ca)
+{
+    return fort_packet_injection_state(ca) == FWPS_PACKET_INJECTED_BY_OTHER;
 }
 
 static FWPS_PACKET_LIST_INBOUND_IPSEC_INFORMATION0 fort_packet_get_ipsec_inbound_info(

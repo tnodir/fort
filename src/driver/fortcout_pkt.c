@@ -27,6 +27,12 @@ inline static UINT32 fort_packet_data_size(const FWPS_INCOMING_METADATA_VALUES0 
     return dataSize;
 }
 
+inline static BOOL fort_packet_layer_is_ipv6(UINT16 layerId)
+{
+    return layerId == FWPS_LAYER_INBOUND_TRANSPORT_V6
+            || layerId == FWPS_LAYER_OUTBOUND_TRANSPORT_V6;
+}
+
 inline static BOOL fort_callout_transport_classify_shaper(
         FWPS_CLASSIFY_OUT0 *classifyOut, PFORT_CALLOUT_ARG ca)
 {
@@ -52,6 +58,10 @@ static void fort_callout_transport_classify_stat(
 {
     /* Skip the packet blocked or absorbed (to be re-injected) by a higher sublayer's callout */
     if (fort_callout_transport_classify_blocked(classifyOut))
+        return;
+
+    /* Skip the packet re-injected by another driver: its original packet is counted */
+    if (fort_packet_injected_by_other(ca))
         return;
 
     PFORT_STAT stat = &fort_device()->stat;
@@ -82,13 +92,13 @@ static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixed
         .flowContext = flowContext,
         .dataSize = fort_packet_data_size(inMetaValues, netBufList, inbound),
         .inbound = inbound,
+        .isIPv6 = fort_packet_layer_is_ipv6(inFixedValues->layerId),
     };
 
-    if (filter->action.type == FWP_ACTION_CALLOUT_INSPECTION) {
-        fort_callout_transport_classify_stat(classifyOut, &ca);
-    } else if (fort_callout_transport_classify_shaper(classifyOut, &ca)) {
+    if (fort_callout_transport_classify_shaper(classifyOut, &ca))
         return;
-    }
+
+    fort_callout_transport_classify_stat(classifyOut, &ca);
 
     fort_callout_classify_continue(classifyOut); /* continue */
 }

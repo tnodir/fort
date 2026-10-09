@@ -936,8 +936,6 @@ FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper, PFORT_CALLOUT_ARG 
     if ((flow_flags & speed_limit) == 0)
         return FALSE;
 
-    ca->isIPv6 = (flow_flags & FORT_FLOW_IP6) != 0;
-
     /* Skip self injected packet */
     if (fort_packet_injected_by_self(ca))
         return FALSE;

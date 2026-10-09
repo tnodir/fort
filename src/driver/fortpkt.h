@@ -57,6 +57,8 @@ extern "C" {
 
 FORT_API BOOL fort_packet_injected_by_self(PCFORT_CALLOUT_ARG ca);
 
+FORT_API BOOL fort_packet_injected_by_other(PCFORT_CALLOUT_ARG ca);
+
 FORT_API BOOL fort_packet_is_ipsec_protected(PCFORT_CALLOUT_ARG ca);
 
 FORT_API void fort_packet_free(PFORT_PACKET_IO pkt);
