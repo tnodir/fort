@@ -30,17 +30,17 @@ AppPublisherURL={#APP_URL}
 AppSupportURL={#APP_URL}
 AppUpdatesURL={#APP_UPDATES_URL}
 DefaultGroupName={#APP_NAME}
-DefaultDirName={param:PATH|{pf}\{#APP_NAME}}
+DefaultDirName={param:PATH|{commonpf}\{#APP_NAME}}
 AlwaysShowDirOnReadyPage=yes
 AlwaysShowGroupOnReadyPage=yes
 AllowNoIcons=yes
 OutputDir=out
 OutputBaseFilename={#APP_BASE}-{#APP_VERSION_STR}{#APP_VERSION_BUILD_STR}
-Uninstallable=not IsTaskSelected('portable')
+Uninstallable=not WizardIsTaskSelected('portable')
 UninstallFilesDir={app}\uninst
 UninstallDisplayIcon={uninstallexe}
 SetupIconFile={#SRC_PATH}\ui_bin\{#APP_ICO_NAME}
-ArchitecturesInstallIn64BitMode=x64
+ArchitecturesInstallIn64BitMode=x64os arm64
 ArchitecturesAllowed={#PROC_ARCHS}
 Compression=lzma/normal
 SolidCompression=yes
@@ -60,7 +60,7 @@ Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl,{#LANG_CUSTOM}\Russian
 Name: "sl"; MessagesFile: "compiler:Languages\Slovenian.isl,{#LANG_CUSTOM}\Slovenian.isl"
 Name: "tr"; MessagesFile: "compiler:Languages\Turkish.isl,{#LANG_CUSTOM}\Turkish.isl"
 Name: "vi"; MessagesFile: "{#LANG_PATH}\Vietnamese.isl,{#LANG_CUSTOM}\Vietnamese.isl"
-Name: "zh_CN"; MessagesFile: "{#LANG_PATH}\ChineseSimplified.isl,{#LANG_CUSTOM}\ChineseSimplified.isl"
+Name: "zh_CN"; MessagesFile: "compiler:Languages\ChineseSimplified.isl,{#LANG_CUSTOM}\ChineseSimplified.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"
@@ -97,7 +97,7 @@ Filename: "{#APP_EXE}"; Parameters: "-u most"
 
 Filename: "{app}\driver\scripts\reinstall.bat"; Parameters: {code:DriverInstallArgs}; \
   Description: "Re-install driver"; \
-  Check: not IsTaskSelected('portable') or IsTaskSelected('service')
+  Check: not WizardIsTaskSelected('portable') or WizardIsTaskSelected('service')
 
 Filename: "{#APP_EXE}"; Parameters: "-i portable"; Tasks: portable
 Filename: "{#APP_EXE}"; Parameters: "-i service"; Tasks: service
@@ -120,7 +120,7 @@ Filename: "{app}\driver\scripts\uninstall.bat"; RunOnceId: "UninsDriver"
 [InstallDelete]
 Type: filesandordirs; Name: "{app}\driver"
 Type: filesandordirs; Name: "{app}\i18n"
-Type: files; Name: "{app}\README*.*"; Check: not IsTaskSelected('portable')
+Type: files; Name: "{app}\README*.*"; Check: not WizardIsTaskSelected('portable')
 Type: files; Name: "{app}\qt*.*"
 ; TODO: COMPAT: Remove the following 4 lines after v4.1.0
 Type: filesandordirs; Name: "{app}\plugins"
@@ -274,14 +274,11 @@ var
   OKButton, CancelButton: TButton;
   PwdEdit: TPasswordEdit;
 begin
-  Form := CreateCustomForm();
+  Form := CreateCustomForm(256, 100, True, True);
   try
-    Form.ClientWidth := ScaleX(256);
-    Form.ClientHeight := ScaleY(100);
     Form.Caption := ExpandConstant('{cm:UninstallPassword}');
     Form.BorderIcons := [biSystemMenu];
     Form.BorderStyle := bsDialog;
-    Form.Center;
 
     OKButton := TButton.Create(Form);
     OKButton.Parent := Form;
