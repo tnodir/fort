@@ -30,7 +30,7 @@ void WidgetWindow::centerTo(QScreen *s)
 {
     const QRect r = s->availableGeometry();
 
-    this->move(r.topLeft() + r.center() - this->rect().center());
+    this->move(r.center() - this->rect().center());
 }
 
 void WidgetWindow::showWidget(QWidget *w, bool activate)
