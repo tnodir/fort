@@ -17,8 +17,8 @@ QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class LineEdit;
 class PlainTextEdit;
+class ProtocolSelector;
 class RuleFilter;
-class SpinCombo;
 
 class FilterEditDialog : public QDialog
 {
@@ -40,7 +40,6 @@ signals:
 
 private:
     void retranslateUi();
-    void retranslateProtocolNames();
     void retranslateNotButtons();
     void retranslateClearButtons();
 
@@ -50,7 +49,7 @@ private:
     QLayout *setupActionsLayout();
     QRadioButton *createActionButton(const QString &iconPath, int actionId);
     QComboBox *createFieldCombo(const QStringList &values);
-    SpinCombo *createProtocolSpinCombo();
+    ProtocolSelector *createProtocolSelector();
     QCheckBox *createFieldCheckBox();
     QToolButton *createNotButton();
     LineEdit *createValuesEdit();
@@ -97,7 +96,7 @@ private:
     QToolButton *m_btDirectionClear = nullptr;
     QLabel *m_labelProtocol = nullptr;
     QToolButton *m_btProtocolNot = nullptr;
-    SpinCombo *m_scProtocol = nullptr;
+    ProtocolSelector *m_protocolSelector = nullptr;
     QToolButton *m_btProtocolClear = nullptr;
     QLabel *m_labelArea = nullptr;
     QToolButton *m_btAreaNot = nullptr;

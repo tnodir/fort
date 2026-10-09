@@ -8,7 +8,6 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QRadioButton>
-#include <QSpinBox>
 #include <QToolButton>
 #include <QVBoxLayout>
 
@@ -17,7 +16,7 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
-#include <form/controls/spincombo.h>
+#include <form/controls/protocolselector.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/connlistmodel.h>
@@ -39,11 +38,6 @@ const QStringList actionNames = { QString(), "Allow", "Block", "Drop" };
 
 // By the Option check box's index
 const QStringList optionNames = { "Log", "NoLog", "Alert" };
-
-inline constexpr int anyProtocol = -1;
-
-// The first value is for the "Custom" item: Any, TCP, UDP, ICMP, ICMPv6
-inline constexpr std::array protocolValues = { 0, anyProtocol, 6, 17, 1, 58 };
 
 int indexOfValue(const QStringList &values, const QString &value)
 {
@@ -82,34 +76,29 @@ void setComboFilter(QToolButton *btNot, QComboBox *c, const RuleFilter *filter)
     c->setCurrentIndex(qMax(index, 0));
 }
 
-void addProtocolFilter(FilterLineText &line, QToolButton *btNot, SpinCombo *sc)
+void addProtocolFilter(FilterLineText &line, QToolButton *btNot, ProtocolSelector *c)
 {
-    const int value = sc->spinBox()->value();
-
     line.addFilter(FORT_RULE_FILTER_TYPE_PROTOCOL,
-            (value == anyProtocol) ? QString() : NetUtil::protocolName(value), btNot->isChecked());
+            c->isAny() ? QString() : NetUtil::protocolName(c->protocol()), btNot->isChecked());
 }
 
-// The first protocol's number by its name or number
+// The first protocol's number by its name or number, -1: Any
 int protocolValue(const RuleFilter *filter)
 {
     ProtoRange range;
     if (!filter || !range.fromList(filter->values))
-        return anyProtocol;
+        return -1;
 
-    return (range.protoSize() > 0) ? range.protoAt(0) : anyProtocol;
+    return (range.protoSize() > 0) ? range.protoAt(0) : -1;
 }
 
-void setProtocolFilter(QToolButton *btNot, SpinCombo *sc, const RuleFilter *filter)
+void setProtocolFilter(QToolButton *btNot, ProtocolSelector *c, const RuleFilter *filter)
 {
     btNot->setChecked(filterIsNot(filter));
 
-    const int value = protocolValue(filter);
+    const QSignalBlocker blocker(c); // protocolChanged() isn't by the user only
 
-    const QSignalBlocker blocker(sc->spinBox()); // valueChanged() isn't by the user only
-
-    sc->spinBox()->setValue(value);
-    sc->comboBox()->setCurrentIndex(sc->getIndexByValue(value));
+    c->setProtocol(protocolValue(filter));
 }
 
 void addEditFilter(FilterLineText &line, qint8 type, QToolButton *btNot, LineEdit *edit)
@@ -189,7 +178,7 @@ void FilterEditDialog::retranslateUi()
     setComboTexts(m_comboDirection, { tr("Any"), tr("Inbound"), tr("Outbound") });
 
     m_labelProtocol->setText(tr("Protocol:"));
-    retranslateProtocolNames();
+    m_protocolSelector->retranslateUi();
 
     m_labelArea->setText(tr("Area:"));
     setComboTexts(m_comboArea, { tr("Any"), tr("Localhost"), "LAN", tr("Internet") });
@@ -226,19 +215,6 @@ void FilterEditDialog::retranslateUi()
     m_btCancel->setText(tr("Cancel"));
 
     this->setWindowTitle(isEmpty() ? tr("Add Filter") : tr("Edit Filter"));
-}
-
-void FilterEditDialog::retranslateProtocolNames()
-{
-    QStringList list = { tr("Custom"), tr("Any") };
-
-    const auto values = m_scProtocol->values().mid(2);
-
-    for (const int value : values) {
-        list << NetUtil::protocolName(value);
-    }
-
-    m_scProtocol->setNames(list);
 }
 
 void FilterEditDialog::retranslateNotButtons()
@@ -328,12 +304,11 @@ QLayout *FilterEditDialog::setupFormLayout()
 
     // Protocol
     m_btProtocolNot = createNotButton();
-    m_scProtocol = createProtocolSpinCombo();
-    m_btProtocolClear =
-            ControlUtil::createClearButton([&] { m_scProtocol->spinBox()->setValue(anyProtocol); });
+    m_protocolSelector = createProtocolSelector();
+    m_btProtocolClear = ControlUtil::createClearButton([&] { m_protocolSelector->setAny(); });
 
     m_labelProtocol = addWidgetsRow(
-            layout, "Protocol:", { m_btProtocolNot, m_scProtocol, m_btProtocolClear });
+            layout, "Protocol:", { m_btProtocolNot, m_protocolSelector, m_btProtocolClear });
 
     layout->addRow(ControlUtil::createHSeparator());
 
@@ -431,17 +406,11 @@ QComboBox *FilterEditDialog::createFieldCombo(const QStringList &values)
     return c;
 }
 
-// The protocol's number, "Any" is in the combo
-SpinCombo *FilterEditDialog::createProtocolSpinCombo()
+ProtocolSelector *FilterEditDialog::createProtocolSelector()
 {
-    auto c = new SpinCombo();
-    c->setValues(protocolValues);
-    c->spinBox()->setRange(anyProtocol, 255);
-    c->spinBox()->setSpecialValueText(" "); // empty: a typed number replaces it
-    c->spinBox()->setValue(anyProtocol);
+    auto c = new ProtocolSelector(/*hasAny=*/true);
 
-    connect(c->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            &FilterEditDialog::updateTextByFields);
+    connect(c, &ProtocolSelector::protocolChanged, this, &FilterEditDialog::updateTextByFields);
 
     return c;
 }
@@ -599,8 +568,7 @@ void FilterEditDialog::updateTextByFields()
 void FilterEditDialog::updateClearButtons()
 {
     ControlUtil::setVisibleAnimated(m_btDirectionClear, m_comboDirection->currentIndex() != 0);
-    ControlUtil::setVisibleAnimated(
-            m_btProtocolClear, m_scProtocol->spinBox()->value() != anyProtocol);
+    ControlUtil::setVisibleAnimated(m_btProtocolClear, !m_protocolSelector->isAny());
     ControlUtil::setVisibleAnimated(m_btAreaClear, m_comboArea->currentIndex() != 0);
     ControlUtil::setVisibleAnimated(m_btRemoteIpsClear, !m_editRemoteIps->toPlainText().isEmpty());
 }
@@ -610,7 +578,7 @@ QString FilterEditDialog::filterText() const
     FilterLineText line;
 
     addComboFilter(line, FORT_RULE_FILTER_TYPE_DIRECTION, m_btDirectionNot, m_comboDirection);
-    addProtocolFilter(line, m_btProtocolNot, m_scProtocol);
+    addProtocolFilter(line, m_btProtocolNot, m_protocolSelector);
     addComboFilter(line, FORT_RULE_FILTER_TYPE_AREA, m_btAreaNot, m_comboArea);
     addAreaFilter(line, FORT_RULE_FILTER_TYPE_ADDRESS, m_btRemoteIpsNot, m_editRemoteIps);
     addEditFilter(line, FORT_RULE_FILTER_TYPE_PORT, m_btRemotePortsNot, m_editRemotePorts);
@@ -634,7 +602,8 @@ void FilterEditDialog::setFilterLine(const FilterLineText &lineText)
 
     setComboFilter(
             m_btDirectionNot, m_comboDirection, line.filter(FORT_RULE_FILTER_TYPE_DIRECTION));
-    setProtocolFilter(m_btProtocolNot, m_scProtocol, line.filter(FORT_RULE_FILTER_TYPE_PROTOCOL));
+    setProtocolFilter(
+            m_btProtocolNot, m_protocolSelector, line.filter(FORT_RULE_FILTER_TYPE_PROTOCOL));
     setComboFilter(m_btAreaNot, m_comboArea, line.filter(FORT_RULE_FILTER_TYPE_AREA));
     setAreaFilter(m_btRemoteIpsNot, m_editRemoteIps, line.filter(FORT_RULE_FILTER_TYPE_ADDRESS));
     setEditFilter(m_btRemotePortsNot, m_editRemotePorts, line.filter(FORT_RULE_FILTER_TYPE_PORT));
