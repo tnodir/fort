@@ -159,11 +159,6 @@ QTime DateUtil::parseTime(const QString &time)
     return QTime(hour, minute);
 }
 
-bool DateUtil::isTimeInPeriod(QTime time, QTime from, QTime to)
-{
-    return (from <= to) ? (time >= from && time < to) : (time >= from || time < to);
-}
-
 QTime DateUtil::timeLeft(const QDateTime &dateTime, const QDateTime &fromDateTime)
 {
     constexpr int maxSecs = 24 * 60 * 60;

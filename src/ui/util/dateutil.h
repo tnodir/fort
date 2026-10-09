@@ -44,8 +44,6 @@ public:
 
     static QTime parseTime(const QString &time);
 
-    static bool isTimeInPeriod(QTime time, QTime from, QTime to);
-
     static QTime timeLeft(const QDateTime &dateTime, const QDateTime &fromDateTime = now());
     static QString formatTimeLeft(const QTime &time);
 
