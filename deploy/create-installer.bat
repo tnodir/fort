@@ -13,6 +13,6 @@
   @set PROC_ARCHS="arm64"
 )
 
-@set INNO_PATH=C:\Programs\InnoSetup7\ISCC.exe
+@if not defined INNO_HOME @set "INNO_HOME=C:\Program Files\Inno Setup 7"
 
-"%INNO_PATH%" FortFirewall.iss /DPROC_ARCHS=%PROC_ARCHS% /DCHECK_WIN10=%CHECK_WIN10%
+"%INNO_HOME%\ISCC.exe" FortFirewall.iss /DPROC_ARCHS=%PROC_ARCHS% /DCHECK_WIN10=%CHECK_WIN10%
