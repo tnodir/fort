@@ -267,6 +267,10 @@ void ProgNetworkPage::setupFilterListView()
     m_filterListView->setUniformItemSizes(true);
     m_filterListView->setAlternatingRowColors(true);
 
+    // Don't enlarge the dialog by the list's size hint, but stretch the list with it
+    m_filterListView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Ignored);
+    m_filterListView->setMinimumHeight(40);
+
     m_filterListView->setModel(m_filterListModel);
 
     connect(m_filterListView, &ListView::doubleClicked, m_btEditFilter, &QToolButton::click);
