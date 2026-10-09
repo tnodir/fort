@@ -30,8 +30,6 @@ using namespace Fort;
 
 namespace {
 
-inline constexpr int CONN_LIST_HEADER_VERSION = 5;
-
 void showFilterSimWindow(const ConnRow &connRow)
 {
     auto windowManager = Fort::windowManager();
@@ -88,7 +86,7 @@ void ConnectionsWindow::saveWindowState(bool /*wasVisible*/)
 
     auto header = m_connListView->horizontalHeader();
     iniUser.setConnListHeader(header->saveState());
-    iniUser.setConnListHeaderVersion(CONN_LIST_HEADER_VERSION);
+    iniUser.setConnListHeaderVersion(connListHeaderVersion);
 
     confManager()->saveIniUser();
 }
@@ -100,7 +98,7 @@ void ConnectionsWindow::restoreWindowState()
     stateWatcher()->restore(
             this, QSize(1024, 768), iniUser.connWindowGeometry(), iniUser.connWindowMaximized());
 
-    if (iniUser.connListHeaderVersion() == CONN_LIST_HEADER_VERSION) {
+    if (iniUser.connListHeaderVersion() == connListHeaderVersion) {
         auto header = m_connListView->horizontalHeader();
         header->restoreState(iniUser.connListHeader());
     }

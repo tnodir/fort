@@ -1,9 +1,12 @@
 #ifndef PROGRAMEDITDIALOG_H
 #define PROGRAMEDITDIALOG_H
 
+#include <QPointer>
+
 #include <form/controls/formwindow.h>
 
 class App;
+class AppConnsWindow;
 class ProgramEditController;
 class ProgMainPage;
 
@@ -23,6 +26,10 @@ public:
 protected:
     virtual void closeOnSave() { close(); }
 
+    virtual AppConnsWindow *createConnsWindow();
+
+    void hideEvent(QHideEvent *event) override;
+
 protected slots:
     void retranslateUi();
     virtual void retranslateWindowTitle();
@@ -33,10 +40,17 @@ private:
     void setupUi();
     void setupMainLayout();
 
+    void switchConnsWindow(bool visible);
+    void openConnsWindow();
+    void closeConnsWindow();
+    void updateConnsWindow();
+
 private:
     ProgramEditController *m_ctrl = nullptr;
 
     ProgMainPage *m_mainPage = nullptr;
+
+    QPointer<AppConnsWindow> m_connsWindow;
 };
 
 #endif // PROGRAMEDITDIALOG_H

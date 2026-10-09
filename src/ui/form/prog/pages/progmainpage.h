@@ -6,6 +6,7 @@
 QT_FORWARD_DECLARE_CLASS(QTabWidget)
 
 class App;
+class Conn;
 
 class ProgMainPage : public ProgBasePage
 {
@@ -15,6 +16,12 @@ public:
     explicit ProgMainPage(ProgramEditController *ctrl, QWidget *parent = nullptr);
 
     void selectTab(int index);
+
+    void setConnsWindowChecked(bool checked);
+
+signals:
+    void connsWindowToggled(bool checked);
+    void addConnFilterRequested(const Conn &conn);
 
 protected slots:
     void onValidateFields(bool &ok);
@@ -40,6 +47,7 @@ private:
 private:
     QTabWidget *m_tabWidget = nullptr;
 
+    QToolButton *m_btConnections = nullptr;
     QPushButton *m_btMenu = nullptr;
 
     QToolButton *m_btSwitchWildcard = nullptr;

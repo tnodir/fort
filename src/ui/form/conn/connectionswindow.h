@@ -32,6 +32,8 @@ public:
     void restoreWindowState() override;
 
 protected:
+    static constexpr int connListHeaderVersion = 5;
+
     ConnectionsWindow(ConnSearchModel *connListModel, QWidget *parent, Qt::WindowFlags f);
 
     QHBoxLayout *headerLayout() const { return m_headerLayout; }

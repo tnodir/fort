@@ -25,6 +25,8 @@ public:
 protected:
     void closeOnSave() override;
 
+    AppConnsWindow *createConnsWindow() override;
+
 protected slots:
     void onAppDeleted(qint64 appId);
 

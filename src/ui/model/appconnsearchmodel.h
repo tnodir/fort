@@ -17,6 +17,9 @@ public:
 
     void setApp(const App &app);
 
+    /* The program has an id or a path */
+    static bool canFilterApp(const App &app);
+
 protected:
     /* The program's connections only: by its id or path */
     bool isSearching() const override { return true; }

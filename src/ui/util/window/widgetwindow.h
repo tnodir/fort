@@ -16,6 +16,8 @@ public:
     void centerTo(QWidget *w);
     void centerTo(QScreen *s);
 
+    void moveNextTo(QWidget *w, int spacing);
+
     static void showWidget(QWidget *w, bool activate = true);
     static void exposeWidget(QWidget *w);
     static void excludeWindowFromCapture(QWidget *w, bool exclude = true);

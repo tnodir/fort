@@ -65,6 +65,8 @@ public:
     static QToolButton *createIconToolButton(const QString &iconPath);
     static QToolButton *createIconToolButton(
             const QString &iconPath, const std::function<void()> &onClicked);
+    static QToolButton *createCheckableIconToolButton(
+            const QString &iconPath, const QString &checkedIconPath);
 
     // As the line edits' Clear button
     static QToolButton *createClearButton(const std::function<void()> &onClicked);

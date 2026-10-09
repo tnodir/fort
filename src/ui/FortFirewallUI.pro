@@ -55,6 +55,7 @@ SOURCES += \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
     form/basecontroller.cpp \
+    form/conn/appalertconnswindow.cpp \
     form/conn/appconnswindow.cpp \
     form/conn/connectionscontroller.cpp \
     form/conn/connectionswindow.cpp \
@@ -130,7 +131,6 @@ SOURCES += \
     form/opt/pages/schedulepage.cpp \
     form/opt/pages/statisticspage.cpp \
     form/prog/pages/progbasepage.cpp \
-    form/prog/pages/progconnlistpage.cpp \
     form/prog/pages/proggeneralpage.cpp \
     form/prog/pages/progmainpage.cpp \
     form/prog/pages/progmorepage.cpp \
@@ -186,7 +186,6 @@ SOURCES += \
     manager/servicemanager.cpp \
     manager/translationmanager.cpp \
     manager/windowmanager.cpp \
-    model/appconnlistmodel.cpp \
     model/appconnsearchmodel.cpp \
     model/applistmodel.cpp \
     model/applistmodeldata.cpp \
@@ -366,6 +365,7 @@ HEADERS += \
     driver/drivermanager.h \
     driver/driverworker.h \
     form/basecontroller.h \
+    form/conn/appalertconnswindow.h \
     form/conn/appconnswindow.h \
     form/conn/connectionscontroller.h \
     form/conn/connectionswindow.h \
@@ -442,7 +442,6 @@ HEADERS += \
     form/opt/pages/schedulepage.h \
     form/opt/pages/statisticspage.h \
     form/prog/pages/progbasepage.h \
-    form/prog/pages/progconnlistpage.h \
     form/prog/pages/proggeneralpage.h \
     form/prog/pages/progmainpage.h \
     form/prog/pages/progmorepage.h \
@@ -499,7 +498,6 @@ HEADERS += \
     manager/servicemanager.h \
     manager/translationmanager.h \
     manager/windowmanager.h \
-    model/appconnlistmodel.h \
     model/appconnsearchmodel.h \
     model/applistcolumn.h \
     model/applistmodel.h \

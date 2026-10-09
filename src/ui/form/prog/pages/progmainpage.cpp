@@ -1,6 +1,5 @@
 #include "progmainpage.h"
 
-#include <QIcon>
 #include <QMenu>
 #include <QPushButton>
 #include <QTabWidget>
@@ -13,9 +12,8 @@
 #include <form/tray/trayicon.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
-#include <util/iconcache.h>
+#include <model/appconnsearchmodel.h>
 
-#include "progconnlistpage.h"
 #include "proggeneralpage.h"
 #include "progmorepage.h"
 #include "prognetworkpage.h"
@@ -30,6 +28,11 @@ ProgMainPage::ProgMainPage(ProgramEditController *ctrl, QWidget *parent) :
 void ProgMainPage::selectTab(int index)
 {
     m_tabWidget->setCurrentIndex(index);
+}
+
+void ProgMainPage::setConnsWindowChecked(bool checked)
+{
+    m_btConnections->setChecked(checked);
 }
 
 void ProgMainPage::onValidateFields(bool &ok)
@@ -60,6 +63,8 @@ void ProgMainPage::onPageInitialize(const App &app)
 
     setNetworkTabEnabled(!app.blocked);
 
+    m_btConnections->setEnabled(AppConnSearchModel::canFilterApp(app));
+
     selectTab(0);
 }
 
@@ -68,7 +73,8 @@ void ProgMainPage::onRetranslateUi()
     m_tabWidget->setTabText(0, tr("General"));
     m_tabWidget->setTabText(1, tr("Network Filters"));
     m_tabWidget->setTabText(2, tr("More"));
-    m_tabWidget->setTabText(3, tr("Connections"));
+
+    m_btConnections->setToolTip(tr("Connections"));
 
     m_btSwitchWildcard->setToolTip(tr("Switch Wildcard"));
     m_btOk->setText(tr("OK"));
@@ -104,26 +110,36 @@ void ProgMainPage::setupTabBar()
     auto generalPage = new ProgGeneralPage(ctrl());
     auto networkPage = new ProgNetworkPage(ctrl());
     auto morePage = new ProgMorePage(ctrl());
-    auto connsPage = new ProgConnListPage(ctrl());
 
-    m_pages = { generalPage, networkPage, morePage, connsPage };
+    m_pages = { generalPage, networkPage, morePage };
 
     m_tabWidget = new QTabWidget();
     m_tabWidget->addTab(generalPage, QString());
     m_tabWidget->addTab(networkPage, QString());
     m_tabWidget->addTab(morePage, QString());
-    m_tabWidget->addTab(connsPage, IconCache::icon(":/icons/connect.png"), QString());
+
+    // Connections button
+    m_btConnections = ControlUtil::createCheckableIconToolButton(
+            ":/icons/disconnect.png", ":/icons/connect.png");
+
+    connect(m_btConnections, &QAbstractButton::clicked, this, &ProgMainPage::connsWindowToggled);
 
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
 
-    m_tabWidget->setCornerWidget(m_btMenu);
+    auto cornerLayout = ControlUtil::createHLayoutByWidgets(
+            { m_btConnections, ControlUtil::createVSeparator(), m_btMenu }, /*margin=*/0);
+
+    auto cornerWidget = new QWidget();
+    cornerWidget->setLayout(cornerLayout);
+
+    m_tabWidget->setCornerWidget(cornerWidget);
 
     connect(m_tabWidget, &QTabWidget::currentChanged, this,
             [&](int tabIndex) { pageAt(tabIndex)->onPageActivated(); });
 
     // Add a Connection's filter on the Network Filters tab
-    connect(connsPage, &ProgConnListPage::addFilterRequested, networkPage,
+    connect(this, &ProgMainPage::addConnFilterRequested, networkPage,
             &ProgNetworkPage::openConnFilterForm);
 }
 

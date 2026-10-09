@@ -4,6 +4,7 @@
 
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
+#include <form/conn/appalertconnswindow.h>
 #include <fortglobal.h>
 #include <user/iniuser.h>
 #include <util/window/widgetwindowstatewatcher.h>
@@ -61,6 +62,11 @@ void ProgramAlertWindow::closeOnSave()
     if (isNew()) {
         ProgramEditDialog::closeOnSave();
     }
+}
+
+AppConnsWindow *ProgramAlertWindow::createConnsWindow()
+{
+    return new AppAlertConnsWindow(ctrl()->app(), this);
 }
 
 void ProgramAlertWindow::onAppDeleted(qint64 appId)

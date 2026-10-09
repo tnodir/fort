@@ -24,6 +24,11 @@ void AppConnSearchModel::setApp(const App &app)
     m_appPath = appFilterPath(app);
 }
 
+bool AppConnSearchModel::canFilterApp(const App &app)
+{
+    return app.isValid() || !appFilterPath(app).isEmpty();
+}
+
 qint64 AppConnSearchModel::lastConnsIdMin(qint64 /*idMax*/) const
 {
     /* The program's last connections */

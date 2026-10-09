@@ -176,6 +176,36 @@ public:
     bool progAlertWindowMaximized() const { return valueBool("progAlertWindow/maximized"); }
     void setProgAlertWindowMaximized(bool on) { setValue("progAlertWindow/maximized", on); }
 
+    QRect progAlertConnWindowGeometry() const
+    {
+        return value("progAlertConnWindow/geometry").toRect();
+    }
+    void setProgAlertConnWindowGeometry(const QRect &v)
+    {
+        setValue("progAlertConnWindow/geometry", v);
+    }
+
+    bool progAlertConnWindowMaximized() const { return valueBool("progAlertConnWindow/maximized"); }
+    void setProgAlertConnWindowMaximized(bool on) { setValue("progAlertConnWindow/maximized", on); }
+
+    int progAlertConnListHeaderVersion() const
+    {
+        return valueInt("progAlertConnWindow/connListHeaderVersion");
+    }
+    void setProgAlertConnListHeaderVersion(int v)
+    {
+        setValue("progAlertConnWindow/connListHeaderVersion", v);
+    }
+
+    QByteArray progAlertConnListHeader() const
+    {
+        return valueByteArray("progAlertConnWindow/connListHeader");
+    }
+    void setProgAlertConnListHeader(const QByteArray &v)
+    {
+        setValue("progAlertConnWindow/connListHeader", v);
+    }
+
     bool progAlertWindowAutoShow() const { return valueBool("progAlertWindow/autoShow", true); }
     void setProgAlertWindowAutoShow(bool on) { setValue("progAlertWindow/autoShow", on); }
 

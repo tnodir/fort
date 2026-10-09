@@ -5,6 +5,43 @@
 
 #include <util/osutil.h>
 
+namespace {
+
+bool isInRange(int pos, int length, int min, int max)
+{
+    return pos >= min && pos + length - 1 <= max;
+}
+
+/* Below the rect or above it, if only that fits the screen */
+int nextToY(const QRect &r, int height, const QRect &screen, int spacing)
+{
+    const int belowY = r.bottom() + 1 + spacing;
+    if (isInRange(belowY, height, screen.top(), screen.bottom()))
+        return belowY;
+
+    const int aboveY = r.top() - spacing - height;
+    if (isInRange(aboveY, height, screen.top(), screen.bottom()))
+        return aboveY;
+
+    return belowY;
+}
+
+/* By the rect's left edge or by its right edge, if only that fits the screen */
+int nextToX(const QRect &r, int width, const QRect &screen)
+{
+    const int leftX = r.left();
+    if (isInRange(leftX, width, screen.left(), screen.right()))
+        return leftX;
+
+    const int rightX = r.right() + 1 - width;
+    if (isInRange(rightX, width, screen.left(), screen.right()))
+        return rightX;
+
+    return leftX;
+}
+
+}
+
 WidgetWindow::WidgetWindow(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f) { }
 
 void WidgetWindow::showWindow(bool activate)
@@ -31,6 +68,18 @@ void WidgetWindow::centerTo(QScreen *s)
     const QRect r = s->availableGeometry();
 
     this->move(r.center() - this->rect().center());
+}
+
+void WidgetWindow::moveNextTo(QWidget *w, int spacing)
+{
+    const QRect r = w->frameGeometry();
+    const QRect screen = w->screen()->availableGeometry();
+
+    // Not shown yet, without the frame: as the window's one
+    const QSize frameSize = this->size() + (r.size() - w->size());
+
+    this->move(
+            nextToX(r, frameSize.width(), screen), nextToY(r, frameSize.height(), screen, spacing));
 }
 
 void WidgetWindow::showWidget(QWidget *w, bool activate)

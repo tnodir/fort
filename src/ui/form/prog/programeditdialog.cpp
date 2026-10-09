@@ -7,6 +7,7 @@
 #include <QDateTimeEdit>
 #include <QFormLayout>
 #include <QHeaderView>
+#include <QHideEvent>
 #include <QLabel>
 #include <QMenu>
 #include <QPushButton>
@@ -18,6 +19,7 @@
 #include <appinfo/appinfoutil.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <form/conn/appconnswindow.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
@@ -30,8 +32,8 @@
 #include <form/rule/ruleswindow.h>
 #include <fortmanager.h>
 #include <manager/windowmanager.h>
-#include <model/appconnlistmodel.h>
 #include <model/applistmodel.h>
+#include <model/appconnsearchmodel.h>
 #include <model/rulelistmodel.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
@@ -62,6 +64,8 @@ ProgramEditDialog::ProgramEditDialog(QWidget *parent, Qt::WindowFlags f) :
 void ProgramEditDialog::initialize(const App &app, const QVector<qint64> &appIdList)
 {
     ctrl()->initialize(app, appIdList);
+
+    updateConnsWindow();
 }
 
 bool ProgramEditDialog::isNew() const
@@ -104,6 +108,9 @@ void ProgramEditDialog::setupMainLayout()
     m_mainPage = new ProgMainPage(ctrl());
     layout->addWidget(m_mainPage);
 
+    connect(m_mainPage, &ProgMainPage::connsWindowToggled, this,
+            &ProgramEditDialog::switchConnsWindow);
+
     this->setLayout(layout);
 }
 
@@ -117,4 +124,67 @@ void ProgramEditDialog::retranslateUi()
 void ProgramEditDialog::retranslateWindowTitle()
 {
     this->setWindowTitle(ctrl()->isWildcard() ? tr("Edit Wildcard") : tr("Edit Program"));
+}
+
+AppConnsWindow *ProgramEditDialog::createConnsWindow()
+{
+    return new AppConnsWindow(ctrl()->app(), this);
+}
+
+void ProgramEditDialog::hideEvent(QHideEvent *event)
+{
+    FormWindow::hideEvent(event);
+
+    // Close the program's Connections window, but not on minimizing
+    if (!event->spontaneous()) {
+        closeConnsWindow();
+    }
+}
+
+void ProgramEditDialog::switchConnsWindow(bool visible)
+{
+    if (visible) {
+        openConnsWindow();
+    } else {
+        closeConnsWindow();
+    }
+}
+
+void ProgramEditDialog::openConnsWindow()
+{
+    if (!m_connsWindow) {
+        m_connsWindow = createConnsWindow();
+        m_connsWindow->setAddFilterVisible(true);
+
+        ControlUtil::deleteOnClose(m_connsWindow);
+
+        connect(m_connsWindow, &AppConnsWindow::addFilterRequested, m_mainPage,
+                &ProgMainPage::addConnFilterRequested);
+        connect(m_connsWindow, &AppConnsWindow::aboutToClose, m_mainPage,
+                [&] { m_mainPage->setConnsWindowChecked(false); });
+    }
+
+    WidgetWindow::showWidget(m_connsWindow);
+}
+
+void ProgramEditDialog::closeConnsWindow()
+{
+    if (m_connsWindow) {
+        m_connsWindow->close();
+    }
+}
+
+void ProgramEditDialog::updateConnsWindow()
+{
+    if (!m_connsWindow)
+        return;
+
+    const App &app = ctrl()->app();
+
+    if (!AppConnSearchModel::canFilterApp(app)) {
+        m_connsWindow->close();
+        return;
+    }
+
+    m_connsWindow->setApp(app);
 }
