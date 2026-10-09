@@ -28,9 +28,6 @@ public:
 
 public slots:
     bool clearTraffic() override;
-
-protected:
-    void setupConfManager() override { }
 };
 
 #endif // STATMANAGERRPC_H

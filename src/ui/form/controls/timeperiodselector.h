@@ -14,6 +14,9 @@ class TimePeriodSelector : public QWidget
 public:
     explicit TimePeriodSelector(QWidget *parent = nullptr);
 
+    QCheckBox *checkBox() const { return m_cbPeriodEnabled; }
+    QComboBox *comboBox() const { return m_comboPeriod; }
+
     bool periodEnabled() const;
     void setPeriodEnabled(bool v);
 

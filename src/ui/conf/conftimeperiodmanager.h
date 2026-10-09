@@ -59,6 +59,8 @@ private:
 
     bool saveTimePeriodIntervals(const TimePeriod &period);
 
+    void deleteStatActivePeriod(quint8 periodId);
+
 private:
     bool m_activeMaskValid = false;
 

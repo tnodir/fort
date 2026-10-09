@@ -4,7 +4,6 @@
 #include <QHash>
 #include <QObject>
 #include <QStringList>
-#include <QTime>
 #include <QVector>
 
 #include <sqlite/sqliteutilbase.h>
@@ -59,17 +58,12 @@ signals:
 public slots:
     virtual bool clearTraffic();
 
-protected:
-    virtual void setupConfManager();
-
 private:
     bool setupDb();
 
     void setupTrafDate();
 
-    void setupByConf();
-
-    void updateActivePeriod(qint32 tickSecs);
+    bool isActivePeriod() const;
 
     void clearQuotas(bool isNewDay, bool isNewMonth);
     void checkQuotas(quint64 inBytes);
@@ -111,16 +105,10 @@ private:
 
 private:
     bool m_active : 1 = false;
-    bool m_isActivePeriod : 1 = false;
 
     qint32 m_trafHour = 0;
     qint32 m_trafDay = 0;
     qint32 m_trafMonth = 0;
-
-    qint32 m_tickSecs = 0;
-
-    QTime m_activePeriodFrom;
-    QTime m_activePeriodTo;
 
     SqliteDbPtr m_sqliteDb;
 

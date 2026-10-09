@@ -117,6 +117,12 @@ public:
     // COMPAT: The App. Groups' enabled bits by their indexes
     quint32 appGroupBits() const { return iniUInt("confFlags/appGroupBits", quint32(-1)); }
 
+    // COMPAT: The Statistics' active period's times, replaced by the Time Period
+    bool activePeriodEnabled() const { return iniBool("stat/activePeriodEnabled"); }
+    QString activePeriodFrom() const { return iniText("stat/activePeriodFrom"); }
+    QString activePeriodTo() const { return iniText("stat/activePeriodTo"); }
+    void setActivePeriodId(quint8 v) { saveIniValue("stat/activePeriodId", v); }
+
 signals:
     void passwordCheckedChanged();
 
@@ -133,6 +139,8 @@ protected:
 
 private:
     void migrateExplorerIntegration(int version);
+    void keepConfDbMigrationValues(int version);
+    void removeConfDbMigrationKeys(int version);
 
     void setupPasswordUnlockTimer();
     void startPasswordUnlockTimer();

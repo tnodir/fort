@@ -207,6 +207,8 @@ bool ConfTimePeriodManager::deleteTimePeriod(quint8 periodId)
         Fort::confRuleManager()->updateDriverRules(); // the Time Period's id can be reused
     }
 
+    deleteStatActivePeriod(periodId);
+
     emit timePeriodRemoved(periodId);
 
     checkActivePeriods(/*forceChanged=*/true);
@@ -402,4 +404,17 @@ bool ConfTimePeriodManager::saveTimePeriodIntervals(const TimePeriod &period)
     }
 
     return true;
+}
+
+void ConfTimePeriodManager::deleteStatActivePeriod(quint8 periodId)
+{
+    auto &conf = Fort::conf();
+
+    if (conf.activePeriodId() != periodId)
+        return;
+
+    // The Time Period's id can be reused
+    conf.setActivePeriodId(0);
+
+    Fort::confManager()->saveFlags();
 }

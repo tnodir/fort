@@ -10,6 +10,7 @@
 #include <sqlite/sqlitestmt.h>
 
 #include <conf/confmanager.h>
+#include <conf/conftimeperiodmanager.h>
 #include <conf/firewallconf.h>
 #include <fortsettings.h>
 #include <log/logentryprocnew.h>
@@ -104,9 +105,13 @@ TEST_F(StatTest, dbWriteRead)
     IocContainer ioc;
     ioc.pinToThread();
 
+    ConfManager confManager(":memory:");
+    ConfTimePeriodManager confTimePeriodManager;
     NiceMock<MockAppInfoCache> appInfoCache;
     NiceMock<MockQuotaManager> quotaManager;
 
+    ioc.set<ConfManager>(confManager);
+    ioc.set<ConfTimePeriodManager>(confTimePeriodManager);
     ioc.set<AppInfoCache>(appInfoCache);
     ioc.set<QuotaManager>(quotaManager);
 

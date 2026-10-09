@@ -481,8 +481,7 @@ void FortSettings::readConfIni(FirewallConf &conf) const
 
     ini()->beginGroup("stat");
     conf.setActivePeriodEnabled(iniBool("activePeriodEnabled"));
-    conf.setActivePeriodFrom(DateUtil::reformatTime(iniText("activePeriodFrom")));
-    conf.setActivePeriodTo(DateUtil::reformatTime(iniText("activePeriodTo")));
+    conf.setActivePeriodId(iniUInt("activePeriodId"));
     ini()->endGroup();
 
     // Ini Options
@@ -529,8 +528,7 @@ void FortSettings::writeConfIni(const FirewallConf &conf, IniOptions &iniOpt)
 
         ini()->beginGroup("stat");
         setIniValue("activePeriodEnabled", conf.activePeriodEnabled());
-        setIniValue("activePeriodFrom", conf.activePeriodFrom());
-        setIniValue("activePeriodTo", conf.activePeriodTo());
+        setIniValue("activePeriodId", conf.activePeriodId());
         ini()->endGroup();
 
         changed = true;
@@ -606,10 +604,8 @@ void FortSettings::migrateIniOnLoad()
         setCacheValue("confFlags/logAlertedConn", ini()->value("confFlags/logAlertedBlockedIp"));
     }
 
-    // COMPAT: v3.20.0: Keep the App. Groups' enabled bits for the conf DB's migration
-    if (version < 0x032000) {
-        setCacheValue("confFlags/appGroupBits", ini()->value("confFlags/appGroupBits"));
-    }
+    // COMPAT: Keep the values for the conf DB's migration
+    keepConfDbMigrationValues(version);
 }
 
 void FortSettings::migrateExplorerIntegration(int version)
@@ -621,6 +617,20 @@ void FortSettings::migrateExplorerIntegration(int version)
     if (StartupUtil::isExplorerIntegrated()) {
         StartupUtil::setExplorerIntegrated(false);
         StartupUtil::setExplorerIntegrated(true);
+    }
+}
+
+void FortSettings::keepConfDbMigrationValues(int version)
+{
+    // COMPAT: v3.20.0: Keep the App. Groups' enabled bits
+    if (version < 0x032000) {
+        setCacheValue("confFlags/appGroupBits", ini()->value("confFlags/appGroupBits"));
+    }
+
+    // COMPAT: v3.20.3: Keep the Statistics' active period
+    if (version < 0x032003) {
+        setCacheValue("stat/activePeriodFrom", ini()->value("stat/activePeriodFrom"));
+        setCacheValue("stat/activePeriodTo", ini()->value("stat/activePeriodTo"));
     }
 }
 
@@ -678,9 +688,21 @@ void FortSettings::migrateIniOnWrite()
         ini()->setValue("confFlags/logAlertedConn", cacheValue("confFlags/logAlertedConn"));
     }
 
+    // COMPAT: Remove the values of the conf DB's migration
+    removeConfDbMigrationKeys(version);
+}
+
+void FortSettings::removeConfDbMigrationKeys(int version)
+{
     // COMPAT: v3.20.0
     if (version < 0x032000) {
         removeIniKey("confFlags/appGroupBits");
+    }
+
+    // COMPAT: v3.20.3
+    if (version < 0x032003) {
+        removeIniKey("stat/activePeriodFrom");
+        removeIniKey("stat/activePeriodTo");
     }
 }
 

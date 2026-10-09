@@ -148,11 +148,8 @@ public:
     bool activePeriodEnabled() const { return m_activePeriodEnabled; }
     void setActivePeriodEnabled(bool v) { m_activePeriodEnabled = v; }
 
-    QString activePeriodFrom() const { return m_activePeriodFrom; }
-    void setActivePeriodFrom(const QString &v) { m_activePeriodFrom = v; }
-
-    QString activePeriodTo() const { return m_activePeriodTo; }
-    void setActivePeriodTo(const QString &v) { m_activePeriodTo = v; }
+    quint8 activePeriodId() const { return m_activePeriodId; }
+    void setActivePeriodId(quint8 v) { m_activePeriodId = v; }
 
     AddressGroup *inetAddressGroup() const { return m_addressGroups.first(); }
 
@@ -210,8 +207,7 @@ private:
 
     uint m_activePeriodEnabled : 1 = false;
 
-    QString m_activePeriodFrom;
-    QString m_activePeriodTo;
+    quint8 m_activePeriodId = 0;
 
     QList<AddressGroup *> m_addressGroups;
 };

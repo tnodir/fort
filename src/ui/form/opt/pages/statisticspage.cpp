@@ -1,20 +1,21 @@
 #include "statisticspage.h"
 
 #include <QCheckBox>
+#include <QComboBox>
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QSpinBox>
-#include <QTimeEdit>
 #include <QVBoxLayout>
 
+#include <conf/conftimeperiodmanager.h>
 #include <conf/firewallconf.h>
 #include <conf/inioptions.h>
-#include <form/controls/checktimeperiod.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/labelcolor.h>
 #include <form/controls/labelspin.h>
 #include <form/controls/labelspincombo.h>
+#include <form/controls/timeperiodselector.h>
 #include <form/opt/optionscontroller.h>
 #include <fortglobal.h>
 #include <util/formatutil.h>
@@ -52,7 +53,7 @@ void StatisticsPage::onResetToDefault()
     m_cbLogStatNoFilter->setChecked(true);
     m_cbLogStatReinjected->setChecked(false);
 
-    m_ctpActivePeriod->checkBox()->setChecked(false);
+    m_activePeriodSelector->setPeriodEnabled(false);
 
     m_lscMonthStart->spinBox()->setValue(DEFAULT_MONTH_START);
     m_lscTrafHourKeepDays->spinBox()->setValue(DEFAULT_TRAF_HOUR_KEEP_DAYS);
@@ -78,7 +79,8 @@ void StatisticsPage::onRetranslateUi()
     m_cbLogStat->setText(tr("Collect Traffic Statistics"));
     m_cbLogStatNoFilter->setText(tr("Collect Traffic, when Filter Disabled"));
     m_cbLogStatReinjected->setText(tr("Collect Traffic re-injected by other drivers"));
-    m_ctpActivePeriod->checkBox()->setText(tr("Active time period:"));
+    m_activePeriodSelector->retranslateUi();
+    m_activePeriodSelector->setToolTip(tr("The Traffic is collected only in this Time Period."));
     m_lscMonthStart->label()->setText(tr("Month starts on:"));
 
     m_lscTrafHourKeepDays->label()->setText(tr("Keep data for 'Hourly':"));
@@ -202,7 +204,7 @@ void StatisticsPage::setupTrafficBox()
 
     // Layout
     auto layout = ControlUtil::createVLayoutByWidgets(
-            { m_cbLogStat, m_cbLogStatNoFilter, m_cbLogStatReinjected, m_ctpActivePeriod,
+            { m_cbLogStat, m_cbLogStatNoFilter, m_cbLogStatReinjected, m_activePeriodSelector,
                     m_lscMonthStart, ControlUtil::createSeparator(), m_lscTrafHourKeepDays,
                     m_lscTrafDayKeepDays, m_lscTrafMonthKeepMonths, ControlUtil::createSeparator(),
                     m_lscQuotaDayMb, m_lscQuotaMonthMb, m_cbQuotaBlockInternet });
@@ -246,33 +248,30 @@ void StatisticsPage::setupLogStatReinjected()
 
 void StatisticsPage::setupActivePeriod()
 {
-    m_ctpActivePeriod = new CheckTimePeriod();
-    m_ctpActivePeriod->checkBox()->setChecked(conf().activePeriodEnabled());
-    m_ctpActivePeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(conf().activePeriodFrom()));
-    m_ctpActivePeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(conf().activePeriodTo()));
+    m_activePeriodSelector = new TimePeriodSelector();
+    m_activePeriodSelector->setPeriodEnabled(conf().activePeriodEnabled());
+    m_activePeriodSelector->setPeriodId(conf().activePeriodId());
 
-    connect(m_ctpActivePeriod->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
+    connect(m_activePeriodSelector->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
         if (conf().activePeriodEnabled() != checked) {
             conf().setActivePeriodEnabled(checked);
             ctrl()->setFlagsEdited();
         }
     });
-    connect(m_ctpActivePeriod->timeEdit1(), &QTimeEdit::userTimeChanged, this,
-            [&](const QTime &time) {
-                const auto timeStr = CheckTimePeriod::fromTime(time);
+    connect(m_activePeriodSelector->comboBox(), &QComboBox::activated, this, [&] {
+        const quint8 periodId = m_activePeriodSelector->periodId();
 
-                if (conf().activePeriodFrom() != timeStr) {
-                    conf().setActivePeriodFrom(timeStr);
-                    ctrl()->setFlagsEdited();
-                }
-            });
-    connect(m_ctpActivePeriod->timeEdit2(), &QTimeEdit::userTimeChanged, this,
-            [&](const QTime &time) {
-                const auto timeStr = CheckTimePeriod::fromTime(time);
+        if (conf().activePeriodId() != periodId) {
+            conf().setActivePeriodId(periodId);
+            ctrl()->setFlagsEdited();
+        }
+    });
 
-                if (conf().activePeriodTo() != timeStr) {
-                    conf().setActivePeriodTo(timeStr);
-                    ctrl()->setFlagsEdited();
+    connect(confTimePeriodManager(), &ConfTimePeriodManager::timePeriodRemoved, this,
+            [&](quint8 periodId) {
+                // The deleted Time Period is already cleared in the saved conf
+                if (conf().activePeriodId() == periodId) {
+                    conf().setActivePeriodId(0);
                 }
             });
 }

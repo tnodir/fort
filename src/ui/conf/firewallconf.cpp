@@ -163,8 +163,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_appAllowAll = o.appAllowAll();
 
     m_activePeriodEnabled = o.activePeriodEnabled();
-    m_activePeriodFrom = o.activePeriodFrom();
-    m_activePeriodTo = o.activePeriodTo();
+    m_activePeriodId = o.activePeriodId();
 }
 
 void FirewallConf::copy(const FirewallConf &o)
@@ -209,8 +208,7 @@ QVariant FirewallConf::flagsToVariant() const
     map["appAllowAll"] = appAllowAll();
 
     map["activePeriodEnabled"] = activePeriodEnabled();
-    map["activePeriodFrom"] = activePeriodFrom();
-    map["activePeriodTo"] = activePeriodTo();
+    map["activePeriodId"] = activePeriodId();
 
     return map;
 }
@@ -246,8 +244,7 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_appAllowAll = map["appAllowAll"].toBool();
 
     m_activePeriodEnabled = map["activePeriodEnabled"].toBool();
-    m_activePeriodFrom = map["activePeriodFrom"].toString();
-    m_activePeriodTo = map["activePeriodTo"].toString();
+    m_activePeriodId = map["activePeriodId"].toUInt();
 }
 
 QVariant FirewallConf::addressesToVariant() const

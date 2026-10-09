@@ -3,8 +3,8 @@
 
 #include "optbasepage.h"
 
-class CheckTimePeriod;
 class LabelSpinCombo;
+class TimePeriodSelector;
 
 class StatisticsPage : public OptBasePage
 {
@@ -47,7 +47,7 @@ private:
     QCheckBox *m_cbLogStat = nullptr;
     QCheckBox *m_cbLogStatNoFilter = nullptr;
     QCheckBox *m_cbLogStatReinjected = nullptr;
-    CheckTimePeriod *m_ctpActivePeriod = nullptr;
+    TimePeriodSelector *m_activePeriodSelector = nullptr;
     LabelSpinCombo *m_lscMonthStart = nullptr;
     LabelSpinCombo *m_lscTrafHourKeepDays = nullptr;
     LabelSpinCombo *m_lscTrafDayKeepDays = nullptr;

@@ -38,7 +38,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-inline constexpr int DATABASE_USER_VERSION = 65;
+inline constexpr int DATABASE_USER_VERSION = 66;
 
 const char *const sqlSelectAddressGroups = "SELECT addr_group_id, include_all, exclude_all,"
                                            "    include_zones, exclude_zones,"
@@ -525,6 +525,44 @@ bool migrateTaskIntervals(SqliteDb *db)
     return DbQuery(db).sql(sql).executeOk();
 }
 
+// The Statistics' active period is replaced by the Time Period
+void migrateStatActivePeriod(SqliteDb *db)
+{
+    auto settings = Fort::settings();
+
+    const QString periodFromText = settings->activePeriodFrom();
+    const QString periodToText = settings->activePeriodTo();
+    if (periodFromText.isEmpty() && periodToText.isEmpty())
+        return; // no old active period
+
+    const QString periodFrom = DateUtil::reformatTime(periodFromText);
+    const QString periodTo = DateUtil::reformatTime(periodToText);
+
+    const int periodId = hasOldPeriod(settings->activePeriodEnabled(), periodFrom, periodTo)
+            ? migrateTimePeriod(db, periodFrom, periodTo)
+            : 0;
+
+    settings->setActivePeriodId(periodId);
+}
+
+void migrateTimePeriods(SqliteDb *db, int version)
+{
+    // COMPAT: Migrate the App. Groups to the Groups and Speed Limits
+    if (version < 59) {
+        migrateAppGroups(db, settings()->appGroupBits());
+    }
+
+    // COMPAT: Migrate the Groups' periods to the Time Periods
+    if (version >= 59 && version < 60) {
+        migrateGroupPeriods(db);
+    }
+
+    // COMPAT: Migrate the Statistics' active period to the Time Period
+    if (version < 66) {
+        migrateStatActivePeriod(db);
+    }
+}
+
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
     Q_UNUSED(ctx);
@@ -544,15 +582,8 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
         migrateAddrGroupExcludeTexts(db);
     }
 
-    // COMPAT: Migrate the App. Groups to the Groups and Speed Limits
-    if (version < 59) {
-        migrateAppGroups(db, settings()->appGroupBits());
-    }
-
-    // COMPAT: Migrate the Groups' periods to the Time Periods
-    if (version >= 59 && version < 60) {
-        migrateGroupPeriods(db);
-    }
+    // COMPAT: Migrate the App. Groups and the old periods to the Time Periods
+    migrateTimePeriods(db, version);
 
     // COMPAT: Migrate the Tasks' intervals from hours to minutes
     if (version < 61) {
