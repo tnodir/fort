@@ -14,7 +14,11 @@ QHash<quint8, QString> protocolNumberNamesMap = {
     { IPPROTO_IGMP, "IGMP" },
     { IPPROTO_TCP, "TCP" },
     { IPPROTO_UDP, "UDP" },
+    { 47, "GRE" }, // no IPPROTO_GRE
+    { IPPROTO_ESP, "ESP" },
+    { IPPROTO_AH, "AH" },
     { IPPROTO_ICMPV6, "ICMPv6" },
+    { IPPROTO_SCTP, "SCTP" },
     { IPPROTO_RAW, "RAWSOCKET" },
 };
 
