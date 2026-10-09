@@ -1,5 +1,13 @@
 Fort Firewall ChangeLog
 
+v3.20.3, 2026-10-09:
+- UI: Edit Program: Replace the Connections tab with the Program Connections window.
+- UI: Improve the Network Filter dialog and the Filter Simulator.
+- UI: Ask to remove the portable's Service on Quit (#472).
+- UI: Options: Statistics: Use a Time Period for the active period.
+- UI: Options: Statistics: Add "Collect Traffic re-injected by other drivers" flag (#768).
+- Driver: Count the traffic in the Fort's sublayer again (v3.20.0 regression) (#768).
+
 v3.20.2, 2026-10-08:
 - UI: Edit Program: Improve Network Filters tab.
 - UI: Rules: Add Time Period.
