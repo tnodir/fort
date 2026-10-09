@@ -18,6 +18,7 @@
 #include <conf/confzonemanager.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
+#include <form/controls/protocolselector.h>
 #include <form/dialog/dialogutil.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -27,7 +28,6 @@
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/net/netformatutil.h>
-#include <util/net/netutil.h>
 #include <util/stringutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
@@ -38,15 +38,14 @@ using namespace Fort;
 namespace {
 
 inline constexpr int PORT_MAX = 65535;
-inline constexpr int IP_PROTO_MAX = 255;
 
 inline constexpr int SIMULATE_DELAY_MSEC = 150;
 
 const QSize resultIconSize(16, 16);
 
-QComboBox *createFixedComboBox(const QStringList &texts = {})
+QComboBox *createFixedComboBox()
 {
-    auto c = ControlUtil::createComboBox(texts);
+    auto c = ControlUtil::createComboBox();
     c->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     return c;
 }
@@ -120,22 +119,6 @@ bool isLoopbackIp(const ip_addr_t &ip, bool isIPv6)
     return (ip.v4 >> 24) == 127; // 127.0.0.0/8
 }
 
-bool textToProtocol(const QString &text, quint8 &ipProto)
-{
-    const QString name = text.trimmed();
-
-    bool ok = false;
-
-    ipProto = NetUtil::protocolNumber(name, ok);
-    if (ok)
-        return true;
-
-    const uint v = name.toUInt(&ok);
-    ipProto = quint8(v);
-
-    return ok && v <= IP_PROTO_MAX;
-}
-
 QString resultIconPath(DriverCommon::ConnFilterResult result)
 {
     // Sync with enum DriverCommon::ConnFilterResult
@@ -199,8 +182,8 @@ void FilterSimWindow::initialize(const FilterSimConn &simConn)
     const FORT_CONF_META_CONN &conn = simConn.conn;
 
     m_editAppPath->setText(simConn.appPath);
-    m_comboDirection->setCurrentIndex(conn.inbound ? 1 : 0);
-    m_comboProtocol->setCurrentText(NetUtil::protocolName(conn.ip_proto));
+    m_comboDirection->setCurrentIndex(conn.inbound ? 0 : 1);
+    m_protocolSelector->setProtocol(conn.ip_proto);
     m_editRemoteIp->setText(NetFormatUtil::ipToText(conn.remote_ip, conn.isIPv6));
     m_spinRemotePort->setValue(conn.remote_port);
     m_editLocalIp->setText(NetFormatUtil::ipToText(conn.local_ip, conn.isIPv6));
@@ -245,6 +228,7 @@ void FilterSimWindow::retranslateUi()
     m_labelDirection->setText(tr("Direction:"));
     retranslateComboDirection();
     m_labelProtocol->setText(tr("Protocol:"));
+    m_protocolSelector->retranslateUi();
     m_labelRemoteIp->setText(tr("Remote IP:"));
     m_labelRemotePort->setText(tr("Port:"));
     m_labelLocalIp->setText(tr("Local IP:"));
@@ -272,18 +256,17 @@ void FilterSimWindow::retranslateUi()
 
 void FilterSimWindow::retranslateComboDirection()
 {
-    const QStringList list = {
-        ConnListModel::directionText(/*inbound=*/false),
-        ConnListModel::directionText(/*inbound=*/true),
-    };
+    const QStringList list = { tr("Inbound"), tr("Outbound") };
 
-    const int currentIndex = qMax(m_comboDirection->currentIndex(), 0);
+    // Outbound by default
+    const int index = m_comboDirection->currentIndex();
+    const int currentIndex = (index < 0) ? 1 : index;
 
     ControlUtil::setComboBoxTexts(m_comboDirection, list, currentIndex);
 
     ControlUtil::setComboBoxIcons(m_comboDirection,
-            { ConnListModel::directionIconPath(/*inbound=*/false),
-                    ConnListModel::directionIconPath(/*inbound=*/true) });
+            { ConnListModel::directionIconPath(/*inbound=*/true),
+                    ConnListModel::directionIconPath(/*inbound=*/false) });
 }
 
 void FilterSimWindow::retranslateComboProfile()
@@ -343,16 +326,17 @@ QLayout *FilterSimWindow::setupConnLayout()
 
     // Direction
     m_comboDirection = createFixedComboBox();
+    m_comboDirection->setFixedWidth(110); // as the Protocol's combo
 
     layout->addRow("Direction:", m_comboDirection);
     m_labelDirection = ControlUtil::formRowLabel(layout, m_comboDirection);
 
     // Protocol
-    m_comboProtocol = createFixedComboBox({ "TCP", "UDP", "ICMP", "ICMPv6" });
-    m_comboProtocol->setEditable(true);
+    m_protocolSelector = new ProtocolSelector();
+    m_protocolSelector->setProtocol(6); // TCP
 
-    layout->addRow("Protocol:", m_comboProtocol);
-    m_labelProtocol = ControlUtil::formRowLabel(layout, m_comboProtocol);
+    layout->addRow("Protocol:", m_protocolSelector);
+    m_labelProtocol = ControlUtil::formRowLabel(layout, m_protocolSelector);
 
     // Remote IP & Port
     auto remoteLayout = setupRemoteLayout();
@@ -373,6 +357,7 @@ QLayout *FilterSimWindow::setupConnLayout()
 
     // Network Profile
     m_comboProfile = createFixedComboBox();
+    m_comboProfile->setMinimumWidth(110);
 
     layout->addRow("Network Profile:", m_comboProfile);
     m_labelProfile = ControlUtil::formRowLabel(layout, m_comboProfile);
@@ -514,10 +499,11 @@ bool FilterSimWindow::fillSimConn(FilterSimConn &simConn) const
 {
     FORT_CONF_META_CONN &conn = simConn.conn;
 
-    if (!fillConnAddresses(conn) || !fillConnProtocol(conn))
+    if (!fillConnAddresses(conn))
         return false;
 
-    conn.inbound = (m_comboDirection->currentIndex() == 1);
+    conn.ip_proto = m_protocolSelector->protocol();
+    conn.inbound = (m_comboDirection->currentIndex() == 0);
     conn.profile_id = m_comboProfile->currentIndex() + 1;
     conn.local_port = m_spinLocalPort->value();
     conn.remote_port = m_spinRemotePort->value();
@@ -549,20 +535,6 @@ bool FilterSimWindow::fillConnAddresses(FORT_CONF_META_CONN &conn) const
         showInputError(tr("Invalid local IP address"));
         return false;
     }
-
-    return true;
-}
-
-bool FilterSimWindow::fillConnProtocol(FORT_CONF_META_CONN &conn) const
-{
-    quint8 ipProto = 0;
-
-    if (!textToProtocol(m_comboProtocol->currentText(), ipProto)) {
-        showInputError(tr("Invalid protocol"));
-        return false;
-    }
-
-    conn.ip_proto = ipProto;
 
     return true;
 }

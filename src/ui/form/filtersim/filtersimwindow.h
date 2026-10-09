@@ -10,6 +10,7 @@ QT_FORWARD_DECLARE_CLASS(QSpinBox)
 
 class FilterSimController;
 class LineEdit;
+class ProtocolSelector;
 
 class FilterSimWindow : public FormWindow
 {
@@ -49,7 +50,6 @@ private:
 
     bool fillSimConn(FilterSimConn &simConn) const;
     bool fillConnAddresses(FORT_CONF_META_CONN &conn) const;
-    bool fillConnProtocol(FORT_CONF_META_CONN &conn) const;
 
     void updateResult();
     void clearResult();
@@ -68,7 +68,7 @@ private:
     QLabel *m_labelDirection = nullptr;
     QComboBox *m_comboDirection = nullptr;
     QLabel *m_labelProtocol = nullptr;
-    QComboBox *m_comboProtocol = nullptr;
+    ProtocolSelector *m_protocolSelector = nullptr;
     QLabel *m_labelRemoteIp = nullptr;
     LineEdit *m_editRemoteIp = nullptr;
     QLabel *m_labelRemotePort = nullptr;
