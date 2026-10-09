@@ -139,9 +139,6 @@ QLayout *ProgMainPage::setupButtonsLayout()
     // Cancel
     m_btCancel = ControlUtil::createButton(QString(), [&] { ctrl()->closeWindow(); });
 
-    // Menu button
-    m_btMenu = ControlUtil::createMenuButton();
-
     auto layout = ControlUtil::createHLayoutByWidgets({ m_btSwitchWildcard,
             /*stretch*/ nullptr, m_btOk, m_btCancel });
 

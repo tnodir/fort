@@ -47,7 +47,6 @@ private:
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 
-    QBoxLayout *m_connectionsLayout = nullptr;
     QList<ProgBasePage *> m_pages;
 };
 
