@@ -70,9 +70,11 @@ src\scripts\i18n\update_ts.bat     :: lupdate all src/ui/i18n/*.ts
 src\scripts\i18n\release_ts.bat    :: lrelease -> *.qm (merges i18n/qt/qtbase_*.ts)
 
 deploy\setup-deployment-win10.bat  :: stage files per deploy/deployment.json into deploy/build
-deploy\create-installer.bat        :: Inno Setup (deploy/FortFirewall.iss)
+deploy\create-installer.bat        :: Inno Setup 7 (deploy/FortFirewall.iss)
 src\scripts\driver\driver-prepare.bat  :: clear certs, build driver payloads
 ```
+
+The installer is Inno Setup 7; `create-installer.bat` picks the allowed architectures by the staged drivers (`x86os x64os` for win7, `x64os`, `arm64`; Inno Setup 5 saw x64 on Windows 11 ARM64). It installs in the 64-bit install mode on x64 and ARM64, so its `HKLM` is the registry view the app writes (`passwordHash`) and the driver scripts run by the native `cmd` (they pick the driver by `PROCESSOR_ARCHITECTURE`); an old install of the 32-bit mode (Windows 10 ARM64) is taken over. The installed versions auto-update by `AutoUpdateManager::installerArgs()` (`/VERYSILENT /SUPPRESSMSGBOXES /NOCANCEL /LOG= /PATH= /TASKS=portable` and our `/LAUNCH`), as the service in session 0: keep these parameters and the `Fort Firewall_is1` uninstall key (`AppName` is the AppId), and use `SuppressibleMsgBox()` in a code that may run then (`MsgBox()` isn't suppressed and would hang invisibly). `deploy/languages/custom/*.isl` (our messages) are ANSI in their language's `LanguageCodePage`, which the compiler takes from the official translation listed before it (`compiler:Languages\…`; the unofficial ones are in `deploy/languages/`); an invalid byte fails the compilation. `CreateCustomForm()` takes the unscaled size.
 
 ## Architecture
 
