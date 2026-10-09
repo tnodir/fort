@@ -68,6 +68,17 @@
     </message>
 </context>
 <context>
+    <name>AppConnsWindow</name>
+    <message>
+        <source>Program Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AppInfoRow</name>
     <message>
         <source>Copy Path</source>
@@ -317,6 +328,10 @@
     </message>
     <message>
         <source>Program&apos;s Network Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Outbound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -604,14 +619,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Custom</source>
-        <translation>Personalizar</translation>
-    </message>
-    <message>
-        <source>Not</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>All, except these</source>
         <translation type="unfinished"></translation>
     </message>
@@ -730,6 +737,14 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Public</source>
         <translation type="unfinished"></translation>
     </message>
@@ -751,10 +766,6 @@
     </message>
     <message>
         <source>Invalid local IP address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Invalid protocol</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -809,6 +820,14 @@
     </message>
     <message>
         <source>Install the Windows Service now?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to quit the program?</source>
+        <translation>Tem certeza de que deseja encerrar o processo?</translation>
+    </message>
+    <message>
+        <source>Remove the Windows Service and the Driver before quitting?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1870,25 +1889,6 @@ Certifique-se de que possui um backup recente.</translation>
     </message>
 </context>
 <context>
-    <name>ProgConnListPage</name>
-    <message>
-        <source>Add Filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy as Filter</source>
-        <translation>Copiar como Filtro</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Copiar</translation>
-    </message>
-    <message>
-        <source>Lookup IP</source>
-        <translation>Consultar IP</translation>
-    </message>
-</context>
-<context>
     <name>ProgGeneralPage</name>
     <message>
         <source>Wildcard Paths:</source>
@@ -2120,11 +2120,19 @@ Certifique-se de que possui um backup recente.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation type="unfinished"></translation>
+        <source>In</source>
+        <translation>Entrada</translation>
     </message>
     <message>
         <source>Block Inbound Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation>Saída</translation>
+    </message>
+    <message>
+        <source>Block Outbound Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2339,6 +2347,10 @@ Por favor verifique se existe outro programa com o mesmo caminho.</translation>
         <translation>Temporizador</translation>
     </message>
     <message>
+        <source>Connections</source>
+        <translation>Conexões</translation>
+    </message>
+    <message>
         <source>Obsolete</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2392,6 +2404,17 @@ Por favor verifique se existe outro programa com o mesmo caminho.</translation>
     <message>
         <source>Bad Protocol</source>
         <translation>Protocolo Inválido</translation>
+    </message>
+</context>
+<context>
+    <name>ProtocolSelector</name>
+    <message>
+        <source>Custom</source>
+        <translation>Personalizar</translation>
+    </message>
+    <message>
+        <source>Any</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2999,10 +3022,6 @@ Packet loss: %2</source>
         <translation>Coletar Tráfego, quando o Filtro estiver Desativado</translation>
     </message>
     <message>
-        <source>Active time period:</source>
-        <translation>Período de tempo ativo:</translation>
-    </message>
-    <message>
         <source>Month starts on:</source>
         <translation>O mês começa em:</translation>
     </message>
@@ -3073,6 +3092,14 @@ Packet loss: %2</source>
     <message>
         <source>Traffic</source>
         <translation>Tráfego</translation>
+    </message>
+    <message>
+        <source>Collect Traffic re-injected by other drivers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Traffic is collected only in this Time Period.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
@@ -3456,10 +3483,6 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation>Tem certeza que deseja trocar o &quot;%1&quot;?</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to quit the program?</source>
-        <translation>Tem certeza de que deseja encerrar o processo?</translation>
     </message>
     <message>
         <source>Filter Mode</source>

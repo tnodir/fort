@@ -68,6 +68,17 @@
     </message>
 </context>
 <context>
+    <name>AppConnsWindow</name>
+    <message>
+        <source>Program Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AppInfoRow</name>
     <message>
         <source>Copy Path</source>
@@ -317,6 +328,10 @@
     </message>
     <message>
         <source>Program&apos;s Network Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Outbound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -604,14 +619,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Custom</source>
-        <translation>Özel</translation>
-    </message>
-    <message>
-        <source>Not</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>All, except these</source>
         <translation type="unfinished"></translation>
     </message>
@@ -730,6 +737,14 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Public</source>
         <translation type="unfinished"></translation>
     </message>
@@ -751,10 +766,6 @@
     </message>
     <message>
         <source>Invalid local IP address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Invalid protocol</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -809,6 +820,14 @@
     </message>
     <message>
         <source>Install the Windows Service now?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to quit the program?</source>
+        <translation>Programdan çıkmak istediğinden emin misin?</translation>
+    </message>
+    <message>
+        <source>Remove the Windows Service and the Driver before quitting?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1871,25 +1890,6 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     </message>
 </context>
 <context>
-    <name>ProgConnListPage</name>
-    <message>
-        <source>Add Filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy as Filter</source>
-        <translation>Filtre Olarak Kopyala</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Kopyala</translation>
-    </message>
-    <message>
-        <source>Lookup IP</source>
-        <translation>IP Adresini Sorgula </translation>
-    </message>
-</context>
-<context>
     <name>ProgGeneralPage</name>
     <message>
         <source>Wildcard Paths:</source>
@@ -2121,11 +2121,19 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation type="unfinished"></translation>
+        <source>In</source>
+        <translation>Gelen</translation>
     </message>
     <message>
         <source>Block Inbound Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation>Giden</translation>
+    </message>
+    <message>
+        <source>Block Outbound Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2339,6 +2347,10 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <translation>Zamanlayıcı</translation>
     </message>
     <message>
+        <source>Connections</source>
+        <translation>Bağlantılar</translation>
+    </message>
+    <message>
         <source>Obsolete</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2392,6 +2404,17 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
     <message>
         <source>Bad Protocol</source>
         <translation>Geçersiz Protokol</translation>
+    </message>
+</context>
+<context>
+    <name>ProtocolSelector</name>
+    <message>
+        <source>Custom</source>
+        <translation>Özel</translation>
+    </message>
+    <message>
+        <source>Any</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2999,10 +3022,6 @@ Packet loss: %2</source>
         <translation>Filtreleme Devre Dışı Bırakıldığında Trafiği Topla</translation>
     </message>
     <message>
-        <source>Active time period:</source>
-        <translation>Aktif Zaman Aralığı:</translation>
-    </message>
-    <message>
         <source>Month starts on:</source>
         <translation>Ayın Başlangıç Günü:</translation>
     </message>
@@ -3073,6 +3092,14 @@ Packet loss: %2</source>
     <message>
         <source>Traffic</source>
         <translation>Trafik</translation>
+    </message>
+    <message>
+        <source>Collect Traffic re-injected by other drivers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Traffic is collected only in this Time Period.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
@@ -3456,10 +3483,6 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation>Değiştirmek istediğinden emin misin?: &quot;%1&quot;</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to quit the program?</source>
-        <translation>Programdan çıkmak istediğinden emin misin?</translation>
     </message>
     <message>
         <source>Filter Mode</source>

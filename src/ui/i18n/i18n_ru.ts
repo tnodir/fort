@@ -68,6 +68,17 @@
     </message>
 </context>
 <context>
+    <name>AppConnsWindow</name>
+    <message>
+        <source>Program Connections</source>
+        <translation>Соединения программы</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>Добавить фильтр</translation>
+    </message>
+</context>
+<context>
     <name>AppInfoRow</name>
     <message>
         <source>Copy Path</source>
@@ -318,6 +329,10 @@
     <message>
         <source>Program&apos;s Network Filter</source>
         <translation>Сетевой фильтр программы</translation>
+    </message>
+    <message>
+        <source>Block Outbound</source>
+        <translation>Блокировать исходящие</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -604,14 +619,6 @@
         <translation>Редактирование фильтра</translation>
     </message>
     <message>
-        <source>Custom</source>
-        <translation>Нестандартный</translation>
-    </message>
-    <message>
-        <source>Not</source>
-        <translation>Не</translation>
-    </message>
-    <message>
         <source>All, except these</source>
         <translation>Все, кроме этих</translation>
     </message>
@@ -730,6 +737,14 @@
         <translation>Симулятор фильтра</translation>
     </message>
     <message>
+        <source>Inbound</source>
+        <translation>Входящие</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>Исходящие</translation>
+    </message>
+    <message>
         <source>Public</source>
         <translation>Общедоступный</translation>
     </message>
@@ -752,10 +767,6 @@
     <message>
         <source>Invalid local IP address</source>
         <translation>Некорректный локальный IP-адрес</translation>
-    </message>
-    <message>
-        <source>Invalid protocol</source>
-        <translation>Некорректный протокол</translation>
     </message>
 </context>
 <context>
@@ -810,6 +821,14 @@
     <message>
         <source>Install the Windows Service now?</source>
         <translation>Установить службу Windows сейчас?</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to quit the program?</source>
+        <translation>Выйти из программы?</translation>
+    </message>
+    <message>
+        <source>Remove the Windows Service and the Driver before quitting?</source>
+        <translation>Удалить службу Windows и драйвер перед выходом?</translation>
     </message>
     <message>
         <source>Quota Alert</source>
@@ -1872,25 +1891,6 @@ Make sure that you have a fresh backup.</source>
     </message>
 </context>
 <context>
-    <name>ProgConnListPage</name>
-    <message>
-        <source>Add Filter</source>
-        <translation>Добавить фильтр</translation>
-    </message>
-    <message>
-        <source>Copy as Filter</source>
-        <translation>Копировать как фильтр</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Копировать</translation>
-    </message>
-    <message>
-        <source>Lookup IP</source>
-        <translation>Поиск IP</translation>
-    </message>
-</context>
-<context>
     <name>ProgGeneralPage</name>
     <message>
         <source>Wildcard Paths:</source>
@@ -2122,12 +2122,20 @@ Make sure that you have a fresh backup.</source>
         <translation>Блокировать:</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Входящие</translation>
+        <source>In</source>
+        <translation>Вх.</translation>
     </message>
     <message>
         <source>Block Inbound Connections</source>
         <translation>Блокировать входящие соединения</translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation>Исх.</translation>
+    </message>
+    <message>
+        <source>Block Outbound Connections</source>
+        <translation>Блокировать исходящие соединения</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -2341,6 +2349,10 @@ Please check other program with the same path.</source>
         <translation>Таймер</translation>
     </message>
     <message>
+        <source>Connections</source>
+        <translation>Соединения</translation>
+    </message>
+    <message>
         <source>Obsolete</source>
         <translation>Устаревшие</translation>
     </message>
@@ -2394,6 +2406,17 @@ Please check other program with the same path.</source>
     <message>
         <source>Bad Protocol</source>
         <translation>Некорректный протокол</translation>
+    </message>
+</context>
+<context>
+    <name>ProtocolSelector</name>
+    <message>
+        <source>Custom</source>
+        <translation>Нестандартный</translation>
+    </message>
+    <message>
+        <source>Any</source>
+        <translation>Любой</translation>
     </message>
 </context>
 <context>
@@ -3002,10 +3025,6 @@ Packet loss: %2</source>
         <translation>Собирать трафик, когда Фильтр Отключен</translation>
     </message>
     <message>
-        <source>Active time period:</source>
-        <translation>Активный период:</translation>
-    </message>
-    <message>
         <source>Month starts on:</source>
         <translation>Месяц начинается с:</translation>
     </message>
@@ -3076,6 +3095,14 @@ Packet loss: %2</source>
     <message>
         <source>Traffic</source>
         <translation>Трафик</translation>
+    </message>
+    <message>
+        <source>Collect Traffic re-injected by other drivers</source>
+        <translation>Собирать трафик, переотправленный другими драйверами</translation>
+    </message>
+    <message>
+        <source>The Traffic is collected only in this Time Period.</source>
+        <translation>Трафик собирается только в этот Период времени.</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
@@ -3459,10 +3486,6 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation>Переключить &quot;%1&quot;?</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to quit the program?</source>
-        <translation>Выйти из программы?</translation>
     </message>
     <message>
         <source>Filter Mode</source>

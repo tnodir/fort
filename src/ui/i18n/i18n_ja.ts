@@ -68,6 +68,17 @@
     </message>
 </context>
 <context>
+    <name>AppConnsWindow</name>
+    <message>
+        <source>Program Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>フィルターを追加</translation>
+    </message>
+</context>
+<context>
     <name>AppInfoRow</name>
     <message>
         <source>Copy Path</source>
@@ -318,6 +329,10 @@
     <message>
         <source>Program&apos;s Network Filter</source>
         <translation>プログラムのネットワークフィルター</translation>
+    </message>
+    <message>
+        <source>Block Outbound</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -604,14 +619,6 @@
         <translation>フィルターの編集</translation>
     </message>
     <message>
-        <source>Custom</source>
-        <translation>カスタム</translation>
-    </message>
-    <message>
-        <source>Not</source>
-        <translation>除外</translation>
-    </message>
-    <message>
         <source>All, except these</source>
         <translation>これら以外のすべて</translation>
     </message>
@@ -730,6 +737,14 @@
         <translation>フィルターシミュレーター</translation>
     </message>
     <message>
+        <source>Inbound</source>
+        <translation>受信</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>送信</translation>
+    </message>
+    <message>
         <source>Public</source>
         <translation>パブリック</translation>
     </message>
@@ -752,10 +767,6 @@
     <message>
         <source>Invalid local IP address</source>
         <translation>無効なローカル IP アドレス</translation>
-    </message>
-    <message>
-        <source>Invalid protocol</source>
-        <translation>無効なプロトコル</translation>
     </message>
 </context>
 <context>
@@ -810,6 +821,14 @@
     <message>
         <source>Install the Windows Service now?</source>
         <translation>今すぐ Windows サービスをインストールしますか?</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to quit the program?</source>
+        <translation>本当にプログラムを終了しますか?</translation>
+    </message>
+    <message>
+        <source>Remove the Windows Service and the Driver before quitting?</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Quota Alert</source>
@@ -1872,25 +1891,6 @@ Make sure that you have a fresh backup.</source>
     </message>
 </context>
 <context>
-    <name>ProgConnListPage</name>
-    <message>
-        <source>Add Filter</source>
-        <translation>フィルターを追加</translation>
-    </message>
-    <message>
-        <source>Copy as Filter</source>
-        <translation>フィルターとしてコピー</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>コピー</translation>
-    </message>
-    <message>
-        <source>Lookup IP</source>
-        <translation>IP 検索</translation>
-    </message>
-</context>
-<context>
     <name>ProgGeneralPage</name>
     <message>
         <source>Wildcard Paths:</source>
@@ -2122,12 +2122,20 @@ Make sure that you have a fresh backup.</source>
         <translation>ブロック :</translation>
     </message>
     <message>
-        <source>Inbound</source>
+        <source>In</source>
         <translation>受信</translation>
     </message>
     <message>
         <source>Block Inbound Connections</source>
         <translation>受信接続をブロック</translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation>送信</translation>
+    </message>
+    <message>
+        <source>Block Outbound Connections</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Internet</source>
@@ -2341,6 +2349,10 @@ Please check other program with the same path.</source>
         <translation>タイマー</translation>
     </message>
     <message>
+        <source>Connections</source>
+        <translation>接続</translation>
+    </message>
+    <message>
         <source>Obsolete</source>
         <translation>廃止済み</translation>
     </message>
@@ -2394,6 +2406,17 @@ Please check other program with the same path.</source>
     <message>
         <source>Bad Protocol</source>
         <translation>不正なプロトコル</translation>
+    </message>
+</context>
+<context>
+    <name>ProtocolSelector</name>
+    <message>
+        <source>Custom</source>
+        <translation>カスタム</translation>
+    </message>
+    <message>
+        <source>Any</source>
+        <translation>すべて</translation>
     </message>
 </context>
 <context>
@@ -3002,10 +3025,6 @@ Packet loss: %2</source>
         <translation>フィルターが無効の場合のトラフィックの収集</translation>
     </message>
     <message>
-        <source>Active time period:</source>
-        <translation>有効期間 :</translation>
-    </message>
-    <message>
         <source>Month starts on:</source>
         <translation>月の開始日 :</translation>
     </message>
@@ -3076,6 +3095,14 @@ Packet loss: %2</source>
     <message>
         <source>Traffic</source>
         <translation>トラフィック</translation>
+    </message>
+    <message>
+        <source>Collect Traffic re-injected by other drivers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Traffic is collected only in this Time Period.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
@@ -3459,10 +3486,6 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation>「%1」を切り替えますか?</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to quit the program?</source>
-        <translation>本当にプログラムを終了しますか?</translation>
     </message>
     <message>
         <source>Filter Mode</source>

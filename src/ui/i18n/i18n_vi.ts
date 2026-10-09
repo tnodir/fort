@@ -68,6 +68,17 @@
     </message>
 </context>
 <context>
+    <name>AppConnsWindow</name>
+    <message>
+        <source>Program Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AppInfoRow</name>
     <message>
         <source>Open Folder</source>
@@ -249,6 +260,10 @@
     </message>
     <message>
         <source>Program&apos;s Network Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Outbound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -604,14 +619,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Custom</source>
-        <translation>Tùy chỉnh</translation>
-    </message>
-    <message>
-        <source>Not</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>All, except these</source>
         <translation type="unfinished"></translation>
     </message>
@@ -730,6 +737,14 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Public</source>
         <translation type="unfinished"></translation>
     </message>
@@ -751,10 +766,6 @@
     </message>
     <message>
         <source>Invalid local IP address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Invalid protocol</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -809,6 +820,14 @@
     </message>
     <message>
         <source>Install the Windows Service now?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to quit the program?</source>
+        <translation>Bạn có chắc muốn thoát chương trình?</translation>
+    </message>
+    <message>
+        <source>Remove the Windows Service and the Driver before quitting?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1871,25 +1890,6 @@ Hãy đảm bảo bạn đã có bản sao lưu mới.</translation>
     </message>
 </context>
 <context>
-    <name>ProgConnListPage</name>
-    <message>
-        <source>Add Filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Sao chép</translation>
-    </message>
-    <message>
-        <source>Lookup IP</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy as Filter</source>
-        <translation>Sao chép làm bộ lọc</translation>
-    </message>
-</context>
-<context>
     <name>ProgGeneralPage</name>
     <message>
         <source>At:</source>
@@ -2121,11 +2121,19 @@ Hãy đảm bảo bạn đã có bản sao lưu mới.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation type="unfinished"></translation>
+        <source>In</source>
+        <translation>Vào</translation>
     </message>
     <message>
         <source>Block Inbound Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation>Ra</translation>
+    </message>
+    <message>
+        <source>Block Outbound Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2291,6 +2299,10 @@ Việc này có thể khiến Windows hoạt động lỗi hoặc hoàn toàn kh
         <translation>Mở thư mục</translation>
     </message>
     <message>
+        <source>Connections</source>
+        <translation>Kết nối</translation>
+    </message>
+    <message>
         <source>Purge Obsolete</source>
         <translation>Xóa mục lỗi thời</translation>
     </message>
@@ -2392,6 +2404,17 @@ Việc này có thể khiến Windows hoạt động lỗi hoặc hoàn toàn kh
     <message>
         <source>Bad Protocol</source>
         <translation>Giao thức không hợp lệ</translation>
+    </message>
+</context>
+<context>
+    <name>ProtocolSelector</name>
+    <message>
+        <source>Custom</source>
+        <translation>Tùy chỉnh</translation>
+    </message>
+    <message>
+        <source>Any</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3043,10 +3066,6 @@ Packet loss: %2</source>
         <translation> ngày</translation>
     </message>
     <message>
-        <source>Active time period:</source>
-        <translation>Khoảng thời gian hoạt động:</translation>
-    </message>
-    <message>
         <source>6 months</source>
         <translation>6 tháng</translation>
     </message>
@@ -3093,6 +3112,14 @@ Packet loss: %2</source>
     <message>
         <source>Collect Traffic, when Filter Disabled</source>
         <translation>Thu thập lưu lượng khi bộ lọc bị tắt</translation>
+    </message>
+    <message>
+        <source>Collect Traffic re-injected by other drivers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Traffic is collected only in this Time Period.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Keep data for &apos;Daily&apos;:</source>
@@ -3436,10 +3463,6 @@ Packet loss: %2</source>
     <message>
         <source>Options</source>
         <translation>Tùy chọn</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to quit the program?</source>
-        <translation>Bạn có chắc muốn thoát chương trình?</translation>
     </message>
     <message>
         <source>Programs</source>

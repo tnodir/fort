@@ -68,6 +68,17 @@
     </message>
 </context>
 <context>
+    <name>AppConnsWindow</name>
+    <message>
+        <source>Program Connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>AppInfoRow</name>
     <message>
         <source>Copy Path</source>
@@ -317,6 +328,10 @@
     </message>
     <message>
         <source>Program&apos;s Network Filter</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block Outbound</source>
         <translation></translation>
     </message>
     <message>
@@ -604,14 +619,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Custom</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Not</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>All, except these</source>
         <translation></translation>
     </message>
@@ -730,6 +737,14 @@
         <translation></translation>
     </message>
     <message>
+        <source>Inbound</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Public</source>
         <translation></translation>
     </message>
@@ -751,10 +766,6 @@
     </message>
     <message>
         <source>Invalid local IP address</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Invalid protocol</source>
         <translation></translation>
     </message>
 </context>
@@ -809,6 +820,14 @@
     </message>
     <message>
         <source>Install the Windows Service now?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to quit the program?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remove the Windows Service and the Driver before quitting?</source>
         <translation></translation>
     </message>
     <message>
@@ -1869,25 +1888,6 @@ Make sure that you have a fresh backup.</source>
     </message>
 </context>
 <context>
-    <name>ProgConnListPage</name>
-    <message>
-        <source>Add Filter</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Copy as Filter</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Lookup IP</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
     <name>ProgGeneralPage</name>
     <message>
         <source>Wildcard Paths:</source>
@@ -2119,11 +2119,19 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Inbound</source>
+        <source>In</source>
         <translation></translation>
     </message>
     <message>
         <source>Block Inbound Connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block Outbound Connections</source>
         <translation></translation>
     </message>
     <message>
@@ -2332,6 +2340,10 @@ Please check other program with the same path.</source>
         <translation></translation>
     </message>
     <message>
+        <source>Connections</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Obsolete</source>
         <translation></translation>
     </message>
@@ -2384,6 +2396,17 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Bad Protocol</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ProtocolSelector</name>
+    <message>
+        <source>Custom</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Any</source>
         <translation></translation>
     </message>
 </context>
@@ -2992,10 +3015,6 @@ Packet loss: %2</source>
         <translation></translation>
     </message>
     <message>
-        <source>Active time period:</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Month starts on:</source>
         <translation></translation>
     </message>
@@ -3065,6 +3084,14 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Traffic</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collect Traffic re-injected by other drivers</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The Traffic is collected only in this Time Period.</source>
         <translation></translation>
     </message>
     <message>
@@ -3448,10 +3475,6 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Are you sure you want to quit the program?</source>
         <translation></translation>
     </message>
     <message>
