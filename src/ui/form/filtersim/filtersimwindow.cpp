@@ -395,6 +395,7 @@ QLayout *FilterSimWindow::setupRemoteLayout()
     // IP
     m_editRemoteIp = new LineEdit();
     m_editRemoteIp->setMaxLength(64);
+    m_editRemoteIp->setClearButtonEnabled(true);
 
     connect(m_editRemoteIp, &QLineEdit::returnPressed, this, &FilterSimWindow::simulateConn);
 
@@ -412,6 +413,7 @@ QLayout *FilterSimWindow::setupLocalLayout()
     // IP
     m_editLocalIp = new LineEdit();
     m_editLocalIp->setMaxLength(64);
+    m_editLocalIp->setClearButtonEnabled(true);
 
     connect(m_editLocalIp, &QLineEdit::returnPressed, this, &FilterSimWindow::simulateConn);
 
