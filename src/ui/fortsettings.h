@@ -132,6 +132,8 @@ protected:
     void migrateIniOnWrite() override;
 
 private:
+    void migrateExplorerIntegration(int version);
+
     void setupPasswordUnlockTimer();
     void startPasswordUnlockTimer();
 

@@ -580,13 +580,7 @@ void FortSettings::migrateIniOnLoad()
         return;
 
     // COMPAT: v3.4.0
-    if (version < 0x030400) {
-        // Windows Explorer integration: Args changed
-        if (StartupUtil::isExplorerIntegrated()) {
-            StartupUtil::setExplorerIntegrated(false);
-            StartupUtil::setExplorerIntegrated(true);
-        }
-    }
+    migrateExplorerIntegration(version);
 
     // COMPAT: v3.8.1
     if (version < 0x030801) {
@@ -615,6 +609,18 @@ void FortSettings::migrateIniOnLoad()
     // COMPAT: v3.20.0: Keep the App. Groups' enabled bits for the conf DB's migration
     if (version < 0x032000) {
         setCacheValue("confFlags/appGroupBits", ini()->value("confFlags/appGroupBits"));
+    }
+}
+
+void FortSettings::migrateExplorerIntegration(int version)
+{
+    if (version >= 0x030400)
+        return;
+
+    // Windows Explorer integration: Args changed
+    if (StartupUtil::isExplorerIntegrated()) {
+        StartupUtil::setExplorerIntegrated(false);
+        StartupUtil::setExplorerIntegrated(true);
     }
 }
 
