@@ -5,9 +5,36 @@
 #include <QTimeEdit>
 #include <QToolButton>
 
-#include <form/controls/checktimeperiod.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/weekdaysselector.h>
+
+namespace {
+
+inline constexpr char timeFormat[] = "HH:mm";
+
+QTimeEdit *createTimeEdit()
+{
+    auto c = new QTimeEdit();
+    c->setFixedWidth(70);
+    c->setDisplayFormat(timeFormat);
+    c->setWrapping(true);
+    return c;
+}
+
+QString fromTime(const QTime &time)
+{
+    return time.toString(timeFormat);
+}
+
+QTime toTime(const QString &text)
+{
+    if (text.isEmpty())
+        return QTime(0, 0);
+
+    return QTime::fromString(text, timeFormat);
+}
+
+}
 
 TimePeriodIntervalEdit::TimePeriodIntervalEdit(QWidget *parent) : QWidget(parent)
 {
@@ -19,8 +46,8 @@ TimePeriodInterval TimePeriodIntervalEdit::interval() const
     TimePeriodInterval interval;
 
     interval.weekDays = m_weekDaysSelector->weekDays();
-    interval.timeFrom = CheckTimePeriod::fromTime(m_timeFrom->time());
-    interval.timeTo = CheckTimePeriod::fromTime(m_timeTo->time());
+    interval.timeFrom = fromTime(m_timeFrom->time());
+    interval.timeTo = fromTime(m_timeTo->time());
 
     return interval;
 }
@@ -28,8 +55,8 @@ TimePeriodInterval TimePeriodIntervalEdit::interval() const
 void TimePeriodIntervalEdit::setInterval(const TimePeriodInterval &interval)
 {
     m_weekDaysSelector->setWeekDays(interval.weekDays);
-    m_timeFrom->setTime(CheckTimePeriod::toTime(interval.timeFrom));
-    m_timeTo->setTime(CheckTimePeriod::toTime(interval.timeTo));
+    m_timeFrom->setTime(toTime(interval.timeFrom));
+    m_timeTo->setTime(toTime(interval.timeTo));
 }
 
 void TimePeriodIntervalEdit::retranslateUi()
@@ -57,8 +84,8 @@ void TimePeriodIntervalEdit::setupUi()
 QLayout *TimePeriodIntervalEdit::setupIntervalLayout()
 {
     // Time
-    m_timeFrom = CheckTimePeriod::createTimeEdit();
-    m_timeTo = CheckTimePeriod::createTimeEdit();
+    m_timeFrom = createTimeEdit();
+    m_timeTo = createTimeEdit();
 
     // Week Days
     m_weekDaysSelector = new WeekDaysSelector();

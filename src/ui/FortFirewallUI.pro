@@ -59,7 +59,6 @@ SOURCES += \
     form/conn/connectionswindow.cpp \
     form/controls/appinforow.cpp \
     form/controls/checkspincombo.cpp \
-    form/controls/checktimeperiod.cpp \
     form/controls/clickablemenu.cpp \
     form/controls/combobox.cpp \
     form/controls/controlutil.cpp \
@@ -368,7 +367,6 @@ HEADERS += \
     form/conn/connectionswindow.h \
     form/controls/appinforow.h \
     form/controls/checkspincombo.h \
-    form/controls/checktimeperiod.h \
     form/controls/clickablemenu.h \
     form/controls/combobox.h \
     form/controls/controlutil.h \
