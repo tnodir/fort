@@ -20,6 +20,7 @@
 #include <form/controls/spincombo.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
+#include <model/connlistmodel.h>
 #include <util/conf/confbuffer.h>
 #include <util/conf/filterline.h>
 #include <util/conf/ruletextparser.h>
@@ -317,6 +318,9 @@ QLayout *FilterEditDialog::setupFormLayout()
     // Direction
     m_btDirectionNot = createNotButton();
     m_comboDirection = createFieldCombo({ QString(), "In", "Out" });
+    ControlUtil::setComboBoxIcons(m_comboDirection,
+            { QString(), ConnListModel::directionIconPath(/*inbound=*/true),
+                    ConnListModel::directionIconPath(/*inbound=*/false) });
     m_btDirectionClear = createComboClearButton(m_comboDirection);
 
     m_labelDirection = addWidgetsRow(
