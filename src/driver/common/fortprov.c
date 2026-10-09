@@ -4,6 +4,12 @@
 
 #include "fortguid.h"
 
+#if defined(FORT_DRIVER)
+#    include "../forttrace.h"
+#else
+#    define TRACE(event_code, status, error_value, sequence)
+#endif
+
 #define FORT_PROV_BOOT_FILTERS_COUNT    4
 #define FORT_PROV_PERSIST_FILTERS_COUNT 4
 #define FORT_PROV_CALLOUT_FILTERS_COUNT 4
@@ -430,6 +436,8 @@ static DWORD fort_prov_add_filters(HANDLE engine, const FWPM_FILTER0 *filters, i
         const DWORD status = FwpmFilterAdd0(engine, &filters[i], NULL, NULL);
         if (status) {
             LOG("Prov Filter Add: %ws: Error: %x\n", filters[i].displayData.name, status);
+            /* The filter's key (its first part) identifies the filter in the event */
+            TRACE(FORT_PROV_FILTER_ADD_ERROR, status, filters[i].filterKey.Data1, 0);
             return status;
         }
     }

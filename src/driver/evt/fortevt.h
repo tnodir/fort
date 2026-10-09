@@ -40,6 +40,7 @@
 #define FACILITY_SHAPER                  0x5
 #define FACILITY_PROCESS_TREE            0x6
 #define FACILITY_CONFIG                  0x7
+#define FACILITY_PROVIDER                0x8
 
 
 //
@@ -172,6 +173,16 @@
 // PsTree: Process Path Error.
 //
 #define FORT_PSTREE_PROCESS_PATH_ERROR   ((NTSTATUS)0xC006003EL)
+
+/* Provider */
+//
+// MessageId: FORT_PROV_FILTER_ADD_ERROR
+//
+// MessageText:
+//
+// Provider: Filter Add Error.
+//
+#define FORT_PROV_FILTER_ADD_ERROR       ((NTSTATUS)0xC0080050L)
 
 /* Config */
 //

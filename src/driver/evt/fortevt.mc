@@ -22,6 +22,7 @@ FacilityNames = (
     Shaper = 5:FACILITY_SHAPER
     ProcessTree = 6:FACILITY_PROCESS_TREE
     Config = 7:FACILITY_CONFIG
+    Provider = 8:FACILITY_PROVIDER
 )
 
 
@@ -99,6 +100,13 @@ PsTree: Enum Processes Error.
 MessageId=62 Facility=ProcessTree Severity=Error SymbolicName=FORT_PSTREE_PROCESS_PATH_ERROR
 Language=English
 PsTree: Process Path Error.
+.
+
+
+;/* Provider */
+MessageId=80 Facility=Provider Severity=Error SymbolicName=FORT_PROV_FILTER_ADD_ERROR
+Language=English
+Provider: Filter Add Error.
 .
 
 
