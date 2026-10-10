@@ -5,7 +5,7 @@
 @rem The secret key of the driver payloads (DriverPayload.exe --secret)
 @set "FORT_RSA_KEY=%FORT_ROOT%\build-tmp\fort.rsa"
 
-@rem EWDKs: Old (WDK 10.0.20348, VS 2019) for win7, New (WDK 10.0.26100, VS 2022) for win10
+@rem EWDKs: Old (WDK 10.0.20348, VS 2019) for win7, New (the latest) for win10
 @set "EWDK_OLD=E:\EWDK\Old"
 @set "EWDK_NEW=E:\EWDK\New"
 

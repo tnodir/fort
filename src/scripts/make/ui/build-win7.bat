@@ -1,4 +1,4 @@
-@rem Build build-win7\ui_bin\FortFirewall.exe (x86) with the EWDK (New: VS 2022) and the static Qt of win7
+@rem Build build-win7\ui_bin\FortFirewall.exe (x86) with the EWDK (New) and the static Qt of win7
 @rem Usage: build-win7.bat [make args], e.g. "build-win7.bat clean"
 
 @setlocal
