@@ -19,3 +19,11 @@
 
 @rem jom for the parallel builds (nmake with cl's /MP if it's missing)
 @set "JOM_PATH=D:\Qt\qtcreator-21.0.0-beta2\bin\jom\jom.exe"
+
+@rem Inno Setup 7 for deploy\create-installer.bat
+@set "INNO_HOME=C:\Programs\InnoSetup7"
+
+@rem GnuPG for the installers' signatures: the key of deploy\keys and its passphrase's file
+@set "GPG_PATH=C:\Program Files\GnuPG\bin\gpg.exe"
+@set "GPG_KEY=BDD3C1AF7A4DC449DFCE7C9115DC0F6DC45C857C"
+@set "GPG_PHRASE=%FORT_ROOT%\build-tmp\fort.phrase"
