@@ -14,6 +14,9 @@
 
 static struct
 {
+    BOOL prov_failed; /* the provider filters' changes are failed */
+    FORT_CONF_FLAGS prov_old_conf_flags; /* the failed changes' old conf flags */
+
     FWPS_CALLOUT0 ale_callouts[FORT_STAT_ALE_CALLOUT_IDS_COUNT];
     FWPS_CALLOUT0 packet_callouts[FORT_STAT_PACKET_CALLOUT_IDS_COUNT];
     FWPS_CALLOUT0 discard_callouts[FORT_STAT_DISCARD_CALLOUT_IDS_COUNT];
@@ -303,18 +306,27 @@ inline static NTSTATUS fort_callout_force_reauth_prov_filters(
 }
 
 inline static NTSTATUS fort_callout_force_reauth_prov(
-        const FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags)
+        FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags)
 {
     NTSTATUS status;
 
+    /* Retry the failed changes: the filters are still by their old conf flags */
+    if (g_calloutGlobal.prov_failed) {
+        old_conf_flags = g_calloutGlobal.prov_old_conf_flags;
+    }
+
     HANDLE engine;
     status = fort_prov_trans_open(&engine);
-    if (!NT_SUCCESS(status))
-        return status;
+    if (NT_SUCCESS(status)) {
+        status = fort_callout_force_reauth_prov_filters(engine, old_conf_flags, conf_flags);
 
-    status = fort_callout_force_reauth_prov_filters(engine, old_conf_flags, conf_flags);
+        status = fort_prov_trans_close(engine, status);
+    }
 
-    return fort_prov_trans_close(engine, status);
+    g_calloutGlobal.prov_failed = !NT_SUCCESS(status);
+    g_calloutGlobal.prov_old_conf_flags = old_conf_flags;
+
+    return status;
 }
 
 FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags)
