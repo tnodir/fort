@@ -71,7 +71,7 @@
     <name>AppConnsWindow</name>
     <message>
         <source>Program Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Connexions au programme</translation>
     </message>
     <message>
         <source>Add Filter</source>
@@ -332,7 +332,7 @@
     </message>
     <message>
         <source>Block Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer les messages sortants</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -828,7 +828,7 @@
     </message>
     <message>
         <source>Remove the Windows Service and the Driver before quitting?</source>
-        <translation type="unfinished"></translation>
+        <translation>Retirer le service Windows et le pilote avant de quitter ?</translation>
     </message>
     <message>
         <source>Quota Alert</source>
@@ -2131,11 +2131,11 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Out</source>
-        <translation>Sortie</translation>
+        <translation>En dehors</translation>
     </message>
     <message>
         <source>Block Outbound Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer les connexions sortantes</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -2412,7 +2412,7 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     <name>ProtocolSelector</name>
     <message>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation>Personnalisé</translation>
     </message>
     <message>
         <source>Any</source>
@@ -3098,11 +3098,11 @@ Perte de paquets : %2</translation>
     </message>
     <message>
         <source>Collect Traffic re-injected by other drivers</source>
-        <translation type="unfinished"></translation>
+        <translation>Collecter le trafic réinjecté par d&apos;autres pilotes</translation>
     </message>
     <message>
         <source>The Traffic is collected only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le trafic est collecté seulement pendant cette période de temps.</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
