@@ -415,6 +415,7 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
                 .kill_process = app.killProcess,
                 .is_new = isNew,
                 .found = true,
+                .alerted = app.alerted,
                 .has_wildcard_app = app.isWildcard,
         },
         .rule_id = app.ruleId,
