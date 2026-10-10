@@ -1,6 +1,6 @@
 @rem The machine-specific paths of the build scripts: call it after setlocal
 
-@for %%I in ("%~dp0..\..\..") do @set "FORT_ROOT=%%~fI"
+@for %%I in ("%~dp0..\..") do @set "FORT_ROOT=%%~fI"
 
 @rem The secret key of the driver payloads (DriverPayload.exe --secret)
 @set "FORT_RSA_KEY=%FORT_ROOT%\build-tmp\fort.rsa"
