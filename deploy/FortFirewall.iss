@@ -76,6 +76,7 @@ Source: "data\inst.tmp"; DestDir: "{app}"; Flags: ignoreversion deleteafterinsta
 
 [Dirs]
 ; Also when taken over from an install of the 32-bit install mode
+; TODO: COMPAT: Remove the following line after v4.1.0 (via v4.0.0)
 Name: "{app}"; Flags: uninsalwaysuninstall
 Name: "{app}\Data"; Flags: uninsneveruninstall; Permissions: users-modify; Tasks: portable
 
@@ -209,6 +210,7 @@ begin
     Exit;
 
   { An install of the 32-bit install mode, e.g. an old one on Windows 10 ARM64 }
+  { TODO: COMPAT: Remove after v4.1.0 (via v4.0.0) }
   if RegQueryStringValue(HKLM32, UninstallKey(), 'UninstallString', Result) then
     Exit;
 
@@ -217,6 +219,8 @@ end;
 
 function DefaultAppDir(Param: String): String;
 begin
+  { TODO: COMPAT: Remove after v4.1.0 (via v4.0.0), restoring DefaultDirName's default
+    to the common Program Files }
   { Upgrade an install of the 32-bit install mode (e.g. an old one on Windows 10 ARM64)
     in its directory }
   if Is64BitInstallMode()
@@ -515,6 +519,9 @@ procedure UnregisterPrevious32BitInstall();
 var
   AppPath: String;
 begin
+  { TODO: COMPAT: Remove after v4.1.0 (via v4.0.0) and its call in PrepareToInstall():
+    instead refuse an upgrade of a version older than 4.0.0 (e.g. while the 32-bit install
+    mode's uninstall key exists) by a SuppressibleMsgBox() asking to install 4.0.0 first }
   { Inno Setup keeps an install of the 32-bit install mode (e.g. an old one on Windows 10 ARM64)
     registered apart: drop its registration, the 64-bit one takes its files over }
   if not Is64BitInstallMode()
