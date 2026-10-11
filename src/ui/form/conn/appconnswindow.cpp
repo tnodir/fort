@@ -127,7 +127,7 @@ void AppConnsWindow::setupAddFilter()
     auto menu = connListView()->menu();
     const auto firstAction = menu->actions().value(0);
 
-    m_actAddFilter = new QAction(IconCache::icon(":/icons/filter.png"), QString(), menu);
+    m_actAddFilter = new QAction(IconCache::icon(":/icons/filter_add.png"), QString(), menu);
     m_actAddFilter->setVisible(false); // by setAddFilterVisible()
 
     menu->insertAction(firstAction, m_actAddFilter);

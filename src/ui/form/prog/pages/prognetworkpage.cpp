@@ -241,8 +241,8 @@ void ProgNetworkPage::setupSpeedLimitsChanged()
 
 QLayout *ProgNetworkPage::setupFiltersHeaderLayout()
 {
-    m_btAddFilter =
-            ControlUtil::createFlatToolButton(":/icons/add.png", [&] { openFilterEditForm(); });
+    m_btAddFilter = ControlUtil::createFlatToolButton(
+            ":/icons/filter_add.png", [&] { openFilterEditForm(); });
     m_btRemoveFilter = ControlUtil::createFlatToolButton(
             ":/icons/delete.png", [&] { m_filterListModel->remove(filterListCurrentIndex()); });
     m_btEditFilter =

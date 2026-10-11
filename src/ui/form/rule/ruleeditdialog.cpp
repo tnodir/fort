@@ -381,8 +381,8 @@ QLayout *RuleEditDialog::setupZonesLayout()
     m_cbInlineZones = new QCheckBox();
 
     // Add Filter
-    m_btAddFilter =
-            ControlUtil::createIconToolButton(":/icons/filter.png", [&] { openFilterEditForm(); });
+    m_btAddFilter = ControlUtil::createIconToolButton(
+            ":/icons/filter_add.png", [&] { openFilterEditForm(); });
 
     auto layout =
             ControlUtil::createHLayoutByWidgets({ m_cbExclusive, ControlUtil::createVSeparator(),
