@@ -104,9 +104,9 @@ PsTree: Process Path Error.
 
 
 ;/* Provider */
-MessageId=80 Facility=Provider Severity=Error SymbolicName=FORT_PROV_FILTER_ADD_ERROR
+MessageId=80 Facility=Provider Severity=Error SymbolicName=FORT_PROV_ADD_ERROR
 Language=English
-Provider: Filter Add Error.
+Provider: Add Error.
 .
 
 

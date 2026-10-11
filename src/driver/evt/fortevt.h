@@ -176,13 +176,13 @@
 
 /* Provider */
 //
-// MessageId: FORT_PROV_FILTER_ADD_ERROR
+// MessageId: FORT_PROV_ADD_ERROR
 //
 // MessageText:
 //
-// Provider: Filter Add Error.
+// Provider: Add Error.
 //
-#define FORT_PROV_FILTER_ADD_ERROR       ((NTSTATUS)0xC0080050L)
+#define FORT_PROV_ADD_ERROR              ((NTSTATUS)0xC0080050L)
 
 /* Config */
 //

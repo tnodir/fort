@@ -419,10 +419,24 @@ FORT_API DWORD fort_prov_trans_close(HANDLE engine, DWORD status)
     return status;
 }
 
+static DWORD fort_prov_add_status(DWORD status, const FWPM_DISPLAY_DATA0 *displayData, GUID key)
+{
+    if (status) {
+        LOG("Prov Add: %ws: Error: %x\n", displayData->name, status);
+        /* The object's key (its first part) identifies the object in the event */
+        TRACE(FORT_PROV_ADD_ERROR, status, key.Data1, 0);
+    }
+
+    return status;
+}
+
 static DWORD fort_prov_add_callouts(HANDLE engine, const FWPM_CALLOUT0 *callouts, int count)
 {
     for (int i = 0; i < count; ++i) {
-        const DWORD status = FwpmCalloutAdd0(engine, &callouts[i], NULL, NULL);
+        const FWPM_CALLOUT0 *callout = &callouts[i];
+
+        const DWORD status = fort_prov_add_status(FwpmCalloutAdd0(engine, callout, NULL, NULL),
+                &callout->displayData, callout->calloutKey);
         if (status)
             return status;
     }
@@ -433,13 +447,12 @@ static DWORD fort_prov_add_callouts(HANDLE engine, const FWPM_CALLOUT0 *callouts
 static DWORD fort_prov_add_filters(HANDLE engine, const FWPM_FILTER0 *filters, int count)
 {
     for (int i = 0; i < count; ++i) {
-        const DWORD status = FwpmFilterAdd0(engine, &filters[i], NULL, NULL);
-        if (status) {
-            LOG("Prov Filter Add: %ws: Error: %x\n", filters[i].displayData.name, status);
-            /* The filter's key (its first part) identifies the filter in the event */
-            TRACE(FORT_PROV_FILTER_ADD_ERROR, status, filters[i].filterKey.Data1, 0);
+        const FWPM_FILTER0 *filter = &filters[i];
+
+        const DWORD status = fort_prov_add_status(FwpmFilterAdd0(engine, filter, NULL, NULL),
+                &filter->displayData, filter->filterKey);
+        if (status)
             return status;
-        }
     }
 
     return 0;
@@ -604,7 +617,8 @@ static DWORD fort_prov_register_provider(HANDLE engine, const FORT_PROV_BOOT_CON
     FWPM_PROVIDER0 *provider =
             boot_conf.boot_filter ? &g_provGlobal.boot_provider : &g_provGlobal.provider;
 
-    return FwpmProviderAdd0(engine, provider, NULL);
+    return fort_prov_add_status(FwpmProviderAdd0(engine, provider, NULL), &provider->displayData,
+            provider->providerKey);
 }
 
 static DWORD fort_prov_register_sublayer(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
@@ -612,7 +626,8 @@ static DWORD fort_prov_register_sublayer(HANDLE engine, const FORT_PROV_BOOT_CON
     FWPM_SUBLAYER0 *sublayer =
             boot_conf.boot_filter ? &g_provGlobal.boot_sublayer : &g_provGlobal.sublayer;
 
-    return FwpmSubLayerAdd0(engine, sublayer, NULL);
+    return fort_prov_add_status(FwpmSubLayerAdd0(engine, sublayer, NULL), &sublayer->displayData,
+            sublayer->subLayerKey);
 }
 
 FORT_API DWORD fort_prov_register(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
