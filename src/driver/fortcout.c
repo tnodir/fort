@@ -271,9 +271,7 @@ inline static NTSTATUS fort_callout_force_reauth_prov_recreate(HANDLE engine,
         .stealth_mode = conf_flags.stealth_mode,
     };
 
-    fort_prov_unregister(engine);
-
-    const NTSTATUS status = fort_prov_register(engine, boot_conf);
+    const NTSTATUS status = fort_prov_reregister(engine, boot_conf);
     if (status == 0) {
         *prov_recreated = TRUE;
     }

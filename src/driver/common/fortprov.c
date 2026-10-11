@@ -634,6 +634,23 @@ FORT_API DWORD fort_prov_register(HANDLE engine, const FORT_PROV_BOOT_CONF boot_
     return 0;
 }
 
+FORT_API DWORD fort_prov_reregister(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
+{
+    DWORD status;
+
+    fort_prov_unregister(engine);
+
+    /* Commit the deletions: some Windows builds (e.g. Insider 29639) fail to add
+     * a callout deleted in the same transaction with STATUS_INVALID_PARAMETER */
+    if ((status = fort_prov_trans_commit(engine)))
+        return status;
+
+    if ((status = fort_prov_trans_begin(engine)))
+        return status;
+
+    return fort_prov_register(engine, boot_conf);
+}
+
 FORT_API DWORD fort_prov_trans_register(const FORT_PROV_BOOT_CONF boot_conf)
 {
     HANDLE engine;

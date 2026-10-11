@@ -607,9 +607,7 @@ static NTSTATUS fort_device_register_provider(void)
 
     fort_device_conf_flags_set(&fort_device()->conf, conf_flags);
 
-    fort_prov_unregister(engine);
-
-    status = fort_prov_register(engine, boot_conf);
+    status = fort_prov_reregister(engine, boot_conf);
 
     return fort_prov_trans_close(engine, status);
 }
