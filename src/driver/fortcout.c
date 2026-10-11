@@ -12,11 +12,11 @@
 #include "forttrace.h"
 #include "fortutl.h"
 
+/* The registered provider's flags, which change its objects */
+#define FORT_CALLOUT_PROV_RECREATE_MASK (FORT_DEVICE_BOOT_CONF_MASK | FORT_DEVICE_PROVIDER)
+
 static struct
 {
-    BOOL prov_failed; /* the provider filters' changes are failed */
-    FORT_CONF_FLAGS prov_old_conf_flags; /* the failed changes' old conf flags */
-
     FWPS_CALLOUT0 ale_callouts[FORT_STAT_ALE_CALLOUT_IDS_COUNT];
     FWPS_CALLOUT0 packet_callouts[FORT_STAT_PACKET_CALLOUT_IDS_COUNT];
     FWPS_CALLOUT0 discard_callouts[FORT_STAT_DISCARD_CALLOUT_IDS_COUNT];
@@ -238,12 +238,26 @@ FORT_API void fort_callout_remove(void)
     }
 }
 
-inline static NTSTATUS fort_callout_force_reauth_prov_flow_filters(HANDLE engine,
-        const FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags, BOOL force)
+inline static NTSTATUS fort_callout_force_reauth_prov_recreate(
+        HANDLE engine, const FORT_CONF_FLAGS conf_flags, UINT16 changed_flags)
 {
-    const BOOL conf_changed = (old_conf_flags.log_stat != conf_flags.log_stat);
+    if ((changed_flags & FORT_CALLOUT_PROV_RECREATE_MASK) == 0)
+        return STATUS_SUCCESS;
 
-    if (!force && !conf_changed)
+    const FORT_PROV_BOOT_CONF boot_conf = {
+        .boot_filter = conf_flags.boot_filter,
+        .filter_locals = conf_flags.filter_locals,
+        .stealth_mode = conf_flags.stealth_mode,
+    };
+
+    return fort_prov_reregister(engine, boot_conf);
+}
+
+inline static NTSTATUS fort_callout_force_reauth_prov_flow_filters(
+        HANDLE engine, const FORT_CONF_FLAGS conf_flags, UINT16 changed_flags)
+{
+    /* The provider's re-registration deletes the flow filters too */
+    if (changed_flags == 0)
         return STATUS_SUCCESS;
 
     fort_prov_flow_unregister(engine);
@@ -254,46 +268,18 @@ inline static NTSTATUS fort_callout_force_reauth_prov_flow_filters(HANDLE engine
     return fort_prov_flow_register(engine);
 }
 
-inline static NTSTATUS fort_callout_force_reauth_prov_recreate(HANDLE engine,
-        const FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags,
-        BOOL *prov_recreated)
-{
-    const BOOL conf_changed = (old_conf_flags.boot_filter != conf_flags.boot_filter
-            || old_conf_flags.stealth_mode != conf_flags.stealth_mode
-            || old_conf_flags.filter_locals != conf_flags.filter_locals);
-
-    if (!conf_changed)
-        return STATUS_SUCCESS;
-
-    const FORT_PROV_BOOT_CONF boot_conf = {
-        .boot_filter = conf_flags.boot_filter,
-        .filter_locals = conf_flags.filter_locals,
-        .stealth_mode = conf_flags.stealth_mode,
-    };
-
-    const NTSTATUS status = fort_prov_reregister(engine, boot_conf);
-    if (status == 0) {
-        *prov_recreated = TRUE;
-    }
-
-    return status;
-}
-
 inline static NTSTATUS fort_callout_force_reauth_prov_filters(
-        HANDLE engine, const FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags)
+        HANDLE engine, const FORT_CONF_FLAGS conf_flags, UINT16 changed_flags)
 {
     NTSTATUS status;
 
     /* Check provider filters */
-    BOOL prov_recreated = FALSE;
-    status = fort_callout_force_reauth_prov_recreate(
-            engine, old_conf_flags, conf_flags, &prov_recreated);
+    status = fort_callout_force_reauth_prov_recreate(engine, conf_flags, changed_flags);
     if (status != 0)
         return status;
 
     /* Check flow filter */
-    status = fort_callout_force_reauth_prov_flow_filters(engine, old_conf_flags, conf_flags,
-            /*force=*/prov_recreated);
+    status = fort_callout_force_reauth_prov_flow_filters(engine, conf_flags, changed_flags);
     if (status != 0)
         return status;
 
@@ -303,31 +289,37 @@ inline static NTSTATUS fort_callout_force_reauth_prov_filters(
     return STATUS_SUCCESS;
 }
 
-inline static NTSTATUS fort_callout_force_reauth_prov(
-        FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags)
+inline static NTSTATUS fort_callout_force_reauth_prov(const FORT_CONF_FLAGS conf_flags)
 {
     NTSTATUS status;
 
-    /* Retry the failed changes: the filters are still by their old conf flags */
-    if (g_calloutGlobal.prov_failed) {
-        old_conf_flags = g_calloutGlobal.prov_old_conf_flags;
-    }
+    PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
+
+    /* Compare with the registered provider's state, so the failed changes are retried */
+    const UINT16 prov_flags = fort_device_prov_flags_by_conf(conf_flags);
+    const UINT16 changed_flags =
+            (fort_device_flags(device_conf) & FORT_DEVICE_PROV_MASK) ^ prov_flags;
 
     HANDLE engine;
     status = fort_prov_trans_open(&engine);
+    if (!NT_SUCCESS(status))
+        return status;
+
+    status = fort_callout_force_reauth_prov_filters(engine, conf_flags, changed_flags);
+
+    status = fort_prov_trans_close(engine, status);
+
     if (NT_SUCCESS(status)) {
-        status = fort_callout_force_reauth_prov_filters(engine, old_conf_flags, conf_flags);
-
-        status = fort_prov_trans_close(engine, status);
+        fort_device_prov_flags_set(device_conf, prov_flags);
+    } else if ((changed_flags & FORT_CALLOUT_PROV_RECREATE_MASK) != 0) {
+        /* The re-registration's deletions may be committed */
+        fort_device_prov_flags_set(device_conf, /*prov_flags=*/0);
     }
-
-    g_calloutGlobal.prov_failed = !NT_SUCCESS(status);
-    g_calloutGlobal.prov_old_conf_flags = old_conf_flags;
 
     return status;
 }
 
-FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags)
+FORT_API NTSTATUS fort_callout_force_reauth(void)
 {
     FORT_CHECK_STACK(FORT_CALLOUT_FORCE_REAUTH);
 
@@ -342,7 +334,7 @@ FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags
     fort_timer_set_running(&fort_device()->log_timer, /*run=*/conf_flags.log_stat);
 
     /* Reauth provider filters */
-    status = fort_callout_force_reauth_prov(old_conf_flags, conf_flags);
+    status = fort_callout_force_reauth_prov(conf_flags);
 
     if (!NT_SUCCESS(status)) {
         LOG("Callout Reauth: Error: %x\n", status);

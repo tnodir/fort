@@ -24,9 +24,9 @@ FORT_API void fort_conf_ref_put(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF co
 
 FORT_API PFORT_CONF_REF fort_conf_ref_take(PFORT_DEVICE_CONF device_conf);
 
-FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF conf_ref);
+FORT_API void fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF conf_ref);
 
-FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
+FORT_API void fort_conf_ref_flags_set(
         PFORT_DEVICE_CONF device_conf, const FORT_CONF_FLAGS conf_flags);
 
 #ifdef __cplusplus

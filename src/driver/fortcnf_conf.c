@@ -367,14 +367,6 @@ FORT_API PFORT_CONF_REF fort_conf_ref_take(PFORT_DEVICE_CONF device_conf)
     return conf_ref;
 }
 
-static void fort_device_flags_conf_set(PFORT_DEVICE_CONF device_conf, FORT_CONF_FLAGS conf_flags)
-{
-    fort_device_flag_set(device_conf, FORT_DEVICE_BOOT_FILTER, conf_flags.boot_filter);
-    fort_device_flag_set(device_conf, FORT_DEVICE_STEALTH_MODE, conf_flags.stealth_mode);
-    fort_device_flag_set(device_conf, FORT_DEVICE_FILTER_LOCALS, conf_flags.filter_locals);
-    fort_device_flag_set(device_conf, FORT_DEVICE_TRACE_EVENTS, conf_flags.trace_events);
-}
-
 static void fort_device_flags_conf_copy(FORT_CONF_FLAGS *conf_flags, const UINT16 flags)
 {
     RtlZeroMemory(conf_flags, sizeof(FORT_CONF_FLAGS));
@@ -399,7 +391,7 @@ static void fort_device_flags_conf_log_event(
     }
 }
 
-FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF conf_ref)
+FORT_API void fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF conf_ref)
 {
     FORT_CONF_FLAGS old_conf_flags;
     FORT_CONF_FLAGS conf_flags;
@@ -425,7 +417,7 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
 
             conf_flags = conf->flags;
 
-            fort_device_flags_conf_set(device_conf, conf_flags);
+            fort_device_flag_set(device_conf, FORT_DEVICE_TRACE_EVENTS, conf_flags.trace_events);
         } else {
             RtlZeroMemory((void *) &conf_flags, sizeof(FORT_CONF_FLAGS));
             conf_flags.boot_filter = old_conf_flags.boot_filter;
@@ -443,12 +435,9 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
     fort_device_flags_conf_log_event(old_conf_flags, conf_flags);
-
-    return old_conf_flags;
 }
 
-FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
-        PFORT_DEVICE_CONF device_conf, FORT_CONF_FLAGS conf_flags)
+FORT_API void fort_conf_ref_flags_set(PFORT_DEVICE_CONF device_conf, FORT_CONF_FLAGS conf_flags)
 {
     FORT_CONF_FLAGS old_conf_flags;
 
@@ -463,7 +452,7 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
             old_conf_flags = conf->flags;
             conf->flags = conf_flags;
 
-            fort_device_flags_conf_set(device_conf, conf_flags);
+            fort_device_flag_set(device_conf, FORT_DEVICE_TRACE_EVENTS, conf_flags.trace_events);
         } else {
             const UINT16 flags = fort_device_flags(device_conf);
 
@@ -477,6 +466,4 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
     fort_device_flags_conf_log_event(old_conf_flags, conf_flags);
-
-    return old_conf_flags;
 }

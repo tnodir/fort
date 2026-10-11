@@ -39,16 +39,9 @@ FORT_API void fort_device_set(PFORT_DEVICE device)
     g_device = device;
 }
 
-static NTSTATUS fort_device_reauth_force(const FORT_CONF_FLAGS old_conf_flags)
-{
-    return fort_callout_force_reauth(old_conf_flags);
-}
-
 static void fort_device_reauth(void)
 {
-    const FORT_CONF_FLAGS conf_flags = fort_device_conf_flags(&fort_device()->conf);
-
-    fort_device_reauth_force(conf_flags);
+    fort_callout_force_reauth();
 }
 
 static void fort_device_reauth_queue(void)
@@ -110,7 +103,8 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
 
     /* Clear conf */
     {
-        const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(&fort_device()->conf, NULL);
+        fort_conf_ref_set(&fort_device()->conf, NULL);
+
         const FORT_CONF_FLAGS conf_flags = fort_device_conf_flags(&fort_device()->conf);
 
         fort_conf_zones_set(&fort_device()->conf, NULL);
@@ -120,7 +114,7 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
         fort_shaper_speed_limits_set(&fort_device()->shaper, NULL);
         fort_shaper_conf_flags_update(&fort_device()->shaper, conf_flags);
 
-        fort_device_reauth_force(old_conf_flags);
+        fort_callout_force_reauth();
     }
 
     /* Clear pending packets */
@@ -172,7 +166,7 @@ inline static NTSTATUS fort_device_control_setconf_ref(
 
     fort_conf_periods_set(device_conf, &conf_io->periods);
 
-    const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(device_conf, conf_ref);
+    fort_conf_ref_set(device_conf, conf_ref);
 
     fort_shaper_conf_flags_update(&fort_device()->shaper, conf_io->conf.flags);
 
@@ -183,7 +177,7 @@ inline static NTSTATUS fort_device_control_setconf_ref(
         fort_device_flag_set(device_conf, FORT_DEVICE_PS_ENUMERATED, TRUE);
     }
 
-    return fort_device_reauth_force(old_conf_flags);
+    return fort_callout_force_reauth();
 }
 
 static NTSTATUS fort_device_control_setconf(PFORT_DEVICE_CONTROL_ARG dca)
@@ -213,12 +207,11 @@ static NTSTATUS fort_device_control_setflags(PFORT_DEVICE_CONTROL_ARG dca)
     if (len == sizeof(FORT_CONF_FLAGS)) {
         const FORT_CONF_FLAGS conf_flags = *in_conf_flags;
 
-        const FORT_CONF_FLAGS old_conf_flags =
-                fort_conf_ref_flags_set(&fort_device()->conf, conf_flags);
+        fort_conf_ref_flags_set(&fort_device()->conf, conf_flags);
 
         fort_shaper_conf_flags_update(&fort_device()->shaper, conf_flags);
 
-        return fort_device_reauth_force(old_conf_flags);
+        return fort_callout_force_reauth();
     }
 
     return STATUS_UNSUCCESSFUL;
@@ -594,10 +587,6 @@ static NTSTATUS fort_device_register_provider(void)
         boot_conf.boot_filter = fort_reg_value(L"bootFilter", 0);
     }
 
-    fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_BOOT_FILTER, boot_conf.boot_filter);
-    fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_STEALTH_MODE, boot_conf.stealth_mode);
-    fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_FILTER_LOCALS, boot_conf.filter_locals);
-
     /* The classify checks the Conf flags before the first conf is set */
     const FORT_CONF_FLAGS conf_flags = {
         .boot_filter = boot_conf.boot_filter,
@@ -609,7 +598,15 @@ static NTSTATUS fort_device_register_provider(void)
 
     status = fort_prov_reregister(engine, boot_conf);
 
-    return fort_prov_trans_close(engine, status);
+    status = fort_prov_trans_close(engine, status);
+
+    if (NT_SUCCESS(status)) {
+        const UINT16 prov_flags = fort_device_prov_flags_by_conf(conf_flags);
+
+        fort_device_prov_flags_set(&fort_device()->conf, prov_flags);
+    }
+
+    return status;
 }
 
 FORT_API NTSTATUS fort_device_load(PVOID device_param)

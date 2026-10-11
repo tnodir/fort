@@ -41,6 +41,20 @@ FORT_API UINT16 fort_device_flag(PFORT_DEVICE_CONF device_conf, UINT16 flag)
     return fort_device_flags(device_conf) & flag;
 }
 
+FORT_API UINT16 fort_device_prov_flags_by_conf(const FORT_CONF_FLAGS conf_flags)
+{
+    return FORT_DEVICE_PROVIDER | (conf_flags.boot_filter ? FORT_DEVICE_BOOT_FILTER : 0)
+            | (conf_flags.stealth_mode ? FORT_DEVICE_STEALTH_MODE : 0)
+            | (conf_flags.filter_locals ? FORT_DEVICE_FILTER_LOCALS : 0)
+            | (conf_flags.log_stat ? FORT_DEVICE_FLOW_FILTERS : 0);
+}
+
+FORT_API void fort_device_prov_flags_set(PFORT_DEVICE_CONF device_conf, UINT16 prov_flags)
+{
+    fort_device_flag_set(device_conf, (FORT_DEVICE_PROV_MASK & ~prov_flags), FALSE);
+    fort_device_flag_set(device_conf, prov_flags, TRUE);
+}
+
 FORT_API FORT_CONF_FLAGS fort_device_conf_flags(PFORT_DEVICE_CONF device_conf)
 {
     FORT_DEVICE_CONF_FLAGS conf_flags;

@@ -39,6 +39,12 @@ typedef struct fort_conf_ref
 #define FORT_DEVICE_POWER_OFF           0x0100
 #define FORT_DEVICE_SHUTDOWN_REGISTERED 0x0200
 #define FORT_DEVICE_PS_ENUMERATED       0x0400
+#define FORT_DEVICE_PROVIDER            0x0800
+#define FORT_DEVICE_FLOW_FILTERS        0x1000
+
+/* The registered provider's state: its objects, their boot conf and the flow filters */
+#define FORT_DEVICE_PROV_MASK                                                                      \
+    (FORT_DEVICE_BOOT_CONF_MASK | FORT_DEVICE_PROVIDER | FORT_DEVICE_FLOW_FILTERS)
 
 /* The conf's flags are read by the classify callouts without the lock, so access them atomically */
 typedef union fort_device_conf_flags {
@@ -80,6 +86,10 @@ FORT_API UINT16 fort_device_flag_set(PFORT_DEVICE_CONF device_conf, UINT16 flag,
 FORT_API UINT16 fort_device_flags(PFORT_DEVICE_CONF device_conf);
 
 FORT_API UINT16 fort_device_flag(PFORT_DEVICE_CONF device_conf, UINT16 flag);
+
+FORT_API UINT16 fort_device_prov_flags_by_conf(const FORT_CONF_FLAGS conf_flags);
+
+FORT_API void fort_device_prov_flags_set(PFORT_DEVICE_CONF device_conf, UINT16 prov_flags);
 
 FORT_API FORT_CONF_FLAGS fort_device_conf_flags(PFORT_DEVICE_CONF device_conf);
 
