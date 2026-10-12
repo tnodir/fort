@@ -109,6 +109,9 @@ void AppConnsWindow::setupUi()
 
     // Add Filter
     setupAddFilter();
+
+    // Size
+    this->setMinimumHeight(300);
 }
 
 void AppConnsWindow::setupEditAppName()
