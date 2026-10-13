@@ -1,9 +1,11 @@
 Fort Firewall ChangeLog
 
-v3.20.4-test01, 2026-10-10:
-- Installer: Use Inno Setup 7: Detect Windows ARM64 natively.
-- Driver: Report the failed WFP filter to the System event log (#768).
+v3.20.4, 2026-10-13:
+- UI: Options: Interface: Add "Style Sheet" option (#775).
+- UI: Network Filter: Edit the Protocols and Areas as text (#778).
 - UI: Update SQLite to 3.54.0
+- Driver: Fix the provider's re-registration on Windows Insider builds (#768).
+- Installer: Use Inno Setup 7: Detect Windows ARM64 natively.
 
 v3.20.3, 2026-10-09:
 - UI: Edit Program: Replace the Connections tab with the Program Connections window.
