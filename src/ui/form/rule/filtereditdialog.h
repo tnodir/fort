@@ -17,7 +17,6 @@ QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class LineEdit;
 class PlainTextEdit;
-class ProtocolSelector;
 class RuleFilter;
 
 class FilterEditDialog : public QDialog
@@ -49,7 +48,6 @@ private:
     QLayout *setupActionsLayout();
     QRadioButton *createActionButton(const QString &iconPath, int actionId);
     QComboBox *createFieldCombo(const QStringList &values);
-    ProtocolSelector *createProtocolSelector();
     QCheckBox *createFieldCheckBox();
     QToolButton *createNotButton();
     LineEdit *createValuesEdit();
@@ -94,14 +92,12 @@ private:
     QToolButton *m_btDirectionNot = nullptr;
     QComboBox *m_comboDirection = nullptr;
     QToolButton *m_btDirectionClear = nullptr;
-    QLabel *m_labelProtocol = nullptr;
-    QToolButton *m_btProtocolNot = nullptr;
-    ProtocolSelector *m_protocolSelector = nullptr;
-    QToolButton *m_btProtocolClear = nullptr;
-    QLabel *m_labelArea = nullptr;
-    QToolButton *m_btAreaNot = nullptr;
-    QComboBox *m_comboArea = nullptr;
-    QToolButton *m_btAreaClear = nullptr;
+    QLabel *m_labelProtocols = nullptr;
+    QToolButton *m_btProtocolsNot = nullptr;
+    LineEdit *m_editProtocols = nullptr;
+    QLabel *m_labelAreas = nullptr;
+    QToolButton *m_btAreasNot = nullptr;
+    LineEdit *m_editAreas = nullptr;
     QLabel *m_labelRemoteIps = nullptr;
     QToolButton *m_btRemoteIpsNot = nullptr;
     QToolButton *m_btRemoteIpsClear = nullptr;
