@@ -15,7 +15,7 @@
 #include <form/controls/labelcolor.h>
 #include <form/controls/labelspin.h>
 #include <form/controls/labelspincombo.h>
-#include <form/controls/timeperiodselector.h>
+#include <form/controls/selector/timeperiodselector.h>
 #include <form/opt/optionscontroller.h>
 #include <fortglobal.h>
 #include <util/formatutil.h>

@@ -15,9 +15,9 @@
 #include <appinfo/appinfocache.h>
 #include <appinfo/appinfoutil.h>
 #include <form/controls/controlutil.h>
-#include <form/controls/groupsselector.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
+#include <form/controls/selector/groupsselector.h>
 #include <form/controls/spincombo.h>
 #include <form/controls/tableview.h>
 #include <form/controls/toolbutton.h>

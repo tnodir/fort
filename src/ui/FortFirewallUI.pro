@@ -67,7 +67,6 @@ SOURCES += \
     form/controls/doublespinbox.cpp \
     form/controls/focusablemenu.cpp \
     form/controls/formwindow.cpp \
-    form/controls/groupsselector.cpp \
     form/controls/labelcolor.cpp \
     form/controls/labeldoublespin.cpp \
     form/controls/labelspin.cpp \
@@ -80,24 +79,25 @@ SOURCES += \
     form/controls/optionsbutton.cpp \
     form/controls/plaintextedit.cpp \
     form/controls/progressitemdelegate.cpp \
-    form/controls/protocolselector.cpp \
     form/controls/pushbutton.cpp \
-    form/controls/ruleselector.cpp \
+    form/controls/selector/groupsselector.cpp \
+    form/controls/selector/protocolselector.cpp \
+    form/controls/selector/ruleselector.cpp \
+    form/controls/selector/terminatingruleselector.cpp \
+    form/controls/selector/timeperiodselector.cpp \
+    form/controls/selector/weekdaysselector.cpp \
+    form/controls/selector/zonesselector.cpp \
     form/controls/sidebutton.cpp \
     form/controls/spinbox.cpp \
     form/controls/spincombo.cpp \
     form/controls/statisticsbutton.cpp \
     form/controls/tabbar.cpp \
     form/controls/tableview.cpp \
-    form/controls/terminatingruleselector.cpp \
     form/controls/textarea2splitter.cpp \
     form/controls/textarea2splitterhandle.cpp \
-    form/controls/timeperiodselector.cpp \
     form/controls/toolbutton.cpp \
     form/controls/treeitemdelegate.cpp \
     form/controls/treeview.cpp \
-    form/controls/weekdaysselector.cpp \
-    form/controls/zonesselector.cpp \
     form/dialog/dialogutil.cpp \
     form/dialog/passworddialog.cpp \
     form/dialog/splashscreen.cpp \
@@ -377,7 +377,6 @@ HEADERS += \
     form/controls/doublespinbox.h \
     form/controls/focusablemenu.h \
     form/controls/formwindow.h \
-    form/controls/groupsselector.h \
     form/controls/labelcolor.h \
     form/controls/labeldoublespin.h \
     form/controls/labelspin.h \
@@ -390,24 +389,25 @@ HEADERS += \
     form/controls/optionsbutton.h \
     form/controls/plaintextedit.h \
     form/controls/progressitemdelegate.h \
-    form/controls/protocolselector.h \
     form/controls/pushbutton.h \
-    form/controls/ruleselector.h \
+    form/controls/selector/groupsselector.h \
+    form/controls/selector/protocolselector.h \
+    form/controls/selector/ruleselector.h \
+    form/controls/selector/terminatingruleselector.h \
+    form/controls/selector/timeperiodselector.h \
+    form/controls/selector/weekdaysselector.h \
+    form/controls/selector/zonesselector.h \
     form/controls/sidebutton.h \
     form/controls/spinbox.h \
     form/controls/spincombo.h \
     form/controls/statisticsbutton.h \
     form/controls/tabbar.h \
     form/controls/tableview.h \
-    form/controls/terminatingruleselector.h \
     form/controls/textarea2splitter.h \
     form/controls/textarea2splitterhandle.h \
-    form/controls/timeperiodselector.h \
     form/controls/toolbutton.h \
     form/controls/treeitemdelegate.h \
     form/controls/treeview.h \
-    form/controls/weekdaysselector.h \
-    form/controls/zonesselector.h \
     form/dialog/dialogutil.h \
     form/dialog/passworddialog.h \
     form/dialog/splashscreen.h \

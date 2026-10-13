@@ -19,7 +19,7 @@
 #include <form/conn/appconnswindow.h>
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
-#include <form/controls/groupsselector.h>
+#include <form/controls/selector/groupsselector.h>
 #include <form/controls/tableview.h>
 #include <fortglobal.h>
 #include <fortsettings.h>

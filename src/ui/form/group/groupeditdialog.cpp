@@ -10,8 +10,8 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
-#include <form/controls/ruleselector.h>
-#include <form/controls/timeperiodselector.h>
+#include <form/controls/selector/ruleselector.h>
+#include <form/controls/selector/timeperiodselector.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/grouplistmodel.h>

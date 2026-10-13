@@ -18,7 +18,7 @@
 #include <conf/confzonemanager.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
-#include <form/controls/protocolselector.h>
+#include <form/controls/selector/protocolselector.h>
 #include <form/dialog/dialogutil.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>

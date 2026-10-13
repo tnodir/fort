@@ -6,7 +6,7 @@
 #include <QToolButton>
 
 #include <form/controls/controlutil.h>
-#include <form/controls/weekdaysselector.h>
+#include <form/controls/selector/weekdaysselector.h>
 
 namespace {
 

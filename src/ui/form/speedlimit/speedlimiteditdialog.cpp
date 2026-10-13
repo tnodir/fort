@@ -12,8 +12,8 @@
 #include <form/controls/doublespinbox.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
+#include <form/controls/selector/timeperiodselector.h>
 #include <form/controls/spincombo.h>
-#include <form/controls/timeperiodselector.h>
 #include <manager/windowmanager.h>
 #include <util/formatutil.h>
 #include <util/guiutil.h>

@@ -23,10 +23,10 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
+#include <form/controls/selector/zonesselector.h>
 #include <form/controls/spincombo.h>
 #include <form/controls/tableview.h>
 #include <form/controls/toolbutton.h>
-#include <form/controls/zonesselector.h>
 #include <form/dialog/dialogutil.h>
 #include <form/prog/pages/progmainpage.h>
 #include <form/rule/ruleswindow.h>

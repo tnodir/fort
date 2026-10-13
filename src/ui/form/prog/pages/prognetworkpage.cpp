@@ -11,9 +11,9 @@
 #include <conf/rule.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/listview.h>
-#include <form/controls/ruleselector.h>
-#include <form/controls/terminatingruleselector.h>
-#include <form/controls/zonesselector.h>
+#include <form/controls/selector/ruleselector.h>
+#include <form/controls/selector/terminatingruleselector.h>
+#include <form/controls/selector/zonesselector.h>
 #include <form/dialog/dialogutil.h>
 #include <form/rule/filtereditdialog.h>
 #include <fortglobal.h>

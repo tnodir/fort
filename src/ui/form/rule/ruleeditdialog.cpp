@@ -17,9 +17,9 @@
 #include <form/controls/lineedit.h>
 #include <form/controls/listview.h>
 #include <form/controls/plaintextedit.h>
-#include <form/controls/terminatingruleselector.h>
-#include <form/controls/timeperiodselector.h>
-#include <form/controls/zonesselector.h>
+#include <form/controls/selector/terminatingruleselector.h>
+#include <form/controls/selector/timeperiodselector.h>
+#include <form/controls/selector/zonesselector.h>
 #include <form/dialog/dialogutil.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>

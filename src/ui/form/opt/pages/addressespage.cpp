@@ -16,7 +16,7 @@
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/plaintextedit.h>
-#include <form/controls/zonesselector.h>
+#include <form/controls/selector/zonesselector.h>
 #include <form/opt/optionscontroller.h>
 #include <fortglobal.h>
 #include <fortmanager.h>

@@ -1,7 +1,7 @@
 #ifndef ZONESSELECTOR_H
 #define ZONESSELECTOR_H
 
-#include "pushbutton.h"
+#include <form/controls/pushbutton.h>
 
 QT_FORWARD_DECLARE_CLASS(QVBoxLayout)
 

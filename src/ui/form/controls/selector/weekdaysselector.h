@@ -1,7 +1,7 @@
 #ifndef WEEKDAYSSELECTOR_H
 #define WEEKDAYSSELECTOR_H
 
-#include "pushbutton.h"
+#include <form/controls/pushbutton.h>
 
 QT_FORWARD_DECLARE_CLASS(QBoxLayout)
 QT_FORWARD_DECLARE_CLASS(QCheckBox)

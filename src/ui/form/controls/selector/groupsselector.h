@@ -1,7 +1,7 @@
 #ifndef GROUPSSELECTOR_H
 #define GROUPSSELECTOR_H
 
-#include "pushbutton.h"
+#include <form/controls/pushbutton.h>
 
 QT_FORWARD_DECLARE_CLASS(QVBoxLayout)
 
