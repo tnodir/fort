@@ -22,6 +22,25 @@ namespace {
 
 const QLoggingCategory LC("util.osUtil");
 
+// The original arguments: QCoreApplication::arguments() lacks the ones processed by Qt
+QStringList commandLineArguments()
+{
+    QStringList list;
+
+    int argc = 0;
+    LPWSTR *argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+    if (!argv)
+        return list;
+
+    for (int i = 0; i < argc; ++i) {
+        list.append(QString::fromWCharArray(argv[i]));
+    }
+
+    LocalFree(argv);
+
+    return list;
+}
+
 }
 
 QString OsUtil::pidToPath(quint32 pid, bool isKernelPath)
@@ -222,8 +241,10 @@ void OsUtil::restart()
 {
     const QString appFilePath = QCoreApplication::applicationFilePath();
 
-    QStringList args = QCoreApplication::arguments();
-    args.removeFirst(); // remove a program path
+    QStringList args = commandLineArguments();
+    if (!args.isEmpty()) {
+        args.removeFirst(); // remove a program path
+    }
 
     qCDebug(LC) << "restart:" << appFilePath << args;
 
