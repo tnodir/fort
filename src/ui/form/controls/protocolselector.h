@@ -9,14 +9,10 @@ class ProtocolSelector : public SpinCombo
     Q_OBJECT
 
 public:
-    explicit ProtocolSelector(bool hasAny = false, QWidget *parent = nullptr);
+    explicit ProtocolSelector(QWidget *parent = nullptr);
 
-    // -1: Any
     int protocol() const;
     void setProtocol(int v);
-
-    bool isAny() const;
-    void setAny();
 
     void retranslateUi();
 
@@ -24,7 +20,7 @@ signals:
     void protocolChanged();
 
 private:
-    void setupUi(bool hasAny);
+    void setupUi();
 };
 
 #endif // PROTOCOLSELECTOR_H
