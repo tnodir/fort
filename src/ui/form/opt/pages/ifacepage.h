@@ -21,6 +21,9 @@ public:
     bool styleEdited() const { return m_styleEdited; }
     void setStyleEdited(bool v) { m_styleEdited = v; }
 
+    bool styleSheetEdited() const { return m_styleSheetEdited; }
+    void setStyleSheetEdited(bool v) { m_styleSheetEdited = v; }
+
 public slots:
     void onResetToDefault() override;
 
@@ -45,6 +48,7 @@ private:
     QLayout *setupLangLayout();
     QLayout *setupThemeLayout();
     QLayout *setupStyleLayout();
+    QLayout *setupStyleSheetLayout();
     void setupHotKeysBox();
     void refreshEditShortcut();
     QLayout *setupComboHotKeyLayout();
@@ -68,6 +72,7 @@ private:
     bool m_languageEdited : 1 = false;
     bool m_themeEdited : 1 = false;
     bool m_styleEdited : 1 = false;
+    bool m_styleSheetEdited : 1 = false;
 
     QGroupBox *m_gbGlobal = nullptr;
     QGroupBox *m_gbHotKeys = nullptr;
@@ -82,6 +87,9 @@ private:
     QComboBox *m_comboTheme = nullptr;
     QLabel *m_labelStyle = nullptr;
     QComboBox *m_comboStyle = nullptr;
+    QLabel *m_labelStyleSheet = nullptr;
+    QLineEdit *m_editStyleSheet = nullptr;
+    QToolButton *m_btStyleSheet = nullptr;
     QCheckBox *m_cbUseSystemLocale = nullptr;
     QCheckBox *m_cbExcludeCapture = nullptr;
 

@@ -1,6 +1,7 @@
 #include "windowmanager.h"
 
 #include <QApplication>
+#include <QDir>
 #include <QLoggingCategory>
 #include <QMouseEvent>
 #include <QProcess>
@@ -32,6 +33,7 @@
 #include <stat/statmanager.h>
 #include <user/usersettings.h>
 #include <util/bitutil.h>
+#include <util/fileutil.h>
 #include <util/guiutil.h>
 #include <util/osutil.h>
 
@@ -44,6 +46,7 @@ namespace {
 const QLoggingCategory LC("manager.window");
 
 bool g_isFusionStyle = false;
+bool g_isArgStyleSheet = false;
 
 }
 
@@ -153,6 +156,9 @@ void WindowManager::setUp()
 {
     setupAppPalette();
 
+    // The "-stylesheet" argument has priority over the option
+    g_isArgStyleSheet = !qApp->styleSheet().isEmpty();
+
     setupMainWindow();
     setupConfManager();
 
@@ -259,6 +265,7 @@ void WindowManager::setupByIniUser()
 
     updateTheme(ini);
     updateStyle(ini);
+    updateStyleSheet(ini);
     updateTrayIconVisibility(ini);
     updateGraphWindowVisibility(ini);
 }
@@ -283,6 +290,26 @@ void WindowManager::updateStyle(const IniUser &ini)
     QApplication::setStyle(style);
 
     refreshAppPalette();
+}
+
+void WindowManager::updateStyleSheet(const IniUser &ini)
+{
+    if (g_isArgStyleSheet)
+        return;
+
+    // A relative path is from the program's folder
+    const QString path = ini.styleSheetPath();
+    const QString filePath =
+            path.isEmpty() ? QString() : QDir(FileUtil::appBinLocation()).absoluteFilePath(path);
+
+    // Cleared by a missing file
+    const QString styleSheet =
+            FileUtil::fileExists(filePath) ? QLatin1String("file:///") + filePath : QString();
+
+    if (qApp->styleSheet() == styleSheet)
+        return;
+
+    qApp->setStyleSheet(styleSheet);
 }
 
 void WindowManager::updateTrayIconVisibility(const IniUser &ini)

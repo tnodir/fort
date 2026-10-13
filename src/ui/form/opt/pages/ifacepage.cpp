@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include <QKeySequenceEdit>
 #include <QLabel>
+#include <QLineEdit>
 #include <QPushButton>
 #include <QSpinBox>
 #include <QToolButton>
@@ -14,6 +15,7 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
+#include <form/dialog/dialogutil.h>
 #include <form/opt/optionscontroller.h>
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
@@ -22,6 +24,7 @@
 #include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
+#include <util/fileutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 
@@ -53,6 +56,7 @@ void IfacePage::onResetToDefault()
     m_comboLanguage->setCurrentIndex(0);
     m_comboTheme->setCurrentIndex(0);
     m_comboStyle->setCurrentText(IniUser::styleDefault());
+    m_editStyleSheet->clear();
     m_cbUseSystemLocale->setChecked(true);
     m_cbExcludeCapture->setChecked(false);
 
@@ -119,6 +123,12 @@ void IfacePage::onEditResetted()
         setStyleEdited(false);
         WindowManager::updateStyle(Fort::iniUser());
     }
+
+    // Style Sheet
+    if (styleSheetEdited()) {
+        setStyleSheetEdited(false);
+        WindowManager::updateStyleSheet(Fort::iniUser());
+    }
 }
 
 void IfacePage::onRetranslateUi()
@@ -136,6 +146,8 @@ void IfacePage::onRetranslateUi()
     retranslateComboTheme();
     m_labelStyle->setText(tr("Style:"));
     retranslateComboStyle();
+    m_labelStyleSheet->setText(tr("Style Sheet:"));
+    m_btStyleSheet->setToolTip(tr("Select File"));
     m_cbUseSystemLocale->setText(tr("Use System Regional Settings"));
     m_cbExcludeCapture->setText(tr("Exclude from screen capture"));
 
@@ -364,6 +376,9 @@ void IfacePage::setupGlobalBox()
     // Style Row
     auto styleLayout = setupStyleLayout();
 
+    // Style Sheet Row
+    auto styleSheetLayout = setupStyleSheetLayout();
+
     m_cbUseSystemLocale =
             ControlUtil::createCheckBox(iniUser().useSystemLocale(), [&](bool checked) {
                 iniUser().setUseSystemLocale(checked);
@@ -380,6 +395,7 @@ void IfacePage::setupGlobalBox()
     layout->addLayout(langLayout);
     layout->addLayout(themeLayout);
     layout->addLayout(styleLayout);
+    layout->addLayout(styleSheetLayout);
     layout->addWidget(m_cbUseSystemLocale);
     layout->addWidget(m_cbExcludeCapture);
 
@@ -447,6 +463,40 @@ QLayout *IfacePage::setupStyleLayout()
     m_comboStyle->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelStyle, m_comboStyle);
+}
+
+QLayout *IfacePage::setupStyleSheetLayout()
+{
+    m_labelStyleSheet = ControlUtil::createLabel();
+
+    m_editStyleSheet =
+            ControlUtil::createLineEdit(iniUser().styleSheetPath(), [&](const QString &text) {
+                if (iniUser().styleSheetPath() != text) {
+                    setStyleSheetEdited(true);
+                    iniUser().setStyleSheetPath(text);
+                    ctrl()->setIniUserEdited();
+
+                    WindowManager::updateStyleSheet(iniUser());
+                }
+            });
+    m_editStyleSheet->setClearButtonEnabled(true);
+
+    m_btStyleSheet = ControlUtil::createIconToolButton(":/icons/folder.png", [&] {
+        const auto filePath = DialogUtil::getOpenFileName(
+                m_labelStyleSheet->text(), tr("Style Sheets (*.qss);;All files (*.*)"));
+
+        if (filePath.isEmpty())
+            return;
+
+        m_editStyleSheet->setText(FileUtil::toNativeSeparators(filePath));
+    });
+
+    auto layout = ControlUtil::createHLayout();
+    layout->addWidget(m_labelStyleSheet);
+    layout->addWidget(m_editStyleSheet, 1);
+    layout->addWidget(m_btStyleSheet);
+
+    return layout;
 }
 
 void IfacePage::setupHotKeysBox()

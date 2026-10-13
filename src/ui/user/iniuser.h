@@ -74,6 +74,9 @@ public:
     QString style() const { return valueText("base/style", styleDefault()); }
     void setStyle(const QString &v) { setValue("base/style", v, styleDefault()); }
 
+    QString styleSheetPath() const { return valueText("base/styleSheetPath"); }
+    void setStyleSheetPath(const QString &v) { setValue("base/styleSheetPath", v); }
+
     bool hotKeyEnabled() const { return valueBool("hotKey/enabled"); }
     void setHotKeyEnabled(bool v) { setValue("hotKey/enabled", v); }
 
