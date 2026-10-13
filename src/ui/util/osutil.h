@@ -52,6 +52,9 @@ public:
 
     static void startService(const QString &serviceName);
 
+    // The original arguments: QCoreApplication::arguments() lacks the ones processed by Qt
+    static QStringList commandLineArguments(bool withProgramPath = false);
+
     static void restart();
     static void quit(const QString &reason);
 
