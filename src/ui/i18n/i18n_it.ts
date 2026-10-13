@@ -539,14 +539,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Localhost</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Internet</source>
-        <translation>Internet</translation>
-    </message>
-    <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1325,6 +1317,14 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>Tema:</translation>
     </message>
     <message>
+        <source>Style Sheet:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select File</source>
+        <translation>Seleziona file</translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation>Abilitato</translation>
     </message>
@@ -1451,6 +1451,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Ignore</source>
         <translation>Ignora</translation>
+    </message>
+    <message>
+        <source>Style Sheets (*.qss);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Exclude from screen capture</source>
@@ -2411,10 +2415,6 @@ Controllare un altro programma con lo stesso percorso.</translation>
     <name>ProtocolSelector</name>
     <message>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Any</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

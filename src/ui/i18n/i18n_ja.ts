@@ -539,14 +539,6 @@
         <translation>エリア :</translation>
     </message>
     <message>
-        <source>Localhost</source>
-        <translation>ローカルホスト</translation>
-    </message>
-    <message>
-        <source>Internet</source>
-        <translation>インターネット</translation>
-    </message>
-    <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
         <translation>LAN : オプションの「ローカルエリアネットワーク」アドレスによる</translation>
     </message>
@@ -1326,6 +1318,14 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>テーマ :</translation>
     </message>
     <message>
+        <source>Style Sheet:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select File</source>
+        <translation>ファイルの選択</translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation>有効</translation>
     </message>
@@ -1452,6 +1452,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Ignore</source>
         <translation>無視</translation>
+    </message>
+    <message>
+        <source>Style Sheets (*.qss);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Exclude from screen capture</source>
@@ -2413,10 +2417,6 @@ Please check other program with the same path.</source>
     <message>
         <source>Custom</source>
         <translation>カスタム</translation>
-    </message>
-    <message>
-        <source>Any</source>
-        <translation>すべて</translation>
     </message>
 </context>
 <context>

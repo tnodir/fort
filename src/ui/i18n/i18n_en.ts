@@ -539,14 +539,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Localhost</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Internet</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
         <translation></translation>
     </message>
@@ -1325,6 +1317,14 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation></translation>
     </message>
     <message>
+        <source>Style Sheet:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Select File</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation></translation>
     </message>
@@ -1450,6 +1450,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Ignore</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Style Sheets (*.qss);;All files (*.*)</source>
         <translation></translation>
     </message>
     <message>
@@ -2403,10 +2407,6 @@ Please check other program with the same path.</source>
     <name>ProtocolSelector</name>
     <message>
         <source>Custom</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Any</source>
         <translation></translation>
     </message>
 </context>

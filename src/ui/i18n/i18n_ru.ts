@@ -539,14 +539,6 @@
         <translation>Область:</translation>
     </message>
     <message>
-        <source>Localhost</source>
-        <translation>Localhost</translation>
-    </message>
-    <message>
-        <source>Internet</source>
-        <translation>Интернет</translation>
-    </message>
-    <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
         <translation>Локальная сеть: по адресам &quot;Локальная сеть&quot; в Опциях</translation>
     </message>
@@ -1326,6 +1318,14 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>Тема:</translation>
     </message>
     <message>
+        <source>Style Sheet:</source>
+        <translation>Таблица стилей:</translation>
+    </message>
+    <message>
+        <source>Select File</source>
+        <translation>Выбрать файл</translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation>Включено</translation>
     </message>
@@ -1452,6 +1452,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Ignore</source>
         <translation>Игнорировать</translation>
+    </message>
+    <message>
+        <source>Style Sheets (*.qss);;All files (*.*)</source>
+        <translation>Таблицы стилей (*.qss);;Все файлы (*.*)</translation>
     </message>
     <message>
         <source>Exclude from screen capture</source>
@@ -2413,10 +2417,6 @@ Please check other program with the same path.</source>
     <message>
         <source>Custom</source>
         <translation>Нестандартный</translation>
-    </message>
-    <message>
-        <source>Any</source>
-        <translation>Любой</translation>
     </message>
 </context>
 <context>

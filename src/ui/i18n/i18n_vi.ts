@@ -539,14 +539,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Localhost</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Internet</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1325,6 +1317,14 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Style Sheet:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select File</source>
+        <translation>Chọn tệp</translation>
+    </message>
+    <message>
         <source>Show Splash screen on startup</source>
         <translation>Hiển thị màn hình khởi động</translation>
     </message>
@@ -1343,6 +1343,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Show Programs</source>
         <translation>Hiển thị chương trình</translation>
+    </message>
+    <message>
+        <source>Style Sheets (*.qss);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Single Click</source>
@@ -2411,10 +2415,6 @@ Việc này có thể khiến Windows hoạt động lỗi hoặc hoàn toàn kh
     <message>
         <source>Custom</source>
         <translation>Tùy chỉnh</translation>
-    </message>
-    <message>
-        <source>Any</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

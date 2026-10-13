@@ -539,14 +539,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Localhost</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Internet</source>
-        <translation>Internet</translation>
-    </message>
-    <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1325,6 +1317,14 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>Tema:</translation>
     </message>
     <message>
+        <source>Style Sheet:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select File</source>
+        <translation>Izberi datoteko</translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation>Omogočeno</translation>
     </message>
@@ -1451,6 +1451,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Ignore</source>
         <translation>Prezri</translation>
+    </message>
+    <message>
+        <source>Style Sheets (*.qss);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Exclude from screen capture</source>
@@ -2412,10 +2416,6 @@ Preverite drug program z isto potjo.</translation>
     <message>
         <source>Custom</source>
         <translation>Po meri</translation>
-    </message>
-    <message>
-        <source>Any</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

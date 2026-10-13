@@ -539,14 +539,6 @@
         <translation>Zone :</translation>
     </message>
     <message>
-        <source>Localhost</source>
-        <translation>Hôte local</translation>
-    </message>
-    <message>
-        <source>Internet</source>
-        <translation>Internet</translation>
-    </message>
-    <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
         <translation>LAN: par les adresses &quot;Réseau local&quot; dans les Options</translation>
     </message>
@@ -1326,6 +1318,14 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
         <translation>Thème :</translation>
     </message>
     <message>
+        <source>Style Sheet:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation>Activé</translation>
     </message>
@@ -1452,6 +1452,10 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
     <message>
         <source>Ignore</source>
         <translation>Ignorer</translation>
+    </message>
+    <message>
+        <source>Style Sheets (*.qss);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Exclude from screen capture</source>
@@ -2413,10 +2417,6 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     <message>
         <source>Custom</source>
         <translation>Personnalisé</translation>
-    </message>
-    <message>
-        <source>Any</source>
-        <translation>N&apos;importe quel</translation>
     </message>
 </context>
 <context>
