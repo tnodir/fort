@@ -1319,11 +1319,11 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
     </message>
     <message>
         <source>Style Sheet:</source>
-        <translation type="unfinished"></translation>
+        <translation>Feuille de style :</translation>
     </message>
     <message>
         <source>Select File</source>
-        <translation type="unfinished"></translation>
+        <translation>Choisir un fichier</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -1455,7 +1455,7 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
     </message>
     <message>
         <source>Style Sheets (*.qss);;All files (*.*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Fiches de style (*.qss);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
         <source>Exclude from screen capture</source>

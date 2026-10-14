@@ -71,11 +71,11 @@
     <name>AppConnsWindow</name>
     <message>
         <source>Program Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>프로그램 연계</translation>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 추가</translation>
     </message>
 </context>
 <context>
@@ -113,7 +113,7 @@
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 제한</translation>
     </message>
     <message>
         <source>File Path</source>
@@ -324,15 +324,15 @@
     </message>
     <message>
         <source>Block Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>인바운드 차단</translation>
     </message>
     <message>
         <source>Program&apos;s Network Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>프로그램의 네트워크 필터</translation>
     </message>
     <message>
         <source>Block Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>아웃바운드 차단</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -348,15 +348,15 @@
     </message>
     <message>
         <source>Loopback</source>
-        <translation type="unfinished"></translation>
+        <translation>루프백</translation>
     </message>
     <message>
         <source>Inherited from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>상속받은 항목: %1</translation>
     </message>
     <message>
         <source>Dropped</source>
-        <translation type="unfinished"></translation>
+        <translation>취소됨</translation>
     </message>
     <message>
         <source>Local Host Name</source>
@@ -399,7 +399,7 @@
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 시뮬레이터</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -427,11 +427,11 @@
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
-        <translation>이 행까지 연결을 제거하시겠습니까?</translation>
+        <translation>이 행까지의 연결을 정말로 삭제하시겠습니까?</translation>
     </message>
     <message>
         <source>Are you sure to remove all connections?</source>
-        <translation>모든 연결을 제거하시겠습니까?</translation>
+        <translation>모든 연결을 정말로 삭제하시겠습니까?</translation>
     </message>
     <message>
         <source>Options</source>
@@ -447,7 +447,7 @@
     </message>
     <message>
         <source>Lookup IP</source>
-        <translation>조회 IP</translation>
+        <translation>IP 조회</translation>
     </message>
     <message>
         <source>Connections</source>
@@ -474,7 +474,7 @@
     </message>
     <message>
         <source>%1d</source>
-        <translation type="unfinished"></translation>
+        <translation>%1d</translation>
     </message>
 </context>
 <context>
@@ -488,95 +488,95 @@
     <name>FilterEditDialog</name>
     <message>
         <source>Action:</source>
-        <translation>처리:</translation>
+        <translation>동작:</translation>
     </message>
     <message>
         <source>By &amp;Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>규칙에 따라(&amp;R)</translation>
     </message>
     <message>
         <source>The Rule&apos;s action is applied</source>
-        <translation type="unfinished"></translation>
+        <translation>규칙 동작이 적용됩니다</translation>
     </message>
     <message>
         <source>&amp;Allow</source>
-        <translation type="unfinished"></translation>
+        <translation>허용(&amp;A)</translation>
     </message>
     <message>
         <source>&amp;Block</source>
-        <translation type="unfinished"></translation>
+        <translation>차단(&amp;B)</translation>
     </message>
     <message>
         <source>&amp;Drop</source>
-        <translation type="unfinished"></translation>
+        <translation>버리기(&amp;D)</translation>
     </message>
     <message>
         <source>Block silently, without a response</source>
-        <translation type="unfinished"></translation>
+        <translation>아무 응답 없이 조용히 차단</translation>
     </message>
     <message>
         <source>Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>방향:</translation>
     </message>
     <message>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>모두</translation>
     </message>
     <message>
         <source>Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>인바운드</translation>
     </message>
     <message>
         <source>Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>아웃바운드</translation>
     </message>
     <message>
         <source>Protocol:</source>
-        <translation type="unfinished"></translation>
+        <translation>프로토콜:</translation>
     </message>
     <message>
         <source>Area:</source>
-        <translation type="unfinished"></translation>
+        <translation>영역:</translation>
     </message>
     <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN: &apos;옵션&apos;의 &quot;근거리 통신망&quot; 주소</translation>
     </message>
     <message>
         <source>Remote IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>원격 IP:</translation>
     </message>
     <message>
         <source>Remote Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>원격 포트:</translation>
     </message>
     <message>
         <source>Local IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>로컬 IP:</translation>
     </message>
     <message>
         <source>Local Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>로컬 포트:</translation>
     </message>
     <message>
         <source>Options:</source>
-        <translation type="unfinished"></translation>
+        <translation>옵션:</translation>
     </message>
     <message>
         <source>Log</source>
-        <translation type="unfinished"></translation>
+        <translation>로그</translation>
     </message>
     <message>
         <source>Collect the connection, even if the Rule doesn&apos;t</source>
-        <translation type="unfinished"></translation>
+        <translation>규칙이 그렇지 않더라도 연결을 수집</translation>
     </message>
     <message>
         <source>No Log</source>
-        <translation type="unfinished"></translation>
+        <translation>로그 없음</translation>
     </message>
     <message>
         <source>Don&apos;t collect the connection</source>
-        <translation type="unfinished"></translation>
+        <translation>연결을 수집하지 않음</translation>
     </message>
     <message>
         <source>Alert</source>
@@ -584,15 +584,15 @@
     </message>
     <message>
         <source>Collect the connection as alerted, also with &quot;Alerted only&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>알림이 울릴 때 연결을 수집합니다. 또한 &quot;알림된 경우&quot;도 수집합니다</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation>텍스트</translation>
     </message>
     <message>
         <source>Copy Text</source>
-        <translation type="unfinished"></translation>
+        <translation>텍스트 복사</translation>
     </message>
     <message>
         <source>OK</source>
@@ -604,30 +604,30 @@
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 추가</translation>
     </message>
     <message>
         <source>Edit Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 편집</translation>
     </message>
     <message>
         <source>All, except these</source>
-        <translation type="unfinished"></translation>
+        <translation>이것들만 제외하고 모두</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>지우기</translation>
     </message>
 </context>
 <context>
     <name>FilterSimController</name>
     <message>
         <source>Cannot simulate the connection</source>
-        <translation type="unfinished"></translation>
+        <translation>연결을 시뮬레이션할 수 없습니다</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 시뮬레이터</translation>
     </message>
 </context>
 <context>
@@ -638,19 +638,19 @@
     </message>
     <message>
         <source>Ignored: other firewalls decide</source>
-        <translation type="unfinished"></translation>
+        <translation>무시됨: 다른 방화벽이 결정합니다</translation>
     </message>
     <message>
         <source>Not found</source>
-        <translation type="unfinished"></translation>
+        <translation>찾을 수 없음</translation>
     </message>
     <message>
         <source>Connection</source>
-        <translation type="unfinished"></translation>
+        <translation>연결</translation>
     </message>
     <message>
         <source>Program Path:</source>
-        <translation type="unfinished"></translation>
+        <translation>프로그램 경로:</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -658,95 +658,95 @@
     </message>
     <message>
         <source>Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>방향:</translation>
     </message>
     <message>
         <source>Protocol:</source>
-        <translation type="unfinished"></translation>
+        <translation>프로토콜:</translation>
     </message>
     <message>
         <source>Remote IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>원격 IP:</translation>
     </message>
     <message>
         <source>Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>포트:</translation>
     </message>
     <message>
         <source>Local IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>로컬 IP:</translation>
     </message>
     <message>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>모두</translation>
     </message>
     <message>
         <source>Loopback</source>
-        <translation type="unfinished"></translation>
+        <translation>루프백</translation>
     </message>
     <message>
         <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
-        <translation type="unfinished"></translation>
+        <translation>이 컴퓨터의 주소와의 연결입니다. 127.0.0.0/8 및 ::1 주소는 항상 루프백입니다.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>네트워크 프로필:</translation>
     </message>
     <message>
         <source>Simulate</source>
-        <translation type="unfinished"></translation>
+        <translation>시뮬레이터</translation>
     </message>
     <message>
         <source>Result</source>
-        <translation type="unfinished"></translation>
+        <translation>결과</translation>
     </message>
     <message>
         <source>Action:</source>
-        <translation>처리:</translation>
+        <translation>동작:</translation>
     </message>
     <message>
         <source>Reason:</source>
-        <translation type="unfinished"></translation>
+        <translation>이유:</translation>
     </message>
     <message>
         <source>Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>규칙:</translation>
     </message>
     <message>
         <source>Zone:</source>
-        <translation type="unfinished"></translation>
+        <translation>구역:</translation>
     </message>
     <message>
         <source>Program:</source>
-        <translation type="unfinished"></translation>
+        <translation>프로그램:</translation>
     </message>
     <message>
         <source>The program is checked by its path: the settings propagated from a parent process aren&apos;t taken into account.</source>
-        <translation type="unfinished"></translation>
+        <translation>프로그램은 경로로 확인됩니다. 상위 프로세스에서 전파된 설정은 고려되지 않습니다.</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 시뮬레이터</translation>
     </message>
     <message>
         <source>Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>인바운드</translation>
     </message>
     <message>
         <source>Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>아웃바운드</translation>
     </message>
     <message>
         <source>Public</source>
-        <translation type="unfinished"></translation>
+        <translation>공개</translation>
     </message>
     <message>
         <source>Private</source>
-        <translation type="unfinished"></translation>
+        <translation>비공개</translation>
     </message>
     <message>
         <source>Domain</source>
-        <translation type="unfinished"></translation>
+        <translation>도메인</translation>
     </message>
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
@@ -754,11 +754,11 @@
     </message>
     <message>
         <source>Invalid remote IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>잘못된 원격 IP 주소</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>잘못된 원격 IP 주소</translation>
     </message>
 </context>
 <context>
@@ -812,7 +812,7 @@
     </message>
     <message>
         <source>Install the Windows Service now?</source>
-        <translation type="unfinished"></translation>
+        <translation>지금 Windows 서비스를 설치하시겠습니까?</translation>
     </message>
     <message>
         <source>Are you sure you want to quit the program?</source>
@@ -820,7 +820,7 @@
     </message>
     <message>
         <source>Remove the Windows Service and the Driver before quitting?</source>
-        <translation type="unfinished"></translation>
+        <translation>종료하기 전에 Windows 서비스와 드라이버를 제거하시겠습니까?</translation>
     </message>
     <message>
         <source>Quota Alert</source>
@@ -890,15 +890,15 @@
     </message>
     <message>
         <source>Animation</source>
-        <translation type="unfinished"></translation>
+        <translation>애니메이션</translation>
     </message>
     <message>
         <source>Axis ticks</source>
-        <translation type="unfinished"></translation>
+        <translation>축 눈금</translation>
     </message>
     <message>
         <source>Show:</source>
-        <translation type="unfinished"></translation>
+        <translation>표시:</translation>
     </message>
     <message>
         <source>Total</source>
@@ -922,7 +922,7 @@
     </message>
     <message>
         <source>Bar width:</source>
-        <translation type="unfinished"></translation>
+        <translation>막대 너비:</translation>
     </message>
     <message>
         <source>Max seconds:</source>
@@ -930,7 +930,7 @@
     </message>
     <message>
         <source>Graph type:</source>
-        <translation type="unfinished"></translation>
+        <translation>그래프 유형:</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -938,7 +938,7 @@
     </message>
     <message>
         <source>Border:</source>
-        <translation type="unfinished"></translation>
+        <translation>테두리:</translation>
     </message>
     <message>
         <source>Download:</source>
@@ -950,7 +950,7 @@
     </message>
     <message>
         <source>Total:</source>
-        <translation type="unfinished"></translation>
+        <translation>전체:</translation>
     </message>
     <message>
         <source>Axis:</source>
@@ -970,11 +970,11 @@
     </message>
     <message>
         <source>Column</source>
-        <translation type="unfinished"></translation>
+        <translation>열</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation type="unfinished"></translation>
+        <translation>줄</translation>
     </message>
     <message>
         <source>Window</source>
@@ -1021,11 +1021,11 @@
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>참고:</translation>
     </message>
     <message>
         <source>Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>사용함</translation>
     </message>
     <message>
         <source>Exclusive</source>
@@ -1033,19 +1033,19 @@
     </message>
     <message>
         <source>A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>프로그램은 고유 그룹 중 어느 하나라도 활성화되어 있거나, 고유 그룹이 없을 경우 모든 그룹 중 어느 하나라도 활성화되어 있을 때에만 활성화됩니다.</translation>
     </message>
     <message>
         <source>Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>규칙:</translation>
     </message>
     <message>
         <source>The Rule is applied to the Group&apos;s programs before their own Rule, while the Group is active.</source>
-        <translation type="unfinished"></translation>
+        <translation>그룹이 활성화되어 있는 동안, 해당 규칙은 그룹의 자체 규칙보다 먼저 그룹 프로그램에 적용됩니다.</translation>
     </message>
     <message>
         <source>The Group is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>이 그룹은 이 시기에만 활동합니다.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -1057,7 +1057,7 @@
     </message>
     <message>
         <source>Edit Group</source>
-        <translation type="unfinished"></translation>
+        <translation>그룹 편집</translation>
     </message>
 </context>
 <context>
@@ -1075,19 +1075,19 @@
     <name>GroupsController</name>
     <message>
         <source>Group Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>그룹 구성 오류</translation>
     </message>
     <message>
         <source>Cannot edit Group</source>
-        <translation type="unfinished"></translation>
+        <translation>그룹을 편집할 수 없습니다</translation>
     </message>
     <message>
         <source>Cannot delete Group</source>
-        <translation type="unfinished"></translation>
+        <translation>그룹을 삭제할 수 없습니다</translation>
     </message>
     <message>
         <source>Cannot update Group&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>그룹 이름을 업데이트할 수 없습니다</translation>
     </message>
 </context>
 <context>
@@ -1095,7 +1095,8 @@
     <message>
         <source>Select Groups.
 A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>그룹 선택.
+프로그램은 고유 그룹 중 어느 하나라도 활성화되어 있거나, 고유 그룹이 없을 경우 모든 그룹 중 어느 하나라도 활성화되어 있을 때에만 활성화됩니다.</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -1103,7 +1104,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>(exclusive)</source>
-        <translation type="unfinished"></translation>
+        <translation>(독점)</translation>
     </message>
 </context>
 <context>
@@ -1126,7 +1127,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Are you sure to remove selected group?</source>
-        <translation type="unfinished"></translation>
+        <translation>선택한 그룹을 제거하시겠습니까?</translation>
     </message>
 </context>
 <context>
@@ -1318,7 +1319,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Style Sheet:</source>
-        <translation type="unfinished"></translation>
+        <translation>스타일 시트:</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -1454,7 +1455,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Style Sheets (*.qss);;All files (*.*)</source>
-        <translation type="unfinished"></translation>
+        <translation>스타일 시트 (*.qss);;모든 파일 (*.*)</translation>
     </message>
     <message>
         <source>Exclude from screen capture</source>
@@ -1510,11 +1511,11 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Show Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>트래픽 표시</translation>
     </message>
     <message>
         <source>Show Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>연결 표시</translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
@@ -1777,11 +1778,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block traffic for disabled Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>비활성화된 그룹의 트래픽 차단</translation>
     </message>
     <message>
         <source>Speed Limiter Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 제한 기능 포함</translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
@@ -2122,7 +2123,7 @@ Make sure that you have a fresh backup.</source>
     <name>ProgNetworkPage</name>
     <message>
         <source>Block:</source>
-        <translation type="unfinished"></translation>
+        <translation>차단:</translation>
     </message>
     <message>
         <source>In</source>
@@ -2130,7 +2131,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block Inbound Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>인바운드 연결 차단</translation>
     </message>
     <message>
         <source>Out</source>
@@ -2138,7 +2139,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block Outbound Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>아웃바운드 연결 차단</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -2158,11 +2159,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>No Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>제한 없음</translation>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 추가</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2357,11 +2358,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>구식</translation>
     </message>
     <message>
         <source>Filter by Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>그룹별로 필터링</translation>
     </message>
     <message>
         <source>Disable</source>
@@ -2468,11 +2469,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 추가</translation>
     </message>
     <message>
         <source>The Rule is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>이 규칙은 이 기간에만 적용됩니다.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -2508,7 +2509,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Presets</source>
-        <translation type="unfinished"></translation>
+        <translation>프리셋</translation>
     </message>
     <message>
         <source>More</source>
@@ -2563,7 +2564,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>기간</translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -2758,19 +2759,19 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Each 5 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>5분마다</translation>
     </message>
     <message>
         <source>Each 15 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>15분마다</translation>
     </message>
     <message>
         <source>Each 30 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>30분마다</translation>
     </message>
     <message>
         <source> minute(s)</source>
-        <translation>분</translation>
+        <translation> 분</translation>
     </message>
     <message>
         <source>20 seconds</source>
@@ -2817,15 +2818,15 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
-        <translation type="unfinished"></translation>
+        <translation>변경 사항은 시스템에 의해 초기화되었습니다. 서비스를 다시 추적 가능하게 만드세요.</translation>
     </message>
     <message>
         <source>Please restart the service to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>변경 사항을 적용하려면 서비스를 다시 시작해 주세요.</translation>
     </message>
     <message>
         <source>Please restart the computer to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>변경 사항을 적용하려면 컴퓨터를 다시 시작해 주세요.</translation>
     </message>
 </context>
 <context>
@@ -2844,7 +2845,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Restart Service</source>
-        <translation type="unfinished"></translation>
+        <translation>서비스 다시 시작</translation>
     </message>
     <message>
         <source>Add Program</source>
@@ -2868,19 +2869,19 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Restart the service &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>서비스를 다시 시작하시겠습니까 &quot;%1&quot;?</translation>
     </message>
     <message>
         <source>Restart the service &quot;%1&quot; to apply the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>변경 사항을 적용하려면 서비스 &quot;%1&quot;을 다시 시작하시겠습니까?</translation>
     </message>
     <message>
         <source>Please restart the computer to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>변경 사항을 적용하려면 컴퓨터를 다시 시작해 주세요.</translation>
     </message>
     <message>
         <source>Cannot restart the service &quot;%1&quot;.</source>
-        <translation type="unfinished"></translation>
+        <translation>서비스 &quot;%1&quot;을 다시 시작할 수 없습니다.</translation>
     </message>
 </context>
 <context>
@@ -2891,11 +2892,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>참고:</translation>
     </message>
     <message>
         <source>Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>사용함</translation>
     </message>
     <message>
         <source>Download</source>
@@ -2907,7 +2908,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Speed:</source>
-        <translation type="unfinished"></translation>
+        <translation>속도:</translation>
     </message>
     <message>
         <source>Latency:</source>
@@ -2919,11 +2920,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>버퍼 크기:</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 제한은 이 기간에만 적용됩니다.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -2935,7 +2936,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Edit Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 제한 편집</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -2947,19 +2948,20 @@ Please check other program with the same path.</source>
     <message>
         <source>Buffer overflow: %1
 Packet loss: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>버퍼 오버플로: %1
+패킷 손실: %2</translation>
     </message>
     <message>
         <source>Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 제한</translation>
     </message>
     <message>
         <source>Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>대기열</translation>
     </message>
     <message>
         <source>Dropped</source>
-        <translation type="unfinished"></translation>
+        <translation>취소됨</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -2974,19 +2976,19 @@ Packet loss: %2</source>
     <name>SpeedLimitsController</name>
     <message>
         <source>Speed Limit Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 제한 구성 오류</translation>
     </message>
     <message>
         <source>Cannot edit Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 제한을 편집할 수 없습니다</translation>
     </message>
     <message>
         <source>Cannot delete Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 제한을 삭제할 수 없습니다</translation>
     </message>
     <message>
         <source>Cannot update Speed Limit&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 제한 이름을 업데이트할 수 없습니다</translation>
     </message>
 </context>
 <context>
@@ -3005,11 +3007,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 제한</translation>
     </message>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
-        <translation type="unfinished"></translation>
+        <translation>선택한 속도 제한을 제거하시겠습니까?</translation>
     </message>
 </context>
 <context>
@@ -3096,11 +3098,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Collect Traffic re-injected by other drivers</source>
-        <translation type="unfinished"></translation>
+        <translation>다른 드라이버들에 의해 재주입된 트래픽 수집</translation>
     </message>
     <message>
         <source>The Traffic is collected only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>트래픽은 이 기간 동안에만 수집됩니다.</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
@@ -3166,7 +3168,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Interval, minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>간격, 시간</translation>
     </message>
     <message>
         <source>Maximum retries count</source>
@@ -3189,7 +3191,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Drop</source>
-        <translation type="unfinished"></translation>
+        <translation>버리기</translation>
     </message>
     <message>
         <source>Alert</source>
@@ -3204,27 +3206,27 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>참고:</translation>
     </message>
     <message>
         <source>Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>사용함</translation>
     </message>
     <message>
         <source>The disabled Time Period doesn&apos;t restrict its Groups and Speed Limits.</source>
-        <translation type="unfinished"></translation>
+        <translation>비활성화된 시간대는 해당 그룹 및 속도 제한을 제한하지 않습니다.</translation>
     </message>
     <message>
         <source>Intervals:</source>
-        <translation type="unfinished"></translation>
+        <translation>간격:</translation>
     </message>
     <message>
         <source>The Time Period is active in ANY of its intervals.</source>
-        <translation type="unfinished"></translation>
+        <translation>해당 기간은 그 기간 내의 어느 구간에서든 유효합니다.</translation>
     </message>
     <message>
         <source>Add Interval</source>
-        <translation type="unfinished"></translation>
+        <translation>간격 추가</translation>
     </message>
     <message>
         <source>OK</source>
@@ -3236,18 +3238,18 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Edit Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>기간 수정</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodIntervalEdit</name>
     <message>
         <source>From</source>
-        <translation type="unfinished"></translation>
+        <translation>시작</translation>
     </message>
     <message>
         <source>To (the same time means the whole 24 hours)</source>
-        <translation type="unfinished"></translation>
+        <translation>종료 (동일한 시간일 경우 24시간 전체를 의미함)</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -3258,11 +3260,11 @@ Packet loss: %2</source>
     <name>TimePeriodListModel</name>
     <message>
         <source>Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>기간</translation>
     </message>
     <message>
         <source>Intervals</source>
-        <translation type="unfinished"></translation>
+        <translation>간격</translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -3273,34 +3275,34 @@ Packet loss: %2</source>
     <name>TimePeriodSelector</name>
     <message>
         <source>Time Period:</source>
-        <translation type="unfinished"></translation>
+        <translation>기간:</translation>
     </message>
     <message>
         <source>No Period</source>
-        <translation type="unfinished"></translation>
+        <translation>기간 없음</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>기간</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodsController</name>
     <message>
         <source>Time Period Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>기간 구성 오류</translation>
     </message>
     <message>
         <source>Cannot edit Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>기간을 편집할 수 없습니다</translation>
     </message>
     <message>
         <source>Cannot delete Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>기간을 삭제할 수 없습니다</translation>
     </message>
     <message>
         <source>Cannot update Time Period&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>기간 이름을 업데이트할 수 없습니다</translation>
     </message>
 </context>
 <context>
@@ -3319,11 +3321,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>기간</translation>
     </message>
     <message>
         <source>Are you sure to remove selected time period?</source>
-        <translation type="unfinished"></translation>
+        <translation>선택한 기간을 제거하시겠습니까?</translation>
     </message>
 </context>
 <context>
@@ -3373,7 +3375,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Bytes</source>
-        <translation>Bytes</translation>
+        <translation>바이트</translation>
     </message>
     <message>
         <source>Hourly</source>
@@ -3393,15 +3395,15 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Are you sure to remove statistics for selected application?</source>
-        <translation>선택한 응용 프로그램에 대한 통계을 제거하시겠습니까?</translation>
+        <translation>선택한 응용 프로그램의 통계를 제거하시겠습니까?</translation>
     </message>
     <message>
         <source>Are you sure to reset total statistics?</source>
-        <translation>총 통계를 재설정하시겠습니까?</translation>
+        <translation>전체 통계를 다시 초기화하시겠습니까?</translation>
     </message>
     <message>
         <source>Are you sure to clear all statistics?</source>
-        <translation>모든 통계를 삭제하시겠습니까?</translation>
+        <translation>모든 통계를 모두 지우시겠습니까?</translation>
     </message>
     <message>
         <source>Edit</source>
@@ -3421,7 +3423,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Make this tab active when window opens?</source>
-        <translation>창이 열리면 이 탭을 활성화하시겠습니까?</translation>
+        <translation>창이 열릴 때 이 탭을 활성화하시겠습니까?</translation>
     </message>
     <message>
         <source>Traffic</source>
@@ -3451,15 +3453,15 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>제한 속도</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>기간</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 시뮬레이터</translation>
     </message>
     <message>
         <source>Traffic Graph</source>
@@ -3471,7 +3473,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Group Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>그룹 수정자</translation>
     </message>
     <message>
         <source>Quit</source>
@@ -3549,11 +3551,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Week Days</source>
-        <translation type="unfinished"></translation>
+        <translation>요일</translation>
     </message>
     <message>
         <source>No Days</source>
-        <translation type="unfinished"></translation>
+        <translation>날짜 없음</translation>
     </message>
 </context>
 <context>
