@@ -39,7 +39,9 @@ FORT_API BOOL fort_packet_injected_by_self(PCFORT_CALLOUT_ARG ca)
 
 FORT_API BOOL fort_packet_injected_by_other(PCFORT_CALLOUT_ARG ca)
 {
-    return fort_packet_injection_state(ca) == FWPS_PACKET_INJECTED_BY_OTHER;
+    const FWPS_PACKET_INJECTION_STATE state = fort_packet_injection_state(ca);
+
+    return state == FWPS_PACKET_INJECTED_BY_OTHER;
 }
 
 static FWPS_PACKET_LIST_INBOUND_IPSEC_INFORMATION0 fort_packet_get_ipsec_inbound_info(
@@ -148,6 +150,9 @@ static NTSTATUS fort_packet_inject_out(
 static NTSTATUS fort_packet_clone(PCFORT_CALLOUT_ARG ca, PFORT_PACKET_IO pkt)
 {
     NTSTATUS status;
+
+    if (ca->netBufList == NULL)
+        return STATUS_SUCCESS; /* no packet, e.g. at the ALE connect layer for TCP */
 
     ULONG bytesRetreated = 0;
     if (ca->inbound) {
@@ -326,6 +331,10 @@ FORT_API NTSTATUS fort_packet_fill(PCFORT_CALLOUT_ARG ca, PFORT_PACKET_IO pkt, U
             | pkt_flags;
 
     pkt->compartmentId = ca->inMetaValues->compartmentId;
+
+    /* The IPsec protected inbound packet can't be re-injected as is */
+    if ((pkt_flags & FORT_PACKET_IPSEC_PROTECTED) != 0)
+        return STATUS_SUCCESS;
 
     status = fort_packet_clone(ca, pkt);
 
