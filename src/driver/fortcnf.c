@@ -57,16 +57,14 @@ FORT_API void fort_device_prov_flags_set(PFORT_DEVICE_CONF device_conf, UINT16 p
 
 FORT_API FORT_CONF_FLAGS fort_device_conf_flags(PFORT_DEVICE_CONF device_conf)
 {
-    FORT_DEVICE_CONF_FLAGS conf_flags;
-    conf_flags.value = InterlockedCompareExchange(&device_conf->conf_flags.value, 0, 0);
+    const FORT_CONF_FLAGS conf_flags = {
+        .v = InterlockedCompareExchange(&device_conf->conf_flags.v, 0, 0),
+    };
 
-    return conf_flags.flags;
+    return conf_flags;
 }
 
-FORT_API void fort_device_conf_flags_set(PFORT_DEVICE_CONF device_conf, FORT_CONF_FLAGS flags)
+FORT_API void fort_device_conf_flags_set(PFORT_DEVICE_CONF device_conf, FORT_CONF_FLAGS conf_flags)
 {
-    FORT_DEVICE_CONF_FLAGS conf_flags;
-    conf_flags.flags = flags;
-
-    InterlockedExchange(&device_conf->conf_flags.value, conf_flags.value);
+    InterlockedExchange(&device_conf->conf_flags.v, conf_flags.v);
 }
