@@ -57,13 +57,13 @@ typedef struct fort_shaper
 {
     UCHAR volatile flags;
 
-    UINT32 limit_bits; /* configured Speed Limits */
-    UINT32 limit_enabled_bits;
+    SHORT volatile in_packet_count; /* held inbound packets */
 
     LONG volatile enabled_bits; /* shaped queues */
     LONG volatile active_io_bits;
 
-    LONG volatile in_packet_count; /* held inbound packets */
+    UINT32 limit_bits; /* configured Speed Limits */
+    UINT32 limit_enabled_bits;
 
     UINT32 randomSeed;
     LARGE_INTEGER qpcFrequency;

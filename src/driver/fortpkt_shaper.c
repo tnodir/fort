@@ -67,7 +67,7 @@ inline static void fort_shaper_packet_del(PFORT_FLOW_PACKET pkt)
 FORT_API void fort_shaper_packet_free(PFORT_SHAPER shaper, PFORT_FLOW_PACKET pkt)
 {
     if ((pkt->io.flags & FORT_PACKET_INBOUND) != 0) {
-        InterlockedDecrement(&shaper->in_packet_count);
+        InterlockedDecrement16(&shaper->in_packet_count);
     }
 
     fort_packet_free(&pkt->io);
@@ -887,7 +887,7 @@ inline static NTSTATUS fort_shaper_packet_queue(
 
     /* The filled inbound packet is counted until its free */
     if ((pkt->io.flags & FORT_PACKET_INBOUND) != 0) {
-        InterlockedIncrement(&shaper->in_packet_count);
+        InterlockedIncrement16(&shaper->in_packet_count);
     }
 
     if (!NT_SUCCESS(status)) {
