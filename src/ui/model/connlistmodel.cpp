@@ -261,7 +261,7 @@ QVariant ConnListModel::headerDataDecoration(int section) const
     case ConnListColumn::Action:
         return IconCache::icon(":/icons/accept.png");
     case ConnListColumn::Reason:
-        return IconCache::icon(":/icons/help.png");
+        return IconCache::icon(":/icons/information.png");
     }
 
     return {};
