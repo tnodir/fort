@@ -87,6 +87,8 @@ private:
     bool saveAppTimer(const App &app);
     void updateAppEndTimes();
 
+    QVector<qint64> alertedAppIds();
+
 private:
     void emitAppAlerted(bool alerted = true);
     void emitAppsChanged();
@@ -98,6 +100,8 @@ private:
     bool updateDriverDeleteApp(const QString &appPath);
     bool updateDriverUpdateApp(const App &app, bool remove = false);
     bool updateDriverUpdateAppConf(const App &app);
+    void updateDriverUpdateAppOrConf(const App &app, bool &isWildcard);
+    void updateDriverApps(const QVector<qint64> &appIdList);
 
 private:
     bool m_alerted = false;

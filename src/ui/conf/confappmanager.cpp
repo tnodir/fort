@@ -473,17 +473,7 @@ bool ConfAppManager::addAlertedApp(qint64 appId)
 
 bool ConfAppManager::deleteAlertedApps()
 {
-    QVector<qint64> appIdList;
-
-    SqliteStmt stmt;
-    if (!DbQuery(sqliteDb()).sql(sqlSelectAppAlertIds).prepare(stmt))
-        return false;
-
-    while (stmt.step() == SqliteStmt::StepRow) {
-        const qint64 appId = stmt.columnInt64(0);
-        appIdList.append(appId);
-    }
-
+    const auto appIdList = alertedAppIds();
     if (appIdList.isEmpty())
         return true;
 
@@ -497,9 +487,14 @@ bool ConfAppManager::deleteAlertedApps()
 
 bool ConfAppManager::clearAlerts()
 {
+    const auto appIdList = alertedAppIds();
+
     const bool ok = DbQuery(sqliteDb()).sql(sqlDeleteAppAlerts).executeOk();
 
     if (ok) {
+        // Reset the driver's alerted flags
+        updateDriverApps(appIdList);
+
         emitAppUpdated();
     }
 
@@ -603,11 +598,7 @@ bool ConfAppManager::updateAppBlocked(
     if (!saveAppBlocked(app))
         return false;
 
-    if (isWildcard || app.isWildcard) {
-        isWildcard = true;
-    } else {
-        updateDriverUpdateApp(app);
-    }
+    updateDriverUpdateAppOrConf(app, isWildcard);
 
     return true;
 }
@@ -644,13 +635,25 @@ bool ConfAppManager::updateAppTimer(qint64 appId, QDateTime scheduleTime, bool &
     if (!saveAppTimer(app))
         return false;
 
-    if (isWildcard || app.isWildcard) {
-        isWildcard = true;
-    } else {
-        updateDriverUpdateApp(app);
-    }
+    updateDriverUpdateAppOrConf(app, isWildcard);
 
     return true;
+}
+
+QVector<qint64> ConfAppManager::alertedAppIds()
+{
+    QVector<qint64> appIdList;
+
+    SqliteStmt stmt;
+    if (!DbQuery(sqliteDb()).sql(sqlSelectAppAlertIds).prepare(stmt))
+        return appIdList;
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        const qint64 appId = stmt.columnInt64(0);
+        appIdList.append(appId);
+    }
+
+    return appIdList;
 }
 
 QVector<qint64> ConfAppManager::collectObsoleteApps(bool withParked)
@@ -939,4 +942,33 @@ bool ConfAppManager::updateDriverUpdateApp(const App &app, bool remove)
 bool ConfAppManager::updateDriverUpdateAppConf(const App &app)
 {
     return app.isWildcard ? updateDriverConf() : updateDriverUpdateApp(app);
+}
+
+void ConfAppManager::updateDriverUpdateAppOrConf(const App &app, bool &isWildcard)
+{
+    // The wildcard app is updated by the full config later
+    if (isWildcard || app.isWildcard) {
+        isWildcard = true;
+    } else {
+        updateDriverUpdateApp(app);
+    }
+}
+
+void ConfAppManager::updateDriverApps(const QVector<qint64> &appIdList)
+{
+    bool isWildcard = (appIdList.size() > 7);
+
+    for (const qint64 appId : appIdList) {
+        if (isWildcard)
+            break;
+
+        App app;
+        if (loadAppById(app, appId)) {
+            updateDriverUpdateAppOrConf(app, isWildcard);
+        }
+    }
+
+    if (isWildcard) {
+        updateDriverConf();
+    }
 }
