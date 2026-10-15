@@ -25,6 +25,7 @@ jom      :: or nmake
 - `CONFIG+=tests` adds the `driver` (user-mode driver test app) and `tests` subprojects; `CONFIG+=driver_payload` adds `driver_payload`. Without them only `ui` + `ui_bin` are built.
 - `scripts\make\` builds all the targets from a plain console, setting up the compilers' environments themselves: `ui\make-all.bat` (`build-win7`, `build-win10`, `build-win10-arm64`; one by `ui\build-<target>.bat [make args]`), `driver\make-all.bat` (the drivers by the EWDKs), `driver-loader\make-all.bat` (the loaders of the built drivers), `deploy\make-all.bat` (the installers in `deploy\out` and their GnuPG signatures `*.exe.sig`; one by `deploy\build-<target>.bat`); they stop at the first error. The machine's paths (EWDKs, VS `vcvars*.bat`, static Qts, jom, the payloads' key, Inno Setup, `gpg.exe`, the signing key and its passphrase's file) are set in `config.bat`.
 - Subproject layout: `ui/` builds the static lib `FortFirewallUILib`, `ui_bin/` links it into `FortFirewall.exe`, tests link the same lib. **New .cpp/.h files must be added explicitly to `SOURCES`/`HEADERS` in `src/ui/FortFirewallUI.pro`.**
+- Never run two builds of the same build dir in parallel (a shell `jom` and Qt Creator's build of it, or two shell ones): they fight over the same files.
 
 ### Kernel driver
 
@@ -55,6 +56,10 @@ build-win10\tests\UtilTest\UtilTest.exe --gtest_filter=ConfUtilTest.*   :: singl
 
 Suites: `UtilTest` (bitutil, confutil, connfilter, dateutil, fileutil, filterline, formatutil, ioccontainer, netutil, ruletextparser, stringutil, timeperiod, wildmatch), `StatTest`, `LogBufferTest`, `LogReaderTest`. `LogReaderTest` needs the loaded kernel driver: run it only manually from a console, never as part of an automated test run. Each `tst_*.h` is included from the suite's `tst_main.cpp` and must also be listed in the suite's `.pro`. Run a test executable with its build folder as the current directory: `UtilTest` writes files (`zones/`) relative to it.
 
+- Never wait by the wall clock (`Sleep()`, `QThread::sleep()`, `Start-Sleep` in the VM scripts) for a result: wait for a state or an event the code under test must produce, or for the answer to a later command proving the earlier one was processed. An absence ("no error is reported") is checked after an event guaranteed to come after the moment in question; where there is none, skip the check and say why.
+- Don't raise a shared timeout to make one flaky test pass: fix the test.
+- An assertion that can't fail is worse than none: before claiming a test covers a fix, disable the fix and see the test fail.
+
 ### Testing the real driver (test-mode VM)
 
 - The machine needs `bcdedit /set testsigning on` and Secure Boot off. A self-signed code-signing certificate is enough (`signtool sign /fd sha256 /f test.pfx fortfw.sys`); test mode doesn't need it imported.
@@ -62,6 +67,7 @@ Suites: `UtilTest` (bitutil, confutil, connfilter, dateutil, fileutil, filterlin
 - `FortFirewall.exe -i service` installs and starts `FortFirewallSvc` (depends on `fortfw`; `sc config FortFirewallSvc start= demand` to keep reboots clean). With a service the app doesn't run `check-reinstall.bat`, so it won't reinstall the driver.
 - LAN addresses aren't filtered by default and the first minute after install is the learn mode, so remote access (SSH/RDP over LAN) survives.
 - Smoke test via the control CLI: `FortFirewall.exe -c filter report`, `-c filter-mode report`, `-c prog allow|block|report <app-path>`. A `report` returns `70 + value index` as the exit code (e.g. filter-mode `learn` = 70, `block` = 72; prog `allow` = 70, `block` = 71), `99` = error. A renamed copy of `curl.exe` works as an unknown program.
+- Run a built `FortFirewall.exe` only on such a machine, not where Fort is installed and running: one instance per session is allowed (the `APP_BASE` mutex), so a second one only shows the running instance's window and exits, and a `-c` command controls the running instance, i.e. the installed firewall. Stop the processes you started by their PID, never by the name (`taskkill /im`, `Stop-Process -Name`): the installed Fort's processes have the same one.
 
 ### Translations & deployment
 
@@ -143,6 +149,7 @@ The traffic graph (`form/graph/`) has no 3rd-party chart library: `GraphWindow` 
 - Wrap an `if` body in braces when it returns a computed expression (incl. a struct field); simple returns (`return;`, a constant, a plain local variable) stay without braces. The blank line after the `{` of an `if` with a multi-line condition comes from clang-format: don't add or remove it by hand.
 - Declare a constant in an anonymous `namespace { }` as `inline constexpr` (Qt Creator's navigation finds it then); function-local constants stay plain `constexpr`.
 - Keep a form's code in the order of its controls: the members in the header, their creation in the `setup*Layout()` functions and their lines in `initialize()`, `retranslateUi()`, `fill*()`. Moving a control on the form moves all of them.
+- Comment only what isn't evident from the code. Don't describe the change being made in the source (that's the commit message's place), nor leave notes for the reviewer or issue numbers; a workaround for another product's bug names it. When editing an existing comment, keep its wording close to the original.
 - Implement the requested UI behavior only: ask before adding a convenience nobody asked for (switching tabs, moving the focus or selection, enabling/disabling controls by other state, guessed defaults or values derived from heuristics), even if it seems obvious; mention it as an option instead.
 - Commit subjects are prefixed by area: `UI:`, `Driver:`, `Tests:`, `Deploy:`, `Installer:`, `README:` — e.g. `UI: ConfManager: Refactor save()`.
 - `ChangeLog` is maintained by hand at release time; don't edit it in feature commits.
