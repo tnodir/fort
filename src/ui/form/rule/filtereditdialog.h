@@ -7,7 +7,6 @@
 
 QT_FORWARD_DECLARE_CLASS(QButtonGroup)
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
-QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QFormLayout)
 QT_FORWARD_DECLARE_CLASS(QGroupBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
@@ -40,25 +39,21 @@ signals:
 private:
     void retranslateUi();
     void retranslateNotButtons();
-    void retranslateClearButtons();
 
     void setupUi();
     QLayout *setupMainLayout();
     QLayout *setupFormLayout();
     QLayout *setupActionsLayout();
     QRadioButton *createActionButton(const QString &iconPath, int actionId);
-    QComboBox *createFieldCombo(const QStringList &values);
     QCheckBox *createFieldCheckBox();
     QToolButton *createNotButton();
+    QToolButton *createEqualButton(LineEdit *edit);
     LineEdit *createValuesEdit();
     PlainTextEdit *createValuesArea();
-    QToolButton *createComboClearButton(QComboBox *combo);
     QLabel *addWidgetsRow(
             QFormLayout *layout, const QString &labelText, const QList<QWidget *> &widgets);
     QLabel *addAreaRow(QFormLayout *layout, const QString &labelText,
             const QList<QWidget *> &widgets, QWidget *area);
-    QLabel *addNotRow(
-            QFormLayout *layout, const QString &labelText, QToolButton *btNot, QWidget *field);
     QLayout *setupOptionsLayout();
     void setupTextBox();
     QLayout *setupButtons();
@@ -70,8 +65,17 @@ private:
     void setFilterLine(const FilterLineText &lineText);
     void setActionFilter(const RuleFilter *filter);
 
+    QList<QCheckBox *> directionCheckBoxes() const;
+    void setDirectionFilter(const RuleFilter *filter);
+
+    QList<QCheckBox *> protocolCheckBoxes() const;
+    QString protocolValues() const;
+    void setProtocolFilter(const RuleFilter *filter);
+
+    QList<QCheckBox *> areasCheckBoxes() const;
+    void setAreasFilter(const RuleFilter *filter);
+
     QList<QCheckBox *> optionCheckBoxes() const;
-    QString optionValues() const;
     void setOptionFilter(const RuleFilter *filter);
 
     bool save();
@@ -90,14 +94,18 @@ private:
     QRadioButton *m_rbDrop = nullptr;
     QLabel *m_labelDirection = nullptr;
     QToolButton *m_btDirectionNot = nullptr;
-    QComboBox *m_comboDirection = nullptr;
-    QToolButton *m_btDirectionClear = nullptr;
+    QCheckBox *m_cbDirectionIn = nullptr;
+    QCheckBox *m_cbDirectionOut = nullptr;
     QLabel *m_labelProtocols = nullptr;
     QToolButton *m_btProtocolsNot = nullptr;
+    QCheckBox *m_cbProtocolTcp = nullptr;
+    QCheckBox *m_cbProtocolUdp = nullptr;
     LineEdit *m_editProtocols = nullptr;
     QLabel *m_labelAreas = nullptr;
     QToolButton *m_btAreasNot = nullptr;
-    LineEdit *m_editAreas = nullptr;
+    QCheckBox *m_cbAreaLocalhost = nullptr;
+    QCheckBox *m_cbAreaLan = nullptr;
+    QCheckBox *m_cbAreaInet = nullptr;
     QLabel *m_labelRemoteIps = nullptr;
     QToolButton *m_btRemoteIpsNot = nullptr;
     QToolButton *m_btRemoteIpsClear = nullptr;
@@ -108,9 +116,11 @@ private:
     QLabel *m_labelLocalIps = nullptr;
     QToolButton *m_btLocalIpsNot = nullptr;
     LineEdit *m_editLocalIps = nullptr;
+    QToolButton *m_btLocalIpsEqual = nullptr;
     QLabel *m_labelLocalPorts = nullptr;
     QToolButton *m_btLocalPortsNot = nullptr;
     LineEdit *m_editLocalPorts = nullptr;
+    QToolButton *m_btLocalPortsEqual = nullptr;
     QLabel *m_labelOptions = nullptr;
     QCheckBox *m_cbOptionLog = nullptr;
     QCheckBox *m_cbOptionNoLog = nullptr;

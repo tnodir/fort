@@ -18,8 +18,9 @@ public:
 
     const QString &text() const { return m_text; }
 
-    // Adds the filter's section with its name to the text: the values are e.g. "80, 443"
-    void addFilter(qint8 type, const QString &values, bool isNot = false);
+    // Adds the filter's section with its name to the text: the values are e.g. "80, 443"; the equal
+    // one may have no values, e.g. "=Local_IP" (the local value equals the remote one)
+    void addFilter(qint8 type, const QString &values, bool isNot = false, bool isEqual = false);
 
     // Adds the connection's filters to match it, in the order of FilterEditDialog's fields: the
     // direction, protocol, remote IP and port, local IP and port

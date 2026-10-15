@@ -4,6 +4,7 @@
 
 #include <common/fortconf.h>
 
+#include <util/conf/confbuffer.h>
 #include <util/conf/conn.h>
 #include <util/conf/filterline.h>
 #include <util/conf/filterlinetext.h>
@@ -117,4 +118,28 @@ TEST_F(FilterLineTest, connAddressesText)
     FilterLineText line2;
     line2.addConnAddresses(conn);
     ASSERT_EQ(line2.text(), "Dir(In):Proto(ICMPv6):IP([fe80::2]):Local_IP([fe80::1])");
+}
+
+TEST_F(FilterLineTest, equalText)
+{
+    FilterLineText line;
+    line.addFilter(FORT_RULE_FILTER_TYPE_PROTOCOL, "TCP");
+    line.addFilter(
+            FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS, QString(), /*isNot=*/true, /*isEqual=*/true);
+    line.addFilter(FORT_RULE_FILTER_TYPE_LOCAL_PORT, QString(), /*isNot=*/false, /*isEqual=*/true);
+    line.addFilter(FORT_RULE_FILTER_TYPE_ACTION, "Allow");
+    ASSERT_EQ(line.text(), "Proto(TCP):!=Local_IP:=Local_Port:Act(Allow)");
+
+    ASSERT_TRUE(ConfBuffer().validateRuleText(line.text()));
+
+    FilterLine filterLine(line);
+    ASSERT_TRUE(filterLine.parse());
+
+    checkFilter(filterLine, FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS, {}, /*isNot=*/true);
+    ASSERT_TRUE(filterLine.filter(FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS)->equalValues);
+
+    checkFilter(filterLine, FORT_RULE_FILTER_TYPE_LOCAL_PORT, {});
+    ASSERT_TRUE(filterLine.filter(FORT_RULE_FILTER_TYPE_LOCAL_PORT)->equalValues);
+
+    checkFilter(filterLine, FORT_RULE_FILTER_TYPE_ACTION, { "Allow" });
 }

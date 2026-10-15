@@ -25,21 +25,28 @@ FilterLineText::FilterLineText(const Conn &conn)
     addFilter(FORT_RULE_FILTER_TYPE_ACTION, conn.blocked ? "Allow" : "Block");
 }
 
-void FilterLineText::addFilter(qint8 type, const QString &values, bool isNot)
+void FilterLineText::addFilter(qint8 type, const QString &values, bool isNot, bool isEqual)
 {
-    if (values.isEmpty())
+    if (values.isEmpty() && !isEqual)
         return;
 
     if (!m_text.isEmpty()) {
         m_text += ':';
     }
 
-    // e.g. "IP(1.1.1.1)", "!Port(80, 443)"
+    // e.g. "IP(1.1.1.1)", "!Port(80, 443)", "!=Local_IP"
     if (isNot) {
         m_text += '!';
     }
+    if (isEqual) {
+        m_text += '=';
+    }
 
-    m_text += QLatin1String(filterNames[type]) + '(' + values + ')';
+    m_text += QLatin1String(filterNames[type]);
+
+    if (!values.isEmpty()) {
+        m_text += '(' + values + ')';
+    }
 }
 
 void FilterLineText::addConnAddresses(const Conn &conn)
