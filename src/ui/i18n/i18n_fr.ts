@@ -540,11 +540,11 @@
     </message>
     <message>
         <source>Localhost</source>
-        <translation type="unfinished"></translation>
+        <translation>Hôte local</translation>
     </message>
     <message>
         <source>LAN</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN</translation>
     </message>
     <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
@@ -568,7 +568,7 @@
     </message>
     <message>
         <source>Equal to the Remote IP</source>
-        <translation type="unfinished"></translation>
+        <translation>Égal à l&apos;adresse IP distante</translation>
     </message>
     <message>
         <source>Local Port:</source>
@@ -576,7 +576,7 @@
     </message>
     <message>
         <source>Equal to the Remote Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Égal au port distant</translation>
     </message>
     <message>
         <source>Options:</source>
