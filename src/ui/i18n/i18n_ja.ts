@@ -71,7 +71,7 @@
     <name>AppConnsWindow</name>
     <message>
         <source>Program Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>プログラムの接続</translation>
     </message>
     <message>
         <source>Add Filter</source>
@@ -332,7 +332,7 @@
     </message>
     <message>
         <source>Block Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>送信をブロック</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -540,11 +540,11 @@
     </message>
     <message>
         <source>Localhost</source>
-        <translation type="unfinished"></translation>
+        <translation>Localhost</translation>
     </message>
     <message>
         <source>LAN</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN</translation>
     </message>
     <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
@@ -568,7 +568,7 @@
     </message>
     <message>
         <source>Equal to the Remote IP</source>
-        <translation type="unfinished"></translation>
+        <translation>リモート IP と同じ</translation>
     </message>
     <message>
         <source>Local Port:</source>
@@ -576,7 +576,7 @@
     </message>
     <message>
         <source>Equal to the Remote Port</source>
-        <translation type="unfinished"></translation>
+        <translation>リモートポートと同じ</translation>
     </message>
     <message>
         <source>Options:</source>
@@ -840,7 +840,7 @@
     </message>
     <message>
         <source>Remove the Windows Service and the Driver before quitting?</source>
-        <translation type="unfinished"></translation>
+        <translation>終了する前に、Windows サービスとドライバーを削除しますか?</translation>
     </message>
     <message>
         <source>Quota Alert</source>
@@ -1339,7 +1339,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Style Sheet:</source>
-        <translation type="unfinished"></translation>
+        <translation>スタイルシート :</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -1475,7 +1475,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Style Sheets (*.qss);;All files (*.*)</source>
-        <translation type="unfinished"></translation>
+        <translation>スタイルシート (*.qss);;すべてのファイル (*.*)</translation>
     </message>
     <message>
         <source>Exclude from screen capture</source>
@@ -2159,7 +2159,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block Outbound Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>送信接続をブロック</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -3118,11 +3118,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Collect Traffic re-injected by other drivers</source>
-        <translation type="unfinished"></translation>
+        <translation>他のドライバーによって再挿入されたトラフィックの収集</translation>
     </message>
     <message>
         <source>The Traffic is collected only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>トラフィックは、この期間にのみ収集されます。</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
