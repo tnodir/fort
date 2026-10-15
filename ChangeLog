@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.20.5, 2026-10-15:
+- UI: Programs: Clear Alerts: Reset the driver's alerted flags too (v3.20.4 regression) (#780).
+- UI: Improve Network Filter.
+
 v3.20.4, 2026-10-13:
 - UI: Options: Interface: Add "Style Sheet" option (#775).
 - UI: Network Filter: Edit the Protocols and Areas as text (#778).
