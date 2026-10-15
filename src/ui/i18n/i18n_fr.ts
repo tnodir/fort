@@ -539,8 +539,20 @@
         <translation>Zone :</translation>
     </message>
     <message>
+        <source>Localhost</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LAN</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
         <translation>LAN: par les adresses &quot;Réseau local&quot; dans les Options</translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>Internet</translation>
     </message>
     <message>
         <source>Remote IP:</source>
@@ -555,8 +567,16 @@
         <translation>IP locale&#xa0;:</translation>
     </message>
     <message>
+        <source>Equal to the Remote IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Local Port:</source>
         <translation>Port local&#xa0;:</translation>
+    </message>
+    <message>
+        <source>Equal to the Remote Port</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Options:</source>

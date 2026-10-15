@@ -539,8 +539,20 @@
         <translation>영역:</translation>
     </message>
     <message>
+        <source>Localhost</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LAN</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
         <translation>LAN: &apos;옵션&apos;의 &quot;근거리 통신망&quot; 주소</translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>인터넷</translation>
     </message>
     <message>
         <source>Remote IP:</source>
@@ -555,8 +567,16 @@
         <translation>로컬 IP:</translation>
     </message>
     <message>
+        <source>Equal to the Remote IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Local Port:</source>
         <translation>로컬 포트:</translation>
+    </message>
+    <message>
+        <source>Equal to the Remote Port</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Options:</source>

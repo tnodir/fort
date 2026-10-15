@@ -539,7 +539,19 @@
         <translation></translation>
     </message>
     <message>
+        <source>Localhost</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>LAN</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Internet</source>
         <translation></translation>
     </message>
     <message>
@@ -555,7 +567,15 @@
         <translation></translation>
     </message>
     <message>
+        <source>Equal to the Remote IP</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Local Port:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Equal to the Remote Port</source>
         <translation></translation>
     </message>
     <message>

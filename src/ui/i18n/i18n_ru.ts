@@ -539,8 +539,20 @@
         <translation>Область:</translation>
     </message>
     <message>
+        <source>Localhost</source>
+        <translation>Локальный хост</translation>
+    </message>
+    <message>
+        <source>LAN</source>
+        <translation>Локальная сеть</translation>
+    </message>
+    <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
         <translation>Локальная сеть: по адресам &quot;Локальная сеть&quot; в Опциях</translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>Интернет</translation>
     </message>
     <message>
         <source>Remote IP:</source>
@@ -555,8 +567,16 @@
         <translation>Локальный IP:</translation>
     </message>
     <message>
+        <source>Equal to the Remote IP</source>
+        <translation>Равен удалённому IP</translation>
+    </message>
+    <message>
         <source>Local Port:</source>
         <translation>Локальный порт:</translation>
+    </message>
+    <message>
+        <source>Equal to the Remote Port</source>
+        <translation>Равен удалённому порту</translation>
     </message>
     <message>
         <source>Options:</source>
