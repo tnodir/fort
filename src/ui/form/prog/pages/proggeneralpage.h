@@ -95,14 +95,14 @@ private:
 
     QIcon appIcon(bool isSingleSelection) const;
 
-    void saveScheduleAction(App::ScheduleAction actionType, int minutes);
+    void saveScheduleAction(App::Action actionType, int minutes);
 
     void fillAppPath(App &app) const;
     void fillAppApplyChild(App &app) const;
     void fillAppEndTime(App &app) const;
 
 private:
-    App::ScheduleAction m_quickActionType = App::ScheduleBlock;
+    App::Action m_quickActionType = App::ActionBlock;
 
     quint16 m_currentRuleId = 0;
 

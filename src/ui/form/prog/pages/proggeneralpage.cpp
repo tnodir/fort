@@ -473,9 +473,9 @@ void ProgGeneralPage::setupActionsGroup()
     m_btgActions = new QButtonGroup(this);
     m_btgActions->setExclusive(true);
 
-    m_btgActions->addButton(m_rbAllow, int(App::ScheduleAllow));
-    m_btgActions->addButton(m_rbBlock, int(App::ScheduleBlock));
-    m_btgActions->addButton(m_rbKillProcess, int(App::ScheduleKillProcess));
+    m_btgActions->addButton(m_rbAllow, int(App::ActionAllow));
+    m_btgActions->addButton(m_rbBlock, int(App::ActionBlock));
+    m_btgActions->addButton(m_rbKillProcess, int(App::ActionKillProcess));
 
     connect(m_rbAllow, &QRadioButton::toggled, ctrl(), &ProgramEditController::allowToggled);
 }
@@ -562,7 +562,7 @@ void ProgGeneralPage::setupQuickAction()
     });
 
     const auto refreshQuickActionType = [&](bool checked) {
-        m_quickActionType = checked ? App::ScheduleBlock : App::ScheduleAllow;
+        m_quickActionType = checked ? App::ActionBlock : App::ActionAllow;
 
         updateQuickAction();
     };
@@ -612,7 +612,7 @@ void ProgGeneralPage::setupTimedAction()
     m_btTimedAction = createTimedButton(iniUser().progAlertWindowTimedActionMinutesKey());
 
     connect(m_btTimedAction, &QToolButton::clicked, this, [&] {
-        const auto currentActionType = App::ScheduleAction(m_btgActions->checkedId());
+        const auto currentActionType = App::Action(m_btgActions->checkedId());
 
         selectQuickAction();
 
@@ -630,7 +630,7 @@ void ProgGeneralPage::setupTimedRemove()
     connect(m_btTimedRemove, &QToolButton::clicked, this, [&] {
         const int minutes = timedActionMinutes(m_btTimedRemove);
 
-        saveScheduleAction(App::ScheduleRemove, minutes);
+        saveScheduleAction(App::ActionRemove, minutes);
     });
 }
 
@@ -795,7 +795,7 @@ QIcon ProgGeneralPage::appIcon(bool isSingleSelection) const
     return appInfoCache()->appIcon(app().appPath);
 }
 
-void ProgGeneralPage::saveScheduleAction(App::ScheduleAction actionType, int minutes)
+void ProgGeneralPage::saveScheduleAction(App::Action actionType, int minutes)
 {
     m_cbSchedule->setChecked(true);
     m_comboScheduleAction->setCurrentIndex(int(actionType));
@@ -879,7 +879,7 @@ void ProgGeneralPage::fillAppEndTime(App &app) const
     app.scheduleTime = {};
 
     if (!m_cbSchedule->isChecked()) {
-        app.scheduleAction = App::ScheduleBlock;
+        app.scheduleAction = App::ActionBlock;
         return;
     }
 

@@ -9,11 +9,11 @@
 class App
 {
 public:
-    enum ScheduleAction : qint8 {
-        ScheduleBlock = 0,
-        ScheduleAllow,
-        ScheduleRemove,
-        ScheduleKillProcess,
+    enum Action : qint8 {
+        ActionBlock = 0,
+        ActionAllow,
+        ActionRemove,
+        ActionKillProcess,
     };
 
     bool isFlagsEqual(const App &o) const;
@@ -55,7 +55,7 @@ public:
     bool inLimitEnabled : 1 = true;
     bool outLimitEnabled : 1 = true;
 
-    qint8 scheduleAction : 4 = ScheduleBlock;
+    qint8 scheduleAction : 4 = ActionBlock;
 
     FORT_SPEED_LIMIT_IDS speedLimits = {};
 

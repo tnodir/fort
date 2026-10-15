@@ -186,13 +186,13 @@ QString AppListModelData::appActionIconPath() const
 QString AppListModelData::appScheduleIconPath() const
 {
     switch (app().scheduleAction) {
-    case App::ScheduleBlock:
+    case App::ActionBlock:
         return ":/icons/deny.png";
-    case App::ScheduleAllow:
+    case App::ActionAllow:
         return ":/icons/accept.png";
-    case App::ScheduleRemove:
+    case App::ActionRemove:
         return ":/icons/delete.png";
-    case App::ScheduleKillProcess:
+    case App::ActionKillProcess:
         return ":/icons/scull.png";
     }
 

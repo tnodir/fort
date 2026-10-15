@@ -340,7 +340,7 @@ void ConfAppManager::logApp(const LogEntryApp &logEntry)
     app.blocked = logEntry.blocked();
     app.alerted = logEntry.alerted();
     app.appOriginPath = FileUtil::realPath(logEntry.path());
-    app.scheduleAction = App::ScheduleRemove; // default action for alert
+    app.scheduleAction = App::ActionRemove; // default action for alert
 
     addApp(app);
 }
@@ -629,7 +629,7 @@ bool ConfAppManager::updateAppTimer(qint64 appId, QDateTime scheduleTime, bool &
 
     app.blocked = timerDisabled;
     app.killProcess = false;
-    app.scheduleAction = timerDisabled ? App::ScheduleAllow : App::ScheduleBlock;
+    app.scheduleAction = timerDisabled ? App::ActionAllow : App::ActionBlock;
     app.scheduleTime = scheduleTime;
 
     if (!saveAppTimer(app))
@@ -761,11 +761,11 @@ void ConfAppManager::updateAppEndTimes()
         App app;
         fillApp(app, stmt);
 
-        if (app.scheduleAction == App::ScheduleRemove) {
+        if (app.scheduleAction == App::ActionRemove) {
             appIdListToRemove.append(app.appId);
         } else {
-            app.blocked = (app.scheduleAction != App::ScheduleAllow);
-            app.killProcess = (app.scheduleAction == App::ScheduleKillProcess);
+            app.blocked = (app.scheduleAction != App::ActionAllow);
+            app.killProcess = (app.scheduleAction == App::ActionKillProcess);
             app.scheduleTime = {};
 
             updateApp(app);
