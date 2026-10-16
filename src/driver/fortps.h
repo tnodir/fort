@@ -4,7 +4,7 @@
 #include "fortdrv.h"
 
 #include "fortcnf.h"
-#include "fortpool.h"
+#include "fortpsname.h"
 #include "forttds.h"
 
 #define FORT_PSTREE_ACTIVE 0x0001
@@ -15,7 +15,8 @@ typedef struct fort_pstree
 
     UINT32 procs_n;
 
-    FORT_POOL_LIST pool_list;
+    PFORT_PSNAMES ps_names; /* the processes' names */
+
     tommy_list free_procs;
 
     tommy_arrayof procs;
@@ -49,17 +50,16 @@ typedef const FORT_PS_OPT *PCFORT_PS_OPT;
 extern "C" {
 #endif
 
-FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree);
+FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree, PFORT_PSNAMES ps_names);
 
-FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree);
+/* Returns FALSE, when the process monitor is still active */
+FORT_API BOOL fort_pstree_close(PFORT_PSTREE ps_tree);
 
 FORT_API void fort_pstree_enum_processes(PFORT_PSTREE ps_tree);
 
-/* Returns the process's name, which is referenced until fort_pstree_put_proc_name() */
-FORT_API PVOID fort_pstree_get_proc_name(
+/* Returns the process's name, which is referenced until fort_psname_put() */
+FORT_API PFORT_PSNAME_NODE fort_pstree_get_proc_name(
         PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, PFORT_PS_OPT ps_opt);
-
-FORT_API void fort_pstree_put_proc_name(PFORT_PSTREE ps_tree, PVOID ps_name);
 
 FORT_API void fort_pstree_update_services(
         PFORT_PSTREE ps_tree, PCFORT_SERVICE_INFO_LIST services, ULONG data_len);

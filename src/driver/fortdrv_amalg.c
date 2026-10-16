@@ -36,6 +36,7 @@
 #include "fortpkt_shaper.c"
 #include "fortpool.c"
 #include "fortps.c"
+#include "fortpsname.c"
 #include "fortstat.c"
 #include "fortscb.c"
 #include "fortthr.c"

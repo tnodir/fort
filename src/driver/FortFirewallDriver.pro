@@ -24,6 +24,7 @@ SOURCES += \
     fortpkt_shaper.c \
     fortpool.c \
     fortps.c \
+    fortpsname.c \
     fortscb.c \
     fortstat.c \
     forttds.c \
@@ -71,6 +72,7 @@ HEADERS += \
     fortpkt_shaper.h \
     fortpool.h \
     fortps.h \
+    fortpsname.h \
     fortscb.h \
     fortstat.h \
     forttds.h \

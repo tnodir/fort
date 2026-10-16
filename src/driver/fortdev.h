@@ -27,6 +27,7 @@ typedef struct fort_device
     FORT_STAT stat;
     FORT_PENDING pending;
     FORT_SHAPER shaper;
+    FORT_PSNAMES ps_names;
     FORT_PSTREE ps_tree;
     FORT_TIMER log_timer;
     FORT_WORKER worker;

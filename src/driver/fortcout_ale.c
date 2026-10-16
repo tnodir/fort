@@ -426,7 +426,7 @@ inline static void fort_callout_ale_check_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALL
     fort_path_buffer_free(&conn->path_buf);
 
     /* Release the process's name */
-    fort_pstree_put_proc_name(&fort_device()->ps_tree, conn->ps_name);
+    fort_psname_put(&fort_device()->ps_names, conn->ps_name);
 }
 
 inline static void fort_callout_ale_by_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,

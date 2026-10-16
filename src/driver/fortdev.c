@@ -625,7 +625,8 @@ FORT_API NTSTATUS fort_device_load(PVOID device_param)
     fort_pending_open(&fort_device()->pending);
     fort_shaper_open(&fort_device()->shaper);
     fort_timer_open(&fort_device()->log_timer, 500, /*flags=*/0, &fort_callout_timer);
-    fort_pstree_open(&fort_device()->ps_tree);
+    fort_psname_open(&fort_device()->ps_names);
+    fort_pstree_open(&fort_device()->ps_tree, &fort_device()->ps_names);
 
     /* The opened data must be closed on unload */
     fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_IS_LOADED, TRUE);
@@ -683,11 +684,16 @@ FORT_API void fort_device_unload(void)
     fort_callout_remove();
 
     /* Stop process monitor */
-    fort_pstree_close(&fort_device()->ps_tree);
+    const BOOL ps_tree_closed = fort_pstree_close(&fort_device()->ps_tree);
 
     /* Stop packets shaper & pending */
     fort_shaper_close(&fort_device()->shaper);
     fort_pending_close(&fort_device()->pending);
+
+    /* The process monitor still uses the names on its removal error */
+    if (ps_tree_closed) {
+        fort_psname_close(&fort_device()->ps_names);
+    }
 
     /* Stop stat & buffer controllers */
     fort_stat_close(&fort_device()->stat);
