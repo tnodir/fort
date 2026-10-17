@@ -5,6 +5,7 @@
 
 #define DEFAULT_FILTER_OFF_SECONDS     0 // Disabled
 #define DEFAULT_AUTO_LEARN_SECONDS     60
+#define DEFAULT_ASK_TO_CONNECT_SECONDS 30
 #define DEFAULT_MONTH_START            1
 #define DEFAULT_TRAF_HOUR_KEEP_DAYS    90 // ~3 months
 #define DEFAULT_TRAF_DAY_KEEP_DAYS     365 // ~1 year

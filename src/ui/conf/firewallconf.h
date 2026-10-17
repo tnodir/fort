@@ -100,6 +100,9 @@ public:
     bool askToConnect() const { return m_askToConnect; }
     void setAskToConnect(bool v) { m_askToConnect = v; }
 
+    quint16 askToConnectSeconds() const { return m_askToConnectSeconds; }
+    void setAskToConnectSeconds(quint16 v) { m_askToConnectSeconds = v; }
+
     bool groupBlocked() const { return m_groupBlocked; }
     void setGroupBlocked(bool v) { m_groupBlocked = v; }
 
@@ -208,6 +211,8 @@ private:
     uint m_activePeriodEnabled : 1 = false;
 
     quint8 m_activePeriodId = 0;
+
+    quint16 m_askToConnectSeconds = DEFAULT_ASK_TO_CONNECT_SECONDS;
 
     QList<AddressGroup *> m_addressGroups;
 };

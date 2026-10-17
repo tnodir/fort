@@ -32,6 +32,8 @@ namespace {
 const std::array timedOptionSecondsValues = { 10, 0, 20, 60, 60 * 2, 60 * 5, 60 * 10,
     60 * 60 /* 1 hour */, 60 * 60 * 24 /* 1 day */ };
 
+const std::array askToConnectSecondsValues = { 15, 10, 20, 30, 60, 60 * 2, 60 * 5 };
+
 void updateComboBox(
         QComboBox *c, const QStringList &names, const QStringList &iconPaths, int currentIndex)
 {
@@ -65,6 +67,7 @@ void OptionsPage::onResetToDefault()
     m_cbSpeedLimiterEnabled->setChecked(true);
     m_lscFilterOffSeconds->spinBox()->setValue(DEFAULT_FILTER_OFF_SECONDS);
     m_lscAutoLearnSeconds->spinBox()->setValue(DEFAULT_AUTO_LEARN_SECONDS);
+    m_lscAskToConnectSeconds->spinBox()->setValue(DEFAULT_ASK_TO_CONNECT_SECONDS);
 
     m_cbBootFilter->setChecked(false);
     m_cbStealthMode->setChecked(false);
@@ -155,6 +158,7 @@ void OptionsPage::onRetranslateUi()
 
     m_lscFilterOffSeconds->label()->setText(tr("Filter Off seconds:"));
     m_lscAutoLearnSeconds->label()->setText(tr("Auto-learn seconds:"));
+    m_lscAskToConnectSeconds->label()->setText(tr("Ask to Connect seconds:"));
     retranslateTimedOptions();
 
     m_cbBootFilter->setText(tr("Block traffic when Fort Firewall is not running"));
@@ -207,6 +211,10 @@ void OptionsPage::retranslateTimedOptions()
 
     m_lscAutoLearnSeconds->setNames(list);
     m_lscAutoLearnSeconds->spinBox()->setSuffix(suffix);
+
+    m_lscAskToConnectSeconds->setNames({ tr("Custom"), tr("10 seconds"), tr("20 seconds"),
+            tr("30 seconds"), tr("1 minute"), tr("2 minutes"), tr("5 minutes") });
+    m_lscAskToConnectSeconds->spinBox()->setSuffix(suffix);
 }
 
 void OptionsPage::retranslateEditPassword()
@@ -307,6 +315,7 @@ void OptionsPage::setupTrafficBox()
     // Timed Options
     setupFilterOffSeconds();
     setupAutoLearnSeconds();
+    setupAskToConnectSeconds();
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbFilterEnabled);
@@ -317,6 +326,7 @@ void OptionsPage::setupTrafficBox()
     layout->addWidget(ControlUtil::createSeparator());
     layout->addWidget(m_lscFilterOffSeconds);
     layout->addWidget(m_lscAutoLearnSeconds);
+    layout->addWidget(m_lscAskToConnectSeconds);
 
     m_gbTraffic = new QGroupBox();
     m_gbTraffic->setLayout(layout);
@@ -390,6 +400,23 @@ void OptionsPage::setupAutoLearnSeconds()
                 if (ini().autoLearnSeconds() != value) {
                     ini().setAutoLearnSeconds(value);
                     ctrl()->setIniEdited();
+                }
+            });
+}
+
+void OptionsPage::setupAskToConnectSeconds()
+{
+    m_lscAskToConnectSeconds = new LabelSpinCombo();
+    m_lscAskToConnectSeconds->spinBox()->setRange(1, 3600); // 1 hour
+    m_lscAskToConnectSeconds->setValues(askToConnectSecondsValues);
+
+    m_lscAskToConnectSeconds->spinBox()->setValue(conf().askToConnectSeconds());
+
+    connect(m_lscAskToConnectSeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                if (conf().askToConnectSeconds() != value) {
+                    conf().setAskToConnectSeconds(value);
+                    ctrl()->setFlagsEdited();
                 }
             });
 }

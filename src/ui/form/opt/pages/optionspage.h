@@ -46,6 +46,7 @@ private:
     QLayout *setupFilterModeLayout();
     void setupFilterOffSeconds();
     void setupAutoLearnSeconds();
+    void setupAskToConnectSeconds();
     void setupProtectionBox();
     QLayout *setupPasswordLayout();
     void setupEditPassword();
@@ -74,6 +75,7 @@ private:
     QCheckBox *m_cbSpeedLimiterEnabled = nullptr;
     LabelSpinCombo *m_lscFilterOffSeconds = nullptr;
     LabelSpinCombo *m_lscAutoLearnSeconds = nullptr;
+    LabelSpinCombo *m_lscAskToConnectSeconds = nullptr;
 
     QCheckBox *m_cbBootFilter = nullptr;
     QCheckBox *m_cbStealthMode = nullptr;

@@ -466,6 +466,7 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setBlockInetTraffic(iniBool("blockInetTraffic"));
     conf.setAllowAllNew(iniBool("allowAllNew", true));
     conf.setAskToConnect(iniBool("askToConnect"));
+    conf.setAskToConnectSeconds(iniUInt("askToConnectSeconds", DEFAULT_ASK_TO_CONNECT_SECONDS));
     conf.setGroupBlocked(iniBool("groupBlocked", true));
     conf.setSpeedLimiterEnabled(iniBool("speedLimiterEnabled", true));
     conf.setLogStat(iniBool("logStat", true));
@@ -513,6 +514,7 @@ void FortSettings::writeConfIni(const FirewallConf &conf, IniOptions &iniOpt)
         setIniValue("blockInetTraffic", conf.blockInetTraffic());
         setIniValue("allowAllNew", conf.allowAllNew());
         setIniValue("askToConnect", conf.askToConnect());
+        setIniValue("askToConnectSeconds", conf.askToConnectSeconds());
         setIniValue("groupBlocked", conf.groupBlocked());
         setIniValue("speedLimiterEnabled", conf.speedLimiterEnabled());
         setIniValue("logStat", conf.logStat());
