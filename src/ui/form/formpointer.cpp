@@ -120,7 +120,7 @@ bool FormPointer::close(bool isAppQuitting)
         emit w->aboutToDelete();
         w->deleteLater();
 
-        m_window.take(); // will be deleted later
+        m_window.release(); // will be deleted later
         return true;
     }
 

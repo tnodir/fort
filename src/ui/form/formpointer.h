@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include <memory>
+
 #include <form/controls/formwindow.h>
 
 class FormPointer
@@ -21,7 +23,7 @@ public:
 private:
     WindowCode m_code = WindowNone;
 
-    QScopedPointer<FormWindow> m_window;
+    std::unique_ptr<FormWindow> m_window;
 };
 
 #endif // FORMPOINTER_H
