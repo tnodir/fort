@@ -14,6 +14,8 @@ typedef struct fort_pending_packet
     UCHAR app_asked : 1; /* asked by the App's data, else by a Rule: decided by the user only */
     UCHAR unlogged : 1; /* not shown to the user: blocked by the worker */
 
+    UINT32 process_id; /* to reauthorize the connections of the process allowed by the user */
+
     UINT64 flow_id; /* the connection's id to decide it by the user or the timeout */
 
     HANDLE completion_context;
@@ -81,6 +83,8 @@ FORT_API void fort_pending_clear(PFORT_PENDING pending);
 /* The flow ids are sorted by the master */
 FORT_API void fort_pending_complete_flows(
         PFORT_PENDING pending, const UINT64 *flow_ids, UINT16 count, BOOL reauth);
+
+FORT_API void fort_pending_complete_proc(PFORT_PENDING pending, UINT32 process_id);
 
 /* The flow ids are sorted by the master */
 FORT_API NTSTATUS fort_pending_allow_flows(

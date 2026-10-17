@@ -125,6 +125,9 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
     /* Clear pending packets */
     fort_pending_clear(&fort_device()->pending);
 
+    /* Clear the allowed processes */
+    fort_pstree_procs_allowed_clear(&fort_device()->ps_tree);
+
     /* Clear buffer */
     fort_buffer_clear(&fort_device()->buffer);
 
@@ -528,6 +531,23 @@ static NTSTATUS fort_device_control_allowpending(PFORT_DEVICE_CONTROL_ARG dca)
     return fort_pending_allow_flows(&fort_device()->pending, flow_ids, count);
 }
 
+static NTSTATUS fort_device_control_allowproc(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    PCFORT_PROC_ALLOW proc_allow = dca->buffer;
+    const ULONG len = dca->in_len;
+
+    if (len != sizeof(FORT_PROC_ALLOW))
+        return STATUS_UNSUCCESSFUL;
+
+    if (!fort_pstree_proc_allow(&fort_device()->ps_tree, proc_allow))
+        return STATUS_NOT_FOUND;
+
+    /* Reauthorize the process's pending connections */
+    fort_pending_complete_proc(&fort_device()->pending, proc_allow->process_id);
+
+    return STATUS_SUCCESS;
+}
+
 static_assert(FORT_CTL_INDEX_FROM_CODE(FORT_IOCTL_SETRULEFLAG) == FORT_IOCTL_INDEX_SETRULEFLAG,
         "Invalid FORT_CTL_INDEX_FROM_CODE()");
 
@@ -555,6 +575,7 @@ static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
     &fort_device_control_blockpending, // FORT_IOCTL_BLOCKPENDING
     &fort_device_control_reauthpending, // FORT_IOCTL_REAUTHPENDING
     &fort_device_control_allowpending, // FORT_IOCTL_ALLOWPENDING
+    &fort_device_control_allowproc, // FORT_IOCTL_ALLOWPROC
 };
 
 static_assert(FORT_ARRAY_SIZE(fortDeviceControlProcess_funcList) == FORT_IOCTL_INDEX_COUNT,

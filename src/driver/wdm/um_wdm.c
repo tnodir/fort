@@ -392,6 +392,11 @@ LARGE_INTEGER KeQueryPerformanceCounter(PLARGE_INTEGER performanceFrequency)
     return res;
 }
 
+ULONGLONG KeQueryInterruptTime(void)
+{
+    return 0;
+}
+
 void KeQuerySystemTime(PLARGE_INTEGER time)
 {
     UNUSED(time);

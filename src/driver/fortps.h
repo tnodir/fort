@@ -61,6 +61,14 @@ FORT_API void fort_pstree_enum_processes(PFORT_PSTREE ps_tree);
 FORT_API PFORT_PSNAME_NODE fort_pstree_get_proc_name(
         PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, PFORT_PS_OPT ps_opt);
 
+/* The process's Ask to Connect is replaced by the user's allowance */
+FORT_API BOOL fort_pstree_proc_allow(PFORT_PSTREE ps_tree, PCFORT_PROC_ALLOW proc_allow);
+
+FORT_API BOOL fort_pstree_proc_allowed(PFORT_PSTREE ps_tree, DWORD processId);
+
+/* The closed master's allowed processes */
+FORT_API void fort_pstree_procs_allowed_clear(PFORT_PSTREE ps_tree);
+
 FORT_API void fort_pstree_update_services(
         PFORT_PSTREE ps_tree, PCFORT_SERVICE_INFO_LIST services, ULONG data_len);
 

@@ -26,6 +26,8 @@ typedef struct fort_psnode
 
     INT64 create_time; /* 0, when unknown */
 
+    INT64 allowed_time; /* allowed by the user till the interrupt time, instead of Ask to Connect */
+
     UINT32 process_id;
 
     FORT_PS_OPT ps_opt;
@@ -389,6 +391,7 @@ static void fort_pstree_proc_del(PFORT_PSTREE ps_tree, PFORT_PSNODE proc)
     fort_psname_put(ps_tree->ps_names, proc->ps_name);
 
     proc->ps_name = NULL;
+    proc->allowed_time = 0;
     proc->process_id = 0;
 
     /* Delete from procs map */
@@ -979,6 +982,75 @@ FORT_API PFORT_PSNAME_NODE fort_pstree_get_proc_name(
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
     return ps_name;
+}
+
+inline static INT64 fort_pstree_allowed_time(UINT32 seconds)
+{
+    if (seconds == 0)
+        return MAXINT64; /* till the process's exit */
+
+    return (INT64) KeQueryInterruptTime() + (INT64) seconds * 10000000;
+}
+
+static BOOL fort_pstree_proc_allow_locked(
+        PFORT_PSTREE ps_tree, DWORD processId, INT64 allowed_time)
+{
+    PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, processId);
+    if (proc == NULL || (proc->ps_opt.flags & FORT_PSNODE_CLOSED) != 0)
+        return FALSE;
+
+    proc->allowed_time = allowed_time;
+
+    return TRUE;
+}
+
+FORT_API BOOL fort_pstree_proc_allow(PFORT_PSTREE ps_tree, PCFORT_PROC_ALLOW proc_allow)
+{
+    const INT64 allowed_time = fort_pstree_allowed_time(proc_allow->seconds);
+
+    BOOL res;
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
+    {
+        res = fort_pstree_proc_allow_locked(ps_tree, proc_allow->process_id, allowed_time);
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return res;
+}
+
+FORT_API BOOL fort_pstree_proc_allowed(PFORT_PSTREE ps_tree, DWORD processId)
+{
+    INT64 allowed_time = 0;
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
+    {
+        PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, processId);
+        if (proc != NULL) {
+            allowed_time = proc->allowed_time;
+        }
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return allowed_time > (INT64) KeQueryInterruptTime();
+}
+
+FORT_API void fort_pstree_procs_allowed_clear(PFORT_PSTREE ps_tree)
+{
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
+    {
+        tommy_arrayof *procs = &ps_tree->procs;
+        const tommy_size_t count = tommy_arrayof_size(procs);
+
+        for (tommy_size_t i = 0; i < count; ++i) {
+            PFORT_PSNODE proc = tommy_arrayof_ref(procs, i);
+            proc->allowed_time = 0;
+        }
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
 inline static PFORT_PSNODE fort_pstree_new_service_proc(

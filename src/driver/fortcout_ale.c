@@ -334,9 +334,26 @@ inline static BOOL fort_callout_ale_ask_decided_check(
     return conn->is_reauth || fort_packet_injected_by_self(ca);
 }
 
-inline static void fort_callout_ale_ask(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
+inline static void fort_callout_ale_ask_proc_allowed(
+        PFORT_CALLOUT_ALE_EXTRA cx, const FORT_CONF_FLAGS conf_flags)
 {
     PFORT_CONF_META_CONN conn = &cx->conn;
+
+    conn->reason = FORT_CONN_REASON_ASK_PROC_ALLOWED;
+
+    conn->act.blocked = (UCHAR) fort_callout_ale_process_flow(cx, conf_flags); /* block (Error) */
+}
+
+inline static void fort_callout_ale_ask(
+        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, const FORT_CONF_FLAGS conf_flags)
+{
+    PFORT_CONF_META_CONN conn = &cx->conn;
+
+    /* The process is allowed by the user */
+    if (fort_pstree_proc_allowed(&fort_device()->ps_tree, conn->process_id)) {
+        fort_callout_ale_ask_proc_allowed(cx, conf_flags);
+        return;
+    }
 
     /* Decided by the user */
     if (fort_callout_ale_ask_decided_check(ca, conn)) {
@@ -368,7 +385,7 @@ inline static void fort_callout_ale_check_app(PCFORT_CALLOUT_ARG ca, PFORT_CALLO
             return;
         }
     } else if (conn->ask_to_connect) {
-        fort_callout_ale_ask(ca, cx);
+        fort_callout_ale_ask(ca, cx, conf_flags);
     }
 
     fort_callout_ale_log_app_path(cx, conf_ref, conf_flags, app_data);

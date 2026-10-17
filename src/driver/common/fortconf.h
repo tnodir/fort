@@ -614,6 +614,15 @@ typedef struct fort_conf_io
 
 typedef const FORT_CONF_IO *PCFORT_CONF_IO;
 
+/* The process allowed by the user instead of Ask to Connect */
+typedef struct fort_proc_allow
+{
+    UINT32 process_id;
+    UINT32 seconds; /* 0 - till the process's exit */
+} FORT_PROC_ALLOW, *PFORT_PROC_ALLOW;
+
+typedef const FORT_PROC_ALLOW *PCFORT_PROC_ALLOW;
+
 typedef struct fort_conf_zones_conn_filtered_result
 {
     UCHAR filtered : 1;

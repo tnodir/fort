@@ -484,6 +484,8 @@ FORT_API NTSTATUS PsCreateSystemThread(PHANDLE threadHandle, ULONG desiredAccess
 
 FORT_API LARGE_INTEGER KeQueryPerformanceCounter(PLARGE_INTEGER performanceFrequency);
 
+FORT_API ULONGLONG KeQueryInterruptTime(void);
+
 FORT_API void KeQuerySystemTime(PLARGE_INTEGER time);
 FORT_API void ExSystemTimeToLocalTime(PLARGE_INTEGER systemTime, PLARGE_INTEGER localTime);
 FORT_API void RtlTimeToTimeFields(PLARGE_INTEGER time, PTIME_FIELDS timeFields);

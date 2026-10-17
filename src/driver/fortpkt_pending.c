@@ -436,6 +436,23 @@ FORT_API void fort_pending_complete_flows(
     fort_pending_complete_walk(pending, &walk, reauth);
 }
 
+static BOOL fort_pending_packet_proc(void *ctx, PCFORT_PENDING_PACKET pkt)
+{
+    const UINT32 *process_id = ctx;
+
+    return pkt->process_id == *process_id;
+}
+
+FORT_API void fort_pending_complete_proc(PFORT_PENDING pending, UINT32 process_id)
+{
+    FORT_PENDING_WALK walk = {
+        .done_func = &fort_pending_packet_proc,
+        .ctx = &process_id,
+    };
+
+    fort_pending_complete_walk(pending, &walk, /*reauth=*/TRUE);
+}
+
 /* Returns the array to free: the old allowed flows' one, else the new one without the room */
 static PFORT_PENDING_ALLOWED_FLOW fort_pending_allow_walk_locked(
         PFORT_PENDING pending, PFORT_PENDING_WALK walk)
@@ -646,6 +663,7 @@ FORT_API NTSTATUS fort_pending_add_packet(
 
     pkt->app_asked = (UCHAR) conn->app_asked;
     pkt->inbound = (UCHAR) conn->inbound;
+    pkt->process_id = conn->process_id;
     pkt->flow_id = conn->flow_id;
 
     const UCHAR ipsec_flag = fort_packet_is_ipsec_protected(ca) ? FORT_PACKET_IPSEC_PROTECTED : 0;
