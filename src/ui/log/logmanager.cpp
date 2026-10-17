@@ -35,6 +35,12 @@ DriverWorker *driverWorker()
     return driverManager()->driverWorker();
 }
 
+/* The log is read or its reading is cancelled without an error */
+bool isLogReadOk(bool success, quint32 errorCode)
+{
+    return success || errorCode == 0;
+}
+
 }
 
 LogManager::LogManager(QObject *parent) : QObject(parent) { }
@@ -118,7 +124,7 @@ void LogManager::addFreeBuffer(LogBuffer *logBuffer)
 
 void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success, quint32 errorCode)
 {
-    if (m_active && (success || errorCode == 0)) {
+    if (m_active && isLogReadOk(success, errorCode)) {
         readLogAsync();
     }
 
