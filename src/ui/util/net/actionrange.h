@@ -20,6 +20,12 @@ public:
 
     void toList(QStringList &list) const override;
 
+    /* The action's name in the rule text */
+    static QString actionTypeName(quint8 actionTypeId);
+
+    /* The action's id by its name, 0 - unknown */
+    static quint8 actionTypeIdByName(const QString &name);
+
     void write(ConfData &confData) const override;
 
 protected:

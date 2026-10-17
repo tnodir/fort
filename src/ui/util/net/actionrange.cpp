@@ -4,6 +4,23 @@
 
 #include <util/conf/confdata.h>
 
+namespace {
+
+struct ActionType
+{
+    quint8 id;
+    const char *name;
+};
+
+inline constexpr ActionType actionTypes[] = {
+    { FORT_RULE_FILTER_ACTION_ALLOW, "Allow" },
+    { FORT_RULE_FILTER_ACTION_BLOCK, "Block" },
+    { FORT_RULE_FILTER_ACTION_ASK, "Ask" },
+    { FORT_RULE_FILTER_ACTION_DROP, "Drop" },
+};
+
+}
+
 ActionRange::ActionRange(QObject *parent) : TextRange(parent) { }
 
 bool ActionRange::isEmpty() const
@@ -20,28 +37,42 @@ void ActionRange::clear()
 
 void ActionRange::toList(QStringList &list) const
 {
-    if (m_actionTypeId == FORT_RULE_FILTER_ACTION_ALLOW) {
-        list << "ALLOW";
+    const QString name = actionTypeName(m_actionTypeId);
+
+    if (!name.isEmpty()) {
+        list << name.toUpper();
     }
-    if (m_actionTypeId == FORT_RULE_FILTER_ACTION_BLOCK) {
-        list << "BLOCK";
+}
+
+QString ActionRange::actionTypeName(quint8 actionTypeId)
+{
+    for (const auto &actionType : actionTypes) {
+        if (actionType.id == actionTypeId) {
+            return actionType.name;
+        }
     }
-    if (m_actionTypeId == FORT_RULE_FILTER_ACTION_DROP) {
-        list << "DROP";
+
+    return {};
+}
+
+quint8 ActionRange::actionTypeIdByName(const QString &name)
+{
+    for (const auto &actionType : actionTypes) {
+        if (name.compare(QLatin1String(actionType.name), Qt::CaseInsensitive) == 0) {
+            return actionType.id;
+        }
     }
+
+    return 0;
 }
 
 TextRange::ParseError ActionRange::parseText(const QString &text)
 {
-    if (text == "ALLOW") {
-        m_actionTypeId = FORT_RULE_FILTER_ACTION_ALLOW;
-    } else if (text == "BLOCK") {
-        m_actionTypeId = FORT_RULE_FILTER_ACTION_BLOCK;
-    } else if (text == "DROP") {
-        m_actionTypeId = FORT_RULE_FILTER_ACTION_DROP;
-    } else {
+    const quint8 actionTypeId = actionTypeIdByName(text);
+    if (actionTypeId == 0)
         return ErrorBadText;
-    }
+
+    m_actionTypeId = actionTypeId;
 
     return ErrorOk;
 }

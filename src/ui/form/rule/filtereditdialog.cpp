@@ -23,14 +23,12 @@
 #include <util/conf/ruletextparser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
+#include <util/net/actionrange.h>
 #include <util/textareautil.h>
 
 using namespace Fort;
 
 namespace {
-
-// By the Action button's id: 0 - the Rule's action
-const QStringList actionNames = { QString(), "Allow", "Block", "Drop" };
 
 // By the Direction check box's index
 const QStringList directionNames = { "In", "Out" };
@@ -173,6 +171,8 @@ void FilterEditDialog::retranslateUi()
     m_rbRuleAction->setToolTip(tr("The Rule's action is applied"));
     m_rbAllow->setText(tr("&Allow"));
     m_rbBlock->setText(tr("&Block"));
+    m_rbAsk->setText(tr("A&sk"));
+    m_rbAsk->setToolTip(tr("Ask to Connect: pause the connection till the user's decision"));
     m_rbDrop->setText(tr("&Drop"));
     m_rbDrop->setToolTip(tr("Block silently, without a response"));
 
@@ -377,26 +377,28 @@ QLayout *FilterEditDialog::setupActionsLayout()
 {
     m_buttonGroupAction = new QButtonGroup(this);
 
-    m_rbRuleAction = createActionButton(":/icons/script.png", /*actionId=*/0);
+    // By the button's id: FORT_RULE_FILTER_ACTION_*, 0 - the Rule's action
+    m_rbRuleAction = createActionButton(":/icons/script.png", /*actionTypeId=*/0);
     m_rbRuleAction->setVisible(isRuleFilter());
 
-    m_rbAllow = createActionButton(":/icons/accept.png", /*actionId=*/1);
-    m_rbBlock = createActionButton(":/icons/deny.png", /*actionId=*/2);
-    m_rbDrop = createActionButton(":/icons/cross.png", /*actionId=*/3);
+    m_rbAllow = createActionButton(":/icons/accept.png", FORT_RULE_FILTER_ACTION_ALLOW);
+    m_rbBlock = createActionButton(":/icons/deny.png", FORT_RULE_FILTER_ACTION_BLOCK);
+    m_rbAsk = createActionButton(":/icons/help.png", FORT_RULE_FILTER_ACTION_ASK);
+    m_rbDrop = createActionButton(":/icons/cross.png", FORT_RULE_FILTER_ACTION_DROP);
 
     auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_rbRuleAction, m_rbAllow, m_rbBlock, m_rbDrop, /*stretch*/ nullptr });
+            { m_rbRuleAction, m_rbAllow, m_rbBlock, m_rbAsk, m_rbDrop, /*stretch*/ nullptr });
     layout->setSpacing(20);
 
     return layout;
 }
 
-QRadioButton *FilterEditDialog::createActionButton(const QString &iconPath, int actionId)
+QRadioButton *FilterEditDialog::createActionButton(const QString &iconPath, int actionTypeId)
 {
     auto c = new QRadioButton();
     c->setIcon(IconCache::icon(iconPath));
 
-    m_buttonGroupAction->addButton(c, actionId);
+    m_buttonGroupAction->addButton(c, actionTypeId);
 
     connect(c, &QRadioButton::clicked, this, &FilterEditDialog::updateTextByFields);
 
@@ -576,8 +578,8 @@ QString FilterEditDialog::filterText() const
     line.addFilter(FORT_RULE_FILTER_TYPE_OPTION, checkedNames(optionCheckBoxes(), optionNames));
 
     // The action is the last: the empty name of the Rule's action
-    line.addFilter(
-            FORT_RULE_FILTER_TYPE_ACTION, actionNames.value(m_buttonGroupAction->checkedId()));
+    line.addFilter(FORT_RULE_FILTER_TYPE_ACTION,
+            ActionRange::actionTypeName(quint8(m_buttonGroupAction->checkedId())));
 
     return line.text();
 }
@@ -606,9 +608,10 @@ void FilterEditDialog::setFilterLine(const FilterLineText &lineText)
 
 void FilterEditDialog::setActionFilter(const RuleFilter *filter)
 {
-    const int actionId = indexOfValue(actionNames, FilterLine::values(filter).value(0));
+    const quint8 actionTypeId =
+            ActionRange::actionTypeIdByName(FilterLine::values(filter).value(0));
 
-    QAbstractButton *button = m_buttonGroupAction->button(actionId);
+    QAbstractButton *button = m_buttonGroupAction->button(actionTypeId);
     if (button) {
         button->setChecked(true);
     }

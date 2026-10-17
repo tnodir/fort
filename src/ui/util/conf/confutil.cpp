@@ -39,8 +39,6 @@ void parseTerminatingRuleLine(const QString &text, Rule &rule)
     rule.terminateBlocked = (actionTypeId != FORT_RULE_FILTER_ACTION_ALLOW);
     rule.terminateDrop = (actionTypeId == FORT_RULE_FILTER_ACTION_DROP);
     rule.terminateAlert = (optionRange.optionTypeIds() & FORT_CONN_FILTER_RESULT_CONN_ALERT) != 0;
-}
-
 QString terminatingRuleLine(const Rule &rule)
 {
     const QString action =

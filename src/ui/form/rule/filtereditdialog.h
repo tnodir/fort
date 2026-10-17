@@ -44,7 +44,7 @@ private:
     QLayout *setupMainLayout();
     QLayout *setupFormLayout();
     QLayout *setupActionsLayout();
-    QRadioButton *createActionButton(const QString &iconPath, int actionId);
+    QRadioButton *createActionButton(const QString &iconPath, int actionTypeId);
     QCheckBox *createFieldCheckBox();
     QToolButton *createNotButton();
     QToolButton *createEqualButton(LineEdit *edit);
@@ -91,6 +91,7 @@ private:
     QRadioButton *m_rbRuleAction = nullptr;
     QRadioButton *m_rbAllow = nullptr;
     QRadioButton *m_rbBlock = nullptr;
+    QRadioButton *m_rbAsk = nullptr;
     QRadioButton *m_rbDrop = nullptr;
     QLabel *m_labelDirection = nullptr;
     QToolButton *m_btDirectionNot = nullptr;
