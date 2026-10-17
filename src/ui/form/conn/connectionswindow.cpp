@@ -79,29 +79,12 @@ ConnectionsWindow::ConnectionsWindow(
 
 void ConnectionsWindow::saveWindowState(bool /*wasVisible*/)
 {
-    auto &iniUser = Fort::iniUser();
-
-    iniUser.setConnWindowGeometry(stateWatcher()->geometry());
-    iniUser.setConnWindowMaximized(stateWatcher()->maximized());
-
-    auto header = m_connListView->horizontalHeader();
-    iniUser.setConnListHeader(header->saveState());
-    iniUser.setConnListHeaderVersion(connListHeaderVersion);
-
-    confManager()->saveIniUser();
+    saveIniWindowState(IniUser::connWindowGroup());
 }
 
 void ConnectionsWindow::restoreWindowState()
 {
-    const auto &iniUser = Fort::iniUser();
-
-    stateWatcher()->restore(
-            this, QSize(1024, 768), iniUser.connWindowGeometry(), iniUser.connWindowMaximized());
-
-    if (iniUser.connListHeaderVersion() == connListHeaderVersion) {
-        auto header = m_connListView->horizontalHeader();
-        header->restoreState(iniUser.connListHeader());
-    }
+    restoreIniWindowState(IniUser::connWindowGroup(), QSize(1024, 768));
 }
 
 void ConnectionsWindow::initialize()
@@ -109,6 +92,33 @@ void ConnectionsWindow::initialize()
     connListModel()->initialize();
 
     emit ctrl()->retranslateUi();
+}
+
+void ConnectionsWindow::saveIniWindowState(const QString &iniGroup)
+{
+    auto &iniUser = Fort::iniUser();
+
+    iniUser.setWindowGeometry(iniGroup, stateWatcher()->geometry());
+    iniUser.setWindowMaximized(iniGroup, stateWatcher()->maximized());
+
+    auto header = m_connListView->horizontalHeader();
+    iniUser.setWindowConnListHeader(iniGroup, header->saveState());
+    iniUser.setWindowConnListHeaderVersion(iniGroup, connListHeaderVersion);
+
+    confManager()->saveIniUser();
+}
+
+void ConnectionsWindow::restoreIniWindowState(const QString &iniGroup, const QSize &defaultSize)
+{
+    const auto &iniUser = Fort::iniUser();
+
+    stateWatcher()->restore(
+            this, defaultSize, iniUser.windowGeometry(iniGroup), iniUser.windowMaximized(iniGroup));
+
+    if (iniUser.windowConnListHeaderVersion(iniGroup) == connListHeaderVersion) {
+        auto header = m_connListView->horizontalHeader();
+        header->restoreState(iniUser.windowConnListHeader(iniGroup));
+    }
 }
 
 void ConnectionsWindow::hideEditing()

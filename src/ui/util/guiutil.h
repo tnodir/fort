@@ -5,6 +5,7 @@
 #include <QIcon>
 #include <QVariant>
 
+QT_FORWARD_DECLARE_CLASS(QColor)
 QT_FORWARD_DECLARE_CLASS(QMouseEvent)
 
 class GuiUtil
@@ -14,6 +15,9 @@ public:
 
     static QIcon overlayIcon(const QString &basePath, const QString &overlayPath,
             Qt::Alignment alignment = Qt::AlignRight | Qt::AlignBottom);
+
+    /* The base icon inside the progress arc, clockwise from 12 o'clock */
+    static QIcon progressIcon(const QString &basePath, int percent, const QColor &color);
 
     static QFont fontBold();
 

@@ -187,7 +187,7 @@ ConnListModel::ConnListModel(QObject *parent) : TableSqlModel(parent) { }
 
 SqliteDb *ConnListModel::sqliteDb() const
 {
-    return statConnManager()->roSqliteDb();
+    return connManager()->roSqliteDb();
 }
 
 void ConnListModel::initialize()
@@ -197,9 +197,8 @@ void ConnListModel::initialize()
 
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &ConnListModel::refresh);
     connect(hostInfoCache(), &HostInfoCache::cacheChanged, this, &ConnListModel::refresh);
-    connect(statConnManager(), &StatConnManager::connChanged, this,
-            &ConnListModel::updateConnIdRange);
-    connect(statConnManager(), &StatConnManager::connCleared, this, &ConnListModel::clearConnRows);
+    connect(connManager(), &StatConnManager::connChanged, this, &ConnListModel::updateConnIdRange);
+    connect(connManager(), &StatConnManager::connCleared, this, &ConnListModel::clearConnRows);
 
     updateConnIdRange();
 }
@@ -404,9 +403,14 @@ void ConnListModel::fillConnRow(ConnRow &connRow, const SqliteStmt &stmt)
     connRow.inheritAppPath = stmt.columnText(22);
 }
 
+StatConnManager *ConnListModel::connManager() const
+{
+    return statConnManager();
+}
+
 void ConnListModel::fillConnIdRange(qint64 &idMin, qint64 &idMax)
 {
-    statConnManager()->getConnIdRange(sqliteDb(), idMin, idMax);
+    StatConnManager::getConnIdRange(sqliteDb(), idMin, idMax);
 }
 
 bool ConnListModel::isConnIdRangeOut(

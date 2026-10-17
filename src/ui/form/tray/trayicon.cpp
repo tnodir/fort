@@ -21,6 +21,7 @@
 #include <manager/hotkeymanager.h>
 #include <manager/windowmanager.h>
 #include <model/grouplistmodel.h>
+#include <stat/pendingconnmanager.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
@@ -248,6 +249,8 @@ TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayCo
 
     connect(confAppManager(), &ConfAppManager::appAlerted, this, &TrayIcon::onAppAlerted,
             Qt::QueuedConnection);
+    connect(pendingConnManager(), &PendingConnManager::connChanged, this,
+            &TrayIcon::onPendingConnChanged, Qt::QueuedConnection);
 
     connect(groupListModel(), &GroupListModel::modelReset, this, &TrayIcon::updateGroupFlagActions,
             Qt::QueuedConnection);
@@ -319,6 +322,22 @@ void TrayIcon::onAppAlerted(bool alerted)
 
     if (alerted) {
         sendAlertMessage();
+    }
+}
+
+void TrayIcon::onPendingConnChanged()
+{
+    if (iniUser().progSnoozeAlerts())
+        return;
+
+    // The new pending connections are decided in the Alert Program window
+    const qint64 lastConnId = pendingConnManager()->lastConnId();
+    const bool isNewConn = (lastConnId > m_lastPendingConnId);
+
+    m_lastPendingConnId = lastConnId;
+
+    if (isNewConn) {
+        windowManager()->showProgramAlertWindow(/*activate=*/false);
     }
 }
 

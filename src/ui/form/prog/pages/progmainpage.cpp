@@ -30,6 +30,20 @@ void ProgMainPage::selectTab(int index)
     m_tabWidget->setCurrentIndex(index);
 }
 
+void ProgMainPage::setPendingConnsWindowChecked(bool checked)
+{
+    m_btPendingConns->setChecked(checked);
+}
+
+void ProgMainPage::setPendingConnsCount(int count)
+{
+    m_pendingConnsCount = count;
+
+    m_btPendingConns->setText(QString::number(count));
+
+    updatePendingConnsVisible();
+}
+
 void ProgMainPage::setConnsWindowChecked(bool checked)
 {
     m_btConnections->setChecked(checked);
@@ -63,7 +77,10 @@ void ProgMainPage::onPageInitialize(const App &app)
 
     setNetworkTabEnabled(!app.blocked);
 
-    m_btConnections->setEnabled(AppConnSearchModel::canFilterApp(app));
+    const bool canFilterApp = AppConnSearchModel::canFilterApp(app);
+
+    m_btPendingConns->setEnabled(canFilterApp);
+    m_btConnections->setEnabled(canFilterApp);
 
     selectTab(0);
 }
@@ -74,6 +91,7 @@ void ProgMainPage::onRetranslateUi()
     m_tabWidget->setTabText(1, tr("Network Filters"));
     m_tabWidget->setTabText(2, tr("More"));
 
+    m_btPendingConns->setToolTip(tr("Paused Connections"));
     m_btConnections->setToolTip(tr("Connections"));
 
     m_btSwitchWildcard->setToolTip(tr("Switch Wildcard"));
@@ -118,6 +136,18 @@ void ProgMainPage::setupTabBar()
     m_tabWidget->addTab(networkPage, QString());
     m_tabWidget->addTab(morePage, QString());
 
+    // Paused Connections button: with their count
+    m_btPendingConns = ControlUtil::createIconToolButton(":/icons/pause.png");
+    m_btPendingConns->setCheckable(true);
+    m_btPendingConns->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+
+    setPendingConnsCount(0);
+
+    connect(m_btPendingConns, &QAbstractButton::clicked, this,
+            &ProgMainPage::pendingConnsWindowToggled);
+    connect(m_btPendingConns, &QAbstractButton::toggled, this,
+            &ProgMainPage::updatePendingConnsVisible);
+
     // Connections button
     m_btConnections = ControlUtil::createCheckableIconToolButton(
             ":/icons/disconnect.png", ":/icons/connect.png");
@@ -128,7 +158,8 @@ void ProgMainPage::setupTabBar()
     m_btMenu = ControlUtil::createMenuButton();
 
     auto cornerLayout = ControlUtil::createHLayoutByWidgets(
-            { m_btConnections, ControlUtil::createVSeparator(), m_btMenu }, /*margin=*/0);
+            { m_btPendingConns, m_btConnections, ControlUtil::createVSeparator(), m_btMenu },
+            /*margin=*/0);
 
     auto cornerWidget = new QWidget();
     cornerWidget->setLayout(cornerLayout);
@@ -172,6 +203,14 @@ void ProgMainPage::setupSwitchWildcard()
 void ProgMainPage::setNetworkTabEnabled(bool enabled)
 {
     m_tabWidget->setTabEnabled(1, enabled);
+}
+
+void ProgMainPage::updatePendingConnsVisible()
+{
+    // Shown with the pending connections or their open window
+    const bool visible = (m_pendingConnsCount > 0 || m_btPendingConns->isChecked());
+
+    m_btPendingConns->setVisible(visible);
 }
 
 ProgBasePage *ProgMainPage::currentPage() const

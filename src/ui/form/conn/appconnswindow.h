@@ -30,6 +30,16 @@ signals:
 
 protected:
     AppConnsWindow(const App &app, QWidget *parent, Qt::WindowFlags f);
+    AppConnsWindow(
+            AppConnSearchModel *connListModel, const App &app, QWidget *parent, Qt::WindowFlags f);
+
+    QAction *addFilterAction() const { return m_actAddFilter; }
+
+    /* The alert's window isn't held by the Window Manager */
+    void setupAlertWindow();
+
+    /* The alert's window keeps its state in the ini group */
+    void restoreAlertWindowState(const QString &iniGroup);
 
     void updateProgramColumnHidden();
 

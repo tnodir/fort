@@ -109,7 +109,7 @@ void ConnSearchModel::clearConnRows()
     }
 
     /* The conn_id-s are reused after the table's clearing */
-    removeFirstConnRows(m_connRows.size());
+    removeConnRowsAt(0, m_connRows.size());
     m_lastConnId = 0;
 }
 
@@ -137,7 +137,7 @@ int ConnSearchModel::doSqlCount() const
 
 void ConnSearchModel::updateSearch()
 {
-    m_textMatcher.setFilter(m_textFilter);
+    applyTextFilter();
 
     m_connRows.clear();
     m_lastConnId = 0;
@@ -173,23 +173,52 @@ qint64 ConnSearchModel::searchConnIdMin()
     return qMax(idMin, lastConnsIdMin(idMax));
 }
 
+void ConnSearchModel::applyTextFilter()
+{
+    m_textMatcher.setFilter(m_textFilter);
+}
+
+QVector<ConnRow> ConnSearchModel::matchedConnRows(const QVector<ConnRow> &connRows) const
+{
+    if (m_textMatcher.isEmpty())
+        return connRows;
+
+    QVector<ConnRow> matchedRows;
+    AppTextHash appTexts;
+
+    for (const auto &connRow : connRows) {
+        if (isConnRowMatched(m_textMatcher, connRow, appTexts)) {
+            matchedRows.append(connRow);
+        }
+    }
+
+    return matchedRows;
+}
+
+void ConnSearchModel::setConnRows(const QVector<ConnRow> &connRows)
+{
+    m_connRows = connRows;
+
+    reset();
+}
+
 void ConnSearchModel::removeConnRowsBefore(qint64 idMin)
 {
     const auto it = std::lower_bound(m_connRows.cbegin(), m_connRows.cend(), idMin,
             [](const ConnRow &connRow, qint64 connId) { return connRow.connId < connId; });
 
-    removeFirstConnRows(int(it - m_connRows.cbegin()));
+    removeConnRowsAt(0, int(it - m_connRows.cbegin()));
 }
 
-void ConnSearchModel::removeFirstConnRows(int count)
+void ConnSearchModel::removeConnRowsAt(int index, int count)
 {
     if (count <= 0)
         return;
 
-    const int first = isAscendingOrder() ? 0 : (m_connRows.size() - count);
+    const int first = isAscendingOrder() ? index : (m_connRows.size() - index - count);
 
     beginRemoveRows({}, first, first + count - 1);
-    m_connRows.remove(0, count);
+    m_connRows.remove(index, count);
     invalidateRowCache();
     endRemoveRows();
 }
@@ -199,14 +228,21 @@ void ConnSearchModel::appendConnRows(qint64 connIdFrom)
     QVector<ConnRow> connRows;
     loadConnRows(connIdFrom, connRows);
 
-    const int count = connRows.size();
+    appendMatchedConnRows(connRows);
+}
+
+void ConnSearchModel::appendMatchedConnRows(const QVector<ConnRow> &connRows)
+{
+    const QVector<ConnRow> matchedRows = matchedConnRows(connRows);
+
+    const int count = matchedRows.size();
     if (count == 0)
         return;
 
     const int first = isAscendingOrder() ? m_connRows.size() : 0;
 
     beginInsertRows({}, first, first + count - 1);
-    m_connRows.append(connRows);
+    m_connRows.append(matchedRows);
     invalidateRowCache();
     endInsertRows();
 }
@@ -223,15 +259,12 @@ void ConnSearchModel::loadConnRows(qint64 connIdFrom, QVector<ConnRow> &connRows
         return;
 
     ConnRow connRow;
-    AppTextHash appTexts;
 
     while (stmt.step() == SqliteStmt::StepRow) {
         fillConnRow(connRow, stmt);
 
         m_lastConnId = connRow.connId;
 
-        if (isConnRowMatched(m_textMatcher, connRow, appTexts)) {
-            connRows.append(connRow);
-        }
+        connRows.append(connRow);
     }
 }

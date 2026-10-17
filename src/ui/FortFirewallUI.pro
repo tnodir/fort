@@ -56,7 +56,9 @@ SOURCES += \
     driver/driverworker.cpp \
     form/basecontroller.cpp \
     form/conn/appalertconnswindow.cpp \
+    form/conn/appalertpendingconnswindow.cpp \
     form/conn/appconnswindow.cpp \
+    form/conn/apppendingconnswindow.cpp \
     form/conn/connectionscontroller.cpp \
     form/conn/connectionswindow.cpp \
     form/controls/appinforow.cpp \
@@ -191,6 +193,7 @@ SOURCES += \
     model/applistmodel.cpp \
     model/applistmodeldata.cpp \
     model/applistmodelheaderdata.cpp \
+    model/apppendingconnsearchmodel.cpp \
     model/appstatmodel.cpp \
     model/connlistmodel.cpp \
     model/connsearchmodel.cpp \
@@ -370,7 +373,9 @@ HEADERS += \
     driver/driverworker.h \
     form/basecontroller.h \
     form/conn/appalertconnswindow.h \
+    form/conn/appalertpendingconnswindow.h \
     form/conn/appconnswindow.h \
+    form/conn/apppendingconnswindow.h \
     form/conn/connectionscontroller.h \
     form/conn/connectionswindow.h \
     form/controls/appinforow.h \
@@ -508,6 +513,7 @@ HEADERS += \
     model/applistmodel.h \
     model/applistmodeldata.h \
     model/applistmodelheaderdata.h \
+    model/apppendingconnsearchmodel.h \
     model/appstatcolumn.h \
     model/appstatmodel.h \
     model/connlistcolumn.h \

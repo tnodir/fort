@@ -21,6 +21,13 @@ public:
     enum ConnDecision : qint8 {
         ConnBlock = 0,
         ConnAllow, // once, the outbound connection only
+        ConnContinue, // by the current conf: blocked, when still asked
+    };
+
+    struct ConnApp
+    {
+        qint64 confAppId = 0;
+        QString appPath; // empty - no pending connections
     };
 
     void setUp() override;
@@ -28,6 +35,15 @@ public:
     bool logConn(const LogEntryConn &entry, bool urgent = false) override;
 
     virtual bool decideConn(qint64 connId, ConnDecision decision);
+
+    /* The oldest pending connection's App, except the excluded one */
+    ConnApp oldestConnApp(qint64 excludeConfAppId = 0, const QString &excludePath = {}) const;
+
+    /* The program's not timed out pending connections, as AppPendingConnSearchModel lists them */
+    int appConnsCount(const App &app) const;
+
+    /* The newest logged connection's id, 0 - none */
+    qint64 lastConnId() const;
 
     /* The connections logged till the time are timed out */
     static qint64 expireTime();

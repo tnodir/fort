@@ -16,7 +16,7 @@ public:
     void centerTo(QWidget *w);
     void centerTo(QScreen *s);
 
-    void moveNextTo(QWidget *w, int spacing);
+    void moveNextTo(QWidget *w, int spacing = 10);
 
     static void showWidget(QWidget *w, bool activate = true);
     static void exposeWidget(QWidget *w);

@@ -68,9 +68,13 @@ public:
     static const char *const sqlSelectConnFlow;
     static const char *const sqlDeleteConnById;
     static const char *const sqlDeleteTimedOutConns;
+    static const char *const sqlSelectOldestConnApp;
     static const char *const sqlSelectAppPendingConns;
+    static const char *const sqlSelectAppPendingConnsCount;
+    static const char *const sqlSelectPendingConnIds;
 
     static const char *const sqlSelectMinMaxConnId;
+    static const char *const sqlSelectMaxConnId;
     static const char *const sqlSelectAppConnIds;
 
     static const char *const sqlDeleteConn;

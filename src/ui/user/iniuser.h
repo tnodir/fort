@@ -179,34 +179,35 @@ public:
     bool progAlertWindowMaximized() const { return valueBool("progAlertWindow/maximized"); }
     void setProgAlertWindowMaximized(bool on) { setValue("progAlertWindow/maximized", on); }
 
-    QRect progAlertConnWindowGeometry() const
+    static QString progAlertConnWindowGroup() { return "progAlertConnWindow"; }
+    static QString progAlertPendingConnWindowGroup() { return "progAlertPendingConnWindow"; }
+
+    // A connections window's state by its group
+    QRect windowGeometry(const QString &group) const { return value(group + "/geometry").toRect(); }
+    void setWindowGeometry(const QString &group, const QRect &v)
     {
-        return value("progAlertConnWindow/geometry").toRect();
-    }
-    void setProgAlertConnWindowGeometry(const QRect &v)
-    {
-        setValue("progAlertConnWindow/geometry", v);
+        setValue(group + "/geometry", v);
     }
 
-    bool progAlertConnWindowMaximized() const { return valueBool("progAlertConnWindow/maximized"); }
-    void setProgAlertConnWindowMaximized(bool on) { setValue("progAlertConnWindow/maximized", on); }
+    bool windowMaximized(const QString &group) const { return valueBool(group + "/maximized"); }
+    void setWindowMaximized(const QString &group, bool on) { setValue(group + "/maximized", on); }
 
-    int progAlertConnListHeaderVersion() const
+    int windowConnListHeaderVersion(const QString &group) const
     {
-        return valueInt("progAlertConnWindow/connListHeaderVersion");
+        return valueInt(group + "/connListHeaderVersion");
     }
-    void setProgAlertConnListHeaderVersion(int v)
+    void setWindowConnListHeaderVersion(const QString &group, int v)
     {
-        setValue("progAlertConnWindow/connListHeaderVersion", v);
+        setValue(group + "/connListHeaderVersion", v);
     }
 
-    QByteArray progAlertConnListHeader() const
+    QByteArray windowConnListHeader(const QString &group) const
     {
-        return valueByteArray("progAlertConnWindow/connListHeader");
+        return valueByteArray(group + "/connListHeader");
     }
-    void setProgAlertConnListHeader(const QByteArray &v)
+    void setWindowConnListHeader(const QString &group, const QByteArray &v)
     {
-        setValue("progAlertConnWindow/connListHeader", v);
+        setValue(group + "/connListHeader", v);
     }
 
     bool progAlertWindowAutoShow() const { return valueBool("progAlertWindow/autoShow", true); }
@@ -644,18 +645,6 @@ public:
     void setStatAppListHeader(const QByteArray &v) { setValue("statWindow/appListHeader", v); }
 
     static QString connWindowGroup() { return "connWindow"; }
-
-    QRect connWindowGeometry() const { return value("connWindow/geometry").toRect(); }
-    void setConnWindowGeometry(const QRect &v) { setValue("connWindow/geometry", v); }
-
-    bool connWindowMaximized() const { return valueBool("connWindow/maximized"); }
-    void setConnWindowMaximized(bool on) { setValue("connWindow/maximized", on); }
-
-    int connListHeaderVersion() const { return valueInt("connWindow/connListHeaderVersion"); }
-    void setConnListHeaderVersion(int v) { setValue("connWindow/connListHeaderVersion", v); }
-
-    QByteArray connListHeader() const { return valueByteArray("connWindow/connListHeader"); }
-    void setConnListHeader(const QByteArray &v) { setValue("connWindow/connListHeader", v); }
 
     bool connAutoScroll() const { return valueBool("connWindow/autoScroll"); }
     void setConnAutoScroll(bool on) { setValue("connWindow/autoScroll", on); }

@@ -41,6 +41,10 @@ protected:
 
     void initialize();
 
+    /* The window's state in the ini group */
+    void saveIniWindowState(const QString &iniGroup);
+    void restoreIniWindowState(const QString &iniGroup, const QSize &defaultSize);
+
     void hideEditing();
 
     int connListCurrentIndex() const;

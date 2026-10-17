@@ -19,11 +19,6 @@ using namespace Fort;
 
 namespace {
 
-inline constexpr QSize APP_CONNS_WINDOW_SIZE(1024, 768);
-
-inline constexpr int OWNED_WINDOW_WIDTH = 800;
-inline constexpr int OWNED_WINDOW_SPACING = 10;
-
 /* A new program has no name yet */
 QString appNameOrPath(const App &app)
 {
@@ -41,7 +36,13 @@ AppConnsWindow::AppConnsWindow(const App &app, QWidget *parent) :
 }
 
 AppConnsWindow::AppConnsWindow(const App &app, QWidget *parent, Qt::WindowFlags f) :
-    ConnectionsWindow(new AppConnSearchModel(), parent, f)
+    AppConnsWindow(new AppConnSearchModel(), app, parent, f)
+{
+}
+
+AppConnsWindow::AppConnsWindow(
+        AppConnSearchModel *connListModel, const App &app, QWidget *parent, Qt::WindowFlags f) :
+    ConnectionsWindow(connListModel, parent, f)
 {
     setupUi();
     setupController();
@@ -71,13 +72,12 @@ void AppConnsWindow::restoreWindowState()
     /* The Program Connections window doesn't keep its state */
     auto owner = parentWidget();
     if (!owner) {
-        resize(APP_CONNS_WINDOW_SIZE);
+        resize(1024, 768);
         return;
     }
 
-    // Next to the owner window, not over it: the owned window stays above it
-    resize(OWNED_WINDOW_WIDTH, minimumHeight());
-    moveNextTo(owner, OWNED_WINDOW_SPACING);
+    resize(800, minimumHeight());
+    moveNextTo(owner);
 }
 
 void AppConnsWindow::retranslateWindowTitle()
@@ -149,6 +149,27 @@ void AppConnsWindow::updateApp(const App &app)
 
     m_editAppName->setStartText(appNameOrPath(app));
 
+    updateProgramColumnHidden();
+}
+
+void AppConnsWindow::setupAlertWindow()
+{
+    initialize();
+
+    setupFormWindow(iniUser(), IniUser::connWindowGroup());
+
+    // Save the state on close
+    connect(this, &WidgetWindow::aboutToClose, this, [&] { saveWindowState(/*wasVisible=*/true); });
+}
+
+void AppConnsWindow::restoreAlertWindowState(const QString &iniGroup)
+{
+    // Next to the alert window, if there is no saved geometry
+    AppConnsWindow::restoreWindowState();
+
+    restoreIniWindowState(iniGroup, size());
+
+    // By the program's path
     updateProgramColumnHidden();
 }
 

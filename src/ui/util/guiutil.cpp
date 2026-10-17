@@ -5,6 +5,7 @@
 #include <QImage>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QPen>
 #include <QPixmap>
 
 #include "iconcache.h"
@@ -64,6 +65,41 @@ QIcon GuiUtil::overlayIcon(
     IconCache::insert(key, icon);
 
     return icon;
+}
+
+QIcon GuiUtil::progressIcon(const QString &basePath, int percent, const QColor &color)
+{
+    constexpr int width = 32;
+    constexpr int baseWidth = 20;
+    constexpr int penWidth = 3;
+
+    QPixmap pixmap(width, width);
+    pixmap.fill(Qt::transparent);
+
+    QPainter p(&pixmap);
+    p.setRenderHint(QPainter::Antialiasing);
+
+    // Paint the base
+    {
+        constexpr int offset = (width - baseWidth) / 2;
+
+        const QPixmap base = IconCache::pixmap(basePath, baseWidth);
+        p.drawPixmap(QRect(offset, offset, baseWidth, baseWidth), base);
+    }
+
+    // Paint the arc
+    {
+        constexpr qreal margin = penWidth / 2.0;
+
+        const QRectF rect = QRectF(0, 0, width, width).adjusted(margin, margin, -margin, -margin);
+
+        p.setPen(QPen(color, penWidth, Qt::SolidLine, Qt::FlatCap));
+        p.drawArc(rect, 90 * 16, -percent * 360 * 16 / 100);
+    }
+
+    p.end();
+
+    return QIcon(pixmap);
 }
 
 QFont GuiUtil::fontBold()

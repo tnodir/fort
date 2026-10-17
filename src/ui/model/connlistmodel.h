@@ -7,6 +7,8 @@
 
 #include "connlistcolumn.h"
 
+class StatConnManager;
+
 // The connection with its ids in the databases
 struct ConnRow : TableRow, Conn
 {
@@ -62,6 +64,8 @@ protected:
     void fillQueryVarsForRow(QVariantHash & /*vars*/, int /*row*/) const override { }
 
     static void fillConnRow(ConnRow &connRow, const SqliteStmt &stmt);
+
+    virtual StatConnManager *connManager() const;
 
     virtual void fillConnIdRange(qint64 &idMin, qint64 &idMax);
 

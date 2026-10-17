@@ -59,6 +59,7 @@ protected slots:
     void onTrayMessageClicked();
 
     void onAppAlerted(bool alerted = true);
+    void onPendingConnChanged();
 
     void showProgramsOrAlertWindow();
 
@@ -139,6 +140,8 @@ private:
     bool m_animatedAlert : 1 = false;
 
     tray::MessageType m_lastTrayMessageType = tray::MessageOptions;
+
+    qint64 m_lastPendingConnId = 0;
 
     QString m_iconPath;
 

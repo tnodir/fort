@@ -181,12 +181,33 @@ const char *const StatSql::sqlDeleteConnById = "DELETE FROM conn WHERE conn_id =
 const char *const StatSql::sqlDeleteTimedOutConns =
         "DELETE FROM conn WHERE conn_time <= ?1 RETURNING flow_id;";
 
+const char *const StatSql::sqlSelectOldestConnApp =
+        "SELECT a.conf_app_id, a.path FROM conn t"
+        "  JOIN app a ON a.app_id = t.app_id"
+        "    AND IFNULL(a.conf_app_id, -1) <> ?2 AND a.path <> ?3"
+        "  WHERE t.conn_time > ?1"
+        "  ORDER BY t.conn_id LIMIT 1;";
+
+/* By the app deciding the connection: the inherited one, if any */
 const char *const StatSql::sqlSelectAppPendingConns =
+        "SELECT t.conn_id, t.flow_id FROM conn t"
         "  JOIN app a ON a.app_id = IFNULL(t.inherit_app_id, t.app_id)"
         "  WHERE (a.conf_app_id = ?1 OR a.path = ?2)"
         "    AND t.conn_time > ?3 AND t.app_asked;";
 
+const char *const StatSql::sqlSelectAppPendingConnsCount =
+        "SELECT COUNT(*) FROM conn t"
+        "  JOIN app a ON a.app_id = t.app_id"
+        "  LEFT JOIN app ia ON ia.app_id = t.inherit_app_id"
+        "  WHERE (a.conf_app_id = ?1 OR a.path = ?2 OR ia.conf_app_id = ?1 OR ia.path = ?2)"
+        "    AND t.conn_time > ?3;";
+
+const char *const StatSql::sqlSelectPendingConnIds =
+        "SELECT conn_id FROM conn WHERE conn_id >= ?1 AND conn_time > ?2;";
+
 const char *const StatSql::sqlSelectMinMaxConnId = "SELECT MIN(conn_id), MAX(conn_id) FROM conn;";
+
+const char *const StatSql::sqlSelectMaxConnId = "SELECT MAX(conn_id) FROM conn;";
 
 const char *const StatSql::sqlSelectAppConnIds = "WITH a AS ("
                                                  "  SELECT app_id FROM app"

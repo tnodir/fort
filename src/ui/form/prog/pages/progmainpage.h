@@ -17,9 +17,13 @@ public:
 
     void selectTab(int index);
 
+    void setPendingConnsWindowChecked(bool checked);
+    void setPendingConnsCount(int count);
+
     void setConnsWindowChecked(bool checked);
 
 signals:
+    void pendingConnsWindowToggled(bool checked);
     void connsWindowToggled(bool checked);
     void addConnFilterRequested(const Conn &conn);
 
@@ -41,12 +45,17 @@ private:
 
     void setNetworkTabEnabled(bool enabled);
 
+    void updatePendingConnsVisible();
+
     ProgBasePage *currentPage() const;
     ProgBasePage *pageAt(int index) const;
 
 private:
+    int m_pendingConnsCount = 0;
+
     QTabWidget *m_tabWidget = nullptr;
 
+    QToolButton *m_btPendingConns = nullptr;
     QToolButton *m_btConnections = nullptr;
     QPushButton *m_btMenu = nullptr;
 

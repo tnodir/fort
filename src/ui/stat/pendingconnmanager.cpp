@@ -3,6 +3,7 @@
 #include <QLoggingCategory>
 
 #include <sqlite/dbquery.h>
+#include <sqlite/dbvar.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -118,6 +119,36 @@ bool PendingConnManager::decideConn(qint64 connId, ConnDecision decision)
     removeConns({ connId });
 
     return true;
+}
+
+PendingConnManager::ConnApp PendingConnManager::oldestConnApp(
+        qint64 excludeConfAppId, const QString &excludePath) const
+{
+    const auto list = DbQuery(roSqliteDb())
+                              .sql(StatSql::sqlSelectOldestConnApp)
+                              .vars({ expireTime(), excludeConfAppId, excludePath })
+                              .execute(2)
+                              .toList();
+
+    return {
+        .confAppId = list.value(0).toLongLong(),
+        .appPath = list.value(1).toString(),
+    };
+}
+
+int PendingConnManager::appConnsCount(const App &app) const
+{
+    return DbQuery(roSqliteDb())
+            .sql(StatSql::sqlSelectAppPendingConnsCount)
+            .vars({ DbVar::nullable(app.appId), DbVar::nullable(app.connFilterPath()),
+                    expireTime() })
+            .execute()
+            .toInt();
+}
+
+qint64 PendingConnManager::lastConnId() const
+{
+    return DbQuery(roSqliteDb()).sql(StatSql::sqlSelectMaxConnId).execute().toLongLong();
 }
 
 qint64 PendingConnManager::expireTime()

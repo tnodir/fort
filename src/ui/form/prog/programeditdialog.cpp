@@ -20,6 +20,7 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/conn/appconnswindow.h>
+#include <form/conn/apppendingconnswindow.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
@@ -30,11 +31,13 @@
 #include <form/dialog/dialogutil.h>
 #include <form/prog/pages/progmainpage.h>
 #include <form/rule/ruleswindow.h>
+#include <fortglobal.h>
 #include <fortmanager.h>
 #include <manager/windowmanager.h>
 #include <model/applistmodel.h>
 #include <model/appconnsearchmodel.h>
 #include <model/rulelistmodel.h>
+#include <stat/pendingconnmanager.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/guiutil.h>
@@ -46,6 +49,8 @@
 #include <util/variantutil.h>
 
 #include "programeditcontroller.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -65,7 +70,10 @@ void ProgramEditDialog::initialize(const App &app, const QVector<qint64> &appIdL
 {
     ctrl()->initialize(app, appIdList);
 
-    updateConnsWindow();
+    updatePendingConnsCount();
+
+    updateConnsWindow(m_connsWindow);
+    updateConnsWindow(m_pendingConnsWindow);
 }
 
 bool ProgramEditDialog::isNew() const
@@ -81,6 +89,9 @@ void ProgramEditDialog::setupController()
     connect(ctrl(), &ProgramEditController::closeDialog, this, &QWidget::close);
 
     connect(ctrl(), &ProgramEditController::retranslateUi, this, &ProgramEditDialog::retranslateUi);
+
+    connect(pendingConnManager(), &StatConnManager::connChanged, this,
+            &ProgramEditDialog::updatePendingConnsCount);
 }
 
 void ProgramEditDialog::setupUi()
@@ -108,6 +119,8 @@ void ProgramEditDialog::setupMainLayout()
     m_mainPage = new ProgMainPage(ctrl());
     layout->addWidget(m_mainPage);
 
+    connect(m_mainPage, &ProgMainPage::pendingConnsWindowToggled, this,
+            &ProgramEditDialog::switchPendingConnsWindow);
     connect(m_mainPage, &ProgMainPage::connsWindowToggled, this,
             &ProgramEditDialog::switchConnsWindow);
 
@@ -131,60 +144,94 @@ AppConnsWindow *ProgramEditDialog::createConnsWindow()
     return new AppConnsWindow(ctrl()->app(), this);
 }
 
+AppPendingConnsWindow *ProgramEditDialog::createPendingConnsWindow()
+{
+    return new AppPendingConnsWindow(ctrl()->app(), this);
+}
+
 void ProgramEditDialog::hideEvent(QHideEvent *event)
 {
     FormWindow::hideEvent(event);
 
-    // Close the program's Connections window, but not on minimizing
+    // Close the program's Connections windows, but not on minimizing
     if (!event->spontaneous()) {
-        closeConnsWindow();
+        closeConnsWindow(m_pendingConnsWindow);
+        closeConnsWindow(m_connsWindow);
     }
 }
 
 void ProgramEditDialog::switchConnsWindow(bool visible)
 {
-    if (visible) {
-        openConnsWindow();
-    } else {
-        closeConnsWindow();
-    }
-}
-
-void ProgramEditDialog::openConnsWindow()
-{
-    if (!m_connsWindow) {
+    if (visible && !m_connsWindow) {
         m_connsWindow = createConnsWindow();
-        m_connsWindow->setAddFilterVisible(true);
+        setupConnsWindow(m_connsWindow);
 
-        ControlUtil::deleteOnClose(m_connsWindow);
-
-        connect(m_connsWindow, &AppConnsWindow::addFilterRequested, m_mainPage,
-                &ProgMainPage::addConnFilterRequested);
         connect(m_connsWindow, &AppConnsWindow::aboutToClose, m_mainPage,
                 [&] { m_mainPage->setConnsWindowChecked(false); });
     }
 
-    WidgetWindow::showWidget(m_connsWindow);
+    showConnsWindow(m_connsWindow, visible);
 }
 
-void ProgramEditDialog::closeConnsWindow()
+void ProgramEditDialog::switchPendingConnsWindow(bool visible)
 {
-    if (m_connsWindow) {
-        m_connsWindow->close();
+    if (visible && !m_pendingConnsWindow) {
+        m_pendingConnsWindow = createPendingConnsWindow();
+        setupConnsWindow(m_pendingConnsWindow);
+
+        connect(m_pendingConnsWindow, &AppConnsWindow::aboutToClose, m_mainPage,
+                [&] { m_mainPage->setPendingConnsWindowChecked(false); });
+    }
+
+    showConnsWindow(m_pendingConnsWindow, visible);
+}
+
+void ProgramEditDialog::setupConnsWindow(AppConnsWindow *window)
+{
+    window->setAddFilterVisible(true);
+
+    ControlUtil::deleteOnClose(window);
+
+    connect(window, &AppConnsWindow::addFilterRequested, m_mainPage,
+            &ProgMainPage::addConnFilterRequested);
+}
+
+void ProgramEditDialog::showConnsWindow(AppConnsWindow *window, bool visible)
+{
+    if (visible) {
+        WidgetWindow::showWidget(window);
+    } else {
+        closeConnsWindow(window);
     }
 }
 
-void ProgramEditDialog::updateConnsWindow()
+void ProgramEditDialog::closeConnsWindow(AppConnsWindow *window)
 {
-    if (!m_connsWindow)
+    if (window) {
+        window->close();
+    }
+}
+
+void ProgramEditDialog::updatePendingConnsCount()
+{
+    // The single program's pending connections
+    const int count =
+            ctrl()->isSingleSelection() ? pendingConnManager()->appConnsCount(ctrl()->app()) : 0;
+
+    m_mainPage->setPendingConnsCount(count);
+}
+
+void ProgramEditDialog::updateConnsWindow(AppConnsWindow *window)
+{
+    if (!window)
         return;
 
     const App &app = ctrl()->app();
 
     if (!AppConnSearchModel::canFilterApp(app)) {
-        m_connsWindow->close();
+        window->close();
         return;
     }
 
-    m_connsWindow->setApp(app);
+    window->setApp(app);
 }

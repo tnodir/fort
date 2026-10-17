@@ -7,6 +7,7 @@
 
 class App;
 class AppConnsWindow;
+class AppPendingConnsWindow;
 class ProgramEditController;
 class ProgMainPage;
 
@@ -27,6 +28,7 @@ protected:
     virtual void closeOnSave() { close(); }
 
     virtual AppConnsWindow *createConnsWindow();
+    virtual AppPendingConnsWindow *createPendingConnsWindow();
 
     void hideEvent(QHideEvent *event) override;
 
@@ -41,9 +43,14 @@ private:
     void setupMainLayout();
 
     void switchConnsWindow(bool visible);
-    void openConnsWindow();
-    void closeConnsWindow();
-    void updateConnsWindow();
+    void switchPendingConnsWindow(bool visible);
+
+    void setupConnsWindow(AppConnsWindow *window);
+    void showConnsWindow(AppConnsWindow *window, bool visible);
+    void closeConnsWindow(AppConnsWindow *window);
+    void updateConnsWindow(AppConnsWindow *window);
+
+    void updatePendingConnsCount();
 
 private:
     ProgramEditController *m_ctrl = nullptr;
@@ -51,6 +58,7 @@ private:
     ProgMainPage *m_mainPage = nullptr;
 
     QPointer<AppConnsWindow> m_connsWindow;
+    QPointer<AppPendingConnsWindow> m_pendingConnsWindow;
 };
 
 #endif // PROGRAMEDITDIALOG_H
