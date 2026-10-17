@@ -6,6 +6,8 @@
 
 #include "statconnmanager.h"
 
+class App;
+
 class PendingConnManager : public StatConnManager
 {
     Q_OBJECT
@@ -35,7 +37,7 @@ signals:
 
 protected:
     void setupWorker() override;
-    void setupConfManager() override { }
+    void setupConfManager() override;
 
     /* The pending connections are logged always: the Alert Program window shows them */
     bool canLogConn(const LogEntryConn & /*entry*/) const override { return true; }
@@ -47,6 +49,10 @@ protected:
     void checkClearConnOnExit() override;
 
 private:
+    /* Reauthorize the not asked programs' pending connections by the driver's updated conf */
+    void reauthApps(const QVector<qint64> &appIdList);
+    void reauthAppConns(const App &app);
+
     void removeConns(const QVector<qint64> &connIds);
 
     void deleteTimedOutConns();

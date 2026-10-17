@@ -21,6 +21,7 @@ public:
 
 protected:
     void setupWorker() override { }
+    void setupConfManager() override { }
 
     void checkClearConnOnStartup() override { }
     void checkClearConnOnExit() override { }

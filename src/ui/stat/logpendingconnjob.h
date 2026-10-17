@@ -11,9 +11,10 @@ public:
 protected:
     enum PendingConnParam : qint8 {
         ConnFlowId = ConnParamEnd,
+        ConnAppAsked,
     };
 
-    /* With the connection's flow id to allow or block it */
+    /* With the connection's flow id to allow or block it, and who asked it */
     const char *sqlInsertConn() const override;
     void bindConn(SqliteStmt *stmt, const LogEntryConn &entry, qint64 appId,
             qint64 inheritAppId) const override;

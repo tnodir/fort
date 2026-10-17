@@ -341,6 +341,8 @@ void ConfAppManager::endAddOrUpdateApp(const App &app, bool onlyUpdate)
     }
 
     updateDriverUpdateAppConf(app);
+
+    emit appsDriverUpdated({ app.appId });
 }
 
 void ConfAppManager::emitAppAlerted(bool alerted)
@@ -585,6 +587,8 @@ bool ConfAppManager::updateAppsBlocked(const QVector<qint64> &appIdList, App::Ac
         updateDriverConf();
     }
 
+    emit appsDriverUpdated(appIdList);
+
     return ok;
 }
 
@@ -605,6 +609,8 @@ bool ConfAppManager::updateAppsTimer(const QVector<qint64> &appIdList, int minut
     if (isWildcard) {
         updateDriverConf();
     }
+
+    emit appsDriverUpdated(appIdList);
 
     return ok;
 }
@@ -649,6 +655,7 @@ bool ConfAppManager::updateAppTimer(qint64 appId, QDateTime scheduleTime, bool &
 
     const bool timerDisabled = scheduleTime.isNull();
 
+    app.alerted = false;
     app.setAction(timerDisabled ? App::ActionBlock : App::ActionAllow);
     app.scheduleAction = timerDisabled ? App::ActionAllow : App::ActionBlock;
     app.scheduleTime = scheduleTime;
@@ -760,7 +767,15 @@ bool ConfAppManager::saveAppTimer(const App &app)
         DbVar::nullable(app.scheduleTime),
     };
 
+    beginWriteTransaction();
+
     DbQuery(sqliteDb(), &ok).sql(sqlUpdateAppTimer).vars(vars).executeOk();
+
+    if (ok) {
+        DbQuery(sqliteDb(), &ok).sql(sqlDeleteAppAlert).vars({ app.appId }).executeOk();
+    }
+
+    endTransaction(ok);
 
     if (ok) {
         emitAppUpdated();

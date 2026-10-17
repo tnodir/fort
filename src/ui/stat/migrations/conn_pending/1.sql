@@ -31,7 +31,8 @@ CREATE TABLE conn(
   remote_ip6 BLOB,
   zone_id INTEGER,
   rule_id INTEGER,
-  flow_id INTEGER NOT NULL
+  flow_id INTEGER NOT NULL,
+  app_asked BOOLEAN NOT NULL
 );
 
 CREATE INDEX conn_app_id_idx ON conn(app_id);

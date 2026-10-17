@@ -31,6 +31,9 @@ public:
 
     bool isValid() const { return appId > 0; }
 
+    /* The path to find the program's connections by: the wildcard's ones are found by its id */
+    QString connFilterPath() const { return isWildcard ? QString() : appPath; }
+
     // By the blocked, ask and killProcess flags: Allow, Block, Ask or Kill Process
     Action action() const;
     void setAction(Action action);

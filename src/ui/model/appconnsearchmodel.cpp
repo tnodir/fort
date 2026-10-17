@@ -6,27 +6,17 @@
 #include <conf/app.h>
 #include <stat/statsql.h>
 
-namespace {
-
-/* A wildcard program's path is its wildcard text */
-QString appFilterPath(const App &app)
-{
-    return app.isWildcard ? QString() : app.appPath;
-}
-
-}
-
 AppConnSearchModel::AppConnSearchModel(QObject *parent) : ConnSearchModel(parent) { }
 
 void AppConnSearchModel::setApp(const App &app)
 {
     m_confAppId = app.appId;
-    m_appPath = appFilterPath(app);
+    m_appPath = app.connFilterPath();
 }
 
 bool AppConnSearchModel::canFilterApp(const App &app)
 {
-    return app.isValid() || !appFilterPath(app).isEmpty();
+    return app.isValid() || !app.connFilterPath().isEmpty();
 }
 
 qint64 AppConnSearchModel::lastConnsIdMin(qint64 /*idMax*/) const

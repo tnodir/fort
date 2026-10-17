@@ -171,7 +171,7 @@ const char *const StatSql::sqlDeleteAllTraffic = "DELETE FROM traffic_app;"
 const char *const StatSql::sqlInsertConn = INSERT_CONN_COLUMNS ")" INSERT_CONN_VALUES ");";
 
 const char *const StatSql::sqlInsertPendingConn =
-        INSERT_CONN_COLUMNS ", flow_id)" INSERT_CONN_VALUES ", ?21);";
+        INSERT_CONN_COLUMNS ", flow_id, app_asked)" INSERT_CONN_VALUES ", ?21, ?22);";
 
 const char *const StatSql::sqlSelectConnFlow =
         "SELECT flow_id, inbound FROM conn WHERE conn_id = ?1 AND conn_time > ?2;";
@@ -180,6 +180,11 @@ const char *const StatSql::sqlDeleteConnById = "DELETE FROM conn WHERE conn_id =
 
 const char *const StatSql::sqlDeleteTimedOutConns =
         "DELETE FROM conn WHERE conn_time <= ?1 RETURNING flow_id;";
+
+const char *const StatSql::sqlSelectAppPendingConns =
+        "  JOIN app a ON a.app_id = IFNULL(t.inherit_app_id, t.app_id)"
+        "  WHERE (a.conf_app_id = ?1 OR a.path = ?2)"
+        "    AND t.conn_time > ?3 AND t.app_asked;";
 
 const char *const StatSql::sqlSelectMinMaxConnId = "SELECT MIN(conn_id), MAX(conn_id) FROM conn;";
 

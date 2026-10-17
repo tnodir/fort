@@ -61,6 +61,9 @@ signals:
     void appUpdated();
     void appDeleted(qint64 appId);
 
+    /* The programs' conf is updated in the driver */
+    void appsDriverUpdated(const QVector<qint64> &appIdList);
+
 protected:
     virtual void setupConfManager();
 

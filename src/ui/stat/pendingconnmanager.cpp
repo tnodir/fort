@@ -4,7 +4,10 @@
 
 #include <sqlite/dbquery.h>
 #include <sqlite/sqlitedb.h>
+#include <sqlite/sqlitestmt.h>
 
+#include <conf/app.h>
+#include <conf/confappmanager.h>
 #include <conf/firewallconf.h>
 #include <driver/drivercommon.h>
 #include <driver/drivermanager.h>
@@ -134,6 +137,14 @@ void PendingConnManager::setupWorker()
             &PendingConnManager::blockTimedOutConns);
 }
 
+void PendingConnManager::setupConfManager()
+{
+    auto confAppManager = Fort::dependency<ConfAppManager>();
+
+    connect(confAppManager, &ConfAppManager::appsDriverUpdated, this,
+            &PendingConnManager::reauthApps);
+}
+
 LogConnJob *PendingConnManager::createLogConnJob(const LogEntryConn &entry) const
 {
     return new LogPendingConnJob(entry);
@@ -155,8 +166,44 @@ void PendingConnManager::checkClearConnOnExit()
     deleteConn();
 
     runQueuedJobs();
+}
+
+void PendingConnManager::reauthApps(const QVector<qint64> &appIdList)
+{
+    auto confAppManager = Fort::confAppManager();
+
+    for (const qint64 appId : appIdList) {
+        const App app = confAppManager->appById(appId);
+
+        // The asked program's pending connections are kept
+        if (app.isValid() && !isAppAsked(app)) {
+            reauthAppConns(app);
+        }
+    }
+}
+
+void PendingConnManager::reauthAppConns(const App &app)
+{
+    SqliteStmt stmt;
+    if (!DbQuery(roSqliteDb())
+                    .sql(StatSql::sqlSelectAppPendingConns)
+                    .vars({ app.appId, app.connFilterPath(), expireTime() })
+                    .prepare(stmt))
         return;
 
+    QVector<qint64> connIds;
+    QVector<quint64> flowIds;
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        connIds.append(stmt.columnInt64(0));
+        flowIds.append(stmt.columnInt64(1));
+    }
+
+    if (connIds.isEmpty())
+        return;
+
+    if (!updateDriverFlows(flowIds, DriverCommon::ioctlReauthPending()))
+        return;
 
     removeConns(connIds);
 }

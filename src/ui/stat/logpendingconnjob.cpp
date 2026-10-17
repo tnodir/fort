@@ -17,4 +17,5 @@ void LogPendingConnJob::bindConn(
     LogConnJob::bindConn(stmt, entry, appId, inheritAppId);
 
     stmt->bindInt64(ConnFlowId, qint64(entry.flowId()));
+    stmt->bindBool(ConnAppAsked, entry.appAsked());
 }

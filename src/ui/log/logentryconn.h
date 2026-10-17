@@ -25,6 +25,9 @@ public:
     bool inherited() const { return m_inherited; }
     void setInherited(bool inherited) { m_inherited = inherited; }
 
+    bool appAsked() const { return m_appAsked; }
+    void setAppAsked(bool v) { m_appAsked = v; }
+
     QString inheritKernelPath() const { return m_inheritKernelPath; }
     void setInheritKernelPath(const QString &v) { m_inheritKernelPath = v; }
 
@@ -85,6 +88,7 @@ private:
     bool m_inbound : 1 = false;
     bool m_loopback : 1 = false;
     bool m_inherited : 1 = false;
+    bool m_appAsked : 1 = false;
     quint8 m_reason = 0;
     quint8 m_ipProto = 0;
     quint8 m_zoneId = 0;
