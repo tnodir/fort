@@ -265,6 +265,12 @@ inline static BOOL fort_conf_conn_asked(
     return filter->conf_flags.ask_to_connect && conn->reason == FORT_CONN_REASON_FILTER_MODE;
 }
 
+/* Asked by the App's data, else by a Rule: decided by the user only */
+inline static BOOL fort_conf_conn_asked_by_app(PCFORT_CONF_META_CONN conn)
+{
+    return conn->reason == FORT_CONN_REASON_FILTER_MODE || conn->reason == FORT_CONN_REASON_PROGRAM;
+}
+
 FORT_API BOOL fort_conf_conn_app_allowed(
         PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn, const FORT_APP_DATA app_data)
 {
@@ -277,7 +283,10 @@ FORT_API BOOL fort_conf_conn_app_allowed(
         fort_conf_conn_app_filter(filter, conn, app_data);
     }
 
-    conn->ask_to_connect = (UINT16) fort_conf_conn_asked(filter, conn, app_data);
+    const BOOL asked = fort_conf_conn_asked(filter, conn, app_data);
+
+    conn->ask_to_connect = (UINT16) asked;
+    conn->app_asked = (UINT16) (asked && fort_conf_conn_asked_by_app(conn));
 
     return !conn->act.blocked;
 }

@@ -2,8 +2,7 @@
 #define FORTPKT_PENDING_H
 
 #include "fortpkt.h"
-
-#include "forttds.h"
+#include "fortpsname.h"
 
 typedef struct fort_pending_packet
 {
@@ -11,22 +10,24 @@ typedef struct fort_pending_packet
 
     struct fort_pending_packet *next;
 
+    UCHAR inbound : 1;
+
+    UINT64 flow_id; /* the connection's id to decide it by the user or the timeout */
+
     HANDLE completion_context;
+
+    PFORT_PSNAME_NODE ps_name; /* the App's referenced path for its limits */
 } FORT_PENDING_PACKET, *PFORT_PENDING_PACKET;
 
-#define FORT_PENDING_PROC_COUNT_MAX        1024
-#define FORT_PENDING_PROC_PACKET_COUNT_MAX 3
+typedef const FORT_PENDING_PACKET *PCFORT_PENDING_PACKET;
 
-typedef struct fort_pending_proc
-{
-    struct fort_pending_proc *next;
+#define FORT_PENDING_PACKET_COUNT_MAX 1024
 
-    PFORT_PENDING_PACKET packets_head;
+/* An App's limits: the inbound connection is decided by the filters only, one is enough to show */
+#define FORT_PENDING_APP_INBOUND_COUNT_MAX  1
+#define FORT_PENDING_APP_OUTBOUND_COUNT_MAX 9
 
-    UINT16 packet_count;
-
-    UINT32 process_id;
-} FORT_PENDING_PROC, *PFORT_PENDING_PROC;
+#define FORT_PENDING_FLOW_COUNT_MAX 0xFFFF /* the flows' lists by the 16-bit count */
 
 typedef struct fort_pending
 {
@@ -37,12 +38,9 @@ typedef struct fort_pending
 
     LONG volatile inject_count; /* asynchronous injections in progress */
 
-    UINT16 proc_count;
+    UINT16 packet_count;
 
-    PFORT_PENDING_PROC proc_free;
-    tommy_arrayof procs;
-
-    PFORT_PENDING_PROC procs_head;
+    PFORT_PENDING_PACKET packets_head;
 
     KSPIN_LOCK lock;
 } FORT_PENDING, *PFORT_PENDING;
@@ -59,7 +57,16 @@ FORT_API void fort_pending_close(PFORT_PENDING pending);
 
 FORT_API void fort_pending_clear(PFORT_PENDING pending);
 
-FORT_API BOOL fort_pending_add_packet(
+/* The flow ids are sorted by the master */
+FORT_API void fort_pending_complete_flows(
+        PFORT_PENDING pending, const UINT64 *flow_ids, UINT16 count, BOOL reauth);
+
+FORT_API BOOL fort_pending_conn_pended(PFORT_PENDING pending, PCFORT_CONF_META_CONN conn);
+
+FORT_API void fort_pending_reauth(PFORT_PENDING pending);
+
+/* STATUS_ALREADY_REGISTERED: the connection's repeated packet or the App's one over its limit */
+FORT_API NTSTATUS fort_pending_add_packet(
         PFORT_PENDING pending, PCFORT_CALLOUT_ARG ca, PCFORT_CONF_META_CONN conn);
 
 #ifdef __cplusplus

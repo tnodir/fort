@@ -34,13 +34,7 @@ FORT_API void fort_psname_close(PFORT_PSNAMES ps_names)
 
 static int fort_psname_cmp(const void *arg, const void *obj)
 {
-    PCFORT_APP_PATH path = arg;
-    PCFORT_PSNAME_NODE ps_name = obj;
-
-    if (ps_name->size != path->len)
-        return 1;
-
-    return !fort_mem_eql(ps_name->data, path->buffer, path->len);
+    return !fort_psname_equal(obj, arg);
 }
 
 static PFORT_PSNAME_NODE fort_psname_new_locked(
@@ -117,4 +111,22 @@ FORT_API void fort_psname_put(PFORT_PSNAMES ps_names, PFORT_PSNAME_NODE ps_name)
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
+}
+
+FORT_API BOOL fort_psname_equal(PCFORT_PSNAME_NODE ps_name, PCFORT_APP_PATH path)
+{
+    if (ps_name->size != path->len)
+        return FALSE;
+
+    return fort_mem_eql(ps_name->data, path->buffer, path->len);
+}
+
+FORT_API FORT_APP_PATH fort_psname_path(PCFORT_PSNAME_NODE ps_name)
+{
+    const FORT_APP_PATH path = {
+        .len = ps_name->size,
+        .buffer = ps_name->data,
+    };
+
+    return path;
 }

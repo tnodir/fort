@@ -267,31 +267,61 @@ inline static BOOL fort_callout_ale_log_conn_check(PCFORT_CALLOUT_ARG ca, PFORT_
     }
 }
 
-inline static BOOL fort_callout_ale_add_pending(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn)
+inline static void fort_callout_ale_ask_pended(PFORT_CONF_META_CONN conn)
 {
-    if (!fort_pending_add_packet(&fort_device()->pending, ca, conn)) {
+    /* Drop the connection's repeated packet or the App's one over its limit silently */
+    conn->act.drop_blocked = TRUE;
+    conn->act.conn_nolog = TRUE;
+}
+
+inline static void fort_callout_ale_add_pending(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn)
+{
+    const NTSTATUS status = fort_pending_add_packet(&fort_device()->pending, ca, conn);
+
+    if (status == STATUS_ALREADY_REGISTERED) {
+        fort_callout_ale_ask_pended(conn);
+        return;
+    }
+
+    if (!NT_SUCCESS(status)) {
         conn->reason = FORT_CONN_REASON_ASK_LIMIT;
-        return TRUE; /* block (Error) */
+        return; /* block (Limit | Timeout) */
     }
 
     conn->act.drop_blocked = TRUE;
-    conn->reason = FORT_CONN_REASON_ASK_PENDING;
-    return TRUE; /* drop (Pending) */
+    conn->reason = FORT_CONN_REASON_ASK_PENDING; /* drop (Pending) */
 }
 
 inline static BOOL fort_callout_ale_process_flow(
-        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, const FORT_CONF_FLAGS conf_flags)
+        PFORT_CALLOUT_ALE_EXTRA cx, const FORT_CONF_FLAGS conf_flags)
 {
-    PFORT_CONF_META_CONN conn = &cx->conn;
-
-    if (conn->ask_to_connect) {
-        return fort_callout_ale_add_pending(ca, conn);
-    }
-
     if (!conf_flags.log_stat)
         return FALSE;
 
-    return fort_callout_ale_associate_flow(cx, conn);
+    return fort_callout_ale_associate_flow(cx, &cx->conn);
+}
+
+inline static BOOL fort_callout_ale_ask_decided_check(
+        PCFORT_CALLOUT_ARG ca, PCFORT_CONF_META_CONN conn)
+{
+    /* The reauthorization of the completed pending connection or its re-injected packet */
+    return conn->is_reauth || fort_packet_injected_by_self(ca);
+}
+
+inline static void fort_callout_ale_ask(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
+{
+    PFORT_CONF_META_CONN conn = &cx->conn;
+
+    /* Decided by the user: blocked */
+    if (fort_callout_ale_ask_decided_check(ca, conn))
+        return; /* block (by the user or the timeout) */
+
+    if (fort_pending_conn_pended(&fort_device()->pending, conn)) {
+        fort_callout_ale_ask_pended(conn);
+        return;
+    }
+
+    fort_callout_ale_add_pending(ca, conn);
 }
 
 inline static void fort_callout_ale_check_app(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
@@ -305,10 +335,12 @@ inline static void fort_callout_ale_check_app(PCFORT_CALLOUT_ARG ca, PFORT_CALLO
 
     if (fort_conf_conn_app_allowed(filter, conn, app_data)) {
 
-        if (fort_callout_ale_process_flow(ca, cx, conf_flags)) {
-            conn->act.blocked = TRUE; /* block (Error | Pending) */
+        if (fort_callout_ale_process_flow(cx, conf_flags)) {
+            conn->act.blocked = TRUE; /* block (Error) */
             return;
         }
+    } else if (conn->ask_to_connect) {
+        fort_callout_ale_ask(ca, cx);
     }
 
     fort_callout_ale_log_app_path(cx, conf_ref, conf_flags, app_data);

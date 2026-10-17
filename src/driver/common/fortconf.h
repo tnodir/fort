@@ -466,7 +466,8 @@ typedef struct fort_conf_meta_conn
     UINT16 inherited : 1;
     UINT16 ignore : 1;
     UINT16 ask_to_connect : 1;
-    UINT16 reserved : 4; /* not used */
+    UINT16 app_asked : 1; /* asked by the App's data, else by a Rule */
+    UINT16 reserved : 3; /* not used */
 
     FORT_CONF_CONN_ACTIONS act;
 

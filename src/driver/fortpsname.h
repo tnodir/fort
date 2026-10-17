@@ -45,6 +45,10 @@ FORT_API void fort_psname_ref(PFORT_PSNAME_NODE ps_name);
 
 FORT_API void fort_psname_put(PFORT_PSNAMES ps_names, PFORT_PSNAME_NODE ps_name);
 
+FORT_API BOOL fort_psname_equal(PCFORT_PSNAME_NODE ps_name, PCFORT_APP_PATH path);
+
+FORT_API FORT_APP_PATH fort_psname_path(PCFORT_PSNAME_NODE ps_name);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

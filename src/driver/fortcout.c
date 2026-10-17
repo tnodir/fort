@@ -341,6 +341,9 @@ FORT_API NTSTATUS fort_callout_force_reauth(void)
         TRACE(FORT_CALLOUT_CALLOUT_REAUTH_ERROR, status, 0, 0);
     }
 
+    /* Reauthorize the pending connections of the decided Apps */
+    fort_pending_reauth(&fort_device()->pending);
+
     return status;
 }
 

@@ -16,6 +16,23 @@ static void fort_log_path_write(char *p, PCFORT_APP_PATH path)
     RtlZeroMemory(p + path_len, FORT_ALIGN_SIZE(path_len, FORT_LOG_ALIGN) - path_len);
 }
 
+/* The flow's id by its low and high halves */
+static UINT32 *fort_log_flow_id_write(UINT32 *up, UINT64 flow_id)
+{
+    *up++ = (UINT32) flow_id;
+    *up++ = (UINT32) (flow_id >> 32);
+
+    return up;
+}
+
+static const UINT32 *fort_log_flow_id_read(const UINT32 *up, UINT64 *flow_id)
+{
+    *flow_id = *up++;
+    *flow_id |= ((UINT64) *up++) << 32;
+
+    return up;
+}
+
 FORT_API void fort_log_app_header_write(char *p, BOOL blocked, UINT32 pid, UINT16 path_len)
 {
     UINT32 *up = (UINT32 *) p;
@@ -43,6 +60,15 @@ FORT_API void fort_log_app_header_read(const char *p, BOOL *blocked, UINT32 *pid
     *pid = *up;
 }
 
+inline static UINT32 fort_log_conn_flags(PCFORT_CONF_META_CONN conn)
+{
+    return (conn->isIPv6 ? FORT_LOG_CONN_IP6 : 0) | (conn->inbound ? FORT_LOG_CONN_INBOUND : 0)
+            | (conn->is_loopback ? FORT_LOG_CONN_LOOPBACK : 0)
+            | (conn->inherited ? FORT_LOG_CONN_INHERITED : 0)
+            | (conn->act.conn_alert ? FORT_LOG_CONN_ALERTED : 0)
+            | (conn->app_asked ? FORT_LOG_CONN_APP_ASKED : 0);
+}
+
 FORT_API void fort_log_conn_header_write(
         char *p, PCFORT_CONF_META_CONN conn, UINT16 path_len, UINT16 inherit_path_len)
 {
@@ -50,16 +76,13 @@ FORT_API void fort_log_conn_header_write(
 
     *up++ = fort_log_flag_type(FORT_LOG_TYPE_CONN)
             | (conn->act.blocked ? FORT_LOG_FLAG_OPT_BLOCKED : 0)
-            | (conn->act.drop_blocked ? FORT_LOG_FLAG_OPT_DROPPED : 0)
-            | (conn->isIPv6 ? FORT_LOG_CONN_IP6 : 0) | (conn->inbound ? FORT_LOG_CONN_INBOUND : 0)
-            | (conn->is_loopback ? FORT_LOG_CONN_LOOPBACK : 0)
-            | (conn->inherited ? FORT_LOG_CONN_INHERITED : 0)
-            | (conn->act.conn_alert ? FORT_LOG_CONN_ALERTED : 0);
+            | (conn->act.drop_blocked ? FORT_LOG_FLAG_OPT_DROPPED : 0) | fort_log_conn_flags(conn);
     *up++ = conn->reason | ((UINT32) conn->ip_proto << 8);
     *up++ = ((UINT32) conn->rule_id) | ((UINT32) conn->act.zone_id << 16);
     *up++ = conn->local_port | ((UINT32) conn->remote_port << 16);
     *up++ = conn->app.data.app_id;
     *up++ = conn->process_id;
+    up = fort_log_flow_id_write(up, conn->flow_id);
     *up++ = path_len | ((UINT32) inherit_path_len << 16);
 
     const int ip_size = FORT_IP_ADDR_SIZE(conn->isIPv6);
@@ -98,6 +121,7 @@ FORT_API void fort_log_conn_header_read(
     conn->is_loopback = (v & FORT_LOG_CONN_LOOPBACK) != 0;
     conn->inherited = (v & FORT_LOG_CONN_INHERITED) != 0;
     conn->act.conn_alert = (v & FORT_LOG_CONN_ALERTED) != 0;
+    conn->app_asked = (v & FORT_LOG_CONN_APP_ASKED) != 0;
 
     v = *up++;
     conn->reason = (UCHAR) v;
@@ -116,6 +140,8 @@ FORT_API void fort_log_conn_header_read(
 
     v = *up++;
     conn->process_id = v;
+
+    up = fort_log_flow_id_read(up, &conn->flow_id);
 
     v = *up++;
     *path_len = (UINT16) v;

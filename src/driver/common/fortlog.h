@@ -28,7 +28,7 @@
 
 #define FORT_IP_ADDR_SIZE(isIPv6) ((isIPv6) ? sizeof(ip6_addr_t) : sizeof(UINT32))
 
-#define FORT_LOG_CONN_HEADER_SIZE(isIPv6) (7 * sizeof(UINT32) + 2 * FORT_IP_ADDR_SIZE(isIPv6))
+#define FORT_LOG_CONN_HEADER_SIZE(isIPv6) (9 * sizeof(UINT32) + 2 * FORT_IP_ADDR_SIZE(isIPv6))
 
 /* The inherited process's name follows the aligned path */
 #define FORT_LOG_CONN_INHERIT_PATH_OFFSET(path_len, isIPv6)                                        \

@@ -469,6 +469,49 @@ static NTSTATUS fort_device_control_getspeedlimitstatus(PFORT_DEVICE_CONTROL_ARG
     return STATUS_SUCCESS;
 }
 
+/* The input buffer of the flows' ids, not empty */
+static BOOL fort_device_control_flow_ids(
+        PFORT_DEVICE_CONTROL_ARG dca, const UINT64 **flow_ids, UINT16 *count)
+{
+    const ULONG len = dca->in_len;
+
+    if (len % sizeof(UINT64) != 0)
+        return FALSE;
+
+    const ULONG n = len / sizeof(UINT64);
+
+    if (n == 0 || n > FORT_PENDING_FLOW_COUNT_MAX)
+        return FALSE;
+
+    *flow_ids = dca->buffer;
+    *count = (UINT16) n;
+
+    return TRUE;
+}
+
+static NTSTATUS fort_device_control_pending(PFORT_DEVICE_CONTROL_ARG dca, BOOL reauth)
+{
+    const UINT64 *flow_ids;
+    UINT16 count;
+
+    if (!fort_device_control_flow_ids(dca, &flow_ids, &count))
+        return STATUS_UNSUCCESSFUL;
+
+    fort_pending_complete_flows(&fort_device()->pending, flow_ids, count, reauth);
+
+    return STATUS_SUCCESS;
+}
+
+static NTSTATUS fort_device_control_blockpending(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    return fort_device_control_pending(dca, /*reauth=*/FALSE);
+}
+
+static NTSTATUS fort_device_control_reauthpending(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    return fort_device_control_pending(dca, /*reauth=*/TRUE);
+}
+
 static_assert(FORT_CTL_INDEX_FROM_CODE(FORT_IOCTL_SETRULEFLAG) == FORT_IOCTL_INDEX_SETRULEFLAG,
         "Invalid FORT_CTL_INDEX_FROM_CODE()");
 
@@ -493,7 +536,12 @@ static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
     &fort_device_control_setspeedlimitflags, // FORT_IOCTL_SETSPEEDLIMITFLAGS
     &fort_device_control_getspeedlimitstatus, // FORT_IOCTL_GETSPEEDLIMITSTATUS
     &fort_device_control_setperiods, // FORT_IOCTL_SETPERIODS
+    &fort_device_control_blockpending, // FORT_IOCTL_BLOCKPENDING
+    &fort_device_control_reauthpending, // FORT_IOCTL_REAUTHPENDING
 };
+
+static_assert(FORT_ARRAY_SIZE(fortDeviceControlProcess_funcList) == FORT_IOCTL_INDEX_COUNT,
+        "Invalid fortDeviceControlProcess_funcList size");
 
 static NTSTATUS fort_device_control_process(PFORT_DEVICE_CONTROL_ARG dca)
 {

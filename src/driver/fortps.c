@@ -529,11 +529,8 @@ static void fort_pstree_check_proc_inheritance(
     if (conf_ref == NULL)
         return;
 
-    const BOOL has_ps_name = (proc->ps_name != NULL);
-    const FORT_APP_PATH path = {
-        .len = has_ps_name ? proc->ps_name->size : psi->path->len,
-        .buffer = has_ps_name ? proc->ps_name->data : psi->path->buffer,
-    };
+    const FORT_APP_PATH path =
+            (proc->ps_name != NULL) ? fort_psname_path(proc->ps_name) : *psi->path;
 
     const FORT_APP_DATA app_data = fort_pstree_find_app_data(conf_ref, &path);
 
@@ -961,8 +958,7 @@ static PFORT_PSNAME_NODE fort_pstree_get_proc_name_locked(
     if (ps_name == NULL)
         return NULL;
 
-    path->len = ps_name->size;
-    path->buffer = ps_name->data;
+    *path = fort_psname_path(ps_name);
 
     /* The process may be deleted, while its name is used */
     fort_psname_ref(ps_name);
