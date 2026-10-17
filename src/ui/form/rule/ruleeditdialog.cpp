@@ -73,7 +73,8 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
     m_cbTrayMenu->setChecked(ruleRow.trayMenu);
 
     m_rbAllow->setChecked(!ruleRow.blocked);
-    m_rbBlock->setChecked(ruleRow.blocked);
+    m_rbBlock->setChecked(ruleRow.blocked && !ruleRow.ask);
+    m_rbAsk->setChecked(ruleRow.ask);
 
     m_editRuleText->setText(ruleRow.ruleText);
 
@@ -139,6 +140,8 @@ void RuleEditDialog::retranslateUi()
 
     m_rbAllow->setText(tr("Allow"));
     m_rbBlock->setText(tr("Block"));
+    m_rbAsk->setText(tr("Ask"));
+    m_rbAsk->setToolTip(tr("Ask to Connect: pause the connection till the user's decision"));
 
     m_cbExclusive->setText(tr("Exclusive"));
     m_btZones->retranslateUi();
@@ -361,8 +364,12 @@ QLayout *RuleEditDialog::setupActionsLayout()
     m_rbBlock = new QRadioButton();
     m_rbBlock->setIcon(IconCache::icon(":/icons/deny.png"));
 
+    // Ask
+    m_rbAsk = new QRadioButton();
+    m_rbAsk->setIcon(IconCache::icon(":/icons/help.png"));
+
     auto layout = ControlUtil::createHLayoutByWidgets(
-            { /*stretch*/ nullptr, m_rbAllow, m_rbBlock, /*stretch*/ nullptr });
+            { /*stretch*/ nullptr, m_rbAllow, m_rbBlock, m_rbAsk, /*stretch*/ nullptr });
     layout->setSpacing(20);
 
     return layout;
@@ -597,6 +604,7 @@ void RuleEditDialog::fillRule(Rule &rule) const
     rule.enabled = m_cbEnabled->isChecked();
     rule.trayMenu = m_cbTrayMenu->isChecked();
     rule.blocked = !m_rbAllow->isChecked();
+    rule.ask = m_rbAsk->isChecked();
     rule.exclusive = m_cbExclusive->isChecked();
 
     m_terminatingRuleSelector->fillRule(rule);

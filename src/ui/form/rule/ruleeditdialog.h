@@ -100,6 +100,7 @@ private:
     QCheckBox *m_cbTrayMenu = nullptr;
     QRadioButton *m_rbAllow = nullptr;
     QRadioButton *m_rbBlock = nullptr;
+    QRadioButton *m_rbAsk = nullptr;
     QCheckBox *m_cbExclusive = nullptr;
     ZonesSelector *m_btZones = nullptr;
     QCheckBox *m_cbInlineZones = nullptr;

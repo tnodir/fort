@@ -29,15 +29,21 @@ public:
     bool isZonesEqual(const Rule &o) const;
     bool isPeriodEqual(const Rule &o) const;
 
+    // By the Terminating flags: Allow, Block, Ask or Drop of FORT_RULE_FILTER_ACTION_*
+    quint8 terminateActionTypeId() const;
+    void setTerminateActionTypeId(quint8 actionTypeId);
+
 public:
     bool enabled : 1 = true;
     bool trayMenu : 1 = false;
     bool blocked : 1 = false;
+    bool ask : 1 = false; // blocked till the user's decision
     bool exclusive : 1 = false;
     bool inlineZones : 1 = false;
     bool terminate : 1 = false;
     bool terminateBlocked : 1 = true;
     bool terminateDrop : 1 = false;
+    bool terminateAsk : 1 = false;
     bool terminateAlert : 1 = false;
     bool logAllowedConn : 1 = true;
     bool logBlockedConn : 1 = true;

@@ -3,15 +3,21 @@
 #include <QCheckBox>
 #include <QComboBox>
 
+#include <algorithm>
+
+#include <common/fortconf.h>
+
 #include <conf/rule.h>
 #include <form/controls/controlutil.h>
 
 namespace {
 
-enum ActionIndex : qint8 {
-    ActionAllow = 0,
-    ActionBlock,
-    ActionDrop,
+// By the Action combo box's index
+inline constexpr quint8 actionTypeIds[] = {
+    FORT_RULE_FILTER_ACTION_ALLOW,
+    FORT_RULE_FILTER_ACTION_BLOCK,
+    FORT_RULE_FILTER_ACTION_ASK,
+    FORT_RULE_FILTER_ACTION_DROP,
 };
 
 }
@@ -24,15 +30,14 @@ TerminatingRuleSelector::TerminatingRuleSelector(QWidget *parent) : QWidget(pare
 void TerminatingRuleSelector::initialize(const Rule &rule)
 {
     setTerminate(rule.terminate);
-    setTerminateAction(rule.terminateBlocked, rule.terminateDrop);
+    setTerminateActionTypeId(rule.terminateActionTypeId());
     setTerminateAlert(rule.terminateAlert);
 }
 
 void TerminatingRuleSelector::fillRule(Rule &rule) const
 {
     rule.terminate = terminate();
-    rule.terminateBlocked = terminateBlocked();
-    rule.terminateDrop = terminateDrop();
+    rule.setTerminateActionTypeId(terminateActionTypeId());
     rule.terminateAlert = terminateAlert();
 }
 
@@ -46,21 +51,16 @@ void TerminatingRuleSelector::setTerminate(bool v)
     m_cbTerminate->setChecked(v);
 }
 
-bool TerminatingRuleSelector::terminateBlocked() const
+quint8 TerminatingRuleSelector::terminateActionTypeId() const
 {
-    return m_comboAction->currentIndex() != ActionAllow;
+    return actionTypeIds[m_comboAction->currentIndex()];
 }
 
-bool TerminatingRuleSelector::terminateDrop() const
+void TerminatingRuleSelector::setTerminateActionTypeId(quint8 actionTypeId)
 {
-    return m_comboAction->currentIndex() == ActionDrop;
-}
+    const auto it = std::find(std::begin(actionTypeIds), std::end(actionTypeIds), actionTypeId);
 
-void TerminatingRuleSelector::setTerminateAction(bool blocked, bool drop)
-{
-    const int index = blocked ? (drop ? ActionDrop : ActionBlock) : ActionAllow;
-
-    m_comboAction->setCurrentIndex(index);
+    m_comboAction->setCurrentIndex(int(it - std::begin(actionTypeIds)));
 }
 
 bool TerminatingRuleSelector::terminateAlert() const
@@ -77,9 +77,10 @@ void TerminatingRuleSelector::retranslateUi()
 {
     m_cbTerminate->setText(tr("Terminating Rule:"));
 
-    ControlUtil::setComboBoxTexts(m_comboAction, { tr("Allow"), tr("Block"), tr("Drop") });
-    ControlUtil::setComboBoxIcons(
-            m_comboAction, { ":/icons/accept.png", ":/icons/deny.png", ":/icons/cross.png" });
+    ControlUtil::setComboBoxTexts(
+            m_comboAction, { tr("Allow"), tr("Block"), tr("Ask"), tr("Drop") });
+    ControlUtil::setComboBoxIcons(m_comboAction,
+            { ":/icons/accept.png", ":/icons/deny.png", ":/icons/help.png", ":/icons/cross.png" });
 
     m_cbAlert->setText(tr("Alert"));
 }
@@ -87,7 +88,7 @@ void TerminatingRuleSelector::retranslateUi()
 void TerminatingRuleSelector::setupUi()
 {
     // Action
-    m_comboAction = ControlUtil::createComboBox({ QString(), QString(), QString() });
+    m_comboAction = ControlUtil::createComboBox({ QString(), QString(), QString(), QString() });
     m_comboAction->setMinimumWidth(100);
 
     // Alert

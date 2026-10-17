@@ -62,6 +62,9 @@ QIcon rulePeriodIcon(const RuleRow &ruleRow)
 
 QString ruleStateIconPath(const RuleRow &ruleRow)
 {
+    if (ruleRow.ask)
+        return ":/icons/help.png";
+
     if (ruleRow.blocked)
         return ":/icons/deny.png";
 
@@ -352,24 +355,26 @@ bool RuleListModel::updateRuleRow(
     ruleRow.ruleId = stmt.columnInt(0);
     ruleRow.enabled = stmt.columnBool(1);
     ruleRow.blocked = stmt.columnBool(2);
-    ruleRow.exclusive = stmt.columnBool(3);
-    ruleRow.inlineZones = stmt.columnBool(4);
-    ruleRow.terminate = stmt.columnBool(5);
-    ruleRow.terminateBlocked = stmt.columnBool(6);
-    ruleRow.terminateDrop = stmt.columnBool(7);
-    ruleRow.terminateAlert = stmt.columnBool(8);
-    ruleRow.logAllowedConn = stmt.columnBool(9);
-    ruleRow.logBlockedConn = stmt.columnBool(10);
-    ruleRow.ruleName = stmt.columnText(11);
-    ruleRow.notes = stmt.columnText(12);
-    ruleRow.ruleText = stmt.columnText(13);
-    ruleRow.ruleType = Rule::RuleType(stmt.columnInt(14));
-    ruleRow.zones.accept_mask = stmt.columnUInt(15);
-    ruleRow.zones.reject_mask = stmt.columnUInt(16);
-    ruleRow.modTime = stmt.columnDateTime(17);
-    ruleRow.periodEnabled = stmt.columnBool(18);
-    ruleRow.periodId = stmt.columnInt(19);
-    ruleRow.trayMenu = stmt.columnBool(20);
+    ruleRow.ask = stmt.columnBool(3);
+    ruleRow.exclusive = stmt.columnBool(4);
+    ruleRow.inlineZones = stmt.columnBool(5);
+    ruleRow.terminate = stmt.columnBool(6);
+    ruleRow.terminateBlocked = stmt.columnBool(7);
+    ruleRow.terminateDrop = stmt.columnBool(8);
+    ruleRow.terminateAsk = stmt.columnBool(9);
+    ruleRow.terminateAlert = stmt.columnBool(10);
+    ruleRow.logAllowedConn = stmt.columnBool(11);
+    ruleRow.logBlockedConn = stmt.columnBool(12);
+    ruleRow.ruleName = stmt.columnText(13);
+    ruleRow.notes = stmt.columnText(14);
+    ruleRow.ruleText = stmt.columnText(15);
+    ruleRow.ruleType = Rule::RuleType(stmt.columnInt(16));
+    ruleRow.zones.accept_mask = stmt.columnUInt(17);
+    ruleRow.zones.reject_mask = stmt.columnUInt(18);
+    ruleRow.modTime = stmt.columnDateTime(19);
+    ruleRow.periodEnabled = stmt.columnBool(20);
+    ruleRow.periodId = stmt.columnInt(21);
+    ruleRow.trayMenu = stmt.columnBool(22);
 
     return true;
 }
@@ -380,11 +385,13 @@ QString RuleListModel::sqlBase() const
            "    t.rule_id,"
            "    t.enabled,"
            "    t.blocked,"
+           "    t.ask,"
            "    t.exclusive,"
            "    t.inline_zones,"
            "    t.terminate,"
            "    t.term_blocked,"
            "    t.term_drop,"
+           "    t.term_ask,"
            "    t.term_alert,"
            "    t.log_allowed_conn,"
            "    t.log_blocked_conn,"

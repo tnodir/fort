@@ -1,5 +1,7 @@
 #include "rule.h"
 
+#include <common/fortconf.h>
+
 bool Rule::isNameEqual(const Rule &o) const
 {
     return ruleName == o.ruleName;
@@ -13,14 +15,15 @@ bool Rule::isOptionsEqual(const Rule &o) const
 
 bool Rule::isFlagsEqual(const Rule &o) const
 {
-    return enabled == o.enabled && trayMenu == o.trayMenu && blocked == o.blocked
+    return enabled == o.enabled && trayMenu == o.trayMenu && blocked == o.blocked && ask == o.ask
             && exclusive == o.exclusive && inlineZones == o.inlineZones;
 }
 
 bool Rule::isTerminateFlagsEqual(const Rule &o) const
 {
     return terminate == o.terminate && terminateBlocked == o.terminateBlocked
-            && terminateDrop == o.terminateDrop && terminateAlert == o.terminateAlert;
+            && terminateDrop == o.terminateDrop && terminateAsk == o.terminateAsk
+            && terminateAlert == o.terminateAlert;
 }
 
 bool Rule::isLogFlagsEqual(const Rule &o) const
@@ -36,4 +39,22 @@ bool Rule::isZonesEqual(const Rule &o) const
 bool Rule::isPeriodEqual(const Rule &o) const
 {
     return periodEnabled == o.periodEnabled && periodId == o.periodId;
+}
+
+quint8 Rule::terminateActionTypeId() const
+{
+    if (!terminateBlocked)
+        return FORT_RULE_FILTER_ACTION_ALLOW;
+
+    if (terminateAsk)
+        return FORT_RULE_FILTER_ACTION_ASK;
+
+    return terminateDrop ? FORT_RULE_FILTER_ACTION_DROP : FORT_RULE_FILTER_ACTION_BLOCK;
+}
+
+void Rule::setTerminateActionTypeId(quint8 actionTypeId)
+{
+    terminateBlocked = (actionTypeId != FORT_RULE_FILTER_ACTION_ALLOW);
+    terminateDrop = (actionTypeId == FORT_RULE_FILTER_ACTION_DROP);
+    terminateAsk = (actionTypeId == FORT_RULE_FILTER_ACTION_ASK);
 }

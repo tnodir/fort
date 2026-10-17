@@ -22,9 +22,9 @@ public:
     bool terminate() const;
     void setTerminate(bool v);
 
-    bool terminateBlocked() const; // Block or Drop
-    bool terminateDrop() const;
-    void setTerminateAction(bool blocked, bool drop);
+    // FORT_RULE_FILTER_ACTION_*
+    quint8 terminateActionTypeId() const;
+    void setTerminateActionTypeId(quint8 actionTypeId);
 
     bool terminateAlert() const;
     void setTerminateAlert(bool v);

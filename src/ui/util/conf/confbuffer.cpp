@@ -53,12 +53,14 @@ FORT_CONF_RULE confRuleFlags(const Rule &rule)
     FORT_CONF_RULE confRule {}; /* zero the reserved bits */
     confRule.enabled = rule.enabled;
     confRule.blocked = rule.blocked;
+    confRule.ask = rule.ask;
     confRule.exclusive = rule.exclusive;
     confRule.inline_zones = rule.inlineZones;
     confRule.terminate = rule.terminate;
     confRule.term_blocked = rule.terminateBlocked;
     confRule.term_alert = rule.terminateAlert;
     confRule.term_drop = rule.terminateDrop;
+    confRule.term_ask = rule.terminateAsk;
     confRule.log_allowed_conn = rule.logAllowedConn;
     confRule.log_blocked_conn = rule.logBlockedConn;
 
