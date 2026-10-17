@@ -54,6 +54,9 @@ public:
     qint64 connTime() const { return m_connTime; }
     void setConnTime(qint64 connTime) { m_connTime = connTime; }
 
+    quint64 flowId() const { return m_flowId; }
+    void setFlowId(quint64 v) { m_flowId = v; }
+
     const ip_addr_t &localIp() const { return m_localIp; }
     ip_addr_t &localIp() { return m_localIp; }
     void setLocalIp(const ip_addr_t ip) { m_localIp = ip; }
@@ -90,6 +93,7 @@ private:
     quint16 m_remotePort = 0;
     quint32 m_appId = 0;
     qint64 m_connTime = 0;
+    quint64 m_flowId = 0;
     ip_addr_t m_localIp;
     ip_addr_t m_remoteIp;
     QString m_inheritKernelPath;

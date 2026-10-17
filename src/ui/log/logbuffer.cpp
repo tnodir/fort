@@ -136,6 +136,7 @@ void LogBuffer::writeEntryConn(const LogEntryConn *logEntry)
         .local_port = logEntry->localPort(),
         .remote_port = logEntry->remotePort(),
         .process_id = logEntry->pid(),
+        .flow_id = logEntry->flowId(),
         .local_ip = logEntry->localIp(),
         .remote_ip = logEntry->remoteIp(),
         .app = {
@@ -188,6 +189,7 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
     logEntry->setRemoteIp(conn.remote_ip);
     logEntry->setAppId(conn.app.data.app_id);
     logEntry->setPid(conn.process_id);
+    logEntry->setFlowId(conn.flow_id);
     logEntry->setKernelPath(path);
 
     const int entrySize = int(DriverCommon::logConnSize(pathLen, inheritPathLen, conn.isIPv6));

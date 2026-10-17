@@ -53,6 +53,12 @@ QString FortSettings::statConnFilePath() const
     return statFilePath() + "-conn";
 }
 
+QString FortSettings::pendingConnFilePath() const
+{
+    // Not prefixed by statConnFilePath(): its DB's files are removed by the prefix
+    return statFilePath() + "-pending";
+}
+
 QString FortSettings::cacheFilePath() const
 {
     return noCache() ? ":memory:" : cachePath() + "appinfo.db";

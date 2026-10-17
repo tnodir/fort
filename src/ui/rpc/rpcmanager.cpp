@@ -20,6 +20,7 @@
 #include <rpc/conftimeperiodmanagerrpc.h>
 #include <rpc/confzonemanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
+#include <rpc/pendingconnmanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
 #include <rpc/serviceinfomanagerrpc.h>
 #include <rpc/statconnmanagerrpc.h>
@@ -97,6 +98,7 @@ void RpcManager::setupServerSignals()
     QuotaManagerRpc::setupServerSignals(this);
     StatManagerRpc::setupServerSignals(this);
     StatConnManagerRpc::setupServerSignals(this);
+    PendingConnManagerRpc::setupServerSignals(this);
     TaskManagerRpc::setupServerSignals(this);
 }
 
@@ -232,7 +234,8 @@ static const processCommand_func processManager_funcList[] = {
     &DriverManagerRpc::processServerCommand, // Control::Rpc_DriverManager,
     &QuotaManagerRpc::processServerCommand, // Control::Rpc_QuotaManager,
     &StatManagerRpc::processServerCommand, // Control::Rpc_StatManager,
-    &StatConnManagerRpc::processServerCommand, // Control::Rpc_StatBlockManager,
+    &StatConnManagerRpc::processServerCommand, // Control::Rpc_StatConnManager,
+    &PendingConnManagerRpc::processServerCommand, // Control::Rpc_PendingConnManager,
     &ServiceInfoManagerRpc::processServerCommand, // Control::Rpc_ServiceInfoManager,
     &TaskManagerRpc::processServerCommand, // Control::Rpc_TaskManager,
 };

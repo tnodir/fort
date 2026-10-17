@@ -29,7 +29,7 @@
 #include <model/timeperiodlistmodel.h>
 #include <model/zonelistmodel.h>
 #include <rpc/rpcmanager.h>
-#include <stat/askpendingmanager.h>
+#include <stat/pendingconnmanager.h>
 #include <stat/quotamanager.h>
 #include <stat/statconnmanager.h>
 #include <stat/statmanager.h>
@@ -46,11 +46,6 @@ AppInfoCache *appInfoCache()
 AppInfoManager *appInfoManager()
 {
     return IoC<AppInfoManager>();
-}
-
-AskPendingManager *askPendingManager()
-{
-    return IoC<AskPendingManager>();
 }
 
 AutoUpdateManager *autoUpdateManager()
@@ -161,6 +156,11 @@ LogManager *logManager()
 NativeEventFilter *nativeEventFilter()
 {
     return IoC<NativeEventFilter>();
+}
+
+PendingConnManager *pendingConnManager()
+{
+    return IoC<PendingConnManager>();
 }
 
 QuotaManager *quotaManager()

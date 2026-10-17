@@ -7,7 +7,6 @@
 
 class AppInfoCache;
 class AppInfoManager;
-class AskPendingManager;
 class AutoUpdateManager;
 class ConfAppManager;
 class ConfGroupManager;
@@ -29,6 +28,7 @@ class IniOptions;
 class IniUser;
 class LogManager;
 class NativeEventFilter;
+class PendingConnManager;
 class QuotaManager;
 class RpcManager;
 class SpeedLimitListModel;
@@ -53,7 +53,6 @@ constexpr T *dependency()
 
 AppInfoCache *appInfoCache();
 AppInfoManager *appInfoManager();
-AskPendingManager *askPendingManager();
 AutoUpdateManager *autoUpdateManager();
 ConfAppManager *confAppManager();
 ConfGroupManager *confGroupManager();
@@ -75,6 +74,7 @@ IniOptions &ini();
 IniUser &iniUser();
 LogManager *logManager();
 NativeEventFilter *nativeEventFilter();
+PendingConnManager *pendingConnManager();
 QuotaManager *quotaManager();
 RpcManager *rpcManager();
 ServiceInfoManager *serviceInfoManager();

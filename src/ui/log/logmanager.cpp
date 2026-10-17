@@ -8,7 +8,7 @@
 #include <driver/drivermanager.h>
 #include <driver/driverworker.h>
 #include <fortglobal.h>
-#include <stat/askpendingmanager.h>
+#include <stat/pendingconnmanager.h>
 #include <stat/statconnmanager.h>
 #include <stat/statmanager.h>
 #include <util/dateutil.h>
@@ -184,7 +184,7 @@ bool LogManager::processLogEntryConn(LogBuffer *logBuffer)
     connEntry.setConnTime(currentUnixTime());
 
     if (connEntry.isAskPending()) {
-        askPendingManager()->logConn(connEntry);
+        pendingConnManager()->logConn(connEntry, /*urgent=*/true);
     } else {
         statConnManager()->logConn(connEntry);
 

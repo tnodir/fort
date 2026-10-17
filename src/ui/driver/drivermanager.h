@@ -54,6 +54,8 @@ public slots:
     bool writeGroups(QByteArray &buf, bool onlyFlags = false);
     bool writeSpeedLimits(QByteArray &buf, bool onlyFlags = false);
     bool writePeriods(QByteArray &buf);
+    /* By DriverCommon::ioctl*Pending() */
+    bool writePending(QByteArray &buf, quint32 code);
 
     virtual bool readSpeedLimitStatus(QByteArray &buf);
 

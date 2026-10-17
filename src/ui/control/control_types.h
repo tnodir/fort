@@ -124,6 +124,10 @@ enum Command : qint8 {
     Rpc_StatConnManager_connChanged,
     Rpc_StatConnManager_connCleared,
 
+    Rpc_PendingConnManager_decideConn,
+    Rpc_PendingConnManager_connChanged,
+    Rpc_PendingConnManager_connCleared,
+
     Rpc_ServiceInfoManager_trackService,
     Rpc_ServiceInfoManager_revertService,
     Rpc_ServiceInfoManager_restartService,
@@ -158,6 +162,7 @@ enum RpcManager : qint8 {
     Rpc_QuotaManager,
     Rpc_StatManager,
     Rpc_StatConnManager,
+    Rpc_PendingConnManager,
     Rpc_ServiceInfoManager,
     Rpc_TaskManager,
 };

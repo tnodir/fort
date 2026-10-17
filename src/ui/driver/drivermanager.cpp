@@ -151,6 +151,11 @@ bool DriverManager::writePeriods(QByteArray &buf)
     return writeData(DriverCommon::ioctlSetPeriods(), buf);
 }
 
+bool DriverManager::writePending(QByteArray &buf, quint32 code)
+{
+    return writeData(code, buf);
+}
+
 bool DriverManager::readSpeedLimitStatus(QByteArray &buf)
 {
     if (!isDeviceOpened())

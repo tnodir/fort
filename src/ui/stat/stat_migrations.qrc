@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/stat">
         <file>migrations/conn/1.sql</file>
+        <file>migrations/conn_pending/1.sql</file>
         <file>migrations/conn_traf/1.sql</file>
         <file>migrations/traf/1.sql</file>
     </qresource>

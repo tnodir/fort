@@ -205,7 +205,6 @@ SOURCES += \
     model/zonesourcewrapper.cpp \
     model/zonetypewrapper.cpp \
     rpc/appinfomanagerrpc.cpp \
-    rpc/askpendingmanagerrpc.cpp \
     rpc/autoupdatemanagerrpc.cpp \
     rpc/confappmanagerrpc.cpp \
     rpc/confgroupmanagerrpc.cpp \
@@ -217,6 +216,7 @@ SOURCES += \
     rpc/dberrormanagerrpc.cpp \
     rpc/drivermanagerrpc.cpp \
     rpc/logmanagerrpc.cpp \
+    rpc/pendingconnmanagerrpc.cpp \
     rpc/quotamanagerrpc.cpp \
     rpc/rpcmanager.cpp \
     rpc/serviceinfomanagerrpc.cpp \
@@ -224,9 +224,12 @@ SOURCES += \
     rpc/statmanagerrpc.cpp \
     rpc/taskmanagerrpc.cpp \
     rpc/windowmanagerfake.cpp \
-    stat/askpendingmanager.cpp \
     stat/deleteconnjob.cpp \
+    stat/deletependingconnjob.cpp \
+    stat/deletetimedoutconnsjob.cpp \
     stat/logconnjob.cpp \
+    stat/logpendingconnjob.cpp \
+    stat/pendingconnmanager.cpp \
     stat/quotamanager.cpp \
     stat/statconnbasejob.cpp \
     stat/statconnmanager.cpp \
@@ -521,7 +524,6 @@ HEADERS += \
     model/zonesourcewrapper.h \
     model/zonetypewrapper.h \
     rpc/appinfomanagerrpc.h \
-    rpc/askpendingmanagerrpc.h \
     rpc/autoupdatemanagerrpc.h \
     rpc/confappmanagerrpc.h \
     rpc/confgroupmanagerrpc.h \
@@ -533,6 +535,7 @@ HEADERS += \
     rpc/dberrormanagerrpc.h \
     rpc/drivermanagerrpc.h \
     rpc/logmanagerrpc.h \
+    rpc/pendingconnmanagerrpc.h \
     rpc/quotamanagerrpc.h \
     rpc/rpcmanager.h \
     rpc/serviceinfomanagerrpc.h \
@@ -540,9 +543,12 @@ HEADERS += \
     rpc/statmanagerrpc.h \
     rpc/taskmanagerrpc.h \
     rpc/windowmanagerfake.h \
-    stat/askpendingmanager.h \
     stat/deleteconnjob.h \
+    stat/deletependingconnjob.h \
+    stat/deletetimedoutconnsjob.h \
     stat/logconnjob.h \
+    stat/logpendingconnjob.h \
+    stat/pendingconnmanager.h \
     stat/quotamanager.h \
     stat/statconnbasejob.h \
     stat/statconnmanager.h \

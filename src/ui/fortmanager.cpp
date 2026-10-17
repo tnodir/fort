@@ -27,7 +27,6 @@
 #include <model/timeperiodlistmodel.h>
 #include <model/zonelistmodel.h>
 #include <rpc/appinfomanagerrpc.h>
-#include <rpc/askpendingmanagerrpc.h>
 #include <rpc/autoupdatemanagerrpc.h>
 #include <rpc/confappmanagerrpc.h>
 #include <rpc/confgroupmanagerrpc.h>
@@ -39,6 +38,7 @@
 #include <rpc/dberrormanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/logmanagerrpc.h>
+#include <rpc/pendingconnmanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
 #include <rpc/rpcmanager.h>
 #include <rpc/serviceinfomanagerrpc.h>
@@ -100,7 +100,7 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService(new QuotaManager());
     ioc->setService(new StatManager(settings->statFilePath()));
     ioc->setService(new StatConnManager(settings->statConnFilePath()));
-    ioc->setService(new AskPendingManager());
+    ioc->setService(new PendingConnManager(settings->pendingConnFilePath()));
     ioc->setService(new AutoUpdateManager(settings->updatePath()));
     ioc->setService(new DriverManager());
     ioc->setService(new AppInfoManager(settings->cacheFilePath()));
@@ -122,7 +122,7 @@ inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService<QuotaManager>(new QuotaManagerRpc());
     ioc->setService<StatManager>(new StatManagerRpc(settings->statFilePath()));
     ioc->setService<StatConnManager>(new StatConnManagerRpc(settings->statConnFilePath()));
-    ioc->setService<AskPendingManager>(new AskPendingManagerRpc());
+    ioc->setService<PendingConnManager>(new PendingConnManagerRpc(settings->pendingConnFilePath()));
     ioc->setService<AutoUpdateManager>(new AutoUpdateManagerRpc(settings->updatePath()));
     ioc->setService<DriverManager>(new DriverManagerRpc());
     ioc->setService<AppInfoManager>(

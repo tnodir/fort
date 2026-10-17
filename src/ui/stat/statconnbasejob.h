@@ -10,7 +10,12 @@ class StatConnManager;
 class StatConnBaseJob : public WorkerJob, public SqliteUtilBase
 {
 public:
-    enum StatConnJobType : qint8 { JobTypeLogConn, JobTypeDeleteConn };
+    enum StatConnJobType : qint8 {
+        JobTypeLogConn,
+        JobTypeDeleteConn,
+        JobTypeDeletePendingConn,
+        JobTypeDeleteTimedOutConns,
+    };
 
     StatConnManager *manager() const { return m_manager; }
     SqliteDb *sqliteDb() const override;

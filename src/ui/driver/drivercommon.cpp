@@ -223,6 +223,16 @@ quint32 ioctlSetPeriods()
     return FORT_IOCTL_SETPERIODS;
 }
 
+quint32 ioctlBlockPending()
+{
+    return FORT_IOCTL_BLOCKPENDING;
+}
+
+quint32 ioctlReauthPending()
+{
+    return FORT_IOCTL_REAUTHPENDING;
+}
+
 quint32 userErrorCode()
 {
     return FORT_ERROR_USER_ERROR;

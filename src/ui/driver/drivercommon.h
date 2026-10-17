@@ -44,6 +44,8 @@ quint32 ioctlSetSpeedLimits();
 quint32 ioctlSetSpeedLimitFlags();
 quint32 ioctlGetSpeedLimitStatus();
 quint32 ioctlSetPeriods();
+quint32 ioctlBlockPending();
+quint32 ioctlReauthPending();
 
 quint32 userErrorCode();
 

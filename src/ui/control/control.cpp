@@ -121,6 +121,10 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(Rpc_StatConnManager_connChanged),
     CASE_STRING(Rpc_StatConnManager_connCleared),
 
+    CASE_STRING(Rpc_PendingConnManager_decideConn),
+    CASE_STRING(Rpc_PendingConnManager_connChanged),
+    CASE_STRING(Rpc_PendingConnManager_connCleared),
+
     CASE_STRING(Rpc_ServiceInfoManager_trackService),
     CASE_STRING(Rpc_ServiceInfoManager_revertService),
     CASE_STRING(Rpc_ServiceInfoManager_restartService),
@@ -154,6 +158,7 @@ static const QHash<RpcManager, const char *> g_managerNames = {
     CASE_STRING(Rpc_QuotaManager),
     CASE_STRING(Rpc_StatManager),
     CASE_STRING(Rpc_StatConnManager),
+    CASE_STRING(Rpc_PendingConnManager),
     CASE_STRING(Rpc_ServiceInfoManager),
     CASE_STRING(Rpc_TaskManager),
 };
@@ -278,6 +283,10 @@ static const RpcManager g_commandManagers[] = {
     Rpc_StatConnManager, // Rpc_StatConnManager_deleteConn,
     Rpc_StatConnManager, // Rpc_StatConnManager_connChanged,
     Rpc_StatConnManager, // Rpc_StatConnManager_connCleared,
+
+    Rpc_PendingConnManager, // Rpc_PendingConnManager_decideConn,
+    Rpc_PendingConnManager, // Rpc_PendingConnManager_connChanged,
+    Rpc_PendingConnManager, // Rpc_PendingConnManager_connCleared,
 
     Rpc_ServiceInfoManager, // Rpc_ServiceInfoManager_trackService,
     Rpc_ServiceInfoManager, // Rpc_ServiceInfoManager_revertService,
@@ -412,6 +421,10 @@ static const qint8 g_commandValidations[] = {
     true, // Rpc_StatConnManager_deleteConn,
     0, // Rpc_StatConnManager_connChanged,
     0, // Rpc_StatConnManager_connCleared,
+
+    true, // Rpc_PendingConnManager_decideConn,
+    0, // Rpc_PendingConnManager_connChanged,
+    0, // Rpc_PendingConnManager_connCleared,
 
     true, // Rpc_ServiceInfoManager_trackService,
     true, // Rpc_ServiceInfoManager_revertService,
