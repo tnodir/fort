@@ -18,6 +18,7 @@
 #include "logbuffer.h"
 #include "logentryapp.h"
 #include "logentryconn.h"
+#include "logentryflowclosed.h"
 #include "logentryprockill.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
@@ -148,22 +149,28 @@ void LogManager::processLogEntries(LogBuffer *logBuffer)
 
 bool LogManager::processLogEntry(LogBuffer *logBuffer, FortLogType logType)
 {
-    switch (logType) {
-    case FORT_LOG_TYPE_APP:
-        return processLogEntryApp(logBuffer);
-    case FORT_LOG_TYPE_CONN:
-        return processLogEntryConn(logBuffer);
-    case FORT_LOG_TYPE_PROC_NEW:
-        return processLogEntryProcNew(logBuffer);
-    case FORT_LOG_TYPE_STAT_TRAF:
-        return processLogEntryStatTraf(logBuffer);
-    case FORT_LOG_TYPE_TIME:
-        return processLogEntryTime(logBuffer);
-    case FORT_LOG_TYPE_PROC_KILL:
-        return processLogEntryProcKill(logBuffer);
-    default:
+    using ProcessFunc = bool (LogManager::*)(LogBuffer *logBuffer);
+
+    static const ProcessFunc processFuncs[] = {
+        nullptr, // FORT_LOG_TYPE_NONE
+        &LogManager::processLogEntryApp, // FORT_LOG_TYPE_APP
+        &LogManager::processLogEntryConn, // FORT_LOG_TYPE_CONN
+        nullptr, // FORT_LOG_TYPE_PROMPT
+        &LogManager::processLogEntryProcNew, // FORT_LOG_TYPE_PROC_NEW
+        &LogManager::processLogEntryStatTraf, // FORT_LOG_TYPE_STAT_TRAF
+        &LogManager::processLogEntryTime, // FORT_LOG_TYPE_TIME
+        &LogManager::processLogEntryProcKill, // FORT_LOG_TYPE_PROC_KILL
+        &LogManager::processLogEntryFlowClosed, // FORT_LOG_TYPE_FLOW_CLOSED
+    };
+
+    const auto index = size_t(logType);
+    const ProcessFunc func = (index < std::size(processFuncs)) ? processFuncs[index] : nullptr;
+
+    if (!func) {
         return processLogEntryError(logBuffer, logType);
     }
+
+    return (this->*func)(logBuffer);
 }
 
 bool LogManager::processLogEntryApp(LogBuffer *logBuffer)
@@ -239,6 +246,15 @@ bool LogManager::processLogEntryProcKill(LogBuffer *logBuffer)
     if (pi.isValid()) {
         pi.terminateProcess(procKillEntry.pid());
     }
+
+    return true;
+}
+
+bool LogManager::processLogEntryFlowClosed(LogBuffer *logBuffer)
+{
+    // Not used yet
+    LogEntryFlowClosed flowClosedEntry;
+    logBuffer->readEntryFlowClosed(&flowClosedEntry);
 
     return true;
 }

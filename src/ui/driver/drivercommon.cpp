@@ -233,6 +233,11 @@ quint32 ioctlReauthPending()
     return FORT_IOCTL_REAUTHPENDING;
 }
 
+quint32 ioctlAllowPending()
+{
+    return FORT_IOCTL_ALLOWPENDING;
+}
+
 quint32 userErrorCode()
 {
     return FORT_ERROR_USER_ERROR;
@@ -343,6 +348,11 @@ quint32 logProcKillSize()
     return FORT_LOG_PROC_KILL_SIZE;
 }
 
+quint32 logFlowClosedSize()
+{
+    return FORT_LOG_FLOW_CLOSED_SIZE;
+}
+
 quint8 logType(const char *input)
 {
     return fort_log_type(input);
@@ -403,6 +413,16 @@ void logProcKillWrite(char *output, quint32 pid)
 void logProcKillRead(const char *input, quint32 *pid)
 {
     fort_log_proc_kill_read(input, pid);
+}
+
+void logFlowClosedWrite(char *output, quint64 flowId)
+{
+    fort_log_flow_closed_write(output, flowId);
+}
+
+void logFlowClosedRead(const char *input, quint64 *flowId)
+{
+    fort_log_flow_closed_read(input, flowId);
 }
 
 bool confIp4InRange(const void *drvConf, quint32 ip, bool included, int addrGroupIndex)

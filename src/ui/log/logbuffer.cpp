@@ -4,6 +4,7 @@
 
 #include "logentryapp.h"
 #include "logentryconn.h"
+#include "logentryflowclosed.h"
 #include "logentryprockill.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
@@ -298,5 +299,32 @@ void LogBuffer::readEntryProcKill(LogEntryProcKill *logEntry)
     logEntry->setPid(pid);
 
     const int entrySize = int(DriverCommon::logProcKillSize());
+    m_offset += entrySize;
+}
+
+void LogBuffer::writeEntryFlowClosed(const LogEntryFlowClosed *logEntry)
+{
+    const int entrySize = int(DriverCommon::logFlowClosedSize());
+    prepareFor(entrySize);
+
+    char *output = this->output();
+
+    DriverCommon::logFlowClosedWrite(output, logEntry->flowId());
+
+    m_top += entrySize;
+}
+
+void LogBuffer::readEntryFlowClosed(LogEntryFlowClosed *logEntry)
+{
+    Q_ASSERT(m_offset < m_top);
+
+    const char *input = this->input();
+
+    quint64 flowId;
+    DriverCommon::logFlowClosedRead(input, &flowId);
+
+    logEntry->setFlowId(flowId);
+
+    const int entrySize = int(DriverCommon::logFlowClosedSize());
     m_offset += entrySize;
 }

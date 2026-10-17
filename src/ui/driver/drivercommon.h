@@ -46,6 +46,7 @@ quint32 ioctlGetSpeedLimitStatus();
 quint32 ioctlSetPeriods();
 quint32 ioctlBlockPending();
 quint32 ioctlReauthPending();
+quint32 ioctlAllowPending();
 
 quint32 userErrorCode();
 
@@ -76,6 +77,8 @@ quint32 logTimeSize();
 
 quint32 logProcKillSize();
 
+quint32 logFlowClosedSize();
+
 quint8 logType(const char *input);
 
 void logAppHeaderWrite(char *output, bool blocked, quint32 pid, quint16 pathLen);
@@ -96,6 +99,9 @@ void logTimeRead(const char *input, qint64 *unixTime, int *systemTimeChanged);
 
 void logProcKillWrite(char *output, quint32 pid);
 void logProcKillRead(const char *input, quint32 *pid);
+
+void logFlowClosedWrite(char *output, quint64 flowId);
+void logFlowClosedRead(const char *input, quint64 *flowId);
 
 bool confIp4InRange(const void *drvConf, quint32 ip, bool included = false, int addrGroupIndex = 0);
 bool confIp6InRange(

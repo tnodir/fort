@@ -8,6 +8,7 @@
 
 class LogEntryApp;
 class LogEntryConn;
+class LogEntryFlowClosed;
 class LogEntryProcKill;
 class LogEntryProcNew;
 class LogEntryStatTraf;
@@ -44,6 +45,8 @@ public:
     void readEntryProcKill(LogEntryProcKill *logEntry);
 
     void writeEntryFlowClosed(const LogEntryFlowClosed *logEntry);
+    void readEntryFlowClosed(LogEntryFlowClosed *logEntry);
+
 public slots:
     void reset(int top = 0);
 

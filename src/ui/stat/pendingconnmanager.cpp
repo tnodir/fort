@@ -36,6 +36,18 @@ bool updateDriver(QByteArray &buf, quint32 code)
     return true;
 }
 
+quint32 decisionIoctl(PendingConnManager::ConnDecision decision)
+{
+    switch (decision) {
+    case PendingConnManager::ConnBlock:
+        return DriverCommon::ioctlBlockPending();
+    case PendingConnManager::ConnAllow:
+        return DriverCommon::ioctlAllowPending();
+    default: // Continue
+        return DriverCommon::ioctlReauthPending();
+    }
+}
+
 /* The driver finds the flows by the binary search */
 bool updateDriverFlows(QVector<quint64> flowIds, quint32 code)
 {
@@ -92,13 +104,13 @@ bool PendingConnManager::decideConn(qint64 connId, ConnDecision decision)
     if (flowId == 0)
         return false;
 
-    // The inbound connection's flow id is changed by its re-injection: allowed by the filters only
-    if (inbound && decision == ConnAllow)
+    // The inbound one's flow id is changed by its re-injection: allowed by the filters only
+    if (decision == ConnAllow && inbound)
         return false;
 
-    updateDriverFlows({ flowId },
-            (decision == ConnBlock) ? DriverCommon::ioctlBlockPending()
-                                    : DriverCommon::ioctlReauthPending());
+    // The not decided connection stays pending till its timeout
+    if (!updateDriverFlows({ flowId }, decisionIoctl(decision)))
+        return false;
 
     removeConns({ connId });
 

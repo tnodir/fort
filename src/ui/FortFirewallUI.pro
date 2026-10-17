@@ -171,6 +171,7 @@ SOURCES += \
     log/logentry.cpp \
     log/logentryapp.cpp \
     log/logentryconn.cpp \
+    log/logentryflowclosed.cpp \
     log/logentryprockill.cpp \
     log/logentryprocnew.cpp \
     log/logentrystattraf.cpp \
@@ -486,6 +487,7 @@ HEADERS += \
     log/logentry.h \
     log/logentryapp.h \
     log/logentryconn.h \
+    log/logentryflowclosed.h \
     log/logentryprockill.h \
     log/logentryprocnew.h \
     log/logentrystattraf.h \
