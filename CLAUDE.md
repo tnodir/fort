@@ -149,6 +149,7 @@ The traffic graph (`form/graph/`) has no 3rd-party chart library: `GraphWindow` 
 - Order a class's or struct's data members by ascending size: `bool`s and other 1-byte ones first (check an enum's underlying type: many are `: qint8`), then `quint16`, 32-bit ints/enums, pointers, objects (`QString`, containers, structs).
 - Put the activating one of paired functions first, in the header and in the .cpp alike: start → stop, open → close, enable → disable, show → hide, setUp → tearDown.
 - Wrap an `if` body in braces when it returns a computed expression (incl. a struct field); simple returns (`return;`, a constant, a plain local variable) stay without braces. The blank line after the `{` of an `if` with a multi-line condition comes from clang-format: don't add or remove it by hand.
+- Order the includes by groups separated by a blank line: the file's own header (in a .cpp), the Qt ones (`<QObject>`), the standard library's (`<memory>`, `<functional>`), then the project's ones.
 - Declare a constant in an anonymous `namespace { }` as `inline constexpr` (Qt Creator's navigation finds it then); function-local constants stay plain `constexpr`.
 - Keep a form's code in the order of its controls: the members in the header, their creation in the `setup*Layout()` functions and their lines in `initialize()`, `retranslateUi()`, `fill*()`. Moving a control on the form moves all of them.
 - Comment only what isn't evident from the code. Don't describe the change being made in the source (that's the commit message's place), nor leave notes for the reviewer or issue numbers; a workaround for another product's bug names it. When editing an existing comment, keep its wording close to the original.
@@ -157,3 +158,4 @@ The traffic graph (`form/graph/`) has no 3rd-party chart library: `GraphWindow` 
 - Commit subjects are prefixed by area: `UI:`, `Driver:`, `Tests:`, `Deploy:`, `Installer:`, `README:` — e.g. `UI: ConfManager: Refactor save()`.
 - `ChangeLog` is maintained by hand at release time; don't edit it in feature commits.
 - App version lives in `src/version/fort_version.h` (`APP_VERSION_*` and `DRIVER_VERSION`).
+- A script processing many files or commits (a history rewrite, a check over the branch) doesn't run `git` per file: a process costs ~50–100 ms on Windows. Read the objects by one `git cat-file --batch`, list the commits' changed files by one `git log --name-only`, write the commits by one `git fast-import` (a branch's 28 commits rebuilt in seconds instead of minutes).
