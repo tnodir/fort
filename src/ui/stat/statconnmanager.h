@@ -12,6 +12,7 @@
 #include <util/worker/workermanager.h>
 
 class IniOptions;
+class LogConnJob;
 class LogEntryConn;
 
 class StatConnManager : public WorkerManager, public SqliteUtilBase, public IocService
@@ -29,7 +30,7 @@ public:
     void setUp() override;
     void tearDown() override;
 
-    void logConn(const LogEntryConn &entry);
+    virtual bool logConn(const LogEntryConn &entry, bool urgent = false);
 
     virtual void deleteConn(qint64 connIdTo = 0);
 
@@ -46,14 +47,19 @@ private:
     void onLogConnFinished(int count, qint64 newConnId);
     void onDeleteConnFinished(qint64 connIdTo);
 
+protected:
     void emitConnChanged();
 
-protected:
     WorkerObject *createWorker() override;
     bool canMergeJobs() const override { return true; }
 
     virtual void setupWorker();
     virtual void setupConfManager();
+
+    virtual bool canLogConn(const LogEntryConn &entry) const;
+    virtual LogConnJob *createLogConnJob(const LogEntryConn &entry) const;
+
+    virtual const char *migrationsSqlDir() const;
 
     virtual void checkClearConnOnStartup();
     virtual void checkClearConnOnExit();

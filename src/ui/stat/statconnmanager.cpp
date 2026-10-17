@@ -77,16 +77,18 @@ void StatConnManager::tearDown()
     abortWorkers();
 }
 
-void StatConnManager::logConn(const LogEntryConn &entry)
+bool StatConnManager::logConn(const LogEntryConn &entry, bool urgent)
 {
-    if (!(entry.blocked() ? m_logBlockedConn : m_logAllowedConn))
-        return;
+    if (!canLogConn(entry))
+        return false;
 
     constexpr int maxJobCount = 16;
-    if (jobCount() >= maxJobCount)
-        return; // drop excessive data
+    if (!urgent && jobCount() >= maxJobCount)
+        return false; // drop excessive data
 
-    enqueueJob(WorkerJobPtr(new LogConnJob(entry)));
+    enqueueJob(WorkerJobPtr(createLogConnJob(entry)));
+
+    return true;
 }
 
 void StatConnManager::deleteConn(qint64 connIdTo)
@@ -162,6 +164,21 @@ void StatConnManager::setupConfManager()
     connect(confManager, &ConfManager::iniChanged, this, &StatConnManager::setupByConfIni);
 }
 
+bool StatConnManager::canLogConn(const LogEntryConn &entry) const
+{
+    return entry.blocked() ? m_logBlockedConn : m_logAllowedConn;
+}
+
+LogConnJob *StatConnManager::createLogConnJob(const LogEntryConn &entry) const
+{
+    return new LogConnJob(entry);
+}
+
+const char *StatConnManager::migrationsSqlDir() const
+{
+    return ":/stat/migrations/conn";
+}
+
 bool StatConnManager::setupDb()
 {
     if (!sqliteDb()->open()) {
@@ -171,7 +188,7 @@ bool StatConnManager::setupDb()
     }
 
     SqliteDb::MigrateOptions opt = {
-        .sqlDir = ":/stat/migrations/conn",
+        .sqlDir = migrationsSqlDir(),
         .version = DATABASE_USER_VERSION,
         .recreate = true,
         .migrateFunc = &migrateFunc,

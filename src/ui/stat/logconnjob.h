@@ -7,6 +7,7 @@
 
 #include "statconnbasejob.h"
 
+class SqliteStmt;
 class StatConnManager;
 
 class LogConnJob : public StatConnBaseJob
@@ -19,9 +20,38 @@ public:
     StatConnJobType jobType() const override { return JobTypeLogConn; }
 
 protected:
+    /* The parameters of sqlInsertConn() by their numbers */
+    enum ConnParam : qint8 {
+        ConnAppId = 1,
+        ConnTime,
+        ConnProcessId,
+        ConnReason,
+        ConnBlocked,
+        ConnDropped,
+        ConnAlerted,
+        ConnInherited,
+        ConnInbound,
+        ConnIpProto,
+        ConnLocalPort,
+        ConnRemotePort,
+        ConnLocalIp,
+        ConnRemoteIp,
+        ConnLocalIp6,
+        ConnRemoteIp6,
+        ConnZoneId,
+        ConnRuleId,
+        ConnLoopback,
+        ConnInheritAppId,
+        ConnParamEnd, // a variant's parameters follow
+    };
+
     bool processMerge(const StatConnBaseJob &statJob) override;
     void processJob() override;
     void emitFinished() override;
+
+    virtual const char *sqlInsertConn() const;
+    virtual void bindConn(
+            SqliteStmt *stmt, const LogEntryConn &entry, qint64 appId, qint64 inheritAppId) const;
 
 private:
     bool processEntry(const LogEntryConn &entry);
