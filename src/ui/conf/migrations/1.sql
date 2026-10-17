@@ -92,6 +92,7 @@ CREATE TABLE app(
   log_allowed_conn BOOLEAN NOT NULL DEFAULT 1,
   log_blocked_conn BOOLEAN NOT NULL DEFAULT 1,
   blocked BOOLEAN NOT NULL,
+  ask BOOLEAN NOT NULL DEFAULT 0,
   kill_process BOOLEAN NOT NULL DEFAULT 0,
   groups_mask INTEGER NOT NULL DEFAULT 0, -- group ids bit mask
   in_limit_enabled BOOLEAN NOT NULL DEFAULT 1,

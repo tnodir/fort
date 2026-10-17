@@ -414,6 +414,7 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
                 .log_allowed_conn = app.logAllowedConn,
                 .log_blocked_conn = app.logBlockedConn,
                 .blocked = app.blocked,
+                .ask = app.ask,
                 .kill_process = app.killProcess,
                 .is_new = isNew,
                 .found = true,

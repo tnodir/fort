@@ -16,7 +16,7 @@ bool App::isBaseFlagsEqual(const App &o) const
 bool App::isExtraFlagsEqual(const App &o) const
 {
     return parked == o.parked && logStat == o.logStat && logBlockedConn == o.logBlockedConn
-            && logAllowedConn == o.logAllowedConn && blocked == o.blocked
+            && logAllowedConn == o.logAllowedConn && blocked == o.blocked && ask == o.ask
             && killProcess == o.killProcess;
 }
 
@@ -56,6 +56,35 @@ bool App::isOptionsEqual(const App &o) const
 bool App::isNameEqual(const App &o) const
 {
     return appName == o.appName;
+}
+
+App::Action App::action() const
+{
+    if (killProcess)
+        return ActionKillProcess;
+
+    if (ask)
+        return ActionAsk;
+
+    return blocked ? ActionBlock : ActionAllow;
+}
+
+void App::setAction(Action action)
+{
+    blocked = (action == ActionBlock || action == ActionKillProcess);
+    ask = (action == ActionAsk);
+    killProcess = (action == ActionKillProcess);
+}
+
+QStringList App::actionIconPaths()
+{
+    return {
+        ":/icons/deny.png",
+        ":/icons/accept.png",
+        ":/icons/delete.png",
+        ":/icons/scull.png",
+        ":/icons/help.png",
+    };
 }
 
 bool App::isProcWild() const

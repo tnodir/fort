@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+#include <conf/app.h>
 #include <util/classhelpers.h>
 #include <util/conf/confappswalker.h>
 #include <util/ioc/iocservice.h>
@@ -10,7 +11,6 @@
 
 #include "confmanagerbase.h"
 
-class App;
 class LogEntryApp;
 
 class ConfAppManager : public ConfManagerBase, public ConfAppsWalker, public IocService
@@ -30,7 +30,7 @@ public:
 
     qint64 appIdByPath(const QString &appOriginPath, QString &normPath);
 
-    virtual bool addOrUpdateAppPath(const QString &appOriginPath, bool blocked, bool killProcess);
+    virtual bool addOrUpdateAppPath(const QString &appOriginPath, App::Action action);
     virtual bool deleteAppPath(const QString &appOriginPath);
 
     virtual bool addOrUpdateApp(App &app, bool onlyUpdate = false);
@@ -41,8 +41,7 @@ public:
     virtual bool deleteAlertedApps();
     virtual bool clearAlerts();
     virtual bool purgeApps();
-    virtual bool updateAppsBlocked(
-            const QVector<qint64> &appIdList, bool blocked, bool killProcess);
+    virtual bool updateAppsBlocked(const QVector<qint64> &appIdList, App::Action action);
     virtual bool updateAppsTimer(const QVector<qint64> &appIdList, int minutes);
 
     bool walkApps(const std::function<walkAppsCallback> &func) const override;
@@ -78,8 +77,8 @@ private:
 
     bool deleteApp(qint64 appId, bool &isWildcard);
 
-    bool updateAppBlocked(qint64 appId, bool blocked, bool killProcess, bool &isWildcard);
-    bool checkAppBlockedChanged(App &app, bool blocked, bool killProcess);
+    bool updateAppBlocked(qint64 appId, App::Action action, bool &isWildcard);
+    bool checkAppBlockedChanged(App &app, App::Action action);
 
     bool updateAppTimer(qint64 appId, QDateTime scheduleTime, bool &isWildcard);
 

@@ -212,8 +212,9 @@ const AppRow &AppListModel::appRowAt(int row) const
 AppStatesCount AppListModel::appStatesCount() const
 {
     const auto sql = "SELECT"
-                     "    SUM(CASE WHEN blocked = 0 THEN 1 ELSE 0 END)," // Allowed
+                     "    SUM(CASE WHEN blocked = 0 AND ask = 0 THEN 1 ELSE 0 END)," // Allowed
                      "    SUM(CASE WHEN blocked = 1 THEN 1 ELSE 0 END)," // Blocked
+                     "    SUM(CASE WHEN ask = 1 THEN 1 ELSE 0 END)," // Asked
                      "    SUM(CASE WHEN alerted = 1 THEN 1 ELSE 0 END)" // Alerted
                      "  FROM ("
             + sqlBase() + sqlWhere() + ");";
@@ -221,12 +222,13 @@ AppStatesCount AppListModel::appStatesCount() const
     QVariantHash vars;
     fillQueryVars(vars);
 
-    const auto list = DbQuery(sqliteDb()).sql(sql).vars(vars).execute(3).toList();
+    const auto list = DbQuery(sqliteDb()).sql(sql).vars(vars).execute(4).toList();
 
     return {
         .allowed = list.value(0).toInt(),
         .blocked = list.value(1).toInt(),
-        .alerted = list.value(2).toInt(),
+        .asked = list.value(2).toInt(),
+        .alerted = list.value(3).toInt(),
     };
 }
 
@@ -257,20 +259,21 @@ bool AppListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
     m_appRow.logAllowedConn = stmt.columnBool(16);
     m_appRow.logBlockedConn = stmt.columnBool(17);
     m_appRow.blocked = stmt.columnBool(18);
-    m_appRow.killProcess = stmt.columnBool(19);
-    m_appRow.groups = stmt.columnUInt(20);
-    m_appRow.inLimitEnabled = stmt.columnBool(21);
-    m_appRow.outLimitEnabled = stmt.columnBool(22);
-    m_appRow.speedLimits.in_limit_id = stmt.columnUInt(23);
-    m_appRow.speedLimits.out_limit_id = stmt.columnUInt(24);
-    m_appRow.zones.accept_mask = stmt.columnUInt(25);
-    m_appRow.zones.reject_mask = stmt.columnUInt(26);
-    m_appRow.ruleId = stmt.columnUInt(27);
-    m_appRow.filtersText = stmt.columnText(28);
-    m_appRow.scheduleAction = stmt.columnInt(29);
-    m_appRow.scheduleTime = stmt.columnDateTime(30);
-    m_appRow.creatTime = stmt.columnDateTime(31);
-    m_appRow.alerted = stmt.columnBool(32);
+    m_appRow.ask = stmt.columnBool(19);
+    m_appRow.killProcess = stmt.columnBool(20);
+    m_appRow.groups = stmt.columnUInt(21);
+    m_appRow.inLimitEnabled = stmt.columnBool(22);
+    m_appRow.outLimitEnabled = stmt.columnBool(23);
+    m_appRow.speedLimits.in_limit_id = stmt.columnUInt(24);
+    m_appRow.speedLimits.out_limit_id = stmt.columnUInt(25);
+    m_appRow.zones.accept_mask = stmt.columnUInt(26);
+    m_appRow.zones.reject_mask = stmt.columnUInt(27);
+    m_appRow.ruleId = stmt.columnUInt(28);
+    m_appRow.filtersText = stmt.columnText(29);
+    m_appRow.scheduleAction = stmt.columnInt(30);
+    m_appRow.scheduleTime = stmt.columnDateTime(31);
+    m_appRow.creatTime = stmt.columnDateTime(32);
+    m_appRow.alerted = stmt.columnBool(33);
 
     return true;
 }
@@ -297,6 +300,7 @@ QString AppListModel::sqlBase() const
            "    t.log_allowed_conn,"
            "    t.log_blocked_conn,"
            "    t.blocked,"
+           "    t.ask,"
            "    t.kill_process,"
            "    t.groups_mask,"
            "    t.in_limit_enabled,"
@@ -326,6 +330,7 @@ QString AppListModel::sqlWhere() const
         addSqlFilter(list, "alerted", FilterAlerted);
         addSqlFilter(list, "t.is_wildcard", FilterWildcard);
         addSqlFilter(list, "t.parked", FilterParked);
+        addSqlFilter(list, "t.ask", FilterAsk);
         addSqlFilter(list, "t.kill_process", FilterKillProcess);
         addSqlObsoleteFilter(list);
     }
@@ -360,6 +365,7 @@ QString AppListModel::sqlOrderColumn() const
         "t.blocked ASC", // SortAllowed
         "t.blocked DESC", // SortBlocked
         "alerted DESC", // SortAlerted
+        "t.ask DESC", // SortAsked
     };
 
     static const QStringList orderColumns = {
@@ -369,7 +375,7 @@ QString AppListModel::sqlOrderColumn() const
         "t.groups_mask", // Groups
         "t.in_limit_id, t.out_limit_id", // Speed Limits
         "t.end_action, t.end_time", // Scheduled
-        "t.blocked", // Action
+        "t.blocked, t.ask", // Action
         pathColumn, // File Path
         "t.app_id", // Creation Time ~ App ID
         "t.notes", // Notes

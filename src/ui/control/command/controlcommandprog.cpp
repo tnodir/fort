@@ -24,6 +24,15 @@ QStringList progActionNames()
     return { "allow", "block", "kill" };
 }
 
+// Sync with enum ProgAction
+inline constexpr App::Action appActions[] = { App::ActionAllow, App::ActionBlock,
+    App::ActionKillProcess };
+
+App::Action appActionByProg(ProgAction progAction)
+{
+    return appActions[progAction];
+}
+
 ProgAction progActionByText(const QString &commandText, bool &report)
 {
     if (commandText == "allow")
@@ -76,22 +85,14 @@ bool processCommandProgAction(
     }
 
     switch (progAction) {
-    case ProgActionAllow:
-    case ProgActionBlock:
-    case ProgActionKill: {
-        const bool blocked = (progAction != ProgActionAllow);
-        const bool killProcess = (progAction == ProgActionKill);
-
-        return confAppManager()->addOrUpdateAppPath(appPath, blocked, killProcess);
-    }
     case ProgActionAdd: {
         return windowManager()->showProgramEditForm(appPath);
     }
     case ProgActionDel: {
         return confAppManager()->deleteAppPath(appPath);
     }
-    default:
-        return false;
+    default: // Allow, Block or Kill
+        return confAppManager()->addOrUpdateAppPath(appPath, appActionByProg(progAction));
     }
 }
 

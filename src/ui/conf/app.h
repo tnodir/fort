@@ -3,6 +3,7 @@
 
 #include <QDateTime>
 #include <QObject>
+#include <QStringList>
 
 #include <common/common_types.h>
 
@@ -14,6 +15,7 @@ public:
         ActionAllow,
         ActionRemove,
         ActionKillProcess,
+        ActionAsk,
     };
 
     bool isFlagsEqual(const App &o) const;
@@ -28,6 +30,13 @@ public:
     bool isNameEqual(const App &o) const;
 
     bool isValid() const { return appId > 0; }
+
+    // By the blocked, ask and killProcess flags: Allow, Block, Ask or Kill Process
+    Action action() const;
+    void setAction(Action action);
+
+    // By the Action
+    static QStringList actionIconPaths();
 
     bool isProcWild() const;
     bool hasGroup() const;
@@ -50,6 +59,7 @@ public:
     bool logAllowedConn : 1 = true;
     bool logBlockedConn : 1 = true;
     bool blocked : 1 = false;
+    bool ask : 1 = false; // the not filtered connections ask the user, instead of allowed
     bool killProcess : 1 = false;
     bool alerted : 1 = false;
     bool inLimitEnabled : 1 = true;

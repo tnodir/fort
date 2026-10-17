@@ -28,10 +28,9 @@ void ProgramsController::initialize()
     appListModel()->initialize();
 }
 
-void ProgramsController::updateAppsBlocked(
-        const QVector<qint64> &appIdList, bool blocked, bool killProcess)
+void ProgramsController::updateAppsBlocked(const QVector<qint64> &appIdList, App::Action action)
 {
-    if (!confAppManager()->updateAppsBlocked(appIdList, blocked, killProcess)) {
+    if (!confAppManager()->updateAppsBlocked(appIdList, action)) {
         showErrorMessage(tr("Cannot update program's state"));
     }
 }

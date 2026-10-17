@@ -123,6 +123,7 @@ private:
     GroupsSelector *m_btGroups = nullptr;
     QRadioButton *m_rbAllow = nullptr;
     QRadioButton *m_rbBlock = nullptr;
+    QRadioButton *m_rbAsk = nullptr;
     QRadioButton *m_rbKillProcess = nullptr;
     QButtonGroup *m_btgActions = nullptr;
 

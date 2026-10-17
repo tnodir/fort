@@ -20,6 +20,7 @@ struct AppStatesCount
 {
     int allowed = 0;
     int blocked = 0;
+    int asked = 0;
     int alerted = 0;
 };
 
@@ -33,6 +34,7 @@ public:
         SortAllowed,
         SortBlocked,
         SortAlerted,
+        SortAsked,
     };
     Q_ENUM(SortState)
 
@@ -43,6 +45,7 @@ public:
         FilterParked = (1 << 2),
         FilterKillProcess = (1 << 3),
         FilterObsolete = (1 << 4),
+        FilterAsk = (1 << 5),
     };
     Q_ENUM(FilterFlag)
     Q_DECLARE_FLAGS(FilterFlags, FilterFlag)

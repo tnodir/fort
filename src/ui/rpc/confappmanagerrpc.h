@@ -13,7 +13,7 @@ class ConfAppManagerRpc : public ConfAppManager
 public:
     explicit ConfAppManagerRpc(QObject *parent = nullptr);
 
-    bool addOrUpdateAppPath(const QString &appOriginPath, bool blocked, bool killProcess) override;
+    bool addOrUpdateAppPath(const QString &appOriginPath, App::Action action) override;
     bool deleteAppPath(const QString &appOriginPath) override;
 
     bool addOrUpdateApp(App &app, bool onlyUpdate = false) override;
@@ -22,8 +22,7 @@ public:
     bool deleteApps(const QVector<qint64> &appIdList) override;
     bool clearAlerts() override;
     bool purgeApps() override;
-    bool updateAppsBlocked(
-            const QVector<qint64> &appIdList, bool blocked, bool killProcess) override;
+    bool updateAppsBlocked(const QVector<qint64> &appIdList, App::Action action) override;
     bool updateAppsTimer(const QVector<qint64> &appIdList, int minutes) override;
 
     bool importAppsBackup(const QString &path) override;

@@ -60,9 +60,7 @@ void ProgGeneralPage::onPageInitialize(const App &app)
     updateApplyChild();
     m_btGroups->setGroups(app.groups);
 
-    m_rbAllow->setChecked(!app.blocked);
-    m_rbBlock->setChecked(app.blocked);
-    m_rbKillProcess->setChecked(app.killProcess);
+    m_btgActions->button(int(app.action()))->setChecked(true);
 
     const bool hasScheduleTime = !app.scheduleTime.isNull();
     const ScheduleType scheduleType = hasScheduleTime ? ScheduleTimeAt : ScheduleTimeIn;
@@ -165,6 +163,8 @@ void ProgGeneralPage::onRetranslateUi()
 
     m_rbAllow->setText(tr("Allow"));
     m_rbBlock->setText(tr("Block"));
+    m_rbAsk->setText(tr("Ask"));
+    m_rbAsk->setToolTip(tr("Ask to Connect: pause the connection till the user's decision"));
     m_rbKillProcess->setText(tr("Kill Process"));
 
     m_cbSchedule->setText(tr("Schedule"));
@@ -213,13 +213,12 @@ void ProgGeneralPage::retranslateComboApplyChild()
 
 void ProgGeneralPage::retranslateScheduleAction()
 {
-    const QStringList list = { tr("Block"), tr("Allow"), tr("Remove"), tr("Kill Process") };
+    const QStringList list = { tr("Block"), tr("Allow"), tr("Remove"), tr("Kill Process"),
+        tr("Ask") };
 
     ControlUtil::setComboBoxTexts(m_comboScheduleAction, list);
 
-    ControlUtil::setComboBoxIcons(m_comboScheduleAction,
-            { ":/icons/deny.png", ":/icons/accept.png", ":/icons/delete.png",
-                    ":/icons/scull.png" });
+    ControlUtil::setComboBoxIcons(m_comboScheduleAction, App::actionIconPaths());
 }
 
 void ProgGeneralPage::retranslateScheduleType()
@@ -454,6 +453,10 @@ QLayout *ProgGeneralPage::setupActionsLayout()
     m_rbBlock = new QRadioButton();
     m_rbBlock->setIcon(IconCache::icon(":/icons/deny.png"));
 
+    // Ask
+    m_rbAsk = new QRadioButton();
+    m_rbAsk->setIcon(IconCache::icon(":/icons/help.png"));
+
     // Kill Process
     m_rbKillProcess = new QRadioButton();
     m_rbKillProcess->setIcon(IconCache::icon(":/icons/scull.png"));
@@ -462,7 +465,8 @@ QLayout *ProgGeneralPage::setupActionsLayout()
             &ProgramEditController::warnDangerousOption);
 
     auto layout = ControlUtil::createHLayoutByWidgets(
-            { /*stretch*/ nullptr, m_rbAllow, m_rbBlock, m_rbKillProcess, /*stretch*/ nullptr });
+            { /*stretch*/ nullptr, m_rbAllow, m_rbBlock, m_rbAsk, m_rbKillProcess,
+                    /*stretch*/ nullptr });
     layout->setSpacing(20);
 
     return layout;
@@ -475,9 +479,19 @@ void ProgGeneralPage::setupActionsGroup()
 
     m_btgActions->addButton(m_rbAllow, int(App::ActionAllow));
     m_btgActions->addButton(m_rbBlock, int(App::ActionBlock));
+    m_btgActions->addButton(m_rbAsk, int(App::ActionAsk));
     m_btgActions->addButton(m_rbKillProcess, int(App::ActionKillProcess));
 
-    connect(m_rbAllow, &QRadioButton::toggled, ctrl(), &ProgramEditController::allowToggled);
+    connect(m_btgActions, &QButtonGroup::idToggled, this, [&](int id, bool checked) {
+        if (!checked)
+            return;
+
+        // The asked Program's connections are filtered too
+        const bool allowed = (id == int(App::ActionAllow) || id == int(App::ActionAsk));
+
+        auto ctrl = this->ctrl();
+        emit ctrl->allowToggled(allowed);
+    });
 }
 
 QLayout *ProgGeneralPage::setupScheduleLayout()
@@ -829,8 +843,7 @@ bool ProgGeneralPage::validateFields() const
 void ProgGeneralPage::fillApp(App &app) const
 {
     app.isWildcard = isWildcard();
-    app.blocked = !m_rbAllow->isChecked();
-    app.killProcess = m_rbKillProcess->isChecked();
+    app.setAction(App::Action(m_btgActions->checkedId()));
     app.groups = m_btGroups->groups();
     app.appName = m_editName->text();
     app.notes = m_editNotes->toPlainText();

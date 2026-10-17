@@ -23,6 +23,7 @@ namespace {
 inline constexpr QColor alertColor = QColorConstants::Svg::orange;
 inline constexpr QColor allowColor = QColorConstants::Svg::green;
 inline constexpr QColor blockColor = QColorConstants::Svg::red;
+inline constexpr QColor askColor = QColorConstants::Svg::royalblue;
 inline constexpr QColor killProcessColor = QColorConstants::Svg::magenta;
 
 QVariant dataDisplayName(const App &app, int role)
@@ -38,6 +39,9 @@ QVariant dataDisplayAction(const App &app, int role)
 
     if (app.blocked)
         return AppListModel::tr("Block");
+
+    if (app.ask)
+        return AppListModel::tr("Ask");
 
     if (role == Qt::ToolTipRole && app.lanOnly)
         return AppListModel::tr("Block Internet Traffic");
@@ -177,6 +181,9 @@ QString AppListModelData::appActionIconPath() const
     if (app().blocked)
         return ":/icons/deny.png";
 
+    if (app().ask)
+        return ":/icons/help.png";
+
     if (app().lanOnly)
         return ":/icons/hostname.png";
 
@@ -185,18 +192,7 @@ QString AppListModelData::appActionIconPath() const
 
 QString AppListModelData::appScheduleIconPath() const
 {
-    switch (app().scheduleAction) {
-    case App::ActionBlock:
-        return ":/icons/deny.png";
-    case App::ActionAllow:
-        return ":/icons/accept.png";
-    case App::ActionRemove:
-        return ":/icons/delete.png";
-    case App::ActionKillProcess:
-        return ":/icons/scull.png";
-    }
-
-    return {};
+    return App::actionIconPaths().value(app().scheduleAction);
 }
 
 QColor AppListModelData::appActionColor() const
@@ -206,6 +202,9 @@ QColor AppListModelData::appActionColor() const
 
     if (app().blocked)
         return blockColor;
+
+    if (app().ask)
+        return askColor;
 
     return allowColor;
 }

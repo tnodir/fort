@@ -1,12 +1,12 @@
 #ifndef PROGRAMSWINDOW_H
 #define PROGRAMSWINDOW_H
 
+#include <conf/app.h>
 #include <form/controls/formwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QHeaderView)
 QT_FORWARD_DECLARE_CLASS(QMenu)
 
-class App;
 class AppInfoRow;
 class AppListModel;
 class GroupsSelector;
@@ -89,7 +89,7 @@ private:
 
     static void openAppEditDialog(const OpenAppEditDialogArgs &a);
 
-    void updateSelectedApps(bool blocked, bool killProcess = false);
+    void updateSelectedApps(App::Action action);
     void deleteSelectedApps();
 
     void deleteAlertedApps();
@@ -110,6 +110,7 @@ private:
     QActionGroup *m_timerMenuActions = nullptr;
     QAction *m_actAllowApp = nullptr;
     QAction *m_actBlockApp = nullptr;
+    QAction *m_actAskApp = nullptr;
     QAction *m_actKillApp = nullptr;
     QAction *m_actAddApp = nullptr;
     QAction *m_actAddWildcard = nullptr;
@@ -126,6 +127,7 @@ private:
     QPushButton *m_btEdit = nullptr;
     QToolButton *m_btAllowApp = nullptr;
     QToolButton *m_btBlockApp = nullptr;
+    QToolButton *m_btAskApp = nullptr;
     QToolButton *m_btRemoveApp = nullptr;
     QLineEdit *m_editSearch = nullptr;
     QPushButton *m_btFilter = nullptr;
@@ -133,11 +135,13 @@ private:
     QCheckBox *m_cbFilterAlerted = nullptr;
     QCheckBox *m_cbFilterWildcard = nullptr;
     QCheckBox *m_cbFilterParked = nullptr;
+    QCheckBox *m_cbFilterAsk = nullptr;
     QCheckBox *m_cbFilterKillProcess = nullptr;
     QCheckBox *m_cbFilterObsolete = nullptr;
     GroupsSelector *m_btFilterGroups = nullptr;
     QToolButton *m_btSortAllowed = nullptr;
     QToolButton *m_btSortBlocked = nullptr;
+    QToolButton *m_btSortAsked = nullptr;
     QToolButton *m_btSortAlerted = nullptr;
     QToolButton *m_btOptions = nullptr;
     QToolButton *m_btStatistics = nullptr;

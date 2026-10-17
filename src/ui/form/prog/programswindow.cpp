@@ -142,6 +142,7 @@ void ProgramsWindow::retranslateUi()
     m_btEdit->setText(tr("Edit"));
     m_actAllowApp->setText(tr("Allow"));
     m_actBlockApp->setText(tr("Block"));
+    m_actAskApp->setText(tr("Ask"));
     m_actKillApp->setText(tr("Kill Process"));
     m_actAddApp->setText(tr("Add"));
     m_actAddWildcard->setText(tr("Add Wildcard"));
@@ -160,6 +161,7 @@ void ProgramsWindow::retranslateUi()
 
     m_btAllowApp->setText(tr("Allow"));
     m_btBlockApp->setText(tr("Block"));
+    m_btAskApp->setText(tr("Ask"));
     m_btRemoveApp->setText(tr("Remove"));
     m_editSearch->setPlaceholderText(tr("Search") + " /");
     m_btFilter->setToolTip(tr("Filters"));
@@ -167,6 +169,7 @@ void ProgramsWindow::retranslateUi()
     m_cbFilterAlerted->setText(tr("Alerts"));
     m_cbFilterWildcard->setText(tr("Wildcard Paths"));
     m_cbFilterParked->setText(tr("Parked"));
+    m_cbFilterAsk->setText(tr("Ask"));
     m_cbFilterKillProcess->setText(tr("Kill Process"));
     m_cbFilterObsolete->setText(tr("Obsolete"));
     m_btFilterGroups->retranslateUi();
@@ -271,14 +274,16 @@ QLayout *ProgramsWindow::setupToolbarButtonsLayout()
 {
     m_btAllowApp = ControlUtil::createFlatToolButton(":/icons/accept.png");
     m_btBlockApp = ControlUtil::createFlatToolButton(":/icons/deny.png");
+    m_btAskApp = ControlUtil::createFlatToolButton(":/icons/help.png");
     m_btRemoveApp = ControlUtil::createFlatToolButton(":/icons/delete.png");
 
     connect(m_btAllowApp, &QAbstractButton::clicked, m_actAllowApp, &QAction::trigger);
     connect(m_btBlockApp, &QAbstractButton::clicked, m_actBlockApp, &QAction::trigger);
+    connect(m_btAskApp, &QAbstractButton::clicked, m_actAskApp, &QAction::trigger);
     connect(m_btRemoveApp, &QAbstractButton::clicked, m_actRemoveApp, &QAction::trigger);
 
-    auto layout =
-            ControlUtil::createHLayoutByWidgets({ m_btAllowApp, m_btBlockApp, m_btRemoveApp });
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_btAllowApp, m_btBlockApp, m_btAskApp, m_btRemoveApp });
     layout->setSpacing(0);
 
     return layout;
@@ -296,6 +301,9 @@ void ProgramsWindow::setupEditMenu()
 
     m_actBlockApp = menu->addAction(IconCache::icon(":/icons/deny.png"), QString());
     m_actBlockApp->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_B));
+
+    m_actAskApp = menu->addAction(IconCache::icon(":/icons/help.png"), QString());
+    m_actAskApp->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_S));
 
     m_actKillApp = menu->addAction(IconCache::icon(":/icons/scull.png"), QString());
     m_actKillApp->setShortcut(QKeyCombination(Qt::CTRL | Qt::ALT, Qt::Key_K));
@@ -339,11 +347,12 @@ void ProgramsWindow::setupEditMenu()
     m_actFindApps->setShortcut(QKeySequence::Find);
 
     connect(m_actAllowApp, &QAction::triggered, this,
-            [&] { updateSelectedApps(/*blocked=*/false); });
+            [&] { updateSelectedApps(App::ActionAllow); });
     connect(m_actBlockApp, &QAction::triggered, this,
-            [&] { updateSelectedApps(/*blocked=*/true); });
+            [&] { updateSelectedApps(App::ActionBlock); });
+    connect(m_actAskApp, &QAction::triggered, this, [&] { updateSelectedApps(App::ActionAsk); });
     connect(m_actKillApp, &QAction::triggered, this,
-            [&] { updateSelectedApps(/*blocked=*/true, /*killProcess=*/true); });
+            [&] { updateSelectedApps(App::ActionKillProcess); });
     connect(m_actAddApp, &QAction::triggered, this, &ProgramsWindow::addNewProgram);
     connect(m_actAddWildcard, &QAction::triggered, this, &ProgramsWindow::addNewWildcard);
     connect(m_actEditApp, &QAction::triggered, this, &ProgramsWindow::editSelectedPrograms);
@@ -406,6 +415,7 @@ void ProgramsWindow::setupFilter()
     layout->addWidget(m_cbFilterAlerted);
     layout->addWidget(m_cbFilterWildcard);
     layout->addWidget(m_cbFilterParked);
+    layout->addWidget(m_cbFilterAsk);
     layout->addWidget(m_cbFilterKillProcess);
     layout->addWidget(m_cbFilterObsolete);
     layout->addWidget(ControlUtil::createHSeparator());
@@ -451,6 +461,10 @@ void ProgramsWindow::setupFilterCheckBoxes()
                         AppListModel::FilterParked, m_cbFilterParked->checkState());
             });
 
+    m_cbFilterAsk = ControlUtil::createCheckStateBox(":/icons/help.png", Qt::PartiallyChecked, [&] {
+        appListModel()->setFilterValue(AppListModel::FilterAsk, m_cbFilterAsk->checkState());
+    });
+
     m_cbFilterKillProcess =
             ControlUtil::createCheckStateBox(":/icons/scull.png", Qt::PartiallyChecked, [&] {
                 appListModel()->setFilterValue(
@@ -482,6 +496,7 @@ void ProgramsWindow::setupFilterClear()
         m_cbFilterAlerted->setCheckState(Qt::PartiallyChecked);
         m_cbFilterWildcard->setCheckState(Qt::PartiallyChecked);
         m_cbFilterParked->setCheckState(Qt::PartiallyChecked);
+        m_cbFilterAsk->setCheckState(Qt::PartiallyChecked);
         m_cbFilterKillProcess->setCheckState(Qt::PartiallyChecked);
         m_cbFilterObsolete->setCheckState(Qt::PartiallyChecked);
         m_btFilterGroups->setGroups(0);
@@ -494,17 +509,20 @@ QLayout *ProgramsWindow::setupSortStatesLayout()
             ":/icons/accept.png", [&] { onSortStateClicked(AppListModel::SortAllowed); });
     m_btSortBlocked = createCheckableToolButton(
             ":/icons/deny.png", [&] { onSortStateClicked(AppListModel::SortBlocked); });
+    m_btSortAsked = createCheckableToolButton(
+            ":/icons/help.png", [&] { onSortStateClicked(AppListModel::SortAsked); });
     m_btSortAlerted = createCheckableToolButton(
             ":/icons/error.png", [&] { onSortStateClicked(AppListModel::SortAlerted); });
 
     appListModel()->setSortState(qBound(AppListModel::SortNone,
-            AppListModel::SortState(iniUser().progWindowSortState()), AppListModel::SortAlerted));
+            AppListModel::SortState(iniUser().progWindowSortState()), AppListModel::SortAsked));
 
     const auto refreshSortStates = [&] {
         const auto sortState = appListModel()->sortState();
 
         m_btSortAllowed->setChecked(sortState == AppListModel::SortAllowed);
         m_btSortBlocked->setChecked(sortState == AppListModel::SortBlocked);
+        m_btSortAsked->setChecked(sortState == AppListModel::SortAsked);
         m_btSortAlerted->setChecked(sortState == AppListModel::SortAlerted);
     };
 
@@ -514,7 +532,7 @@ QLayout *ProgramsWindow::setupSortStatesLayout()
 
     // Layout
     auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_btSortAllowed, m_btSortBlocked, m_btSortAlerted });
+            { m_btSortAllowed, m_btSortBlocked, m_btSortAsked, m_btSortAlerted });
     layout->setSpacing(0);
 
     return layout;
@@ -596,6 +614,7 @@ void ProgramsWindow::setupTableAppsChanged()
         m_timerMenu->setEnabled(appSelected);
         m_actAllowApp->setEnabled(appSelected);
         m_actBlockApp->setEnabled(appSelected);
+        m_actAskApp->setEnabled(appSelected);
         m_actKillApp->setEnabled(appSelected);
         m_actEditApp->setEnabled(appSelected);
         m_actRemoveApp->setEnabled(appSelected);
@@ -604,6 +623,7 @@ void ProgramsWindow::setupTableAppsChanged()
         m_actAppConns->setEnabled(appSelected);
         m_btAllowApp->setEnabled(appSelected);
         m_btBlockApp->setEnabled(appSelected);
+        m_btAskApp->setEnabled(appSelected);
         m_btRemoveApp->setEnabled(appSelected);
         m_appInfoRow->setVisible(appSelected);
     };
@@ -688,6 +708,7 @@ void ProgramsWindow::updateSortStateCounts()
 
         setToolButtonCount(m_btSortAllowed, asc.allowed);
         setToolButtonCount(m_btSortBlocked, asc.blocked);
+        setToolButtonCount(m_btSortAsked, asc.asked);
         setToolButtonCount(m_btSortAlerted, asc.alerted);
     };
 
@@ -836,9 +857,9 @@ void ProgramsWindow::openAppEditDialog(const OpenAppEditDialogArgs &a)
     }
 }
 
-void ProgramsWindow::updateSelectedApps(bool blocked, bool killProcess)
+void ProgramsWindow::updateSelectedApps(App::Action action)
 {
-    ctrl()->updateAppsBlocked(selectedAppIdList(), blocked, killProcess);
+    ctrl()->updateAppsBlocked(selectedAppIdList(), action);
 }
 
 void ProgramsWindow::deleteSelectedApps()

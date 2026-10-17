@@ -17,7 +17,7 @@ bool processConfAppManager_addOrUpdateAppPath(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     return confAppManager->addOrUpdateAppPath(
-            p.args.value(0).toString(), p.args.value(1).toBool(), p.args.value(2).toBool());
+            p.args.value(0).toString(), App::Action(p.args.value(1).toInt()));
 }
 
 bool processConfAppManager_deleteAppPath(
@@ -75,8 +75,7 @@ bool processConfAppManager_updateAppsBlocked(
     QVector<qint64> appIdList;
     VariantUtil::listToVector(p.args.value(0).toList(), appIdList);
 
-    return confAppManager->updateAppsBlocked(
-            appIdList, p.args.value(1).toBool(), p.args.value(2).toBool());
+    return confAppManager->updateAppsBlocked(appIdList, App::Action(p.args.value(1).toInt()));
 }
 
 bool processConfAppManager_updateAppsTimer(
@@ -132,11 +131,10 @@ inline bool processConfAppManagerRpcResult(
 
 ConfAppManagerRpc::ConfAppManagerRpc(QObject *parent) : ConfAppManager(parent) { }
 
-bool ConfAppManagerRpc::addOrUpdateAppPath(
-        const QString &appOriginPath, bool blocked, bool killProcess)
+bool ConfAppManagerRpc::addOrUpdateAppPath(const QString &appOriginPath, App::Action action)
 {
-    return rpcManager()->doOnServer(Control::Rpc_ConfAppManager_addOrUpdateAppPath,
-            { appOriginPath, blocked, killProcess });
+    return rpcManager()->doOnServer(
+            Control::Rpc_ConfAppManager_addOrUpdateAppPath, { appOriginPath, int(action) });
 }
 
 bool ConfAppManagerRpc::deleteAppPath(const QString &appOriginPath)
@@ -181,15 +179,14 @@ bool ConfAppManagerRpc::purgeApps()
     return rpcManager()->doOnServer(Control::Rpc_ConfAppManager_purgeApps);
 }
 
-bool ConfAppManagerRpc::updateAppsBlocked(
-        const QVector<qint64> &appIdList, bool blocked, bool killProcess)
+bool ConfAppManagerRpc::updateAppsBlocked(const QVector<qint64> &appIdList, App::Action action)
 {
     QVariantList appIdVarList;
     VariantUtil::vectorToList(appIdList, appIdVarList);
 
     QVariantList args;
     VariantUtil::addToList(args, QVariant(appIdVarList));
-    args << blocked << killProcess;
+    args << int(action);
 
     return rpcManager()->doOnServer(Control::Rpc_ConfAppManager_updateAppsBlocked, args);
 }
@@ -220,11 +217,11 @@ QVariantList ConfAppManagerRpc::appToVarList(const App &app)
 {
     return { app.isWildcard, app.applyParent, app.applyChild, app.applySpecChild, app.killChild,
         app.blockInbound, app.blockOutbound, app.lanOnly, app.parked, app.logStat,
-        app.logAllowedConn, app.logBlockedConn, app.blocked, app.killProcess, app.inLimitEnabled,
-        app.outLimitEnabled, app.groups, app.speedLimits.in_limit_id, app.speedLimits.out_limit_id,
-        app.zones.accept_mask, app.zones.reject_mask, app.ruleId, app.appId, app.appOriginPath,
-        app.appPath, app.iconPath, app.appName, app.notes, app.scheduleAction, app.scheduleTime,
-        app.filtersText };
+        app.logAllowedConn, app.logBlockedConn, app.blocked, app.ask, app.killProcess,
+        app.inLimitEnabled, app.outLimitEnabled, app.groups, app.speedLimits.in_limit_id,
+        app.speedLimits.out_limit_id, app.zones.accept_mask, app.zones.reject_mask, app.ruleId,
+        app.appId, app.appOriginPath, app.appPath, app.iconPath, app.appName, app.notes,
+        app.scheduleAction, app.scheduleTime, app.filtersText };
 }
 
 App ConfAppManagerRpc::varListToApp(const QVariantList &v)
@@ -243,24 +240,25 @@ App ConfAppManagerRpc::varListToApp(const QVariantList &v)
     app.logAllowedConn = v.value(10).toBool();
     app.logBlockedConn = v.value(11).toBool();
     app.blocked = v.value(12).toBool();
-    app.killProcess = v.value(13).toBool();
-    app.inLimitEnabled = v.value(14).toBool();
-    app.outLimitEnabled = v.value(15).toBool();
-    app.groups = v.value(16).toUInt();
-    app.speedLimits.in_limit_id = v.value(17).toUInt();
-    app.speedLimits.out_limit_id = v.value(18).toUInt();
-    app.zones.accept_mask = v.value(19).toUInt();
-    app.zones.reject_mask = v.value(20).toUInt();
-    app.ruleId = v.value(21).toUInt();
-    app.appId = v.value(22).toLongLong();
-    app.appOriginPath = v.value(23).toString();
-    app.appPath = v.value(24).toString();
-    app.iconPath = v.value(25).toString();
-    app.appName = v.value(26).toString();
-    app.notes = v.value(27).toString();
-    app.scheduleAction = v.value(28).toInt();
-    app.scheduleTime = v.value(29).toDateTime();
-    app.filtersText = v.value(30).toString();
+    app.ask = v.value(13).toBool();
+    app.killProcess = v.value(14).toBool();
+    app.inLimitEnabled = v.value(15).toBool();
+    app.outLimitEnabled = v.value(16).toBool();
+    app.groups = v.value(17).toUInt();
+    app.speedLimits.in_limit_id = v.value(18).toUInt();
+    app.speedLimits.out_limit_id = v.value(19).toUInt();
+    app.zones.accept_mask = v.value(20).toUInt();
+    app.zones.reject_mask = v.value(21).toUInt();
+    app.ruleId = v.value(22).toUInt();
+    app.appId = v.value(23).toLongLong();
+    app.appOriginPath = v.value(24).toString();
+    app.appPath = v.value(25).toString();
+    app.iconPath = v.value(26).toString();
+    app.appName = v.value(27).toString();
+    app.notes = v.value(28).toString();
+    app.scheduleAction = v.value(29).toInt();
+    app.scheduleTime = v.value(30).toDateTime();
+    app.filtersText = v.value(31).toString();
     return app;
 }
 
