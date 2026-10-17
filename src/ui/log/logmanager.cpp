@@ -162,6 +162,7 @@ bool LogManager::processLogEntry(LogBuffer *logBuffer, FortLogType logType)
         &LogManager::processLogEntryProcKill, // FORT_LOG_TYPE_PROC_KILL
         &LogManager::processLogEntryFlowClosed, // FORT_LOG_TYPE_FLOW_CLOSED
     };
+    static_assert(std::size(processFuncs) == FORT_LOG_TYPE_COUNT);
 
     const auto index = size_t(logType);
     const ProcessFunc func = (index < std::size(processFuncs)) ? processFuncs[index] : nullptr;

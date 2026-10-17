@@ -65,10 +65,14 @@ QString reasonIconPath(const ConnRow &connRow)
         ":/icons/ip_block.png",
         ":/icons/filter.png",
         ":/icons/ip_block.png",
+        ":/icons/help.png",
+        ":/icons/help.png",
+        ":/icons/help.png",
     };
+    static_assert(std::size(reasonIcons) == FORT_CONN_REASON_COUNT - FORT_CONN_REASON_IP_INET);
 
-    if (connRow.reason >= FORT_CONN_REASON_IP_INET
-            && connRow.reason <= FORT_CONN_REASON_BLOCK_OUTBOUND) {
+            && connRow.reason <= FORT_CONN_REASON_ASK_BLOCKED) {
+    if (connRow.reason >= FORT_CONN_REASON_IP_INET && connRow.reason < FORT_CONN_REASON_COUNT) {
         const int index = connRow.reason - FORT_CONN_REASON_IP_INET;
         return reasonIcons[index];
     }
@@ -538,9 +542,13 @@ QString ConnListModel::reasonText(FortConnReason reason)
         QT_TR_NOOP("Block Inbound"),
         QT_TR_NOOP("Program's Network Filter"),
         QT_TR_NOOP("Block Outbound"),
+        QT_TR_NOOP("Pending by Ask to Connect"),
+        QT_TR_NOOP("Allowed once by Ask to Connect"),
+        QT_TR_NOOP("Blocked by Ask to Connect"),
     };
+    static_assert(std::size(reasonTexts) == FORT_CONN_REASON_COUNT - FORT_CONN_REASON_IP_INET);
 
-    if (reason >= FORT_CONN_REASON_IP_INET && reason <= FORT_CONN_REASON_BLOCK_OUTBOUND) {
+    if (reason >= FORT_CONN_REASON_IP_INET && reason <= FORT_CONN_REASON_ASK_BLOCKED) {
         const int index = reason - FORT_CONN_REASON_IP_INET;
         return tr(reasonTexts[index]);
     }
