@@ -250,12 +250,16 @@ inline static BOOL fort_callout_ale_log_conn_check(PCFORT_CALLOUT_ARG ca, PFORT_
     if (conn->ignore || conn->reason == FORT_CONN_REASON_UNKNOWN)
         return FALSE;
 
+    /* The pending connection is shown to the user, the decided one is logged by the flags */
+    if (conn->reason == FORT_CONN_REASON_ASK_PENDING)
+        return TRUE;
+
     /* Conf */
     {
         const BOOL log_conn =
                 (conn->act.blocked ? conf_flags.log_blocked_conn : conf_flags.log_allowed_conn);
 
-        if (!(log_conn || conn->ask_to_connect))
+        if (!log_conn)
             return FALSE;
     }
 

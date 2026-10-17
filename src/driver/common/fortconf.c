@@ -20,7 +20,7 @@ static_assert((FORT_CONF_RULE_GLOBAL_MAX + FORT_CONF_RULE_SET_MAX) < 256,
         "FORT_CONF_RULE_GLOBAL_MAX count mismatch");
 
 static_assert(sizeof(FORT_TRAF) == sizeof(UINT64), "FORT_TRAF size mismatch");
-static_assert(sizeof(FORT_APP_FLAGS) == sizeof(UINT16), "FORT_APP_FLAGS size mismatch");
+static_assert(sizeof(FORT_APP_FLAGS) == sizeof(UINT32), "FORT_APP_FLAGS size mismatch");
 static_assert(sizeof(FORT_APP_DATA) == 6 * sizeof(UINT32), "FORT_APP_DATA size mismatch");
 static_assert(sizeof(FORT_CONF_GROUPS) == 3 * sizeof(UINT32) + FORT_CONF_GROUP_MAX * sizeof(UINT16),
         "FORT_CONF_GROUPS size mismatch");
@@ -588,6 +588,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_zones_result(PFORT_CONF_META
         conn->act.zone_id = opt.accept.zone_id;
         conn->act.blocked = (UCHAR) rule->blocked;
         conn->act.drop_blocked = FALSE;
+        conn->act.ask = (UCHAR) rule->ask;
         return TRUE;
     }
 
@@ -775,12 +776,19 @@ static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_action(
     FORT_CONN_FILTER_RESULT action_res =
             FORT_CONN_FILTER_RESULT_TRUE | FORT_CONN_FILTER_RESULT_RULE_FILTER_ACTION;
 
-    if ((flags & (FORT_RULE_FILTER_ACTION_BLOCK | FORT_RULE_FILTER_ACTION_DROP)) != 0) {
+    const UINT16 block_flags = FORT_RULE_FILTER_ACTION_BLOCK | FORT_RULE_FILTER_ACTION_DROP
+            | FORT_RULE_FILTER_ACTION_ASK;
+
+    if ((flags & block_flags) != 0) {
         action_res |= FORT_CONN_FILTER_RESULT_ACTION_BLOCK;
     }
 
     if ((flags & FORT_RULE_FILTER_ACTION_DROP) != 0) {
         action_res |= FORT_CONN_FILTER_RESULT_ACTION_DROP;
+    }
+
+    if ((flags & FORT_RULE_FILTER_ACTION_ASK) != 0) {
+        action_res |= FORT_CONN_FILTER_RESULT_ACTION_ASK;
     }
 
     return action_res;
@@ -982,6 +990,8 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_filters(
         conn->act.blocked = has_action ? (filter_res & FORT_CONN_FILTER_RESULT_ACTION_BLOCK) != 0
                                        : (UCHAR) rule->blocked;
         conn->act.drop_blocked = (filter_res & FORT_CONN_FILTER_RESULT_ACTION_DROP) != 0;
+        conn->act.ask = has_action ? (filter_res & FORT_CONN_FILTER_RESULT_ACTION_ASK) != 0
+                                   : (UCHAR) rule->ask;
 
         conn->act.conn_log |= (filter_res & FORT_CONN_FILTER_RESULT_CONN_LOG) != 0;
         conn->act.conn_nolog |= (filter_res & FORT_CONN_FILTER_RESULT_CONN_NOLOG) != 0;
@@ -1027,6 +1037,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_terminate(
     if (rule->terminate) {
         conn->act.blocked = (UCHAR) rule->term_blocked;
         conn->act.drop_blocked = (UCHAR) rule->term_drop;
+        conn->act.ask = (UCHAR) rule->term_ask;
         conn->act.conn_alert = (UCHAR) rule->term_alert;
         return TRUE;
     }

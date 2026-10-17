@@ -3,6 +3,7 @@
 #include "fortpkt_pending.h"
 
 #include "common/fortconf_conn.h"
+#include "common/fortdef.h"
 
 #include "fortcnf_conf.h"
 #include "fortdev.h"
@@ -553,12 +554,16 @@ static BOOL fort_pending_packet_decided(void *ctx, PCFORT_PENDING_PACKET pkt)
     if (!rc->conf_flags.filter_enabled)
         return TRUE;
 
+    /* The Rule's decision can't be checked without the connection */
+    if (!pkt->app_asked)
+        return FALSE;
+
     const FORT_APP_PATH path = fort_psname_path(pkt->ps_name);
 
     const FORT_CONF_APP_FIND_RESULT app =
             fort_conf_app_find(&conf_ref->conf, &path, fort_conf_exe_find, conf_ref);
 
-    return !fort_conf_app_asked(rc->conf_flags, app.data);
+    return !(fort_conf_app_asked(rc->conf_flags, app.data) || app.data.flags.ask);
 }
 
 FORT_API void fort_pending_reauth(PFORT_PENDING pending)

@@ -217,7 +217,8 @@ inline static void fort_conf_conn_app_filter(
     }
 
     if (app_found) {
-        conn->act.blocked = FALSE; /* allow App */
+        conn->act.blocked = (UCHAR) app_data.flags.ask; /* allow or ask App */
+        conn->act.ask = (UCHAR) app_data.flags.ask;
         conn->reason = FORT_CONN_REASON_PROGRAM;
     }
 }
@@ -260,6 +261,10 @@ inline static BOOL fort_conf_conn_asked(
     /* The unknown App is asked only when it's logged, else blocked */
     if (app_data.flags.found == 0 && !filter->conf_flags.log_app)
         return FALSE;
+
+    /* Asked by the App's, Rule's or Filter's action */
+    if (conn->act.ask)
+        return TRUE;
 
     /* Ask to Connect, when blocked by the Filter Mode */
     return filter->conf_flags.ask_to_connect && conn->reason == FORT_CONN_REASON_FILTER_MODE;

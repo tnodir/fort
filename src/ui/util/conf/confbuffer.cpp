@@ -418,11 +418,11 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
                 .alerted = app.alerted,
                 .has_wildcard_app = app.isWildcard,
         },
-        .rule_id = app.ruleId,
+        .zones = app.zones,
         .speed_limits = app.activeSpeedLimits(),
+        .rule_id = app.ruleId,
         .groups = app.groups,
         .app_id = quint32(app.appId),
-        .zones = app.zones,
     };
 
     appsMap.insert(appPath, { appData, ruleData });

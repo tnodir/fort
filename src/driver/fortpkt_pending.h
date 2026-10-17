@@ -11,6 +11,7 @@ typedef struct fort_pending_packet
     struct fort_pending_packet *next;
 
     UCHAR inbound : 1;
+    UCHAR app_asked : 1; /* asked by the App's data, else by a Rule: decided by the user only */
 
     UINT64 flow_id; /* the connection's id to decide it by the user or the timeout */
 

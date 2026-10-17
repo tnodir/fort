@@ -196,6 +196,7 @@ enum {
     FORT_RULE_FILTER_ACTION_ALLOW = (1 << 0),
     FORT_RULE_FILTER_ACTION_BLOCK = (1 << 1),
     FORT_RULE_FILTER_ACTION_DROP = (1 << 2),
+    FORT_RULE_FILTER_ACTION_ASK = (1 << 3),
     // Options
     // FORT_CONN_FILTER_RESULT_CONN_*
 };
@@ -224,18 +225,20 @@ typedef struct fort_conf_rule
 {
     UINT16 enabled : 1;
     UINT16 blocked : 1;
+    UINT16 ask : 1; /* the blocking Rule asks the user to connect */
     UINT16 exclusive : 1;
     UINT16 inline_zones : 1;
     UINT16 terminate : 1;
     UINT16 term_blocked : 1;
     UINT16 term_drop : 1; /* the blocking Terminating Rule drops the connection */
+    UINT16 term_ask : 1; /* the blocking Terminating Rule asks the user to connect */
     UINT16 term_alert : 1;
     UINT16 log_allowed_conn : 1;
     UINT16 log_blocked_conn : 1;
 
     UINT16 has_zones : 1;
     UINT16 has_filters : 1;
-    UINT16 reserved : 4; /* not used */
+    UINT16 reserved : 2; /* not used */
 
     UCHAR period_id; /* the Time Period's id: the Rule is active in it, 0 - always */
 
@@ -353,41 +356,44 @@ typedef struct fort_traf
 
 typedef struct fort_app_flags
 {
-    UINT16 apply_parent : 1;
-    UINT16 apply_child : 1;
-    UINT16 apply_spec_child : 1;
-    UINT16 kill_child : 1;
-    UINT16 block_inbound : 1;
-    UINT16 block_outbound : 1;
-    UINT16 lan_only : 1;
+    UINT32 apply_parent : 1;
+    UINT32 apply_child : 1;
+    UINT32 apply_spec_child : 1;
+    UINT32 kill_child : 1;
+    UINT32 block_inbound : 1;
+    UINT32 block_outbound : 1;
+    UINT32 lan_only : 1;
 
-    UINT16 log_stat : 1;
-    UINT16 log_allowed_conn : 1;
-    UINT16 log_blocked_conn : 1;
+    UINT32 log_stat : 1;
+    UINT32 log_allowed_conn : 1;
+    UINT32 log_blocked_conn : 1;
 
-    UINT16 blocked : 1;
-    UINT16 kill_process : 1;
+    UINT32 blocked : 1;
+    UINT32 ask : 1; /* the not filtered connections ask the user, instead of allowed */
+    UINT32 kill_process : 1;
 
-    UINT16 is_new : 1; /* can not replace an existing app data? */
-    UINT16 found : 1; /* is app data not empty? */
-    UINT16 alerted : 1;
+    UINT32 is_new : 1; /* can not replace an existing app data? */
+    UINT32 found : 1; /* is app data not empty? */
+    UINT32 alerted : 1;
 
-    UINT16 has_wildcard_app : 1; /* is the path listed by a wildcard app? */
+    UINT32 has_wildcard_app : 1; /* is the path listed by a wildcard app? */
+
+    UINT32 reserved : 15; /* not used */
 } FORT_APP_FLAGS, *PFORT_APP_FLAGS;
 
 typedef struct fort_app_data
 {
     FORT_APP_FLAGS flags;
 
-    UINT16 rule_id;
+    FORT_CONF_RULE_ZONES zones;
 
     FORT_SPEED_LIMIT_IDS speed_limits;
+
+    UINT16 rule_id;
 
     UINT32 groups; /* Group ids bit mask, 0 - no Group */
 
     UINT32 app_id;
-
-    FORT_CONF_RULE_ZONES zones;
 } FORT_APP_DATA, *PFORT_APP_DATA;
 
 typedef const FORT_APP_DATA *PCFORT_APP_DATA;
@@ -445,6 +451,7 @@ typedef struct fort_conf_conn_actions
 {
     UCHAR blocked : 1;
     UCHAR drop_blocked : 1;
+    UCHAR ask : 1; /* the blocked connection asks the user */
     UCHAR conn_log : 1;
     UCHAR conn_nolog : 1;
     UCHAR conn_alert : 1;
@@ -513,6 +520,7 @@ enum {
     FORT_CONN_FILTER_RESULT_CONN_LOG = (1 << 4),
     FORT_CONN_FILTER_RESULT_CONN_NOLOG = (1 << 5),
     FORT_CONN_FILTER_RESULT_CONN_ALERT = (1 << 6),
+    FORT_CONN_FILTER_RESULT_ACTION_ASK = (1 << 7),
 };
 
 typedef UINT16 FORT_CONN_FILTER_RESULT;

@@ -139,7 +139,7 @@ static NTSTATUS fort_conf_ref_exe_replace_entry(PFORT_CONF_REF conf_ref, PFORT_C
         PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
 {
     PFORT_APP_ENTRY entry = node->app_entry;
-    const UINT16 has_wildcard_app = entry->app_data.flags.has_wildcard_app;
+    const UINT32 has_wildcard_app = entry->app_data.flags.has_wildcard_app;
 
     /* An entry's Network Filters are not changed in place */
     if (entry->rule_size != 0 || app_entry->rule_size != 0) {
