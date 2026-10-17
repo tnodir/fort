@@ -312,9 +312,12 @@ inline static void fort_callout_ale_ask_decided(PFORT_CALLOUT_ALE_EXTRA cx)
 {
     PFORT_CONF_META_CONN conn = &cx->conn;
 
-    if (!fort_pending_flow_allowed(&fort_device()->pending, conn->flow_id))
     if (!fort_callout_ale_ask_allowed(conn)) {
+        conn->reason = FORT_CONN_REASON_ASK_BLOCKED;
         return; /* block (by the user or the timeout) */
+    }
+
+    conn->reason = FORT_CONN_REASON_ASK_ALLOWED;
 
     /* The associated flow keeps the user's decision */
     conn->act.blocked = (UCHAR) fort_callout_ale_associate_flow(cx, conn); /* allow once */
