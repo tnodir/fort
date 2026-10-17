@@ -32,6 +32,7 @@ static NTSTATUS fort_worker_callback_expand(PVOID context)
     const UCHAR id_bits = InterlockedAnd8(&worker->id_bits, 0);
 
     fort_worker_callback_run(worker, FORT_WORKER_REAUTH, id_bits);
+    fort_worker_callback_run(worker, FORT_WORKER_PENDING, id_bits);
 
     return STATUS_SUCCESS;
 }

@@ -588,6 +588,49 @@ FORT_API void fort_pending_reauth(PFORT_PENDING pending)
     }
 }
 
+static PFORT_PENDING_PACKET fort_pending_flow_packet_locked(PFORT_PENDING pending, UINT64 flow_id)
+{
+    PFORT_PENDING_PACKET pkt = pending->packets_head;
+
+    for (; pkt != NULL; pkt = pkt->next) {
+        if (pkt->flow_id == flow_id)
+            return pkt;
+    }
+
+    return NULL;
+}
+
+FORT_API BOOL fort_pending_conn_unlogged(PFORT_PENDING pending, PCFORT_CONF_META_CONN conn)
+{
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&pending->lock, &lock_queue);
+
+    PFORT_PENDING_PACKET pkt = fort_pending_flow_packet_locked(pending, conn->flow_id);
+    if (pkt != NULL) {
+        pkt->unlogged = TRUE;
+    }
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return pkt != NULL;
+}
+
+static BOOL fort_pending_packet_unlogged(void *ctx, PCFORT_PENDING_PACKET pkt)
+{
+    UNUSED(ctx);
+
+    return pkt->unlogged;
+}
+
+FORT_API void fort_pending_block_unlogged(PFORT_PENDING pending)
+{
+    FORT_PENDING_WALK walk = {
+        .done_func = &fort_pending_packet_unlogged,
+    };
+
+    fort_pending_complete_walk(pending, &walk, /*reauth=*/FALSE);
+}
+
 FORT_API NTSTATUS fort_pending_add_packet(
         PFORT_PENDING pending, PCFORT_CALLOUT_ARG ca, PCFORT_CONF_META_CONN conn)
 {

@@ -12,6 +12,7 @@ typedef struct fort_pending_packet
 
     UCHAR inbound : 1;
     UCHAR app_asked : 1; /* asked by the App's data, else by a Rule: decided by the user only */
+    UCHAR unlogged : 1; /* not shown to the user: blocked by the worker */
 
     UINT64 flow_id; /* the connection's id to decide it by the user or the timeout */
 
@@ -91,6 +92,10 @@ FORT_API BOOL fort_pending_flow_take_allowed(PFORT_PENDING pending, UINT64 flow_
 FORT_API BOOL fort_pending_conn_pended(PFORT_PENDING pending, PCFORT_CONF_META_CONN conn);
 
 FORT_API void fort_pending_reauth(PFORT_PENDING pending);
+
+FORT_API BOOL fort_pending_conn_unlogged(PFORT_PENDING pending, PCFORT_CONF_META_CONN conn);
+
+FORT_API void fort_pending_block_unlogged(PFORT_PENDING pending);
 
 /* STATUS_ALREADY_REGISTERED: the connection's repeated packet or the App's one over its limit */
 FORT_API NTSTATUS fort_pending_add_packet(

@@ -455,6 +455,22 @@ inline static void fort_callout_ale_classify_boot_action(
     }
 }
 
+inline static void fort_callout_ale_log_conn(PFORT_CALLOUT_ALE_EXTRA cx)
+{
+    PCFORT_CONF_META_CONN conn = &cx->conn;
+
+    const NTSTATUS status = fort_buffer_conn_write(
+            &fort_device()->buffer, conn, &cx->irp_info, FORT_BUFFER_CONN_WRITE_CONN);
+
+    if (NT_SUCCESS(status) || conn->reason != FORT_CONN_REASON_ASK_PENDING)
+        return;
+
+    /* The not logged pending connection isn't shown to the user: block it by the worker */
+    if (fort_pending_conn_unlogged(&fort_device()->pending, conn)) {
+        fort_worker_queue(&fort_device()->worker, FORT_WORKER_PENDING);
+    }
+}
+
 inline static void fort_callout_ale_check_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
         PFORT_CONF_REF conf_ref, const FORT_CONF_FLAGS conf_flags)
 {
@@ -476,8 +492,7 @@ inline static void fort_callout_ale_check_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALL
 
     /* Log the connection */
     if (fort_callout_ale_log_conn_check(ca, conn, conf_ref, conf_flags)) {
-        fort_buffer_conn_write(
-                &fort_device()->buffer, conn, &cx->irp_info, FORT_BUFFER_CONN_WRITE_CONN);
+        fort_callout_ale_log_conn(cx);
     }
 
     fort_callout_ale_classify_action(ca, conn);

@@ -44,6 +44,11 @@ static void fort_device_reauth(void)
     fort_callout_force_reauth();
 }
 
+static void fort_device_block_unlogged_pending(void)
+{
+    fort_pending_block_unlogged(&fort_device()->pending);
+}
+
 static void fort_device_reauth_queue(void)
 {
     fort_worker_queue(&fort_device()->worker, FORT_WORKER_REAUTH);
@@ -678,6 +683,8 @@ FORT_API NTSTATUS fort_device_load(PVOID device_param)
     PDEVICE_OBJECT device = device_param;
 
     fort_worker_func_set(&fort_device()->worker, FORT_WORKER_REAUTH, &fort_device_reauth);
+    fort_worker_func_set(
+            &fort_device()->worker, FORT_WORKER_PENDING, &fort_device_block_unlogged_pending);
 
     fort_device_conf_open(&fort_device()->conf);
     fort_buffer_open(&fort_device()->buffer);
