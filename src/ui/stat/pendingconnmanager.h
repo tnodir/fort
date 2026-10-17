@@ -36,6 +36,9 @@ public:
 
     virtual bool decideConn(qint64 connId, ConnDecision decision);
 
+    /* Allow the pending connections' process for the seconds, 0 - till its exit */
+    virtual bool allowProcess(quint32 processId, quint32 seconds);
+
     /* The oldest pending connection's App, except the excluded one */
     ConnApp oldestConnApp(qint64 excludeConfAppId = 0, const QString &excludePath = {}) const;
 
@@ -70,6 +73,7 @@ private:
     void reauthAppConns(const App &app);
 
     void removeConns(const QVector<qint64> &connIds);
+    void removeProcessConns(quint32 processId);
 
     void deleteTimedOutConns();
     void blockTimedOutConns(const QVector<quint64> &flowIds);

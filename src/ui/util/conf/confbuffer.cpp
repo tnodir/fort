@@ -769,3 +769,15 @@ void ConfBuffer::writePeriods(quint64 activeMask)
 
     confPeriods->active_mask = activeMask;
 }
+
+void ConfBuffer::writeProcAllow(quint32 processId, quint32 seconds)
+{
+    // Resize the buffer
+    buffer().resize(sizeof(FORT_PROC_ALLOW));
+
+    // Fill the buffer
+    PFORT_PROC_ALLOW procAllow = PFORT_PROC_ALLOW(buffer().data());
+
+    procAllow->process_id = processId;
+    procAllow->seconds = seconds;
+}

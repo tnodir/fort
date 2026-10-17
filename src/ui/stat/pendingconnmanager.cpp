@@ -14,6 +14,7 @@
 #include <driver/drivermanager.h>
 #include <fortglobal.h>
 #include <log/logentryconn.h>
+#include <util/conf/confbuffer.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 
@@ -38,6 +39,12 @@ bool updateDriver(QByteArray &buf, quint32 code)
     }
 
     return true;
+}
+
+/* By its action or as the alerted one by the "Ask to Connect" Filter Mode, as the driver asks it */
+bool isAppAsked(const App &app)
+{
+    return app.ask || (app.alerted && Fort::conf().askToConnect());
 }
 
 quint32 decisionIoctl(PendingConnManager::ConnDecision decision)
@@ -117,6 +124,23 @@ bool PendingConnManager::decideConn(qint64 connId, ConnDecision decision)
         return false;
 
     removeConns({ connId });
+
+    return true;
+}
+
+bool PendingConnManager::allowProcess(quint32 processId, quint32 seconds)
+{
+    if (processId == 0)
+        return false;
+
+    ConfBuffer confBuf;
+    confBuf.writeProcAllow(processId, seconds);
+
+    // The driver reauthorizes the process's pending connections
+    if (!updateDriver(confBuf.buffer(), DriverCommon::ioctlAllowProc()))
+        return false;
+
+    removeProcessConns(processId);
 
     return true;
 }
@@ -243,6 +267,26 @@ void PendingConnManager::removeConns(const QVector<qint64> &connIds)
 {
     // The decided connections are no longer pending
     enqueueJob(WorkerJobPtr(new DeletePendingConnJob(connIds)));
+}
+
+void PendingConnManager::removeProcessConns(quint32 processId)
+{
+    SqliteStmt stmt;
+    if (!DbQuery(roSqliteDb())
+                    .sql(StatSql::sqlSelectProcPendingConnIds)
+                    .vars({ processId })
+                    .prepare(stmt))
+        return;
+
+    QVector<qint64> connIds;
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        connIds.append(stmt.columnInt64(0));
+    }
+
+    if (!connIds.isEmpty()) {
+        removeConns(connIds);
+    }
 }
 
 void PendingConnManager::deleteTimedOutConns()

@@ -63,6 +63,8 @@ public slots:
 
     void writePeriods(quint64 activeMask);
 
+    void writeProcAllow(quint32 processId, quint32 seconds);
+
 private:
     void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }
 

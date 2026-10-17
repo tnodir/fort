@@ -238,6 +238,11 @@ quint32 ioctlAllowPending()
     return FORT_IOCTL_ALLOWPENDING;
 }
 
+quint32 ioctlAllowProc()
+{
+    return FORT_IOCTL_ALLOWPROC;
+}
+
 quint32 userErrorCode()
 {
     return FORT_ERROR_USER_ERROR;

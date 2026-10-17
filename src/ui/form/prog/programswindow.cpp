@@ -187,11 +187,7 @@ void ProgramsWindow::retranslateTimerMenuActions()
     const QStringList list = { tr("Disable"), tr("1 minute"), tr("5 minutes"), tr("10 minutes"),
         tr("30 minutes"), tr("1 hour"), tr("3 hours"), tr("6 hours") };
 
-    int i = 0;
-    const auto actions = m_timerMenuActions->actions();
-    for (QAction *a : actions) {
-        a->setText(list[i++]);
-    }
+    ControlUtil::setActionTexts(m_timerMenuActions->actions(), list);
 }
 
 void ProgramsWindow::setupUi()

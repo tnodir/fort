@@ -202,6 +202,9 @@ const char *const StatSql::sqlSelectAppPendingConnsCount =
         "  WHERE (a.conf_app_id = ?1 OR a.path = ?2 OR ia.conf_app_id = ?1 OR ia.path = ?2)"
         "    AND t.conn_time > ?3;";
 
+const char *const StatSql::sqlSelectProcPendingConnIds =
+        "SELECT conn_id FROM conn WHERE process_id = ?1;";
+
 const char *const StatSql::sqlSelectPendingConnIds =
         "SELECT conn_id FROM conn WHERE conn_id >= ?1 AND conn_time > ?2;";
 

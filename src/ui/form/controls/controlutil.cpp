@@ -361,6 +361,16 @@ QMenu *ControlUtil::createMenuByLayout(QBoxLayout *layout, QWidget *parent)
     return menu;
 }
 
+void ControlUtil::setActionTexts(const QList<QAction *> &actions, const QStringList &texts)
+{
+    int index = 0;
+    for (QAction *a : actions) {
+        a->setText(texts.value(index));
+
+        ++index;
+    }
+}
+
 QBoxLayout *ControlUtil::createLayout(QBoxLayout::Direction direction, int margin)
 {
     auto layout = new QBoxLayout(direction);

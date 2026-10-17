@@ -83,6 +83,8 @@ public:
     static QMenu *createMenu(QWidget *parent = nullptr);
     static QMenu *createMenuByLayout(QBoxLayout *layout, QWidget *parent);
 
+    static void setActionTexts(const QList<QAction *> &actions, const QStringList &texts);
+
     static QBoxLayout *createLayout(QBoxLayout::Direction direction, int margin = 0);
     inline static QBoxLayout *createHLayout(int margin = 0)
     {

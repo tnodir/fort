@@ -2,6 +2,7 @@
 
 #include <QHBoxLayout>
 #include <QItemSelectionModel>
+#include <QMenu>
 #include <QToolButton>
 
 #include <form/controls/controlutil.h>
@@ -15,6 +16,9 @@
 using namespace Fort;
 
 namespace {
+
+inline constexpr std::array allowProcessSecondValues = { 10, 30, 60 * 1, 60 * 5, 60 * 10, 60 * 30,
+    60 * 60 * 1, 60 * 60 * 3, 60 * 60 * 6 };
 
 // The icon only button's mnemonic and tool tip
 void setIconButtonText(QAbstractButton *bt, const QString &text)
@@ -59,6 +63,9 @@ void AppPendingConnsWindow::setupController()
 void AppPendingConnsWindow::retranslateUi()
 {
     setIconButtonText(m_btAllow, tr("&Allow once"));
+    setIconButtonText(m_btAllowProcess, tr("Allow &Process"));
+    m_btAllowProcess->setToolTip(tr("Allow the process till its exit or for the time by the menu"));
+    retranslateAllowProcessMenu();
     setIconButtonText(m_btBlock, tr("&Block once"));
     setIconButtonText(m_btContinue, tr("&Continue"));
     m_btContinue->setToolTip(tr("Continue by the current rules: the still asked ones are blocked"));
@@ -67,9 +74,17 @@ void AppPendingConnsWindow::retranslateUi()
     addFilterAction()->setIconText(tr("Add &Filter"));
 }
 
+void AppPendingConnsWindow::retranslateAllowProcessMenu()
+{
+    const QStringList list = { tr("10 seconds"), tr("30 seconds"), tr("1 minute"), tr("5 minutes"),
+        tr("10 minutes"), tr("30 minutes"), tr("1 hour"), tr("3 hours"), tr("6 hours") };
+
+    ControlUtil::setActionTexts(m_btAllowProcess->menu()->actions(), list);
+}
+
 void AppPendingConnsWindow::setupUi()
 {
-    // Allow, Block & Continue
+    // Allow, Allow Process, Block & Continue
     setupDecideButtons();
 
     // Add Filter
@@ -81,10 +96,11 @@ void AppPendingConnsWindow::setupUi()
 
     auto layout = headerLayout();
     layout->insertWidget(2, m_btAllow);
-    layout->insertWidget(3, m_btBlock);
-    layout->insertWidget(4, m_btContinue);
-    layout->insertWidget(5, m_btAddFilter);
-    layout->insertWidget(6, ControlUtil::createVSeparator());
+    layout->insertWidget(3, m_btAllowProcess);
+    layout->insertWidget(4, m_btBlock);
+    layout->insertWidget(5, m_btContinue);
+    layout->insertWidget(6, btAddFilter);
+    layout->insertWidget(7, ControlUtil::createVSeparator());
 
     // The selected row stays in view, when the new rows are added
     setAutoScroll(false);
@@ -96,10 +112,29 @@ void AppPendingConnsWindow::setupDecideButtons()
 {
     m_btAllow = ControlUtil::createIconToolButton(
             ":/icons/accept.png", [&] { decideConns(PendingConnManager::ConnAllow); });
+    setupAllowProcessButton();
     m_btBlock = ControlUtil::createIconToolButton(
             ":/icons/deny.png", [&] { decideConns(PendingConnManager::ConnBlock); });
     m_btContinue = ControlUtil::createIconToolButton(":/icons/arrow_refresh_small.png",
             [&] { decideConns(PendingConnManager::ConnContinue); });
+}
+
+void AppPendingConnsWindow::setupAllowProcessButton()
+{
+    auto menu = ControlUtil::createMenu(this);
+
+    for (const int seconds : allowProcessSecondValues) {
+        auto a = menu->addAction(QString());
+        a->setData(seconds);
+    }
+
+    connect(menu, &QMenu::triggered, this, [&](QAction *a) { allowProcesses(a->data().toUInt()); });
+
+    // Till the process's exit
+    m_btAllowProcess = ControlUtil::createIconToolButton(
+            ":/icons/tick.png", [&] { allowProcesses(/*seconds=*/0); });
+    m_btAllowProcess->setPopupMode(QToolButton::MenuButtonPopup);
+    m_btAllowProcess->setMenu(menu);
 }
 
 void AppPendingConnsWindow::setupConnsChanged()
@@ -123,6 +158,7 @@ void AppPendingConnsWindow::updateDecideButtons()
     const bool hasSelected = !selectedConnIds().isEmpty();
 
     m_btAllow->setEnabled(hasOutbound);
+    m_btAllowProcess->setEnabled(hasSelected);
     m_btBlock->setEnabled(hasOutbound);
     m_btContinue->setEnabled(hasSelected);
 }
@@ -139,10 +175,45 @@ void AppPendingConnsWindow::decideConns(PendingConnManager::ConnDecision decisio
     }
 }
 
+void AppPendingConnsWindow::allowProcesses(quint32 seconds)
+{
+    const auto processIds = selectedProcessIds();
+
+    for (const quint32 processId : processIds) {
+        pendingConnManager()->allowProcess(processId, seconds);
+    }
+}
+
 QVector<qint64> AppPendingConnsWindow::selectedConnIds(bool outboundOnly) const
 {
     QVector<qint64> connIds;
 
+    walkSelectedPendingConns([&](const ConnRow &connRow) {
+        if (outboundOnly && connRow.inbound)
+            return;
+
+        connIds.append(connRow.connId);
+    });
+
+    return connIds;
+}
+
+QVector<quint32> AppPendingConnsWindow::selectedProcessIds() const
+{
+    QVector<quint32> processIds;
+
+    walkSelectedPendingConns([&](const ConnRow &connRow) {
+        if (!processIds.contains(connRow.pid)) {
+            processIds.append(connRow.pid);
+        }
+    });
+
+    return processIds;
+}
+
+void AppPendingConnsWindow::walkSelectedPendingConns(
+        const std::function<void(const ConnRow &connRow)> &func) const
+{
     const auto model = pendingConnListModel();
 
     const auto rows = connListView()->selectedRows();
@@ -152,11 +223,6 @@ QVector<qint64> AppPendingConnsWindow::selectedConnIds(bool outboundOnly) const
         if (connRow.isNull() || !model->isConnPending(row))
             continue;
 
-        if (outboundOnly && connRow.inbound)
-            continue;
-
-        connIds.append(connRow.connId);
+        func(connRow);
     }
-
-    return connIds;
 }

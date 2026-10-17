@@ -14,6 +14,7 @@ public:
     explicit PendingConnManagerRpc(const QString &filePath, QObject *parent = nullptr);
 
     bool decideConn(qint64 connId, ConnDecision decision) override;
+    bool allowProcess(quint32 processId, quint32 seconds) override;
 
     static bool processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 

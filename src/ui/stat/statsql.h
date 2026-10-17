@@ -71,6 +71,7 @@ public:
     static const char *const sqlSelectOldestConnApp;
     static const char *const sqlSelectAppPendingConns;
     static const char *const sqlSelectAppPendingConnsCount;
+    static const char *const sqlSelectProcPendingConnIds;
     static const char *const sqlSelectPendingConnIds;
 
     static const char *const sqlSelectMinMaxConnId;

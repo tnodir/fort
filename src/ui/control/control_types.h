@@ -125,6 +125,7 @@ enum Command : qint8 {
     Rpc_StatConnManager_connCleared,
 
     Rpc_PendingConnManager_decideConn,
+    Rpc_PendingConnManager_allowProcess,
     Rpc_PendingConnManager_connChanged,
     Rpc_PendingConnManager_connCleared,
 

@@ -47,6 +47,7 @@ quint32 ioctlSetPeriods();
 quint32 ioctlBlockPending();
 quint32 ioctlReauthPending();
 quint32 ioctlAllowPending();
+quint32 ioctlAllowProc();
 
 quint32 userErrorCode();
 

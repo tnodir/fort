@@ -16,6 +16,8 @@ inline bool processPendingConnManagerRpcResult(
     case Control::Rpc_PendingConnManager_decideConn:
         return pendingConnManager->decideConn(p.args.value(0).toLongLong(),
                 PendingConnManager::ConnDecision(p.args.value(1).toInt()));
+    case Control::Rpc_PendingConnManager_allowProcess:
+        return pendingConnManager->allowProcess(p.args.value(0).toUInt(), p.args.value(1).toUInt());
     default:
         return false;
     }
@@ -32,6 +34,12 @@ bool PendingConnManagerRpc::decideConn(qint64 connId, ConnDecision decision)
 {
     return rpcManager()->doOnServer(
             Control::Rpc_PendingConnManager_decideConn, { connId, int(decision) });
+}
+
+bool PendingConnManagerRpc::allowProcess(quint32 processId, quint32 seconds)
+{
+    return rpcManager()->doOnServer(
+            Control::Rpc_PendingConnManager_allowProcess, { processId, seconds });
 }
 
 bool PendingConnManagerRpc::processServerCommand(
