@@ -29,6 +29,20 @@ typedef const FORT_PENDING_PACKET *PCFORT_PENDING_PACKET;
 
 #define FORT_PENDING_FLOW_COUNT_MAX 0xFFFF /* the flows' lists by the 16-bit count */
 
+/* The allowed connection's reauthorization follows its completion in milliseconds: the not taken
+ * one (e.g. closed meanwhile) is dropped after the seconds by the next allowing */
+#define FORT_PENDING_ALLOWED_FLOW_SECONDS 10
+
+/* The connection allowed once by the user */
+typedef struct fort_pending_allowed_flow
+{
+    UINT64 flow_id; /* must be first: the binary search by it */
+
+    INT64 expire_time; /* the interrupt time */
+} FORT_PENDING_ALLOWED_FLOW, *PFORT_PENDING_ALLOWED_FLOW;
+
+typedef const FORT_PENDING_ALLOWED_FLOW *PCFORT_PENDING_ALLOWED_FLOW;
+
 typedef struct fort_pending
 {
     HANDLE injection_transport4_in_id;
@@ -39,6 +53,11 @@ typedef struct fort_pending
     LONG volatile inject_count; /* asynchronous injections in progress */
 
     UINT16 packet_count;
+
+    UINT16 volatile allowed_flow_count; /* checked without the lock: usually empty */
+
+    /* The connections allowed once by the user: sorted, till their reauthorization */
+    PFORT_PENDING_ALLOWED_FLOW allowed_flows;
 
     PFORT_PENDING_PACKET packets_head;
 
@@ -60,6 +79,13 @@ FORT_API void fort_pending_clear(PFORT_PENDING pending);
 /* The flow ids are sorted by the master */
 FORT_API void fort_pending_complete_flows(
         PFORT_PENDING pending, const UINT64 *flow_ids, UINT16 count, BOOL reauth);
+
+/* The flow ids are sorted by the master */
+FORT_API NTSTATUS fort_pending_allow_flows(
+        PFORT_PENDING pending, const UINT64 *flow_ids, UINT16 count);
+
+/* The allowed connection's first reauthorization takes it: then its associated flow keeps it */
+FORT_API BOOL fort_pending_flow_take_allowed(PFORT_PENDING pending, UINT64 flow_id);
 
 FORT_API BOOL fort_pending_conn_pended(PFORT_PENDING pending, PCFORT_CONF_META_CONN conn);
 

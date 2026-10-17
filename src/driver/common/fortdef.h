@@ -10,6 +10,7 @@ enum FortLogType {
     FORT_LOG_TYPE_STAT_TRAF,
     FORT_LOG_TYPE_TIME,
     FORT_LOG_TYPE_PROC_KILL,
+    FORT_LOG_TYPE_FLOW_CLOSED,
 };
 
 enum FortLogConnFlag {

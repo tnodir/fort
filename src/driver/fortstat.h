@@ -46,6 +46,7 @@ typedef struct fort_stat_proc
 #define FORT_FLOW_SPEED_LIMIT_IN    0x01
 #define FORT_FLOW_SPEED_LIMIT_OUT   0x02
 #define FORT_FLOW_SPEED_LIMIT_FLAGS (FORT_FLOW_SPEED_LIMIT_IN | FORT_FLOW_SPEED_LIMIT_OUT)
+#define FORT_FLOW_ASK_ALLOWED       0x04 /* allowed once by the user, instead of Ask to Connect */
 #define FORT_FLOW_CONTEXT_REMOVED   0x08
 #define FORT_FLOW_TCP               0x10
 #define FORT_FLOW_IP6               0x20
@@ -91,6 +92,8 @@ typedef struct fort_flow
     FORT_SPEED_LIMIT_IDS speed_limits;
     FORT_SPEED_LIMIT_IDS old_speed_limits; /* the previous queues may have the flow's packets */
 } FORT_FLOW, *PFORT_FLOW;
+
+typedef const FORT_FLOW *PCFORT_FLOW;
 
 #define FORT_STAT_LOG                 0x01
 #define FORT_STAT_SYSTEM_TIME_CHANGED 0x02
@@ -171,6 +174,12 @@ FORT_API void fort_stat_close(PFORT_STAT stat);
 FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat);
 
 FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, PCFORT_CONF_META_CONN conn, BOOL *proc_stat);
+
+/* The closing flow allowed once by the user */
+FORT_API BOOL fort_flow_ask_allowed_id(PFORT_STAT stat, UINT64 flowContext, UINT64 *flow_id);
+
+/* The flow allowed once by the user */
+FORT_API BOOL fort_flow_ask_allowed(PFORT_STAT stat, UINT64 flow_id);
 
 FORT_API void fort_flow_proc_unlog(PFORT_STAT stat, UINT32 process_id);
 

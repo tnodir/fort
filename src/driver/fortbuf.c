@@ -309,6 +309,26 @@ FORT_API NTSTATUS fort_buffer_proc_kill_write(PFORT_BUFFER buf, PFORT_IRP_INFO i
     return status;
 }
 
+FORT_API NTSTATUS fort_buffer_flow_closed_write(
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT64 flow_id)
+{
+    NTSTATUS status;
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
+    {
+        PCHAR out;
+        status = fort_buffer_prepare(buf, FORT_LOG_FLOW_CLOSED_SIZE, &out, irp_info);
+
+        if (NT_SUCCESS(status)) {
+            fort_log_flow_closed_write(out, flow_id);
+        }
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return status;
+}
+
 inline static NTSTATUS fort_buffer_cancel_pending(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info)
 {
     NTSTATUS status = STATUS_NOT_FOUND;

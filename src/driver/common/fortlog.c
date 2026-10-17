@@ -230,3 +230,21 @@ FORT_API void fort_log_proc_kill_read(const char *p, UINT32 *pid)
     up++;
     *pid = *up;
 }
+
+FORT_API void fort_log_flow_closed_write(char *p, UINT64 flow_id)
+{
+    UINT32 *up = (UINT32 *) p;
+
+    *up++ = fort_log_flag_type(FORT_LOG_TYPE_FLOW_CLOSED);
+
+    fort_log_flow_id_write(up, flow_id);
+}
+
+FORT_API void fort_log_flow_closed_read(const char *p, UINT64 *flow_id)
+{
+    const UINT32 *up = (const UINT32 *) p;
+
+    up++;
+
+    fort_log_flow_id_read(up, flow_id);
+}

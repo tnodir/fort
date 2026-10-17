@@ -512,6 +512,17 @@ static NTSTATUS fort_device_control_reauthpending(PFORT_DEVICE_CONTROL_ARG dca)
     return fort_device_control_pending(dca, /*reauth=*/TRUE);
 }
 
+static NTSTATUS fort_device_control_allowpending(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    const UINT64 *flow_ids;
+    UINT16 count;
+
+    if (!fort_device_control_flow_ids(dca, &flow_ids, &count))
+        return STATUS_UNSUCCESSFUL;
+
+    return fort_pending_allow_flows(&fort_device()->pending, flow_ids, count);
+}
+
 static_assert(FORT_CTL_INDEX_FROM_CODE(FORT_IOCTL_SETRULEFLAG) == FORT_IOCTL_INDEX_SETRULEFLAG,
         "Invalid FORT_CTL_INDEX_FROM_CODE()");
 
@@ -538,6 +549,7 @@ static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
     &fort_device_control_setperiods, // FORT_IOCTL_SETPERIODS
     &fort_device_control_blockpending, // FORT_IOCTL_BLOCKPENDING
     &fort_device_control_reauthpending, // FORT_IOCTL_REAUTHPENDING
+    &fort_device_control_allowpending, // FORT_IOCTL_ALLOWPENDING
 };
 
 static_assert(FORT_ARRAY_SIZE(fortDeviceControlProcess_funcList) == FORT_IOCTL_INDEX_COUNT,

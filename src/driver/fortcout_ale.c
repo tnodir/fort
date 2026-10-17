@@ -301,6 +301,25 @@ inline static BOOL fort_callout_ale_process_flow(
     return fort_callout_ale_associate_flow(cx, &cx->conn);
 }
 
+/* Allowed by the user: till its first reauthorization, then by its associated flow */
+inline static BOOL fort_callout_ale_ask_allowed(PCFORT_CONF_META_CONN conn)
+{
+    return fort_pending_flow_take_allowed(&fort_device()->pending, conn->flow_id)
+            || fort_flow_ask_allowed(&fort_device()->stat, conn->flow_id);
+}
+
+inline static void fort_callout_ale_ask_decided(PFORT_CALLOUT_ALE_EXTRA cx)
+{
+    PFORT_CONF_META_CONN conn = &cx->conn;
+
+    if (!fort_pending_flow_allowed(&fort_device()->pending, conn->flow_id))
+    if (!fort_callout_ale_ask_allowed(conn)) {
+        return; /* block (by the user or the timeout) */
+
+    /* The associated flow keeps the user's decision */
+    conn->act.blocked = (UCHAR) fort_callout_ale_associate_flow(cx, conn); /* allow once */
+}
+
 inline static BOOL fort_callout_ale_ask_decided_check(
         PCFORT_CALLOUT_ARG ca, PCFORT_CONF_META_CONN conn)
 {
@@ -312,9 +331,11 @@ inline static void fort_callout_ale_ask(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE
 {
     PFORT_CONF_META_CONN conn = &cx->conn;
 
-    /* Decided by the user: blocked */
-    if (fort_callout_ale_ask_decided_check(ca, conn))
-        return; /* block (by the user or the timeout) */
+    /* Decided by the user */
+    if (fort_callout_ale_ask_decided_check(ca, conn)) {
+        fort_callout_ale_ask_decided(cx);
+        return;
+    }
 
     if (fort_pending_conn_pended(&fort_device()->pending, conn)) {
         fort_callout_ale_ask_pended(conn);

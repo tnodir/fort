@@ -57,6 +57,8 @@
 
 #define FORT_LOG_PROC_KILL_SIZE (sizeof(UINT32) * 2)
 
+#define FORT_LOG_FLOW_CLOSED_SIZE (sizeof(UINT32) + sizeof(UINT64))
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -94,6 +96,10 @@ FORT_API void fort_log_time_read(const char *p, INT64 *unix_time, BOOL *system_t
 FORT_API void fort_log_proc_kill_write(char *p, UINT32 pid);
 
 FORT_API void fort_log_proc_kill_read(const char *p, UINT32 *pid);
+
+FORT_API void fort_log_flow_closed_write(char *p, UINT64 flow_id);
+
+FORT_API void fort_log_flow_closed_read(const char *p, UINT64 *flow_id);
 
 #ifdef __cplusplus
 } // extern "C"

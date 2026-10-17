@@ -38,11 +38,14 @@ typedef struct fort_pending_app_state
 typedef struct fort_pending_flows_ctx
 {
     UINT16 count;
+    UINT16 allowed_count;
+    UINT16 allowed_size; /* the allowed flows' new array's size */
+
+    INT64 now; /* the interrupt time of the allowing */
 
     const UINT64 *flow_ids;
+    PFORT_PENDING_ALLOWED_FLOW allowed_flows; /* the new array, NULL - not allowing */
 } FORT_PENDING_FLOWS_CTX, *PFORT_PENDING_FLOWS_CTX;
-
-typedef const FORT_PENDING_FLOWS_CTX *PCFORT_PENDING_FLOWS_CTX;
 
 static PFORT_PENDING_PACKET fort_pending_packet_new(PCFORT_CONF_META_CONN conn)
 {
@@ -131,6 +134,80 @@ static BOOL fort_pending_conn_pended_locked(
                          : state.outbound_count >= FORT_PENDING_APP_OUTBOUND_COUNT_MAX;
 }
 
+/* Binary search of the items sorted by their first field, the flow's id: the flow's index or the
+ * count, when not found */
+static UINT32 fort_pending_flow_index(
+        const void *items, UINT32 count, UINT32 item_size, UINT64 flow_id)
+{
+    UINT32 low = 0;
+    UINT32 high = count;
+
+    while (low < high) {
+        const UINT32 mid = low + (high - low) / 2;
+        const UINT64 id = *(const UINT64 *) ((const char *) items + mid * item_size);
+
+        if (id == flow_id)
+            return mid;
+
+        if (id < flow_id) {
+            low = mid + 1;
+        } else {
+            high = mid;
+        }
+    }
+
+    return count;
+}
+
+/* Sorted insertion into the array with the room for it */
+static UINT16 fort_pending_allowed_flow_insert(
+        PFORT_PENDING_ALLOWED_FLOW flows, UINT16 count, const FORT_PENDING_ALLOWED_FLOW flow)
+{
+    UINT16 i = count;
+
+    while (i > 0 && flows[i - 1].flow_id > flow.flow_id) {
+        flows[i] = flows[i - 1];
+        --i;
+    }
+
+    flows[i] = flow;
+
+    return count + 1;
+}
+
+/* Copy the not expired ones */
+static UINT16 fort_pending_allowed_flows_copy(PFORT_PENDING_ALLOWED_FLOW flows,
+        PCFORT_PENDING_ALLOWED_FLOW old_flows, UINT16 old_count, INT64 now)
+{
+    UINT16 count = 0;
+
+    for (UINT16 i = 0; i < old_count; ++i) {
+        if (old_flows[i].expire_time > now) {
+            flows[count++] = old_flows[i];
+        }
+    }
+
+    return count;
+}
+
+static BOOL fort_pending_allowed_flow_remove_locked(PFORT_PENDING pending, UINT64 flow_id)
+{
+    PFORT_PENDING_ALLOWED_FLOW flows = pending->allowed_flows;
+    const UINT32 count = pending->allowed_flow_count;
+
+    const UINT32 index =
+            fort_pending_flow_index(flows, count, sizeof(FORT_PENDING_ALLOWED_FLOW), flow_id);
+    if (index >= count)
+        return FALSE;
+
+    RtlMoveMemory(flows + index, flows + index + 1,
+            (count - index - 1) * sizeof(FORT_PENDING_ALLOWED_FLOW));
+
+    pending->allowed_flow_count = (UINT16) (count - 1);
+
+    return TRUE;
+}
+
 static NTSTATUS fort_pending_add_packet_locked(PFORT_PENDING pending, PCFORT_CALLOUT_ARG ca,
         PCFORT_CONF_META_CONN conn, PFORT_PENDING_PACKET pkt)
 {
@@ -155,6 +232,9 @@ static NTSTATUS fort_pending_add_packet_locked(PFORT_PENDING pending, PCFORT_CAL
 
     pkt->next = pending->packets_head;
     pending->packets_head = pkt;
+
+    /* The closed allowed flow's id may be reused by the new flow */
+    fort_pending_allowed_flow_remove_locked(pending, pkt->flow_id);
 
     return STATUS_SUCCESS;
 }
@@ -286,6 +366,25 @@ static BOOL fort_pending_packet_any(void *ctx, PCFORT_PENDING_PACKET pkt)
     return TRUE;
 }
 
+static void fort_pending_allowed_flows_clear(PFORT_PENDING pending)
+{
+    PFORT_PENDING_ALLOWED_FLOW flows;
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&pending->lock, &lock_queue);
+
+    flows = pending->allowed_flows;
+
+    pending->allowed_flows = NULL;
+    pending->allowed_flow_count = 0;
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    if (flows != NULL) {
+        fort_mem_free(flows, FORT_PACKET_POOL_TAG);
+    }
+}
+
 FORT_API void fort_pending_clear(PFORT_PENDING pending)
 {
     FORT_PENDING_WALK walk = {
@@ -294,13 +393,30 @@ FORT_API void fort_pending_clear(PFORT_PENDING pending)
 
     /* Complete the connections without re-injecting their packets */
     fort_pending_complete_walk(pending, &walk, /*reauth=*/FALSE);
+
+    /* The closed master's allowed connections */
+    fort_pending_allowed_flows_clear(pending);
 }
 
 static BOOL fort_pending_packet_listed(void *ctx, PCFORT_PENDING_PACKET pkt)
 {
-    PCFORT_PENDING_FLOWS_CTX fc = ctx;
+    PFORT_PENDING_FLOWS_CTX fc = ctx;
 
-    return fort_pending_flow_index(fc->flow_ids, fc->count, pkt->flow_id) < fc->count;
+    if (fort_pending_flow_index(fc->flow_ids, fc->count, sizeof(UINT64), pkt->flow_id) >= fc->count)
+        return FALSE;
+
+    /* The allowed connection's reauthorization finds it */
+    if (fc->allowed_flows != NULL) {
+        const FORT_PENDING_ALLOWED_FLOW flow = {
+            .flow_id = pkt->flow_id,
+            .expire_time = fc->now + (INT64) FORT_PENDING_ALLOWED_FLOW_SECONDS * 10000000,
+        };
+
+        fc->allowed_count =
+                fort_pending_allowed_flow_insert(fc->allowed_flows, fc->allowed_count, flow);
+    }
+
+    return TRUE;
 }
 
 FORT_API void fort_pending_complete_flows(
@@ -317,6 +433,96 @@ FORT_API void fort_pending_complete_flows(
     };
 
     fort_pending_complete_walk(pending, &walk, reauth);
+}
+
+/* Returns the array to free: the old allowed flows' one, else the new one without the room */
+static PFORT_PENDING_ALLOWED_FLOW fort_pending_allow_walk_locked(
+        PFORT_PENDING pending, PFORT_PENDING_WALK walk)
+{
+    PFORT_PENDING_FLOWS_CTX fc = walk->ctx;
+
+    PFORT_PENDING_ALLOWED_FLOW old_flows = pending->allowed_flows;
+    const UINT16 old_count = pending->allowed_flow_count;
+
+    /* The allowed flows are added meanwhile */
+    if (old_count + fc->count > fc->allowed_size) {
+        return fc->allowed_flows;
+    }
+
+    /* The not taken ones are dropped by their expiration */
+    fc->allowed_count =
+            fort_pending_allowed_flows_copy(fc->allowed_flows, old_flows, old_count, fc->now);
+
+    fort_pending_walk_locked(pending, walk);
+
+    pending->allowed_flows = fc->allowed_flows;
+    pending->allowed_flow_count = fc->allowed_count;
+
+    return old_flows;
+}
+
+FORT_API NTSTATUS fort_pending_allow_flows(
+        PFORT_PENDING pending, const UINT64 *flow_ids, UINT16 count)
+{
+    const UINT32 size = pending->allowed_flow_count + count;
+    if (size > FORT_PENDING_FLOW_COUNT_MAX)
+        return STATUS_INSUFFICIENT_RESOURCES;
+
+    FORT_PENDING_FLOWS_CTX fc = {
+        .count = count,
+        .allowed_size = (UINT16) size,
+        .now = (INT64) KeQueryInterruptTime(),
+        .flow_ids = flow_ids,
+        .allowed_flows =
+                fort_mem_alloc(size * sizeof(FORT_PENDING_ALLOWED_FLOW), FORT_PACKET_POOL_TAG),
+    };
+
+    if (fc.allowed_flows == NULL)
+        return STATUS_INSUFFICIENT_RESOURCES;
+
+    FORT_PENDING_WALK walk = {
+        .done_func = &fort_pending_packet_listed,
+        .ctx = &fc,
+    };
+
+    PFORT_PENDING_ALLOWED_FLOW free_flows;
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&pending->lock, &lock_queue);
+    {
+        free_flows = fort_pending_allow_walk_locked(pending, &walk);
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    /* Reauthorize the allowed connections, re-inject their packets */
+    fort_pending_packets_complete(walk.packets, /*inject=*/TRUE);
+
+    /* The new array without the room isn't used */
+    const NTSTATUS status =
+            (free_flows == fc.allowed_flows) ? STATUS_INSUFFICIENT_RESOURCES : STATUS_SUCCESS;
+
+    if (free_flows != NULL) {
+        fort_mem_free(free_flows, FORT_PACKET_POOL_TAG);
+    }
+
+    return status;
+}
+
+FORT_API BOOL fort_pending_flow_take_allowed(PFORT_PENDING pending, UINT64 flow_id)
+{
+    if (pending->allowed_flow_count == 0)
+        return FALSE;
+
+    BOOL allowed;
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&pending->lock, &lock_queue);
+
+    allowed = fort_pending_allowed_flow_remove_locked(pending, flow_id);
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return allowed;
 }
 
 FORT_API BOOL fort_pending_conn_pended(PFORT_PENDING pending, PCFORT_CONF_META_CONN conn)

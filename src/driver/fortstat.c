@@ -4,6 +4,8 @@
 
 #include <assert.h>
 
+#include "common/fortdef.h"
+
 #include "fortutl.h"
 
 #define FORT_STAT_POOL_TAG 'SwfF'
@@ -322,7 +324,8 @@ inline static void fort_flow_opt_set(PCFORT_FLOW_ADD_ARG faa)
     const UCHAR speed_limit = fort_flow_speed_limit_flags(speed_limits);
 
     flow->opt.flags = speed_limit | (conn->ip_proto == IPPROTO_TCP ? FORT_FLOW_TCP : 0)
-            | (conn->isIPv6 ? FORT_FLOW_IP6 : 0) | (conn->inbound ? FORT_FLOW_INBOUND : 0);
+            | (conn->isIPv6 ? FORT_FLOW_IP6 : 0) | (conn->inbound ? FORT_FLOW_INBOUND : 0)
+            | (conn->reason == FORT_CONN_REASON_ASK_ALLOWED ? FORT_FLOW_ASK_ALLOWED : 0);
 
     flow->opt.proc_index = faa->proc->proc_index;
 
@@ -541,6 +544,25 @@ FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, PCFORT_CONF_META_CONN con
     return status;
 }
 
+FORT_API BOOL fort_flow_ask_allowed(PFORT_STAT stat, UINT64 flow_id)
+{
+    const tommy_key_t flow_hash = fort_flow_hash(flow_id);
+
+    BOOL allowed = FALSE;
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
+    {
+        PFORT_FLOW flow = fort_flow_get(stat, flow_id, flow_hash);
+        if (flow != NULL) {
+            allowed = (flow->opt.flags & FORT_FLOW_ASK_ALLOWED) != 0;
+        }
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return allowed;
+}
+
 FORT_API void fort_flow_proc_unlog(PFORT_STAT stat, UINT32 process_id)
 {
     const tommy_key_t pid_hash = fort_stat_proc_hash(process_id);
@@ -566,6 +588,21 @@ static BOOL fort_flow_delete_closing(PFORT_STAT stat, PFORT_FLOW flow)
         return TRUE;
     }
     return FALSE;
+}
+
+FORT_API BOOL fort_flow_ask_allowed_id(PFORT_STAT stat, UINT64 flowContext, UINT64 *flow_id)
+{
+    /* The flows aren't closed, when their contexts are removed by the stat's closing */
+    if ((fort_stat_flags(stat) & FORT_STAT_CLOSED) != 0)
+        return FALSE;
+
+    PCFORT_FLOW flow = (PCFORT_FLOW) flowContext;
+
+    if ((flow->opt.flags & FORT_FLOW_ASK_ALLOWED) == 0)
+        return FALSE;
+
+    *flow_id = flow->flow_id;
+    return TRUE;
 }
 
 FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext)
