@@ -44,7 +44,6 @@ private:
     QToolButton *m_btAllow = nullptr;
     QToolButton *m_btBlock = nullptr;
     QToolButton *m_btContinue = nullptr;
-    QToolButton *m_btAddFilter = nullptr;
 };
 
 #endif // APPPENDINGCONNSWINDOW_H

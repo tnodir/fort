@@ -103,9 +103,11 @@ void AppConnsWindow::setupUi()
     // Program Name
     setupEditAppName();
 
+    m_appNameSeparator = ControlUtil::createVSeparator();
+
     auto layout = headerLayout();
     layout->insertWidget(0, m_editAppName);
-    layout->insertWidget(1, ControlUtil::createVSeparator());
+    layout->insertWidget(1, m_appNameSeparator);
 
     // Add Filter
     setupAddFilter();
@@ -136,6 +138,13 @@ void AppConnsWindow::setupAddFilter()
     connect(m_actAddFilter, &QAction::triggered, this,
             [&] { emit addFilterRequested(currentConnRow()); });
 
+    // Also by the double click, when it's visible
+    connect(connListView(), &TableView::doubleClicked, this, [&] {
+        if (m_actAddFilter->isVisible()) {
+            m_actAddFilter->trigger();
+        }
+    });
+
     const auto refreshAddFilter = [&] { m_actAddFilter->setEnabled(connListCurrentIndex() >= 0); };
 
     refreshAddFilter();
@@ -150,6 +159,12 @@ void AppConnsWindow::updateApp(const App &app)
     m_editAppName->setStartText(appNameOrPath(app));
 
     updateProgramColumnHidden();
+}
+
+void AppConnsWindow::hideAppName()
+{
+    m_editAppName->hide();
+    m_appNameSeparator->hide();
 }
 
 void AppConnsWindow::setupAlertWindow()

@@ -73,10 +73,12 @@ void AppPendingConnsWindow::setupUi()
     setupDecideButtons();
 
     // Add Filter
-    m_btAddFilter = ControlUtil::createIconToolButton(QString());
-    m_btAddFilter->setDefaultAction(addFilterAction());
+    auto btAddFilter = ControlUtil::createIconToolButton(QString());
+    btAddFilter->setDefaultAction(addFilterAction());
 
-    // After the program's name
+    // After the hidden program's name
+    hideAppName();
+
     auto layout = headerLayout();
     layout->insertWidget(2, m_btAllow);
     layout->insertWidget(3, m_btBlock);

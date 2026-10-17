@@ -33,6 +33,8 @@ protected:
     AppConnsWindow(
             AppConnSearchModel *connListModel, const App &app, QWidget *parent, Qt::WindowFlags f);
 
+    void hideAppName();
+
     QAction *addFilterAction() const { return m_actAddFilter; }
 
     /* The alert's window isn't held by the Window Manager */
@@ -59,6 +61,7 @@ private:
 
 private:
     LineEdit *m_editAppName = nullptr;
+    QWidget *m_appNameSeparator = nullptr;
     QAction *m_actAddFilter = nullptr;
 };
 
