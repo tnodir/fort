@@ -60,6 +60,9 @@ FORT_API BOOL fort_conf_conn_flags_filtered(
 FORT_API BOOL fort_conf_conn_app_allowed(
         PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn, const FORT_APP_DATA app_data);
 
+/* Returns TRUE, when the unknown (logged) or alerted App is asked by Ask to Connect */
+FORT_API BOOL fort_conf_app_asked(const FORT_CONF_FLAGS conf_flags, const FORT_APP_DATA app_data);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

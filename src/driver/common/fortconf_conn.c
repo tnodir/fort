@@ -182,6 +182,22 @@ static BOOL fort_conf_conn_app_filtered(
     return fort_conf_conn_app_rule_filtered(conn);
 }
 
+FORT_API BOOL fort_conf_app_asked(const FORT_CONF_FLAGS conf_flags, const FORT_APP_DATA app_data)
+{
+    if (!conf_flags.ask_to_connect)
+        return FALSE;
+
+    /* The unknown App is asked only when it's logged */
+    return app_data.flags.found == 0 ? conf_flags.log_app : app_data.flags.alerted;
+}
+
+inline static BOOL fort_conf_conn_app_found(
+        PCFORT_CONF_CONN_FILTER filter, const FORT_APP_DATA app_data)
+{
+    /* The alerted App is asked, as an unknown one */
+    return app_data.flags.found != 0 && !fort_conf_app_asked(filter->conf_flags, app_data);
+}
+
 inline static void fort_conf_conn_app_filter(
         PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn, const FORT_APP_DATA app_data)
 {
@@ -190,7 +206,7 @@ inline static void fort_conf_conn_app_filter(
         return; /* filtered by Global Rule Pre Apps */
     }
 
-    const BOOL app_found = (app_data.flags.found != 0);
+    const BOOL app_found = fort_conf_conn_app_found(filter, app_data);
     if (app_found ? fort_conf_conn_app_filtered(filter, conn, app_data) : conn->act.blocked) {
         return; /* filtered by App or Filter Mode */
     }
@@ -217,11 +233,10 @@ inline static BOOL fort_conf_conn_filter_mode_filtered(
         return FALSE;
     }
 
-    /* Ask to Connect */
+    /* Ask to Connect: block till the user's decision */
     if (conf_flags.ask_to_connect) {
-        conn->act.blocked = FALSE;
-        conn->ask_to_connect = TRUE;
-        return TRUE;
+        conn->act.blocked = TRUE;
+        return FALSE;
     }
 
     /* Block/Allow All */
@@ -236,16 +251,33 @@ inline static BOOL fort_conf_conn_filter_mode_filtered(
     return TRUE;
 }
 
+inline static BOOL fort_conf_conn_asked(
+        PCFORT_CONF_CONN_FILTER filter, PCFORT_CONF_META_CONN conn, const FORT_APP_DATA app_data)
+{
+    if (!conn->act.blocked)
+        return FALSE;
+
+    /* The unknown App is asked only when it's logged, else blocked */
+    if (app_data.flags.found == 0 && !filter->conf_flags.log_app)
+        return FALSE;
+
+    /* Ask to Connect, when blocked by the Filter Mode */
+    return filter->conf_flags.ask_to_connect && conn->reason == FORT_CONN_REASON_FILTER_MODE;
+}
+
 FORT_API BOOL fort_conf_conn_app_allowed(
         PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn, const FORT_APP_DATA app_data)
 {
     if (!conn->act.blocked)
         return TRUE; /* collect traffic, when Filter Disabled */
 
-    const BOOL app_found = (app_data.flags.found != 0);
+    const BOOL app_found = fort_conf_conn_app_found(filter, app_data);
+
     if (app_found || !fort_conf_conn_filter_mode_filtered(conn, filter->conf_flags)) {
         fort_conf_conn_app_filter(filter, conn, app_data);
     }
+
+    conn->ask_to_connect = (UINT16) fort_conf_conn_asked(filter, conn, app_data);
 
     return !conn->act.blocked;
 }
