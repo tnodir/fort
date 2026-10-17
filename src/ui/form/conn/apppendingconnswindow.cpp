@@ -84,6 +84,9 @@ void AppPendingConnsWindow::setupUi()
     layout->insertWidget(5, m_btAddFilter);
     layout->insertWidget(6, ControlUtil::createVSeparator());
 
+    // The selected row stays in view, when the new rows are added
+    setAutoScroll(false);
+
     setupConnsChanged();
 }
 

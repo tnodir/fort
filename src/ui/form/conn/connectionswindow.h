@@ -47,6 +47,10 @@ protected:
 
     void hideEditing();
 
+    /* Scroll to the new rows or keep the visible ones in place. The model's signals to the window
+     * are disconnected: a variant connects its own ones after it */
+    void setAutoScroll(bool autoScroll);
+
     int connListCurrentIndex() const;
     const ConnRow &currentConnRow() const;
 

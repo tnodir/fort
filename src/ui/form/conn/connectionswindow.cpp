@@ -579,9 +579,14 @@ void ConnectionsWindow::restoreTopRow()
 
 void ConnectionsWindow::updateAutoScroll()
 {
+    setAutoScroll(iniUser().connAutoScroll());
+}
+
+void ConnectionsWindow::setAutoScroll(bool autoScroll)
+{
     connListModel()->disconnect(this);
 
-    if (iniUser().connAutoScroll()) {
+    if (autoScroll) {
         setupAutoScrollConnections();
     } else {
         setupKeepScrollConnections();
