@@ -298,6 +298,8 @@ TEST_F(ConnFilterTest, filterModes)
 
     FORT_CONF_META_CONN conn;
 
+    confFlags()->log_app = true; // the unknown App is asked only when it's logged
+
     ASSERT_EQ(checkMode(FirewallConf::ModeAutoLearn, conn), DriverCommon::ConnFilterAllowed);
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_FILTER_MODE);
 
@@ -324,6 +326,53 @@ TEST_F(ConnFilterTest, filterModes)
 
     conn = connFilterConn("8.8.8.8");
     ASSERT_EQ(connFilter("C:\\App\\allowed.exe", conn), DriverCommon::ConnFilterAllowed);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM);
+}
+
+TEST_F(ConnFilterTest, askToConnect)
+{
+    App alertedApp = wildcardApp("C:\\App\\alerted.exe", /*blocked=*/true);
+    alertedApp.alerted = true;
+
+    m_apps << alertedApp;
+    writeConf();
+
+    writeRules(TestRuleList({ { .ruleId = 1, .ruleText = "1.1.1.1" } }, /*globPreRuleId=*/1));
+
+    setFilterMode(FirewallConf::ModeAskToConnect);
+
+    // The not logged unknown App is blocked
+    FORT_CONF_META_CONN conn = connFilterConn("8.8.8.8");
+    ASSERT_EQ(connFilter("C:\\App\\unknown.exe", conn), DriverCommon::ConnFilterBlocked);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_FILTER_MODE);
+
+    confFlags()->log_app = true;
+
+    // The unknown and alerted Apps are asked
+    conn = connFilterConn("8.8.8.8");
+    ASSERT_EQ(connFilter("C:\\App\\unknown.exe", conn), DriverCommon::ConnFilterAsk);
+    ASSERT_TRUE(conn.act.blocked);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_FILTER_MODE);
+
+    conn = connFilterConn("8.8.8.8");
+    ASSERT_EQ(connFilter("C:\\App\\alerted.exe", conn), DriverCommon::ConnFilterAsk);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_FILTER_MODE);
+
+    // The known App is not asked
+    conn = connFilterConn("8.8.8.8");
+    ASSERT_EQ(connFilter("C:\\App\\allowed.exe", conn), DriverCommon::ConnFilterAllowed);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM);
+
+    // Pre Apps: allow the unknown App without asking
+    conn = connFilterConn("1.1.1.1");
+    ASSERT_EQ(connFilter("C:\\App\\unknown.exe", conn), DriverCommon::ConnFilterAllowed);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_RULE_GLOB_PRE);
+
+    // The alerted App is filtered by its flags in other Filter Modes
+    setFilterMode(FirewallConf::ModeAllowAll);
+
+    conn = connFilterConn("8.8.8.8");
+    ASSERT_EQ(connFilter("C:\\App\\alerted.exe", conn), DriverCommon::ConnFilterBlocked);
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM);
 }
 
