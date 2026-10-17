@@ -1,5 +1,7 @@
 #include "controlcommandprog.h"
 
+#include <algorithm>
+
 #include <conf/app.h>
 #include <conf/confappmanager.h>
 #include <fortglobal.h>
@@ -14,6 +16,7 @@ enum ProgAction : qint8 {
     ProgActionAllow = 0,
     ProgActionBlock,
     ProgActionKill,
+    ProgActionAsk,
     ProgActionAdd,
     ProgActionDel,
 };
@@ -21,40 +24,30 @@ enum ProgAction : qint8 {
 QStringList progActionNames()
 {
     // Sync with enum ProgAction
-    return { "allow", "block", "kill" };
+    return { "allow", "block", "kill", "ask", "add", "del" };
 }
 
 // Sync with enum ProgAction
 inline constexpr App::Action appActions[] = { App::ActionAllow, App::ActionBlock,
-    App::ActionKillProcess };
+    App::ActionKillProcess, App::ActionAsk };
 
 App::Action appActionByProg(ProgAction progAction)
 {
     return appActions[progAction];
 }
 
+ProgAction progActionByApp(const App &app)
+{
+    const auto it = std::find(std::begin(appActions), std::end(appActions), app.action());
+
+    return ProgAction(it - std::begin(appActions));
+}
+
 ProgAction progActionByText(const QString &commandText, bool &report)
 {
-    if (commandText == "allow")
-        return ProgActionAllow;
+    report = (commandText == "report");
 
-    if (commandText == "block")
-        return ProgActionBlock;
-
-    if (commandText == "kill")
-        return ProgActionKill;
-
-    if (commandText == "add")
-        return ProgActionAdd;
-
-    if (commandText == "del")
-        return ProgActionDel;
-
-    if (commandText == "report") {
-        report = true;
-    }
-
-    return ProgActionInvalid;
+    return ProgAction(progActionNames().indexOf(commandText));
 }
 
 bool reportCommandProgAction(ProcessCommandResult &r, const QString &appPath)
@@ -67,8 +60,7 @@ bool reportCommandProgAction(ProcessCommandResult &r, const QString &appPath)
         return true;
     }
 
-    const auto progAction =
-            app.killProcess ? ProgActionKill : (app.blocked ? ProgActionBlock : ProgActionAllow);
+    const auto progAction = progActionByApp(app);
 
     r.commandResult = Control::CommandResult(Control::CommandResultBase + progAction);
 
@@ -91,7 +83,7 @@ bool processCommandProgAction(
     case ProgActionDel: {
         return confAppManager()->deleteAppPath(appPath);
     }
-    default: // Allow, Block or Kill
+    default: // Allow, Block, Kill or Ask
         return confAppManager()->addOrUpdateAppPath(appPath, appActionByProg(progAction));
     }
 }
@@ -104,7 +96,7 @@ bool ControlCommandProg::processCommand(const ProcessCommandArgs &p, ProcessComm
     const ProgAction progAction = progActionByText(p.args.value(0).toString(), report);
 
     if (progAction == ProgActionInvalid && !report) {
-        r.errorMessage = "Usage: prog allow|block|kill|add|del|report <app-path>";
+        r.errorMessage = "Usage: prog allow|block|kill|ask|add|del|report <app-path>";
         return false;
     }
 
