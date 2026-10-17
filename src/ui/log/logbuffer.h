@@ -43,6 +43,7 @@ public:
 
     void readEntryProcKill(LogEntryProcKill *logEntry);
 
+    void writeEntryFlowClosed(const LogEntryFlowClosed *logEntry);
 public slots:
     void reset(int top = 0);
 

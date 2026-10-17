@@ -8,6 +8,7 @@
 #include <log/logbuffer.h>
 #include <log/logentryapp.h>
 #include <log/logentryconn.h>
+#include <log/logentryflowclosed.h>
 #include <log/logentrytime.h>
 #include <util/dateutil.h>
 
@@ -86,7 +87,7 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
 
     const int entrySize = DriverCommon::logConnHeaderSize() + pathSize * sizeof(wchar_t);
 
-    const int testCount = 16; // all the flags' combinations
+    const int testCount = 32; // all the flags' combinations
 
     LogBuffer buf(entrySize * testCount);
 
@@ -100,6 +101,7 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
         entry.setBlocked((v & 2) != 0);
         entry.setDropped((v & 4) != 0);
         entry.setAlerted((v & 8) != 0);
+        entry.setAppAsked((v & 16) != 0);
         entry.setReason(++v);
         entry.setIpProto(++v);
         entry.setLocalPort(++v);
@@ -107,6 +109,7 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
         entry.setLocalIp4(++v);
         entry.setRemoteIp4(++v);
         entry.setPid(++v);
+        entry.setFlowId((quint64(++v) << 32) | 0xF0000000u);
 
         buf.writeEntryConn(&entry);
     }
@@ -123,6 +126,7 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
         ASSERT_EQ(entry.blocked(), (v & 2) != 0);
         ASSERT_EQ(entry.dropped(), (v & 4) != 0);
         ASSERT_EQ(entry.alerted(), (v & 8) != 0);
+        ASSERT_EQ(entry.appAsked(), (v & 16) != 0);
         ASSERT_EQ(entry.reason(), ++v);
         ASSERT_EQ(entry.ipProto(), ++v);
         ASSERT_EQ(entry.localPort(), ++v);
@@ -130,6 +134,7 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
         ASSERT_EQ(entry.localIp4(), ++v);
         ASSERT_EQ(entry.remoteIp4(), ++v);
         ASSERT_EQ(entry.pid(), ++v);
+        ASSERT_EQ(entry.flowId(), (quint64(++v) << 32) | 0xF0000000u);
         ASSERT_EQ(entry.kernelPath(), path);
     }
     ASSERT_EQ(index, testCount);
@@ -255,4 +260,43 @@ TEST_F(LogBufferTest, timeWriteRead)
     ASSERT_EQ(buf.peekEntryType(), FORT_LOG_TYPE_TIME);
     buf.readEntryTime(&entry);
     ASSERT_EQ(entry.unixTime(), unixTime);
+}
+
+TEST_F(LogBufferTest, flowClosedWriteRead)
+{
+    const QString path("C:\\test\\");
+
+    const int connSize = int(DriverCommon::logConnHeaderSize() + path.size() * sizeof(wchar_t));
+    const int flowClosedSize = DriverCommon::logFlowClosedSize();
+
+    const int testCount = 3;
+
+    LogBuffer buf((connSize + flowClosedSize) * testCount);
+
+    LogEntryConn connEntry;
+    connEntry.setKernelPath(path);
+
+    // Write: the records of different sizes alternate
+    for (int i = 0; i < testCount; ++i) {
+        connEntry.setPid(i + 1);
+        buf.writeEntryConn(&connEntry);
+
+        const LogEntryFlowClosed flowClosedEntry(0x89ABCDEF01234567ull + i);
+        buf.writeEntryFlowClosed(&flowClosedEntry);
+    }
+
+    // Read
+    for (int i = 0; i < testCount; ++i) {
+        ASSERT_EQ(buf.peekEntryType(), FORT_LOG_TYPE_CONN);
+        buf.readEntryConn(&connEntry);
+        ASSERT_EQ(connEntry.pid(), i + 1);
+        ASSERT_EQ(connEntry.kernelPath(), path);
+
+        ASSERT_EQ(buf.peekEntryType(), FORT_LOG_TYPE_FLOW_CLOSED);
+        LogEntryFlowClosed flowClosedEntry;
+        buf.readEntryFlowClosed(&flowClosedEntry);
+        ASSERT_EQ(flowClosedEntry.flowId(), 0x89ABCDEF01234567ull + i);
+    }
+
+    ASSERT_EQ(buf.offset(), buf.top());
 }
