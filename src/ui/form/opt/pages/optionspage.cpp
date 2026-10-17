@@ -9,7 +9,6 @@
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QSpinBox>
-#include <QStandardItemModel>
 #include <QToolButton>
 #include <QVBoxLayout>
 
@@ -361,11 +360,6 @@ QLayout *OptionsPage::setupFilterModeLayout()
                 }
             });
     m_comboFilterMode->setFixedWidth(200);
-
-    // TODO: Implement Ask to Connect
-    QStandardItemModel *model = qobject_cast<QStandardItemModel *>(m_comboFilterMode->model());
-    QStandardItem *item = model->item(1);
-    item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
 
     return ControlUtil::createRowLayout(m_labelFilterMode, m_comboFilterMode);
 }

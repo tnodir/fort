@@ -61,10 +61,6 @@ FirewallConf::FilterMode FirewallConf::filterMode() const
 
 void FirewallConf::setFilterMode(FirewallConf::FilterMode mode)
 {
-    // TODO: Implement "Ask to Connect" mode
-    if (mode == ModeAskToConnect)
-        return;
-
     if (mode != ModeAutoLearn && m_allowAllNew) {
         setAutoLearnOff();
     }

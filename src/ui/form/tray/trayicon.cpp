@@ -649,9 +649,6 @@ void TrayIcon::setupTrayMenuFilterMode()
 
         addHotKey(a, iniKey);
 
-        // TODO: Implement Ask to Connect
-        a->setEnabled(index != 1);
-
         m_filterModeActions->addAction(a);
         ++index;
     }
