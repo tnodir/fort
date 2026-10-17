@@ -1329,6 +1329,17 @@ TEST_F(ConfUtilTest, appFiltersText)
 
     ASSERT_EQ(ConfUtil::appFiltersText(rule), "# Terminating\nAct(Allow)");
 
+    // The asking Terminating Rule
+    rule = {};
+    ConfUtil::parseAppFiltersText("# Terminating\nAct(Ask)", rule);
+
+    ASSERT_TRUE(rule.terminate);
+    ASSERT_TRUE(rule.terminateBlocked);
+    ASSERT_TRUE(rule.terminateAsk);
+    ASSERT_FALSE(rule.terminateDrop);
+
+    ASSERT_EQ(ConfUtil::appFiltersText(rule), "# Terminating\nAct(Ask)");
+
     // No Terminating Rule
     rule = {};
     ConfUtil::parseAppFiltersText("Port(80)", rule);

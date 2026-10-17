@@ -543,6 +543,11 @@ ConnFilterResult confConnFilter(
     return connFilterResult(conn);
 }
 
+bool confAppAsked(const FORT_CONF_FLAGS &confFlags, const FORT_APP_DATA &appData)
+{
+    return fort_conf_app_asked(confFlags, appData);
+}
+
 bool confIoValid(const void *drvConfIo, quint32 len)
 {
     return fort_conf_io_valid(PCFORT_CONF_IO(drvConfIo), len);

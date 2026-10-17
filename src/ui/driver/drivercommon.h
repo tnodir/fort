@@ -124,6 +124,9 @@ bool confRulesConnBlocked(const void *drvRules, PFORT_CONF_META_CONN conn, quint
 ConnFilterResult confConnFilter(
         const ConnFilterConf &cf, PFORT_CONF_META_CONN conn, const FORT_CONF_APP_FIND_RESULT &app);
 
+// The App is asked as an unknown one by the "Ask to Connect" Filter Mode
+bool confAppAsked(const FORT_CONF_FLAGS &confFlags, const FORT_APP_DATA &appData);
+
 bool confIoValid(const void *drvConfIo, quint32 len);
 bool confAppEntryValid(const void *drvAppEntry, quint32 len);
 bool confZonesValid(const void *drvZones, quint32 len);

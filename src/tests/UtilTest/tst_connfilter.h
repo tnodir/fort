@@ -304,6 +304,7 @@ TEST_F(ConnFilterTest, filterModes)
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_FILTER_MODE);
 
     ASSERT_EQ(checkMode(FirewallConf::ModeAskToConnect, conn), DriverCommon::ConnFilterAsk);
+    ASSERT_TRUE(conn.app_asked);
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_FILTER_MODE);
 
     ASSERT_EQ(checkMode(FirewallConf::ModeBlockAll, conn), DriverCommon::ConnFilterBlocked);
@@ -351,11 +352,13 @@ TEST_F(ConnFilterTest, askToConnect)
     // The unknown and alerted Apps are asked
     conn = connFilterConn("8.8.8.8");
     ASSERT_EQ(connFilter("C:\\App\\unknown.exe", conn), DriverCommon::ConnFilterAsk);
+    ASSERT_TRUE(conn.app_asked);
     ASSERT_TRUE(conn.act.blocked);
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_FILTER_MODE);
 
     conn = connFilterConn("8.8.8.8");
     ASSERT_EQ(connFilter("C:\\App\\alerted.exe", conn), DriverCommon::ConnFilterAsk);
+    ASSERT_TRUE(conn.app_asked);
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_FILTER_MODE);
 
     // The known App is not asked
@@ -373,6 +376,171 @@ TEST_F(ConnFilterTest, askToConnect)
 
     conn = connFilterConn("8.8.8.8");
     ASSERT_EQ(connFilter("C:\\App\\alerted.exe", conn), DriverCommon::ConnFilterBlocked);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM);
+}
+
+TEST_F(ConnFilterTest, appAsked)
+{
+    const struct
+    {
+        bool askToConnect;
+        bool logApp;
+        bool found;
+        bool alerted;
+        bool asked;
+    } cases[] = {
+        // Other Filter Modes
+        { .askToConnect = false, .logApp = true, .found = false, .alerted = false, .asked = false },
+        { .askToConnect = false, .logApp = true, .found = true, .alerted = true, .asked = false },
+        // The unknown App only when it's logged
+        { .askToConnect = true, .logApp = false, .found = false, .alerted = false, .asked = false },
+        { .askToConnect = true, .logApp = true, .found = false, .alerted = false, .asked = true },
+        // The known App only when it's alerted, logged or not
+        { .askToConnect = true, .logApp = true, .found = true, .alerted = false, .asked = false },
+        { .askToConnect = true, .logApp = false, .found = true, .alerted = true, .asked = true },
+        { .askToConnect = true, .logApp = true, .found = true, .alerted = true, .asked = true },
+    };
+
+    int index = 0;
+    for (const auto &c : cases) {
+        FORT_CONF_FLAGS confFlags = {};
+        confFlags.ask_to_connect = c.askToConnect;
+        confFlags.log_app = c.logApp;
+
+        FORT_APP_DATA appData = {};
+        appData.flags.found = c.found;
+        appData.flags.alerted = c.alerted;
+
+        ASSERT_EQ(DriverCommon::confAppAsked(confFlags, appData), c.asked) << "case: " << index;
+
+        ++index;
+    }
+}
+
+TEST_F(ConnFilterTest, askAction)
+{
+    App askApp = wildcardApp("C:\\App\\ask.exe");
+    askApp.setAction(App::ActionAsk);
+    askApp.filtersText = "IP(1.1.1.1):Act(Allow)\n"
+                         "IP(2.2.2.2):Act(Block)";
+
+    App filtersApp = wildcardApp("C:\\App\\filters.exe");
+    filtersApp.filtersText = "IP(1.1.1.1):Act(Ask)\n"
+                             "# Terminating\n"
+                             "Act(Ask)";
+
+    App ruleApp = wildcardApp("C:\\App\\rule.exe");
+    ruleApp.ruleId = 1;
+
+    m_apps << askApp << filtersApp << ruleApp;
+    writeConf();
+
+    writeRules(
+            TestRuleList({ { .blocked = true, .ask = true, .ruleId = 1, .ruleText = "3.3.3.3" } }));
+
+    // In any Filter Mode
+    setFilterMode(FirewallConf::ModeBlockAll);
+
+    // The Program's not filtered connections are asked
+    FORT_CONF_META_CONN conn = connFilterConn("8.8.8.8");
+    ASSERT_EQ(connFilter("C:\\App\\ask.exe", conn), DriverCommon::ConnFilterAsk);
+    ASSERT_TRUE(conn.app_asked);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM);
+
+    conn = connFilterConn("1.1.1.1");
+    ASSERT_EQ(connFilter("C:\\App\\ask.exe", conn), DriverCommon::ConnFilterAllowed);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM_FILTER);
+
+    conn = connFilterConn("2.2.2.2");
+    ASSERT_EQ(connFilter("C:\\App\\ask.exe", conn), DriverCommon::ConnFilterBlocked);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM_FILTER);
+
+    // The filter's and Terminating Rule's Ask
+    conn = connFilterConn("1.1.1.1");
+    ASSERT_EQ(connFilter("C:\\App\\filters.exe", conn), DriverCommon::ConnFilterAsk);
+    ASSERT_FALSE(conn.app_asked);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM_FILTER);
+
+    conn = connFilterConn("8.8.8.8");
+    ASSERT_EQ(connFilter("C:\\App\\filters.exe", conn), DriverCommon::ConnFilterAsk);
+    ASSERT_FALSE(conn.app_asked);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM_FILTER);
+
+    // The Rule's Ask
+    conn = connFilterConn("3.3.3.3");
+    ASSERT_EQ(connFilter("C:\\App\\rule.exe", conn), DriverCommon::ConnFilterAsk);
+    ASSERT_FALSE(conn.app_asked);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_RULE);
+    ASSERT_EQ(conn.rule_id, 1);
+
+    conn = connFilterConn("8.8.8.8");
+    ASSERT_EQ(connFilter("C:\\App\\rule.exe", conn), DriverCommon::ConnFilterAllowed);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM);
+}
+
+TEST_F(ConnFilterTest, askDecisions)
+{
+    App askApp = wildcardApp("C:\\App\\ask.exe");
+    askApp.setAction(App::ActionAsk);
+    askApp.zones.reject_mask = connFilterZone1;
+
+    App alertedApp = wildcardApp("C:\\App\\alerted.exe", /*blocked=*/true);
+    alertedApp.alerted = true;
+
+    App groupApp = wildcardApp("C:\\App\\group.exe");
+    groupApp.groups = 0b01u; // Group 1
+
+    m_apps << askApp << alertedApp << groupApp;
+    writeConf();
+
+    writeZone1("9.0.0.0/8");
+
+    writeRules(TestRuleList(
+            { { .blocked = true, .ask = true, .ruleId = 1, .ruleText = "3.3.3.3" },
+                    { .blocked = true, .ask = true, .ruleId = 2, .ruleText = "4.4.4.4" } },
+            /*globPreRuleId=*/0, /*globPostRuleId=*/2));
+
+    writeGroups({ { .groupId = 1, .ruleId = 1 } }, /*activeMask=*/0b01u);
+
+    // The Global Rule Post Apps' Ask: the unknown App is asked only when it's logged
+    setFilterMode(FirewallConf::ModeAllowAll);
+
+    FORT_CONF_META_CONN conn = connFilterConn("4.4.4.4");
+    ASSERT_EQ(connFilter("C:\\App\\unknown.exe", conn), DriverCommon::ConnFilterBlocked);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_RULE_GLOB_POST);
+
+    confFlags()->log_app = true;
+
+    conn = connFilterConn("4.4.4.4");
+    ASSERT_EQ(connFilter("C:\\App\\unknown.exe", conn), DriverCommon::ConnFilterAsk);
+    ASSERT_FALSE(conn.app_asked);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_RULE_GLOB_POST);
+
+    // The Group's Rule's Ask
+    conn = connFilterConn("3.3.3.3");
+    ASSERT_EQ(connFilter("C:\\App\\group.exe", conn), DriverCommon::ConnFilterAsk);
+    ASSERT_FALSE(conn.app_asked);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_RULE);
+    ASSERT_EQ(conn.rule_id, 1);
+
+    // The Ask App's rejected Zone blocks without asking
+    conn = connFilterConn("9.9.9.9");
+    ASSERT_EQ(connFilter("C:\\App\\ask.exe", conn), DriverCommon::ConnFilterBlocked);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_ZONE);
+
+    // Ask to Connect: the alerted App is asked, logged or not
+    setFilterMode(FirewallConf::ModeAskToConnect);
+    confFlags()->log_app = false;
+
+    conn = connFilterConn("8.8.8.8");
+    ASSERT_EQ(connFilter("C:\\App\\alerted.exe", conn), DriverCommon::ConnFilterAsk);
+    ASSERT_TRUE(conn.app_asked);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_FILTER_MODE);
+
+    // The Ask App is asked by its action
+    conn = connFilterConn("8.8.8.8");
+    ASSERT_EQ(connFilter("C:\\App\\ask.exe", conn), DriverCommon::ConnFilterAsk);
+    ASSERT_TRUE(conn.app_asked);
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM);
 }
 
