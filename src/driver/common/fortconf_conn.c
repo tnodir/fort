@@ -367,7 +367,7 @@ inline static BOOL fort_conf_conn_filter_flags_filtered(
     /* INET addresses */
     if (!fort_conf_conn_addr_group_included(
                 filter, conn, /*addr_group_index=*/1, &conn->act.zone_id)) {
-        conn->reason = FORT_CONN_REASON_IP_INET;
+        conn->reason = FORT_CONN_REASON_IP_BLOCK_INET;
         return TRUE; /* block address */
     }
 

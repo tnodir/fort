@@ -280,7 +280,7 @@ TEST_F(ConnFilterTest, inetAddresses)
 
     FORT_CONF_META_CONN conn = connFilterConn("8.8.8.8");
     ASSERT_FALSE(connAllowed("C:\\App\\allowed.exe", conn));
-    ASSERT_EQ(conn.reason, FORT_CONN_REASON_IP_INET);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_IP_BLOCK_INET);
 
     conn = connFilterConn("8.8.4.4");
     ASSERT_TRUE(connAllowed("C:\\App\\allowed.exe", conn));
