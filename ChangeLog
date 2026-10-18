@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.20.6, 2026-10-18:
+- UI: Implement "Ask to Connect" filter mode (#30).
+- UI: Options: IP Addresses: Add the Internet's "Allow Addresses" (#784).
+- UI: Update SQLite to 3.54.1
+- Driver: Ask to Connect: Pause the connections till the user's decision.
+
 v3.20.5, 2026-10-15:
 - UI: Programs: Clear Alerts: Reset the driver's alerted flags too (v3.20.4 regression) (#780).
 - UI: Improve Network Filter.
