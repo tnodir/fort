@@ -162,6 +162,7 @@ public:
     quint8 activePeriodId() const { return m_activePeriodId; }
     void setActivePeriodId(quint8 v) { m_activePeriodId = v; }
 
+    static AddressList addressList(int groupIndex, bool isExclude);
     static QStringList addressListNames();
 
     AddressGroup *lanAddressGroup() const { return m_addressGroups.at(0); }

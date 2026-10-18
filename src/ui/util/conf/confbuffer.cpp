@@ -270,6 +270,18 @@ bool ConfBuffer::loadZone(IpRange &ipRange)
     return ConfRoData(data).loadAddressList(ipRange, bufSize);
 }
 
+bool ConfBuffer::parseAddressList(
+        IpRange &ipRange, const QString &text, FirewallConf::AddressList list)
+{
+    if (ipRange.fromText(text))
+        return true;
+
+    const QString listName = FirewallConf::addressListNames().value(list);
+
+    setErrorMessage(listName + ": " + ipRange.errorLineAndMessageDetails());
+    return false;
+}
+
 bool ConfBuffer::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
         ParseAddressGroupsArgs &ad, quint32 &addressGroupsSize)
 {
@@ -286,19 +298,13 @@ bool ConfBuffer::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
         addressRange.setIncludeZones(addressGroup->includeZones());
         addressRange.setExcludeZones(addressGroup->excludeZones());
 
-        if (!addressRange.includeRange().fromText(addressGroup->includeText())) {
-            setErrorMessage(tr("Bad Include IP address: #%1 %2")
-                            .arg(QString::number(i),
-                                    addressRange.includeRange().errorLineAndMessageDetails()));
+        if (!parseAddressList(addressRange.includeRange(), addressGroup->includeText(),
+                    FirewallConf::addressList(i, /*isExclude=*/false)))
             return false;
-        }
 
-        if (!addressRange.excludeRange().fromText(addressGroup->excludeText())) {
-            setErrorMessage(tr("Bad Exclude IP address: #%1 %2")
-                            .arg(QString::number(i),
-                                    addressRange.excludeRange().errorLineAndMessageDetails()));
+        if (!parseAddressList(addressRange.excludeRange(), addressGroup->excludeText(),
+                    FirewallConf::addressList(i, /*isExclude=*/true)))
             return false;
-        }
 
         const IpRange &incRange = addressRange.includeRange();
         const IpRange &excRange = addressRange.excludeRange();

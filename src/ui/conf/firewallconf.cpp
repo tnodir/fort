@@ -128,6 +128,11 @@ QStringList FirewallConf::filterModeIconPaths()
         ":/icons/road_sign.png" };
 }
 
+FirewallConf::AddressList FirewallConf::addressList(int groupIndex, bool isExclude)
+{
+    return AddressList(groupIndex * 2 + (isExclude ? 1 : 0));
+}
+
 QStringList FirewallConf::addressListNames()
 {
     // Sync with enum AddressList

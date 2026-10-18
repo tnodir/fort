@@ -3,6 +3,7 @@
 
 #include <QByteArray>
 
+#include <conf/firewallconf.h>
 #include <util/conf/confappswalker.h>
 #include <util/conf/confgroupswalker.h>
 #include <util/conf/confruleswalker.h>
@@ -68,9 +69,9 @@ public slots:
 private:
     void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }
 
+    bool parseAddressList(IpRange &ipRange, const QString &text, FirewallConf::AddressList list);
     bool parseAddressGroups(const QList<AddressGroup *> &addressGroups, ParseAddressGroupsArgs &ad,
             quint32 &addressGroupsSize);
-
 
     bool parseExeApps(
             EnvManager &envManager, const ConfAppsWalker *confAppsWalker, AppParseOptions &opt);
