@@ -5,6 +5,20 @@
 
 #include "addressgroup.h"
 
+namespace {
+
+int addressListGroupIndex(FirewallConf::AddressList list)
+{
+    return list / 2;
+}
+
+bool isAddressListExclude(FirewallConf::AddressList list)
+{
+    return (list % 2) != 0;
+}
+
+}
+
 FirewallConf::FirewallConf(QObject *parent) : QObject(parent)
 {
     setupAddressGroups();
@@ -112,6 +126,49 @@ QStringList FirewallConf::filterModeIconPaths()
 {
     return { ":/icons/lightbulb.png", ":/icons/help.png", ":/icons/deny.png", ":/icons/accept.png",
         ":/icons/road_sign.png" };
+}
+
+QStringList FirewallConf::addressListNames()
+{
+    // Sync with enum AddressList
+    return { tr("Internet Addresses"), tr("Local Network Addresses"), tr("Allow Addresses"),
+        tr("Block Addresses") };
+}
+
+quint32 FirewallConf::addressListZones(AddressList list) const
+{
+    const AddressGroup *addressGroup = m_addressGroups.at(addressListGroupIndex(list));
+
+    return isAddressListExclude(list) ? addressGroup->excludeZones() : addressGroup->includeZones();
+}
+
+void FirewallConf::setAddressListZones(AddressList list, quint32 zones)
+{
+    AddressGroup *addressGroup = m_addressGroups.at(addressListGroupIndex(list));
+
+    if (isAddressListExclude(list)) {
+        addressGroup->setExcludeZones(zones);
+    } else {
+        addressGroup->setIncludeZones(zones);
+    }
+}
+
+QString FirewallConf::addressListText(AddressList list) const
+{
+    const AddressGroup *addressGroup = m_addressGroups.at(addressListGroupIndex(list));
+
+    return isAddressListExclude(list) ? addressGroup->excludeText() : addressGroup->includeText();
+}
+
+void FirewallConf::setAddressListText(AddressList list, const QString &text)
+{
+    AddressGroup *addressGroup = m_addressGroups.at(addressListGroupIndex(list));
+
+    if (isAddressListExclude(list)) {
+        addressGroup->setExcludeText(text);
+    } else {
+        addressGroup->setIncludeText(text);
+    }
 }
 
 void FirewallConf::setupDefaultAddressGroups()

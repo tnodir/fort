@@ -16,7 +16,6 @@
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/plaintextedit.h>
-#include <form/controls/selector/zonesselector.h>
 #include <form/opt/optionscontroller.h>
 #include <fortglobal.h>
 #include <fortmanager.h>
@@ -25,6 +24,8 @@
 #include <util/iconcache.h>
 #include <util/net/netutil.h>
 #include <util/textareautil.h>
+
+#include "addresses/addressesarea.h"
 
 using namespace Fort;
 
@@ -40,7 +41,7 @@ void AddressesPage::onResetToDefault()
     m_cbFilterLocals->setChecked(false);
     m_cbFilterLocalNet->setChecked(false);
 
-    for (auto addressGroup : addressGroups()) {
+    for (auto addressGroup : conf().addressGroups()) {
         addressGroup->resetToDefault();
     }
 
@@ -59,20 +60,19 @@ void AddressesPage::onRetranslateUi()
             tr("Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses"));
     m_cbFilterLocalNet->setText(tr("Filter Local Network"));
 
-    m_labelLanText->setText(tr("Local Network Addresses:"));
-    m_btLanZones->retranslateUi();
+    for (AddressesArea *addressesArea : addressesAreas()) {
+        addressesArea->retranslateUi();
+    }
+
     m_actAddLocalNetworks->setText(tr("Add Local Networks"));
     retranslateEditLanPlaceholderText();
-
-    m_labelBlockInetText->setText(tr("Block Addresses:"));
-    m_btBlockInetZones->retranslateUi();
 }
 
 void AddressesPage::retranslateEditLanPlaceholderText()
 {
     const auto placeholderText = tr("# Examples:") + '\n' + NetUtil::localIpNetworksText(9);
 
-    m_editLanText->setPlaceholderText(placeholderText);
+    m_lanAddresses->editIpText()->setPlaceholderText(placeholderText);
 }
 
 void AddressesPage::setupUi()
@@ -106,8 +106,8 @@ QLayout *AddressesPage::setupColumn1()
 
 QLayout *AddressesPage::setupColumn2()
 {
-    // Block Inet Box
-    setupBlockInetBox();
+    // Inet Box
+    setupInetBox();
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_gbInet, 1);
@@ -127,148 +127,73 @@ void AddressesPage::setupLanBox()
         ctrl()->setFlagsEdited();
     });
 
-    // LAN Text Header
-    auto lanHeaderLayout = setupLanHeaderLayout();
-
-    // Edit LAN Text
-    setupEditLanText();
+    // LAN Addresses
+    m_lanAddresses = createAddressesArea(FirewallConf::AddressListLan, ":/icons/hostname.png");
     setupEditLanTextActions();
 
     // Layout
     auto layout = ControlUtil::createVLayoutByWidgets(
             { m_cbFilterLocals, m_cbFilterLocalNet, ControlUtil::createHSeparator() });
-    layout->addLayout(lanHeaderLayout);
-    layout->addWidget(m_editLanText, 1);
+    layout->addWidget(m_lanAddresses, 1);
 
     m_gbLan = new QGroupBox();
     m_gbLan->setLayout(layout);
-}
-
-QLayout *AddressesPage::setupLanHeaderLayout()
-{
-    // LAN Icon
-    const QSize iconSize(16, 16);
-    m_iconLan = ControlUtil::createIconLabel(":/icons/hostname.png", iconSize);
-
-    // LAN Label
-    m_labelLanText = ControlUtil::createLabel();
-
-    // Select Zones
-    m_btLanZones = new ZonesSelector();
-
-    connect(m_btLanZones, &ZonesSelector::zonesChanged, this, [&] {
-        inetAddressGroup()->setExcludeZones(m_btLanZones->zones());
-        ctrl()->setOptEdited();
-    });
-
-    // Layout
-    auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_iconLan, m_labelLanText, /*stretch*/ nullptr, m_btLanZones });
-
-    return layout;
-}
-
-void AddressesPage::setupEditLanText()
-{
-    m_editLanText = new PlainTextEdit();
-
-    connect(m_editLanText, &QPlainTextEdit::textChanged, this, [&] {
-        const auto text = m_editLanText->toPlainText();
-
-        AddressGroup *inetGroup = inetAddressGroup();
-        if (inetGroup->excludeText() != text) {
-            inetGroup->setExcludeText(text);
-            ctrl()->setOptEdited();
-        }
-    });
 }
 
 void AddressesPage::setupEditLanTextActions()
 {
     m_actAddLocalNetworks = new QAction(IconCache::icon(":/icons/hostname.png"), QString(), this);
 
-    connect(m_actAddLocalNetworks, &QAction::triggered, this,
-            [&] { TextAreaUtil::appendText(m_editLanText, NetUtil::localIpNetworksText()); });
+    connect(m_actAddLocalNetworks, &QAction::triggered, this, [&] {
+        TextAreaUtil::appendText(m_lanAddresses->editIpText(), NetUtil::localIpNetworksText());
+    });
 
-    m_editLanText->addContextAction(m_actAddLocalNetworks);
+    m_lanAddresses->editIpText()->addContextAction(m_actAddLocalNetworks);
 }
 
-void AddressesPage::setupBlockInetBox()
+void AddressesPage::setupInetBox()
 {
-    // LAN Text Header
-    auto blockInetHeaderLayout = setupBlockInetHeaderLayout();
-
-    // Edit LAN Text
-    setupEditBlockInetText();
+    // Block Inet Addresses
+    m_blockInetAddresses =
+            createAddressesArea(FirewallConf::AddressListBlockInet, ":/icons/ip_block.png");
 
     // Layout
     auto layout = ControlUtil::createVLayout(/*margin=*/-1);
-    layout->addLayout(blockInetHeaderLayout);
-    layout->addWidget(m_editBlockInetText, 1);
+    layout->addWidget(m_blockInetAddresses, 1);
 
     m_gbInet = new QGroupBox();
     m_gbInet->setLayout(layout);
 }
 
-QLayout *AddressesPage::setupBlockInetHeaderLayout()
+AddressesArea *AddressesPage::createAddressesArea(
+        FirewallConf::AddressList addressList, const QString &iconPath)
 {
-    // Block Inet Icon
-    const QSize iconSize(16, 16);
-    m_iconBlockInet = ControlUtil::createIconLabel(":/icons/ip_block.png", iconSize);
+    auto addressesArea = new AddressesArea(addressList, iconPath);
 
-    // Block Inet Label
-    m_labelBlockInetText = ControlUtil::createLabel();
-
-    // Select Zones
-    m_btBlockInetZones = new ZonesSelector();
-
-    connect(m_btBlockInetZones, &ZonesSelector::zonesChanged, this, [&] {
-        allowAddressGroup()->setExcludeZones(m_btBlockInetZones->zones());
+    connect(addressesArea, &AddressesArea::zonesEdited, this, [=, this](quint32 zones) {
+        conf().setAddressListZones(addressList, zones);
         ctrl()->setOptEdited();
     });
 
-    // Layout
-    auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_iconBlockInet, m_labelBlockInetText, /*stretch*/ nullptr, m_btBlockInetZones });
-
-    return layout;
-}
-
-void AddressesPage::setupEditBlockInetText()
-{
-    m_editBlockInetText = new PlainTextEdit();
-
-    connect(m_editBlockInetText, &QPlainTextEdit::textChanged, this, [&] {
-        const auto text = m_editBlockInetText->toPlainText();
-
-        AddressGroup *allowGroup = allowAddressGroup();
-        if (allowGroup->excludeText() != text) {
-            allowGroup->setExcludeText(text);
-            ctrl()->setOptEdited();
-        }
+    connect(addressesArea, &AddressesArea::textEdited, this, [=, this](const QString &text) {
+        conf().setAddressListText(addressList, text);
+        ctrl()->setOptEdited();
     });
+
+    return addressesArea;
 }
 
 void AddressesPage::updateUi()
 {
-    m_btLanZones->setZones(inetAddressGroup()->excludeZones());
-    m_editLanText->setPlainText(inetAddressGroup()->excludeText());
+    for (AddressesArea *addressesArea : addressesAreas()) {
+        const auto addressList = addressesArea->addressList();
 
-    m_btBlockInetZones->setZones(allowAddressGroup()->excludeZones());
-    m_editBlockInetText->setPlainText(allowAddressGroup()->excludeText());
+        addressesArea->setZones(conf().addressListZones(addressList));
+        addressesArea->setText(conf().addressListText(addressList));
+    }
 }
 
-const QList<AddressGroup *> &AddressesPage::addressGroups() const
+QList<AddressesArea *> AddressesPage::addressesAreas() const
 {
-    return conf().addressGroups();
-}
-
-AddressGroup *AddressesPage::inetAddressGroup() const
-{
-    return addressGroups().first();
-}
-
-AddressGroup *AddressesPage::allowAddressGroup() const
-{
-    return addressGroups().at(1);
+    return { m_lanAddresses, m_blockInetAddresses };
 }

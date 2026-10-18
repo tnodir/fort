@@ -1,11 +1,11 @@
 #ifndef ADDRESSESPAGE_H
 #define ADDRESSESPAGE_H
 
+#include <conf/firewallconf.h>
+
 #include "optbasepage.h"
 
-class AddressGroup;
-class PlainTextEdit;
-class ZonesSelector;
+class AddressesArea;
 
 class AddressesPage : public OptBasePage
 {
@@ -28,19 +28,16 @@ private:
     QLayout *setupColumn2();
 
     void setupLanBox();
-    QLayout *setupLanHeaderLayout();
-    void setupEditLanText();
     void setupEditLanTextActions();
 
-    void setupBlockInetBox();
-    QLayout *setupBlockInetHeaderLayout();
-    void setupEditBlockInetText();
+    void setupInetBox();
+
+    AddressesArea *createAddressesArea(
+            FirewallConf::AddressList addressList, const QString &iconPath);
 
     void updateUi();
 
-    const QList<AddressGroup *> &addressGroups() const;
-    AddressGroup *inetAddressGroup() const;
-    AddressGroup *allowAddressGroup() const;
+    QList<AddressesArea *> addressesAreas() const;
 
 private:
     QGroupBox *m_gbLan = nullptr;
@@ -48,16 +45,10 @@ private:
 
     QCheckBox *m_cbFilterLocals = nullptr;
     QCheckBox *m_cbFilterLocalNet = nullptr;
-    QLabel *m_iconLan = nullptr;
-    QLabel *m_labelLanText = nullptr;
-    ZonesSelector *m_btLanZones = nullptr;
-    PlainTextEdit *m_editLanText = nullptr;
+    AddressesArea *m_lanAddresses = nullptr;
     QAction *m_actAddLocalNetworks = nullptr;
 
-    QLabel *m_iconBlockInet = nullptr;
-    QLabel *m_labelBlockInetText = nullptr;
-    ZonesSelector *m_btBlockInetZones = nullptr;
-    PlainTextEdit *m_editBlockInetText = nullptr;
+    AddressesArea *m_blockInetAddresses = nullptr;
 };
 
 #endif // ADDRESSESPAGE_H

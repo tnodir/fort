@@ -45,6 +45,14 @@ public:
     };
     Q_ENUM(FilterMode)
 
+    // Sync with addressGroups(): each one's include and exclude lists
+    enum AddressList {
+        AddressListInet = 0, // hidden: Include All
+        AddressListLan,
+        AddressListAllowInet,
+        AddressListBlockInet,
+    };
+
     explicit FirewallConf(QObject *parent = nullptr);
 
     EditedFlags editedFlags() const { return EditedFlags(m_editedFlags); }
@@ -154,8 +162,16 @@ public:
     quint8 activePeriodId() const { return m_activePeriodId; }
     void setActivePeriodId(quint8 v) { m_activePeriodId = v; }
 
+    static QStringList addressListNames();
+
     AddressGroup *lanAddressGroup() const { return m_addressGroups.at(0); }
     AddressGroup *inetAddressGroup() const { return m_addressGroups.at(1); }
+
+    quint32 addressListZones(AddressList list) const;
+    void setAddressListZones(AddressList list, quint32 zones);
+
+    QString addressListText(AddressList list) const;
+    void setAddressListText(AddressList list, const QString &text);
 
     const QList<AddressGroup *> &addressGroups() const { return m_addressGroups; }
 
