@@ -46,6 +46,7 @@ void AddressesPage::onResetToDefault()
     }
 
     conf().setupDefaultAddressGroups();
+    ctrl()->setOptEdited();
 
     updateUi();
 }
