@@ -93,7 +93,7 @@
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>確認</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -160,54 +160,54 @@
     <name>AppPendingConnSearchModel</name>
     <message>
         <source>No longer paused</source>
-        <translation type="unfinished"></translation>
+        <translation>一時停止は解除されました</translation>
     </message>
     <message>
         <source>Blocked in %1 s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 秒後にブロック</translation>
     </message>
 </context>
 <context>
     <name>AppPendingConnsWindow</name>
     <message>
         <source>Paused Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>一時停止中の接続</translation>
     </message>
     <message>
         <source>&amp;Allow once</source>
-        <translation type="unfinished"></translation>
+        <translation>今回のみ許可(&amp;A)</translation>
     </message>
     <message>
         <source>Allow &amp;Process</source>
-        <translation type="unfinished"></translation>
+        <translation>プロセスを許可(&amp;P)</translation>
     </message>
     <message>
         <source>Allow the process till its exit or for the time by the menu</source>
-        <translation type="unfinished"></translation>
+        <translation>プロセスの終了まで、またはメニューで指定した時間までプロセスを許可する</translation>
     </message>
     <message>
         <source>&amp;Block once</source>
-        <translation type="unfinished"></translation>
+        <translation>今回のみブロック(&amp;B)</translation>
     </message>
     <message>
         <source>&amp;Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>続行(&amp;C)</translation>
     </message>
     <message>
         <source>Continue by the current rules: the still paused ones are blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>現在のルールで続行する : まだ一時停止中のものはブロックされます</translation>
     </message>
     <message>
         <source>Add &amp;Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルターを追加(&amp;F)</translation>
     </message>
     <message>
         <source>10 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>10 秒</translation>
     </message>
     <message>
         <source>30 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>30 秒</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -318,27 +318,27 @@
     </message>
     <message>
         <source>Blocked Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>ブロックされたインターネットアドレス</translation>
     </message>
     <message>
         <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>「接続を確認する」の制限</translation>
     </message>
     <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>「接続を確認する」により一時停止</translation>
     </message>
     <message>
         <source>Allowed once by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>「接続を確認する」により今回のみ許可</translation>
     </message>
     <message>
         <source>Blocked by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>「接続を確認する」によりブロック</translation>
     </message>
     <message>
         <source>Process allowed by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>「接続を確認する」によりプロセスを許可</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -422,7 +422,7 @@
     </message>
     <message>
         <source>Allowed Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>許可されたインターネットアドレス</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -618,11 +618,11 @@
     </message>
     <message>
         <source>A&amp;sk</source>
-        <translation type="unfinished"></translation>
+        <translation>確認(&amp;S)</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>接続を確認する : ユーザーの決定まで接続を一時停止します</translation>
     </message>
     <message>
         <source>Outbound</source>
@@ -899,19 +899,19 @@
     </message>
     <message>
         <source>Internet Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>インターネットアドレス</translation>
     </message>
     <message>
         <source>Local Network Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルネットワークアドレス</translation>
     </message>
     <message>
         <source>Allow Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>許可アドレス</translation>
     </message>
     <message>
         <source>Block Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>ブロックアドレス</translation>
     </message>
     <message>
         <source>Ask to Connect</source>
@@ -1832,11 +1832,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>10 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>10 秒</translation>
     </message>
     <message>
         <source>30 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>30 秒</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
@@ -1932,7 +1932,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Ask to Connect seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>接続を確認する秒数 :</translation>
     </message>
     <message>
         <source>Disable command line management</source>
@@ -2088,11 +2088,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>確認</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>接続を確認する : ユーザーの決定まで接続を一時停止します</translation>
     </message>
     <message>
         <source>Kill Process</source>
@@ -2231,7 +2231,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Paused Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>一時停止中の接続</translation>
     </message>
     <message>
         <source>Switch Wildcard</source>
@@ -2512,7 +2512,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>確認</translation>
     </message>
     <message>
         <source>Connections</source>
@@ -2627,11 +2627,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>確認</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>接続を確認する : ユーザーの決定まで接続を一時停止します</translation>
     </message>
     <message>
         <source>Exclusive</source>
@@ -3365,7 +3365,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>確認</translation>
     </message>
     <message>
         <source>Alert</source>
