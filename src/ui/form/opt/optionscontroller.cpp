@@ -22,6 +22,17 @@ void showErrorMessage(const QString &errorMessage)
     windowManager()->showErrorBox(errorMessage, ConfManager::tr("Configuration Error"));
 }
 
+void showErrorMessageDetails(const QString &errorMessage, const QString &details)
+{
+    QString text = errorMessage;
+
+    if (!details.isEmpty()) {
+        text += ":\n" + details;
+    }
+
+    showErrorMessage(text);
+}
+
 }
 
 OptionsController::OptionsController(QObject *parent) :
@@ -103,7 +114,7 @@ void OptionsController::save(bool closeOnSuccess)
     }
 
     if (!confManager()->save(confToEdit(), iniOptToEdit())) {
-        showErrorMessage(tr("Cannot save the options"));
+        showErrorMessageDetails(tr("Cannot save the options"), confManager()->errorMessage());
         return;
     }
 

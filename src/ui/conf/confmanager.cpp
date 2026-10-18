@@ -871,6 +871,8 @@ void ConfManager::load()
 
 bool ConfManager::save(FirewallConf &newConf, IniOptions &ini)
 {
+    setErrorMessage({});
+
     if (!newConf.anyEdited())
         return true;
 
@@ -1167,7 +1169,8 @@ bool ConfManager::validateConf(const FirewallConf &conf)
     ConfBuffer confBuf;
 
     if (!confBuf.writeConf(conf, confAppManager(), envManager())) {
-        qCCritical(LC) << "Conf save error:" << confBuf.errorMessage();
+        setErrorMessage(confBuf.errorMessage());
+        qCCritical(LC) << "Conf save error:" << errorMessage();
         return false;
     }
 

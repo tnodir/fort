@@ -31,6 +31,8 @@ public:
     FirewallConf &conf() { return m_conf; }
     const FirewallConf &conf() const { return m_conf; }
 
+    QString errorMessage() const { return m_errorMessage; }
+
     void setUp() override;
 
     bool checkCanMigrate(Settings *settings) const;
@@ -84,6 +86,8 @@ protected:
     virtual void applyAutoLearnSeconds();
 
 private:
+    void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }
+
     void switchFilterOff();
     void switchAutoLearn();
 
@@ -105,6 +109,8 @@ private:
 
 private:
     SqliteDbPtr m_sqliteDb;
+
+    QString m_errorMessage;
 
     FirewallConf m_conf;
 
