@@ -50,7 +50,8 @@ extern "C" {
 FORT_API BOOL fort_conf_conn_local_allowed(
         PFORT_CONF_META_CONN conn, const FORT_CONF_FLAGS conf_flags);
 
-/* Returns TRUE, when the connection is decided by the Conf's flags and addresses */
+/* Returns TRUE, when the connection is decided by the Conf's flags and addresses.
+ * Returns FALSE for the allowed one (act.blocked is unset), whose traffic is collected. */
 FORT_API BOOL fort_conf_conn_flags_filtered(
         PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn);
 

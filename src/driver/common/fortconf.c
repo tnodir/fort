@@ -243,9 +243,8 @@ FORT_API PCFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(PCFORT_CONF conf, int a
     return (PCFORT_CONF_ADDR_GROUP) (addr_group_data + addr_group_offsets[addr_group_index]);
 }
 
-static BOOL fort_conf_ip_included_check(PCFORT_CONF_META_CONN conn,
-        PCFORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT opt, PCFORT_CONF_ADDR_GROUP addr_group,
-        BOOL is_exclude)
+FORT_API BOOL fort_conf_addr_group_ip_listed(PCFORT_CONF_ADDR_GROUP addr_group,
+        PCFORT_CONF_META_CONN conn, PCFORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT opt, BOOL is_exclude)
 {
     const BOOL list_is_empty =
             is_exclude ? addr_group->exclude_is_empty : addr_group->include_is_empty;
@@ -269,24 +268,22 @@ static BOOL fort_conf_ip_included_check(PCFORT_CONF_META_CONN conn,
     return FALSE;
 }
 
-FORT_API BOOL fort_conf_addr_group_ip_included(
-        PCFORT_CONF conf, PCFORT_CONF_META_CONN conn, PCFORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT opt)
+FORT_API BOOL fort_conf_addr_group_ip_included(PCFORT_CONF_ADDR_GROUP addr_group,
+        PCFORT_CONF_META_CONN conn, PCFORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT opt)
 {
-    PCFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(conf, opt->addr_group_index);
-
     const BOOL include_all = addr_group->include_all;
     const BOOL exclude_all = addr_group->exclude_all;
 
     /* Include All */
     const BOOL ip_excluded = exclude_all
             ? TRUE
-            : fort_conf_ip_included_check(conn, opt, addr_group, /*is_exclude=*/TRUE);
+            : fort_conf_addr_group_ip_listed(addr_group, conn, opt, /*is_exclude=*/TRUE);
     if (include_all)
         return !ip_excluded;
 
     /* Exclude All */
     const BOOL ip_included = /* include_all ? TRUE : */
-            fort_conf_ip_included_check(conn, opt, addr_group, /*is_exclude=*/FALSE);
+            fort_conf_addr_group_ip_listed(addr_group, conn, opt, /*is_exclude=*/FALSE);
     if (exclude_all)
         return ip_included;
 

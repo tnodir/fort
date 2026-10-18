@@ -51,7 +51,7 @@ QString formatPort(const quint16 port, int role)
 QString reasonIconPath(const ConnRow &connRow)
 {
     static const char *const reasonIcons[] = {
-        ":/icons/ip.png",
+        ":/icons/ip_block.png",
         ":/icons/arrow_refresh_small.png",
         ":/icons/application.png",
         ":/icons/application_double.png",
@@ -69,6 +69,7 @@ QString reasonIconPath(const ConnRow &connRow)
         ":/icons/help.png",
         ":/icons/help.png",
         ":/icons/help.png",
+        ":/icons/global_telecom.png",
     };
     static_assert(
             std::size(reasonIcons) == FORT_CONN_REASON_COUNT - FORT_CONN_REASON_IP_BLOCK_INET);
@@ -534,7 +535,7 @@ void ConnListModel::insertConnRows(qint64 idMax, int count)
 QString ConnListModel::reasonText(FortConnReason reason)
 {
     static const char *const reasonTexts[] = {
-        QT_TR_NOOP("Internet address"),
+        QT_TR_NOOP("Blocked Internet address"),
         QT_TR_NOOP("Old connection"),
         QT_TR_NOOP("Program's action"),
         QT_TR_NOOP("App. Group"),
@@ -552,6 +553,7 @@ QString ConnListModel::reasonText(FortConnReason reason)
         QT_TR_NOOP("Allowed once by Ask to Connect"),
         QT_TR_NOOP("Blocked by Ask to Connect"),
         QT_TR_NOOP("Process allowed by Ask to Connect"),
+        QT_TR_NOOP("Allowed Internet address"),
     };
     static_assert(
             std::size(reasonTexts) == FORT_CONN_REASON_COUNT - FORT_CONN_REASON_IP_BLOCK_INET);

@@ -152,6 +152,11 @@ typedef struct fort_conf_addr_group
 
 typedef const FORT_CONF_ADDR_GROUP *PCFORT_CONF_ADDR_GROUP;
 
+enum FORT_CONF_ADDR_GROUP_INDEX {
+    FORT_CONF_ADDR_GROUP_LAN = 0,
+    FORT_CONF_ADDR_GROUP_INET,
+};
+
 enum FORT_RULE_FILTER_TYPE {
     FORT_RULE_FILTER_TYPE_INVALID = -1,
     FORT_RULE_FILTER_TYPE_ADDRESS = 0,
@@ -686,14 +691,17 @@ typedef struct fort_conf_addr_group_ip_included_opt
 {
     fort_conf_zones_ip_included_func *zone_func;
     void *ctx;
-    int addr_group_index;
     UCHAR *zone_id;
 } FORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT, *PFORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT;
 
 typedef const FORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT *PCFORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT;
 
-FORT_API BOOL fort_conf_addr_group_ip_included(
-        PCFORT_CONF conf, PCFORT_CONF_META_CONN conn, PCFORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT opt);
+/* Is the IP in the include or exclude list or zones, regardless of Include/Exclude All */
+FORT_API BOOL fort_conf_addr_group_ip_listed(PCFORT_CONF_ADDR_GROUP addr_group,
+        PCFORT_CONF_META_CONN conn, PCFORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT opt, BOOL is_exclude);
+
+FORT_API BOOL fort_conf_addr_group_ip_included(PCFORT_CONF_ADDR_GROUP addr_group,
+        PCFORT_CONF_META_CONN conn, PCFORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT opt);
 
 FORT_API BOOL fort_conf_zones_ip_included(
         PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn, UCHAR *zone_id, UINT32 zones_mask);
