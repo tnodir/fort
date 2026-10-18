@@ -261,7 +261,7 @@ TEST_F(ConnFilterTest, blockInetTraffic)
     ASSERT_TRUE(connAllowed("C:\\App\\unknown.exe", conn));
 
     // The filtered broadcast out of LAN is checked further
-    m_conf.inetAddressGroup()->setExcludeText(QString());
+    m_conf.lanAddressGroup()->setExcludeText(QString());
     writeConf();
 
     confFlags()->filter_locals = true;
@@ -275,7 +275,7 @@ TEST_F(ConnFilterTest, blockInetTraffic)
 
 TEST_F(ConnFilterTest, inetAddresses)
 {
-    m_conf.addressGroups().at(1)->setExcludeText("8.8.8.0/24");
+    m_conf.inetAddressGroup()->setExcludeText("8.8.8.0/24");
     writeConf();
 
     FORT_CONF_META_CONN conn = connFilterConn("8.8.8.8");

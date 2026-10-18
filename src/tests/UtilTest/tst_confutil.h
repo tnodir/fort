@@ -47,13 +47,13 @@ TEST_F(ConfUtilTest, confWriteRead)
     EnvManager envManager;
     FirewallConf conf;
 
-    AddressGroup *inetGroup = conf.inetAddressGroup();
+    AddressGroup *lanGroup = conf.lanAddressGroup();
 
-    inetGroup->setIncludeAll(true);
-    inetGroup->setExcludeAll(false);
+    lanGroup->setIncludeAll(true);
+    lanGroup->setExcludeAll(false);
 
-    inetGroup->setIncludeText(QString());
-    inetGroup->setExcludeText(NetUtil::localIpNetworksText());
+    lanGroup->setIncludeText(QString());
+    lanGroup->setExcludeText(NetUtil::localIpNetworksText());
 
     conf.setAppBlockAll(true);
     conf.setAppAllowAll(false);
@@ -1227,9 +1227,9 @@ TEST_F(ConfUtilTest, confValid)
     EnvManager envManager;
     FirewallConf conf;
 
-    AddressGroup *inetGroup = conf.inetAddressGroup();
-    inetGroup->setIncludeAll(true);
-    inetGroup->setExcludeText(NetUtil::localIpNetworksText());
+    AddressGroup *lanGroup = conf.lanAddressGroup();
+    lanGroup->setIncludeAll(true);
+    lanGroup->setExcludeText(NetUtil::localIpNetworksText());
 
     const TestApps testApps({
             wildcardApp("C:\\Program Files\\Skype\\Phone\\Skype.exe\n"

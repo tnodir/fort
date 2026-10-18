@@ -55,12 +55,12 @@ void setConf(Device &device)
     conf.setLogBlockedConn(true);
 
     // Address Groups
-    AddressGroup *inetGroup = conf.inetAddressGroup();
+    AddressGroup *lanGroup = conf.lanAddressGroup();
 
-    inetGroup->setIncludeAll(true);
-    inetGroup->setExcludeAll(false);
+    lanGroup->setIncludeAll(true);
+    lanGroup->setExcludeAll(false);
 
-    inetGroup->setExcludeText(NetUtil::localIpNetworksText());
+    lanGroup->setExcludeText(NetUtil::localIpNetworksText());
 
     conf.setAppBlockAll(true);
     conf.setAppAllowAll(false);

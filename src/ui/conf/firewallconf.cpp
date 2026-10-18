@@ -116,15 +116,13 @@ QStringList FirewallConf::filterModeIconPaths()
 
 void FirewallConf::setupDefaultAddressGroups()
 {
-    AddressGroup *inetGroup = inetAddressGroup();
-    inetGroup->setExcludeText(NetUtil::localIpNetworksText());
+    AddressGroup *lanGroup = lanAddressGroup();
+    lanGroup->setExcludeText(NetUtil::localIpNetworksText());
 }
 
 void FirewallConf::setupAddressGroups()
 {
     m_addressGroups.append(new AddressGroup(this));
-
-    // COMPAT: Remove after v4.1.0
     m_addressGroups.append(new AddressGroup(this));
 }
 

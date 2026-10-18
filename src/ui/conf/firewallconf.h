@@ -154,7 +154,8 @@ public:
     quint8 activePeriodId() const { return m_activePeriodId; }
     void setActivePeriodId(quint8 v) { m_activePeriodId = v; }
 
-    AddressGroup *inetAddressGroup() const { return m_addressGroups.first(); }
+    AddressGroup *lanAddressGroup() const { return m_addressGroups.at(0); }
+    AddressGroup *inetAddressGroup() const { return m_addressGroups.at(1); }
 
     const QList<AddressGroup *> &addressGroups() const { return m_addressGroups; }
 
