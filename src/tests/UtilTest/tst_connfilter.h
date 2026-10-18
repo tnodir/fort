@@ -2,6 +2,7 @@
 
 #include <googletest.h>
 
+#include <common/fortconf_conn.h>
 #include <common/fortdef.h>
 
 #include <conf/addressgroup.h>
@@ -50,6 +51,7 @@ protected:
     void writeGroups(const QList<Group> &groups, quint32 activeMask);
     void writeZone1(const QString &text);
 
+    bool connFlagsFiltered(FORT_CONF_META_CONN &conn);
     DriverCommon::ConnFilterResult connFilter(const QString &appPath, FORT_CONF_META_CONN &conn);
     bool connAllowed(const QString &appPath, FORT_CONF_META_CONN &conn);
 
@@ -132,6 +134,19 @@ void ConnFilterTest::writeZone1(const QString &text)
     const QList<QByteArray> zonesData = { zoneBuf.buffer() };
 
     m_zonesBuf.writeZones(connFilterZone1, connFilterZone1, zoneBuf.buffer().size(), zonesData);
+}
+
+bool ConnFilterTest::connFlagsFiltered(FORT_CONF_META_CONN &conn)
+{
+    const FORT_CONF_CONN_FILTER_FUNCS funcs = {}; // without Zones
+
+    const FORT_CONF_CONN_FILTER filter = {
+        .conf_flags = *confFlags(),
+        .conf = PCFORT_CONF(m_confBuf.data() + DriverCommon::confIoConfOff()),
+        .funcs = &funcs,
+    };
+
+    return fort_conf_conn_flags_filtered(&filter, &conn);
 }
 
 DriverCommon::ConnFilterResult ConnFilterTest::connFilter(
@@ -285,6 +300,54 @@ TEST_F(ConnFilterTest, inetAddresses)
     conn = connFilterConn("8.8.4.4");
     ASSERT_TRUE(connAllowed("C:\\App\\allowed.exe", conn));
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM);
+}
+
+TEST_F(ConnFilterTest, allowInetAddresses)
+{
+    AddressGroup *inetGroup = m_conf.inetAddressGroup();
+    inetGroup->setIncludeText("8.8.8.0/24");
+    inetGroup->setExcludeText("8.8.8.4");
+    inetGroup->setIncludeZones(connFilterZone1);
+    writeConf();
+
+    writeZone1("1.1.1.1");
+
+    // Allowed for any program
+    FORT_CONF_META_CONN conn = connFilterConn("8.8.8.8");
+    ASSERT_TRUE(connAllowed("C:\\App\\unknown.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_IP_ALLOW_INET);
+
+    conn = connFilterConn("8.8.8.8", /*inbound=*/true);
+    ASSERT_TRUE(connAllowed("C:\\App\\unknown.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_IP_ALLOW_INET);
+
+    // The traffic is collected: the App is checked
+    conn = connFilterConn("8.8.8.8");
+    ASSERT_FALSE(connFlagsFiltered(conn));
+    ASSERT_FALSE(conn.act.blocked);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_IP_ALLOW_INET);
+
+    // By the Zone
+    conn = connFilterConn("1.1.1.1");
+    ASSERT_TRUE(connAllowed("C:\\App\\unknown.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_IP_ALLOW_INET);
+    ASSERT_EQ(conn.act.zone_id, 1);
+
+    // Not listed
+    conn = connFilterConn("8.8.4.4");
+    ASSERT_FALSE(connAllowed("C:\\App\\unknown.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_FILTER_MODE);
+
+    // Blocked address
+    conn = connFilterConn("8.8.8.4");
+    ASSERT_FALSE(connAllowed("C:\\App\\unknown.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_IP_BLOCK_INET);
+
+    // Blocked Internet
+    confFlags()->block_inet_traffic = true;
+
+    conn = connFilterConn("8.8.8.8");
+    ASSERT_FALSE(connAllowed("C:\\App\\unknown.exe", conn));
 }
 
 TEST_F(ConnFilterTest, filterModes)
