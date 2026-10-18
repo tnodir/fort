@@ -58,14 +58,6 @@
         <source>Filter Local Network</source>
         <translation>Filtrer le réseau local</translation>
     </message>
-    <message>
-        <source>Local Network Addresses:</source>
-        <translation>Adresses du réseau local :</translation>
-    </message>
-    <message>
-        <source>Block Addresses:</source>
-        <translation>Bloquer les adresses :</translation>
-    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -98,6 +90,10 @@
     <message>
         <source>Block</source>
         <translation>Bloquer</translation>
+    </message>
+    <message>
+        <source>Ask</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Allow</source>
@@ -161,6 +157,88 @@
     </message>
 </context>
 <context>
+    <name>AppPendingConnSearchModel</name>
+    <message>
+        <source>No longer paused</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blocked in %1 s</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AppPendingConnsWindow</name>
+    <message>
+        <source>Paused Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Allow once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow &amp;Process</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow the process till its exit or for the time by the menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Block once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Continue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Continue by the current rules: the still paused ones are blocked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>10 seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>30 seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 minute</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 minutes</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 minutes</translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation>30 minutes</translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 heure</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation>3 heures</translation>
+    </message>
+    <message>
+        <source>6 hours</source>
+        <translation>6 heures</translation>
+    </message>
+</context>
+<context>
     <name>AppStatModel</name>
     <message>
         <source>All</source>
@@ -184,14 +262,6 @@
     <message>
         <source>Too many application paths</source>
         <translation>Trop de chemins d&apos;application</translation>
-    </message>
-    <message>
-        <source>Bad Include IP address: #%1 %2</source>
-        <translation>Adresse IP incorrecte pour inclure: #%1 %2</translation>
-    </message>
-    <message>
-        <source>Bad Exclude IP address: #%1 %2</source>
-        <translation>Adresse IP non valide à exclure: #%1 %2</translation>
     </message>
     <message>
         <source>Too many IP addresses</source>
@@ -247,6 +317,30 @@
         <translation>Autorisé</translation>
     </message>
     <message>
+        <source>Blocked Internet address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Limit of &quot;Ask to Connect&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paused by &quot;Ask to Connect&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allowed once by &quot;Ask to Connect&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blocked by &quot;Ask to Connect&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process allowed by &quot;Ask to Connect&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Inherited</source>
         <translation>Hérité</translation>
     </message>
@@ -277,10 +371,6 @@
     <message>
         <source>Reason</source>
         <translation>Raison</translation>
-    </message>
-    <message>
-        <source>Internet address</source>
-        <translation>Adresse Internet</translation>
     </message>
     <message>
         <source>Old connection</source>
@@ -319,10 +409,6 @@
         <translation>Règle globale après règles d&apos;App</translation>
     </message>
     <message>
-        <source>Limit of Ask to Connect</source>
-        <translation>Limite de demande de connexion</translation>
-    </message>
-    <message>
         <source>Block Inbound</source>
         <translation>Bloquer connexions entrantes</translation>
     </message>
@@ -333,6 +419,10 @@
     <message>
         <source>Block Outbound</source>
         <translation>Bloquer les messages sortants</translation>
+    </message>
+    <message>
+        <source>Allowed Internet address</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -525,6 +615,14 @@
     <message>
         <source>Inbound</source>
         <translation>Entrant</translation>
+    </message>
+    <message>
+        <source>A&amp;sk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Outbound</source>
@@ -798,6 +896,22 @@
     <message>
         <source>Ignore, if not blocked or allowed</source>
         <translation>Ignorer si non bloqué ou autorisé</translation>
+    </message>
+    <message>
+        <source>Internet Addresses</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local Network Addresses</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow Addresses</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Addresses</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ask to Connect</source>
@@ -1717,6 +1831,14 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <translation>Mot de Passe:</translation>
     </message>
     <message>
+        <source>10 seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>30 seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
         <translation>Verrouiller mot de passe (déverrouillé jusqu&apos;à &quot;%1&quot;)</translation>
     </message>
@@ -1807,6 +1929,10 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     <message>
         <source>Auto-learn seconds:</source>
         <translation>Secondes d&apos;auto-apprentissage :</translation>
+    </message>
+    <message>
+        <source>Ask to Connect seconds:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Disable command line management</source>
@@ -1961,6 +2087,14 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <translation>Bloquer</translation>
     </message>
     <message>
+        <source>Ask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Kill Process</source>
         <translation>Tuer le processus</translation>
     </message>
@@ -2094,6 +2228,10 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     <message>
         <source>More</source>
         <translation>Plus</translation>
+    </message>
+    <message>
+        <source>Paused Connections</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Switch Wildcard</source>
@@ -2373,6 +2511,10 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
         <translation>Minuteur</translation>
     </message>
     <message>
+        <source>Ask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>Connexions</translation>
     </message>
@@ -2482,6 +2624,14 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     <message>
         <source>Block</source>
         <translation>Bloquer</translation>
+    </message>
+    <message>
+        <source>Ask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Exclusive</source>
@@ -3212,6 +3362,10 @@ Perte de paquets : %2</translation>
     <message>
         <source>Drop</source>
         <translation>Lâcher</translation>
+    </message>
+    <message>
+        <source>Ask</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Alert</source>

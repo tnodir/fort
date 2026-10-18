@@ -58,14 +58,6 @@
         <source>Filter Local Network</source>
         <translation></translation>
     </message>
-    <message>
-        <source>Local Network Addresses:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Block Addresses:</source>
-        <translation></translation>
-    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -97,6 +89,10 @@
     </message>
     <message>
         <source>Block</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ask</source>
         <translation></translation>
     </message>
     <message>
@@ -161,6 +157,88 @@
     </message>
 </context>
 <context>
+    <name>AppPendingConnSearchModel</name>
+    <message>
+        <source>No longer paused</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Blocked in %1 s</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>AppPendingConnsWindow</name>
+    <message>
+        <source>Paused Connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&amp;Allow once</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Allow &amp;Process</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Allow the process till its exit or for the time by the menu</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&amp;Block once</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&amp;Continue</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Continue by the current rules: the still paused ones are blocked</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Add &amp;Filter</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>10 seconds</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>30 seconds</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>6 hours</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>AppStatModel</name>
     <message>
         <source>All</source>
@@ -183,14 +261,6 @@
     <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Bad Include IP address: #%1 %2</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Bad Exclude IP address: #%1 %2</source>
         <translation></translation>
     </message>
     <message>
@@ -247,6 +317,30 @@
         <translation></translation>
     </message>
     <message>
+        <source>Blocked Internet address</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Limit of &quot;Ask to Connect&quot;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Paused by &quot;Ask to Connect&quot;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Allowed once by &quot;Ask to Connect&quot;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Blocked by &quot;Ask to Connect&quot;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Process allowed by &quot;Ask to Connect&quot;</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Inherited</source>
         <translation></translation>
     </message>
@@ -276,10 +370,6 @@
     </message>
     <message>
         <source>Reason</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Internet address</source>
         <translation></translation>
     </message>
     <message>
@@ -319,10 +409,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Limit of Ask to Connect</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Block Inbound</source>
         <translation></translation>
     </message>
@@ -332,6 +418,10 @@
     </message>
     <message>
         <source>Block Outbound</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Allowed Internet address</source>
         <translation></translation>
     </message>
     <message>
@@ -524,6 +614,14 @@
     </message>
     <message>
         <source>Inbound</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>A&amp;sk</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation></translation>
     </message>
     <message>
@@ -797,6 +895,22 @@
     </message>
     <message>
         <source>Ignore, if not blocked or allowed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Internet Addresses</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Local Network Addresses</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Allow Addresses</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block Addresses</source>
         <translation></translation>
     </message>
     <message>
@@ -1714,6 +1828,14 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
+        <source>10 seconds</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>30 seconds</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
         <translation></translation>
     </message>
@@ -1803,6 +1925,10 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ask to Connect seconds:</source>
         <translation></translation>
     </message>
     <message>
@@ -1958,6 +2084,14 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
+        <source>Ask</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Kill Process</source>
         <translation></translation>
     </message>
@@ -2090,6 +2224,10 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>More</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Paused Connections</source>
         <translation></translation>
     </message>
     <message>
@@ -2364,6 +2502,10 @@ Please check other program with the same path.</source>
         <translation></translation>
     </message>
     <message>
+        <source>Ask</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation></translation>
     </message>
@@ -2472,6 +2614,14 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Block</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ask</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation></translation>
     </message>
     <message>
@@ -3201,6 +3351,10 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Drop</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ask</source>
         <translation></translation>
     </message>
     <message>

@@ -31,14 +31,6 @@
 <context>
     <name>AddressesPage</name>
     <message>
-        <source>Block Addresses:</source>
-        <translation>Chặn địa chỉ:</translation>
-    </message>
-    <message>
-        <source>Local Network Addresses:</source>
-        <translation>Địa chỉ mạng cục bộ:</translation>
-    </message>
-    <message>
         <source>Internet</source>
         <translation type="unfinished"></translation>
     </message>
@@ -140,6 +132,10 @@
         <translation>Hành động</translation>
     </message>
     <message>
+        <source>Ask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Allowed Zones:</source>
         <translation>Vùng được phép:</translation>
     </message>
@@ -158,6 +154,88 @@
     <message>
         <source>Block Internet Traffic</source>
         <translation>Chặn lưu lượng Internet</translation>
+    </message>
+</context>
+<context>
+    <name>AppPendingConnSearchModel</name>
+    <message>
+        <source>No longer paused</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blocked in %1 s</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AppPendingConnsWindow</name>
+    <message>
+        <source>Paused Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Allow once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow &amp;Process</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow the process till its exit or for the time by the menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Block once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Continue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Continue by the current rules: the still paused ones are blocked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>10 seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>30 seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 phút</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 phút</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 phút</translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation>30 phút</translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 giờ</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation>3 giờ</translation>
+    </message>
+    <message>
+        <source>6 hours</source>
+        <translation>6 giờ</translation>
     </message>
 </context>
 <context>
@@ -192,14 +270,6 @@
     <message>
         <source>Too many values</source>
         <translation>Quá nhiều giá trị</translation>
-    </message>
-    <message>
-        <source>Bad Exclude IP address: #%1 %2</source>
-        <translation>Địa chỉ IP loại trừ không hợp lệ: #%1 %2</translation>
-    </message>
-    <message>
-        <source>Bad Include IP address: #%1 %2</source>
-        <translation>Địa chỉ IP bao gồm không hợp lệ: #%1 %2</translation>
     </message>
     <message>
         <source>Too many IP addresses</source>
@@ -251,7 +321,15 @@
         <translation>Nhóm ứng dụng</translation>
     </message>
     <message>
+        <source>Blocked Internet address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Zone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Limit of &quot;Ask to Connect&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -264,6 +342,10 @@
     </message>
     <message>
         <source>Block Outbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allowed Internet address</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -315,12 +397,24 @@
         <translation>Quy tắc Toàn cầu sau quy tắc ứng dụng</translation>
     </message>
     <message>
-        <source>Program</source>
-        <translation>Chương trình</translation>
+        <source>Paused by &quot;Ask to Connect&quot;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Limit of Ask to Connect</source>
-        <translation>Giới hạn hỏi kết nối</translation>
+        <source>Allowed once by &quot;Ask to Connect&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blocked by &quot;Ask to Connect&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process allowed by &quot;Ask to Connect&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Program</source>
+        <translation>Chương trình</translation>
     </message>
     <message>
         <source>Local Port</source>
@@ -353,10 +447,6 @@
     <message>
         <source>Remote Port</source>
         <translation>Cổng từ xa</translation>
-    </message>
-    <message>
-        <source>Internet address</source>
-        <translation>Địa chỉ Internet</translation>
     </message>
     <message>
         <source>Filter Mode</source>
@@ -524,6 +614,14 @@
     </message>
     <message>
         <source>Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A&amp;sk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -818,6 +916,22 @@
     <message>
         <source>Block, if not allowed</source>
         <translation>Chặn nếu không cho phép</translation>
+    </message>
+    <message>
+        <source>Internet Addresses</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local Network Addresses</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow Addresses</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Addresses</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
@@ -1752,6 +1866,10 @@ Hãy đảm bảo bạn đã có bản sao lưu mới.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Ask to Connect seconds:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Disable command line management</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1864,6 +1982,14 @@ Hãy đảm bảo bạn đã có bản sao lưu mới.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>10 seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>30 seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Not Installed</source>
         <translation>Chưa cài đặt</translation>
     </message>
@@ -1961,6 +2087,14 @@ Hãy đảm bảo bạn đã có bản sao lưu mới.</translation>
     </message>
     <message>
         <source>Name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2092,6 +2226,10 @@ Hãy đảm bảo bạn đã có bản sao lưu mới.</translation>
     </message>
     <message>
         <source>More</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paused Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2319,6 +2457,10 @@ Việc này có thể khiến Windows hoạt động lỗi hoặc hoàn toàn kh
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Ask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Open Folder</source>
         <translation>Mở thư mục</translation>
     </message>
@@ -2504,6 +2646,14 @@ Việc này có thể khiến Windows hoạt động lỗi hoặc hoàn toàn kh
     <message>
         <source>Type:</source>
         <translation>Loại:</translation>
+    </message>
+    <message>
+        <source>Ask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Inline Zones</source>
@@ -3208,6 +3358,10 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Drop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
