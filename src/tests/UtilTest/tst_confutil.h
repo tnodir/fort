@@ -1300,6 +1300,20 @@ TEST_F(ConfUtilTest, confValid)
     }
 }
 
+TEST_F(ConfUtilTest, addressListError)
+{
+    EnvManager envManager;
+    FirewallConf conf;
+
+    conf.inetAddressGroup()->setIncludeText("8.8.8.8\nbad");
+
+    const TestApps testApps(QList<App> {});
+
+    ConfBuffer confBuf;
+    ASSERT_FALSE(confBuf.writeConf(conf, &testApps, &envManager));
+    ASSERT_TRUE(confBuf.errorMessage().startsWith("Allow Addresses: Error at line 2:"));
+}
+
 TEST_F(ConfUtilTest, appFiltersText)
 {
     const QString filtersText = "IP(1.1.1.1):Act(Block)\n"
