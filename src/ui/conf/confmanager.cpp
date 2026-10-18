@@ -38,7 +38,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-inline constexpr int DATABASE_USER_VERSION = 67;
+inline constexpr int DATABASE_USER_VERSION = 68;
 
 const char *const sqlSelectAddressGroups = "SELECT addr_group_id, include_all, exclude_all,"
                                            "    include_zones, exclude_zones,"
@@ -212,6 +212,17 @@ bool migrateAddrGroupExcludeTexts(SqliteDb *db)
     }
 
     return true;
+}
+
+// The old "Allowed Internet Addresses" kept the hidden "Include" list: it's "Allow Addresses" now
+bool migrateAddrGroupAllowInclude(SqliteDb *db)
+{
+    const char *const sql = "UPDATE address_group"
+                            "  SET include_all = 1, include_zones = 0, include_text = ''"
+                            "  WHERE addr_group_id = (SELECT addr_group_id FROM address_group"
+                            "    ORDER BY addr_group_id LIMIT 1 OFFSET 1);";
+
+    return DbQuery(db).sql(sql).executeOk();
 }
 
 struct OldAppGroup
@@ -588,6 +599,11 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     // COMPAT: Migrate the Tasks' intervals from hours to minutes
     if (version < 61) {
         migrateTaskIntervals(db);
+    }
+
+    // COMPAT: Clear the old "Include" list of the allowed addresses
+    if (version < 68) {
+        migrateAddrGroupAllowInclude(db);
     }
 
     return true;
