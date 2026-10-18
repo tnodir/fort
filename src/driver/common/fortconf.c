@@ -258,14 +258,12 @@ FORT_API BOOL fort_conf_addr_group_ip_listed(PCFORT_CONF_ADDR_GROUP addr_group,
             return TRUE;
     }
 
-    if (opt->zone_func != NULL) {
-        const UINT32 zones_mask =
-                is_exclude ? addr_group->exclude_zones : addr_group->include_zones;
+    const UINT32 zones_mask = is_exclude ? addr_group->exclude_zones : addr_group->include_zones;
 
-        return opt->zone_func(opt->ctx, conn, opt->zone_id, zones_mask);
-    }
+    if (zones_mask == 0 || opt->zone_func == NULL)
+        return FALSE;
 
-    return FALSE;
+    return opt->zone_func(opt->ctx, conn, opt->zone_id, zones_mask);
 }
 
 FORT_API BOOL fort_conf_addr_group_ip_included(PCFORT_CONF_ADDR_GROUP addr_group,
