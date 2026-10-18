@@ -153,12 +153,18 @@ void AddressesPage::setupEditLanTextActions()
 
 void AddressesPage::setupInetBox()
 {
+    // Allow Inet Addresses
+    m_allowInetAddresses =
+            createAddressesArea(FirewallConf::AddressListAllowInet, ":/icons/global_telecom.png");
+
     // Block Inet Addresses
     m_blockInetAddresses =
             createAddressesArea(FirewallConf::AddressListBlockInet, ":/icons/ip_block.png");
 
     // Layout
     auto layout = ControlUtil::createVLayout(/*margin=*/-1);
+    layout->addWidget(m_allowInetAddresses, 1);
+    layout->addWidget(ControlUtil::createHSeparator());
     layout->addWidget(m_blockInetAddresses, 1);
 
     m_gbInet = new QGroupBox();
@@ -195,5 +201,5 @@ void AddressesPage::updateUi()
 
 QList<AddressesArea *> AddressesPage::addressesAreas() const
 {
-    return { m_lanAddresses, m_blockInetAddresses };
+    return { m_lanAddresses, m_allowInetAddresses, m_blockInetAddresses };
 }

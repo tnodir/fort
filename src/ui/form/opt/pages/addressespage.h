@@ -48,6 +48,7 @@ private:
     AddressesArea *m_lanAddresses = nullptr;
     QAction *m_actAddLocalNetworks = nullptr;
 
+    AddressesArea *m_allowInetAddresses = nullptr;
     AddressesArea *m_blockInetAddresses = nullptr;
 };
 
