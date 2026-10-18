@@ -68,7 +68,7 @@ void AppPendingConnsWindow::retranslateUi()
     retranslateAllowProcessMenu();
     setIconButtonText(m_btBlock, tr("&Block once"));
     setIconButtonText(m_btContinue, tr("&Continue"));
-    m_btContinue->setToolTip(tr("Continue by the current rules: the still asked ones are blocked"));
+    m_btContinue->setToolTip(tr("Continue by the current rules: the still paused ones are blocked"));
 
     // The button's text with the mnemonic
     addFilterAction()->setIconText(tr("Add &Filter"));
