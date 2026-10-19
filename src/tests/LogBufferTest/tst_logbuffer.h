@@ -9,6 +9,7 @@
 #include <log/logentryapp.h>
 #include <log/logentryconn.h>
 #include <log/logentryflowclosed.h>
+#include <log/logentryprocnew.h>
 #include <log/logentrytime.h>
 #include <util/dateutil.h>
 
@@ -296,6 +297,45 @@ TEST_F(LogBufferTest, flowClosedWriteRead)
         LogEntryFlowClosed flowClosedEntry;
         buf.readEntryFlowClosed(&flowClosedEntry);
         ASSERT_EQ(flowClosedEntry.flowId(), 0x89ABCDEF01234567ull + i);
+    }
+
+    ASSERT_EQ(buf.offset(), buf.top());
+}
+
+TEST_F(LogBufferTest, procNewWriteRead)
+{
+    const QString path("C:\\test\\app.exe");
+
+    const int testCount = 3;
+
+    LogBuffer buf;
+
+    // Write: the App and the Process New records of different sizes alternate
+    for (int i = 0; i < testCount; ++i) {
+        LogEntryApp appEntry(i + 1, path.left(path.size() - i));
+        appEntry.setBlocked(i % 2 != 0);
+        buf.writeEntryApp(&appEntry);
+
+        LogEntryProcNew procNewEntry(i + 11, path.left(i + 1));
+        procNewEntry.setAppId(i + 21);
+        buf.writeEntryProcNew(&procNewEntry);
+    }
+
+    // Read
+    for (int i = 0; i < testCount; ++i) {
+        ASSERT_EQ(buf.peekEntryType(), FORT_LOG_TYPE_APP);
+        LogEntryApp appEntry;
+        buf.readEntryApp(&appEntry);
+        ASSERT_EQ(appEntry.pid(), i + 1);
+        ASSERT_EQ(appEntry.blocked(), i % 2 != 0);
+        ASSERT_EQ(appEntry.kernelPath(), path.left(path.size() - i));
+
+        ASSERT_EQ(buf.peekEntryType(), FORT_LOG_TYPE_PROC_NEW);
+        LogEntryProcNew procNewEntry;
+        buf.readEntryProcNew(&procNewEntry);
+        ASSERT_EQ(procNewEntry.pid(), i + 11);
+        ASSERT_EQ(procNewEntry.appId(), i + 21);
+        ASSERT_EQ(procNewEntry.kernelPath(), path.left(i + 1));
     }
 
     ASSERT_EQ(buf.offset(), buf.top());
