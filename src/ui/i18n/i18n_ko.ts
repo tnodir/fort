@@ -939,6 +939,13 @@
     </message>
 </context>
 <context>
+    <name>FontSelector</name>
+    <message>
+        <source>Select Font</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FortManager</name>
     <message>
         <source>Application is already running!</source>
@@ -1023,6 +1030,10 @@
         <translation>호버 시 숨기기</translation>
     </message>
     <message>
+        <source>Hide Y axis scale labels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Animation</source>
         <translation>애니메이션</translation>
     </message>
@@ -1103,6 +1114,26 @@
         <translation>격자:</translation>
     </message>
     <message>
+        <source>Maximized</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Column</source>
         <translation>열</translation>
     </message>
@@ -1125,6 +1156,10 @@
     <message>
         <source>Colors (Light | Dark)</source>
         <translation>색상 (밝은 | 어두운)</translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Fixed speed:</source>
@@ -1458,6 +1493,14 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Select File</source>
         <translation>파일 선택</translation>
+    </message>
+    <message>
+        <source>Font:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icon Size in Lists:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Enabled</source>

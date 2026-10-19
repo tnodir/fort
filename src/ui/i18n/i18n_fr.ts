@@ -939,6 +939,13 @@
     </message>
 </context>
 <context>
+    <name>FontSelector</name>
+    <message>
+        <source>Select Font</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FortManager</name>
     <message>
         <source>Application is already running!</source>
@@ -1023,6 +1030,10 @@
         <translation>Cacher en survol</translation>
     </message>
     <message>
+        <source>Hide Y axis scale labels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Animation</source>
         <translation>Animation</translation>
     </message>
@@ -1103,6 +1114,26 @@
         <translation>Grille:</translation>
     </message>
     <message>
+        <source>Maximized</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Column</source>
         <translation>Colonne</translation>
     </message>
@@ -1125,6 +1156,10 @@
     <message>
         <source>Colors (Light | Dark)</source>
         <translation>Couleurs (Clair | Sombre)</translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Fixed speed:</source>
@@ -1458,6 +1493,14 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
     <message>
         <source>Select File</source>
         <translation>Choisir un fichier</translation>
+    </message>
+    <message>
+        <source>Font:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icon Size in Lists:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Enabled</source>

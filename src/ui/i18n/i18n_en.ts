@@ -939,6 +939,13 @@
     </message>
 </context>
 <context>
+    <name>FontSelector</name>
+    <message>
+        <source>Select Font</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>FortManager</name>
     <message>
         <source>Application is already running!</source>
@@ -1023,6 +1030,10 @@
         <translation></translation>
     </message>
     <message>
+        <source>Hide Y axis scale labels</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Animation</source>
         <translation></translation>
     </message>
@@ -1103,6 +1114,26 @@
         <translation></translation>
     </message>
     <message>
+        <source>Maximized</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Column</source>
         <translation></translation>
     </message>
@@ -1124,6 +1155,10 @@
     </message>
     <message>
         <source>Colors (Light | Dark)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
         <translation></translation>
     </message>
     <message>
@@ -1456,6 +1491,14 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Select File</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Font:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Icon Size in Lists:</source>
         <translation></translation>
     </message>
     <message>

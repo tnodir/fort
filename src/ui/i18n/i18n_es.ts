@@ -939,6 +939,13 @@
     </message>
 </context>
 <context>
+    <name>FontSelector</name>
+    <message>
+        <source>Select Font</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FortManager</name>
     <message>
         <source>Application is already running!</source>
@@ -1023,6 +1030,10 @@
         <translation>Ocultar al pasar el cursor</translation>
     </message>
     <message>
+        <source>Hide Y axis scale labels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Animation</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1103,6 +1114,26 @@
         <translation>Cuadrícula:</translation>
     </message>
     <message>
+        <source>Maximized</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Column</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1125,6 +1156,10 @@
     <message>
         <source>Colors (Light | Dark)</source>
         <translation>Colores (Claro | Oscuro)</translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Fixed speed:</source>
@@ -1457,6 +1492,14 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Select File</source>
         <translation>Seleccionar archivo</translation>
+    </message>
+    <message>
+        <source>Font:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icon Size in Lists:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Enabled</source>

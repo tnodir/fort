@@ -939,6 +939,13 @@
     </message>
 </context>
 <context>
+    <name>FontSelector</name>
+    <message>
+        <source>Select Font</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FortManager</name>
     <message>
         <source>Application is already running!</source>
@@ -1019,8 +1026,16 @@
         <translation>Độ mờ khi rê chuột</translation>
     </message>
     <message>
+        <source>Window Geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Click through</source>
         <translation>Cho phép nhấp xuyên</translation>
+    </message>
+    <message>
+        <source>Hide Y axis scale labels</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Animation</source>
@@ -1068,6 +1083,26 @@
     </message>
     <message>
         <source>Total:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximized</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1457,6 +1492,14 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Select File</source>
         <translation>Chọn tệp</translation>
+    </message>
+    <message>
+        <source>Font:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icon Size in Lists:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Show Splash screen on startup</source>

@@ -939,6 +939,13 @@
     </message>
 </context>
 <context>
+    <name>FontSelector</name>
+    <message>
+        <source>Select Font</source>
+        <translation>Выбрать шрифт</translation>
+    </message>
+</context>
+<context>
     <name>FortManager</name>
     <message>
         <source>Application is already running!</source>
@@ -1023,6 +1030,10 @@
         <translation>Скрыть при наведении</translation>
     </message>
     <message>
+        <source>Hide Y axis scale labels</source>
+        <translation>Скрыть метки шкалы оси Y</translation>
+    </message>
+    <message>
         <source>Animation</source>
         <translation>Анимация</translation>
     </message>
@@ -1103,6 +1114,26 @@
         <translation>Сетка:</translation>
     </message>
     <message>
+        <source>Maximized</source>
+        <translation>Развёрнуто</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation>Ширина:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>Высота:</translation>
+    </message>
+    <message>
         <source>Column</source>
         <translation>Столбцы</translation>
     </message>
@@ -1125,6 +1156,10 @@
     <message>
         <source>Colors (Light | Dark)</source>
         <translation>Цвета (Светлый | Тёмный)</translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
+        <translation>Геометрия окна</translation>
     </message>
     <message>
         <source>Fixed speed:</source>
@@ -1458,6 +1493,14 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Select File</source>
         <translation>Выбрать файл</translation>
+    </message>
+    <message>
+        <source>Font:</source>
+        <translation>Шрифт:</translation>
+    </message>
+    <message>
+        <source>Icon Size in Lists:</source>
+        <translation>Размер значков в списках:</translation>
     </message>
     <message>
         <source>Enabled</source>
