@@ -368,9 +368,16 @@ void logAppHeaderWrite(char *output, bool blocked, quint32 pid, quint16 pathLen)
     fort_log_app_header_write(output, blocked, pid, pathLen);
 }
 
-void logAppHeaderRead(const char *input, int *blocked, quint32 *pid, quint16 *pathLen)
+LogAppHeader logAppHeaderRead(const char *input)
 {
-    fort_log_app_header_read(input, blocked, pid, pathLen);
+    LogAppHeader header;
+    BOOL blocked;
+
+    fort_log_app_header_read(input, &blocked, &header.pid, &header.pathLen);
+
+    header.blocked = blocked;
+
+    return header;
 }
 
 void logConnHeaderWrite(
@@ -390,9 +397,13 @@ void logProcNewHeaderWrite(char *output, quint32 appId, quint32 pid, quint16 pat
     fort_log_proc_new_header_write(output, appId, pid, pathLen);
 }
 
-void logProcNewHeaderRead(const char *input, quint32 *appId, quint32 *pid, quint16 *pathLen)
+LogProcNewHeader logProcNewHeaderRead(const char *input)
 {
-    fort_log_proc_new_header_read(input, appId, pid, pathLen);
+    LogProcNewHeader header;
+
+    fort_log_proc_new_header_read(input, &header.appId, &header.pid, &header.pathLen);
+
+    return header;
 }
 
 void logStatTrafHeaderRead(const char *input, quint16 *procCount)

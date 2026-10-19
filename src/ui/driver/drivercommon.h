@@ -25,6 +25,20 @@ struct ConnFilterConf
     const void *drvGroups = nullptr;
 };
 
+struct LogAppHeader
+{
+    bool blocked = false;
+    quint16 pathLen = 0;
+    quint32 pid = 0;
+};
+
+struct LogProcNewHeader
+{
+    quint16 pathLen = 0;
+    quint32 appId = 0;
+    quint32 pid = 0;
+};
+
 QString deviceName();
 
 quint32 ioctlValidate();
@@ -83,7 +97,7 @@ quint32 logFlowClosedSize();
 quint8 logType(const char *input);
 
 void logAppHeaderWrite(char *output, bool blocked, quint32 pid, quint16 pathLen);
-void logAppHeaderRead(const char *input, int *blocked, quint32 *pid, quint16 *pathLen);
+LogAppHeader logAppHeaderRead(const char *input);
 
 void logConnHeaderWrite(
         char *output, PCFORT_CONF_META_CONN conn, quint16 pathLen, quint16 inheritPathLen);
@@ -91,7 +105,7 @@ void logConnHeaderRead(
         const char *input, PFORT_CONF_META_CONN conn, quint16 *pathLen, quint16 *inheritPathLen);
 
 void logProcNewHeaderWrite(char *output, quint32 appId, quint32 pid, quint16 pathLen);
-void logProcNewHeaderRead(const char *input, quint32 *appId, quint32 *pid, quint16 *pathLen);
+LogProcNewHeader logProcNewHeaderRead(const char *input);
 
 void logStatTrafHeaderRead(const char *input, quint16 *procCount);
 

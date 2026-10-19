@@ -56,6 +56,12 @@ private:
 
     void prepareFor(int len);
 
+    char *appendEntry(quint32 entrySize);
+
+    const char *entryInput() const;
+    void skipEntry(quint32 entrySize);
+    const char *takeEntry(quint32 entrySize);
+
 private:
     int m_top = 0;
     int m_offset = 0;

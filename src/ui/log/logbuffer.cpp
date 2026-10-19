@@ -12,6 +12,16 @@
 
 namespace {
 
+quint16 pathSize(const QString &path)
+{
+    return quint16(path.size()) * sizeof(wchar_t);
+}
+
+void writePath(char *output, const QString &path)
+{
+    path.toWCharArray((wchar_t *) output);
+}
+
 QString readPath(const char *input, quint16 pathLen)
 {
     if (pathLen == 0)
@@ -53,6 +63,38 @@ void LogBuffer::prepareFor(int len)
     }
 }
 
+char *LogBuffer::appendEntry(quint32 entrySize)
+{
+    prepareFor(int(entrySize));
+
+    char *output = this->output();
+
+    m_top += int(entrySize);
+
+    return output;
+}
+
+const char *LogBuffer::entryInput() const
+{
+    Q_ASSERT(m_offset < m_top);
+
+    return input();
+}
+
+void LogBuffer::skipEntry(quint32 entrySize)
+{
+    m_offset += int(entrySize);
+}
+
+const char *LogBuffer::takeEntry(quint32 entrySize)
+{
+    const char *input = entryInput();
+
+    skipEntry(entrySize);
+
+    return input;
+}
+
 FortLogType LogBuffer::peekEntryType()
 {
     if (m_offset >= m_top)
@@ -68,57 +110,38 @@ FortLogType LogBuffer::peekEntryType()
 void LogBuffer::writeEntryApp(const LogEntryApp *logEntry)
 {
     const QString path = logEntry->kernelPath();
-    const quint16 pathLen = quint16(path.size()) * sizeof(wchar_t);
+    const quint16 pathLen = pathSize(path);
 
-    const int entrySize = int(DriverCommon::logAppSize(pathLen));
-    prepareFor(entrySize);
-
-    char *output = this->output();
+    char *output = appendEntry(DriverCommon::logAppSize(pathLen));
 
     DriverCommon::logAppHeaderWrite(output, logEntry->blocked(), logEntry->pid(), pathLen);
-
-    if (pathLen > 0) {
-        output += DriverCommon::logAppHeaderSize();
-        path.toWCharArray((wchar_t *) output);
-    }
-
-    m_top += entrySize;
+    writePath(output + DriverCommon::logAppHeaderSize(), path);
 }
 
 void LogBuffer::readEntryApp(LogEntryApp *logEntry)
 {
-    Q_ASSERT(m_offset < m_top);
+    const char *input = entryInput();
 
-    const char *input = this->input();
+    const auto header = DriverCommon::logAppHeaderRead(input);
 
-    int blocked;
-    quint32 pid;
-    quint16 pathLen;
-    DriverCommon::logAppHeaderRead(input, &blocked, &pid, &pathLen);
+    logEntry->setBlocked(header.blocked);
+    logEntry->setPid(header.pid);
+    logEntry->setKernelPath(readPath(input + DriverCommon::logAppHeaderSize(), header.pathLen));
 
-    const QString path = readPath(input + DriverCommon::logAppHeaderSize(), pathLen);
-
-    logEntry->setBlocked(blocked);
-    logEntry->setPid(pid);
-    logEntry->setKernelPath(path);
-
-    const int entrySize = int(DriverCommon::logAppSize(pathLen));
-    m_offset += entrySize;
+    skipEntry(DriverCommon::logAppSize(header.pathLen));
 }
 
 void LogBuffer::writeEntryConn(const LogEntryConn *logEntry)
 {
     const QString path = logEntry->kernelPath();
-    const quint32 pathLen = quint32(path.size()) * sizeof(wchar_t);
+    const quint16 pathLen = pathSize(path);
 
     const QString inheritPath = logEntry->inheritKernelPath();
-    const quint32 inheritPathLen = quint32(inheritPath.size()) * sizeof(wchar_t);
+    const quint16 inheritPathLen = pathSize(inheritPath);
 
     const bool isIPv6 = logEntry->isIPv6();
-    const int entrySize = int(DriverCommon::logConnSize(pathLen, inheritPathLen, isIPv6));
-    prepareFor(entrySize);
 
-    char *output = this->output();
+    char *output = appendEntry(DriverCommon::logConnSize(pathLen, inheritPathLen, isIPv6));
 
     const FORT_CONF_META_CONN conn = {
         .inbound = logEntry->inbound(),
@@ -150,18 +173,13 @@ void LogBuffer::writeEntryConn(const LogEntryConn *logEntry)
 
     DriverCommon::logConnHeaderWrite(output, &conn, pathLen, inheritPathLen);
 
-    path.toWCharArray((wchar_t *) (output + DriverCommon::logConnHeaderSize(isIPv6)));
-    inheritPath.toWCharArray(
-            (wchar_t *) (output + DriverCommon::logConnInheritPathOffset(pathLen, isIPv6)));
-
-    m_top += entrySize;
+    writePath(output + DriverCommon::logConnHeaderSize(isIPv6), path);
+    writePath(output + DriverCommon::logConnInheritPathOffset(pathLen, isIPv6), inheritPath);
 }
 
 void LogBuffer::readEntryConn(LogEntryConn *logEntry)
 {
-    Q_ASSERT(m_offset < m_top);
-
-    const char *input = this->input();
+    const char *input = entryInput();
 
     FORT_CONF_META_CONN conn;
     quint16 pathLen;
@@ -195,56 +213,36 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
     logEntry->setFlowId(conn.flow_id);
     logEntry->setKernelPath(path);
 
-    const int entrySize = int(DriverCommon::logConnSize(pathLen, inheritPathLen, conn.isIPv6));
-    m_offset += entrySize;
+    skipEntry(DriverCommon::logConnSize(pathLen, inheritPathLen, conn.isIPv6));
 }
 
 void LogBuffer::writeEntryProcNew(const LogEntryProcNew *logEntry)
 {
     const QString path = logEntry->kernelPath();
-    const quint16 pathLen = quint16(path.size()) * sizeof(wchar_t);
+    const quint16 pathLen = pathSize(path);
 
-    const int entrySize = int(DriverCommon::logProcNewSize(pathLen));
-    prepareFor(entrySize);
-
-    char *output = this->output();
+    char *output = appendEntry(DriverCommon::logProcNewSize(pathLen));
 
     DriverCommon::logProcNewHeaderWrite(output, logEntry->appId(), logEntry->pid(), pathLen);
-
-    if (pathLen > 0) {
-        output += DriverCommon::logProcNewHeaderSize();
-        path.toWCharArray((wchar_t *) output);
-    }
-
-    m_top += entrySize;
+    writePath(output + DriverCommon::logProcNewHeaderSize(), path);
 }
 
 void LogBuffer::readEntryProcNew(LogEntryProcNew *logEntry)
 {
-    Q_ASSERT(m_offset < m_top);
+    const char *input = entryInput();
 
-    const char *input = this->input();
+    const auto header = DriverCommon::logProcNewHeaderRead(input);
 
-    quint32 appId;
-    quint32 pid;
-    quint16 pathLen;
-    DriverCommon::logProcNewHeaderRead(input, &appId, &pid, &pathLen);
+    logEntry->setAppId(header.appId);
+    logEntry->setPid(header.pid);
+    logEntry->setKernelPath(readPath(input + DriverCommon::logProcNewHeaderSize(), header.pathLen));
 
-    const QString path = readPath(input + DriverCommon::logProcNewHeaderSize(), pathLen);
-
-    logEntry->setAppId(appId);
-    logEntry->setPid(pid);
-    logEntry->setKernelPath(path);
-
-    const int entrySize = int(DriverCommon::logProcNewSize(pathLen));
-    m_offset += entrySize;
+    skipEntry(DriverCommon::logProcNewSize(header.pathLen));
 }
 
 void LogBuffer::readEntryStatTraf(LogEntryStatTraf *logEntry)
 {
-    Q_ASSERT(m_offset < m_top);
-
-    const char *input = this->input();
+    const char *input = entryInput();
 
     quint16 procCount;
     DriverCommon::logStatTrafHeaderRead(input, &procCount);
@@ -256,27 +254,19 @@ void LogBuffer::readEntryStatTraf(LogEntryStatTraf *logEntry)
         logEntry->setProcTrafBytes(reinterpret_cast<const quint32 *>(input));
     }
 
-    const int entrySize = int(DriverCommon::logStatSize(procCount));
-    m_offset += entrySize;
+    skipEntry(DriverCommon::logStatSize(procCount));
 }
 
 void LogBuffer::writeEntryTime(const LogEntryTime *logEntry)
 {
-    const int entrySize = int(DriverCommon::logTimeSize());
-    prepareFor(entrySize);
-
-    char *output = this->output();
+    char *output = appendEntry(DriverCommon::logTimeSize());
 
     DriverCommon::logTimeWrite(output, logEntry->unixTime(), logEntry->systemTimeChanged());
-
-    m_top += entrySize;
 }
 
 void LogBuffer::readEntryTime(LogEntryTime *logEntry)
 {
-    Q_ASSERT(m_offset < m_top);
-
-    const char *input = this->input();
+    const char *input = takeEntry(DriverCommon::logTimeSize());
 
     qint64 unixTime;
     int systemTimeChanged;
@@ -284,49 +274,31 @@ void LogBuffer::readEntryTime(LogEntryTime *logEntry)
 
     logEntry->setSystemTimeChanged(systemTimeChanged != 0);
     logEntry->setUnixTime(unixTime);
-
-    const int entrySize = int(DriverCommon::logTimeSize());
-    m_offset += entrySize;
 }
 
 void LogBuffer::readEntryProcKill(LogEntryProcKill *logEntry)
 {
-    Q_ASSERT(m_offset < m_top);
-
-    const char *input = this->input();
+    const char *input = takeEntry(DriverCommon::logProcKillSize());
 
     quint32 pid;
     DriverCommon::logProcKillRead(input, &pid);
 
     logEntry->setPid(pid);
-
-    const int entrySize = int(DriverCommon::logProcKillSize());
-    m_offset += entrySize;
 }
 
 void LogBuffer::writeEntryFlowClosed(const LogEntryFlowClosed *logEntry)
 {
-    const int entrySize = int(DriverCommon::logFlowClosedSize());
-    prepareFor(entrySize);
-
-    char *output = this->output();
+    char *output = appendEntry(DriverCommon::logFlowClosedSize());
 
     DriverCommon::logFlowClosedWrite(output, logEntry->flowId());
-
-    m_top += entrySize;
 }
 
 void LogBuffer::readEntryFlowClosed(LogEntryFlowClosed *logEntry)
 {
-    Q_ASSERT(m_offset < m_top);
-
-    const char *input = this->input();
+    const char *input = takeEntry(DriverCommon::logFlowClosedSize());
 
     quint64 flowId;
     DriverCommon::logFlowClosedRead(input, &flowId);
 
     logEntry->setFlowId(flowId);
-
-    const int entrySize = int(DriverCommon::logFlowClosedSize());
-    m_offset += entrySize;
 }
