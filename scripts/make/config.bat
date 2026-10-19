@@ -22,7 +22,7 @@
 @set "PERL_HOME=D:\Utils\Dev\Perl"
 
 @rem jom for the parallel builds (nmake with cl's /MP if it's missing)
-@set "JOM_PATH=D:\Qt\qtcreator-21.0.0-beta2\bin\jom\jom.exe"
+@set "JOM_PATH=D:\Qt\qtcreator-22.0.0-beta1\bin\jom\jom.exe"
 
 @rem Inno Setup 7 for deploy\create-installer.bat
 @set "INNO_HOME=C:\Programs\InnoSetup7"
