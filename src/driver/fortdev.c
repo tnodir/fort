@@ -54,11 +54,13 @@ static void fort_device_reauth_queue(void)
     fort_worker_queue(&fort_device()->worker, FORT_WORKER_REAUTH);
 }
 
-static void fort_device_conf_reauth_queue(PFORT_DEVICE_CONF device_conf)
+static NTSTATUS fort_device_control_conf_changed(void)
 {
-    if (device_conf->ref != NULL) {
+    if (fort_device()->conf.ref != NULL) {
         fort_device_reauth_queue();
     }
+
+    return STATUS_SUCCESS;
 }
 
 FORT_API NTSTATUS fort_device_create(PDEVICE_OBJECT device, PIRP irp)
@@ -139,16 +141,13 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
 static NTSTATUS fort_device_control_validate(PFORT_DEVICE_CONTROL_ARG dca)
 {
     PCFORT_CONF_VERSION conf_ver = dca->buffer;
-    const ULONG len = dca->in_len;
 
-    if (len == sizeof(FORT_CONF_VERSION)) {
-        if (conf_ver->driver_version == DRIVER_VERSION) {
-            fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_IS_VALIDATED, TRUE);
-            return STATUS_SUCCESS;
-        }
-    }
+    if (conf_ver->driver_version != DRIVER_VERSION)
+        return STATUS_UNSUCCESSFUL;
 
-    return STATUS_UNSUCCESSFUL;
+    fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_IS_VALIDATED, TRUE);
+
+    return STATUS_SUCCESS;
 }
 
 static NTSTATUS fort_device_control_setservices(PFORT_DEVICE_CONTROL_ARG dca)
@@ -210,19 +209,14 @@ static NTSTATUS fort_device_control_setconf(PFORT_DEVICE_CONTROL_ARG dca)
 static NTSTATUS fort_device_control_setflags(PFORT_DEVICE_CONTROL_ARG dca)
 {
     PCFORT_CONF_FLAGS in_conf_flags = dca->buffer;
-    const ULONG len = dca->in_len;
 
-    if (len == sizeof(FORT_CONF_FLAGS)) {
-        const FORT_CONF_FLAGS conf_flags = *in_conf_flags;
+    const FORT_CONF_FLAGS conf_flags = *in_conf_flags;
 
-        fort_conf_ref_flags_set(&fort_device()->conf, conf_flags);
+    fort_conf_ref_flags_set(&fort_device()->conf, conf_flags);
 
-        fort_shaper_conf_flags_update(&fort_device()->shaper, conf_flags);
+    fort_shaper_conf_flags_update(&fort_device()->shaper, conf_flags);
 
-        return fort_callout_force_reauth();
-    }
-
-    return STATUS_UNSUCCESSFUL;
+    return fort_callout_force_reauth();
 }
 
 static NTSTATUS fort_device_control_getlog(PFORT_DEVICE_CONTROL_ARG dca)
@@ -292,41 +286,26 @@ static NTSTATUS fort_device_control_setzones(PFORT_DEVICE_CONTROL_ARG dca)
     PCFORT_CONF_ZONES zones = dca->buffer;
     const ULONG len = dca->in_len;
 
-    if (fort_conf_zones_valid(zones, len)) {
-        PFORT_CONF_ZONES conf_zones = fort_conf_zones_new(zones, len);
+    if (!fort_conf_zones_valid(zones, len))
+        return STATUS_UNSUCCESSFUL;
 
-        if (conf_zones == NULL) {
-            return STATUS_INSUFFICIENT_RESOURCES;
-        } else {
-            PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
+    PFORT_CONF_ZONES conf_zones = fort_conf_zones_new(zones, len);
 
-            fort_conf_zones_set(device_conf, conf_zones);
+    if (conf_zones == NULL)
+        return STATUS_INSUFFICIENT_RESOURCES;
 
-            fort_device_conf_reauth_queue(device_conf);
+    fort_conf_zones_set(&fort_device()->conf, conf_zones);
 
-            return STATUS_SUCCESS;
-        }
-    }
-
-    return STATUS_UNSUCCESSFUL;
+    return fort_device_control_conf_changed();
 }
 
 static NTSTATUS fort_device_control_setzoneflag(PFORT_DEVICE_CONTROL_ARG dca)
 {
     PCFORT_CONF_ZONE_FLAG zone_flag = dca->buffer;
-    const ULONG len = dca->in_len;
 
-    if (len == sizeof(FORT_CONF_ZONE_FLAG)) {
-        PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
+    fort_conf_zone_flag_set(&fort_device()->conf, zone_flag);
 
-        fort_conf_zone_flag_set(device_conf, zone_flag);
-
-        fort_device_conf_reauth_queue(device_conf);
-
-        return STATUS_SUCCESS;
-    }
-
-    return STATUS_UNSUCCESSFUL;
+    return fort_device_control_conf_changed();
 }
 
 static NTSTATUS fort_device_control_setrules(PFORT_DEVICE_CONTROL_ARG dca)
@@ -347,119 +326,68 @@ static NTSTATUS fort_device_control_setrules(PFORT_DEVICE_CONTROL_ARG dca)
         }
     }
 
-    PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
+    fort_conf_rules_set(&fort_device()->conf, conf_rules);
 
-    fort_conf_rules_set(device_conf, conf_rules);
-
-    fort_device_conf_reauth_queue(device_conf);
-
-    return STATUS_SUCCESS;
+    return fort_device_control_conf_changed();
 }
 
 static NTSTATUS fort_device_control_setruleflag(PFORT_DEVICE_CONTROL_ARG dca)
 {
     PCFORT_CONF_RULE_FLAG rule_flag = dca->buffer;
-    const ULONG len = dca->in_len;
 
-    if (len == sizeof(FORT_CONF_RULE_FLAG)) {
-        PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
+    fort_conf_rule_flag_set(&fort_device()->conf, rule_flag);
 
-        fort_conf_rule_flag_set(device_conf, rule_flag);
-
-        fort_device_conf_reauth_queue(device_conf);
-
-        return STATUS_SUCCESS;
-    }
-
-    return STATUS_UNSUCCESSFUL;
+    return fort_device_control_conf_changed();
 }
 
 static NTSTATUS fort_device_control_setgroups(PFORT_DEVICE_CONTROL_ARG dca)
 {
     PCFORT_CONF_GROUPS groups = dca->buffer;
-    const ULONG len = dca->in_len;
 
-    if (len == sizeof(FORT_CONF_GROUPS)) {
-        PFORT_CONF_GROUPS conf_groups = fort_conf_groups_new(groups, len);
+    PFORT_CONF_GROUPS conf_groups = fort_conf_groups_new(groups, sizeof(FORT_CONF_GROUPS));
 
-        if (conf_groups == NULL) {
-            return STATUS_INSUFFICIENT_RESOURCES;
-        } else {
-            PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
+    if (conf_groups == NULL)
+        return STATUS_INSUFFICIENT_RESOURCES;
 
-            fort_conf_groups_set(device_conf, conf_groups);
+    fort_conf_groups_set(&fort_device()->conf, conf_groups);
 
-            fort_device_conf_reauth_queue(device_conf);
-
-            return STATUS_SUCCESS;
-        }
-    }
-
-    return STATUS_UNSUCCESSFUL;
+    return fort_device_control_conf_changed();
 }
 
 static NTSTATUS fort_device_control_setgroupflags(PFORT_DEVICE_CONTROL_ARG dca)
 {
     PCFORT_CONF_GROUP_FLAGS group_flags = dca->buffer;
-    const ULONG len = dca->in_len;
 
-    if (len == sizeof(FORT_CONF_GROUP_FLAGS)) {
-        PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
+    fort_conf_group_flags_set(&fort_device()->conf, group_flags);
 
-        fort_conf_group_flags_set(device_conf, group_flags);
-
-        fort_device_conf_reauth_queue(device_conf);
-
-        return STATUS_SUCCESS;
-    }
-
-    return STATUS_UNSUCCESSFUL;
+    return fort_device_control_conf_changed();
 }
 
 static NTSTATUS fort_device_control_setperiods(PFORT_DEVICE_CONTROL_ARG dca)
 {
     PCFORT_CONF_PERIODS periods = dca->buffer;
-    const ULONG len = dca->in_len;
 
-    if (len == sizeof(FORT_CONF_PERIODS)) {
-        PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
+    fort_conf_periods_set(&fort_device()->conf, periods);
 
-        fort_conf_periods_set(device_conf, periods);
-
-        fort_device_conf_reauth_queue(device_conf);
-
-        return STATUS_SUCCESS;
-    }
-
-    return STATUS_UNSUCCESSFUL;
+    return fort_device_control_conf_changed();
 }
 
 static NTSTATUS fort_device_control_setspeedlimits(PFORT_DEVICE_CONTROL_ARG dca)
 {
     PCFORT_CONF_SPEED_LIMITS speed_limits = dca->buffer;
-    const ULONG len = dca->in_len;
 
-    if (len == sizeof(FORT_CONF_SPEED_LIMITS)) {
-        fort_shaper_speed_limits_set(&fort_device()->shaper, speed_limits);
+    fort_shaper_speed_limits_set(&fort_device()->shaper, speed_limits);
 
-        return STATUS_SUCCESS;
-    }
-
-    return STATUS_UNSUCCESSFUL;
+    return STATUS_SUCCESS;
 }
 
 static NTSTATUS fort_device_control_setspeedlimitflags(PFORT_DEVICE_CONTROL_ARG dca)
 {
     PCFORT_CONF_SPEED_LIMIT_FLAGS limit_flags = dca->buffer;
-    const ULONG len = dca->in_len;
 
-    if (len == sizeof(FORT_CONF_SPEED_LIMIT_FLAGS)) {
-        fort_shaper_speed_limit_flags_set(&fort_device()->shaper, limit_flags);
+    fort_shaper_speed_limit_flags_set(&fort_device()->shaper, limit_flags);
 
-        return STATUS_SUCCESS;
-    }
-
-    return STATUS_UNSUCCESSFUL;
+    return STATUS_SUCCESS;
 }
 
 static NTSTATUS fort_device_control_getspeedlimitstatus(PFORT_DEVICE_CONTROL_ARG dca)
@@ -534,10 +462,6 @@ static NTSTATUS fort_device_control_allowpending(PFORT_DEVICE_CONTROL_ARG dca)
 static NTSTATUS fort_device_control_allowproc(PFORT_DEVICE_CONTROL_ARG dca)
 {
     PCFORT_PROC_ALLOW proc_allow = dca->buffer;
-    const ULONG len = dca->in_len;
-
-    if (len != sizeof(FORT_PROC_ALLOW))
-        return STATUS_UNSUCCESSFUL;
 
     if (!fort_pstree_proc_allow(&fort_device()->ps_tree, proc_allow))
         return STATUS_NOT_FOUND;
@@ -554,32 +478,51 @@ static_assert(FORT_CTL_INDEX_FROM_CODE(FORT_IOCTL_SETRULEFLAG) == FORT_IOCTL_IND
 typedef NTSTATUS(FORT_DEVICE_CONTROL_PROCESS_FUNC)(PFORT_DEVICE_CONTROL_ARG dca);
 typedef FORT_DEVICE_CONTROL_PROCESS_FUNC *PFORT_DEVICE_CONTROL_PROCESS_FUNC;
 
-static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
-    &fort_device_control_validate, // FORT_IOCTL_VALIDATE
-    &fort_device_control_setservices, // FORT_IOCTL_SETSERVICES
-    &fort_device_control_setconf, // FORT_IOCTL_SETCONF
-    &fort_device_control_setflags, // FORT_IOCTL_SETFLAGS
-    &fort_device_control_getlog, // FORT_IOCTL_GETLOG
-    &fort_device_control_addapp, // FORT_IOCTL_ADDAPP
-    &fort_device_control_delapp, // FORT_IOCTL_DELAPP
-    &fort_device_control_setzones, // FORT_IOCTL_SETZONES
-    &fort_device_control_setzoneflag, // FORT_IOCTL_SETZONEFLAG
-    &fort_device_control_setrules, // FORT_IOCTL_SETRULES
-    &fort_device_control_setruleflag, // FORT_IOCTL_SETRULEFLAG
-    &fort_device_control_setgroups, // FORT_IOCTL_SETGROUPS
-    &fort_device_control_setgroupflags, // FORT_IOCTL_SETGROUPFLAGS
-    &fort_device_control_setspeedlimits, // FORT_IOCTL_SETSPEEDLIMITS
-    &fort_device_control_setspeedlimitflags, // FORT_IOCTL_SETSPEEDLIMITFLAGS
-    &fort_device_control_getspeedlimitstatus, // FORT_IOCTL_GETSPEEDLIMITSTATUS
-    &fort_device_control_setperiods, // FORT_IOCTL_SETPERIODS
-    &fort_device_control_blockpending, // FORT_IOCTL_BLOCKPENDING
-    &fort_device_control_reauthpending, // FORT_IOCTL_REAUTHPENDING
-    &fort_device_control_allowpending, // FORT_IOCTL_ALLOWPENDING
-    &fort_device_control_allowproc, // FORT_IOCTL_ALLOWPROC
+typedef struct fort_device_control_process
+{
+    ULONG in_len; /* the input's fixed size, 0 - checked by the handler */
+    PFORT_DEVICE_CONTROL_PROCESS_FUNC func;
+} FORT_DEVICE_CONTROL_PROCESS, *PFORT_DEVICE_CONTROL_PROCESS;
+
+typedef const FORT_DEVICE_CONTROL_PROCESS *PCFORT_DEVICE_CONTROL_PROCESS;
+
+static const FORT_DEVICE_CONTROL_PROCESS fortDeviceControlProcess_list[] = {
+    [FORT_IOCTL_INDEX_VALIDATE] = { sizeof(FORT_CONF_VERSION), &fort_device_control_validate },
+    [FORT_IOCTL_INDEX_SETSERVICES] = { 0, &fort_device_control_setservices },
+    [FORT_IOCTL_INDEX_SETCONF] = { 0, &fort_device_control_setconf },
+    [FORT_IOCTL_INDEX_SETFLAGS] = { sizeof(FORT_CONF_FLAGS), &fort_device_control_setflags },
+    [FORT_IOCTL_INDEX_GETLOG] = { 0, &fort_device_control_getlog },
+    [FORT_IOCTL_INDEX_ADDAPP] = { 0, &fort_device_control_addapp },
+    [FORT_IOCTL_INDEX_DELAPP] = { 0, &fort_device_control_delapp },
+    [FORT_IOCTL_INDEX_SETZONES] = { 0, &fort_device_control_setzones },
+    [FORT_IOCTL_INDEX_SETZONEFLAG] = { sizeof(FORT_CONF_ZONE_FLAG),
+            &fort_device_control_setzoneflag },
+    [FORT_IOCTL_INDEX_SETRULES] = { 0, &fort_device_control_setrules },
+    [FORT_IOCTL_INDEX_SETRULEFLAG] = { sizeof(FORT_CONF_RULE_FLAG),
+            &fort_device_control_setruleflag },
+    [FORT_IOCTL_INDEX_SETGROUPS] = { sizeof(FORT_CONF_GROUPS), &fort_device_control_setgroups },
+    [FORT_IOCTL_INDEX_SETGROUPFLAGS] = { sizeof(FORT_CONF_GROUP_FLAGS),
+            &fort_device_control_setgroupflags },
+    [FORT_IOCTL_INDEX_SETSPEEDLIMITS] = { sizeof(FORT_CONF_SPEED_LIMITS),
+            &fort_device_control_setspeedlimits },
+    [FORT_IOCTL_INDEX_SETSPEEDLIMITFLAGS] = { sizeof(FORT_CONF_SPEED_LIMIT_FLAGS),
+            &fort_device_control_setspeedlimitflags },
+    [FORT_IOCTL_INDEX_GETSPEEDLIMITSTATUS] = { 0, &fort_device_control_getspeedlimitstatus },
+    [FORT_IOCTL_INDEX_SETPERIODS] = { sizeof(FORT_CONF_PERIODS), &fort_device_control_setperiods },
+    [FORT_IOCTL_INDEX_BLOCKPENDING] = { 0, &fort_device_control_blockpending },
+    [FORT_IOCTL_INDEX_REAUTHPENDING] = { 0, &fort_device_control_reauthpending },
+    [FORT_IOCTL_INDEX_ALLOWPENDING] = { 0, &fort_device_control_allowpending },
+    [FORT_IOCTL_INDEX_ALLOWPROC] = { sizeof(FORT_PROC_ALLOW), &fort_device_control_allowproc },
 };
 
-static_assert(FORT_ARRAY_SIZE(fortDeviceControlProcess_funcList) == FORT_IOCTL_INDEX_COUNT,
-        "Invalid fortDeviceControlProcess_funcList size");
+static_assert(FORT_ARRAY_SIZE(fortDeviceControlProcess_list) == FORT_IOCTL_INDEX_COUNT,
+        "Invalid fortDeviceControlProcess_list size");
+
+inline static BOOL fort_device_control_in_len_valid(
+        PFORT_DEVICE_CONTROL_ARG dca, PCFORT_DEVICE_CONTROL_PROCESS dcp)
+{
+    return dcp->in_len == 0 || dca->in_len == dcp->in_len;
+}
 
 static NTSTATUS fort_device_control_process(PFORT_DEVICE_CONTROL_ARG dca)
 {
@@ -596,9 +539,12 @@ static NTSTATUS fort_device_control_process(PFORT_DEVICE_CONTROL_ARG dca)
             && fort_device_flag(&fort_device()->conf, FORT_DEVICE_IS_VALIDATED) == 0)
         return STATUS_INVALID_DEVICE_REQUEST;
 
-    PFORT_DEVICE_CONTROL_PROCESS_FUNC func = fortDeviceControlProcess_funcList[control_index];
+    PCFORT_DEVICE_CONTROL_PROCESS dcp = &fortDeviceControlProcess_list[control_index];
 
-    return func(dca);
+    if (!fort_device_control_in_len_valid(dca, dcp))
+        return STATUS_UNSUCCESSFUL;
+
+    return dcp->func(dca);
 }
 
 FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
