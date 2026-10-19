@@ -13,9 +13,13 @@
 @set "VCVARS_DIR=C:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build"
 
 @rem Static Qts: win7 (x86, Qt 6.1), win10 (x64; also the host tools for arm64), win10-arm64
-@set "QT_STATIC_WIN7=D:\opt\qt-fort\static"
+@set "QT_STATIC_WIN7=D:\opt\qt-fort-win7\static"
 @set "QT_STATIC_WIN10=D:\opt\qt-fort-lib\static"
 @set "QT_STATIC_ARM64=D:\opt\qt-fort-arm\static"
+
+@rem CMake and Perl to build the static Qt of win7 (qt\qt-env-win7.bat)
+@set "CMAKE_WIN7_HOME=D:\Utils\Dev\CMake-3.20.6"
+@set "PERL_HOME=D:\Utils\Dev\Perl"
 
 @rem jom for the parallel builds (nmake with cl's /MP if it's missing)
 @set "JOM_PATH=D:\Qt\qtcreator-21.0.0-beta2\bin\jom\jom.exe"
