@@ -3,6 +3,8 @@
 
 #include <QPointer>
 
+#include <functional>
+
 #include <form/controls/formwindow.h>
 
 class App;
@@ -45,7 +47,7 @@ private:
     void switchConnsWindow(bool visible);
     void switchPendingConnsWindow(bool visible);
 
-    void setupConnsWindow(AppConnsWindow *window);
+    void setupConnsWindow(AppConnsWindow *window, const std::function<void()> &onAboutToClose);
     void showConnsWindow(AppConnsWindow *window, bool visible);
     void closeConnsWindow(AppConnsWindow *window);
     void updateConnsWindow(AppConnsWindow *window);

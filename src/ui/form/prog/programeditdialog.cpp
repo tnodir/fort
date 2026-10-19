@@ -164,10 +164,7 @@ void ProgramEditDialog::switchConnsWindow(bool visible)
 {
     if (visible && !m_connsWindow) {
         m_connsWindow = createConnsWindow();
-        setupConnsWindow(m_connsWindow);
-
-        connect(m_connsWindow, &AppConnsWindow::aboutToClose, m_mainPage,
-                [&] { m_mainPage->setConnsWindowChecked(false); });
+        setupConnsWindow(m_connsWindow, [this] { m_mainPage->setConnsWindowChecked(false); });
     }
 
     showConnsWindow(m_connsWindow, visible);
@@ -177,21 +174,21 @@ void ProgramEditDialog::switchPendingConnsWindow(bool visible)
 {
     if (visible && !m_pendingConnsWindow) {
         m_pendingConnsWindow = createPendingConnsWindow();
-        setupConnsWindow(m_pendingConnsWindow);
-
-        connect(m_pendingConnsWindow, &AppConnsWindow::aboutToClose, m_mainPage,
-                [&] { m_mainPage->setPendingConnsWindowChecked(false); });
+        setupConnsWindow(
+                m_pendingConnsWindow, [this] { m_mainPage->setPendingConnsWindowChecked(false); });
     }
 
     showConnsWindow(m_pendingConnsWindow, visible);
 }
 
-void ProgramEditDialog::setupConnsWindow(AppConnsWindow *window)
+void ProgramEditDialog::setupConnsWindow(
+        AppConnsWindow *window, const std::function<void()> &onAboutToClose)
 {
     window->setAddFilterVisible(true);
 
     ControlUtil::deleteOnClose(window);
 
+    connect(window, &AppConnsWindow::aboutToClose, m_mainPage, onAboutToClose);
     connect(window, &AppConnsWindow::addFilterRequested, m_mainPage,
             &ProgMainPage::addConnFilterRequested);
 }
