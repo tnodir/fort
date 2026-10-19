@@ -52,8 +52,8 @@ void GraphPage::onResetToDefault()
     m_graphBarWidth->spinBox()->setValue(iniUser.graphWindowBarWidthDefault());
     m_graphMaxSeconds->spinBox()->setValue(iniUser.graphWindowMaxSecondsDefault());
     m_graphFixedSpeed->spinBox()->setValue(iniUser.graphWindowFixedSpeedDefault());
-    m_comboGraphType->setCurrentIndex(iniUser.graphWindowGraphTypeDefault());
-    m_comboTrafUnit->setCurrentIndex(iniUser.graphWindowTrafUnitDefault());
+    changeGraphType(iniUser.graphWindowGraphTypeDefault());
+    changeTrafUnit(iniUser.graphWindowTrafUnitDefault());
 
     m_graphColor->setColor(iniUser.graphWindowColorDefault());
     m_graphBorderColor->setColor(iniUser.graphWindowBorderColorDefault());
@@ -421,15 +421,21 @@ QLayout *GraphPage::setupGraphTypeLayout()
 {
     m_labelGraphType = ControlUtil::createLabel();
 
-    m_comboGraphType = ControlUtil::createComboBox({}, [&](int index) {
-        if (index >= 0 && iniUser().graphWindowGraphType() != index) {
-            iniUser().setGraphWindowGraphType(index);
-            ctrl()->setIniUserEdited();
-        }
-    });
+    m_comboGraphType = ControlUtil::createComboBox({}, [&](int index) { changeGraphType(index); });
     m_comboGraphType->setFixedWidth(110);
 
     return ControlUtil::createRowLayout(m_labelGraphType, m_comboGraphType);
+}
+
+void GraphPage::changeGraphType(int index)
+{
+    if (iniUser().graphWindowGraphType() == index)
+        return;
+
+    iniUser().setGraphWindowGraphType(index);
+    ctrl()->setIniUserEdited();
+
+    m_comboGraphType->setCurrentIndex(index);
 }
 
 QLayout *GraphPage::setupTrafUnitsLayout()
@@ -438,17 +444,23 @@ QLayout *GraphPage::setupTrafUnitsLayout()
 
     m_traphUnits = ControlUtil::createLabel();
 
-    m_comboTrafUnit = ControlUtil::createComboBox(list, [&](int index) {
-        if (iniUser().graphWindowTrafUnit() != index) {
-            iniUser().setGraphWindowTrafUnit(index);
-            ctrl()->setIniUserEdited();
-        }
-    });
+    m_comboTrafUnit = ControlUtil::createComboBox(list, [&](int index) { changeTrafUnit(index); });
     m_comboTrafUnit->setFixedWidth(110);
 
     m_comboTrafUnit->setCurrentIndex(iniUser().graphWindowTrafUnit());
 
     return ControlUtil::createRowLayout(m_traphUnits, m_comboTrafUnit);
+}
+
+void GraphPage::changeTrafUnit(int index)
+{
+    if (iniUser().graphWindowTrafUnit() == index)
+        return;
+
+    iniUser().setGraphWindowTrafUnit(index);
+    ctrl()->setIniUserEdited();
+
+    m_comboTrafUnit->setCurrentIndex(index);
 }
 
 void GraphPage::setupColorsBox()

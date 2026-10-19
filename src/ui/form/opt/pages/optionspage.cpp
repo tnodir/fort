@@ -60,8 +60,8 @@ OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : OptBasePage
 void OptionsPage::onResetToDefault()
 {
     m_cbFilterEnabled->setChecked(true);
-    m_comboBlockTraffic->setCurrentIndex(0);
-    m_comboFilterMode->setCurrentIndex(0);
+    changeBlockTraffic(0);
+    changeFilterMode(0);
     m_cbGroupBlocked->setChecked(true);
     m_cbSpeedLimiterEnabled->setChecked(true);
     m_lscFilterOffSeconds->spinBox()->setValue(DEFAULT_FILTER_OFF_SECONDS);
@@ -335,33 +335,45 @@ QLayout *OptionsPage::setupBlockTrafficLayout()
 {
     m_labelBlockTraffic = ControlUtil::createLabel();
 
-    m_comboBlockTraffic =
-            ControlUtil::createComboBox(FirewallConf::blockTrafficNames(), [&](int index) {
-                if (conf().blockTrafficIndex() != index) {
-                    conf().setBlockTrafficIndex(index);
-                    ctrl()->setFlagsEdited();
-                }
-            });
+    m_comboBlockTraffic = ControlUtil::createComboBox(
+            FirewallConf::blockTrafficNames(), [&](int index) { changeBlockTraffic(index); });
     m_comboBlockTraffic->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelBlockTraffic, m_comboBlockTraffic);
+}
+
+void OptionsPage::changeBlockTraffic(int index)
+{
+    if (conf().blockTrafficIndex() == index)
+        return;
+
+    conf().setBlockTrafficIndex(index);
+    ctrl()->setFlagsEdited();
+
+    m_comboBlockTraffic->setCurrentIndex(index);
 }
 
 QLayout *OptionsPage::setupFilterModeLayout()
 {
     m_labelFilterMode = ControlUtil::createLabel();
 
-    m_comboFilterMode =
-            ControlUtil::createComboBox(FirewallConf::filterModeNames(), [&](int index) {
-                if (conf().filterMode() != index) {
-                    conf().setFilterMode(FirewallConf::FilterMode(index));
-                    ctrl()->setFlagsEdited();
-                    setFilterModeEdited(true);
-                }
-            });
+    m_comboFilterMode = ControlUtil::createComboBox(
+            FirewallConf::filterModeNames(), [&](int index) { changeFilterMode(index); });
     m_comboFilterMode->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelFilterMode, m_comboFilterMode);
+}
+
+void OptionsPage::changeFilterMode(int index)
+{
+    if (conf().filterMode() == index)
+        return;
+
+    conf().setFilterMode(FirewallConf::FilterMode(index));
+    ctrl()->setFlagsEdited();
+    setFilterModeEdited(true);
+
+    m_comboFilterMode->setCurrentIndex(index);
 }
 
 void OptionsPage::setupFilterOffSeconds()

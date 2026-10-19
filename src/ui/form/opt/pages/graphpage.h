@@ -37,7 +37,9 @@ private:
     void setupGraphOptions();
     void setupGraphFixedSpeed();
     QLayout *setupGraphTypeLayout();
+    void changeGraphType(int index);
     QLayout *setupTrafUnitsLayout();
+    void changeTrafUnit(int index);
     void setupColorsBox();
     void setupGraphColors();
     void setupGraphColors1();

@@ -43,7 +43,9 @@ private:
 
     void setupTrafficBox();
     QLayout *setupBlockTrafficLayout();
+    void changeBlockTraffic(int index);
     QLayout *setupFilterModeLayout();
+    void changeFilterMode(int index);
     void setupFilterOffSeconds();
     void setupAutoLearnSeconds();
     void setupAskToConnectSeconds();
