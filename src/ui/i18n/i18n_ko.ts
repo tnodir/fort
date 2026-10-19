@@ -93,7 +93,7 @@
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>묻기</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -160,54 +160,54 @@
     <name>AppPendingConnSearchModel</name>
     <message>
         <source>No longer paused</source>
-        <translation type="unfinished"></translation>
+        <translation>더 이상 일시 정지가 아님</translation>
     </message>
     <message>
         <source>Blocked in %1 s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1초 동안 차단됨</translation>
     </message>
 </context>
 <context>
     <name>AppPendingConnsWindow</name>
     <message>
         <source>Paused Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>일시 중지된 연결</translation>
     </message>
     <message>
         <source>&amp;Allow once</source>
-        <translation type="unfinished"></translation>
+        <translation>한 번만 허용(&amp;A)</translation>
     </message>
     <message>
         <source>Allow &amp;Process</source>
-        <translation type="unfinished"></translation>
+        <translation>프로세스 허용(&amp;P)</translation>
     </message>
     <message>
         <source>Allow the process till its exit or for the time by the menu</source>
-        <translation type="unfinished"></translation>
+        <translation>프로세스가 종료될 때까지 또는 메뉴에서 지정한 시간 동안 기다리기</translation>
     </message>
     <message>
         <source>&amp;Block once</source>
-        <translation type="unfinished"></translation>
+        <translation>한 번 차단(&amp;B)</translation>
     </message>
     <message>
         <source>&amp;Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>계속(&amp;C)</translation>
     </message>
     <message>
         <source>Continue by the current rules: the still paused ones are blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>현재 규칙을 따르세요: 아직 중지된 항목은 차단됩니다</translation>
     </message>
     <message>
         <source>Add &amp;Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 추가(&amp;F)</translation>
     </message>
     <message>
         <source>10 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>10초</translation>
     </message>
     <message>
         <source>30 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>30초</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -318,27 +318,27 @@
     </message>
     <message>
         <source>Blocked Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>차단된 인터넷 주소</translation>
     </message>
     <message>
         <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;연결 요청&quot;의 제한 사항</translation>
     </message>
     <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;연결 요청&quot;으로 일시 중지됨</translation>
     </message>
     <message>
         <source>Allowed once by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;연결 요청&quot;을 통해 한 번 허용됨</translation>
     </message>
     <message>
         <source>Blocked by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;연결 요청&quot;으로 차단됨</translation>
     </message>
     <message>
         <source>Process allowed by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;연결 요청&quot;을 통해 허용된 프로세스</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -422,7 +422,7 @@
     </message>
     <message>
         <source>Allowed Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>허용된 인터넷 주소</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -618,11 +618,11 @@
     </message>
     <message>
         <source>A&amp;sk</source>
-        <translation type="unfinished"></translation>
+        <translation>묻기(&amp;S)</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>연결 요청: 사용자의 결정이 있을 때까지 연결을 일시 중지합니다</translation>
     </message>
     <message>
         <source>Outbound</source>
@@ -638,11 +638,11 @@
     </message>
     <message>
         <source>Localhost</source>
-        <translation type="unfinished"></translation>
+        <translation>로컬 호스트</translation>
     </message>
     <message>
         <source>LAN</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN</translation>
     </message>
     <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
@@ -666,7 +666,7 @@
     </message>
     <message>
         <source>Equal to the Remote IP</source>
-        <translation type="unfinished"></translation>
+        <translation>원격 IP와 동일</translation>
     </message>
     <message>
         <source>Local Port:</source>
@@ -674,7 +674,7 @@
     </message>
     <message>
         <source>Equal to the Remote Port</source>
-        <translation type="unfinished"></translation>
+        <translation>원격 포트와 동일</translation>
     </message>
     <message>
         <source>Options:</source>
@@ -899,19 +899,19 @@
     </message>
     <message>
         <source>Internet Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>인터넷 주소</translation>
     </message>
     <message>
         <source>Local Network Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>로컬 네트워크 주소</translation>
     </message>
     <message>
         <source>Allow Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>허용 주소</translation>
     </message>
     <message>
         <source>Block Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>차단 주소</translation>
     </message>
     <message>
         <source>Ask to Connect</source>
@@ -942,7 +942,7 @@
     <name>FontSelector</name>
     <message>
         <source>Select Font</source>
-        <translation type="unfinished"></translation>
+        <translation>글꼴 선택</translation>
     </message>
 </context>
 <context>
@@ -1031,7 +1031,7 @@
     </message>
     <message>
         <source>Hide Y axis scale labels</source>
-        <translation type="unfinished"></translation>
+        <translation>Y축 눈금 레이블 숨기기</translation>
     </message>
     <message>
         <source>Animation</source>
@@ -1115,23 +1115,23 @@
     </message>
     <message>
         <source>Maximized</source>
-        <translation type="unfinished"></translation>
+        <translation>최대화</translation>
     </message>
     <message>
         <source>X:</source>
-        <translation type="unfinished"></translation>
+        <translation>X:</translation>
     </message>
     <message>
         <source>Y:</source>
-        <translation type="unfinished"></translation>
+        <translation>Y:</translation>
     </message>
     <message>
         <source>Width:</source>
-        <translation type="unfinished"></translation>
+        <translation>너비:</translation>
     </message>
     <message>
         <source>Height:</source>
-        <translation type="unfinished"></translation>
+        <translation>높이:</translation>
     </message>
     <message>
         <source>Column</source>
@@ -1159,7 +1159,7 @@
     </message>
     <message>
         <source>Window Geometry</source>
-        <translation type="unfinished"></translation>
+        <translation>창 기하 구조</translation>
     </message>
     <message>
         <source>Fixed speed:</source>
@@ -1496,11 +1496,11 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Font:</source>
-        <translation type="unfinished"></translation>
+        <translation>글꼴:</translation>
     </message>
     <message>
         <source>Icon Size in Lists:</source>
-        <translation type="unfinished"></translation>
+        <translation>목록의 아이콘 크기:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -1875,11 +1875,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>10 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>10초</translation>
     </message>
     <message>
         <source>30 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>30초</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
@@ -1975,7 +1975,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Ask to Connect seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>연결 요청까지 걸리는 시간 (초):</translation>
     </message>
     <message>
         <source>Disable command line management</source>
@@ -2131,11 +2131,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>묻기</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>연결 요청: 사용자의 결정이 있을 때까지 연결을 일시 중지합니다</translation>
     </message>
     <message>
         <source>Kill Process</source>
@@ -2274,7 +2274,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Paused Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>일시 중지된 연결</translation>
     </message>
     <message>
         <source>Switch Wildcard</source>
@@ -2555,7 +2555,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>묻기</translation>
     </message>
     <message>
         <source>Connections</source>
@@ -2670,11 +2670,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>묻기</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>연결 요청: 사용자의 결정이 있을 때까지 연결을 일시 중지합니다</translation>
     </message>
     <message>
         <source>Exclusive</source>
@@ -3408,7 +3408,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>묻기</translation>
     </message>
     <message>
         <source>Alert</source>
