@@ -7,6 +7,7 @@
 #include <QScrollBar>
 #include <QStyle>
 
+#include <manager/windowmanager.h>
 #include <util/guiutil.h>
 
 TableView::TableView(QWidget *parent) : QTableView(parent)
@@ -15,8 +16,11 @@ TableView::TableView(QWidget *parent) : QTableView(parent)
     setTextElideMode(Qt::ElideMiddle);
     setAlternatingRowColors(true);
     setTabKeyNavigation(false);
+    setIconSize(WindowManager::listIconSize());
 
     updateRowsHeight();
+
+    connect(this, &QAbstractItemView::iconSizeChanged, this, &TableView::updateRowsHeight);
 }
 
 void TableView::setModel(QAbstractItemModel *model)
@@ -218,14 +222,14 @@ void TableView::updateRowsHeight()
 
 int TableView::defaultRowsHeight() const
 {
-    // As QHeaderView's default section size, by the current font
+    // As QHeaderView's default section size, by the current font and icon size
     const auto header = verticalHeader();
     const auto style = header->style();
 
     const int margin = 2 * style->pixelMetric(QStyle::PM_HeaderMargin, nullptr, header);
-    const int fontHeight = fontMetrics().height() + margin;
+    const int contentHeight = qMax(fontMetrics().height(), iconSize().height()) + margin;
     const int styleHeight =
             style->pixelMetric(QStyle::PM_HeaderDefaultSectionSizeVertical, nullptr, header);
 
-    return qMax(fontHeight, styleHeight);
+    return qMax(contentHeight, styleHeight);
 }

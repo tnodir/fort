@@ -15,6 +15,7 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/labelspin.h>
 #include <form/controls/selector/fontselector.h>
 #include <form/dialog/dialogutil.h>
 #include <form/opt/optionscontroller.h>
@@ -59,6 +60,7 @@ void IfacePage::onResetToDefault()
     m_comboStyle->setCurrentText(IniUser::styleDefault());
     m_editStyleSheet->clear();
     changeFont(IniUser::fontFamilyDefault(), IniUser::fontSizeDefault());
+    m_listIconSize->spinBox()->setValue(IniUser::listIconSizeDefault());
     m_cbUseSystemLocale->setChecked(true);
     m_cbExcludeCapture->setChecked(false);
 
@@ -138,6 +140,12 @@ void IfacePage::onEditResetted()
         WindowManager::updateFont(Fort::iniUser());
         refreshFontSelector();
     }
+
+    // List Icon Size
+    if (listIconSizeEdited()) {
+        setListIconSizeEdited(false);
+        WindowManager::updateListIconSize(Fort::iniUser());
+    }
 }
 
 void IfacePage::onRetranslateUi()
@@ -159,6 +167,7 @@ void IfacePage::onRetranslateUi()
     m_btStyleSheet->setToolTip(tr("Select File"));
     m_labelFont->setText(tr("Font:"));
     m_fontSelector->retranslateUi();
+    m_listIconSize->label()->setText(tr("Icon Size in Lists:"));
     m_cbUseSystemLocale->setText(tr("Use System Regional Settings"));
     m_cbExcludeCapture->setText(tr("Exclude from screen capture"));
 
@@ -393,6 +402,9 @@ void IfacePage::setupGlobalBox()
     // Font Row
     auto fontLayout = setupFontLayout();
 
+    // List Icon Size Row
+    setupListIconSize();
+
     m_cbUseSystemLocale =
             ControlUtil::createCheckBox(iniUser().useSystemLocale(), [&](bool checked) {
                 iniUser().setUseSystemLocale(checked);
@@ -411,6 +423,7 @@ void IfacePage::setupGlobalBox()
     layout->addLayout(styleLayout);
     layout->addLayout(styleSheetLayout);
     layout->addLayout(fontLayout);
+    layout->addWidget(m_listIconSize);
     layout->addWidget(m_cbUseSystemLocale);
     layout->addWidget(m_cbExcludeCapture);
 
@@ -548,6 +561,21 @@ void IfacePage::changeFont(const QString &family, int pointSize)
 void IfacePage::refreshFontSelector()
 {
     m_fontSelector->setSelectedFont(QFont(iniUser().fontFamily(), iniUser().fontSize()));
+}
+
+void IfacePage::setupListIconSize()
+{
+    m_listIconSize = ControlUtil::createSpin(iniUser().listIconSize(), 16, 48, " px", [&](int v) {
+        if (iniUser().listIconSize() != v) {
+            setListIconSizeEdited(true);
+            iniUser().setListIconSize(v);
+            ctrl()->setIniUserEdited();
+
+            WindowManager::updateListIconSize(iniUser());
+        }
+    });
+
+    m_listIconSize->spinBox()->setFixedWidth(70);
 }
 
 void IfacePage::setupHotKeysBox()

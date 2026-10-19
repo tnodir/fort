@@ -6,6 +6,7 @@
 QT_FORWARD_DECLARE_CLASS(QKeySequenceEdit)
 
 class FontSelector;
+class LabelSpin;
 
 class IfacePage : public OptBasePage
 {
@@ -28,6 +29,9 @@ public:
 
     bool fontEdited() const { return m_fontEdited; }
     void setFontEdited(bool v) { m_fontEdited = v; }
+
+    bool listIconSizeEdited() const { return m_listIconSizeEdited; }
+    void setListIconSizeEdited(bool v) { m_listIconSizeEdited = v; }
 
 public slots:
     void onResetToDefault() override;
@@ -57,6 +61,7 @@ private:
     QLayout *setupFontLayout();
     void changeFont(const QString &family, int pointSize);
     void refreshFontSelector();
+    void setupListIconSize();
     void setupHotKeysBox();
     void refreshEditShortcut();
     QLayout *setupComboHotKeyLayout();
@@ -82,6 +87,7 @@ private:
     bool m_styleEdited : 1 = false;
     bool m_styleSheetEdited : 1 = false;
     bool m_fontEdited : 1 = false;
+    bool m_listIconSizeEdited : 1 = false;
 
     QGroupBox *m_gbGlobal = nullptr;
     QGroupBox *m_gbHotKeys = nullptr;
@@ -101,6 +107,7 @@ private:
     QToolButton *m_btStyleSheet = nullptr;
     QLabel *m_labelFont = nullptr;
     FontSelector *m_fontSelector = nullptr;
+    LabelSpin *m_listIconSize = nullptr;
     QCheckBox *m_cbUseSystemLocale = nullptr;
     QCheckBox *m_cbExcludeCapture = nullptr;
 

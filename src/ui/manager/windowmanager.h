@@ -77,6 +77,7 @@ public:
     bool isWindowOpen(WindowCode code) const { return isAnyWindowOpen(code); }
 
     static QFont defaultFont();
+    static QSize listIconSize();
 
 signals:
     void windowVisibilityChanged(WindowCode code, bool isVisible);
@@ -183,6 +184,7 @@ public slots:
     static void updateStyle(const IniUser &ini);
     static void updateStyleSheet(const IniUser &ini);
     static void updateFont(const IniUser &ini);
+    static void updateListIconSize(const IniUser &ini);
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override;

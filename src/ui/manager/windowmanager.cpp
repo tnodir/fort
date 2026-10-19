@@ -11,6 +11,8 @@
 #include <conf/confmanager.h>
 #include <form/conn/connectionswindow.h>
 #include <form/controls/mainwindow.h>
+#include <form/controls/tableview.h>
+#include <form/controls/treeview.h>
 #include <form/dialog/dialogutil.h>
 #include <form/dialog/passworddialog.h>
 #include <form/dialog/splashscreen.h>
@@ -59,6 +61,16 @@ QFont &defaultFontRef()
             IniUser::fontSizeDefault());
 
     return g_font;
+}
+
+int g_listIconSize = IniUser::listIconSizeDefault();
+
+QAbstractItemView *listView(QWidget *w)
+{
+    if (auto tableView = qobject_cast<TableView *>(w))
+        return tableView;
+
+    return qobject_cast<TreeView *>(w);
 }
 
 }
@@ -209,6 +221,11 @@ QFont WindowManager::defaultFont()
     return defaultFontRef();
 }
 
+QSize WindowManager::listIconSize()
+{
+    return QSize(g_listIconSize, g_listIconSize);
+}
+
 void WindowManager::setupAppPalette()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
@@ -272,6 +289,7 @@ void WindowManager::setupByIniUser()
     updateStyle(ini);
     updateStyleSheet(ini);
     updateFont(ini);
+    updateListIconSize(ini);
     updateTrayIconVisibility(ini);
     updateGraphWindowVisibility(ini);
 }
@@ -337,6 +355,24 @@ void WindowManager::updateFont(const IniUser &ini)
     for (QWidget *w : widgets) {
         if (GuiUtil::isSameFont(w->font(), oldFont)) {
             w->setFont(font);
+        }
+    }
+}
+
+void WindowManager::updateListIconSize(const IniUser &ini)
+{
+    const int iconSize = ini.listIconSize();
+    if (g_listIconSize == iconSize)
+        return;
+
+    g_listIconSize = iconSize;
+
+    const QSize size = listIconSize();
+
+    const auto widgets = QApplication::allWidgets();
+    for (QWidget *w : widgets) {
+        if (auto view = listView(w)) {
+            view->setIconSize(size);
         }
     }
 }

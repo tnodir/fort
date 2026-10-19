@@ -85,6 +85,10 @@ public:
     int fontSize() const { return valueInt("base/fontSize", fontSizeDefault()); }
     void setFontSize(int v) { setValue("base/fontSize", v, fontSizeDefault()); }
 
+    static constexpr int listIconSizeDefault() { return 16; }
+    int listIconSize() const { return valueInt("base/listIconSize", listIconSizeDefault()); }
+    void setListIconSize(int v) { setValue("base/listIconSize", v, listIconSizeDefault()); }
+
     bool hotKeyEnabled() const { return valueBool("hotKey/enabled"); }
     void setHotKeyEnabled(bool v) { setValue("hotKey/enabled", v); }
 

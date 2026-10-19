@@ -26,7 +26,7 @@ public:
     int scrollOffset(int row) const;
     void setScrollOffset(int row, int offset);
 
-    /* The rows' fixed height, 0 - by the font and style */
+    /* The rows' fixed height, 0 - by the font, icon size and style */
     void setRowsHeight(int v);
 
     /* Select the row (or the last one) after the model's next reset */

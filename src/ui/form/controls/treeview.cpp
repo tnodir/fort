@@ -3,6 +3,7 @@
 #include <QContextMenuEvent>
 #include <QMenu>
 
+#include <manager/windowmanager.h>
 #include <util/model/tableitemmodel.h>
 
 #include "treeitemdelegate.h"
@@ -12,6 +13,7 @@ TreeView::TreeView(QWidget *parent) : QTreeView(parent)
     setTabKeyNavigation(false);
     setUniformRowHeights(true);
     setAnimated(true);
+    setIconSize(WindowManager::listIconSize());
 }
 
 void TreeView::setModel(QAbstractItemModel *model)
