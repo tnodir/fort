@@ -72,7 +72,7 @@ static const createRange_func createRange_funcList[] = {
 
 ValueRange *ValueRangeUtil::createRangeByType(qint8 type)
 {
-    Q_ASSERT(type >= 0 && type < std::size(g_filterRangeTypes));
+    Q_ASSERT(type >= 0 && type < std::ssize(g_filterRangeTypes));
 
     const RangeType rangeType = g_filterRangeTypes[type];
 

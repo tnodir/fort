@@ -136,7 +136,7 @@ FormatUtil::SizeFormat FormatUtil::graphUnitFormat(int index)
     static const SizeFormat list[] = { SpeedTraditionalFormat, SizeTraditionalFormat,
         SpeedIecFormat, SizeIecFormat };
 
-    if (index < 0 || index >= std::size(list)) {
+    if (index < 0 || index >= std::ssize(list)) {
         index = 0;
     }
 

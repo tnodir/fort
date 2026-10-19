@@ -621,7 +621,7 @@ void TrayIcon::setupTrayMenuBlockTraffic()
 
     int index = 0;
     for (const QString &name : FirewallConf::blockTrafficNames()) {
-        if (Q_UNLIKELY(index >= std::size(blockTrafficIniKeys)))
+        if (Q_UNLIKELY(index >= std::ssize(blockTrafficIniKeys)))
             break;
 
         const char *iniKey = blockTrafficIniKeys[index];
@@ -656,7 +656,7 @@ void TrayIcon::setupTrayMenuFilterMode()
 
     int index = 0;
     for (const QString &name : FirewallConf::filterModeNames()) {
-        if (Q_UNLIKELY(index >= std::size(filterModeIniKeys)))
+        if (Q_UNLIKELY(index >= std::ssize(filterModeIniKeys)))
             break;
 
         const char *iniKey = filterModeIniKeys[index];

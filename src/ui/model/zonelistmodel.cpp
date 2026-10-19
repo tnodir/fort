@@ -288,7 +288,7 @@ QString ZoneListModel::zoneSourceTitleById(const int sourceId)
         QT_TR_NOOP("TAS-IX Addresses"),
     };
 
-    if (sourceId >= 0 && sourceId < std::size(sourceTitles)) {
+    if (sourceId >= 0 && sourceId < std::ssize(sourceTitles)) {
         return tr(sourceTitles[sourceId]);
     }
 
