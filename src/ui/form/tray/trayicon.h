@@ -99,9 +99,6 @@ private:
     void updateGroupFlagActions();
     void updateRuleActions();
 
-    void updateBlockTrafficMenuIcon(int index);
-    void updateFilterModeMenuIcon(int index);
-
     void selectTrayFlag(QAction *action, int currentIndex);
     void confirmSaveTrayFlags(const QString &question);
 

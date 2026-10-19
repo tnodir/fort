@@ -5,6 +5,8 @@
 #include <QMenu>
 #include <QTimer>
 
+#include <algorithm>
+
 #include <conf/addressgroup.h>
 #include <conf/confappmanager.h>
 #include <conf/confgroupmanager.h>
@@ -209,11 +211,39 @@ QAction *addAction(QWidget *widget, const AddActionArgs &a)
     return action;
 }
 
+void setFlagAction(QAction *action, int id, bool checked, const QString &text)
+{
+    action->setText(text);
+    action->setData(id);
+    action->setChecked(checked);
+}
+
+void updateActionsVisible(const QList<QAction *> &actions, int visibleCount)
+{
+    int index = 0;
+    for (QAction *action : actions) {
+        action->setVisible(index++ < visibleCount);
+    }
+}
+
 void updateActionsEnabled(const QList<QAction *> &actions, bool editEnabled)
 {
     for (QAction *action : actions) {
         action->setEnabled(editEnabled && action->isVisible());
     }
+}
+
+int checkedActionIndex(QActionGroup *actionGroup)
+{
+    return actionGroup->actions().indexOf(actionGroup->checkedAction());
+}
+
+void checkRadioMenuAction(
+        QMenu *menu, QActionGroup *actionGroup, const QStringList &iconPaths, int index)
+{
+    actionGroup->actions().at(index)->setChecked(true);
+
+    menu->setIcon(IconCache::icon(iconPaths.at(index)));
 }
 
 bool checkAlertFilterMode(const FirewallConf &conf, const IniUser &iniUser)
@@ -684,24 +714,12 @@ void TrayIcon::updateTrayMenuFlags()
     m_snoozeAlertsAction->setChecked(iniUser().progSnoozeAlerts());
 
     m_blockTrafficMenu->setEnabled(editEnabled);
-    {
-        const int index = conf().blockTrafficIndex();
-        QAction *action = m_blockTrafficActions->actions().at(index);
-        if (!action->isChecked()) {
-            action->setChecked(true);
-            updateBlockTrafficMenuIcon(index);
-        }
-    }
+    checkRadioMenuAction(m_blockTrafficMenu, m_blockTrafficActions,
+            FirewallConf::blockTrafficIconPaths(), conf().blockTrafficIndex());
 
     m_filterModeMenu->setEnabled(editEnabled);
-    {
-        const int index = conf().filterMode();
-        QAction *action = m_filterModeActions->actions().at(index);
-        if (!action->isChecked()) {
-            action->setChecked(true);
-            updateFilterModeMenuIcon(index);
-        }
-    }
+    checkRadioMenuAction(m_filterModeMenu, m_filterModeActions, FirewallConf::filterModeIconPaths(),
+            conf().filterMode());
 
     updateActionsEnabled(m_groupFlagActions, editEnabled);
     updateActionsEnabled(m_ruleActions, editEnabled);
@@ -709,82 +727,36 @@ void TrayIcon::updateTrayMenuFlags()
 
 void TrayIcon::updateGroupFlagActions()
 {
-    const bool editEnabled = isEditEnabled();
-
     const auto groupListModel = Fort::groupListModel();
 
     const int trayMaxGroups = iniUser().trayMaxGroups(MAX_GROUP_FLAG_ACTIONS_COUNT);
-    const int groupsCount = qMin(groupListModel->rowCount(), trayMaxGroups);
+    const int groupsCount =
+            std::min({ groupListModel->rowCount(), trayMaxGroups, MAX_GROUP_FLAG_ACTIONS_COUNT });
 
-    for (int i = 0; i < MAX_GROUP_FLAG_ACTIONS_COUNT; ++i) {
-        QAction *action = m_groupFlagActions.at(i);
+    for (int i = 0; i < groupsCount; ++i) {
+        const auto &groupRow = groupListModel->groupRowAt(i);
 
-        const bool visible = (i < groupsCount);
-        quint8 groupId = 0;
-        bool enabled = false;
-        QString menuLabel;
-
-        if (visible) {
-            const auto &groupRow = groupListModel->groupRowAt(i);
-
-            groupId = groupRow.groupId;
-            enabled = groupRow.enabled;
-            menuLabel = GroupListModel::menuLabel(groupRow);
-        }
-
-        action->setText(menuLabel);
-        action->setData(groupId);
-        action->setChecked(enabled);
-        action->setVisible(visible);
-        action->setEnabled(visible && editEnabled);
+        setFlagAction(m_groupFlagActions.at(i), groupRow.groupId, groupRow.enabled,
+                GroupListModel::menuLabel(groupRow));
     }
+
+    updateActionsVisible(m_groupFlagActions, groupsCount);
+    updateActionsEnabled(m_groupFlagActions, isEditEnabled());
 }
 
 void TrayIcon::updateRuleActions()
 {
-    const bool editEnabled = isEditEnabled();
-
     const auto rules = confRuleManager()->getTrayMenuRules();
-    const int rulesCount = rules.size();
+    const int rulesCount = std::min(int(rules.size()), MAX_RULE_ACTIONS_COUNT);
 
-    for (int i = 0; i < MAX_RULE_ACTIONS_COUNT; ++i) {
-        QAction *action = m_ruleActions.at(i);
+    for (int i = 0; i < rulesCount; ++i) {
+        const auto &rule = rules[i];
 
-        const bool visible = (i < rulesCount);
-        quint16 ruleId = 0;
-        bool enabled = false;
-        QString menuLabel;
-
-        if (visible) {
-            const auto &rule = rules[i];
-
-            ruleId = rule.ruleId;
-            enabled = rule.enabled;
-            menuLabel = rule.ruleName;
-        }
-
-        action->setText(menuLabel);
-        action->setData(ruleId);
-        action->setChecked(enabled);
-        action->setVisible(visible);
-        action->setEnabled(visible && editEnabled);
+        setFlagAction(m_ruleActions.at(i), rule.ruleId, rule.enabled, rule.ruleName);
     }
-}
 
-void TrayIcon::updateBlockTrafficMenuIcon(int index)
-{
-    const QStringList iconPaths = FirewallConf::blockTrafficIconPaths();
-    const QString iconPath = iconPaths.at(index);
-
-    m_blockTrafficMenu->setIcon(IconCache::icon(iconPath));
-}
-
-void TrayIcon::updateFilterModeMenuIcon(int index)
-{
-    const QStringList iconPaths = FirewallConf::filterModeIconPaths();
-    const QString iconPath = iconPaths.at(index);
-
-    m_filterModeMenu->setIcon(IconCache::icon(iconPath));
+    updateActionsVisible(m_ruleActions, rulesCount);
+    updateActionsEnabled(m_ruleActions, isEditEnabled());
 }
 
 void TrayIcon::sendAlertMessage()
@@ -902,27 +874,12 @@ void TrayIcon::saveTrayFlags()
     conf().setFilterEnabled(m_filterEnabledAction->isChecked());
     iniUser().setProgSnoozeAlerts(m_snoozeAlertsAction->isChecked());
 
-    // Set Block Traffic
-    {
-        QAction *action = m_blockTrafficActions->checkedAction();
-        const int index = m_blockTrafficActions->actions().indexOf(action);
-        if (conf().blockTrafficIndex() != index) {
-            conf().setBlockTrafficIndex(index);
-            updateBlockTrafficMenuIcon(index);
-        }
-    }
-
-    // Set Filter Mode
-    {
-        QAction *action = m_filterModeActions->checkedAction();
-        const int index = m_filterModeActions->actions().indexOf(action);
-        if (conf().filterMode() != index) {
-            conf().setFilterMode(FirewallConf::FilterMode(index));
-            updateFilterModeMenuIcon(index);
-        }
-    }
+    conf().setBlockTrafficIndex(checkedActionIndex(m_blockTrafficActions));
+    conf().setFilterMode(FirewallConf::FilterMode(checkedActionIndex(m_filterModeActions)));
 
     confManager()->saveFlags();
+
+    updateTrayMenuFlags();
 }
 
 void TrayIcon::onShowWindowAction()
