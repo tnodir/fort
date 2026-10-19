@@ -77,6 +77,14 @@ public:
     QString styleSheetPath() const { return valueText("base/styleSheetPath"); }
     void setStyleSheetPath(const QString &v) { setValue("base/styleSheetPath", v); }
 
+    static QString fontFamilyDefault() { return "Tahoma"; }
+    QString fontFamily() const { return valueText("base/fontFamily", fontFamilyDefault()); }
+    void setFontFamily(const QString &v) { setValue("base/fontFamily", v, fontFamilyDefault()); }
+
+    static constexpr int fontSizeDefault() { return 9; }
+    int fontSize() const { return valueInt("base/fontSize", fontSizeDefault()); }
+    void setFontSize(int v) { setValue("base/fontSize", v, fontSizeDefault()); }
+
     bool hotKeyEnabled() const { return valueBool("hotKey/enabled"); }
     void setHotKeyEnabled(bool v) { setValue("hotKey/enabled", v); }
 
@@ -159,11 +167,8 @@ public:
     QByteArray progAppsHeader() const { return valueByteArray("progWindow/appsHeader"); }
     void setProgAppsHeader(const QByteArray &v) { setValue("progWindow/appsHeader", v); }
 
-    int progAppsRowsHeight(int defaultValue) const
-    {
-        return valueInt("progWindow/appsRowsHeight", defaultValue);
-    }
-    void setProgAppsHeader(int v) { setValue("progWindow/appsRowsHeight", v); }
+    int progAppsRowsHeight() const { return valueInt("progWindow/appsRowsHeight"); }
+    void setProgAppsRowsHeight(int v) { setValue("progWindow/appsRowsHeight", v); }
 
     bool progWindowAutoClearAlerts() const { return valueBool("progWindow/autoClearAlerts"); }
     void setProgWindowAutoClearAlerts(bool on) { setValue("progWindow/autoClearAlerts", on); }

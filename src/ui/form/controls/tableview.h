@@ -26,6 +26,9 @@ public:
     int scrollOffset(int row) const;
     void setScrollOffset(int row, int offset);
 
+    /* The rows' fixed height, 0 - by the font and style */
+    void setRowsHeight(int v);
+
     /* Select the row (or the last one) after the model's next reset */
     void selectRowOnReset(int row) { m_resetRow = row; }
 
@@ -38,6 +41,8 @@ public slots:
     void copySelectedText();
 
 protected:
+    void changeEvent(QEvent *event) override;
+
     void selectionChanged(
             const QItemSelection &selected, const QItemSelection &deselected) override;
     void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
@@ -53,8 +58,12 @@ private:
 
     int rowScrollPos(int row) const;
 
+    void updateRowsHeight();
+    int defaultRowsHeight() const;
+
 private:
     int m_resetRow = -1;
+    int m_rowsHeight = 0;
 
     QMenu *m_menu = nullptr;
 };

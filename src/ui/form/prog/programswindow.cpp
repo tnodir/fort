@@ -109,11 +109,7 @@ void ProgramsWindow::restoreWindowState()
     }
 
     // Apps rows
-    {
-        auto header = m_appListView->verticalHeader();
-        header->setDefaultSectionSize(
-                qBound(7, iniUser.progAppsRowsHeight(header->defaultSectionSize()), 999));
-    }
+    m_appListView->setRowsHeight(qBound(0, iniUser.progAppsRowsHeight(), 999));
 }
 
 void ProgramsWindow::onWindowClosed()

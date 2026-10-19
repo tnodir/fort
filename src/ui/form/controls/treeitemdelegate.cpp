@@ -16,10 +16,11 @@ void TreeItemDelegate::paint(
     QStyledItemDelegate::paint(painter, opt, index);
 }
 
-QSize TreeItemDelegate::sizeHint(
-        const QStyleOptionViewItem & /*option*/, const QModelIndex & /*index*/) const
+QSize TreeItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    return QSize(100, 24);
+    const int height = QStyledItemDelegate::sizeHint(option, index).height();
+
+    return QSize(100, qMax(height, 24));
 }
 
 void TreeItemDelegate::setOptionEnabled(QStyleOptionViewItem &opt, const QModelIndex &index) const

@@ -15,6 +15,7 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/selector/fontselector.h>
 #include <form/dialog/dialogutil.h>
 #include <form/opt/optionscontroller.h>
 #include <form/tray/trayicon.h>
@@ -57,6 +58,7 @@ void IfacePage::onResetToDefault()
     m_comboTheme->setCurrentIndex(0);
     m_comboStyle->setCurrentText(IniUser::styleDefault());
     m_editStyleSheet->clear();
+    changeFont(IniUser::fontFamilyDefault(), IniUser::fontSizeDefault());
     m_cbUseSystemLocale->setChecked(true);
     m_cbExcludeCapture->setChecked(false);
 
@@ -129,6 +131,13 @@ void IfacePage::onEditResetted()
         setStyleSheetEdited(false);
         WindowManager::updateStyleSheet(Fort::iniUser());
     }
+
+    // Font
+    if (fontEdited()) {
+        setFontEdited(false);
+        WindowManager::updateFont(Fort::iniUser());
+        refreshFontSelector();
+    }
 }
 
 void IfacePage::onRetranslateUi()
@@ -148,6 +157,8 @@ void IfacePage::onRetranslateUi()
     retranslateComboStyle();
     m_labelStyleSheet->setText(tr("Style Sheet:"));
     m_btStyleSheet->setToolTip(tr("Select File"));
+    m_labelFont->setText(tr("Font:"));
+    m_fontSelector->retranslateUi();
     m_cbUseSystemLocale->setText(tr("Use System Regional Settings"));
     m_cbExcludeCapture->setText(tr("Exclude from screen capture"));
 
@@ -379,6 +390,9 @@ void IfacePage::setupGlobalBox()
     // Style Sheet Row
     auto styleSheetLayout = setupStyleSheetLayout();
 
+    // Font Row
+    auto fontLayout = setupFontLayout();
+
     m_cbUseSystemLocale =
             ControlUtil::createCheckBox(iniUser().useSystemLocale(), [&](bool checked) {
                 iniUser().setUseSystemLocale(checked);
@@ -396,6 +410,7 @@ void IfacePage::setupGlobalBox()
     layout->addLayout(themeLayout);
     layout->addLayout(styleLayout);
     layout->addLayout(styleSheetLayout);
+    layout->addLayout(fontLayout);
     layout->addWidget(m_cbUseSystemLocale);
     layout->addWidget(m_cbExcludeCapture);
 
@@ -497,6 +512,42 @@ QLayout *IfacePage::setupStyleSheetLayout()
     layout->addWidget(m_btStyleSheet);
 
     return layout;
+}
+
+QLayout *IfacePage::setupFontLayout()
+{
+    m_labelFont = ControlUtil::createLabel();
+
+    m_fontSelector = new FontSelector();
+    m_fontSelector->setDefaultFont(QFont(IniUser::fontFamilyDefault(), IniUser::fontSizeDefault()));
+    m_fontSelector->setFixedWidth(200);
+
+    refreshFontSelector();
+
+    connect(m_fontSelector, &FontSelector::fontSelected, this,
+            [&](const QFont &font) { changeFont(font.family(), font.pointSize()); });
+
+    return ControlUtil::createRowLayout(m_labelFont, m_fontSelector);
+}
+
+void IfacePage::changeFont(const QString &family, int pointSize)
+{
+    if (iniUser().fontFamily() == family && iniUser().fontSize() == pointSize)
+        return;
+
+    setFontEdited(true);
+    iniUser().setFontFamily(family);
+    iniUser().setFontSize(pointSize);
+    ctrl()->setIniUserEdited();
+
+    WindowManager::updateFont(iniUser());
+
+    refreshFontSelector();
+}
+
+void IfacePage::refreshFontSelector()
+{
+    m_fontSelector->setSelectedFont(QFont(iniUser().fontFamily(), iniUser().fontSize()));
 }
 
 void IfacePage::setupHotKeysBox()

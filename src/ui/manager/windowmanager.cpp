@@ -48,6 +48,19 @@ const QLoggingCategory LC("manager.window");
 bool g_isFusionStyle = false;
 bool g_isArgStyleSheet = false;
 
+QFont &defaultFontRef()
+{
+    static QFont g_font(
+#if QT_VERSION < QT_VERSION_CHECK(6, 2, 0)
+            IniUser::fontFamilyDefault(),
+#else
+            QStringList { IniUser::fontFamilyDefault() },
+#endif
+            IniUser::fontSizeDefault());
+
+    return g_font;
+}
+
 }
 
 WindowManager::WindowManager(QObject *parent) : QObject(parent) { }
@@ -193,15 +206,7 @@ void WindowManager::initialize()
 
 QFont WindowManager::defaultFont()
 {
-    static QFont g_font(
-#if QT_VERSION < QT_VERSION_CHECK(6, 2, 0)
-            "Tahoma",
-#else
-            QStringList { "Tahoma" },
-#endif
-            9);
-
-    return g_font;
+    return defaultFontRef();
 }
 
 void WindowManager::setupAppPalette()
@@ -266,6 +271,7 @@ void WindowManager::setupByIniUser()
     updateTheme(ini);
     updateStyle(ini);
     updateStyleSheet(ini);
+    updateFont(ini);
     updateTrayIconVisibility(ini);
     updateGraphWindowVisibility(ini);
 }
@@ -310,6 +316,29 @@ void WindowManager::updateStyleSheet(const IniUser &ini)
         return;
 
     qApp->setStyleSheet(styleSheet);
+}
+
+void WindowManager::updateFont(const IniUser &ini)
+{
+    QFont &font = defaultFontRef();
+
+    QFont newFont = font;
+    newFont.setFamily(ini.fontFamily());
+    newFont.setPointSize(ini.fontSize());
+
+    if (GuiUtil::isSameFont(newFont, font))
+        return;
+
+    const QFont oldFont = font;
+    font = newFont;
+
+    // The windows of the default font
+    const auto widgets = QApplication::topLevelWidgets();
+    for (QWidget *w : widgets) {
+        if (GuiUtil::isSameFont(w->font(), oldFont)) {
+            w->setFont(font);
+        }
+    }
 }
 
 void WindowManager::updateTrayIconVisibility(const IniUser &ini)

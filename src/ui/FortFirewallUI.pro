@@ -82,6 +82,7 @@ SOURCES += \
     form/controls/plaintextedit.cpp \
     form/controls/progressitemdelegate.cpp \
     form/controls/pushbutton.cpp \
+    form/controls/selector/fontselector.cpp \
     form/controls/selector/groupsselector.cpp \
     form/controls/selector/protocolselector.cpp \
     form/controls/selector/ruleselector.cpp \
@@ -400,6 +401,7 @@ HEADERS += \
     form/controls/plaintextedit.h \
     form/controls/progressitemdelegate.h \
     form/controls/pushbutton.h \
+    form/controls/selector/fontselector.h \
     form/controls/selector/groupsselector.h \
     form/controls/selector/protocolselector.h \
     form/controls/selector/ruleselector.h \

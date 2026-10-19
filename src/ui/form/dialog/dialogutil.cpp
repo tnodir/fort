@@ -2,6 +2,7 @@
 
 #include <QColorDialog>
 #include <QFileDialog>
+#include <QFontDialog>
 
 #include <form/controls/controlutil.h>
 #include <util/window/widgetwindow.h>
@@ -32,6 +33,13 @@ QString DialogUtil::getExistingDir(const QString &title)
 QColor DialogUtil::getColor(const QColor &initial, const QString &title)
 {
     return QColorDialog::getColor(initial, nullptr, title, QColorDialog::ShowAlphaChannel);
+}
+
+bool DialogUtil::getFont(QFont &font, const QString &title)
+{
+    bool ok = false;
+    font = QFontDialog::getFont(&ok, font, nullptr, title);
+    return ok;
 }
 
 void DialogUtil::setupModalDialog(QWidget *box)

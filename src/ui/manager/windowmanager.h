@@ -182,6 +182,7 @@ public slots:
     static void updateTheme(const IniUser &ini);
     static void updateStyle(const IniUser &ini);
     static void updateStyleSheet(const IniUser &ini);
+    static void updateFont(const IniUser &ini);
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override;

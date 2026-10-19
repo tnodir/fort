@@ -109,6 +109,11 @@ QFont GuiUtil::fontBold()
     return font;
 }
 
+bool GuiUtil::isSameFont(const QFont &f1, const QFont &f2)
+{
+    return f1.family() == f2.family() && f1.pointSize() == f2.pointSize();
+}
+
 QPoint GuiUtil::globalPos(const QMouseEvent *event)
 {
     return event->globalPosition().toPoint();

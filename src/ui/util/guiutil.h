@@ -20,6 +20,7 @@ public:
     static QIcon progressIcon(const QString &basePath, int percent, const QColor &color);
 
     static QFont fontBold();
+    static bool isSameFont(const QFont &f1, const QFont &f2);
 
     static QPoint globalPos(const QMouseEvent *event);
 };

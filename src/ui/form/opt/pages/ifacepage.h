@@ -5,6 +5,8 @@
 
 QT_FORWARD_DECLARE_CLASS(QKeySequenceEdit)
 
+class FontSelector;
+
 class IfacePage : public OptBasePage
 {
     Q_OBJECT
@@ -23,6 +25,9 @@ public:
 
     bool styleSheetEdited() const { return m_styleSheetEdited; }
     void setStyleSheetEdited(bool v) { m_styleSheetEdited = v; }
+
+    bool fontEdited() const { return m_fontEdited; }
+    void setFontEdited(bool v) { m_fontEdited = v; }
 
 public slots:
     void onResetToDefault() override;
@@ -49,6 +54,9 @@ private:
     QLayout *setupThemeLayout();
     QLayout *setupStyleLayout();
     QLayout *setupStyleSheetLayout();
+    QLayout *setupFontLayout();
+    void changeFont(const QString &family, int pointSize);
+    void refreshFontSelector();
     void setupHotKeysBox();
     void refreshEditShortcut();
     QLayout *setupComboHotKeyLayout();
@@ -73,6 +81,7 @@ private:
     bool m_themeEdited : 1 = false;
     bool m_styleEdited : 1 = false;
     bool m_styleSheetEdited : 1 = false;
+    bool m_fontEdited : 1 = false;
 
     QGroupBox *m_gbGlobal = nullptr;
     QGroupBox *m_gbHotKeys = nullptr;
@@ -90,6 +99,8 @@ private:
     QLabel *m_labelStyleSheet = nullptr;
     QLineEdit *m_editStyleSheet = nullptr;
     QToolButton *m_btStyleSheet = nullptr;
+    QLabel *m_labelFont = nullptr;
+    FontSelector *m_fontSelector = nullptr;
     QCheckBox *m_cbUseSystemLocale = nullptr;
     QCheckBox *m_cbExcludeCapture = nullptr;
 

@@ -5,6 +5,7 @@
 #include <QKeyEvent>
 #include <QMenu>
 #include <QScrollBar>
+#include <QStyle>
 
 #include <util/guiutil.h>
 
@@ -14,6 +15,8 @@ TableView::TableView(QWidget *parent) : QTableView(parent)
     setTextElideMode(Qt::ElideMiddle);
     setAlternatingRowColors(true);
     setTabKeyNavigation(false);
+
+    updateRowsHeight();
 }
 
 void TableView::setModel(QAbstractItemModel *model)
@@ -110,6 +113,13 @@ void TableView::setScrollOffset(int row, int offset)
     verticalScrollBar()->setValue(rowScrollPos(row) + offset);
 }
 
+void TableView::setRowsHeight(int v)
+{
+    m_rowsHeight = v;
+
+    updateRowsHeight();
+}
+
 void TableView::selectCell(int row, int column)
 {
     const auto index = model()->index(row, column);
@@ -138,6 +148,20 @@ void TableView::selectResetRow()
 void TableView::copySelectedText()
 {
     GuiUtil::setClipboardData(selectedText());
+}
+
+void TableView::changeEvent(QEvent *event)
+{
+    QTableView::changeEvent(event);
+
+    switch (event->type()) {
+    case QEvent::FontChange:
+    case QEvent::StyleChange:
+        updateRowsHeight();
+        break;
+    default:
+        break;
+    }
 }
 
 void TableView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
@@ -183,4 +207,25 @@ int TableView::rowScrollPos(int row) const
         return row;
 
     return verticalHeader()->sectionPosition(row);
+}
+
+void TableView::updateRowsHeight()
+{
+    const int rowsHeight = (m_rowsHeight > 0) ? m_rowsHeight : defaultRowsHeight();
+
+    verticalHeader()->setDefaultSectionSize(rowsHeight);
+}
+
+int TableView::defaultRowsHeight() const
+{
+    // As QHeaderView's default section size, by the current font
+    const auto header = verticalHeader();
+    const auto style = header->style();
+
+    const int margin = 2 * style->pixelMetric(QStyle::PM_HeaderMargin, nullptr, header);
+    const int fontHeight = fontMetrics().height() + margin;
+    const int styleHeight =
+            style->pixelMetric(QStyle::PM_HeaderDefaultSectionSizeVertical, nullptr, header);
+
+    return qMax(fontHeight, styleHeight);
 }

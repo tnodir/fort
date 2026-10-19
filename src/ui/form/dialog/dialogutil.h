@@ -2,6 +2,7 @@
 #define DIALOGUTIL_H
 
 #include <QColor>
+#include <QFont>
 #include <QMessageBox>
 #include <QObject>
 
@@ -26,6 +27,8 @@ public:
     static QString getExistingDir(const QString &title = QString());
 
     static QColor getColor(const QColor &initial = Qt::white, const QString &title = QString());
+
+    static bool getFont(QFont &font, const QString &title = QString());
 
     static void setupModalDialog(QWidget *box);
 
