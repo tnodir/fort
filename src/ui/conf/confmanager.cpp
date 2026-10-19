@@ -869,6 +869,14 @@ void ConfManager::load()
     applySavedConf(conf());
 }
 
+void ConfManager::reload()
+{
+    // The edited flags are reset after the first load()
+    conf().resetEdited(FirewallConf::AllEdited);
+
+    load();
+}
+
 bool ConfManager::save(FirewallConf &newConf, IniOptions &ini)
 {
     setErrorMessage({});
@@ -1104,10 +1112,7 @@ bool ConfManager::importMasterBackup(const QString &path)
 
     emit imported();
 
-    // The edited flags are reset after the first load()
-    conf().resetEdited(FirewallConf::AllEdited);
-
-    load(); // Reload conf
+    reload();
 
     return true;
 }

@@ -39,6 +39,7 @@ public:
 
     bool loadConf(FirewallConf &conf);
     void load();
+    void reload();
 
     bool save(FirewallConf &newConf, IniOptions &ini);
     virtual bool saveConf(FirewallConf &conf, IniOptions &ini);

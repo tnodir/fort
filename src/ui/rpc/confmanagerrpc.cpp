@@ -151,7 +151,7 @@ void ConfManagerRpc::onConfChanged(const QVariant &confVar)
 
     if ((editedFlags & FirewallConf::OptEdited) != 0) {
         // Reload from storage
-        load();
+        reload();
     } else {
         // Apply only flags
         conf().fromVariant(ini(), confVar, /*onlyEdited=*/true);
