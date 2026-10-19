@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.20.7, 2026-10-19:
+- UI: Options: Interface: Add "Font" and "Icon Size in Lists" options (#731).
+- UI: Options: Graph: Add Window Geometry (#785).
+- UI: Options: Show the saved options when the Service is running (v3.20.0 regression) (#784).
+- UI: Programs: Sort by every column of a sort order.
+
 v3.20.6, 2026-10-18:
 - UI: Implement "Ask to Connect" filter mode (#30).
 - UI: Options: IP Addresses: Add the Internet's "Allow Addresses" (#784).
