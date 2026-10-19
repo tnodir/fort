@@ -93,7 +93,7 @@
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>Demander</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -160,54 +160,54 @@
     <name>AppPendingConnSearchModel</name>
     <message>
         <source>No longer paused</source>
-        <translation type="unfinished"></translation>
+        <translation>Plus en pause</translation>
     </message>
     <message>
         <source>Blocked in %1 s</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloqué en %1 s</translation>
     </message>
 </context>
 <context>
     <name>AppPendingConnsWindow</name>
     <message>
         <source>Paused Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Connexions en pause</translation>
     </message>
     <message>
         <source>&amp;Allow once</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Autoriser une fois</translation>
     </message>
     <message>
         <source>Allow &amp;Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Autoriser le &amp;processus</translation>
     </message>
     <message>
         <source>Allow the process till its exit or for the time by the menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Laissez le processus se terminer ou suivre la durée indiquée dans le menu</translation>
     </message>
     <message>
         <source>&amp;Block once</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Bloquer une fois</translation>
     </message>
     <message>
         <source>&amp;Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Continuer</translation>
     </message>
     <message>
         <source>Continue by the current rules: the still paused ones are blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>Continuer selon les règles actuelles : les règles toujours en pause sont bloquées</translation>
     </message>
     <message>
         <source>Add &amp;Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter &amp;Filtre</translation>
     </message>
     <message>
         <source>10 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>10 secondes</translation>
     </message>
     <message>
         <source>30 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>30 secondes</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -318,27 +318,27 @@
     </message>
     <message>
         <source>Blocked Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresse Internet bloquée</translation>
     </message>
     <message>
         <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Limite de &quot;demandes de connexion&quot;</translation>
     </message>
     <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Pause par &quot;demandes de connexion&quot;</translation>
     </message>
     <message>
         <source>Allowed once by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Autorisé une fois par &quot;demandes de connexion&quot;</translation>
     </message>
     <message>
         <source>Blocked by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloqué par &quot;demandes de connexion&quot;</translation>
     </message>
     <message>
         <source>Process allowed by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Processus autorisé par &quot;demandes de connexion&quot;</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -422,7 +422,7 @@
     </message>
     <message>
         <source>Allowed Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresses Internet autorisées</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -618,11 +618,11 @@
     </message>
     <message>
         <source>A&amp;sk</source>
-        <translation type="unfinished"></translation>
+        <translation>Que&amp;stion</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>Demander à se connecter : mettre en pause la connexion jusqu&apos;à ce que l&apos;utilisateur&apos;s décide</translation>
     </message>
     <message>
         <source>Outbound</source>
@@ -899,19 +899,19 @@
     </message>
     <message>
         <source>Internet Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresses Internet</translation>
     </message>
     <message>
         <source>Local Network Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresses du réseau local</translation>
     </message>
     <message>
         <source>Allow Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Autoriser les adresses</translation>
     </message>
     <message>
         <source>Block Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer les adresses</translation>
     </message>
     <message>
         <source>Ask to Connect</source>
@@ -1832,11 +1832,11 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>10 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>10 secondes</translation>
     </message>
     <message>
         <source>30 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>30 secondes</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
@@ -1932,7 +1932,7 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Ask to Connect seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>Demander à se connecter en secondes:</translation>
     </message>
     <message>
         <source>Disable command line management</source>
@@ -2088,11 +2088,11 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>Demander</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>Demander à se connecter : mettre en pause la connexion jusqu&apos;à ce que l&apos;utilisateur&apos;s décide</translation>
     </message>
     <message>
         <source>Kill Process</source>
@@ -2231,7 +2231,7 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Paused Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Connexions en pause</translation>
     </message>
     <message>
         <source>Switch Wildcard</source>
@@ -2512,7 +2512,7 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>Questions</translation>
     </message>
     <message>
         <source>Connections</source>
@@ -2627,11 +2627,11 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>Questions</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>Demander à se connecter : mettre en pause la connexion jusqu&apos;à ce que l&apos;utilisateur&apos;s décide</translation>
     </message>
     <message>
         <source>Exclusive</source>
@@ -3365,7 +3365,7 @@ Perte de paquets : %2</translation>
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>Demander</translation>
     </message>
     <message>
         <source>Alert</source>
