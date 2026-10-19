@@ -65,6 +65,10 @@ void WidgetWindowStateWatcher::restore(
 
     this->reset(rect, maximized);
 
+    // Before setGeometry(): a visible maximized window is moved by it, keeping its old normal
+    // geometry
+    window->setWindowState(window->windowState() & ~Qt::WindowMaximized);
+
     window->setGeometry(rect);
 
     if (maximized) {

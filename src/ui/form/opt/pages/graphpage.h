@@ -42,10 +42,16 @@ private:
     void setupGraphColors();
     void setupGraphColors1();
     void setupGraphColors2();
+    void setupGeometryBox();
+    void saveGraphWindowGeometry();
+    void setupGeometryControls();
+    LabelSpin *createGeometrySpin(int value, int min);
+    void onGeometryEdited();
 
 private:
     QGroupBox *m_gbGraph = nullptr;
     QGroupBox *m_gbColors = nullptr;
+    QGroupBox *m_gbGeometry = nullptr;
 
     QCheckBox *m_cbGraphHideOnClose = nullptr;
     QCheckBox *m_cbGraphAlwaysOnTop = nullptr;
@@ -79,6 +85,12 @@ private:
     LabelColor *m_graphTickLabelColor = nullptr;
     LabelColor *m_graphLabelColor = nullptr;
     LabelColor *m_graphGridColor = nullptr;
+
+    QCheckBox *m_cbGraphMaximized = nullptr;
+    LabelSpin *m_graphX = nullptr;
+    LabelSpin *m_graphY = nullptr;
+    LabelSpin *m_graphWidth = nullptr;
+    LabelSpin *m_graphHeight = nullptr;
 };
 
 #endif // GRAPHPAGE_H

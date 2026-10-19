@@ -14,8 +14,10 @@
 #include <form/controls/labelcolor.h>
 #include <form/controls/labelspin.h>
 #include <form/controls/labelspincombo.h>
+#include <form/graph/graphwindow.h>
 #include <form/opt/optionscontroller.h>
 #include <fortglobal.h>
+#include <manager/windowmanager.h>
 #include <user/iniuser.h>
 #include <util/formatutil.h>
 #include <util/iconcache.h>
@@ -77,6 +79,7 @@ void GraphPage::onRetranslateUi()
 {
     m_gbGraph->setTitle(tr("Window"));
     m_gbColors->setTitle(tr("Colors (Light | Dark)"));
+    m_gbGeometry->setTitle(tr("Window Geometry"));
 
     m_cbGraphHideOnClose->setText(tr("Hide on close"));
 
@@ -111,6 +114,12 @@ void GraphPage::onRetranslateUi()
     m_graphTickLabelColor->label()->setText(tr("Tick label:"));
     m_graphLabelColor->label()->setText(tr("Label:"));
     m_graphGridColor->label()->setText(tr("Grid:"));
+
+    m_cbGraphMaximized->setText(tr("Maximized"));
+    m_graphX->label()->setText(tr("X:"));
+    m_graphY->label()->setText(tr("Y:"));
+    m_graphWidth->label()->setText(tr("Width:"));
+    m_graphHeight->label()->setText(tr("Height:"));
 }
 
 void GraphPage::retranslateFixedSpeedCombo()
@@ -178,9 +187,13 @@ QLayout *GraphPage::setupColumn2()
     // Graph Colors Group Box
     setupColorsBox();
 
+    // Window Geometry Group Box
+    setupGeometryBox();
+
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
     layout->addWidget(m_gbColors);
+    layout->addWidget(m_gbGeometry);
     layout->addStretch();
 
     return layout;
@@ -549,4 +562,61 @@ void GraphPage::setupGraphColors2()
                 iniUser().setGraphWindowDarkGridColor(v);
                 ctrl()->setIniUserEdited();
             });
+}
+
+void GraphPage::setupGeometryBox()
+{
+    saveGraphWindowGeometry();
+
+    setupGeometryControls();
+
+    auto layout = ControlUtil::createVLayoutByWidgets(
+            { m_cbGraphMaximized, m_graphX, m_graphY, m_graphWidth, m_graphHeight });
+
+    m_gbGeometry = new QGroupBox();
+    m_gbGeometry->setLayout(layout);
+}
+
+void GraphPage::saveGraphWindowGeometry()
+{
+    // The window saves its geometry on close only
+    const auto w = windowManager()->graphWindow();
+    if (w) {
+        w->saveWindowGeometry();
+    }
+}
+
+void GraphPage::setupGeometryControls()
+{
+    m_cbGraphMaximized =
+            ControlUtil::createCheckBox(iniUser().graphWindowMaximized(), [&](bool checked) {
+                if (iniUser().graphWindowMaximized() != checked) {
+                    iniUser().setGraphWindowMaximized(checked);
+                    ctrl()->setIniUserEdited();
+                }
+            });
+
+    const QRect rect = iniUser().graphWindowGeometry();
+
+    m_graphX = createGeometrySpin(rect.x(), -99999);
+    m_graphY = createGeometrySpin(rect.y(), -99999);
+    m_graphWidth = createGeometrySpin(rect.width(), 0);
+    m_graphHeight = createGeometrySpin(rect.height(), 0);
+}
+
+LabelSpin *GraphPage::createGeometrySpin(int value, int min)
+{
+    return ControlUtil::createSpin(
+            value, min, 99999, " px", [&](int /*v*/) { onGeometryEdited(); });
+}
+
+void GraphPage::onGeometryEdited()
+{
+    const QRect rect(m_graphX->spinBox()->value(), m_graphY->spinBox()->value(),
+            m_graphWidth->spinBox()->value(), m_graphHeight->spinBox()->value());
+
+    if (iniUser().graphWindowGeometry() != rect) {
+        iniUser().setGraphWindowGeometry(rect);
+        ctrl()->setIniUserEdited();
+    }
 }

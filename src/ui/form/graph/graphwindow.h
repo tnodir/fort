@@ -21,6 +21,8 @@ public:
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
 
+    void saveWindowGeometry();
+
 signals:
     void mouseRightClick(QMouseEvent *event);
 
@@ -29,6 +31,8 @@ public slots:
 
 private slots:
     void checkHoverLeave();
+
+    void updateWindowGeometry();
 
     void updateGraph();
 
@@ -74,12 +78,15 @@ protected:
 
 private:
     bool m_mouseDragResize = false;
+    bool m_iniMaximized = false;
 
     GraphPlot *m_plot = nullptr;
 
     QPoint m_mousePressPoint;
     QPoint m_posOnMousePress;
     QSize m_sizeOnMousePress;
+
+    QRect m_iniGeometry;
 
     QTimer m_updateTimer;
     QTimer m_hoverTimer;

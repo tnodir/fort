@@ -64,6 +64,8 @@ GraphWindow::GraphWindow(QWidget *parent) : FormWindow(parent)
 
     setupFormWindow(iniUser(), IniUser::graphWindowGroup());
 
+    connect(confManager(), &ConfManager::iniUserChanged, this, &GraphWindow::updateWindowGeometry);
+
     connect(this, &GraphWindow::mouseRightClick, this, [&](QMouseEvent *event) {
         windowManager()->trayIcon()->showTrayMenu(GuiUtil::globalPos(event));
     });
@@ -78,22 +80,43 @@ bool GraphWindow::deleteOnClose() const
 
 void GraphWindow::saveWindowState(bool wasVisible)
 {
-    auto &iniUser = Fort::iniUser();
+    iniUser().setGraphWindowVisible(wasVisible);
 
-    iniUser.setGraphWindowGeometry(stateWatcher()->geometry());
-    iniUser.setGraphWindowMaximized(stateWatcher()->maximized());
-
-    iniUser.setGraphWindowVisible(wasVisible);
-
-    confManager()->saveIniUser();
+    saveWindowGeometry();
 }
 
 void GraphWindow::restoreWindowState()
 {
     const auto &iniUser = Fort::iniUser();
 
-    stateWatcher()->restore(
-            this, QSize(400, 300), iniUser.graphWindowGeometry(), iniUser.graphWindowMaximized());
+    m_iniGeometry = iniUser.graphWindowGeometry();
+    m_iniMaximized = iniUser.graphWindowMaximized();
+
+    stateWatcher()->restore(this, QSize(400, 300), m_iniGeometry, m_iniMaximized);
+}
+
+void GraphWindow::saveWindowGeometry()
+{
+    auto &iniUser = Fort::iniUser();
+
+    m_iniGeometry = stateWatcher()->geometry();
+    m_iniMaximized = stateWatcher()->maximized();
+
+    iniUser.setGraphWindowGeometry(m_iniGeometry);
+    iniUser.setGraphWindowMaximized(m_iniMaximized);
+
+    confManager()->saveIniUser();
+}
+
+void GraphWindow::updateWindowGeometry()
+{
+    const auto &iniUser = Fort::iniUser();
+
+    if (iniUser.graphWindowGeometry() == m_iniGeometry
+            && iniUser.graphWindowMaximized() == m_iniMaximized)
+        return;
+
+    restoreWindowState();
 }
 
 void GraphWindow::setupUi()
