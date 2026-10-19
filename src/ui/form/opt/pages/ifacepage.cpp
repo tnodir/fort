@@ -55,9 +55,9 @@ IfacePage::IfacePage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctr
 
 void IfacePage::onResetToDefault()
 {
-    m_comboLanguage->setCurrentIndex(0);
-    m_comboTheme->setCurrentIndex(0);
-    m_comboStyle->setCurrentText(IniUser::styleDefault());
+    changeLanguage(0);
+    changeTheme(0);
+    changeStyle(IniUser::styleDefault());
     m_editStyleSheet->clear();
     changeFont(IniUser::fontFamilyDefault(), IniUser::fontSizeDefault());
     m_listIconSize->spinBox()->setValue(IniUser::listIconSizeDefault());
@@ -437,33 +437,30 @@ QLayout *IfacePage::setupLangLayout()
     m_labelLanguage = ControlUtil::createLabel();
 
     // Language Combobox
-    m_comboLanguage = ControlUtil::createComboBox({}, [&](int index) {
-        if (translationManager()->switchLanguage(index)) {
-            setLanguageEdited(true);
-            iniUser().setLanguage(translationManager()->languageName());
-            ctrl()->setIniUserEdited();
-        }
-    });
+    m_comboLanguage = ControlUtil::createComboBox({}, [&](int index) { changeLanguage(index); });
     m_comboLanguage->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelLanguage, m_comboLanguage);
+}
+
+void IfacePage::changeLanguage(int index)
+{
+    if (translationManager()->language() == index)
+        return;
+
+    if (!translationManager()->switchLanguage(index))
+        return;
+
+    setLanguageEdited(true);
+    iniUser().setLanguage(translationManager()->languageName());
+    ctrl()->setIniUserEdited();
 }
 
 QLayout *IfacePage::setupThemeLayout()
 {
     m_labelTheme = ControlUtil::createLabel();
 
-    m_comboTheme = ControlUtil::createComboBox({}, [&](int index) {
-        const auto theme = IniUser::colorSchemeName(index);
-
-        if (iniUser().theme() != theme) {
-            setThemeEdited(true);
-            iniUser().setTheme(theme);
-            ctrl()->setIniUserEdited();
-
-            WindowManager::updateTheme(iniUser());
-        }
-    });
+    m_comboTheme = ControlUtil::createComboBox({}, [&](int index) { changeTheme(index); });
     m_comboTheme->setFixedWidth(200);
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
@@ -473,24 +470,45 @@ QLayout *IfacePage::setupThemeLayout()
     return ControlUtil::createRowLayout(m_labelTheme, m_comboTheme);
 }
 
+void IfacePage::changeTheme(int colorScheme)
+{
+    const auto theme = IniUser::colorSchemeName(colorScheme);
+
+    if (iniUser().theme() == theme)
+        return;
+
+    setThemeEdited(true);
+    iniUser().setTheme(theme);
+    ctrl()->setIniUserEdited();
+
+    WindowManager::updateTheme(iniUser());
+
+    updateTheme();
+}
+
 QLayout *IfacePage::setupStyleLayout()
 {
     m_labelStyle = ControlUtil::createLabel();
 
-    m_comboStyle = ControlUtil::createComboBox({}, [&](int index) {
-        const auto style = m_comboStyle->itemText(index);
-
-        if (iniUser().style() != style) {
-            setStyleEdited(true);
-            iniUser().setStyle(style);
-            ctrl()->setIniUserEdited();
-
-            WindowManager::updateStyle(iniUser());
-        }
-    });
+    m_comboStyle = ControlUtil::createComboBox(
+            {}, [&](int index) { changeStyle(m_comboStyle->itemText(index)); });
     m_comboStyle->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelStyle, m_comboStyle);
+}
+
+void IfacePage::changeStyle(const QString &style)
+{
+    if (iniUser().style() == style)
+        return;
+
+    setStyleEdited(true);
+    iniUser().setStyle(style);
+    ctrl()->setIniUserEdited();
+
+    WindowManager::updateStyle(iniUser());
+
+    updateStyle();
 }
 
 QLayout *IfacePage::setupStyleSheetLayout()

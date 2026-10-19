@@ -55,8 +55,11 @@ private:
 
     void setupGlobalBox();
     QLayout *setupLangLayout();
+    void changeLanguage(int index);
     QLayout *setupThemeLayout();
+    void changeTheme(int colorScheme);
     QLayout *setupStyleLayout();
+    void changeStyle(const QString &style);
     QLayout *setupStyleSheetLayout();
     QLayout *setupFontLayout();
     void changeFont(const QString &family, int pointSize);
