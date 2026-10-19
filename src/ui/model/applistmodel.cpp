@@ -368,17 +368,18 @@ QString AppListModel::sqlOrderColumn() const
         "t.ask DESC", // SortAsked
     };
 
+    // %1 - the sort order
     static const QStringList orderColumns = {
-        nameColumn, // Name
-        "t.accept_zones, t.reject_zones", // Zones
-        "r.rule_type ASC NULLS LAST, lower(r.name)", // Rule
-        "t.groups_mask", // Groups
-        "t.in_limit_id, t.out_limit_id", // Speed Limits
-        "t.end_action, t.end_time", // Scheduled
-        "t.blocked, t.ask", // Action
-        pathColumn, // File Path
-        "t.app_id", // Creation Time ~ App ID
-        "t.notes", // Notes
+        nameColumn + "%1", // Name
+        "t.accept_zones%1, t.reject_zones%1", // Zones
+        "r.rule_type ASC NULLS LAST, lower(r.name)%1", // Rule
+        "t.groups_mask%1", // Groups
+        "t.in_limit_id%1, t.out_limit_id%1", // Speed Limits
+        "t.end_action%1, t.end_time%1", // Scheduled
+        "t.blocked%1, t.ask%1", // Action
+        pathColumn + "%1", // File Path
+        "t.app_id%1", // Creation Time ~ App ID
+        "t.notes%1", // Notes
     };
 
     static const QStringList postOrderColumns = {
@@ -400,10 +401,10 @@ QString AppListModel::sqlOrderColumn() const
     const auto sortStateStr =
             (sortState() != SortNone) ? sortStateColumns.at(sortState() - 1) + ", " : QString();
 
-    const auto &columnsStr = orderColumns.at(sortColumn());
+    const auto columnsStr = orderColumns.at(sortColumn()).arg(sqlOrderAsc());
     const auto &postColumnsStr = postOrderColumns.at(sortColumn());
 
-    return sortStateStr + columnsStr + sqlOrderAsc() + ", " + postColumnsStr;
+    return sortStateStr + columnsStr + ", " + postColumnsStr;
 }
 
 const QStringList &AppListModel::regexpColumns() const
