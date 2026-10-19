@@ -437,30 +437,13 @@ void TrayIcon::retranslateUi()
     m_snoozeAlertsAction->setText(tr("Snooze Alerts"));
 
     m_blockTrafficMenu->setTitle(tr("Block Traffic"));
-    retranslateBlockTrafficActions();
+    ControlUtil::setActionTexts(
+            m_blockTrafficActions->actions(), FirewallConf::blockTrafficNames());
 
     m_filterModeMenu->setTitle(tr("Filter Mode"));
-    retranslateFilterModeActions();
+    ControlUtil::setActionTexts(m_filterModeActions->actions(), FirewallConf::filterModeNames());
 
     m_quitAction->setText(tr("Quit"));
-}
-
-void TrayIcon::retranslateBlockTrafficActions()
-{
-    int index = 0;
-    for (const QString &name : FirewallConf::blockTrafficNames()) {
-        QAction *a = m_blockTrafficActions->actions().at(index++);
-        a->setText(name);
-    }
-}
-
-void TrayIcon::retranslateFilterModeActions()
-{
-    int index = 0;
-    for (const QString &name : FirewallConf::filterModeNames()) {
-        QAction *a = m_filterModeActions->actions().at(index++);
-        a->setText(name);
-    }
 }
 
 void TrayIcon::setupUi()
@@ -485,10 +468,12 @@ void TrayIcon::setupTrayMenu()
     setupTrayMenuTopActions();
 
     m_menu->addSeparator();
-    setupTrayMenuGroupFlagActions();
+    m_groupFlagActions = addFlagActions(MAX_GROUP_FLAG_ACTIONS_COUNT,
+            SLOT(switchTrayGroupFlag(bool)), HotKey::appGroupModifier);
 
     m_menu->addSeparator();
-    setupTrayMenuRuleActions();
+    m_ruleActions = addFlagActions(
+            MAX_RULE_ACTIONS_COUNT, SLOT(switchTrayRuleFlag(bool)), HotKey::ruleModifier);
 
     m_menu->addSeparator();
     setupTrayMenuBottomActions();
@@ -607,102 +592,69 @@ void TrayIcon::setupTrayMenuStatistics()
 
 void TrayIcon::setupTrayMenuBlockTraffic()
 {
-    static const char *const blockTrafficIniKeys[] = {
-        HotKey::blockTrafficOff,
-        HotKey::blockInetTraffic,
-        HotKey::blockLanTraffic,
-        HotKey::blockInetLanTraffic,
-        HotKey::blockTraffic,
-    };
-
     m_blockTrafficMenu = ControlUtil::createMenu(m_menu);
 
-    m_blockTrafficActions = new QActionGroup(m_blockTrafficMenu);
-
-    int index = 0;
-    for (const QString &name : FirewallConf::blockTrafficNames()) {
-        if (Q_UNLIKELY(index >= std::ssize(blockTrafficIniKeys)))
-            break;
-
-        const char *iniKey = blockTrafficIniKeys[index];
-
-        QAction *a = addAction(m_blockTrafficMenu,
-                { /*iconPath=*/ {}, /*receiver=*/nullptr, /*member=*/nullptr, tray::ActionNone,
-                        /*checkable=*/true });
-        a->setText(name);
-
-        addHotKey(a, iniKey);
-
-        m_blockTrafficActions->addAction(a);
-        ++index;
-    }
+    m_blockTrafficActions = addRadioActions(m_blockTrafficMenu,
+            {
+                    HotKey::blockTrafficOff,
+                    HotKey::blockInetTraffic,
+                    HotKey::blockLanTraffic,
+                    HotKey::blockInetLanTraffic,
+                    HotKey::blockTraffic,
+            });
 
     connect(m_blockTrafficActions, &QActionGroup::triggered, this, &TrayIcon::switchBlockTraffic);
 }
 
 void TrayIcon::setupTrayMenuFilterMode()
 {
-    static const char *const filterModeIniKeys[] = {
-        HotKey::filterModeAutoLearn,
-        HotKey::filterModeAskToConnect,
-        HotKey::filterModeBlock,
-        HotKey::filterModeAllow,
-        HotKey::filterModeIgnore,
-    };
-
     m_filterModeMenu = ControlUtil::createMenu(m_menu);
 
-    m_filterModeActions = new QActionGroup(m_filterModeMenu);
-
-    int index = 0;
-    for (const QString &name : FirewallConf::filterModeNames()) {
-        if (Q_UNLIKELY(index >= std::ssize(filterModeIniKeys)))
-            break;
-
-        const char *iniKey = filterModeIniKeys[index];
-
-        QAction *a = addAction(m_filterModeMenu,
-                { /*iconPath=*/ {}, /*receiver=*/nullptr, /*member=*/nullptr, tray::ActionNone,
-                        /*checkable=*/true });
-        a->setText(name);
-
-        addHotKey(a, iniKey);
-
-        m_filterModeActions->addAction(a);
-        ++index;
-    }
+    m_filterModeActions = addRadioActions(m_filterModeMenu,
+            {
+                    HotKey::filterModeAutoLearn,
+                    HotKey::filterModeAskToConnect,
+                    HotKey::filterModeBlock,
+                    HotKey::filterModeAllow,
+                    HotKey::filterModeIgnore,
+            });
 
     connect(m_filterModeActions, &QActionGroup::triggered, this, &TrayIcon::switchFilterMode);
 }
 
-void TrayIcon::setupTrayMenuGroupFlagActions()
+QActionGroup *TrayIcon::addRadioActions(QMenu *menu, const QList<const char *> &iniKeys)
 {
-    for (int i = 0; i < MAX_GROUP_FLAG_ACTIONS_COUNT; ++i) {
-        QAction *a = addAction(m_menu,
-                { QString(), this, SLOT(switchTrayGroupFlag(bool)), tray::ActionNone,
+    auto actionGroup = new QActionGroup(menu);
+
+    for (const char *iniKey : iniKeys) {
+        QAction *a = addAction(menu,
+                { /*iconPath=*/ {}, /*receiver=*/nullptr, /*member=*/nullptr, tray::ActionNone,
                         /*checkable=*/true });
 
-        if (i < MAX_FKEY_COUNT) {
-            addHotKey(a, HotKey::appGroupModifier);
-        }
+        addHotKey(a, iniKey);
 
-        m_groupFlagActions.append(a);
+        actionGroup->addAction(a);
     }
+
+    return actionGroup;
 }
 
-void TrayIcon::setupTrayMenuRuleActions()
+QList<QAction *> TrayIcon::addFlagActions(int count, const char *member, const char *modifierIniKey)
 {
-    for (int i = 0; i < MAX_RULE_ACTIONS_COUNT; ++i) {
-        QAction *a = addAction(m_menu,
-                { QString(), this, SLOT(switchTrayRuleFlag(bool)), tray::ActionNone,
-                        /*checkable=*/true });
+    QList<QAction *> actions;
+
+    for (int i = 0; i < count; ++i) {
+        QAction *a = addAction(
+                m_menu, { QString(), this, member, tray::ActionNone, /*checkable=*/true });
 
         if (i < MAX_FKEY_COUNT) {
-            addHotKey(a, HotKey::ruleModifier);
+            addHotKey(a, modifierIniKey);
         }
 
-        m_ruleActions.append(a);
+        actions.append(a);
     }
+
+    return actions;
 }
 
 void TrayIcon::setupTrayMenuBottomActions()
@@ -989,69 +941,49 @@ void TrayIcon::onShowWindowAction()
     }
 }
 
-void TrayIcon::switchTrayFlag(bool checked)
+void TrayIcon::switchTrayFlag(bool /*checked*/)
 {
-    if (iniUser().confirmTrayFlags()) {
-        const auto action = qobject_cast<QAction *>(sender());
-        Q_ASSERT(action);
+    const auto action = qobject_cast<QAction *>(sender());
+    Q_ASSERT(action);
 
-        windowManager()->showQuestionBox(
-                [=, this](bool confirmed) {
-                    if (confirmed) {
-                        saveTrayFlags();
-                    } else {
-                        action->setChecked(!checked);
-                    }
-                },
-                tr("Are you sure to switch the \"%1\"?").arg(action->text()));
-    } else {
-        saveTrayFlags();
-    }
+    confirmSaveTrayFlags(tr("Are you sure to switch the \"%1\"?").arg(action->text()));
 }
 
 void TrayIcon::switchBlockTraffic(QAction *action)
 {
-    const int index = m_blockTrafficActions->actions().indexOf(action);
-    if (index < 0 || index == conf().blockTrafficIndex())
-        return;
-
-    if (iniUser().confirmTrayFlags()) {
-        windowManager()->showQuestionBox(
-                [=, this](bool confirmed) {
-                    if (confirmed) {
-                        saveTrayFlags();
-                    } else {
-                        QAction *a =
-                                m_blockTrafficActions->actions().at(conf().blockTrafficIndex());
-                        a->setChecked(true);
-                    }
-                },
-                tr("Are you sure to select the \"%1\"?").arg(action->text()));
-    } else {
-        saveTrayFlags();
-    }
+    selectTrayFlag(action, conf().blockTrafficIndex());
 }
 
 void TrayIcon::switchFilterMode(QAction *action)
 {
-    const int index = m_filterModeActions->actions().indexOf(action);
-    if (index < 0 || index == conf().filterMode())
+    selectTrayFlag(action, conf().filterMode());
+}
+
+void TrayIcon::selectTrayFlag(QAction *action, int currentIndex)
+{
+    const int index = action->actionGroup()->actions().indexOf(action);
+    if (index == currentIndex)
         return;
 
-    if (iniUser().confirmTrayFlags()) {
-        windowManager()->showQuestionBox(
-                [=, this](bool confirmed) {
-                    if (confirmed) {
-                        saveTrayFlags();
-                    } else {
-                        QAction *a = m_filterModeActions->actions().at(conf().filterMode());
-                        a->setChecked(true);
-                    }
-                },
-                tr("Are you sure to select the \"%1\"?").arg(action->text()));
-    } else {
+    confirmSaveTrayFlags(tr("Are you sure to select the \"%1\"?").arg(action->text()));
+}
+
+void TrayIcon::confirmSaveTrayFlags(const QString &question)
+{
+    if (!iniUser().confirmTrayFlags()) {
         saveTrayFlags();
+        return;
     }
+
+    windowManager()->showQuestionBox(
+            [this](bool confirmed) {
+                if (confirmed) {
+                    saveTrayFlags();
+                } else {
+                    updateTrayMenuFlags();
+                }
+            },
+            question);
 }
 
 void TrayIcon::switchTrayGroupFlag(bool checked)

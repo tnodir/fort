@@ -80,8 +80,6 @@ private:
     void setupController();
 
     void retranslateUi();
-    void retranslateBlockTrafficActions();
-    void retranslateFilterModeActions();
 
     void setupUi();
     void setupTrayMenu();
@@ -90,9 +88,10 @@ private:
     void setupTrayMenuStatistics();
     void setupTrayMenuBlockTraffic();
     void setupTrayMenuFilterMode();
-    void setupTrayMenuGroupFlagActions();
-    void setupTrayMenuRuleActions();
     void setupTrayMenuBottomActions();
+
+    QActionGroup *addRadioActions(QMenu *menu, const QList<const char *> &iniKeys);
+    QList<QAction *> addFlagActions(int count, const char *member, const char *modifierIniKey);
 
     bool isEditEnabled() const;
 
@@ -102,6 +101,9 @@ private:
 
     void updateBlockTrafficMenuIcon(int index);
     void updateFilterModeMenuIcon(int index);
+
+    void selectTrayFlag(QAction *action, int currentIndex);
+    void confirmSaveTrayFlags(const QString &question);
 
     void sendAlertMessage();
     void updateAlertTimer();
