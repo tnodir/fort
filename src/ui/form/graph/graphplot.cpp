@@ -244,6 +244,21 @@ void GraphPlot::setAxisTicksVisible(bool v)
     m_axesChanged = true;
 }
 
+bool GraphPlot::yAxisLabelsVisible() const
+{
+    return m_yAxisLabels->isVisible();
+}
+
+void GraphPlot::setYAxisLabelsVisible(bool v)
+{
+    if (yAxisLabelsVisible() == v)
+        return;
+
+    m_yAxisLabels->setVisible(v);
+
+    m_axesChanged = true;
+}
+
 void GraphPlot::setBorderVisible(bool v)
 {
     if (m_borderVisible == v)
@@ -550,8 +565,11 @@ void GraphPlot::setupItems()
     // Axis
     m_axes = scene->addPath(QPainterPath());
 
+    // Y Axis Labels: The tick and unit labels are hidden together
+    m_yAxisLabels = scene->addRect(QRectF(), Qt::NoPen);
+
     // Unit Label: Vertical
-    m_unitLabel = scene->addSimpleText(QString());
+    m_unitLabel = new QGraphicsSimpleTextItem(m_yAxisLabels);
     m_unitLabel->setRotation(-90);
 
     // Border: Over all
@@ -795,7 +813,7 @@ int GraphPlot::setupTickLabels(const QStringList &labels)
 
     // Add missing labels
     while (m_tickLabels.size() < count) {
-        auto label = scene()->addSimpleText(QString());
+        auto label = new QGraphicsSimpleTextItem(m_yAxisLabels);
         setupTickLabelStyle(label);
 
         m_tickLabels.append(label);
@@ -822,8 +840,9 @@ void GraphPlot::updateAxisRect(int tickLabelsWidth)
 {
     const int border = borderWidth();
     const int ticksWidth = axisTickLength();
-    const int leftMargin = border + axisPadding + unitLabelWidth() + ticksWidth + tickLabelPadding
-            + tickLabelsWidth;
+    const int leftWidth = yAxisLabelsWidth(tickLabelsWidth) + ticksWidth;
+    // The base line is on the border without the labels and ticks
+    const int leftMargin = (leftWidth > 0) ? border + leftWidth : 0;
     // The bars are up to the right edge without the ticks
     const int rightMargin = border + ticksWidth;
 
@@ -851,6 +870,14 @@ int GraphPlot::unitLabelWidth() const
 {
     // The vertical label's width is its text's height
     return qCeil(m_unitLabel->boundingRect().height()) + unitLabelPadding;
+}
+
+int GraphPlot::yAxisLabelsWidth(int tickLabelsWidth) const
+{
+    if (!yAxisLabelsVisible())
+        return 0;
+
+    return axisPadding + unitLabelWidth() + tickLabelPadding + tickLabelsWidth;
 }
 
 void GraphPlot::updateGrid(const QVector<int> &tickYs)

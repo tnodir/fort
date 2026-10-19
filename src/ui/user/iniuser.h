@@ -402,6 +402,10 @@ public:
     bool graphWindowHideOnHover() const { return valueBool("graphWindow/hideOnHover"); }
     void setGraphWindowHideOnHover(bool on) { setValue("graphWindow/hideOnHover", on); }
 
+    constexpr bool graphWindowHideYAxisLabelsDefault() const { return false; }
+    bool graphWindowHideYAxisLabels() const { return valueBool("graphWindow/hideYAxisLabels"); }
+    void setGraphWindowHideYAxisLabels(bool on) { setValue("graphWindow/hideYAxisLabels", on); }
+
     constexpr bool graphWindowShowSpeedDefault() const { return false; }
     bool graphWindowShowSpeed() const { return valueBool("graphWindow/showSpeed"); }
     void setGraphWindowShowSpeed(bool on) { setValue("graphWindow/showSpeed", on); }

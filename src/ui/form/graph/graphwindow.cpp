@@ -211,6 +211,7 @@ void GraphWindow::updateFormat(const IniUser &ini)
     m_plot->setOutVisible(ini.graphWindowShowOut());
     m_plot->setBarWidth(ini.graphWindowBarWidth());
     m_plot->setAxisTicksVisible(ini.graphWindowAxisTicks());
+    m_plot->setYAxisLabelsVisible(!ini.graphWindowHideYAxisLabels());
     m_plot->setBorderVisible(ini.graphWindowFrameless());
     m_plot->setUnitFormat(FormatUtil::graphUnitFormat(ini.graphWindowTrafUnit()));
     m_plot->setFixedValueMax(ini.graphWindowFixedSpeed() * 1024LL);

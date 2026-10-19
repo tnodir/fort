@@ -126,6 +126,9 @@ public:
     bool axisTicksVisible() const { return m_axisTicksVisible; }
     void setAxisTicksVisible(bool v);
 
+    bool yAxisLabelsVisible() const;
+    void setYAxisLabelsVisible(bool v);
+
     bool borderVisible() const { return m_borderVisible; }
     void setBorderVisible(bool v);
 
@@ -209,6 +212,7 @@ private:
     int axisTickLength() const;
     int borderWidth() const;
     int unitLabelWidth() const;
+    int yAxisLabelsWidth(int tickLabelsWidth) const;
 
     void updateGrid(const QVector<int> &tickYs);
     void startRising(qint64 unixTime);
@@ -282,6 +286,7 @@ private:
     QGraphicsPathItem *m_speedOutArrow = nullptr;
     QGraphicsSimpleTextItem *m_speedOutText = nullptr;
     QGraphicsPathItem *m_axes = nullptr;
+    QGraphicsRectItem *m_yAxisLabels = nullptr;
     QGraphicsSimpleTextItem *m_unitLabel = nullptr;
     GraphBarsItem *m_border = nullptr;
 

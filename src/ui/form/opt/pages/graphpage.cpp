@@ -39,6 +39,7 @@ void GraphPage::onResetToDefault()
     m_cbGraphFrameless->setChecked(iniUser.graphWindowFramelessDefault());
     m_cbGraphClickThrough->setChecked(iniUser.graphWindowClickThroughDefault());
     m_cbGraphHideOnHover->setChecked(iniUser.graphWindowHideOnHoverDefault());
+    m_cbGraphHideYAxisLabels->setChecked(iniUser.graphWindowHideYAxisLabelsDefault());
     m_cbGraphShowSpeed->setChecked(iniUser.graphWindowShowSpeedDefault());
     m_cbGraphAnimation->setChecked(iniUser.graphWindowAnimationDefault());
     m_cbGraphAxisTicks->setChecked(iniUser.graphWindowAxisTicksDefault());
@@ -87,6 +88,7 @@ void GraphPage::onRetranslateUi()
     m_cbGraphFrameless->setText(tr("Frameless"));
     m_cbGraphClickThrough->setText(tr("Click through"));
     m_cbGraphHideOnHover->setText(tr("Hide on hover"));
+    m_cbGraphHideYAxisLabels->setText(tr("Hide Y axis scale labels"));
     m_cbGraphShowSpeed->setText(tr("Show speed"));
     m_cbGraphAnimation->setText(tr("Animation"));
     m_cbGraphAxisTicks->setText(tr("Axis ticks"));
@@ -222,6 +224,7 @@ void GraphPage::setupGraphBox()
             m_cbGraphFrameless,
             m_cbGraphClickThrough,
             m_cbGraphHideOnHover,
+            m_cbGraphHideYAxisLabels,
             m_cbGraphShowSpeed,
             m_cbGraphAnimation,
             m_cbGraphAxisTicks,
@@ -281,6 +284,13 @@ void GraphPage::setupGraphCheckboxes()
 
 void GraphPage::setupGraphViewCheckboxes()
 {
+    m_cbGraphHideYAxisLabels =
+            ControlUtil::createCheckBox(iniUser().graphWindowHideYAxisLabels(), [&](bool checked) {
+                if (iniUser().graphWindowHideYAxisLabels() != checked) {
+                    iniUser().setGraphWindowHideYAxisLabels(checked);
+                    ctrl()->setIniUserEdited();
+                }
+            });
     m_cbGraphShowSpeed =
             ControlUtil::createCheckBox(iniUser().graphWindowShowSpeed(), [&](bool checked) {
                 if (iniUser().graphWindowShowSpeed() != checked) {

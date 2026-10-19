@@ -58,6 +58,7 @@ private:
     QCheckBox *m_cbGraphFrameless = nullptr;
     QCheckBox *m_cbGraphClickThrough = nullptr;
     QCheckBox *m_cbGraphHideOnHover = nullptr;
+    QCheckBox *m_cbGraphHideYAxisLabels = nullptr;
     QCheckBox *m_cbGraphShowSpeed = nullptr;
     QCheckBox *m_cbGraphAnimation = nullptr;
     QCheckBox *m_cbGraphAxisTicks = nullptr;
