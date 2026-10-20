@@ -61,6 +61,23 @@ QIcon rulePeriodIcon(const RuleRow &ruleRow)
     return (rulePeriodId(ruleRow) != 0) ? IconCache::icon(":/icons/clock.png") : QIcon();
 }
 
+QVariant dataDisplayTerminate(const RuleRow &ruleRow, int role)
+{
+    if (role != Qt::ToolTipRole || !ruleRow.terminate)
+        return {};
+
+    return RuleListModel::tr("Terminating Rule:") + ' '
+            + ActionRange::actionTypeText(ruleRow.terminateActionTypeId());
+}
+
+QIcon ruleTerminateIcon(const RuleRow &ruleRow)
+{
+    if (!ruleRow.terminate)
+        return {};
+
+    return IconCache::icon(ActionRange::actionTypeIconPath(ruleRow.terminateActionTypeId()));
+}
+
 quint8 ruleActionTypeId(const RuleRow &ruleRow)
 {
     if (ruleRow.ask)
@@ -178,7 +195,7 @@ int RuleListModel::rowCount(const QModelIndex &parent) const
 
 int RuleListModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return 3;
+    return 4;
 }
 
 QVariant RuleListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -257,8 +274,10 @@ QVariant RuleListModel::headerDataDisplay(int section, int role) const
     case 0:
         return tr("Rule");
     case 1:
-        return (role == Qt::ToolTipRole) ? tr("Time Period") : QVariant();
+        return (role == Qt::ToolTipRole) ? tr("Terminating Rule") : QVariant();
     case 2:
+        return (role == Qt::ToolTipRole) ? tr("Time Period") : QVariant();
+    case 3:
         return tr("Change Time");
     }
     return {};
@@ -266,7 +285,13 @@ QVariant RuleListModel::headerDataDisplay(int section, int role) const
 
 QVariant RuleListModel::headerDataDecoration(int section) const
 {
-    return (section == 1) ? IconCache::icon(":/icons/clock.png") : QVariant();
+    switch (section) {
+    case 1:
+        return IconCache::icon(":/icons/control_end.png");
+    case 2:
+        return IconCache::icon(":/icons/clock.png");
+    }
+    return {};
 }
 
 QVariant RuleListModel::dataDisplay(const QModelIndex &index, int role) const
@@ -277,8 +302,10 @@ QVariant RuleListModel::dataDisplay(const QModelIndex &index, int role) const
     case 0:
         return dataDisplayName(ruleRow, role);
     case 1:
-        return dataDisplayPeriod(ruleRow, role);
+        return dataDisplayTerminate(ruleRow, role);
     case 2:
+        return dataDisplayPeriod(ruleRow, role);
+    case 3:
         return ruleRow.modTime;
     }
 
@@ -295,6 +322,8 @@ QVariant RuleListModel::dataDecoration(const QModelIndex &index) const
     case 0:
         return IconCache::icon(ruleStateIconPath(ruleRow));
     case 1:
+        return ruleTerminateIcon(ruleRow);
+    case 2:
         return rulePeriodIcon(ruleRow);
     }
 

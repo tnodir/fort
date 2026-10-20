@@ -25,7 +25,7 @@ using namespace Fort;
 
 namespace {
 
-inline constexpr int RULES_HEADER_VERSION = 4;
+inline constexpr int RULES_HEADER_VERSION = 5;
 
 constexpr quint8 ruleTypeBit(Rule::RuleType ruleType)
 {
@@ -227,12 +227,14 @@ void RulesWindow::setupTreeRulesHeader()
 
     header->setSectionResizeMode(0, QHeaderView::Interactive);
     header->setSectionResizeMode(1, QHeaderView::Fixed);
-    header->setSectionResizeMode(2, QHeaderView::Interactive);
+    header->setSectionResizeMode(2, QHeaderView::Fixed);
+    header->setSectionResizeMode(3, QHeaderView::Interactive);
     header->setStretchLastSection(true);
 
-    header->resizeSection(0, 330);
+    header->resizeSection(0, 300);
     header->resizeSection(1, 30);
-    header->resizeSection(2, 130);
+    header->resizeSection(2, 30);
+    header->resizeSection(3, 130);
 }
 
 void RulesWindow::setupTreeRulesExpandingChanged()
