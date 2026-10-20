@@ -27,6 +27,7 @@
 #include <util/fileutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
+#include <util/net/actionrange.h>
 #include <util/net/netformatutil.h>
 #include <util/stringutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
@@ -122,14 +123,14 @@ bool isLoopbackIp(const ip_addr_t &ip, bool isIPv6)
 QString resultIconPath(DriverCommon::ConnFilterResult result)
 {
     // Sync with enum DriverCommon::ConnFilterResult
-    static const char *const iconPaths[] = {
-        ":/icons/accept.png",
-        ":/icons/deny.png",
-        ":/icons/help.png",
+    const QStringList iconPaths = {
+        ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ALLOW),
+        ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_BLOCK),
+        ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ASK),
         ":/icons/road_sign.png",
     };
 
-    return iconPaths[result];
+    return iconPaths.value(result);
 }
 
 QString resultText(DriverCommon::ConnFilterResult result)

@@ -1,6 +1,6 @@
 #include "actionrange.h"
 
-#include <common/fortconf.h>
+#include <bit>
 
 #include <util/conf/confdata.h>
 
@@ -9,15 +9,46 @@ namespace {
 struct ActionType
 {
     quint8 id;
-    const char *name;
+    const char *name; // also the translated text's source
+    const char *iconPath;
 };
 
-inline constexpr ActionType actionTypes[] = {
-    { FORT_RULE_FILTER_ACTION_ALLOW, "Allow" },
-    { FORT_RULE_FILTER_ACTION_BLOCK, "Block" },
-    { FORT_RULE_FILTER_ACTION_ASK, "Ask" },
-    { FORT_RULE_FILTER_ACTION_DROP, "Drop" },
+// By their ids' bits: Allow, Block, Ask, Drop
+inline constexpr ActionType g_actionTypes[] = {
+    {
+            FORT_RULE_FILTER_ACTION_ALLOW,
+            QT_TRANSLATE_NOOP("ActionRange", "Allow"),
+            ":/icons/accept.png",
+    },
+    {
+            FORT_RULE_FILTER_ACTION_BLOCK,
+            QT_TRANSLATE_NOOP("ActionRange", "Block"),
+            ":/icons/deny.png",
+    },
+    {
+            FORT_RULE_FILTER_ACTION_ASK,
+            QT_TRANSLATE_NOOP("ActionRange", "Ask"),
+            ":/icons/help.png",
+    },
+    {
+            FORT_RULE_FILTER_ACTION_DROP,
+            QT_TRANSLATE_NOOP("ActionRange", "Drop"),
+            ":/icons/cross.png",
+    },
 };
+
+const ActionType *findActionType(quint8 actionTypeId)
+{
+    const int index = ActionRange::actionTypeIndex(actionTypeId);
+    if (index < 0)
+        return nullptr;
+
+    const ActionType &actionType = g_actionTypes[index];
+
+    Q_ASSERT(actionType.id == actionTypeId);
+
+    return &actionType;
+}
 
 }
 
@@ -46,24 +77,67 @@ void ActionRange::toList(QStringList &list) const
 
 QString ActionRange::actionTypeName(quint8 actionTypeId)
 {
-    for (const auto &actionType : actionTypes) {
-        if (actionType.id == actionTypeId) {
-            return actionType.name;
-        }
-    }
+    const ActionType *actionType = findActionType(actionTypeId);
 
-    return {};
+    return actionType ? actionType->name : QString();
 }
 
 quint8 ActionRange::actionTypeIdByName(const QString &name)
 {
-    for (const auto &actionType : actionTypes) {
+    for (const auto &actionType : g_actionTypes) {
         if (name.compare(QLatin1String(actionType.name), Qt::CaseInsensitive) == 0) {
             return actionType.id;
         }
     }
 
     return 0;
+}
+
+QString ActionRange::actionTypeText(quint8 actionTypeId)
+{
+    const ActionType *actionType = findActionType(actionTypeId);
+
+    return actionType ? tr(actionType->name) : QString();
+}
+
+QString ActionRange::actionTypeIconPath(quint8 actionTypeId)
+{
+    const ActionType *actionType = findActionType(actionTypeId);
+
+    return actionType ? actionType->iconPath : QString();
+}
+
+quint8 ActionRange::actionTypeIdAt(int index)
+{
+    if (index < 0 || index >= std::ssize(g_actionTypes))
+        return 0;
+
+    return g_actionTypes[index].id;
+}
+
+int ActionRange::actionTypeIndex(quint8 actionTypeId)
+{
+    const int index = std::countr_zero(actionTypeId);
+
+    return (index < std::ssize(g_actionTypes)) ? index : -1;
+}
+
+QStringList ActionRange::actionTypeTexts()
+{
+    QStringList list;
+    for (const auto &actionType : g_actionTypes) {
+        list << tr(actionType.name);
+    }
+    return list;
+}
+
+QStringList ActionRange::actionTypeIconPaths()
+{
+    QStringList list;
+    for (const auto &actionType : g_actionTypes) {
+        list << actionType.iconPath;
+    }
+    return list;
 }
 
 TextRange::ParseError ActionRange::parseText(const QString &text)

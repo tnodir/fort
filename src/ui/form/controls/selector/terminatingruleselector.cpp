@@ -3,24 +3,9 @@
 #include <QCheckBox>
 #include <QComboBox>
 
-#include <algorithm>
-
-#include <common/fortconf.h>
-
 #include <conf/rule.h>
 #include <form/controls/controlutil.h>
-
-namespace {
-
-// By the Action combo box's index
-inline constexpr quint8 actionTypeIds[] = {
-    FORT_RULE_FILTER_ACTION_ALLOW,
-    FORT_RULE_FILTER_ACTION_BLOCK,
-    FORT_RULE_FILTER_ACTION_ASK,
-    FORT_RULE_FILTER_ACTION_DROP,
-};
-
-}
+#include <util/net/actionrange.h>
 
 TerminatingRuleSelector::TerminatingRuleSelector(QWidget *parent) : QWidget(parent)
 {
@@ -53,14 +38,12 @@ void TerminatingRuleSelector::setTerminate(bool v)
 
 quint8 TerminatingRuleSelector::terminateActionTypeId() const
 {
-    return actionTypeIds[m_comboAction->currentIndex()];
+    return ActionRange::actionTypeIdAt(m_comboAction->currentIndex());
 }
 
 void TerminatingRuleSelector::setTerminateActionTypeId(quint8 actionTypeId)
 {
-    const auto it = std::find(std::begin(actionTypeIds), std::end(actionTypeIds), actionTypeId);
-
-    m_comboAction->setCurrentIndex(int(it - std::begin(actionTypeIds)));
+    m_comboAction->setCurrentIndex(ActionRange::actionTypeIndex(actionTypeId));
 }
 
 bool TerminatingRuleSelector::terminateAlert() const
@@ -77,10 +60,8 @@ void TerminatingRuleSelector::retranslateUi()
 {
     m_cbTerminate->setText(tr("Terminating Rule:"));
 
-    ControlUtil::setComboBoxTexts(
-            m_comboAction, { tr("Allow"), tr("Block"), tr("Ask"), tr("Drop") });
-    ControlUtil::setComboBoxIcons(m_comboAction,
-            { ":/icons/accept.png", ":/icons/deny.png", ":/icons/help.png", ":/icons/cross.png" });
+    ControlUtil::setComboBoxTexts(m_comboAction, ActionRange::actionTypeTexts());
+    ControlUtil::setComboBoxIcons(m_comboAction, ActionRange::actionTypeIconPaths());
 
     m_cbAlert->setText(tr("Alert"));
 }

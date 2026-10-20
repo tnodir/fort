@@ -378,13 +378,14 @@ QLayout *FilterEditDialog::setupActionsLayout()
     m_buttonGroupAction = new QButtonGroup(this);
 
     // By the button's id: FORT_RULE_FILTER_ACTION_*, 0 - the Rule's action
-    m_rbRuleAction = createActionButton(":/icons/script.png", /*actionTypeId=*/0);
+    m_rbRuleAction = createActionButton(/*actionTypeId=*/0);
+    m_rbRuleAction->setIcon(IconCache::icon(":/icons/script.png"));
     m_rbRuleAction->setVisible(isRuleFilter());
 
-    m_rbAllow = createActionButton(":/icons/accept.png", FORT_RULE_FILTER_ACTION_ALLOW);
-    m_rbBlock = createActionButton(":/icons/deny.png", FORT_RULE_FILTER_ACTION_BLOCK);
-    m_rbAsk = createActionButton(":/icons/help.png", FORT_RULE_FILTER_ACTION_ASK);
-    m_rbDrop = createActionButton(":/icons/cross.png", FORT_RULE_FILTER_ACTION_DROP);
+    m_rbAllow = createActionButton(FORT_RULE_FILTER_ACTION_ALLOW);
+    m_rbBlock = createActionButton(FORT_RULE_FILTER_ACTION_BLOCK);
+    m_rbAsk = createActionButton(FORT_RULE_FILTER_ACTION_ASK);
+    m_rbDrop = createActionButton(FORT_RULE_FILTER_ACTION_DROP);
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { m_rbRuleAction, m_rbAllow, m_rbBlock, m_rbAsk, m_rbDrop, /*stretch*/ nullptr });
@@ -393,10 +394,10 @@ QLayout *FilterEditDialog::setupActionsLayout()
     return layout;
 }
 
-QRadioButton *FilterEditDialog::createActionButton(const QString &iconPath, int actionTypeId)
+QRadioButton *FilterEditDialog::createActionButton(int actionTypeId)
 {
     auto c = new QRadioButton();
-    c->setIcon(IconCache::icon(iconPath));
+    c->setIcon(IconCache::icon(ActionRange::actionTypeIconPath(actionTypeId)));
 
     m_buttonGroupAction->addButton(c, actionTypeId);
 

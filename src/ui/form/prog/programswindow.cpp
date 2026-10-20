@@ -29,6 +29,7 @@
 #include <util/conf/confutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
+#include <util/net/actionrange.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "programeditdialog.h"
@@ -136,9 +137,9 @@ void ProgramsWindow::retranslateUi()
     retranslateTimerMenuActions();
 
     m_btEdit->setText(tr("Edit"));
-    m_actAllowApp->setText(tr("Allow"));
-    m_actBlockApp->setText(tr("Block"));
-    m_actAskApp->setText(tr("Ask"));
+    m_actAllowApp->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_ALLOW));
+    m_actBlockApp->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_BLOCK));
+    m_actAskApp->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_ASK));
     m_actKillApp->setText(tr("Kill Process"));
     m_actAddApp->setText(tr("Add"));
     m_actAddWildcard->setText(tr("Add Wildcard"));
@@ -155,9 +156,9 @@ void ProgramsWindow::retranslateUi()
     m_actPurgeApps->setText(tr("Purge Obsolete"));
     m_actFindApps->setText(tr("Find"));
 
-    m_btAllowApp->setText(tr("Allow"));
-    m_btBlockApp->setText(tr("Block"));
-    m_btAskApp->setText(tr("Ask"));
+    m_btAllowApp->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_ALLOW));
+    m_btBlockApp->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_BLOCK));
+    m_btAskApp->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_ASK));
     m_btRemoveApp->setText(tr("Remove"));
     m_editSearch->setPlaceholderText(tr("Search") + " /");
     m_btFilter->setToolTip(tr("Filters"));
@@ -165,7 +166,7 @@ void ProgramsWindow::retranslateUi()
     m_cbFilterAlerted->setText(tr("Alerts"));
     m_cbFilterWildcard->setText(tr("Wildcard Paths"));
     m_cbFilterParked->setText(tr("Parked"));
-    m_cbFilterAsk->setText(tr("Ask"));
+    m_cbFilterAsk->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_ASK));
     m_cbFilterKillProcess->setText(tr("Kill Process"));
     m_cbFilterObsolete->setText(tr("Obsolete"));
     m_btFilterGroups->retranslateUi();
@@ -264,9 +265,12 @@ QLayout *ProgramsWindow::setupHeader()
 
 QLayout *ProgramsWindow::setupToolbarButtonsLayout()
 {
-    m_btAllowApp = ControlUtil::createFlatToolButton(":/icons/accept.png");
-    m_btBlockApp = ControlUtil::createFlatToolButton(":/icons/deny.png");
-    m_btAskApp = ControlUtil::createFlatToolButton(":/icons/help.png");
+    m_btAllowApp = ControlUtil::createFlatToolButton(
+            ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ALLOW));
+    m_btBlockApp = ControlUtil::createFlatToolButton(
+            ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_BLOCK));
+    m_btAskApp = ControlUtil::createFlatToolButton(
+            ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ASK));
     m_btRemoveApp = ControlUtil::createFlatToolButton(":/icons/delete.png");
 
     connect(m_btAllowApp, &QAbstractButton::clicked, m_actAllowApp, &QAction::trigger);
@@ -288,13 +292,19 @@ void ProgramsWindow::setupEditMenu()
     m_timerMenu = menu->addMenu(IconCache::icon(":/icons/time.png"), QString());
     setupTimerMenuActions();
 
-    m_actAllowApp = menu->addAction(IconCache::icon(":/icons/accept.png"), QString());
+    m_actAllowApp = menu->addAction(
+            IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ALLOW)),
+            QString());
     m_actAllowApp->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_A));
 
-    m_actBlockApp = menu->addAction(IconCache::icon(":/icons/deny.png"), QString());
+    m_actBlockApp = menu->addAction(
+            IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_BLOCK)),
+            QString());
     m_actBlockApp->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_B));
 
-    m_actAskApp = menu->addAction(IconCache::icon(":/icons/help.png"), QString());
+    m_actAskApp = menu->addAction(
+            IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ASK)),
+            QString());
     m_actAskApp->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_S));
 
     m_actKillApp = menu->addAction(IconCache::icon(":/icons/scull.png"), QString());
@@ -453,9 +463,12 @@ void ProgramsWindow::setupFilterCheckBoxes()
                         AppListModel::FilterParked, m_cbFilterParked->checkState());
             });
 
-    m_cbFilterAsk = ControlUtil::createCheckStateBox(":/icons/help.png", Qt::PartiallyChecked, [&] {
-        appListModel()->setFilterValue(AppListModel::FilterAsk, m_cbFilterAsk->checkState());
-    });
+    m_cbFilterAsk = ControlUtil::createCheckStateBox(
+            ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ASK), Qt::PartiallyChecked,
+            [&] {
+                appListModel()->setFilterValue(
+                        AppListModel::FilterAsk, m_cbFilterAsk->checkState());
+            });
 
     m_cbFilterKillProcess =
             ControlUtil::createCheckStateBox(":/icons/scull.png", Qt::PartiallyChecked, [&] {
@@ -498,11 +511,14 @@ void ProgramsWindow::setupFilterClear()
 QLayout *ProgramsWindow::setupSortStatesLayout()
 {
     m_btSortAllowed = createCheckableToolButton(
-            ":/icons/accept.png", [&] { onSortStateClicked(AppListModel::SortAllowed); });
+            ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ALLOW),
+            [&] { onSortStateClicked(AppListModel::SortAllowed); });
     m_btSortBlocked = createCheckableToolButton(
-            ":/icons/deny.png", [&] { onSortStateClicked(AppListModel::SortBlocked); });
-    m_btSortAsked = createCheckableToolButton(
-            ":/icons/help.png", [&] { onSortStateClicked(AppListModel::SortAsked); });
+            ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_BLOCK),
+            [&] { onSortStateClicked(AppListModel::SortBlocked); });
+    m_btSortAsked =
+            createCheckableToolButton(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ASK),
+                    [&] { onSortStateClicked(AppListModel::SortAsked); });
     m_btSortAlerted = createCheckableToolButton(
             ":/icons/error.png", [&] { onSortStateClicked(AppListModel::SortAlerted); });
 

@@ -14,6 +14,7 @@
 #include <fortglobal.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
+#include <util/net/actionrange.h>
 
 using namespace Fort;
 
@@ -60,15 +61,17 @@ QIcon rulePeriodIcon(const RuleRow &ruleRow)
     return (rulePeriodId(ruleRow) != 0) ? IconCache::icon(":/icons/clock.png") : QIcon();
 }
 
-QString ruleStateIconPath(const RuleRow &ruleRow)
+quint8 ruleActionTypeId(const RuleRow &ruleRow)
 {
     if (ruleRow.ask)
-        return ":/icons/help.png";
+        return FORT_RULE_FILTER_ACTION_ASK;
 
-    if (ruleRow.blocked)
-        return ":/icons/deny.png";
+    return ruleRow.blocked ? FORT_RULE_FILTER_ACTION_BLOCK : FORT_RULE_FILTER_ACTION_ALLOW;
+}
 
-    return ":/icons/accept.png";
+QString ruleStateIconPath(const RuleRow &ruleRow)
+{
+    return ActionRange::actionTypeIconPath(ruleActionTypeId(ruleRow));
 }
 
 }

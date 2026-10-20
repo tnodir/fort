@@ -13,6 +13,7 @@
 #include <util/bitutil.h>
 #include <util/dateutil.h>
 #include <util/iconcache.h>
+#include <util/net/actionrange.h>
 
 #include "applistmodel.h"
 
@@ -34,19 +35,23 @@ QVariant dataDisplayName(const App &app, int role)
 
 QVariant dataDisplayAction(const App &app, int role)
 {
-    if (app.killProcess)
+    if (app.killProcess) {
         return AppListModel::tr("Kill Process");
+    }
 
-    if (app.blocked)
-        return AppListModel::tr("Block");
+    if (app.blocked) {
+        return ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_BLOCK);
+    }
 
-    if (app.ask)
-        return AppListModel::tr("Ask");
+    if (app.ask) {
+        return ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_ASK);
+    }
 
-    if (role == Qt::ToolTipRole && app.lanOnly)
+    if (role == Qt::ToolTipRole && app.lanOnly) {
         return AppListModel::tr("Block Internet Traffic");
+    }
 
-    return AppListModel::tr("Allow");
+    return ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_ALLOW);
 }
 
 QVariant dataDisplayZones(const App &app, int role)
@@ -175,19 +180,12 @@ QString AppListModelData::appActionIconPath() const
     if (app().alerted)
         return ":/icons/error.png";
 
-    if (app().killProcess)
-        return ":/icons/scull.png";
+    const App::Action action = app().action();
 
-    if (app().blocked)
-        return ":/icons/deny.png";
-
-    if (app().ask)
-        return ":/icons/help.png";
-
-    if (app().lanOnly)
+    if (action == App::ActionAllow && app().lanOnly)
         return ":/icons/hostname.png";
 
-    return ":/icons/accept.png";
+    return App::actionIconPaths().value(action);
 }
 
 QString AppListModelData::appScheduleIconPath() const

@@ -1,5 +1,7 @@
 #include "app.h"
 
+#include <util/net/actionrange.h>
+
 bool App::isFlagsEqual(const App &o) const
 {
     return isBaseFlagsEqual(o) && isExtraFlagsEqual(o);
@@ -79,11 +81,11 @@ void App::setAction(Action action)
 QStringList App::actionIconPaths()
 {
     return {
-        ":/icons/deny.png",
-        ":/icons/accept.png",
+        ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_BLOCK),
+        ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ALLOW),
         ":/icons/delete.png",
         ":/icons/scull.png",
-        ":/icons/help.png",
+        ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ASK),
     };
 }
 

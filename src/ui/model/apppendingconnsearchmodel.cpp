@@ -12,6 +12,7 @@
 #include <util/dateutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
+#include <util/net/actionrange.h>
 
 namespace {
 
@@ -206,7 +207,7 @@ bool AppPendingConnSearchModel::hasPendingConns() const
 QIcon AppPendingConnSearchModel::actionIcon(int row) const
 {
     if (!isConnPending(row)) {
-        return IconCache::icon(":/icons/help.png");
+        return IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ASK));
     }
 
     // The pending connection's timeout

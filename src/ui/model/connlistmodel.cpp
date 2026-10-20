@@ -18,6 +18,7 @@
 #include <util/conf/filterlinetext.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
+#include <util/net/actionrange.h>
 #include <util/net/netformatutil.h>
 #include <util/net/netutil.h>
 
@@ -85,7 +86,8 @@ QString reasonIconPath(const ConnRow &connRow)
 
 QString actionIconPath(const ConnRow &connRow)
 {
-    return connRow.blocked ? ":/icons/deny.png" : ":/icons/accept.png";
+    return ActionRange::actionTypeIconPath(
+            connRow.blocked ? FORT_RULE_FILTER_ACTION_BLOCK : FORT_RULE_FILTER_ACTION_ALLOW);
 }
 
 QVariant dataDisplayAppName(const ConnRow &connRow, int /*role*/)

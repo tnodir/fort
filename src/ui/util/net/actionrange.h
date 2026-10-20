@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include <common/fortconf.h>
+
 #include "textrange.h"
 
 class ActionRange : public TextRange
@@ -25,6 +27,16 @@ public:
 
     /* The action's id by its name, 0 - unknown */
     static quint8 actionTypeIdByName(const QString &name);
+
+    /* The action's translated text and icon */
+    static QString actionTypeText(quint8 actionTypeId);
+    static QString actionTypeIconPath(quint8 actionTypeId);
+
+    /* The actions in their order: Allow, Block, Ask, Drop */
+    static quint8 actionTypeIdAt(int index); // 0 - out of the range
+    static int actionTypeIndex(quint8 actionTypeId); // -1 - not an action
+    static QStringList actionTypeTexts();
+    static QStringList actionTypeIconPaths();
 
     void write(ConfData &confData) const override;
 

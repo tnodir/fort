@@ -7,6 +7,7 @@
 
 #include <task/taskzonedownloader.h>
 #include <util/fileutil.h>
+#include <util/net/actionrange.h>
 #include <util/net/arearange.h>
 #include <util/net/dirrange.h>
 #include <util/net/iprange.h>
@@ -303,6 +304,37 @@ TEST_F(NetUtilTest, areaRanges)
             QString("LOCALHOST\n"
                     "LAN\n"
                     "INET\n"));
+}
+
+TEST_F(NetUtilTest, actionRanges)
+{
+    ActionRange actionRange;
+
+    ASSERT_FALSE(actionRange.fromText("1"));
+    ASSERT_EQ(actionRange.errorLineNo(), 1);
+
+    ASSERT_TRUE(actionRange.fromText("drop"));
+    ASSERT_EQ(actionRange.actionTypeId(), FORT_RULE_FILTER_ACTION_DROP);
+    ASSERT_EQ(actionRange.toText(), QString("DROP\n"));
+
+    // The actions by their indexes
+    int index = 0;
+    while (const quint8 actionTypeId = ActionRange::actionTypeIdAt(index)) {
+        const QString name = ActionRange::actionTypeName(actionTypeId);
+        ASSERT_EQ(ActionRange::actionTypeIdByName(name), actionTypeId) << qPrintable(name);
+        ASSERT_EQ(ActionRange::actionTypeIndex(actionTypeId), index) << qPrintable(name);
+        ++index;
+    }
+    ASSERT_EQ(index, 4);
+    ASSERT_EQ(ActionRange::actionTypeTexts().size(), index);
+    ASSERT_EQ(ActionRange::actionTypeIconPaths().size(), index);
+
+    // Not an action's id
+    ASSERT_EQ(ActionRange::actionTypeIdAt(-1), 0);
+    ASSERT_EQ(ActionRange::actionTypeIndex(0), -1);
+    ASSERT_EQ(ActionRange::actionTypeIndex(1 << 4), -1);
+    ASSERT_TRUE(ActionRange::actionTypeName(0).isEmpty());
+    ASSERT_TRUE(ActionRange::actionTypeName(1 << 4).isEmpty());
 }
 
 TEST_F(NetUtilTest, taskTasix)

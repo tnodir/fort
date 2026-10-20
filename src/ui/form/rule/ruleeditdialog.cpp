@@ -28,6 +28,7 @@
 #include <util/conf/confutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
+#include <util/net/actionrange.h>
 #include <util/osutil.h>
 #include <util/textareautil.h>
 
@@ -138,9 +139,9 @@ void RuleEditDialog::retranslateUi()
     m_cbEnabled->setText(tr("Enabled"));
     m_cbTrayMenu->setText(tr("Tray Menu"));
 
-    m_rbAllow->setText(tr("Allow"));
-    m_rbBlock->setText(tr("Block"));
-    m_rbAsk->setText(tr("Ask"));
+    m_rbAllow->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_ALLOW));
+    m_rbBlock->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_BLOCK));
+    m_rbAsk->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_ASK));
     m_rbAsk->setToolTip(tr("Ask to Connect: pause the connection till the user's decision"));
 
     m_cbExclusive->setText(tr("Exclusive"));
@@ -355,18 +356,20 @@ QLayout *RuleEditDialog::setupActionsLayout()
 {
     // Allow
     m_rbAllow = new QRadioButton();
-    m_rbAllow->setIcon(IconCache::icon(":/icons/accept.png"));
+    m_rbAllow->setIcon(
+            IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ALLOW)));
     m_rbAllow->setChecked(true);
 
     connect(m_rbAllow, &QRadioButton::toggled, this, &RuleEditDialog::updateZonesLayout);
 
     // Block
     m_rbBlock = new QRadioButton();
-    m_rbBlock->setIcon(IconCache::icon(":/icons/deny.png"));
+    m_rbBlock->setIcon(
+            IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_BLOCK)));
 
     // Ask
     m_rbAsk = new QRadioButton();
-    m_rbAsk->setIcon(IconCache::icon(":/icons/help.png"));
+    m_rbAsk->setIcon(IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ASK)));
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { /*stretch*/ nullptr, m_rbAllow, m_rbBlock, m_rbAsk, /*stretch*/ nullptr });

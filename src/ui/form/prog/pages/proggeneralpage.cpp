@@ -29,6 +29,7 @@
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/iconcache.h>
+#include <util/net/actionrange.h>
 #include <util/stringutil.h>
 #include <util/textareautil.h>
 #include <util/variantutil.h>
@@ -161,9 +162,9 @@ void ProgGeneralPage::onRetranslateUi()
 
     m_btGroups->retranslateUi();
 
-    m_rbAllow->setText(tr("Allow"));
-    m_rbBlock->setText(tr("Block"));
-    m_rbAsk->setText(tr("Ask"));
+    m_rbAllow->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_ALLOW));
+    m_rbBlock->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_BLOCK));
+    m_rbAsk->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_ASK));
     m_rbAsk->setToolTip(tr("Ask to Connect: pause the connection till the user's decision"));
     m_rbKillProcess->setText(tr("Kill Process"));
 
@@ -203,8 +204,11 @@ void ProgGeneralPage::retranslatePathPlaceholderText()
 void ProgGeneralPage::retranslateComboApplyChild()
 {
     // Sync with ProgGeneralPage::ApplyChildType
-    const QStringList list = { tr("Propagate to all child processes"),
-        tr("Propagate to designated child processes"), tr("Receive from the parent process") };
+    const QStringList list = {
+        tr("Propagate to all child processes"),
+        tr("Propagate to designated child processes"),
+        tr("Receive from the parent process"),
+    };
 
     ControlUtil::setComboBoxTexts(m_comboApplyChild, list);
 
@@ -213,8 +217,14 @@ void ProgGeneralPage::retranslateComboApplyChild()
 
 void ProgGeneralPage::retranslateScheduleAction()
 {
-    const QStringList list = { tr("Block"), tr("Allow"), tr("Remove"), tr("Kill Process"),
-        tr("Ask") };
+    // By App::Action
+    const QStringList list = {
+        ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_BLOCK),
+        ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_ALLOW),
+        tr("Remove"),
+        tr("Kill Process"),
+        ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_ASK),
+    };
 
     ControlUtil::setComboBoxTexts(m_comboScheduleAction, list);
 
@@ -230,9 +240,21 @@ void ProgGeneralPage::retranslateScheduleType()
 
 void ProgGeneralPage::retranslateScheduleIn()
 {
-    const QStringList list = { tr("Custom"), tr("1 second"), tr("1 minute"), tr("5 minutes"),
-        tr("10 minutes"), tr("30 minutes"), tr("1 hour"), tr("3 hours"), tr("6 hours"),
-        tr("12 hours"), tr("Day"), tr("Week"), tr("Month") };
+    const QStringList list = {
+        tr("Custom"),
+        tr("1 second"),
+        tr("1 minute"),
+        tr("5 minutes"),
+        tr("10 minutes"),
+        tr("30 minutes"),
+        tr("1 hour"),
+        tr("3 hours"),
+        tr("6 hours"),
+        tr("12 hours"),
+        tr("Day"),
+        tr("Week"),
+        tr("Month"),
+    };
 
     m_scScheduleIn->setNames(list);
     m_scScheduleIn->spinBox()->setSuffix(tr(" minute(s)"));
@@ -446,16 +468,18 @@ QLayout *ProgGeneralPage::setupActionsLayout()
 {
     // Allow
     m_rbAllow = new QRadioButton();
-    m_rbAllow->setIcon(IconCache::icon(":/icons/accept.png"));
+    m_rbAllow->setIcon(
+            IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ALLOW)));
     m_rbAllow->setChecked(true);
 
     // Block
     m_rbBlock = new QRadioButton();
-    m_rbBlock->setIcon(IconCache::icon(":/icons/deny.png"));
+    m_rbBlock->setIcon(
+            IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_BLOCK)));
 
     // Ask
     m_rbAsk = new QRadioButton();
-    m_rbAsk->setIcon(IconCache::icon(":/icons/help.png"));
+    m_rbAsk->setIcon(IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ASK)));
 
     // Kill Process
     m_rbKillProcess = new QRadioButton();
