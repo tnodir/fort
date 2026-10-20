@@ -20,11 +20,11 @@ namespace {
 inline constexpr std::array allowProcessSecondValues = { 10, 30, 60 * 1, 60 * 5, 60 * 10, 60 * 30,
     60 * 60 * 1, 60 * 60 * 3, 60 * 60 * 6 };
 
-// The icon only button's mnemonic and tool tip
+// The icon only button's name and tool tip
 void setIconButtonText(QAbstractButton *bt, const QString &text)
 {
     bt->setText(text);
-    bt->setToolTip(QString(text).remove(QLatin1Char('&')));
+    bt->setToolTip(text);
 }
 
 }
@@ -62,16 +62,14 @@ void AppPendingConnsWindow::setupController()
 
 void AppPendingConnsWindow::retranslateUi()
 {
-    setIconButtonText(m_btAllow, tr("&Allow once"));
-    setIconButtonText(m_btAllowProcess, tr("Allow &Process"));
+    setIconButtonText(m_btAllow, tr("Allow once"));
+    setIconButtonText(m_btAllowProcess, tr("Allow Process"));
     m_btAllowProcess->setToolTip(tr("Allow the process till its exit or for the time by the menu"));
     retranslateAllowProcessMenu();
-    setIconButtonText(m_btBlock, tr("&Block once"));
-    setIconButtonText(m_btContinue, tr("&Continue"));
-    m_btContinue->setToolTip(tr("Continue by the current rules: the still paused ones are blocked"));
-
-    // The button's text with the mnemonic
-    addFilterAction()->setIconText(tr("Add &Filter"));
+    setIconButtonText(m_btBlock, tr("Block once"));
+    setIconButtonText(m_btContinue, tr("Continue"));
+    m_btContinue->setToolTip(
+            tr("Continue by the current rules: the still paused ones are blocked"));
 }
 
 void AppPendingConnsWindow::retranslateAllowProcessMenu()
@@ -90,6 +88,7 @@ void AppPendingConnsWindow::setupUi()
     // Add Filter
     auto btAddFilter = ControlUtil::createIconToolButton(QString());
     btAddFilter->setDefaultAction(addFilterAction());
+    addFilterAction()->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_F));
 
     // After the hidden program's name
     hideAppName();
@@ -112,11 +111,17 @@ void AppPendingConnsWindow::setupDecideButtons()
 {
     m_btAllow = ControlUtil::createIconToolButton(
             ":/icons/accept.png", [&] { decideConns(PendingConnManager::ConnAllow); });
+    m_btAllow->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_A));
+
     setupAllowProcessButton();
+
     m_btBlock = ControlUtil::createIconToolButton(
             ":/icons/deny.png", [&] { decideConns(PendingConnManager::ConnBlock); });
+    m_btBlock->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_B));
+
     m_btContinue = ControlUtil::createIconToolButton(":/icons/arrow_refresh_small.png",
             [&] { decideConns(PendingConnManager::ConnContinue); });
+    m_btContinue->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_C));
 }
 
 void AppPendingConnsWindow::setupAllowProcessButton()
@@ -135,6 +140,7 @@ void AppPendingConnsWindow::setupAllowProcessButton()
             ":/icons/tick.png", [&] { allowProcesses(/*seconds=*/0); });
     m_btAllowProcess->setPopupMode(QToolButton::MenuButtonPopup);
     m_btAllowProcess->setMenu(menu);
+    m_btAllowProcess->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_P));
 }
 
 void AppPendingConnsWindow::setupConnsChanged()
