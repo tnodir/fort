@@ -792,6 +792,70 @@ TEST_F(ConfUtilTest, rulesTwoFilters)
     }
 }
 
+TEST_F(ConfUtilTest, ruleProtocols)
+{
+    static Rule g_rules[] = {
+        {
+                .blocked = true,
+                .ruleId = 1,
+                .ruleText = "proto(ICMP, 47, 50-51)",
+        },
+    };
+
+    class TestRules : public ConfRulesWalker
+    {
+    public:
+        bool walkRules(
+                WalkRulesArgs &wra, const std::function<walkRulesCallback> &func) const override
+        {
+            wra.maxRuleId = 1;
+
+            return walkRulesLoop(func);
+        }
+
+    private:
+        bool walkRulesLoop(const std::function<walkRulesCallback> &func) const
+        {
+            for (const auto &rule : g_rules) {
+                if (!func(rule))
+                    return false;
+            }
+
+            return true;
+        }
+    };
+
+    TestRules testRules;
+
+    ConfBuffer confBuf;
+
+    if (!confBuf.writeRules(testRules)) {
+        qCritical() << "Error:" << confBuf.errorMessage();
+        Q_UNREACHABLE();
+    }
+
+    // Check the buffer
+    const char *data = confBuf.data();
+
+    // Blocked: the list's and the range's protocols
+    for (const int proto : { 1, 47, 50, 51 }) {
+        FORT_CONF_META_CONN conn = {
+            .ip_proto = UCHAR(proto),
+        };
+
+        ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1)) << proto;
+    }
+
+    // Allowed: the other protocols
+    for (const int proto : { int(IpProto_TCP), int(IpProto_UDP), 49, 52 }) {
+        FORT_CONF_META_CONN conn = {
+            .ip_proto = UCHAR(proto),
+        };
+
+        ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1)) << proto;
+    }
+}
+
 TEST_F(ConfUtilTest, ruleExclusiveTerminating)
 {
     static Rule g_rules[] = {

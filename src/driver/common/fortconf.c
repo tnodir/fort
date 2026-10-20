@@ -28,82 +28,54 @@ static_assert(sizeof(FORT_CONF_GROUPS) == 3 * sizeof(UINT32) + FORT_CONF_GROUP_M
 static_assert(
         sizeof(FORT_CONF_CONN_ACTIONS) == sizeof(UINT16), "FORT_CONF_CONN_ACTIONS size mismatch");
 
-static BOOL fort_conf_proto_find(const UINT8 *proto_arr, UINT8 proto, UINT16 count, BOOL is_range)
+/* The value of the UINT8, UINT16 or UINT32 array by its size */
+inline static UINT32 fort_conf_value_at(const void *arr, int index, UCHAR value_size)
 {
-    if (count == 0)
-        return FALSE;
-
-    int low = 0;
-    int high = count - 1;
-
-    do {
-        const int mid = (low + high) / 2;
-        const UINT8 mid_proto = proto_arr[mid];
-
-        if (proto < mid_proto)
-            high = mid - 1;
-        else if (proto > mid_proto)
-            low = mid + 1;
-        else
-            return TRUE;
-    } while (low <= high);
-
-    if (!is_range)
-        return FALSE;
-
-    return high >= 0 && proto >= proto_arr[high] && proto <= proto_arr[count + high];
+    switch (value_size) {
+    case sizeof(UINT8):
+        return ((const UINT8 *) arr)[index];
+    case sizeof(UINT16):
+        return ((const UINT16 *) arr)[index];
+    default:
+        return ((const UINT32 *) arr)[index];
+    }
 }
 
-static BOOL fort_conf_port_find(const UINT16 *port_arr, UINT16 port, UINT16 count, BOOL is_range)
+/* The index of the sorted array's greatest value not greater than the value, -1 if none */
+static int fort_conf_value_floor_index(
+        const void *arr, UINT32 value, UINT32 count, UCHAR value_size)
 {
-    if (count == 0)
-        return FALSE;
-
     int low = 0;
     int high = count - 1;
 
-    do {
+    while (low <= high) {
         const int mid = (low + high) / 2;
-        const UINT16 mid_port = port_arr[mid];
+        const UINT32 mid_value = fort_conf_value_at(arr, mid, value_size);
 
-        if (port < mid_port)
+        if (value < mid_value)
             high = mid - 1;
-        else if (port > mid_port)
+        else if (value > mid_value)
             low = mid + 1;
         else
-            return TRUE;
-    } while (low <= high);
+            return mid;
+    }
 
-    if (!is_range)
-        return FALSE;
-
-    return high >= 0 && port >= port_arr[high] && port <= port_arr[count + high];
+    return high;
 }
 
-static BOOL fort_conf_ip4_find(const UINT32 *iparr, UINT32 ip, UINT32 count, BOOL is_range)
+static BOOL fort_conf_value_inarr(const void *arr, UINT32 value, UINT32 count, UCHAR value_size)
 {
-    if (count == 0)
-        return FALSE;
+    const int index = fort_conf_value_floor_index(arr, value, count, value_size);
 
-    int low = 0;
-    int high = count - 1;
+    return index >= 0 && fort_conf_value_at(arr, index, value_size) == value;
+}
 
-    do {
-        const int mid = (low + high) / 2;
-        const UINT32 mid_ip = iparr[mid];
+/* The ranges' "from" values are followed by their "to" values */
+static BOOL fort_conf_value_inrange(const void *range, UINT32 value, UINT32 count, UCHAR value_size)
+{
+    const int index = fort_conf_value_floor_index(range, value, count, value_size);
 
-        if (ip < mid_ip)
-            high = mid - 1;
-        else if (ip > mid_ip)
-            low = mid + 1;
-        else
-            return TRUE;
-    } while (low <= high);
-
-    if (!is_range)
-        return FALSE;
-
-    return high >= 0 && ip >= iparr[high] && ip <= iparr[count + high];
+    return index >= 0 && value <= fort_conf_value_at(range, count + index, value_size);
 }
 
 static BOOL fort_conf_ip6_find(
@@ -163,30 +135,30 @@ static int fort_conf_blob_index(const char *arr, const char *p, UINT32 blob_len,
 #define FORT_CONF_RULE_SET_LOOP_DEPTH_MAX (2 * FORT_CONF_RULE_SET_DEPTH_MAX)
 
 #define fort_conf_proto_inarr(proto_arr, proto, count)                                             \
-    fort_conf_proto_find(proto_arr, proto, count, /*is_range=*/FALSE)
+    fort_conf_value_inarr(proto_arr, proto, count, sizeof(UINT8))
 
 #define fort_conf_proto_inrange(proto_range, proto, count)                                         \
-    fort_conf_proto_find(proto_range, proto, count, /*is_range=*/TRUE)
+    fort_conf_value_inrange(proto_range, proto, count, sizeof(UINT8))
 
 #define fort_conf_proto_list_arr_ref(proto_list) (proto_list)->proto
 
 #define fort_conf_proto_list_pair_ref(proto_list) &(proto_list)->proto[(proto_list)->proto_n]
 
 #define fort_conf_port_inarr(port_arr, port, count)                                                \
-    fort_conf_port_find(port_arr, port, count, /*is_range=*/FALSE)
+    fort_conf_value_inarr(port_arr, port, count, sizeof(UINT16))
 
 #define fort_conf_port_inrange(port_range, port, count)                                            \
-    fort_conf_port_find(port_range, port, count, /*is_range=*/TRUE)
+    fort_conf_value_inrange(port_range, port, count, sizeof(UINT16))
 
 #define fort_conf_port_list_arr_ref(port_list) (port_list)->port
 
 #define fort_conf_port_list_pair_ref(port_list) &(port_list)->port[(port_list)->port_n]
 
 #define fort_conf_ip4_inarr(iparr, ip, count)                                                      \
-    fort_conf_ip4_find(iparr, ip, count, /*is_range=*/FALSE)
+    fort_conf_value_inarr(iparr, ip, count, sizeof(UINT32))
 
 #define fort_conf_ip4_inrange(iprange, ip, count)                                                  \
-    fort_conf_ip4_find(iprange, ip, count, /*is_range=*/TRUE)
+    fort_conf_value_inrange(iprange, ip, count, sizeof(UINT32))
 
 #define fort_conf_addr_list_ip4_ref(addr_list) (addr_list)->ip
 
