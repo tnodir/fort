@@ -42,6 +42,8 @@ protected:
 
     void applyAutoLearnSeconds() override { }
 
+    void setupDefaultPresetRules(bool /*isNewConf*/) override { }
+
 private:
     bool saving() const { return m_saving; }
     void setSaving(bool v) { m_saving = v; }

@@ -138,6 +138,7 @@ CREATE TABLE rule(
   notes TEXT,
   rule_text TEXT NOT NULL,
   rule_type INTEGER NOT NULL, -- app rules, global before/after apps, preset rules
+  preset_code TEXT, -- default Preset Rule's code
   period_id INTEGER,
   accept_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
   reject_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
@@ -145,6 +146,7 @@ CREATE TABLE rule(
 );
 
 CREATE INDEX rule_rule_type_name_idx ON rule(rule_type, lower(name));
+CREATE UNIQUE INDEX rule_preset_code_uk ON rule(preset_code);
 
 CREATE TABLE rule_filter(
   filter_id INTEGER PRIMARY KEY,

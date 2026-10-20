@@ -9,6 +9,7 @@
 #include <util/ioc/iocservice.h>
 
 #include "confmanagerbase.h"
+#include "presetrulesmanager.h"
 
 class ConfRuleManager : public ConfManagerBase, public ConfRulesWalker, public IocService
 {
@@ -31,6 +32,8 @@ public:
     int rulesCountByType(Rule::RuleType ruleType);
     bool checkRuleSetValid(quint16 ruleId, quint16 subRuleId, int extraDepth = 0);
 
+    bool syncPresetRules(PresetRulesManager::SyncMode mode);
+
     virtual bool addOrUpdateRule(Rule &rule);
     virtual bool deleteRule(quint16 ruleId);
     virtual bool updateRuleName(quint16 ruleId, const QString &ruleName);
@@ -50,6 +53,10 @@ signals:
     void trayMenuUpdated();
 
 private:
+    friend class PresetRulesManager;
+
+    bool loadRuleById(quint16 ruleId, Rule &rule) const;
+
     bool doAddOrUpdateRule(Rule &rule, bool &isNew, bool &isTrayMenuUpdated);
 
     void walkRulesMap(WalkRulesArgs &wra) const;

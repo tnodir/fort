@@ -86,6 +86,8 @@ protected:
     virtual void applyFilterOffSeconds();
     virtual void applyAutoLearnSeconds();
 
+    virtual void setupDefaultPresetRules(bool isNewConf);
+
 private:
     void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }
 

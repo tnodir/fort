@@ -30,6 +30,7 @@ SOURCES += \
     conf/firewallconf.cpp \
     conf/group.cpp \
     conf/inioptions.cpp \
+    conf/presetrulesmanager.cpp \
     conf/rule.cpp \
     conf/speedlimit.cpp \
     conf/timeperiod.cpp \
@@ -348,6 +349,7 @@ HEADERS += \
     conf/firewallconf.h \
     conf/group.h \
     conf/inioptions.h \
+    conf/presetrulesmanager.h \
     conf/rule.h \
     conf/speedlimit.h \
     conf/timeperiod.h \
@@ -685,6 +687,12 @@ OTHER_FILES += conf/zone/*.json
 
 RESOURCES += \
     conf/conf_zone.qrc
+
+# Rule
+OTHER_FILES += conf/rule/*.json
+
+RESOURCES += \
+    conf/conf_rule.qrc
 
 # Driver integration
 include(../driver/Driver.pri)

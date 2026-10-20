@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QRegularExpression>
 #include <QSignalSpy>
 
 #include <googletest.h>
@@ -9,6 +10,7 @@
 #include <conf/confrulemanager.h>
 #include <conf/firewallconf.h>
 #include <conf/group.h>
+#include <conf/presetrulesmanager.h>
 #include <conf/rule.h>
 #include <conf/speedlimit.h>
 #include <driver/drivercommon.h>
@@ -1965,4 +1967,47 @@ TEST_F(ConfUtilTest, ruleSetsNestedRuleId)
 
     // The deepest filtered rule
     ASSERT_EQ(conn.rule_id, 3);
+}
+
+TEST_F(ConfUtilTest, defaultPresetRules)
+{
+    Q_INIT_RESOURCE(conf_rule);
+
+    const auto presetsFile = PresetRulesManager::loadPresetsFile();
+
+    // Compared as a string: YYYYMMDDNN
+    const QRegularExpression versionRe("^\\d{10}$");
+
+    const auto version = presetsFile.value("version").toString();
+    ASSERT_TRUE(versionRe.match(version).hasMatch()) << qPrintable(version);
+
+    const auto presets = presetsFile.value("rules").toList();
+    ASSERT_FALSE(presets.isEmpty());
+
+    QStringList codes;
+    for (const auto &presetVar : presets) {
+        const auto preset = presetVar.toMap();
+        const auto code = preset.value("code").toString();
+        ASSERT_FALSE(code.isEmpty());
+        ASSERT_FALSE(codes.contains(code)) << qPrintable(code);
+        ASSERT_FALSE(preset.value("name").toString().isEmpty()) << qPrintable(code);
+
+        // The version adding it
+        const auto since = preset.value("since").toString();
+        ASSERT_TRUE(versionRe.match(since).hasMatch())
+                << qPrintable(code) << ": " << qPrintable(since);
+        ASSERT_LE(since, version) << qPrintable(code);
+
+        ConfBuffer confBuf;
+        ASSERT_TRUE(confBuf.validateRuleText(preset.value("text").toStringList().join('\n')))
+                << qPrintable(code) << ": " << qPrintable(confBuf.errorMessage());
+
+        // The presets are added before
+        const auto presetCodes = preset.value("presets").toStringList();
+        for (const auto &presetCode : presetCodes) {
+            ASSERT_TRUE(codes.contains(presetCode)) << qPrintable(presetCode);
+        }
+
+        codes.append(code);
+    }
 }

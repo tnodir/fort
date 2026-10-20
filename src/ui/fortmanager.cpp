@@ -731,6 +731,7 @@ void FortManager::setupResources()
 {
     Q_INIT_RESOURCE(appinfo_migrations);
     Q_INIT_RESOURCE(conf_migrations);
+    Q_INIT_RESOURCE(conf_rule);
     Q_INIT_RESOURCE(conf_zone);
     Q_INIT_RESOURCE(stat_migrations);
 

@@ -38,7 +38,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-inline constexpr int DATABASE_USER_VERSION = 69;
+inline constexpr int DATABASE_USER_VERSION = 70;
 
 const char *const sqlSelectAddressGroups = "SELECT addr_group_id, include_all, exclude_all,"
                                            "    include_zones, exclude_zones,"
@@ -835,6 +835,12 @@ void ConfManager::setupDefault(FirewallConf &conf) const
     conf.setupDefaultAddressGroups();
 }
 
+void ConfManager::setupDefaultPresetRules(bool isNewConf)
+{
+    confRuleManager()->syncPresetRules(
+            isNewConf ? PresetRulesManager::SyncRestore : PresetRulesManager::SyncUpdate);
+}
+
 bool ConfManager::checkCanMigrate(Settings *settings) const
 {
     QString viaVersion;
@@ -858,6 +864,8 @@ bool ConfManager::loadConf(FirewallConf &conf)
             setupDefault(conf);
             saveToDb(conf);
         }
+
+        setupDefaultPresetRules(isNewConf);
     }
 
     settings()->readConfIni(conf);

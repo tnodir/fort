@@ -48,6 +48,11 @@ const char *const sqlSelectRules = "SELECT" SELECT_RULE_FIELDS "  FROM rule t"
                                    "  LEFT JOIN rule_menu menu ON menu.rule_id = t.rule_id"
                                    "  ORDER BY t.rule_id;";
 
+const char *const sqlSelectRuleById = "SELECT" SELECT_RULE_FIELDS ", t.name, t.notes"
+                                      "  FROM rule t"
+                                      "  LEFT JOIN rule_menu menu ON menu.rule_id = t.rule_id"
+                                      "  WHERE t.rule_id = ?1;";
+
 const char *const sqlSelectRulesByName = "SELECT" SELECT_RULE_FIELDS "  FROM rule t"
                                          "  LEFT JOIN rule_menu menu ON menu.rule_id = t.rule_id"
                                          "  WHERE t.name = ?1"
@@ -322,6 +327,23 @@ bool ConfRuleManager::checkRuleSetValid(quint16 ruleId, quint16 subRuleId, int e
     return loopId == 0 && (depth + extraDepth) <= ConfUtil::ruleSetDepthMaxCount();
 }
 
+bool ConfRuleManager::syncPresetRules(PresetRulesManager::SyncMode mode)
+{
+    PresetRulesManager presetRules(this);
+
+    const bool ok = presetRules.sync(mode);
+
+    // Also the ones synced till an error
+    if (presetRules.changed()) {
+        updateDriverRules();
+
+        emit ruleAdded();
+        emit trayMenuUpdated(); // the renamed ones
+    }
+
+    return ok;
+}
+
 bool ConfRuleManager::addOrUpdateRule(Rule &rule)
 {
     bool isNew = false;
@@ -341,6 +363,21 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
     if (isTrayMenuUpdated) {
         emit trayMenuUpdated();
     }
+
+    return true;
+}
+
+bool ConfRuleManager::loadRuleById(quint16 ruleId, Rule &rule) const
+{
+    SqliteStmt stmt;
+    if (!DbQuery(sqliteDb()).sql(sqlSelectRuleById).vars({ ruleId }).prepareRow(stmt))
+        return false;
+
+    fillRule(rule, stmt);
+    rule.ruleName = stmt.columnText(20);
+    rule.notes = stmt.columnText(21);
+
+    loadRuleSet(rule);
 
     return true;
 }

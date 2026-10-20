@@ -2,6 +2,12 @@
 
 #include <common/fortconf.h>
 
+// The name, options, type and rule set
+bool Rule::isContentEqual(const Rule &o) const
+{
+    return isNameEqual(o) && isOptionsEqual(o) && ruleType == o.ruleType && ruleSet == o.ruleSet;
+}
+
 bool Rule::isNameEqual(const Rule &o) const
 {
     return ruleName == o.ruleName;

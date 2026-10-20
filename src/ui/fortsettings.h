@@ -36,6 +36,10 @@ public:
     QString passwordHash() const { return iniText(passwordHashKey()); }
     void setPasswordHash(const QString &v) { setIniValue(passwordHashKey(), v); }
 
+    // The version of the default Preset Rules synced last
+    QString rulePresetVersion() const { return iniText("base/rulePresetVersion"); }
+    void setRulePresetVersion(const QString &v) { setIniValue("base/rulePresetVersion", v); }
+
     bool isDefaultProfilePath() const { return m_isDefaultProfilePath; }
     bool noCache() const { return m_noCache; }
     bool noSplash() const { return m_noSplash; }

@@ -1,0 +1,456 @@
+{
+    "version": "2026102002",
+    "rules": [
+        {
+            "code": "localhost",
+            "since": "2026102002",
+            "name": "Localhost",
+            "notes": "The loopback connections: filtered only with the \"Filter Local Addresses\" option.",
+            "text": [
+                "area(LOCALHOST)"
+            ]
+        },
+        {
+            "code": "local-network",
+            "since": "2026102002",
+            "name": "Local Network",
+            "notes": "The Local Network's addresses (Options: IP Addresses): filtered only with the \"Filter Local Network\" option.",
+            "text": [
+                "area(LAN)"
+            ]
+        },
+        {
+            "code": "local-network-inbound",
+            "since": "2026102002",
+            "name": "Local Network: Inbound",
+            "notes": "The Local Network's addresses (Options: IP Addresses): filtered only with the \"Filter Local Network\" option.",
+            "text": [
+                "area(LAN):dir(IN)"
+            ]
+        },
+        {
+            "code": "local-network-outbound",
+            "since": "2026102002",
+            "name": "Local Network: Outbound",
+            "notes": "The Local Network's addresses (Options: IP Addresses): filtered only with the \"Filter Local Network\" option.",
+            "text": [
+                "area(LAN):dir(OUT)"
+            ]
+        },
+        {
+            "code": "multicast-broadcast",
+            "since": "2026102002",
+            "name": "Multicast, Broadcast",
+            "notes": "The outbound multicast and broadcast, e.g. of the LAN games' discovery. 255.255.255.255 is filtered only with the \"Filter Local Addresses\" option.",
+            "text": [
+                "(224.0.0.0/4, [ff00::]/8):dir(OUT)",
+                "255.255.255.255:proto(UDP):dir(OUT)"
+            ]
+        },
+        {
+            "code": "dns",
+            "since": "2026102002",
+            "name": "DNS",
+            "notes": "The names' resolving: usually by the \"DNS Client\" service (Dnscache), not by the programs. DNS over HTTPS is HTTPS.",
+            "text": [
+                "udp(53):dir(OUT)",
+                "tcp(53, 853):dir(OUT) # 853: DNS over TLS"
+            ]
+        },
+        {
+            "code": "dhcp",
+            "since": "2026102002",
+            "name": "DHCP",
+            "notes": "The network's configuration of IPv4 (67) and IPv6 (547) addresses: by the \"DHCP Client\" service.",
+            "text": [
+                "udp(67, 547)"
+            ]
+        },
+        {
+            "code": "time-sync-ntp",
+            "since": "2026102002",
+            "name": "Time Sync (NTP)",
+            "notes": "The clock's synchronization: by the \"Windows Time\" service.",
+            "text": [
+                "udp(123):dir(OUT)"
+            ]
+        },
+        {
+            "code": "icmp",
+            "since": "2026102002",
+            "name": "ICMP",
+            "notes": "Ping and the network's error messages.",
+            "text": [
+                "proto(ICMP, ICMPv6)"
+            ]
+        },
+        {
+            "code": "http-https",
+            "since": "2026102002",
+            "name": "HTTP, HTTPS",
+            "text": [
+                "tcp(80, 443):dir(OUT)"
+            ]
+        },
+        {
+            "code": "web",
+            "since": "2026102002",
+            "name": "Web",
+            "notes": "HTTP, HTTPS, the alternative HTTP port 8080 and HTTP/3 (QUIC).",
+            "text": [
+                "tcp(80, 443, 8080):dir(OUT)",
+                "udp(443):dir(OUT) # QUIC"
+            ]
+        },
+        {
+            "code": "stun-turn",
+            "since": "2026102002",
+            "name": "STUN, TURN",
+            "notes": "The NAT traversal and media relay of the video calls (WebRTC) and messengers.",
+            "text": [
+                "udp(3478):dir(OUT)",
+                "tcp(3478, 5349):dir(OUT)"
+            ]
+        },
+        {
+            "code": "email",
+            "since": "2026102002",
+            "name": "Email",
+            "notes": "SMTP (25, 465, 587), POP3 (110, 995), IMAP (143, 993).",
+            "text": [
+                "tcp(25, 110, 143, 465, 587, 993, 995):dir(OUT)"
+            ]
+        },
+        {
+            "code": "ftp",
+            "since": "2026102002",
+            "name": "FTP",
+            "notes": "The passive mode's data connections may use any port: all the outbound TCP connections to the ports 1024-65535 are allowed.",
+            "text": [
+                "tcp(21, 990):dir(OUT) # Commands",
+                "tcp(1024-65535):dir(OUT) # Passive mode's data",
+                "tcp(20):dir(IN) # Active mode's data",
+                "udp(69):dir(OUT) # TFTP"
+            ]
+        },
+        {
+            "code": "ssh-telnet",
+            "since": "2026102002",
+            "name": "SSH, Telnet",
+            "text": [
+                "tcp(22, 23, 992):dir(OUT)"
+            ]
+        },
+        {
+            "code": "remote-desktop",
+            "since": "2026102002",
+            "name": "Remote Desktop",
+            "notes": "The outbound Remote Desktop (RDP) and VNC connections.",
+            "text": [
+                "tcp(3389):dir(OUT) # RDP",
+                "udp(3389):dir(OUT) # RDP",
+                "tcp(5900):dir(OUT) # VNC"
+            ]
+        },
+        {
+            "code": "vpn",
+            "since": "2026102002",
+            "name": "VPN",
+            "notes": "OpenVPN, WireGuard, IPsec, L2TP, PPTP. IPsec, L2TP and PPTP connections are made by the system (the \"System\" process and services), WireGuard's by its service.",
+            "text": [
+                "udp(1194):dir(OUT) # OpenVPN",
+                "tcp(1194):dir(OUT) # OpenVPN",
+                "udp(51820):dir(OUT) # WireGuard",
+                "udp(500, 4500):dir(OUT) # IPsec: IKE, NAT-T",
+                "proto(ESP):dir(OUT) # IPsec",
+                "udp(1701):dir(OUT) # L2TP",
+                "tcp(1723):dir(OUT) # PPTP",
+                "proto(GRE):dir(OUT) # PPTP"
+            ]
+        },
+        {
+            "code": "ldap",
+            "since": "2026102002",
+            "name": "LDAP",
+            "notes": "LDAP, LDAPS and the Global Catalog (3268, 3269) of the domain controllers.",
+            "text": [
+                "udp(389):dir(OUT)",
+                "tcp(389, 636, 3268, 3269):dir(OUT)"
+            ]
+        },
+        {
+            "code": "kerberos",
+            "since": "2026102002",
+            "name": "Kerberos",
+            "notes": "The domain's authentication and the password change (464).",
+            "text": [
+                "udp(88, 464):dir(OUT)",
+                "tcp(88, 464):dir(OUT)"
+            ]
+        },
+        {
+            "code": "rpc",
+            "since": "2026102002",
+            "name": "RPC",
+            "notes": "The outbound RPC: the Endpoint Mapper (135) and the dynamic ports.",
+            "text": [
+                "tcp(135):dir(OUT) # Endpoint Mapper",
+                "tcp(49152-65535):dir(OUT) # Dynamic ports"
+            ]
+        },
+        {
+            "code": "file-printer-sharing",
+            "since": "2026102002",
+            "name": "File and Printer Sharing",
+            "notes": "SMB, NetBIOS and the network printers in the Local Network: filtered only with the \"Filter Local Network\" option.",
+            "text": [
+                "area(LAN):tcp(139, 445) # SMB",
+                "area(LAN):udp(137, 138) # NetBIOS",
+                "area(LAN):tcp(631, 9100):dir(OUT) # Printing: IPP, raw"
+            ]
+        },
+        {
+            "code": "network-discovery",
+            "since": "2026102002",
+            "name": "Network Discovery",
+            "notes": "The devices' and services' discovery in the Local Network: filtered only with the \"Filter Local Network\" option.",
+            "text": [
+                "area(LAN):udp(1900, 3702, 5353, 5355) # SSDP, WS-Discovery, mDNS, LLMNR",
+                "area(LAN):tcp(5357, 5358) # WSD"
+            ]
+        },
+        {
+            "code": "delivery-optimization",
+            "since": "2026102002",
+            "name": "Delivery Optimization",
+            "notes": "The peer-to-peer downloads of Windows Update: by the \"Delivery Optimization\" service.",
+            "text": [
+                "tcp(7680)"
+            ]
+        },
+        {
+            "code": "block-inbound-rdp",
+            "since": "2026102002",
+            "name": "Block Inbound RDP",
+            "notes": "The inbound Remote Desktop connections: from the Local Network only with the \"Filter Local Network\" option.",
+            "blocked": true,
+            "text": [
+                "local_port(3389):dir(IN)"
+            ]
+        },
+        {
+            "code": "block-local-network",
+            "since": "2026102002",
+            "name": "Block Local Network",
+            "notes": "Works only with the \"Filter Local Network\" option: else the Local Network is allowed before the rules.",
+            "blocked": true,
+            "text": [
+                "area(LAN):!area(LOCALHOST)"
+            ]
+        },
+        {
+            "code": "inbound-only",
+            "since": "2026102002",
+            "name": "Inbound Only",
+            "terminate": true,
+            "text": [
+                "dir(IN)"
+            ]
+        },
+        {
+            "code": "outbound-only",
+            "since": "2026102002",
+            "name": "Outbound Only",
+            "terminate": true,
+            "text": [
+                "dir(OUT)"
+            ]
+        },
+        {
+            "code": "web-browser",
+            "since": "2026102002",
+            "name": "Web Browser",
+            "notes": "The video calls' direct media streams (WebRTC) use random UDP ports: they work via a TURN relay only.",
+            "terminate": true,
+            "presets": [
+                "localhost",
+                "web",
+                "stun-turn"
+            ]
+        },
+        {
+            "code": "email-client",
+            "since": "2026102002",
+            "name": "Email Client",
+            "terminate": true,
+            "presets": [
+                "localhost",
+                "email",
+                "web"
+            ]
+        },
+        {
+            "code": "email-only",
+            "since": "2026102002",
+            "name": "Email Only",
+            "terminate": true,
+            "presets": [
+                "localhost",
+                "email"
+            ]
+        },
+        {
+            "code": "ftp-client",
+            "since": "2026102002",
+            "name": "FTP Client",
+            "notes": "The passive mode's data connections may use any port: all the outbound TCP connections to the ports 1024-65535 are allowed.",
+            "terminate": true,
+            "presets": [
+                "localhost",
+                "ftp"
+            ]
+        },
+        {
+            "code": "ssh-telnet-client",
+            "since": "2026102002",
+            "name": "SSH, Telnet Client",
+            "terminate": true,
+            "presets": [
+                "localhost",
+                "ssh-telnet"
+            ]
+        },
+        {
+            "code": "remote-desktop-client",
+            "since": "2026102002",
+            "name": "Remote Desktop Client",
+            "terminate": true,
+            "presets": [
+                "localhost",
+                "remote-desktop"
+            ]
+        },
+        {
+            "code": "vpn-client",
+            "since": "2026102002",
+            "name": "VPN Client",
+            "notes": "A VPN program: its tunnels and HTTP, HTTPS (e.g. the login).",
+            "terminate": true,
+            "presets": [
+                "localhost",
+                "vpn",
+                "http-https"
+            ]
+        },
+        {
+            "code": "this-pc-only",
+            "since": "2026102002",
+            "name": "This PC Only",
+            "terminate": true,
+            "presets": [
+                "localhost"
+            ]
+        },
+        {
+            "code": "local-network-only",
+            "since": "2026102002",
+            "name": "Local Network Only",
+            "terminate": true,
+            "presets": [
+                "localhost",
+                "local-network"
+            ]
+        },
+        {
+            "code": "local-network-inbound-only",
+            "since": "2026102002",
+            "name": "Local Network: Inbound Only",
+            "notes": "Without the \"Filter Local Network\" option the Local Network is allowed in both directions.",
+            "terminate": true,
+            "presets": [
+                "localhost",
+                "local-network-inbound"
+            ]
+        },
+        {
+            "code": "local-network-outbound-only",
+            "since": "2026102002",
+            "name": "Local Network: Outbound Only",
+            "notes": "Without the \"Filter Local Network\" option the Local Network is allowed in both directions.",
+            "terminate": true,
+            "presets": [
+                "localhost",
+                "local-network-outbound"
+            ]
+        },
+        {
+            "code": "lan-game",
+            "since": "2026102002",
+            "name": "LAN Game",
+            "terminate": true,
+            "presets": [
+                "localhost",
+                "local-network",
+                "multicast-broadcast"
+            ]
+        },
+        {
+            "code": "domain-member",
+            "since": "2026102002",
+            "name": "Domain Member",
+            "notes": "The system processes of a domain member: \"lsass.exe\", the services (\"Netlogon\", \"Group Policy Client\") and \"System\" (SMB).",
+            "terminate": true,
+            "presets": [
+                "localhost",
+                "dns",
+                "kerberos",
+                "ldap",
+                "rpc",
+                "file-printer-sharing",
+                "time-sync-ntp"
+            ]
+        },
+        {
+            "code": "system-service",
+            "since": "2026102002",
+            "name": "System Service",
+            "terminate": true,
+            "presets": [
+                "localhost",
+                "dns",
+                "dhcp",
+                "time-sync-ntp",
+                "local-network",
+                "multicast-broadcast"
+            ]
+        },
+        {
+            "code": "system-service-with-updates",
+            "since": "2026102002",
+            "name": "System Service with Updates",
+            "terminate": true,
+            "presets": [
+                "localhost",
+                "dns",
+                "dhcp",
+                "time-sync-ntp",
+                "local-network",
+                "multicast-broadcast",
+                "http-https",
+                "delivery-optimization"
+            ]
+        },
+        {
+            "code": "local-system",
+            "since": "2026102002",
+            "name": "Local System",
+            "terminate": true,
+            "presets": [
+                "localhost",
+                "local-network",
+                "multicast-broadcast",
+                "icmp"
+            ]
+        }
+    ]
+}
