@@ -13,6 +13,10 @@ public:
     bool dropped() const { return m_dropped; }
     void setDropped(bool v) { m_dropped = v; }
 
+    // By the Terminating Rule
+    bool terminated() const { return m_terminated; }
+    void setTerminated(bool v) { m_terminated = v; }
+
     bool isIPv6() const { return m_isIPv6; }
     void setIsIPv6(bool isIPv6) { m_isIPv6 = isIPv6; }
 
@@ -84,6 +88,7 @@ public:
 
 private:
     bool m_dropped : 1 = false;
+    bool m_terminated : 1 = false;
     bool m_isIPv6 : 1 = false;
     bool m_inbound : 1 = false;
     bool m_loopback : 1 = false;

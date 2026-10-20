@@ -44,6 +44,7 @@ public:
 
     static QString reasonText(FortConnReason reason);
     static QString reasonDetailsText(const ConnRow &connRow);
+    static QString terminatedText();
     static QString inheritedText(const ConnRow &connRow);
 
     static QString directionText(bool inbound);

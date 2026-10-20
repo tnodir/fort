@@ -162,6 +162,7 @@ void LogConnJob::bindConn(
     stmt->bindBool(ConnBlocked, entry.blocked());
     stmt->bindBool(ConnDropped, entry.dropped());
     stmt->bindBool(ConnAlerted, entry.alerted());
+    stmt->bindBool(ConnTerminated, entry.terminated());
     stmt->bindBool(ConnInherited, entry.inherited());
     stmt->bindBool(ConnInbound, entry.inbound());
     stmt->bindInt(ConnIpProto, entry.ipProto());

@@ -29,6 +29,7 @@ protected:
         ConnBlocked,
         ConnDropped,
         ConnAlerted,
+        ConnTerminated,
         ConnInherited,
         ConnInbound,
         ConnIpProto,

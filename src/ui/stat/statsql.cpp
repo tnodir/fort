@@ -161,17 +161,17 @@ const char *const StatSql::sqlDeleteAllTraffic = "DELETE FROM traffic_app;"
 /* A variant appends its columns and values */
 #define INSERT_CONN_COLUMNS                                                                        \
     "INSERT INTO conn(app_id, conn_time, process_id, reason, blocked, dropped, alerted,"           \
-    "    inherited, inbound, ip_proto, local_port, remote_port, local_ip, remote_ip,"              \
+    "    terminated, inherited, inbound, ip_proto, local_port, remote_port, local_ip, remote_ip,"  \
     "    local_ip6, remote_ip6, zone_id, rule_id, loopback, inherit_app_id"
 
 #define INSERT_CONN_VALUES                                                                         \
     "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17,"         \
-    "    ?18, ?19, ?20"
+    "    ?18, ?19, ?20, ?21"
 
 const char *const StatSql::sqlInsertConn = INSERT_CONN_COLUMNS ")" INSERT_CONN_VALUES ");";
 
 const char *const StatSql::sqlInsertPendingConn =
-        INSERT_CONN_COLUMNS ", flow_id, app_asked)" INSERT_CONN_VALUES ", ?21, ?22);";
+        INSERT_CONN_COLUMNS ", flow_id, app_asked)" INSERT_CONN_VALUES ", ?22, ?23);";
 
 const char *const StatSql::sqlSelectConnFlow =
         "SELECT flow_id, inbound FROM conn WHERE conn_id = ?1 AND conn_time > ?2;";

@@ -88,7 +88,7 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
 
     const int entrySize = DriverCommon::logConnHeaderSize() + pathSize * sizeof(wchar_t);
 
-    const int testCount = 32; // all the flags' combinations
+    const int testCount = 64; // all the flags' combinations
 
     LogBuffer buf(entrySize * testCount);
 
@@ -102,7 +102,8 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
         entry.setBlocked((v & 2) != 0);
         entry.setDropped((v & 4) != 0);
         entry.setAlerted((v & 8) != 0);
-        entry.setAppAsked((v & 16) != 0);
+        entry.setTerminated((v & 16) != 0);
+        entry.setAppAsked((v & 32) != 0);
         entry.setReason(++v);
         entry.setIpProto(++v);
         entry.setLocalPort(++v);
@@ -127,7 +128,8 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
         ASSERT_EQ(entry.blocked(), (v & 2) != 0);
         ASSERT_EQ(entry.dropped(), (v & 4) != 0);
         ASSERT_EQ(entry.alerted(), (v & 8) != 0);
-        ASSERT_EQ(entry.appAsked(), (v & 16) != 0);
+        ASSERT_EQ(entry.terminated(), (v & 16) != 0);
+        ASSERT_EQ(entry.appAsked(), (v & 32) != 0);
         ASSERT_EQ(entry.reason(), ++v);
         ASSERT_EQ(entry.ipProto(), ++v);
         ASSERT_EQ(entry.localPort(), ++v);

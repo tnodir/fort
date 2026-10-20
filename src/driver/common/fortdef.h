@@ -20,7 +20,8 @@ enum FortLogConnFlag {
     FORT_LOG_CONN_LOOPBACK = (1 << 2),
     FORT_LOG_CONN_INHERITED = (1 << 3),
     FORT_LOG_CONN_ALERTED = (1 << 4),
-    FORT_LOG_CONN_APP_ASKED = (1 << 5),
+    FORT_LOG_CONN_TERMINATED = (1 << 5),
+    FORT_LOG_CONN_APP_ASKED = (1 << 6),
 };
 
 enum FortConnReason {

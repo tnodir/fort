@@ -172,7 +172,8 @@ QVariantList ConfManagerRpc::simConnToVarList(const FilterSimConn &simConn)
         bool(conn.is_loopback), conn.ip_proto, conn.local_port, conn.remote_port,
         NetUtil::ip6ToArrayView(conn.local_ip.v6).toByteArray(),
         NetUtil::ip6ToArrayView(conn.remote_ip.v6).toByteArray(), conn.reason, conn.rule_id,
-        conn.act.zone_id, conn.app.data.app_id, bool(conn.app.data.flags.found), simConn.appPath };
+        bool(conn.act.terminated), conn.act.zone_id, conn.app.data.app_id,
+        bool(conn.app.data.flags.found), simConn.appPath };
 }
 
 FilterSimConn ConfManagerRpc::varListToSimConn(const QVariantList &v)
@@ -192,11 +193,12 @@ FilterSimConn ConfManagerRpc::varListToSimConn(const QVariantList &v)
     conn.remote_ip.v6 = NetUtil::arrayViewToIp6(v.value(9).toByteArray());
     conn.reason = v.value(10).toUInt();
     conn.rule_id = v.value(11).toUInt();
-    conn.act.zone_id = v.value(12).toUInt();
-    conn.app.data.app_id = v.value(13).toUInt();
-    conn.app.data.flags.found = v.value(14).toBool();
+    conn.act.terminated = v.value(12).toBool();
+    conn.act.zone_id = v.value(13).toUInt();
+    conn.app.data.app_id = v.value(14).toUInt();
+    conn.app.data.flags.found = v.value(15).toBool();
 
-    simConn.appPath = v.value(15).toString();
+    simConn.appPath = v.value(16).toString();
 
     return simConn;
 }

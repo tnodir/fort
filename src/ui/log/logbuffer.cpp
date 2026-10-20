@@ -153,6 +153,7 @@ void LogBuffer::writeEntryConn(const LogEntryConn *logEntry)
             .blocked = logEntry->blocked(),
             .drop_blocked = logEntry->dropped(),
             .conn_alert = logEntry->alerted(),
+            .terminated = logEntry->terminated(),
             .zone_id = logEntry->zoneId(),
         },
         .reason = logEntry->reason(),
@@ -194,6 +195,7 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
     logEntry->setBlocked(conn.act.blocked);
     logEntry->setDropped(conn.act.drop_blocked);
     logEntry->setAlerted(conn.act.conn_alert);
+    logEntry->setTerminated(conn.act.terminated);
     logEntry->setIsIPv6(conn.isIPv6);
     logEntry->setInbound(conn.inbound);
     logEntry->setLoopback(conn.is_loopback);

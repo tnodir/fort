@@ -460,6 +460,7 @@ typedef struct fort_conf_conn_actions
     UCHAR conn_log : 1;
     UCHAR conn_nolog : 1;
     UCHAR conn_alert : 1;
+    UCHAR terminated : 1; /* by the Terminating Rule */
 
     UCHAR zone_id;
 } FORT_CONF_CONN_ACTIONS;

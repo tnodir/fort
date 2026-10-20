@@ -1034,6 +1034,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_terminate(
         conn->act.drop_blocked = (UCHAR) rule->term_drop;
         conn->act.ask = (UCHAR) rule->term_ask;
         conn->act.conn_alert = (UCHAR) rule->term_alert;
+        conn->act.terminated = TRUE;
         return TRUE;
     }
 

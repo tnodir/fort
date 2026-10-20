@@ -14,6 +14,7 @@ public:
     bool blocked : 1 = false;
     bool dropped : 1 = false;
     bool alerted : 1 = false;
+    bool terminated : 1 = false; // by the Terminating Rule
     bool inherited : 1 = false;
     bool inbound : 1 = false;
     bool loopback : 1 = false;

@@ -18,6 +18,7 @@ CREATE TABLE conn(
   blocked BOOLEAN NOT NULL,
   dropped BOOLEAN NOT NULL DEFAULT 0,
   alerted BOOLEAN NOT NULL DEFAULT 0,
+  terminated BOOLEAN NOT NULL DEFAULT 0,
   inherited BOOLEAN NOT NULL,
   inherit_app_id INTEGER,
   inbound BOOLEAN NOT NULL,

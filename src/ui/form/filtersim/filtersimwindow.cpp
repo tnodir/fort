@@ -146,6 +146,15 @@ QString resultText(DriverCommon::ConnFilterResult result)
     return texts.value(result);
 }
 
+// E.g. "Rule (Terminating Rule)"
+QString reasonText(const FORT_CONF_META_CONN &conn)
+{
+    const QString reason = ConnListModel::reasonText(FortConnReason(conn.reason));
+
+    return StringUtil::textWithDetails(
+            reason, conn.act.terminated ? ConnListModel::terminatedText() : QString());
+}
+
 QString ruleText(quint16 ruleId)
 {
     return (ruleId != 0) ? confRuleManager()->ruleNameById(ruleId) : QString();
@@ -553,7 +562,7 @@ void FilterSimWindow::updateResult()
 
     m_iconAction->setPixmap(IconCache::pixmap(resultIconPath(m_simConn.result), resultIconSize));
     m_resultAction->setText(resultText(m_simConn.result));
-    m_resultReason->setText(ConnListModel::reasonText(FortConnReason(conn.reason)));
+    m_resultReason->setText(reasonText(conn));
     m_resultRule->setText(ruleText(conn.rule_id));
     m_resultZone->setText(zoneText(conn.act.zone_id));
     m_resultProgram->setText(appText(conn.app.data));

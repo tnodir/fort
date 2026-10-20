@@ -849,6 +849,7 @@ TEST_F(ConfUtilTest, ruleExclusiveTerminating)
         };
 
         ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
+        ASSERT_FALSE(conn.act.terminated);
     }
 
     // Blocked IP
@@ -859,6 +860,7 @@ TEST_F(ConfUtilTest, ruleExclusiveTerminating)
         };
 
         ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
+        ASSERT_TRUE(conn.act.terminated);
     }
 }
 

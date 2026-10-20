@@ -66,6 +66,7 @@ inline static UINT32 fort_log_conn_flags(PCFORT_CONF_META_CONN conn)
             | (conn->is_loopback ? FORT_LOG_CONN_LOOPBACK : 0)
             | (conn->inherited ? FORT_LOG_CONN_INHERITED : 0)
             | (conn->act.conn_alert ? FORT_LOG_CONN_ALERTED : 0)
+            | (conn->act.terminated ? FORT_LOG_CONN_TERMINATED : 0)
             | (conn->app_asked ? FORT_LOG_CONN_APP_ASKED : 0);
 }
 
@@ -121,6 +122,7 @@ FORT_API void fort_log_conn_header_read(
     conn->is_loopback = (v & FORT_LOG_CONN_LOOPBACK) != 0;
     conn->inherited = (v & FORT_LOG_CONN_INHERITED) != 0;
     conn->act.conn_alert = (v & FORT_LOG_CONN_ALERTED) != 0;
+    conn->act.terminated = (v & FORT_LOG_CONN_TERMINATED) != 0;
     conn->app_asked = (v & FORT_LOG_CONN_APP_ASKED) != 0;
 
     v = *up++;

@@ -383,29 +383,30 @@ void ConnListModel::fillConnRow(ConnRow &connRow, const SqliteStmt &stmt)
     connRow.blocked = stmt.columnBool(5);
     connRow.dropped = stmt.columnBool(6);
     connRow.alerted = stmt.columnBool(7);
-    connRow.inherited = stmt.columnBool(8);
-    connRow.inbound = stmt.columnBool(9);
-    connRow.ipProto = stmt.columnInt(10);
-    connRow.localPort = stmt.columnInt(11);
-    connRow.remotePort = stmt.columnInt(12);
+    connRow.terminated = stmt.columnBool(8);
+    connRow.inherited = stmt.columnBool(9);
+    connRow.inbound = stmt.columnBool(10);
+    connRow.ipProto = stmt.columnInt(11);
+    connRow.localPort = stmt.columnInt(12);
+    connRow.remotePort = stmt.columnInt(13);
 
-    connRow.isIPv6 = stmt.columnIsNull(13);
+    connRow.isIPv6 = stmt.columnIsNull(14);
     if (!connRow.isIPv6) {
-        connRow.localIp.v4 = stmt.columnInt(13);
-        connRow.remoteIp.v4 = stmt.columnInt(14);
+        connRow.localIp.v4 = stmt.columnInt(14);
+        connRow.remoteIp.v4 = stmt.columnInt(15);
     } else {
-        connRow.localIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(15, /*isView=*/true));
-        connRow.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(16, /*isView=*/true));
+        connRow.localIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(16, /*isView=*/true));
+        connRow.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(17, /*isView=*/true));
     }
 
-    connRow.zoneId = stmt.columnInt(17);
-    connRow.ruleId = stmt.columnInt(18);
+    connRow.zoneId = stmt.columnInt(18);
+    connRow.ruleId = stmt.columnInt(19);
 
-    connRow.loopback = stmt.columnBool(19);
+    connRow.loopback = stmt.columnBool(20);
 
-    connRow.confAppId = stmt.columnInt64(20);
-    connRow.appPath = stmt.columnText(21);
-    connRow.inheritAppPath = stmt.columnText(22);
+    connRow.confAppId = stmt.columnInt64(21);
+    connRow.appPath = stmt.columnText(22);
+    connRow.inheritAppPath = stmt.columnText(23);
 }
 
 StatConnManager *ConnListModel::connManager() const
@@ -453,6 +454,7 @@ QString ConnListModel::sqlBase() const
            "    t.blocked,"
            "    t.dropped,"
            "    t.alerted,"
+           "    t.terminated,"
            "    t.inherited,"
            "    t.inbound,"
            "    t.ip_proto,"
@@ -578,6 +580,10 @@ QString ConnListModel::reasonDetailsText(const ConnRow &connRow)
         list << tr("Rule: %1").arg(ruleName);
     }
 
+    if (connRow.terminated) {
+        list << terminatedText();
+    }
+
     if (connRow.zoneId != 0) {
         const QString zoneName = confZoneManager()->zoneNameById(connRow.zoneId);
 
@@ -593,6 +599,11 @@ QString ConnListModel::reasonDetailsText(const ConnRow &connRow)
     }
 
     return list.join('\n');
+}
+
+QString ConnListModel::terminatedText()
+{
+    return tr("Terminating Rule");
 }
 
 QString ConnListModel::inheritedText(const ConnRow &connRow)
