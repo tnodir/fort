@@ -177,7 +177,7 @@ QHash<QString, qint16> protocolNameNumbersMap = {
 QHash<quint16, QString> serviceNumberNamesMap = {
     { 21, "FTP" },
     { 22, "SSH" },
-    { 35, "SMTP" },
+    { 25, "SMTP" },
     { 53, "DNS" },
     { 80, "HTTP" },
     { 110, "POP3" },
@@ -199,7 +199,7 @@ QHash<QString, quint16> serviceNameNumbersMap = {
     { "FTP", 21 }, // File Transfer Protocol
     { "SSH", 22 }, // Secure Shell
     { "TELNET", 23 }, // Telnet Protocol
-    { "SMTP", 35 }, // Simple Message Transfer Protocol
+    { "SMTP", 25 }, // Simple Mail Transfer Protocol
     { "TIME", 37 }, // Timeserver
     { "RAP", 38 }, // Route Access Protocol
     { "RIP", 39 }, // Resource Location Protocol

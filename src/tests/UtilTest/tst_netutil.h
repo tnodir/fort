@@ -202,10 +202,12 @@ TEST_F(NetUtilTest, portRanges)
     // TCP Prots
     portRange.setProtoTcp(true);
 
-    ASSERT_TRUE(portRange.fromText("http\n"
+    ASSERT_TRUE(portRange.fromText("smtp\n"
+                                   "http\n"
                                    "https\n"));
     ASSERT_EQ(portRange.toText(),
-            QString("80\n"
+            QString("25\n"
+                    "80\n"
                     "443\n"));
 
     ASSERT_TRUE(portRange.fromText("ISO_TSAP-SSL"));
