@@ -59,10 +59,15 @@ private:
 
     void addNewRule();
     void editSelectedRule();
+    void duplicateSelectedRule();
 
     void openRuleEditForm(const RuleRow &ruleRow);
+    RuleEditDialog *ruleEditForm();
 
     void deleteSelectedRule();
+
+    // nullptr: no rule is selected
+    const RuleRow *selectedRuleRow() const;
 
     QModelIndex ruleListCurrentIndex() const;
 
@@ -76,6 +81,7 @@ private:
     QPushButton *m_btEdit = nullptr;
     QAction *m_actAddRule = nullptr;
     QAction *m_actEditRule = nullptr;
+    QAction *m_actDuplicateRule = nullptr;
     QAction *m_actRemoveRule = nullptr;
     QLineEdit *m_editSearch = nullptr;
     QToolButton *m_btOptions = nullptr;

@@ -55,7 +55,7 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
 {
     m_ruleRow = ruleRow;
 
-    initializeRuleSet();
+    initializeRuleSet(ruleRow.ruleId);
 
     retranslateUi();
 
@@ -100,11 +100,28 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
     initializeFocus();
 }
 
-void RuleEditDialog::initializeRuleSet()
+void RuleEditDialog::initializeDuplicate(const RuleRow &ruleRow)
 {
-    QStringList ruleSetNames;
+    RuleRow newRuleRow = ruleRow;
+    newRuleRow.ruleId = 0; // a new rule
+    newRuleRow.ruleName += " (Copy)";
 
-    confRuleManager()->loadRuleSet(m_ruleRow, ruleSetNames);
+    initialize(newRuleRow);
+
+    initializeRuleSet(ruleRow.ruleId);
+    ruleSetModel()->setEdited(true); // saved with the new rule
+}
+
+// The rule set of the rule by its id
+void RuleEditDialog::initializeRuleSet(quint16 ruleId)
+{
+    Rule rule;
+    rule.ruleId = ruleId;
+
+    QStringList ruleSetNames;
+    confRuleManager()->loadRuleSet(rule, ruleSetNames);
+
+    m_ruleRow.ruleSet = rule.ruleSet;
 
     ruleSetModel()->initialize(m_ruleRow, ruleSetNames);
 }

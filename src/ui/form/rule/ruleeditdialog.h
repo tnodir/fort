@@ -37,8 +37,11 @@ public:
 
     void initialize(const RuleRow &ruleRow);
 
+    // A new rule as the rule's copy
+    void initializeDuplicate(const RuleRow &ruleRow);
+
 private:
-    void initializeRuleSet();
+    void initializeRuleSet(quint16 ruleId);
     void initializeFocus();
 
     void setupController();

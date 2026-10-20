@@ -95,6 +95,7 @@ void RulesWindow::retranslateUi()
     m_btEdit->setText(tr("Edit"));
     m_actAddRule->setText(tr("Add"));
     m_actEditRule->setText(tr("Edit"));
+    m_actDuplicateRule->setText(tr("Duplicate"));
     m_actRemoveRule->setText(tr("Remove"));
     m_editSearch->setPlaceholderText(tr("Search") + " /");
 
@@ -157,11 +158,14 @@ QLayout *RulesWindow::setupHeader()
     m_actEditRule = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
     m_actEditRule->setShortcut(Qt::Key_Enter);
 
+    m_actDuplicateRule = editMenu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
+
     m_actRemoveRule = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveRule->setShortcut(Qt::Key_Delete);
 
     connect(m_actAddRule, &QAction::triggered, this, &RulesWindow::addNewRule);
     connect(m_actEditRule, &QAction::triggered, this, &RulesWindow::editSelectedRule);
+    connect(m_actDuplicateRule, &QAction::triggered, this, &RulesWindow::duplicateSelectedRule);
     connect(m_actRemoveRule, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
                 [&] { deleteSelectedRule(); }, tr("Are you sure to remove selected rule?"));
@@ -258,6 +262,7 @@ void RulesWindow::setupTreeRulesChanged()
         const auto ruleIndex = ruleListCurrentIndex();
         const bool isRuleSelected = RuleListModel::isIndexRule(ruleIndex);
         m_actEditRule->setEnabled(isRuleSelected);
+        m_actDuplicateRule->setEnabled(isRuleSelected);
         m_actRemoveRule->setEnabled(isRuleSelected);
     };
 
@@ -345,37 +350,58 @@ void RulesWindow::addNewRule()
 
 void RulesWindow::editSelectedRule()
 {
-    const auto ruleIndex = ruleListCurrentIndex();
-    if (RuleListModel::isIndexRoot(ruleIndex))
+    const RuleRow *ruleRow = selectedRuleRow();
+    if (!ruleRow)
         return;
 
-    const auto &ruleRow = ruleListModel()->ruleRowAt(ruleIndex);
+    openRuleEditForm(*ruleRow);
+}
 
-    openRuleEditForm(ruleRow);
+void RulesWindow::duplicateSelectedRule()
+{
+    const RuleRow *ruleRow = selectedRuleRow();
+    if (!ruleRow)
+        return;
+
+    ruleEditForm()->initializeDuplicate(*ruleRow);
+
+    DialogUtil::showDialog(m_formRuleEdit);
 }
 
 void RulesWindow::openRuleEditForm(const RuleRow &ruleRow)
+{
+    ruleEditForm()->initialize(ruleRow);
+
+    DialogUtil::showDialog(m_formRuleEdit);
+}
+
+RuleEditDialog *RulesWindow::ruleEditForm()
 {
     if (!m_formRuleEdit) {
         m_formRuleEdit = new RuleEditDialog(ctrl(), this);
     }
 
-    m_formRuleEdit->initialize(ruleRow);
-
-    DialogUtil::showDialog(m_formRuleEdit);
+    return m_formRuleEdit;
 }
 
 void RulesWindow::deleteSelectedRule()
 {
-    const auto ruleIndex = ruleListCurrentIndex();
-    if (RuleListModel::isIndexRoot(ruleIndex))
+    const RuleRow *ruleRow = selectedRuleRow();
+    if (!ruleRow)
         return;
+
+    ctrl()->deleteRule(ruleRow->ruleId);
+}
+
+const RuleRow *RulesWindow::selectedRuleRow() const
+{
+    const auto ruleIndex = ruleListCurrentIndex();
+    if (!RuleListModel::isIndexRule(ruleIndex))
+        return nullptr;
 
     const auto &ruleRow = ruleListModel()->ruleRowAt(ruleIndex);
-    if (ruleRow.isNull())
-        return;
 
-    ctrl()->deleteRule(ruleRow.ruleId);
+    return ruleRow.isNull() ? nullptr : &ruleRow;
 }
 
 QModelIndex RulesWindow::ruleListCurrentIndex() const
