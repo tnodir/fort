@@ -16,14 +16,15 @@ class RulesWindow : public FormWindow
     Q_OBJECT
 
 public:
-    explicit RulesWindow(Rule::RuleType ruleType = Rule::RuleNone, QWidget *parent = nullptr,
-            Qt::WindowFlags f = {});
+    explicit RulesWindow(
+            quint8 selectRuleTypes = 0, QWidget *parent = nullptr, Qt::WindowFlags f = {});
 
     WindowCode windowCode() const override { return WindowRules; }
     QString windowOverlayIconPath() const override { return ":/icons/script.png"; }
 
-    Rule::RuleType ruleType() const { return m_ruleType; }
-    bool isOpenSelectRule() const { return ruleType() != Rule::RuleNone; }
+    // Bits of Rule::ruleTypeBit()
+    quint8 selectRuleTypes() const { return m_selectRuleTypes; }
+    bool isOpenSelectRule() const { return selectRuleTypes() != 0; }
 
     RulesController *ctrl() const { return m_ctrl; }
     RuleListModel *ruleListModel() const;
@@ -31,8 +32,8 @@ public:
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
 
-    static RulesWindow *showRulesDialog(Rule::RuleType ruleType, QWidget *parent);
-    static RuleEditDialog *showRuleEditDialog(int ruleId, Rule::RuleType ruleType, QWidget *parent);
+    static RulesWindow *showRulesDialog(quint8 selectRuleTypes, QWidget *parent);
+    static RuleEditDialog *showRuleEditDialog(int ruleId, QWidget *parent);
 
 signals:
     void ruleSelected(const RuleRow &ruleRow);
@@ -53,6 +54,11 @@ private:
     QLayout *setupButtons();
 
     void expandTreeRules();
+    bool isRuleTypeShown(Rule::RuleType ruleType) const;
+    bool isRuleTypeExpanded(Rule::RuleType ruleType) const;
+
+    bool isSelectRuleType(Rule::RuleType ruleType) const;
+    Rule::RuleType newRuleType() const;
 
     bool emitRuleSelected();
     bool emitRuleSelected(const QModelIndex &index);
@@ -73,8 +79,7 @@ private:
 
 private:
     quint8 m_expandedRuleTypes = 0xFF;
-
-    Rule::RuleType m_ruleType = Rule::RuleNone;
+    quint8 m_selectRuleTypes = 0;
 
     RulesController *m_ctrl = nullptr;
 

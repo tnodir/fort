@@ -357,16 +357,12 @@ const RuleRow &RuleListModel::ruleRowAt(const QModelIndex &index) const
     return m_ruleRow;
 }
 
-RuleRow RuleListModel::ruleRowById(int ruleId, Rule::RuleType ruleType) const
+RuleRow RuleListModel::ruleRowById(int ruleId) const
 {
-    setSqlRuleType(ruleType);
-
-    QVariantHash vars;
-    fillQueryVars(vars);
-    vars.insert(":rule_id", ruleId);
+    const QVariantHash vars = { { ":rule_id", ruleId } };
 
     RuleRow ruleRow;
-    updateRuleRow(sqlBase() + " AND t.rule_id = :rule_id;", vars, ruleRow);
+    updateRuleRow(sqlSelectRules() + " WHERE t.rule_id = :rule_id;", vars, ruleRow);
     return ruleRow;
 }
 
@@ -413,6 +409,11 @@ bool RuleListModel::updateRuleRow(
 
 QString RuleListModel::sqlBase() const
 {
+    return sqlSelectRules() + " WHERE rule_type = :type";
+}
+
+QString RuleListModel::sqlSelectRules()
+{
     return "SELECT"
            "    t.rule_id,"
            "    t.enabled,"
@@ -438,8 +439,7 @@ QString RuleListModel::sqlBase() const
            "    t.period_id,"
            "    (menu.rule_id IS NOT NULL) AS tray_menu"
            "  FROM rule t"
-           "  LEFT JOIN rule_menu menu ON menu.rule_id = t.rule_id"
-           "  WHERE rule_type = :type";
+           "  LEFT JOIN rule_menu menu ON menu.rule_id = t.rule_id";
 }
 
 QString RuleListModel::sqlWhereRegexp() const

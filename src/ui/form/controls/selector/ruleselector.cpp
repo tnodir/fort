@@ -1,6 +1,7 @@
 #include "ruleselector.h"
 
 #include <conf/confrulemanager.h>
+#include <conf/rule.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/toolbutton.h>
@@ -9,6 +10,13 @@
 #include <model/rulelistmodel.h>
 
 using namespace Fort;
+
+namespace {
+
+inline constexpr quint8 selectRuleTypes =
+        Rule::ruleTypeBit(Rule::AppRule) | Rule::ruleTypeBit(Rule::PresetRule);
+
+}
 
 RuleSelector::RuleSelector(QWidget *parent) : QWidget(parent)
 {
@@ -85,7 +93,7 @@ void RuleSelector::setupController()
 
 void RuleSelector::selectRuleDialog()
 {
-    auto rulesDialog = RulesWindow::showRulesDialog(ruleType(), this);
+    auto rulesDialog = RulesWindow::showRulesDialog(selectRuleTypes, this);
 
     connect(rulesDialog, &RulesWindow::ruleSelected, this,
             [&](const RuleRow &ruleRow) { setRuleId(ruleRow.ruleId); });
@@ -93,5 +101,5 @@ void RuleSelector::selectRuleDialog()
 
 void RuleSelector::editRuleDialog()
 {
-    RulesWindow::showRuleEditDialog(m_ruleId, ruleType(), this);
+    RulesWindow::showRuleEditDialog(m_ruleId, this);
 }

@@ -47,7 +47,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     const RuleRow &ruleRowAt(const QModelIndex &index) const;
-    RuleRow ruleRowById(int ruleId, Rule::RuleType ruleType) const;
+    RuleRow ruleRowById(int ruleId) const;
 
     static QStringList ruleTypeNames();
     static QStringList ruleTypeIconPaths();
@@ -74,6 +74,8 @@ protected:
     void setSqlRuleType(const QModelIndex &index) const;
 
 private:
+    static QString sqlSelectRules();
+
     QVariant rootData(const QModelIndex &index, int role) const;
 
     QVariant headerDataDisplay(int section, int role) const;

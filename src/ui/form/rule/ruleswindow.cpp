@@ -7,6 +7,8 @@
 #include <QToolButton>
 #include <QVBoxLayout>
 
+#include <bit>
+
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/treeview.h>
@@ -27,15 +29,10 @@ namespace {
 
 inline constexpr int RULES_HEADER_VERSION = 5;
 
-constexpr quint8 ruleTypeBit(Rule::RuleType ruleType)
-{
-    return (1 << ruleType);
 }
 
-}
-
-RulesWindow::RulesWindow(Rule::RuleType ruleType, QWidget *parent, Qt::WindowFlags f) :
-    FormWindow(parent, f), m_ruleType(ruleType), m_ctrl(new RulesController(this))
+RulesWindow::RulesWindow(quint8 selectRuleTypes, QWidget *parent, Qt::WindowFlags f) :
+    FormWindow(parent, f), m_selectRuleTypes(selectRuleTypes), m_ctrl(new RulesController(this))
 {
     setupUi();
     setupController();
@@ -59,7 +56,10 @@ void RulesWindow::saveWindowState(bool /*wasVisible*/)
     iniUser.setRulesHeader(header->saveState());
     iniUser.setRulesHeaderVersion(RULES_HEADER_VERSION);
 
-    iniUser.setRulesExpanded(m_expandedRuleTypes);
+    // The Select Rule dialog expands its rule types always
+    if (!isOpenSelectRule()) {
+        iniUser.setRulesExpanded(m_expandedRuleTypes);
+    }
 
     confManager()->saveIniUser();
 }
@@ -246,7 +246,7 @@ void RulesWindow::setupTreeRulesExpandingChanged()
     const auto onExpandingChanged = [&](const QModelIndex &index) {
         const bool isExpanded = m_ruleListView->isExpanded(index);
         const auto ruleType = RuleListModel::indexRuleType(index);
-        const auto typeBit = ruleTypeBit(ruleType);
+        const auto typeBit = Rule::ruleTypeBit(ruleType);
 
         m_expandedRuleTypes =
                 isExpanded ? (m_expandedRuleTypes | typeBit) : (m_expandedRuleTypes & ~typeBit);
@@ -299,17 +299,40 @@ void RulesWindow::expandTreeRules()
 {
     for (int i = 0; i < Rule::RuleTypeCount; ++i) {
         const auto ruleType = Rule::RuleType(i);
-        const auto typeBit = ruleTypeBit(ruleType);
-        const bool isExpanded = (m_expandedRuleTypes & typeBit) != 0;
         const auto index = ruleListModel()->indexRoot(ruleType);
 
-        m_ruleListView->setExpanded(index, isExpanded);
+        m_ruleListView->setRowHidden(index.row(), index.parent(), !isRuleTypeShown(ruleType));
+        m_ruleListView->setExpanded(index, isRuleTypeExpanded(ruleType));
+    }
+}
+
+bool RulesWindow::isRuleTypeShown(Rule::RuleType ruleType) const
+{
+    return !isOpenSelectRule() || isSelectRuleType(ruleType);
+}
+
+bool RulesWindow::isRuleTypeExpanded(Rule::RuleType ruleType) const
+{
+    if (isOpenSelectRule()) {
+        return isSelectRuleType(ruleType);
     }
 
-    if (isOpenSelectRule()) {
-        m_ruleListView->setRootIndex(ruleListModel()->indexRoot(ruleType()));
-        m_ruleListView->setIndentation(0);
-    }
+    return (m_expandedRuleTypes & Rule::ruleTypeBit(ruleType)) != 0;
+}
+
+bool RulesWindow::isSelectRuleType(Rule::RuleType ruleType) const
+{
+    return (selectRuleTypes() & Rule::ruleTypeBit(ruleType)) != 0;
+}
+
+Rule::RuleType RulesWindow::newRuleType() const
+{
+    const auto ruleType = RuleListModel::indexRuleType(ruleListCurrentIndex());
+
+    if (isRuleTypeShown(ruleType))
+        return ruleType;
+
+    return Rule::RuleType(std::countr_zero(selectRuleTypes())); // the first selectable one
 }
 
 bool RulesWindow::emitRuleSelected()
@@ -336,14 +359,7 @@ bool RulesWindow::emitRuleSelected(const QModelIndex &index)
 void RulesWindow::addNewRule()
 {
     RuleRow ruleRow;
-
-    if (ruleType() != Rule::RuleNone) {
-        ruleRow.ruleType = ruleType();
-    } else {
-        const auto ruleIndex = ruleListCurrentIndex();
-
-        ruleRow.ruleType = RuleListModel::indexRuleType(ruleIndex);
-    }
+    ruleRow.ruleType = newRuleType();
 
     openRuleEditForm(ruleRow);
 }
@@ -409,9 +425,9 @@ QModelIndex RulesWindow::ruleListCurrentIndex() const
     return m_ruleListView->currentIndex();
 }
 
-RulesWindow *RulesWindow::showRulesDialog(Rule::RuleType ruleType, QWidget *parent)
+RulesWindow *RulesWindow::showRulesDialog(quint8 selectRuleTypes, QWidget *parent)
 {
-    auto w = new RulesWindow(ruleType, parent, Qt::Dialog);
+    auto w = new RulesWindow(selectRuleTypes, parent, Qt::Dialog);
     ControlUtil::deleteOnClose(w);
 
     w->setWindowModality(Qt::WindowModal);
@@ -421,8 +437,7 @@ RulesWindow *RulesWindow::showRulesDialog(Rule::RuleType ruleType, QWidget *pare
     return w;
 }
 
-RuleEditDialog *RulesWindow::showRuleEditDialog(
-        int ruleId, Rule::RuleType ruleType, QWidget *parent)
+RuleEditDialog *RulesWindow::showRuleEditDialog(int ruleId, QWidget *parent)
 {
     auto ctrl = new RulesController();
 
@@ -433,7 +448,7 @@ RuleEditDialog *RulesWindow::showRuleEditDialog(
 
     // Initialize the Rule edit dialog
     {
-        const auto ruleRow = ctrl->ruleListModel()->ruleRowById(ruleId, ruleType);
+        const auto ruleRow = ctrl->ruleListModel()->ruleRowById(ruleId);
         w->initialize(ruleRow);
     }
 

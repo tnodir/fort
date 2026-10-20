@@ -664,7 +664,7 @@ void RuleEditDialog::openFilterEditForm()
 
 void RuleEditDialog::selectPresetRuleDialog()
 {
-    auto rulesDialog = RulesWindow::showRulesDialog(Rule::PresetRule, this);
+    auto rulesDialog = RulesWindow::showRulesDialog(Rule::ruleTypeBit(Rule::PresetRule), this);
 
     connect(rulesDialog, &RulesWindow::ruleSelected, ruleSetModel(), &RuleSetModel::addRule);
 }
@@ -673,5 +673,5 @@ void RuleEditDialog::editCurrentPresetRuleDialog()
 {
     const int ruleId = ruleSetModel()->ruleSet().value(ruleSetCurrentIndex());
 
-    RulesWindow::showRuleEditDialog(ruleId, Rule::PresetRule, this);
+    RulesWindow::showRuleEditDialog(ruleId, this);
 }

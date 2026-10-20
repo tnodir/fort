@@ -3,8 +3,6 @@
 
 #include <QWidget>
 
-#include <conf/rule.h>
-
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class LineEdit;
@@ -15,9 +13,6 @@ class RuleSelector : public QWidget
 
 public:
     explicit RuleSelector(QWidget *parent = nullptr);
-
-    Rule::RuleType ruleType() const { return m_ruleType; }
-    void setRuleType(Rule::RuleType v) { m_ruleType = v; }
 
     quint16 ruleId() const { return m_ruleId; }
     void setRuleId(quint16 ruleId);
@@ -39,7 +34,6 @@ private:
 private:
     bool m_showRuleName = true;
 
-    Rule::RuleType m_ruleType = Rule::AppRule;
     quint16 m_ruleId = 0;
 
     LineEdit *m_editRuleName = nullptr;

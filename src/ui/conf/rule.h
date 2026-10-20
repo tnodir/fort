@@ -21,6 +21,8 @@ public:
         RuleTypeCount
     };
 
+    static constexpr quint8 ruleTypeBit(RuleType ruleType) { return quint8(1 << ruleType); }
+
     bool isNameEqual(const Rule &o) const;
     bool isOptionsEqual(const Rule &o) const;
     bool isFlagsEqual(const Rule &o) const;
