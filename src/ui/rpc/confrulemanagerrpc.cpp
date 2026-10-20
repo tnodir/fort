@@ -46,6 +46,12 @@ bool processConfRuleManager_updateRuleText(
             p.args.value(0).toLongLong(), p.args.value(1).toString());
 }
 
+bool processConfRuleManager_addDefaultPresetRules(ConfRuleManager *confRuleManager,
+        const ProcessCommandArgs & /*p*/, ProcessCommandResult & /*r*/)
+{
+    return confRuleManager->addDefaultPresetRules();
+}
+
 using processConfRuleManager_func = bool (*)(
         ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, ProcessCommandResult &r);
 
@@ -55,6 +61,7 @@ static const processConfRuleManager_func processConfRuleManager_funcList[] = {
     &processConfRuleManager_updateRuleName, // Rpc_ConfRuleManager_updateRuleName,
     &processConfRuleManager_updateRuleEnabled, // Rpc_ConfRuleManager_updateRuleEnabled,
     &processConfRuleManager_updateRuleText, // Rpc_ConfRuleManager_updateRuleText,
+    &processConfRuleManager_addDefaultPresetRules, // Rpc_ConfRuleManager_addDefaultPresetRules,
 };
 
 inline bool processConfRuleManagerRpcResult(
@@ -62,7 +69,7 @@ inline bool processConfRuleManagerRpcResult(
 {
     const processConfRuleManager_func func = RpcManager::getProcessFunc(p.command,
             processConfRuleManager_funcList, Control::Rpc_ConfRuleManager_addOrUpdateRule,
-            Control::Rpc_ConfRuleManager_updateRuleText);
+            Control::Rpc_ConfRuleManager_addDefaultPresetRules);
 
     return func ? func(confRuleManager, p, r) : false;
 }
@@ -105,6 +112,11 @@ bool ConfRuleManagerRpc::updateRuleText(quint16 ruleId, const QString &ruleText)
 {
     return rpcManager()->doOnServer(
             Control::Rpc_ConfRuleManager_updateRuleText, { ruleId, ruleText });
+}
+
+bool ConfRuleManagerRpc::addDefaultPresetRules()
+{
+    return rpcManager()->doOnServer(Control::Rpc_ConfRuleManager_addDefaultPresetRules);
 }
 
 QVariantList ConfRuleManagerRpc::ruleToVarList(const Rule &rule)

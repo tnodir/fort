@@ -18,6 +18,7 @@ public:
     bool updateRuleName(quint16 ruleId, const QString &ruleName) override;
     bool updateRuleEnabled(quint16 ruleId, bool enabled) override;
     bool updateRuleText(quint16 ruleId, const QString &ruleText) override;
+    bool addDefaultPresetRules() override;
 
     static QVariantList ruleToVarList(const Rule &rule);
     static Rule varListToRule(const QVariantList &v);

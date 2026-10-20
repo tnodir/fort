@@ -50,3 +50,10 @@ bool RulesController::updateRuleName(int ruleId, const QString &ruleName)
     }
     return true;
 }
+
+void RulesController::addDefaultPresetRules()
+{
+    if (!confRuleManager()->addDefaultPresetRules()) {
+        showErrorMessage(tr("Cannot add the default Preset Rules"));
+    }
+}

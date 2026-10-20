@@ -19,6 +19,7 @@ public slots:
     bool addOrUpdateRule(Rule &rule);
     void deleteRule(int ruleId);
     bool updateRuleName(int ruleId, const QString &ruleName);
+    void addDefaultPresetRules();
 
 private:
     RuleListModel *m_ruleListModel = nullptr;

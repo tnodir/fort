@@ -88,6 +88,7 @@ private:
     QAction *m_actEditRule = nullptr;
     QAction *m_actDuplicateRule = nullptr;
     QAction *m_actRemoveRule = nullptr;
+    QAction *m_actAddDefaultPresetRules = nullptr;
     QLineEdit *m_editSearch = nullptr;
     QToolButton *m_btOptions = nullptr;
     QToolButton *m_btStatistics = nullptr;

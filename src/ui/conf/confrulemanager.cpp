@@ -527,6 +527,11 @@ bool ConfRuleManager::updateRuleText(quint16 ruleId, const QString &ruleText)
     return true;
 }
 
+bool ConfRuleManager::addDefaultPresetRules()
+{
+    return syncPresetRules(PresetRulesManager::SyncRestore);
+}
+
 bool ConfRuleManager::walkRules(
         WalkRulesArgs &wra, const std::function<walkRulesCallback> &func) const
 {

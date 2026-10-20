@@ -97,6 +97,7 @@ void RulesWindow::retranslateUi()
     m_actEditRule->setText(tr("Edit"));
     m_actDuplicateRule->setText(tr("Duplicate"));
     m_actRemoveRule->setText(tr("Remove"));
+    m_actAddDefaultPresetRules->setText(tr("Add Default Preset Rules"));
     m_editSearch->setPlaceholderText(tr("Search") + " /");
 
     ruleListModel()->refresh();
@@ -163,6 +164,11 @@ QLayout *RulesWindow::setupHeader()
     m_actRemoveRule = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveRule->setShortcut(Qt::Key_Delete);
 
+    editMenu->addSeparator();
+
+    m_actAddDefaultPresetRules =
+            editMenu->addAction(IconCache::icon(":/icons/script.png"), QString());
+
     connect(m_actAddRule, &QAction::triggered, this, &RulesWindow::addNewRule);
     connect(m_actEditRule, &QAction::triggered, this, &RulesWindow::editSelectedRule);
     connect(m_actDuplicateRule, &QAction::triggered, this, &RulesWindow::duplicateSelectedRule);
@@ -170,6 +176,8 @@ QLayout *RulesWindow::setupHeader()
         windowManager()->showConfirmBox(
                 [&] { deleteSelectedRule(); }, tr("Are you sure to remove selected rule?"));
     });
+    connect(m_actAddDefaultPresetRules, &QAction::triggered, ctrl(),
+            &RulesController::addDefaultPresetRules);
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setMenu(editMenu);
