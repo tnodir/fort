@@ -47,6 +47,7 @@ private:
     void setupController();
 
     void retranslateUi();
+    void retranslatePresetsTabText();
     void retranslateComboRuleType();
     void retranslateRulePlaceholderText();
 

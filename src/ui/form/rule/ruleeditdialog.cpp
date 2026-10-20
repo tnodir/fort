@@ -30,6 +30,7 @@
 #include <util/iconcache.h>
 #include <util/net/actionrange.h>
 #include <util/osutil.h>
+#include <util/stringutil.h>
 #include <util/textareautil.h>
 
 #include "filtereditdialog.h"
@@ -145,7 +146,7 @@ void RuleEditDialog::retranslateUi()
     this->unsetLocale();
 
     m_tabWidget->setTabText(0, tr("General"));
-    m_tabWidget->setTabText(1, tr("Presets"));
+    retranslatePresetsTabText();
     m_tabWidget->setTabText(2, tr("More"));
 
     m_labelEditName->setText(tr("Name:"));
@@ -187,6 +188,13 @@ void RuleEditDialog::retranslateUi()
     m_btCancel->setText(tr("Cancel"));
 
     this->setWindowTitle(tr("Edit Rule"));
+}
+
+void RuleEditDialog::retranslatePresetsTabText()
+{
+    const int presetsCount = ruleSetModel()->rowCount();
+
+    m_tabWidget->setTabText(1, StringUtil::textWithCount(tr("Presets"), presetsCount));
 }
 
 void RuleEditDialog::retranslateComboRuleType()
@@ -254,6 +262,9 @@ void RuleEditDialog::setupTabBar()
     m_tabWidget->addTab(generalTab, QString());
     m_tabWidget->addTab(presetsTab, QString());
     m_tabWidget->addTab(moreTab, QString());
+
+    connect(ruleSetModel(), &RuleSetModel::rowCountChanged, this,
+            &RuleEditDialog::retranslatePresetsTabText);
 }
 
 QWidget *RuleEditDialog::setupGeneralTab()
