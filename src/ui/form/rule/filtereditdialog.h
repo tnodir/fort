@@ -44,7 +44,7 @@ private:
     QLayout *setupMainLayout();
     QLayout *setupFormLayout();
     QLayout *setupActionsLayout();
-    QRadioButton *createActionButton(int actionTypeId);
+    QRadioButton *createActionButton(int actionTypeId, Qt::Key key);
     QCheckBox *createFieldCheckBox();
     QToolButton *createNotButton();
     QToolButton *createEqualButton(LineEdit *edit);

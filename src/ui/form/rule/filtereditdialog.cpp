@@ -170,13 +170,13 @@ void FilterEditDialog::retranslateUi()
     this->unsetLocale();
 
     m_labelAction->setText(tr("Action:"));
-    m_rbRuleAction->setText(tr("By &Rule"));
+    m_rbRuleAction->setText(tr("By Rule"));
     m_rbRuleAction->setToolTip(tr("The Rule's action is applied"));
-    m_rbAllow->setText(tr("&Allow"));
-    m_rbBlock->setText(tr("&Block"));
-    m_rbAsk->setText(tr("A&sk"));
+    m_rbAllow->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_ALLOW));
+    m_rbBlock->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_BLOCK));
+    m_rbAsk->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_ASK));
     m_rbAsk->setToolTip(tr("Ask to Connect: pause the connection till the user's decision"));
-    m_rbDrop->setText(tr("&Drop"));
+    m_rbDrop->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_DROP));
     m_rbDrop->setToolTip(tr("Block silently, without a response"));
 
     m_labelDirection->setText(tr("Direction:"));
@@ -382,14 +382,14 @@ QLayout *FilterEditDialog::setupActionsLayout()
     m_buttonGroupAction = new QButtonGroup(this);
 
     // By the button's id: FORT_RULE_FILTER_ACTION_*, 0 - the Rule's action
-    m_rbRuleAction = createActionButton(/*actionTypeId=*/0);
+    m_rbRuleAction = createActionButton(/*actionTypeId=*/0, Qt::Key_R);
     m_rbRuleAction->setIcon(IconCache::icon(":/icons/script.png"));
     m_rbRuleAction->setVisible(isRuleFilter());
 
-    m_rbAllow = createActionButton(FORT_RULE_FILTER_ACTION_ALLOW);
-    m_rbBlock = createActionButton(FORT_RULE_FILTER_ACTION_BLOCK);
-    m_rbAsk = createActionButton(FORT_RULE_FILTER_ACTION_ASK);
-    m_rbDrop = createActionButton(FORT_RULE_FILTER_ACTION_DROP);
+    m_rbAllow = createActionButton(FORT_RULE_FILTER_ACTION_ALLOW, Qt::Key_A);
+    m_rbBlock = createActionButton(FORT_RULE_FILTER_ACTION_BLOCK, Qt::Key_B);
+    m_rbAsk = createActionButton(FORT_RULE_FILTER_ACTION_ASK, Qt::Key_S);
+    m_rbDrop = createActionButton(FORT_RULE_FILTER_ACTION_DROP, Qt::Key_D);
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { m_rbRuleAction, m_rbAllow, m_rbBlock, m_rbAsk, m_rbDrop, /*stretch*/ nullptr });
@@ -398,10 +398,12 @@ QLayout *FilterEditDialog::setupActionsLayout()
     return layout;
 }
 
-QRadioButton *FilterEditDialog::createActionButton(int actionTypeId)
+// The Alt+key shortcut checks the button
+QRadioButton *FilterEditDialog::createActionButton(int actionTypeId, Qt::Key key)
 {
     auto c = new QRadioButton();
     c->setIcon(IconCache::icon(ActionRange::actionTypeIconPath(actionTypeId)));
+    c->setShortcut(QKeyCombination(Qt::ALT, key));
 
     m_buttonGroupAction->addButton(c, actionTypeId);
 
