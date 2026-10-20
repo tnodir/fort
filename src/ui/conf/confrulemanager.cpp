@@ -159,7 +159,8 @@ const char *const sqlSelectRuleSetLoop = "WITH RECURSIVE"
                                          "    + (SELECT MAX(level) FROM children))"
                                          "));";
 
-const char *const sqlUpdateRuleName = "UPDATE rule SET name = ?2 WHERE rule_id = ?1;";
+const char *const sqlUpdateRuleName = "UPDATE rule SET name = ?2, mod_time = ?3"
+                                      "  WHERE rule_id = ?1;";
 
 const char *const sqlUpdateRuleEnabled = "UPDATE rule SET enabled = ?2 WHERE rule_id = ?1;";
 
@@ -450,7 +451,7 @@ bool ConfRuleManager::deleteRule(quint16 ruleId)
 
 bool ConfRuleManager::updateRuleName(quint16 ruleId, const QString &ruleName)
 {
-    if (!executeWrite(sqlUpdateRuleName, { ruleId, ruleName }))
+    if (!executeWrite(sqlUpdateRuleName, { ruleId, ruleName, DateUtil::now() }))
         return false;
 
     emit ruleUpdated(ruleId);
