@@ -38,7 +38,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-inline constexpr int DATABASE_USER_VERSION = 68;
+inline constexpr int DATABASE_USER_VERSION = 69;
 
 const char *const sqlSelectAddressGroups = "SELECT addr_group_id, include_all, exclude_all,"
                                            "    include_zones, exclude_zones,"
@@ -172,7 +172,8 @@ bool migrateAppPaths(SqliteDb *db)
 
 using AddrGroupTextsMap = QHash<qint64, QString>;
 
-bool fillAddrGroupExcludeTextsMap(SqliteDb *db, AddrGroupTextsMap &textsMap)
+bool fillAddrGroupExcludeTextsMap(
+        SqliteDb *db, AddrGroupTextsMap &textsMap, const QString &removedLine)
 {
     const char *const sql = "SELECT addr_group_id, exclude_text FROM address_group;";
 
@@ -184,8 +185,8 @@ bool fillAddrGroupExcludeTextsMap(SqliteDb *db, AddrGroupTextsMap &textsMap)
         const qint64 addrGroupId = stmt.columnInt64(0);
         QStringList lines = stmt.columnText(1).split('\n');
 
-        const auto removedCount = lines.removeIf(
-                [](const QString &line) { return line.trimmed() == QLatin1String("::/0"); });
+        const auto removedCount =
+                lines.removeIf([&](const QString &line) { return line.trimmed() == removedLine; });
 
         if (removedCount > 0) {
             textsMap.insert(addrGroupId, lines.join('\n'));
@@ -195,12 +196,12 @@ bool fillAddrGroupExcludeTextsMap(SqliteDb *db, AddrGroupTextsMap &textsMap)
     return true;
 }
 
-// The old local networks list had "::/0", which is the whole IPv6 address space
-bool migrateAddrGroupExcludeTexts(SqliteDb *db)
+// The old local networks list had the removed line
+bool migrateAddrGroupExcludeTexts(SqliteDb *db, const QString &removedLine)
 {
     AddrGroupTextsMap textsMap;
 
-    if (!fillAddrGroupExcludeTextsMap(db, textsMap))
+    if (!fillAddrGroupExcludeTextsMap(db, textsMap, removedLine))
         return false;
 
     const char *const sql = "UPDATE address_group SET exclude_text = ?2 WHERE addr_group_id = ?1;";
@@ -588,9 +589,9 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
         migrateAppPaths(db);
     }
 
-    // COMPAT: Remove "::/0" from addr group's exclude
+    // COMPAT: Remove "::/0" from addr group's exclude: the whole IPv6 address space
     if (version < 58) {
-        migrateAddrGroupExcludeTexts(db);
+        migrateAddrGroupExcludeTexts(db, "::/0");
     }
 
     // COMPAT: Migrate the App. Groups and the old periods to the Time Periods
@@ -604,6 +605,11 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     // COMPAT: Clear the old "Include" list of the allowed addresses
     if (version < 68) {
         migrateAddrGroupAllowInclude(db);
+    }
+
+    // COMPAT: Remove "2001::/32" from addr group's exclude: the Teredo's routable prefix
+    if (version < 69) {
+        migrateAddrGroupExcludeTexts(db, "2001::/32");
     }
 
     return true;

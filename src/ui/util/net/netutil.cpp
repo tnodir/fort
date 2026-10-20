@@ -380,7 +380,6 @@ QStringList NetUtil::localIpNetworks()
         "::ffff:0:0:0/96", //
         "64:ff9b::/96", // IPv4-IPv6 Translat.
         "100::/64", // Discard-Only Address Block
-        "2001::/32", // Global Unique Addresses (GUA) - Routable IPv6 addresses
         "2001:20::/28", // ORCHIDv2
         "2001:db8::/32", // Documentation prefix used for examples
         "2002::/16", // 6to4

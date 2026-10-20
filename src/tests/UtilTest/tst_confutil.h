@@ -90,6 +90,7 @@ TEST_F(ConfUtilTest, confWriteRead)
     ASSERT_FALSE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("::2")));
     ASSERT_TRUE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("::ffff:0:2")));
     ASSERT_FALSE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("65::")));
+    ASSERT_FALSE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("2001::1")));
 
     ASSERT_TRUE(DriverCommon::confAppFind(data, "System").data.flags.found);
 
