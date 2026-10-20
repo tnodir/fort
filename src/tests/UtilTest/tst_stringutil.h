@@ -32,3 +32,12 @@ TEST_F(StringUtilTest, multiStringBad)
     QByteArray buffer;
     ASSERT_FALSE(StringUtil::buildMultiString(buffer, { "1", "", "2" }));
 }
+
+TEST_F(StringUtilTest, textWithDetails)
+{
+    ASSERT_EQ(StringUtil::textWithDetails("Zones", "2^1"), "Zones (2^1)");
+    ASSERT_EQ(StringUtil::textWithDetails("Zones", QString()), "Zones");
+
+    ASSERT_EQ(StringUtil::textWithCount("Groups", 2), "Groups (2)");
+    ASSERT_EQ(StringUtil::textWithCount("Groups", 0), "Groups");
+}

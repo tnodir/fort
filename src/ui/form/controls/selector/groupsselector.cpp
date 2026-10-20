@@ -10,6 +10,7 @@
 #include <model/grouplistmodel.h>
 #include <util/bitutil.h>
 #include <util/iconcache.h>
+#include <util/stringutil.h>
 
 using namespace Fort;
 
@@ -65,12 +66,7 @@ void GroupsSelector::retranslateUi()
 
 void GroupsSelector::retranslateGroupsText()
 {
-    QString countText;
-    if (groupsCount() != 0) {
-        countText = " (" + QString::number(groupsCount()) + ')';
-    }
-
-    this->setText(tr("Groups") + countText);
+    this->setText(StringUtil::textWithCount(tr("Groups"), groupsCount()));
 }
 
 void GroupsSelector::setupUi()

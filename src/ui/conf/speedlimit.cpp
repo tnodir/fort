@@ -1,6 +1,7 @@
 #include "speedlimit.h"
 
 #include <util/formatutil.h>
+#include <util/stringutil.h>
 
 bool SpeedLimit::isPeriodEqual(const SpeedLimit &o) const
 {
@@ -27,8 +28,5 @@ QString SpeedLimit::menuLabel(const QString &periodName) const
     const QString text = name + QLatin1Char(' ') + (inbound ? inChar : outChar)
             + FormatUtil::formatSpeed(qint64(kbps) * 1024);
 
-    if (periodName.isEmpty())
-        return text;
-
-    return text + " (" + periodName + ')';
+    return StringUtil::textWithDetails(text, periodName);
 }

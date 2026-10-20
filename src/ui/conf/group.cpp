@@ -1,5 +1,7 @@
 #include "group.h"
 
+#include <util/stringutil.h>
+
 bool Group::isFlagsEqual(const Group &o) const
 {
     return enabled == o.enabled && exclusive == o.exclusive && periodEnabled == o.periodEnabled;
@@ -17,8 +19,5 @@ bool Group::isNameEqual(const Group &o) const
 
 QString Group::menuLabel(const QString &periodName) const
 {
-    if (periodName.isEmpty())
-        return groupName;
-
-    return groupName + " (" + periodName + ')';
+    return StringUtil::textWithDetails(groupName, periodName);
 }

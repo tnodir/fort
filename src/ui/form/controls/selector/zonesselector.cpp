@@ -10,6 +10,7 @@
 #include <model/zonelistmodel.h>
 #include <util/bitutil.h>
 #include <util/iconcache.h>
+#include <util/stringutil.h>
 
 using namespace Fort;
 
@@ -85,11 +86,8 @@ void ZonesSelector::retranslateZonesText()
     if (uncheckedZonesCount() != 0) {
         countText += '^' + QString::number(uncheckedZonesCount());
     }
-    if (!countText.isEmpty()) {
-        countText = " (" + countText + ')';
-    }
 
-    this->setText(tr("Zones") + countText);
+    this->setText(StringUtil::textWithDetails(tr("Zones"), countText));
 }
 
 void ZonesSelector::setupUi()

@@ -104,6 +104,19 @@ QString StringUtil::firstLine(const QString &text)
     return (pos != -1) ? text.left(pos) : text;
 }
 
+QString StringUtil::textWithDetails(const QString &text, const QString &details)
+{
+    if (details.isEmpty())
+        return text;
+
+    return text + " (" + details + ')';
+}
+
+QString StringUtil::textWithCount(const QString &text, int count)
+{
+    return textWithDetails(text, (count != 0) ? QString::number(count) : QString());
+}
+
 QRegularExpressionMatch StringUtil::match(const QRegularExpression &re, const QStringView text)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)

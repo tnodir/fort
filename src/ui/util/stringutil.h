@@ -30,6 +30,10 @@ public:
 
     static QString firstLine(const QString &text);
 
+    // The text with its details in parentheses, without them when empty: e.g. "Groups (2)"
+    static QString textWithDetails(const QString &text, const QString &details);
+    static QString textWithCount(const QString &text, int count);
+
     static QRegularExpressionMatch match(const QRegularExpression &re, const QStringView text);
 };
 
