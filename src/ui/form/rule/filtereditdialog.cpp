@@ -136,6 +136,11 @@ void setAreaFilter(QToolButton *btNot, PlainTextEdit *area, const RuleFilter *fi
 
     area->setText(FilterLine::values(filter).join('\n'));
 }
+
+void showErrorMessage(const QString &errorMessage)
+{
+    windowManager()->showErrorBox(errorMessage, FilterEditDialog::tr("Filter Configuration Error"));
+}
 }
 
 FilterEditDialog::FilterEditDialog(bool isRuleFilter, QWidget *parent) :
@@ -154,8 +159,6 @@ void FilterEditDialog::initialize(const FilterLineText &lineText, int row)
     const bool isNewProgramFilter = lineText.isEmpty() && !isRuleFilter();
 
     const FilterLineText startText = isNewProgramFilter ? FilterLineText("Act(Allow)") : lineText;
-
-    m_editText->setText(startText.text());
 
     setFilterLine(startText);
 
@@ -216,6 +219,7 @@ void FilterEditDialog::retranslateUi()
 
     m_gbText->setTitle(tr("Text"));
     m_btCopyText->setToolTip(tr("Copy Text"));
+    m_btPasteText->setToolTip(tr("Paste Text"));
 
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
@@ -512,8 +516,15 @@ void FilterEditDialog::setupTextBox()
     m_btCopyText = ControlUtil::createIconToolButton(
             ":/icons/page_copy.png", [&] { GuiUtil::setClipboardData(m_editText->toPlainText()); });
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_editText, m_btCopyText });
-    layout->setAlignment(m_btCopyText, Qt::AlignTop);
+    // Paste Text
+    m_btPasteText =
+            ControlUtil::createIconToolButton(":/icons/page_paste.png", [&] { pasteText(); });
+
+    auto buttonsLayout = ControlUtil::createVLayoutByWidgets(
+            { m_btCopyText, m_btPasteText, /*stretch*/ nullptr }, /*margin=*/0);
+
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_editText });
+    layout->addLayout(buttonsLayout);
 
     m_gbText = new QGroupBox();
     m_gbText->setLayout(layout);
@@ -585,8 +596,22 @@ QString FilterEditDialog::filterText() const
     return line.text();
 }
 
+void FilterEditDialog::pasteText()
+{
+    const QString text = GuiUtil::getClipboardText().trimmed();
+    if (text.isEmpty())
+        return;
+
+    if (!validateText(text))
+        return;
+
+    setFilterLine(text);
+}
+
 void FilterEditDialog::setFilterLine(const FilterLineText &lineText)
 {
+    m_editText->setText(lineText.text());
+
     FilterLine line(lineText);
     line.parse();
 
@@ -697,9 +722,20 @@ bool FilterEditDialog::validateEditText() const
         return false;
     }
 
+    return validateText(text);
+}
+
+bool FilterEditDialog::validateText(const QString &text) const
+{
+    // A line of the filters, as copied
+    if (text.contains('\n')) {
+        showErrorMessage(tr("The text must be one line of filters"));
+        return false;
+    }
+
     ConfBuffer confBuf;
     if (!confBuf.validateRuleText(text)) {
-        windowManager()->showErrorBox(confBuf.errorMessage());
+        showErrorMessage(confBuf.errorMessage());
         return false;
     }
 

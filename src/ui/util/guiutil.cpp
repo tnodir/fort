@@ -26,6 +26,11 @@ void GuiUtil::setClipboardData(const QVariant &data)
     }
 }
 
+QString GuiUtil::getClipboardText()
+{
+    return QGuiApplication::clipboard()->text();
+}
+
 QIcon GuiUtil::overlayIcon(
         const QString &basePath, const QString &overlayPath, Qt::Alignment alignment)
 {

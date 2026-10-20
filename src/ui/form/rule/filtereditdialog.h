@@ -62,6 +62,7 @@ private:
     void updateClearButtons();
 
     QString filterText() const;
+    void pasteText();
     void setFilterLine(const FilterLineText &lineText);
     void setActionFilter(const RuleFilter *filter);
 
@@ -80,6 +81,7 @@ private:
 
     bool save();
     bool validateEditText() const;
+    bool validateText(const QString &text) const;
 
 private:
     bool m_isRuleFilter = false;
@@ -129,6 +131,7 @@ private:
     QGroupBox *m_gbText = nullptr;
     PlainTextEdit *m_editText = nullptr;
     QToolButton *m_btCopyText = nullptr;
+    QToolButton *m_btPasteText = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 };
