@@ -68,7 +68,7 @@ void TimePeriodsWindow::setupController()
 {
     connect(ctrl(), &TimePeriodsController::retranslateUi, this, &TimePeriodsWindow::retranslateUi);
 
-    emit ctrl() -> retranslateUi();
+    emit ctrl()->retranslateUi();
 }
 
 void TimePeriodsWindow::retranslateUi()

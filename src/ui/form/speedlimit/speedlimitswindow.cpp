@@ -72,7 +72,7 @@ void SpeedLimitsWindow::setupController()
 {
     connect(ctrl(), &SpeedLimitsController::retranslateUi, this, &SpeedLimitsWindow::retranslateUi);
 
-    emit ctrl() -> retranslateUi();
+    emit ctrl()->retranslateUi();
 }
 
 void SpeedLimitsWindow::retranslateUi()

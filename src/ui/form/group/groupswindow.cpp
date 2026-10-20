@@ -69,7 +69,7 @@ void GroupsWindow::setupController()
 {
     connect(ctrl(), &GroupsController::retranslateUi, this, &GroupsWindow::retranslateUi);
 
-    emit ctrl() -> retranslateUi();
+    emit ctrl()->retranslateUi();
 }
 
 void GroupsWindow::retranslateUi()

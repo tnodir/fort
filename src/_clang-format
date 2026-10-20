@@ -69,6 +69,9 @@ SortIncludes: true
 # Sort each #include block separately.
 IncludeBlocks: Preserve
 
+# Qt's signal emitting macros, else "emit ctrl()->retranslateUi();" becomes "emit ctrl() -> ...".
+StatementAttributeLikeMacros: [ Q_EMIT, emit ]
+
 # macros for which the opening brace stays attached.
 ForEachMacros:   [ foreach, Q_FOREACH, BOOST_FOREACH, forever, Q_FOREVER, QBENCHMARK, QBENCHMARK_ONCE ]
 

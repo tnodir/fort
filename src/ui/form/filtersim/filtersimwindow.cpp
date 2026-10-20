@@ -225,7 +225,7 @@ void FilterSimWindow::setupController()
 {
     connect(ctrl(), &FilterSimController::retranslateUi, this, &FilterSimWindow::retranslateUi);
 
-    emit ctrl() -> retranslateUi();
+    emit ctrl()->retranslateUi();
 }
 
 void FilterSimWindow::retranslateUi()
