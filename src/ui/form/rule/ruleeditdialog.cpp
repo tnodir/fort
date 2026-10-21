@@ -120,7 +120,7 @@ void RuleEditDialog::initializeRuleSet(quint16 ruleId)
     rule.ruleId = ruleId;
 
     QStringList ruleSetNames;
-    confRuleManager()->loadRuleSet(rule, ruleSetNames);
+    confRuleManager()->loadRuleSet(rule, &ruleSetNames);
 
     m_ruleRow.ruleSet = rule.ruleSet;
 

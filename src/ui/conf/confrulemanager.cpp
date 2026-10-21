@@ -132,6 +132,10 @@ const char *const sqlSelectRuleSet = "SELECT t.sub_rule_id, r.name"
                                      "  WHERE t.rule_id = ?1"
                                      "  ORDER BY t.order_index;";
 
+const char *const sqlSelectRuleSetIds = "SELECT sub_rule_id FROM rule_set"
+                                        "  WHERE rule_id = ?1"
+                                        "  ORDER BY order_index;";
+
 const char *const sqlSelectRulesCountByType = "SELECT COUNT(*) FROM rule t"
                                               "  WHERE t.rule_type = ?1;";
 
@@ -255,21 +259,24 @@ QVector<Rule> ConfRuleManager::getRulesByName(const QString &ruleName) const
     return ruleList;
 }
 
-void ConfRuleManager::loadRuleSet(Rule &rule, QStringList &ruleSetNames)
+void ConfRuleManager::loadRuleSet(Rule &rule, QStringList *ruleSetNames) const
 {
     rule.ruleSetEdited = false;
     rule.ruleSet.clear();
 
+    const char *sql = ruleSetNames ? sqlSelectRuleSet : sqlSelectRuleSetIds;
+
     SqliteStmt stmt;
-    if (!DbQuery(sqliteDb()).sql(sqlSelectRuleSet).vars({ rule.ruleId }).prepare(stmt))
+    if (!DbQuery(sqliteDb()).sql(sql).vars({ rule.ruleId }).prepare(stmt))
         return;
 
     while (stmt.step() == SqliteStmt::StepRow) {
         const quint16 subRuleId = stmt.columnInt(0);
-        const auto subRuleName = stmt.columnText(1);
-
         rule.ruleSet.append(subRuleId);
-        ruleSetNames.append(subRuleName);
+
+        if (ruleSetNames) {
+            ruleSetNames->append(stmt.columnText(1));
+        }
     }
 }
 

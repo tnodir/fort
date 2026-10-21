@@ -25,7 +25,7 @@ public:
     QVector<Rule> getTrayMenuRules() const;
     QVector<Rule> getRulesByName(const QString &ruleName) const;
 
-    void loadRuleSet(Rule &rule, QStringList &ruleSetNames);
+    void loadRuleSet(Rule &rule, QStringList *ruleSetNames = nullptr) const;
     void saveRuleSet(Rule &rule);
 
     int rulesCountByType(Rule::RuleType ruleType);
