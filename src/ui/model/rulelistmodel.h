@@ -11,6 +11,7 @@
 
 struct RuleRow : TableRow, public Rule
 {
+    bool defaultPreset = false; // of conf/rule/presets.json: updated by its new versions
 };
 
 class RuleListModel : public FtsTableSqlModel

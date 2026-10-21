@@ -72,8 +72,12 @@ private:
 
     int ruleSetCurrentIndex() const;
 
-    bool save();
+    void confirmSave();
+    void saveAndClose(Rule &rule);
+    bool save(Rule &rule);
     bool saveRule(Rule &rule);
+
+    bool isDefaultPresetEdited(const Rule &rule) const;
 
     bool validateFields() const;
     bool validateEditName() const;

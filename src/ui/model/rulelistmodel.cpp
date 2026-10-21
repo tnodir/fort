@@ -403,6 +403,7 @@ bool RuleListModel::updateRuleRow(
     ruleRow.periodEnabled = stmt.columnBool(20);
     ruleRow.periodId = stmt.columnInt(21);
     ruleRow.trayMenu = stmt.columnBool(22);
+    ruleRow.defaultPreset = stmt.columnBool(23);
 
     return true;
 }
@@ -437,7 +438,8 @@ QString RuleListModel::sqlSelectRules()
            "    t.mod_time,"
            "    t.period_enabled,"
            "    t.period_id,"
-           "    (menu.rule_id IS NOT NULL) AS tray_menu"
+           "    (menu.rule_id IS NOT NULL) AS tray_menu,"
+           "    (t.preset_code IS NOT NULL) AS default_preset"
            "  FROM rule t"
            "  LEFT JOIN rule_menu menu ON menu.rule_id = t.rule_id";
 }

@@ -13,6 +13,7 @@
 #include <QVBoxLayout>
 
 #include <conf/confrulemanager.h>
+#include <conf/presetrulesmanager.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/listview.h>
@@ -105,6 +106,7 @@ void RuleEditDialog::initializeDuplicate(const RuleRow &ruleRow)
 {
     RuleRow newRuleRow = ruleRow;
     newRuleRow.ruleId = 0; // a new rule
+    newRuleRow.defaultPreset = false;
     newRuleRow.ruleName += " (Copy)";
 
     initialize(newRuleRow);
@@ -504,11 +506,7 @@ QLayout *RuleEditDialog::setupLogLayout()
 QLayout *RuleEditDialog::setupButtons()
 {
     // OK
-    m_btOk = ControlUtil::createButton(QString(), [&] {
-        if (save()) {
-            this->close();
-        }
-    });
+    m_btOk = ControlUtil::createButton(QString(), [&] { confirmSave(); });
     m_btOk->setDefault(true);
 
     // Cancel
@@ -534,14 +532,34 @@ int RuleEditDialog::ruleSetCurrentIndex() const
     return m_ruleSetView->currentRow();
 }
 
-bool RuleEditDialog::save()
+void RuleEditDialog::confirmSave()
 {
     if (!validateFields())
-        return false;
+        return;
 
     Rule rule;
     fillRule(rule);
 
+    if (!isDefaultPresetEdited(rule)) {
+        saveAndClose(rule);
+        return;
+    }
+
+    windowManager()->showConfirmBox([this, rule]() mutable { saveAndClose(rule); },
+            tr("The default Preset Rule is updated by the program's new versions: your changes"
+               " will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them."
+               "\n\nSave the changes?"));
+}
+
+void RuleEditDialog::saveAndClose(Rule &rule)
+{
+    if (save(rule)) {
+        this->close();
+    }
+}
+
+bool RuleEditDialog::save(Rule &rule)
+{
     // Add new rule
     if (isEmpty()) {
         return ctrl()->addOrUpdateRule(rule);
@@ -564,6 +582,18 @@ bool RuleEditDialog::saveRule(Rule &rule)
     }
 
     return true;
+}
+
+// The changes lost on the default Preset Rules' update
+bool RuleEditDialog::isDefaultPresetEdited(const Rule &rule) const
+{
+    if (!m_ruleRow.defaultPreset)
+        return false;
+
+    Rule presetRule = rule;
+    PresetRulesManager::keepUserFlags(presetRule, m_ruleRow);
+
+    return !presetRule.isContentEqual(m_ruleRow);
 }
 
 bool RuleEditDialog::validateFields() const
