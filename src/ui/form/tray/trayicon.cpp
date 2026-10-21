@@ -933,6 +933,7 @@ void TrayIcon::confirmSaveTrayFlags(const QString &question)
     }
 
     windowManager()->showQuestionBox(
+            this,
             [this](bool confirmed) {
                 if (confirmed) {
                     saveTrayFlags();

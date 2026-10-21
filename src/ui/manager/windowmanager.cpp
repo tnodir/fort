@@ -596,7 +596,7 @@ void WindowManager::processRestartRequired(const QString &info)
     const QString title = tr("Restart Required");
     const QString text = tr("Restart Now?") + "\n\n" + info;
 
-    showConfirmBox([&] { OsUtil::restart(); }, text, title);
+    showConfirmBox(this, [&] { OsUtil::restart(); }, text, title);
 }
 
 bool WindowManager::checkWindowPassword(WindowCode code)
@@ -642,22 +642,24 @@ void WindowManager::showInfoBox(const QString &text, const QString &title, QWidg
     showMessageBox(QMessageBox::Information, text, title, parent);
 }
 
-void WindowManager::showConfirmBox(const std::function<void()> &onConfirmed, const QString &text,
-        const QString &title, QWidget *parent)
+void WindowManager::showConfirmBox(QObject *context, const std::function<void()> &onConfirmed,
+        const QString &text, const QString &title)
 {
     showQuestionBox(
+            context,
             [=](bool confirmed) {
                 if (confirmed) {
                     onConfirmed();
                 }
             },
-            text, title, parent);
+            text, title);
 }
 
-void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &onFinished,
-        const QString &text, const QString &title, QWidget *parent)
+void WindowManager::showQuestionBox(QObject *context,
+        const std::function<void(bool confirmed)> &onFinished, const QString &text,
+        const QString &title)
 {
-    showChoiceBox(
+    showChoiceBox(context,
             [=](int button) {
                 const bool confirmed = (button == QMessageBox::Yes);
                 onFinished(confirmed);
@@ -665,16 +667,16 @@ void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &o
             { .icon = QMessageBox::Question,
                     .buttons = QMessageBox::Yes | QMessageBox::No,
                     .text = text,
-                    .title = title },
-            parent);
+                    .title = title });
 }
 
-void WindowManager::showChoiceBox(
-        const std::function<void(int button)> &onFinished, const MessageBoxArg &ba, QWidget *parent)
+void WindowManager::showChoiceBox(QObject *context,
+        const std::function<void(int button)> &onFinished, const MessageBoxArg &ba)
 {
-    auto box = DialogUtil::createMessageBox(ba, parent);
+    auto box = DialogUtil::createMessageBox(ba);
 
-    connect(box, &QMessageBox::finished, this, onFinished, Qt::QueuedConnection);
+    connect(context, &QObject::destroyed, box, &QWidget::close);
+    connect(box, &QMessageBox::finished, context, onFinished, Qt::QueuedConnection);
 
     DialogUtil::showDialog(box);
 }

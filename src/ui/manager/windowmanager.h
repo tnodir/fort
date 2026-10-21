@@ -166,12 +166,13 @@ public slots:
             const QString &text, const QString &title = QString(), QWidget *parent = nullptr);
     virtual void showInfoBox(
             const QString &text, const QString &title = QString(), QWidget *parent = nullptr);
-    void showConfirmBox(const std::function<void()> &onConfirmed, const QString &text,
-            const QString &title = QString(), QWidget *parent = nullptr);
-    void showQuestionBox(const std::function<void(bool confirmed)> &onFinished, const QString &text,
-            const QString &title = QString(), QWidget *parent = nullptr);
-    void showChoiceBox(const std::function<void(int button)> &onFinished, const MessageBoxArg &ba,
-            QWidget *parent = nullptr);
+    // The callback is called by the context: the box is closed with it
+    void showConfirmBox(QObject *context, const std::function<void()> &onConfirmed,
+            const QString &text, const QString &title = QString());
+    void showQuestionBox(QObject *context, const std::function<void(bool confirmed)> &onFinished,
+            const QString &text, const QString &title = QString());
+    void showChoiceBox(QObject *context, const std::function<void(int button)> &onFinished,
+            const MessageBoxArg &ba);
 
     static void showMessageBox(QMessageBox::Icon icon, const QString &text,
             const QString &title = QString(), QWidget *parent = nullptr);

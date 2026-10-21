@@ -222,12 +222,14 @@ void HomePage::setupDriverIcon()
 QLayout *HomePage::setupDriverButtonsLayout()
 {
     m_btInstallDriver = ControlUtil::createButton(QString(), [&] {
-        windowManager()->showConfirmBox([&] { fortManager()->installDriver(); },
+        windowManager()->showConfirmBox(
+                this, [&] { fortManager()->installDriver(); },
                 tr("Are you sure to reinstall the Driver?"));
     });
     m_btRemoveDriver = ControlUtil::createButton(QString(), [&] {
         windowManager()->showConfirmBox(
-                [&] { fortManager()->removeDriver(); }, tr("Are you sure to remove the Driver?"));
+                this, [&] { fortManager()->removeDriver(); },
+                tr("Are you sure to remove the Driver?"));
     });
 
     auto layout = new QHBoxLayout();
@@ -273,11 +275,13 @@ QLayout *HomePage::setupServiceButtonsLayout()
 
     m_btInstallService = ControlUtil::createButton(QString(), [&] {
         windowManager()->showConfirmBox(
-                [&] { setServiceInstalled(true); }, tr("Are you sure to install the Service?"));
+                this, [&] { setServiceInstalled(true); },
+                tr("Are you sure to install the Service?"));
     });
     m_btRemoveService = ControlUtil::createButton(QString(), [&] {
         windowManager()->showConfirmBox(
-                [&] { setServiceInstalled(false); }, tr("Are you sure to remove the Service?"));
+                this, [&] { setServiceInstalled(false); },
+                tr("Are you sure to remove the Service?"));
     });
 
     layout->addStretch();
@@ -318,6 +322,7 @@ QLayout *HomePage::setupPortableButtonsLayout()
 {
     m_btUninstallPortable = ControlUtil::createButton(QString(), [&] {
         windowManager()->showConfirmBox(
+                this,
                 [&] {
                     FortManager::uninstall();
                     fortManager()->removeDriver();

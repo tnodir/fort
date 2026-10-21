@@ -469,6 +469,7 @@ void FortManager::askInstallService()
             + "\n\n" + tr("Install the Windows Service now?");
 
     windowManager()->showConfirmBox(
+            this,
             [&] {
                 if (setServiceInstalled(true)) {
                     OsUtil::restart();
@@ -487,7 +488,8 @@ void FortManager::quitProgram()
 
     if (iniUser().confirmQuit()) {
         windowManager()->showConfirmBox(
-                [&] { windowManager()->quit(); }, tr("Are you sure you want to quit the program?"));
+                this, [&] { windowManager()->quit(); },
+                tr("Are you sure you want to quit the program?"));
     } else {
         windowManager()->quit();
     }
@@ -506,7 +508,7 @@ bool FortManager::canAskRemoveService() const
 
 void FortManager::askRemoveServiceAndQuit()
 {
-    windowManager()->showChoiceBox(
+    windowManager()->showChoiceBox(this,
             [&](int button) {
                 if (button == QMessageBox::Cancel)
                     return;

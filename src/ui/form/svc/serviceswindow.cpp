@@ -297,7 +297,7 @@ void ServicesWindow::trackService(ServiceInfo serviceInfo)
 void ServicesWindow::confirmRestartService(const QString &serviceName, const QString &question)
 {
     windowManager()->showConfirmBox(
-            [=, this] { restartService(serviceName); }, question.arg(serviceName), QString(), this);
+            this, [=, this] { restartService(serviceName); }, question.arg(serviceName));
 }
 
 void ServicesWindow::restartService(const QString &serviceName)

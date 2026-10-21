@@ -244,6 +244,7 @@ void TrafficWindow::setupClearMenu()
     });
     connect(m_actRemoveApp, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
+                this,
                 [&] {
                     const auto &appStatRow = currentAppStatRow();
 
@@ -255,10 +256,12 @@ void TrafficWindow::setupClearMenu()
     });
     connect(m_actResetTotal, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
-                [&] { ctrl()->resetAppTotals(); }, tr("Are you sure to reset total statistics?"));
+                this, [&] { ctrl()->resetAppTotals(); },
+                tr("Are you sure to reset total statistics?"));
     });
     connect(m_actClearAll, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
+                this,
                 [&] {
                     m_appListView->clearSelection();
                     ctrl()->clearTraffic();
@@ -528,6 +531,6 @@ void TrafficWindow::saveTrafTabIndex(int tabIndex)
         return;
 
     windowManager()->showConfirmBox(
-            [=, this] { iniUser().setValue(IniUser::statTrafTabIndexKey(), tabIndex); },
+            this, [=, this] { iniUser().setValue(IniUser::statTrafTabIndexKey(), tabIndex); },
             tr("Make this tab active when window opens?"));
 }

@@ -174,7 +174,7 @@ QLayout *RulesWindow::setupHeader()
     connect(m_actDuplicateRule, &QAction::triggered, this, &RulesWindow::duplicateSelectedRule);
     connect(m_actRemoveRule, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
-                [&] { deleteSelectedRule(); }, tr("Are you sure to remove selected rule?"));
+                this, [&] { deleteSelectedRule(); }, tr("Are you sure to remove selected rule?"));
     });
     connect(m_actAddDefaultPresetRules, &QAction::triggered, ctrl(),
             &RulesController::addDefaultPresetRules);

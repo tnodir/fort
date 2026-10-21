@@ -136,7 +136,7 @@ QLayout *ZonesWindow::setupHeader()
     connect(m_actEditZone, &QAction::triggered, this, &ZonesWindow::editSelectedZone);
     connect(m_actRemoveZone, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
-                [&] { deleteSelectedZone(); }, tr("Are you sure to remove selected zone?"));
+                this, [&] { deleteSelectedZone(); }, tr("Are you sure to remove selected zone?"));
     });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
@@ -263,7 +263,7 @@ void ZonesWindow::openZoneEditForm(const Zone &zone)
         m_formZoneEdit = new ZoneEditDialog(ctrl(), this);
 
         connect(m_formZoneEdit, &ZoneEditDialog::saved, [&] {
-            windowManager()->showConfirmBox([&] { downloadZones(); }, tr("Update Zones?"));
+            windowManager()->showConfirmBox(this, [&] { downloadZones(); }, tr("Update Zones?"));
         });
     }
 

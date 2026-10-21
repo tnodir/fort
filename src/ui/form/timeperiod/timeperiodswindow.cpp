@@ -131,7 +131,8 @@ QLayout *TimePeriodsWindow::setupHeader()
     connect(m_actEditTimePeriod, &QAction::triggered, this,
             &TimePeriodsWindow::editSelectedTimePeriod);
     connect(m_actRemoveTimePeriod, &QAction::triggered, this, [&] {
-        windowManager()->showConfirmBox([&] { deleteSelectedTimePeriod(); },
+        windowManager()->showConfirmBox(
+                this, [&] { deleteSelectedTimePeriod(); },
                 tr("Are you sure to remove selected time period?"));
     });
 

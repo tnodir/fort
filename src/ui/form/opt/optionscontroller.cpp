@@ -190,7 +190,8 @@ void OptionsController::importBackup(bool onlyNewApps)
 
 void OptionsController::confirmImportBackup()
 {
-    windowManager()->showConfirmBox([&] { importBackup(); },
+    windowManager()->showConfirmBox(
+            this, [&] { importBackup(); },
             tr("All Options and Programs will be replaced after successful import. Continue?\n\n"
                "Make sure that you have a fresh backup."),
             tr("Import Backup"));
@@ -198,7 +199,8 @@ void OptionsController::confirmImportBackup()
 
 void OptionsController::confirmImportAppsBackup()
 {
-    windowManager()->showConfirmBox([&] { importBackup(/*onlyNewApps=*/true); },
+    windowManager()->showConfirmBox(
+            this, [&] { importBackup(/*onlyNewApps=*/true); },
             tr("Only new Programs will be added after successful import. Continue?"),
             tr("Import Backup"));
 }

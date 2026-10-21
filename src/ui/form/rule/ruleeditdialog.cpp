@@ -545,7 +545,8 @@ void RuleEditDialog::confirmSave()
         return;
     }
 
-    windowManager()->showConfirmBox([this, rule]() mutable { saveAndClose(rule); },
+    windowManager()->showConfirmBox(
+            this, [this, rule]() mutable { saveAndClose(rule); },
             tr("The default Preset Rule is updated by the program's new versions: your changes"
                " will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them."
                "\n\nSave the changes?"));

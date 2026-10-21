@@ -369,7 +369,8 @@ void ProgramsWindow::setupEditMenu()
     connect(m_actDeleteAlertedApps, &QAction::triggered, this, &ProgramsWindow::deleteAlertedApps);
     connect(m_actClearAlerts, &QAction::triggered, this, &ProgramsWindow::clearAlerts);
     connect(m_actPurgeApps, &QAction::triggered, this, [&] {
-        windowManager()->showConfirmBox([&] { ctrl()->purgeApps(); },
+        windowManager()->showConfirmBox(
+                this, [&] { ctrl()->purgeApps(); },
                 tr("Are you sure to remove all non-existent programs?"));
     });
     connect(m_actFindApps, &QAction::triggered, this, [&] { m_editSearch->setFocus(); });
@@ -879,6 +880,7 @@ void ProgramsWindow::deleteSelectedApps()
     const int row = m_appListView->selectedRows().value(0, -1);
 
     windowManager()->showConfirmBox(
+            this,
             [=, this] {
                 m_appListView->selectRowOnReset(row);
                 ctrl()->deleteApps(appIdList);
@@ -890,14 +892,15 @@ void ProgramsWindow::deleteSelectedApps()
 
 void ProgramsWindow::deleteAlertedApps()
 {
-    windowManager()->showConfirmBox([=, this] { ctrl()->deleteAlertedApps(); },
+    windowManager()->showConfirmBox(
+            this, [=, this] { ctrl()->deleteAlertedApps(); },
             tr("Are you sure to remove alerted programs?"));
 }
 
 void ProgramsWindow::clearAlerts()
 {
     windowManager()->showConfirmBox(
-            [=, this] { ctrl()->clearAlerts(); }, tr("Are you sure to clear alerts?"));
+            this, [=, this] { ctrl()->clearAlerts(); }, tr("Are you sure to clear alerts?"));
 }
 
 int ProgramsWindow::appListCurrentIndex() const

@@ -132,7 +132,7 @@ QLayout *GroupsWindow::setupHeader()
     connect(m_actEditGroup, &QAction::triggered, this, &GroupsWindow::editSelectedGroup);
     connect(m_actRemoveGroup, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
-                [&] { deleteSelectedGroup(); }, tr("Are you sure to remove selected group?"));
+                this, [&] { deleteSelectedGroup(); }, tr("Are you sure to remove selected group?"));
     });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");

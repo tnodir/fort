@@ -138,7 +138,8 @@ QLayout *SpeedLimitsWindow::setupHeader()
     connect(m_actEditSpeedLimit, &QAction::triggered, this,
             &SpeedLimitsWindow::editSelectedSpeedLimit);
     connect(m_actRemoveSpeedLimit, &QAction::triggered, this, [&] {
-        windowManager()->showConfirmBox([&] { deleteSelectedSpeedLimit(); },
+        windowManager()->showConfirmBox(
+                this, [&] { deleteSelectedSpeedLimit(); },
                 tr("Are you sure to remove selected speed limit?"));
     });
 

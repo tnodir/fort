@@ -315,12 +315,13 @@ void ConnectionsWindow::setupHeaderConnections()
         }
     });
     connect(m_actRemoveConn, &QAction::triggered, this, [&] {
-        windowManager()->showConfirmBox([&] { deleteConn(connListCurrentIndex()); },
+        windowManager()->showConfirmBox(
+                this, [&] { deleteConn(connListCurrentIndex()); },
                 tr("Are you sure to remove connections till this row?"));
     });
     connect(m_actClearAll, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
-                [&] { ctrl()->deleteConn(); }, tr("Are you sure to remove all connections?"));
+                this, [&] { ctrl()->deleteConn(); }, tr("Are you sure to remove all connections?"));
     });
     connect(m_actFind, &QAction::triggered, this, [&] {
         m_editSearch->setFocus();
