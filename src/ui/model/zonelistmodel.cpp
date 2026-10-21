@@ -11,7 +11,6 @@
 #include <conf/confzonemanager.h>
 #include <fortglobal.h>
 #include <util/conf/confutil.h>
-#include <util/fileutil.h>
 #include <util/json/jsonutil.h>
 
 #include "zonesourcewrapper.h"
@@ -20,7 +19,30 @@
 using namespace Fort;
 
 namespace {
+
 const QLoggingCategory LC("model.zoneList");
+
+// The JSON list's items with their indexes as ids
+template<class Wrapper>
+QVariantList readJsonList(const QString &filePath, const char *title)
+{
+    QString errorString;
+    const auto items = JsonUtil::fileToVariant(filePath, errorString).toList();
+    if (!errorString.isEmpty()) {
+        qCWarning(LC) << title << "JSON error:" << errorString;
+    }
+
+    QVariantList list;
+    int index = 0;
+    for (const auto &itemVar : items) {
+        Wrapper item(itemVar);
+        item.setId(index++);
+        list.append(item.map());
+    }
+
+    return list;
+}
+
 }
 
 ZoneListModel::ZoneListModel(QObject *parent) : TableSqlModel(parent) { }
@@ -238,44 +260,12 @@ QString ZoneListModel::sqlBase() const
 
 void ZoneListModel::setupZoneTypes()
 {
-    const auto data = FileUtil::readFileData(":/zone/types.json");
-    if (data.isEmpty())
-        return;
-
-    QString errorString;
-    const auto zoneTypes = JsonUtil::jsonToVariant(data, errorString).toList();
-    if (!errorString.isEmpty()) {
-        qCWarning(LC) << "Zone Types: JSON error:" << errorString;
-        return;
-    }
-
-    int index = 0;
-    for (const auto &typeVar : zoneTypes) {
-        ZoneTypeWrapper zoneType(typeVar);
-        zoneType.setId(index++);
-        m_zoneTypes.append(zoneType.map());
-    }
+    m_zoneTypes = readJsonList<ZoneTypeWrapper>(":/zone/types.json", "Zone Types:");
 }
 
 void ZoneListModel::setupZoneSources()
 {
-    const auto data = FileUtil::readFileData(":/zone/sources.json");
-    if (data.isEmpty())
-        return;
-
-    QString errorString;
-    const auto zoneSources = JsonUtil::jsonToVariant(data, errorString).toList();
-    if (!errorString.isEmpty()) {
-        qCWarning(LC) << "Zone Sources: JSON error:" << errorString;
-        return;
-    }
-
-    int index = 0;
-    for (const auto &sourceVar : zoneSources) {
-        ZoneSourceWrapper zoneSource(sourceVar);
-        zoneSource.setId(index++);
-        m_zoneSources.append(zoneSource.map());
-    }
+    m_zoneSources = readJsonList<ZoneSourceWrapper>(":/zone/sources.json", "Zone Sources:");
 }
 
 QString ZoneListModel::zoneSourceTitleById(const int sourceId)

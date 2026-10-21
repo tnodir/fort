@@ -2,6 +2,8 @@
 
 #include <QJsonDocument>
 
+#include <util/fileutil.h>
+
 QVariant JsonUtil::jsonToVariant(const QByteArray &data, QString &errorString)
 {
     QJsonParseError jsonParseError {};
@@ -12,4 +14,10 @@ QVariant JsonUtil::jsonToVariant(const QByteArray &data, QString &errorString)
     }
 
     return jsonDoc.toVariant();
+}
+
+QVariant JsonUtil::fileToVariant(const QString &filePath, QString &errorString)
+{
+    // A missing file's empty data is a parse error too
+    return jsonToVariant(FileUtil::readFileData(filePath), errorString);
 }
