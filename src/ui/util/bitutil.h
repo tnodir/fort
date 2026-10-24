@@ -11,6 +11,7 @@ public:
     static int firstZeroBit(quint32 v);
 
     static int bitScanForward(quint32 v);
+    static int bitScanReverse(quint32 v);
 };
 
 #endif // BITUTIL_H

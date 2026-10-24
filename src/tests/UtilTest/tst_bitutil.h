@@ -29,3 +29,10 @@ TEST_F(BitUtilTest, firstZeroBit)
     ASSERT_EQ(BitUtil::firstZeroBit(0x03), 2);
     ASSERT_EQ(BitUtil::firstZeroBit(0x8F), 4);
 }
+
+TEST_F(BitUtilTest, bitScanReverse)
+{
+    ASSERT_EQ(BitUtil::bitScanReverse(0x01), 0);
+    ASSERT_EQ(BitUtil::bitScanReverse(0x8F), 7);
+    ASSERT_EQ(BitUtil::bitScanReverse(0x80000001), 31);
+}
