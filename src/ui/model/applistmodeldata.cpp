@@ -14,6 +14,7 @@
 #include <util/dateutil.h>
 #include <util/iconcache.h>
 #include <util/net/actionrange.h>
+#include <util/stringutil.h>
 
 #include "applistmodel.h"
 
@@ -116,6 +117,24 @@ QVariant dataDisplayGroups(const App &app, int role)
     return confGroupManager()->groupNamesByMask(app.groups).join('\n');
 }
 
+QVariant dataDisplayGroup(const App &app, int role)
+{
+    if (role == Qt::ToolTipRole) {
+        return dataDisplayGroups(app, role);
+    }
+
+    if (!app.hasGroup())
+        return {};
+
+    const int groupIndex = BitUtil::bitScanReverse(app.groups);
+    const QString name = confGroupManager()->groupNameById(groupIndex + 1);
+
+    const int restCount = BitUtil::bitCount(app.groups) - 1;
+
+    return StringUtil::textWithDetails(
+            name, (restCount != 0) ? '+' + QString::number(restCount) : QString());
+}
+
 QVariant dataDisplaySpeedLimits(const App &app, int role)
 {
     if (role != Qt::ToolTipRole)
@@ -160,6 +179,7 @@ static const dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplayZones,
     &dataDisplayRule,
     &dataDisplayGroups,
+    &dataDisplayGroup,
     &dataDisplaySpeedLimits,
     &dataDisplayScheduled,
     &dataDisplayAction,

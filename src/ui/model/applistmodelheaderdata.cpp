@@ -6,6 +6,23 @@
 
 #include "applistmodel.h"
 
+namespace {
+
+bool isIconColumn(AppListColumn column)
+{
+    switch (column) {
+    case AppListColumn::Zones:
+    case AppListColumn::Rule:
+    case AppListColumn::Groups:
+    case AppListColumn::SpeedLimits:
+    case AppListColumn::Scheduled:
+        return true;
+    }
+    return false;
+}
+
+}
+
 AppListModelHeaderData::AppListModelHeaderData(int column, int role) :
     m_column(column), m_role(role)
 {
@@ -13,10 +30,8 @@ AppListModelHeaderData::AppListModelHeaderData(int column, int role) :
 
 QVariant AppListModelHeaderData::headerDataDisplay() const
 {
-    if (role() != Qt::ToolTipRole) {
-        if (column() >= int(AppListColumn::Zones) && column() <= int(AppListColumn::Scheduled))
-            return {};
-    }
+    if (role() != Qt::ToolTipRole && isIconColumn(AppListColumn(column())))
+        return {};
 
     return AppListModel::columnName(AppListColumn(column()));
 }

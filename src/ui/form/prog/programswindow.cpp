@@ -39,7 +39,7 @@ using namespace Fort;
 
 namespace {
 
-inline constexpr int APPS_HEADER_VERSION = 16;
+inline constexpr int APPS_HEADER_VERSION = 17;
 
 const std::array timerMinuteValues = { -1, 1, 5, 10, 30, 60 * 1, 60 * 3, 60 * 6 };
 
@@ -569,6 +569,7 @@ void ProgramsWindow::setupTableAppsHeader()
     header->setSectionResizeMode(int(AppListColumn::Zones), QHeaderView::Fixed);
     header->setSectionResizeMode(int(AppListColumn::Rule), QHeaderView::Fixed);
     header->setSectionResizeMode(int(AppListColumn::Groups), QHeaderView::Fixed);
+    header->setSectionResizeMode(int(AppListColumn::Group), QHeaderView::Interactive);
     header->setSectionResizeMode(int(AppListColumn::SpeedLimits), QHeaderView::Fixed);
     header->setSectionResizeMode(int(AppListColumn::Scheduled), QHeaderView::Fixed);
     header->setSectionResizeMode(int(AppListColumn::Action), QHeaderView::Interactive);
@@ -581,6 +582,7 @@ void ProgramsWindow::setupTableAppsHeader()
     header->resizeSection(int(AppListColumn::Zones), 30);
     header->resizeSection(int(AppListColumn::Rule), 30);
     header->resizeSection(int(AppListColumn::Groups), 30);
+    header->resizeSection(int(AppListColumn::Group), 150);
     header->resizeSection(int(AppListColumn::SpeedLimits), 30);
     header->resizeSection(int(AppListColumn::Scheduled), 30);
     header->resizeSection(int(AppListColumn::Action), 100);
@@ -589,6 +591,7 @@ void ProgramsWindow::setupTableAppsHeader()
     header->resizeSection(int(AppListColumn::Notes), 200);
 
     // Hidden columns
+    header->setSectionHidden(int(AppListColumn::Group), /*hide=*/true);
     header->setSectionHidden(int(AppListColumn::Notes), /*hide=*/true);
 
     header->setSectionsMovable(true);

@@ -374,6 +374,7 @@ QString AppListModel::sqlOrderColumn() const
         "t.accept_zones%1, t.reject_zones%1", // Zones
         "r.rule_type ASC NULLS LAST, lower(r.name)%1", // Rule
         "t.groups_mask%1", // Groups
+        "t.groups_mask%1", // Group
         "t.in_limit_id%1, t.out_limit_id%1", // Speed Limits
         "t.end_action%1, t.end_time%1", // Scheduled
         "t.blocked%1, t.ask%1", // Action
@@ -387,6 +388,7 @@ QString AppListModel::sqlOrderColumn() const
         nameColumn, // Zones
         nameColumn, // Rule
         nameColumn, // Groups
+        nameColumn, // Group
         nameColumn, // Speed Limits
         nameColumn, // Scheduled
         nameColumn, // Action
@@ -464,6 +466,7 @@ QString AppListModel::columnName(const AppListColumn column)
             tr("Zones"),
             tr("Rule"),
             tr("Groups"),
+            tr("Group"),
             tr("Speed Limits"),
             tr("Scheduled"),
             tr("Action"),
