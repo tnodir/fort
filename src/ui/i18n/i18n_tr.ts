@@ -29,6 +29,25 @@
     </message>
 </context>
 <context>
+    <name>ActionRange</name>
+    <message>
+        <source>Allow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Engelle </translation>
+    </message>
+    <message>
+        <source>Ask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Drop</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -88,24 +107,16 @@
         <translation>Oluşturma Zamanı</translation>
     </message>
     <message>
-        <source>Block</source>
-        <translation>Engelle </translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>İzin Ver</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>Ad</translation>
     </message>
     <message>
         <source>Groups</source>
         <translation>Gruplar</translation>
+    </message>
+    <message>
+        <source>Group</source>
+        <translation>Grup</translation>
     </message>
     <message>
         <source>Speed Limits</source>
@@ -174,23 +185,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Allow once</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Allow &amp;Process</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Allow the process till its exit or for the time by the menu</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Block once</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -198,7 +193,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Add &amp;Filter</source>
+        <source>Allow once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow Process</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -441,6 +448,10 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Terminating Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Inherited from: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -581,23 +592,7 @@
         <translation>Eylem:</translation>
     </message>
     <message>
-        <source>By &amp;Rule</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>The Rule&apos;s action is applied</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Allow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Block</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Drop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -617,7 +612,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>A&amp;sk</source>
+        <source>Filter Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>By Rule</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -713,6 +712,10 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Paste Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>Tamam</translation>
     </message>
@@ -730,6 +733,10 @@
     </message>
     <message>
         <source>All, except these</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The text must be one line of filters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2121,18 +2128,6 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Kuralların Devralınması:</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>İzin Ver </translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Engelle </translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2448,14 +2443,6 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <translation>Düzenle</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>İzin Ver </translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Engelle </translation>
-    </message>
-    <message>
         <source>Add</source>
         <translation>Ekle</translation>
     </message>
@@ -2550,10 +2537,6 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
     <message>
         <source>Timer</source>
         <translation>Zamanlayıcı</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Connections</source>
@@ -2659,18 +2642,6 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <translation>Etkin</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>İzin Ver </translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Engelle </translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2739,6 +2710,12 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <translation>Aşağıya Taşı</translation>
     </message>
     <message>
+        <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
+
+Save the changes?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Global rules count exceeded!</source>
         <translation>Global Kuralların Sayısı Aşıldı! </translation>
     </message>
@@ -2770,8 +2747,16 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
 <context>
     <name>RuleListModel</name>
     <message>
+        <source>Terminating Rule:</source>
+        <translation>Sonlandırma Kuralı:</translation>
+    </message>
+    <message>
         <source>Rule</source>
         <translation>Kural</translation>
+    </message>
+    <message>
+        <source>Terminating Rule</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Time Period</source>
@@ -2870,6 +2855,10 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <source>Cannot update Rule&apos;s name</source>
         <translation>Kuralın Adı Güncellenemiyor &apos;</translation>
     </message>
+    <message>
+        <source>Cannot add the default Preset Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RulesWindow</name>
@@ -2882,8 +2871,16 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <translation>Ekle</translation>
     </message>
     <message>
+        <source>Duplicate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Remove</source>
         <translation>Kaldır</translation>
+    </message>
+    <message>
+        <source>Add Default Preset Rules</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Rules</source>
@@ -3390,22 +3387,6 @@ Packet loss: %2</source>
     <message>
         <source>Terminating Rule:</source>
         <translation>Sonlandırma Kuralı:</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Engelle </translation>
-    </message>
-    <message>
-        <source>Drop</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Alert</source>

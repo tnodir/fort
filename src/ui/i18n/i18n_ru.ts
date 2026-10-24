@@ -29,6 +29,25 @@
     </message>
 </context>
 <context>
+    <name>ActionRange</name>
+    <message>
+        <source>Allow</source>
+        <translation>Разрешить</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Блокировать</translation>
+    </message>
+    <message>
+        <source>Ask</source>
+        <translation>Спрашивать</translation>
+    </message>
+    <message>
+        <source>Drop</source>
+        <translation>Отбросить</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -88,24 +107,16 @@
         <translation>Время создания</translation>
     </message>
     <message>
-        <source>Block</source>
-        <translation>Блокировать</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>Спрашивать</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>Разрешить</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>Наименование</translation>
     </message>
     <message>
         <source>Groups</source>
         <translation>Группы</translation>
+    </message>
+    <message>
+        <source>Group</source>
+        <translation>Группа</translation>
     </message>
     <message>
         <source>Speed Limits</source>
@@ -174,32 +185,28 @@
         <translation>Приостановленные соединения</translation>
     </message>
     <message>
-        <source>&amp;Allow once</source>
-        <translation>&amp;Разрешить однократно</translation>
-    </message>
-    <message>
-        <source>Allow &amp;Process</source>
-        <translation>Разрешить про&amp;цесс</translation>
-    </message>
-    <message>
         <source>Allow the process till its exit or for the time by the menu</source>
         <translation>Разрешить процесс до его завершения или на время из меню</translation>
-    </message>
-    <message>
-        <source>&amp;Block once</source>
-        <translation>&amp;Блокировать однократно</translation>
-    </message>
-    <message>
-        <source>&amp;Continue</source>
-        <translation>&amp;Продолжить</translation>
     </message>
     <message>
         <source>Continue by the current rules: the still paused ones are blocked</source>
         <translation>Продолжить по текущим правилам: всё ещё приостановленные блокируются</translation>
     </message>
     <message>
-        <source>Add &amp;Filter</source>
-        <translation>Добавить &amp;фильтр</translation>
+        <source>Allow once</source>
+        <translation>Разрешить однократно</translation>
+    </message>
+    <message>
+        <source>Allow Process</source>
+        <translation>Разрешить процесс</translation>
+    </message>
+    <message>
+        <source>Block once</source>
+        <translation>Блокировать однократно</translation>
+    </message>
+    <message>
+        <source>Continue</source>
+        <translation>Продолжить</translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -441,6 +448,10 @@
         <translation>Loopback</translation>
     </message>
     <message>
+        <source>Terminating Rule</source>
+        <translation>Завершающее правило</translation>
+    </message>
+    <message>
         <source>Inherited from: %1</source>
         <translation>Унаследовано от: %1</translation>
     </message>
@@ -581,24 +592,8 @@
         <translation>Действие:</translation>
     </message>
     <message>
-        <source>By &amp;Rule</source>
-        <translation>По &amp;правилу</translation>
-    </message>
-    <message>
         <source>The Rule&apos;s action is applied</source>
         <translation>Применяется действие Правила</translation>
-    </message>
-    <message>
-        <source>&amp;Allow</source>
-        <translation>&amp;Разрешить</translation>
-    </message>
-    <message>
-        <source>&amp;Block</source>
-        <translation>&amp;Блокировать</translation>
-    </message>
-    <message>
-        <source>&amp;Drop</source>
-        <translation>&amp;Отбросить</translation>
     </message>
     <message>
         <source>Block silently, without a response</source>
@@ -617,8 +612,12 @@
         <translation>Входящие</translation>
     </message>
     <message>
-        <source>A&amp;sk</source>
-        <translation>&amp;Спрашивать</translation>
+        <source>Filter Configuration Error</source>
+        <translation>Ошибка конфигурации фильтра</translation>
+    </message>
+    <message>
+        <source>By Rule</source>
+        <translation>По правилу</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
@@ -713,6 +712,10 @@
         <translation>Копировать текст</translation>
     </message>
     <message>
+        <source>Paste Text</source>
+        <translation>Вставить текст</translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>ОК</translation>
     </message>
@@ -731,6 +734,10 @@
     <message>
         <source>All, except these</source>
         <translation>Все, кроме этих</translation>
+    </message>
+    <message>
+        <source>The text must be one line of filters</source>
+        <translation>Текст должен быть одной строкой фильтров</translation>
     </message>
     <message>
         <source>Clear</source>
@@ -2122,18 +2129,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Наследование правил:</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>Разрешить</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Блокировать</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>Спрашивать</translation>
-    </message>
-    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>Спрашивать для соединения: приостановить соединение до решения пользователя</translation>
     </message>
@@ -2450,14 +2445,6 @@ Please check other program with the same path.</source>
         <translation>Изменить</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>Разрешить</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Блокировать</translation>
-    </message>
-    <message>
         <source>Add</source>
         <translation>Добавить</translation>
     </message>
@@ -2552,10 +2539,6 @@ Please check other program with the same path.</source>
     <message>
         <source>Timer</source>
         <translation>Таймер</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>Спрашивать</translation>
     </message>
     <message>
         <source>Connections</source>
@@ -2661,18 +2644,6 @@ Please check other program with the same path.</source>
         <translation>Включено</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>Разрешить</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Блокировать</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>Спрашивать</translation>
-    </message>
-    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>Спрашивать для соединения: приостановить соединение до решения пользователя</translation>
     </message>
@@ -2741,6 +2712,14 @@ Please check other program with the same path.</source>
         <translation>Передвинуть вниз</translation>
     </message>
     <message>
+        <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
+
+Save the changes?</source>
+        <translation>Заданное правило по умолчанию обновляется новыми версиями программы: ваши изменения будут потеряны, кроме флагов &quot;Включено&quot; и &quot;Меню в трее&quot;. Дублируйте его, чтобы сохранить их.
+
+Сохранить изменения?</translation>
+    </message>
+    <message>
         <source>Global rules count exceeded!</source>
         <translation>Превышено количество глобальных правил!</translation>
     </message>
@@ -2772,8 +2751,16 @@ Please check other program with the same path.</source>
 <context>
     <name>RuleListModel</name>
     <message>
+        <source>Terminating Rule:</source>
+        <translation>Завершающее правило:</translation>
+    </message>
+    <message>
         <source>Rule</source>
         <translation>Правило</translation>
+    </message>
+    <message>
+        <source>Terminating Rule</source>
+        <translation>Завершающее правило</translation>
     </message>
     <message>
         <source>Time Period</source>
@@ -2872,6 +2859,10 @@ Please check other program with the same path.</source>
         <source>Cannot update Rule&apos;s name</source>
         <translation>Невозможно обновить наименование Правила</translation>
     </message>
+    <message>
+        <source>Cannot add the default Preset Rules</source>
+        <translation>Невозможно добавить заданные правила по умолчанию</translation>
+    </message>
 </context>
 <context>
     <name>RulesWindow</name>
@@ -2884,8 +2875,16 @@ Please check other program with the same path.</source>
         <translation>Добавить</translation>
     </message>
     <message>
+        <source>Duplicate</source>
+        <translation>Дублировать</translation>
+    </message>
+    <message>
         <source>Remove</source>
         <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>Add Default Preset Rules</source>
+        <translation>Добавить заданные правила по умолчанию</translation>
     </message>
     <message>
         <source>Rules</source>
@@ -3393,22 +3392,6 @@ Packet loss: %2</source>
     <message>
         <source>Terminating Rule:</source>
         <translation>Завершающее правило:</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>Разрешить</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Блокировать</translation>
-    </message>
-    <message>
-        <source>Drop</source>
-        <translation>Отбросить</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>Спрашивать</translation>
     </message>
     <message>
         <source>Alert</source>

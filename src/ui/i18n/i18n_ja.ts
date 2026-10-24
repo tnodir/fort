@@ -29,6 +29,25 @@
     </message>
 </context>
 <context>
+    <name>ActionRange</name>
+    <message>
+        <source>Allow</source>
+        <translation>許可</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>ブロック</translation>
+    </message>
+    <message>
+        <source>Ask</source>
+        <translation>確認</translation>
+    </message>
+    <message>
+        <source>Drop</source>
+        <translation>破棄</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -88,23 +107,15 @@
         <translation>作成日時</translation>
     </message>
     <message>
-        <source>Block</source>
-        <translation>ブロック</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>確認</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>許可</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>名前</translation>
     </message>
     <message>
         <source>Groups</source>
+        <translation>グループ</translation>
+    </message>
+    <message>
+        <source>Group</source>
         <translation>グループ</translation>
     </message>
     <message>
@@ -174,32 +185,28 @@
         <translation>一時停止中の接続</translation>
     </message>
     <message>
-        <source>&amp;Allow once</source>
-        <translation>今回のみ許可(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Allow &amp;Process</source>
-        <translation>プロセスを許可(&amp;P)</translation>
-    </message>
-    <message>
         <source>Allow the process till its exit or for the time by the menu</source>
         <translation>プロセスの終了まで、またはメニューで指定した時間までプロセスを許可する</translation>
-    </message>
-    <message>
-        <source>&amp;Block once</source>
-        <translation>今回のみブロック(&amp;B)</translation>
-    </message>
-    <message>
-        <source>&amp;Continue</source>
-        <translation>続行(&amp;C)</translation>
     </message>
     <message>
         <source>Continue by the current rules: the still paused ones are blocked</source>
         <translation>現在のルールで続行する : まだ一時停止中のものはブロックされます</translation>
     </message>
     <message>
-        <source>Add &amp;Filter</source>
-        <translation>フィルターを追加(&amp;F)</translation>
+        <source>Allow once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow Process</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Continue</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -441,6 +448,10 @@
         <translation>ループバック</translation>
     </message>
     <message>
+        <source>Terminating Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Inherited from: %1</source>
         <translation>継承元 : %1</translation>
     </message>
@@ -581,24 +592,8 @@
         <translation>操作 :</translation>
     </message>
     <message>
-        <source>By &amp;Rule</source>
-        <translation>ルールによる(&amp;R)</translation>
-    </message>
-    <message>
         <source>The Rule&apos;s action is applied</source>
         <translation>ルールのアクションが適用されます</translation>
-    </message>
-    <message>
-        <source>&amp;Allow</source>
-        <translation>許可(&amp;A)</translation>
-    </message>
-    <message>
-        <source>&amp;Block</source>
-        <translation>ブロック(&amp;B)</translation>
-    </message>
-    <message>
-        <source>&amp;Drop</source>
-        <translation>破棄(&amp;D)</translation>
     </message>
     <message>
         <source>Block silently, without a response</source>
@@ -617,8 +612,12 @@
         <translation>受信</translation>
     </message>
     <message>
-        <source>A&amp;sk</source>
-        <translation>確認(&amp;S)</translation>
+        <source>Filter Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>By Rule</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
@@ -713,6 +712,10 @@
         <translation>テキストをコピー</translation>
     </message>
     <message>
+        <source>Paste Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -731,6 +734,10 @@
     <message>
         <source>All, except these</source>
         <translation>これら以外のすべて</translation>
+    </message>
+    <message>
+        <source>The text must be one line of filters</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Clear</source>
@@ -2122,18 +2129,6 @@ Make sure that you have a fresh backup.</source>
         <translation>ルールの継承 :</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>許可</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>ブロック</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>確認</translation>
-    </message>
-    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>接続を確認する : ユーザーの決定まで接続を一時停止します</translation>
     </message>
@@ -2450,14 +2445,6 @@ Please check other program with the same path.</source>
         <translation>編集</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>許可</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>ブロック</translation>
-    </message>
-    <message>
         <source>Add</source>
         <translation>追加</translation>
     </message>
@@ -2552,10 +2539,6 @@ Please check other program with the same path.</source>
     <message>
         <source>Timer</source>
         <translation>タイマー</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>確認</translation>
     </message>
     <message>
         <source>Connections</source>
@@ -2661,18 +2644,6 @@ Please check other program with the same path.</source>
         <translation>有効</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>許可</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>ブロック</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>確認</translation>
-    </message>
-    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>接続を確認する : ユーザーの決定まで接続を一時停止します</translation>
     </message>
@@ -2741,6 +2712,12 @@ Please check other program with the same path.</source>
         <translation>下へ移動</translation>
     </message>
     <message>
+        <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
+
+Save the changes?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Global rules count exceeded!</source>
         <translation>グローバルルールの数を超えました!</translation>
     </message>
@@ -2772,8 +2749,16 @@ Please check other program with the same path.</source>
 <context>
     <name>RuleListModel</name>
     <message>
+        <source>Terminating Rule:</source>
+        <translation>強制終了ルール :</translation>
+    </message>
+    <message>
         <source>Rule</source>
         <translation>ルール</translation>
+    </message>
+    <message>
+        <source>Terminating Rule</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Time Period</source>
@@ -2872,6 +2857,10 @@ Please check other program with the same path.</source>
         <source>Cannot update Rule&apos;s name</source>
         <translation>ルールの名前を更新できません</translation>
     </message>
+    <message>
+        <source>Cannot add the default Preset Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RulesWindow</name>
@@ -2884,8 +2873,16 @@ Please check other program with the same path.</source>
         <translation>追加</translation>
     </message>
     <message>
+        <source>Duplicate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Remove</source>
         <translation>削除</translation>
+    </message>
+    <message>
+        <source>Add Default Preset Rules</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Rules</source>
@@ -3393,22 +3390,6 @@ Packet loss: %2</source>
     <message>
         <source>Terminating Rule:</source>
         <translation>強制終了ルール :</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>許可</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>ブロック</translation>
-    </message>
-    <message>
-        <source>Drop</source>
-        <translation>破棄</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>確認</translation>
     </message>
     <message>
         <source>Alert</source>

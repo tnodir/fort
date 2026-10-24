@@ -29,6 +29,25 @@
     </message>
 </context>
 <context>
+    <name>ActionRange</name>
+    <message>
+        <source>Allow</source>
+        <translation>Consenti</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Blocca</translation>
+    </message>
+    <message>
+        <source>Ask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Drop</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -88,24 +107,16 @@
         <translation>Data creazione</translation>
     </message>
     <message>
-        <source>Block</source>
-        <translation>Blocca</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>Consenti</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
     <message>
         <source>Groups</source>
         <translation>Gruppi</translation>
+    </message>
+    <message>
+        <source>Group</source>
+        <translation>Gruppo</translation>
     </message>
     <message>
         <source>Speed Limits</source>
@@ -174,23 +185,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Allow once</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Allow &amp;Process</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Allow the process till its exit or for the time by the menu</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Block once</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -198,7 +193,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Add &amp;Filter</source>
+        <source>Allow once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow Process</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -441,6 +448,10 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Terminating Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Inherited from: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -581,23 +592,7 @@
         <translation>Azione:</translation>
     </message>
     <message>
-        <source>By &amp;Rule</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>The Rule&apos;s action is applied</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Allow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Block</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Drop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -617,7 +612,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>A&amp;sk</source>
+        <source>Filter Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>By Rule</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -713,6 +712,10 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Paste Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>Ok</translation>
     </message>
@@ -730,6 +733,10 @@
     </message>
     <message>
         <source>All, except these</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The text must be one line of filters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2121,18 +2128,6 @@ Assicurati di avere un nuovo backup.</translation>
         <translation>Ereditarietà regole:</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>Consenti</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Blocca</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2449,14 +2444,6 @@ Controllare un altro programma con lo stesso percorso.</translation>
         <translation>Modifica</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>Consenti</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Blocca</translation>
-    </message>
-    <message>
         <source>Add</source>
         <translation>Aggiungi</translation>
     </message>
@@ -2551,10 +2538,6 @@ Controllare un altro programma con lo stesso percorso.</translation>
     <message>
         <source>Timer</source>
         <translation>Tempo</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Connections</source>
@@ -2660,18 +2643,6 @@ Controllare un altro programma con lo stesso percorso.</translation>
         <translation>Abilitato</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>Consenti</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Blocca</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2740,6 +2711,12 @@ Controllare un altro programma con lo stesso percorso.</translation>
         <translation>Sposta giù</translation>
     </message>
     <message>
+        <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
+
+Save the changes?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Global rules count exceeded!</source>
         <translation>Conteggio regole globali superato!</translation>
     </message>
@@ -2771,8 +2748,16 @@ Controllare un altro programma con lo stesso percorso.</translation>
 <context>
     <name>RuleListModel</name>
     <message>
+        <source>Terminating Rule:</source>
+        <translation>Regola terminante:</translation>
+    </message>
+    <message>
         <source>Rule</source>
         <translation>Regola</translation>
+    </message>
+    <message>
+        <source>Terminating Rule</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Time Period</source>
@@ -2871,6 +2856,10 @@ Controllare un altro programma con lo stesso percorso.</translation>
         <source>Cannot update Rule&apos;s name</source>
         <translation>Impossibile aggiornare nome regola</translation>
     </message>
+    <message>
+        <source>Cannot add the default Preset Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RulesWindow</name>
@@ -2883,8 +2872,16 @@ Controllare un altro programma con lo stesso percorso.</translation>
         <translation>Aggiungi</translation>
     </message>
     <message>
+        <source>Duplicate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Remove</source>
         <translation>Rimuovi</translation>
+    </message>
+    <message>
+        <source>Add Default Preset Rules</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Rules</source>
@@ -3391,22 +3388,6 @@ Packet loss: %2</source>
     <message>
         <source>Terminating Rule:</source>
         <translation>Regola terminante:</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>Consenti</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Blocca</translation>
-    </message>
-    <message>
-        <source>Drop</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Alert</source>

@@ -29,6 +29,25 @@
     </message>
 </context>
 <context>
+    <name>ActionRange</name>
+    <message>
+        <source>Allow</source>
+        <translation>Autoriser</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Bloquer</translation>
+    </message>
+    <message>
+        <source>Ask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Drop</source>
+        <translation>Lâcher</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -88,24 +107,16 @@
         <translation>Heure de création</translation>
     </message>
     <message>
-        <source>Block</source>
-        <translation>Bloquer</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>Demander</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>Autoriser</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>Nom</translation>
     </message>
     <message>
         <source>Groups</source>
         <translation>Groupes</translation>
+    </message>
+    <message>
+        <source>Group</source>
+        <translation>Groupe</translation>
     </message>
     <message>
         <source>Speed Limits</source>
@@ -174,32 +185,28 @@
         <translation>Connexions en pause</translation>
     </message>
     <message>
-        <source>&amp;Allow once</source>
-        <translation>&amp;Autoriser une fois</translation>
-    </message>
-    <message>
-        <source>Allow &amp;Process</source>
-        <translation>Autoriser le &amp;processus</translation>
-    </message>
-    <message>
         <source>Allow the process till its exit or for the time by the menu</source>
         <translation>Laissez le processus se terminer ou suivre la durée indiquée dans le menu</translation>
-    </message>
-    <message>
-        <source>&amp;Block once</source>
-        <translation>&amp;Bloquer une fois</translation>
-    </message>
-    <message>
-        <source>&amp;Continue</source>
-        <translation>&amp;Continuer</translation>
     </message>
     <message>
         <source>Continue by the current rules: the still paused ones are blocked</source>
         <translation>Continuer selon les règles actuelles : les règles toujours en pause sont bloquées</translation>
     </message>
     <message>
-        <source>Add &amp;Filter</source>
-        <translation>Ajouter &amp;Filtre</translation>
+        <source>Allow once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow Process</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Continue</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -441,6 +448,10 @@
         <translation>Boucle de retour</translation>
     </message>
     <message>
+        <source>Terminating Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Inherited from: %1</source>
         <translation>Hérité de : %1</translation>
     </message>
@@ -581,24 +592,8 @@
         <translation>Action :</translation>
     </message>
     <message>
-        <source>By &amp;Rule</source>
-        <translation>Par &amp;Règle</translation>
-    </message>
-    <message>
         <source>The Rule&apos;s action is applied</source>
         <translation>L&apos;action de la règle&apos;s est appliquée</translation>
-    </message>
-    <message>
-        <source>&amp;Allow</source>
-        <translation>&amp;Autoriser</translation>
-    </message>
-    <message>
-        <source>&amp;Block</source>
-        <translation>&amp;Bloquer</translation>
-    </message>
-    <message>
-        <source>&amp;Drop</source>
-        <translation>&amp;Lâcher</translation>
     </message>
     <message>
         <source>Block silently, without a response</source>
@@ -617,8 +612,12 @@
         <translation>Entrant</translation>
     </message>
     <message>
-        <source>A&amp;sk</source>
-        <translation>Que&amp;stion</translation>
+        <source>Filter Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>By Rule</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
@@ -713,6 +712,10 @@
         <translation>Copier le texte</translation>
     </message>
     <message>
+        <source>Paste Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>Ok</translation>
     </message>
@@ -731,6 +734,10 @@
     <message>
         <source>All, except these</source>
         <translation>Tous, sauf ceux-ci</translation>
+    </message>
+    <message>
+        <source>The text must be one line of filters</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Clear</source>
@@ -2122,18 +2129,6 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <translation>Règles d&apos;héritage :</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>Autoriser</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Bloquer</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>Demander</translation>
-    </message>
-    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>Demander à se connecter : mettre en pause la connexion jusqu&apos;à ce que l&apos;utilisateur&apos;s décide</translation>
     </message>
@@ -2450,14 +2445,6 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
         <translation>Éditer</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>Autoriser</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Bloquer</translation>
-    </message>
-    <message>
         <source>Add</source>
         <translation>Ajouter</translation>
     </message>
@@ -2552,10 +2539,6 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
     <message>
         <source>Timer</source>
         <translation>Minuteur</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>Questions</translation>
     </message>
     <message>
         <source>Connections</source>
@@ -2661,18 +2644,6 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
         <translation>Activé</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>Autoriser</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Bloquer</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>Questions</translation>
-    </message>
-    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>Demander à se connecter : mettre en pause la connexion jusqu&apos;à ce que l&apos;utilisateur&apos;s décide</translation>
     </message>
@@ -2741,6 +2712,12 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
         <translation>Descendre</translation>
     </message>
     <message>
+        <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
+
+Save the changes?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Global rules count exceeded!</source>
         <translation>Nombre de règles globales dépassé!</translation>
     </message>
@@ -2772,8 +2749,16 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
 <context>
     <name>RuleListModel</name>
     <message>
+        <source>Terminating Rule:</source>
+        <translation>Règle de terminaison :</translation>
+    </message>
+    <message>
         <source>Rule</source>
         <translation>Règle</translation>
+    </message>
+    <message>
+        <source>Terminating Rule</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Time Period</source>
@@ -2872,6 +2857,10 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
         <source>Cannot update Rule&apos;s name</source>
         <translation>Impossible de mettre à jour la règle&apos;s nom</translation>
     </message>
+    <message>
+        <source>Cannot add the default Preset Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RulesWindow</name>
@@ -2884,8 +2873,16 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
         <translation>Ajouter</translation>
     </message>
     <message>
+        <source>Duplicate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Remove</source>
         <translation>Retirer</translation>
+    </message>
+    <message>
+        <source>Add Default Preset Rules</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Rules</source>
@@ -3393,22 +3390,6 @@ Perte de paquets : %2</translation>
     <message>
         <source>Terminating Rule:</source>
         <translation>Règle de terminaison :</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>Autoriser</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Bloquer</translation>
-    </message>
-    <message>
-        <source>Drop</source>
-        <translation>Lâcher</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>Demander</translation>
     </message>
     <message>
         <source>Alert</source>

@@ -29,6 +29,25 @@
     </message>
 </context>
 <context>
+    <name>ActionRange</name>
+    <message>
+        <source>Allow</source>
+        <translation>허용</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>차단</translation>
+    </message>
+    <message>
+        <source>Ask</source>
+        <translation>묻기</translation>
+    </message>
+    <message>
+        <source>Drop</source>
+        <translation>버리기</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -88,23 +107,15 @@
         <translation>생성 시간</translation>
     </message>
     <message>
-        <source>Block</source>
-        <translation>차단</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>묻기</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>허용</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>이름</translation>
     </message>
     <message>
         <source>Groups</source>
+        <translation>그룹</translation>
+    </message>
+    <message>
+        <source>Group</source>
         <translation>그룹</translation>
     </message>
     <message>
@@ -174,32 +185,28 @@
         <translation>일시 중지된 연결</translation>
     </message>
     <message>
-        <source>&amp;Allow once</source>
-        <translation>한 번만 허용(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Allow &amp;Process</source>
-        <translation>프로세스 허용(&amp;P)</translation>
-    </message>
-    <message>
         <source>Allow the process till its exit or for the time by the menu</source>
         <translation>프로세스가 종료될 때까지 또는 메뉴에서 지정한 시간 동안 기다리기</translation>
-    </message>
-    <message>
-        <source>&amp;Block once</source>
-        <translation>한 번 차단(&amp;B)</translation>
-    </message>
-    <message>
-        <source>&amp;Continue</source>
-        <translation>계속(&amp;C)</translation>
     </message>
     <message>
         <source>Continue by the current rules: the still paused ones are blocked</source>
         <translation>현재 규칙을 따르세요: 아직 중지된 항목은 차단됩니다</translation>
     </message>
     <message>
-        <source>Add &amp;Filter</source>
-        <translation>필터 추가(&amp;F)</translation>
+        <source>Allow once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow Process</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Continue</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -441,6 +448,10 @@
         <translation>루프백</translation>
     </message>
     <message>
+        <source>Terminating Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Inherited from: %1</source>
         <translation>상속받은 항목: %1</translation>
     </message>
@@ -581,24 +592,8 @@
         <translation>동작:</translation>
     </message>
     <message>
-        <source>By &amp;Rule</source>
-        <translation>규칙에 따라(&amp;R)</translation>
-    </message>
-    <message>
         <source>The Rule&apos;s action is applied</source>
         <translation>규칙 동작이 적용됩니다</translation>
-    </message>
-    <message>
-        <source>&amp;Allow</source>
-        <translation>허용(&amp;A)</translation>
-    </message>
-    <message>
-        <source>&amp;Block</source>
-        <translation>차단(&amp;B)</translation>
-    </message>
-    <message>
-        <source>&amp;Drop</source>
-        <translation>버리기(&amp;D)</translation>
     </message>
     <message>
         <source>Block silently, without a response</source>
@@ -617,8 +612,12 @@
         <translation>인바운드</translation>
     </message>
     <message>
-        <source>A&amp;sk</source>
-        <translation>묻기(&amp;S)</translation>
+        <source>Filter Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>By Rule</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
@@ -713,6 +712,10 @@
         <translation>텍스트 복사</translation>
     </message>
     <message>
+        <source>Paste Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>확인</translation>
     </message>
@@ -731,6 +734,10 @@
     <message>
         <source>All, except these</source>
         <translation>이것들만 제외하고 모두</translation>
+    </message>
+    <message>
+        <source>The text must be one line of filters</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Clear</source>
@@ -2122,18 +2129,6 @@ Make sure that you have a fresh backup.</source>
         <translation>규칙 상속:</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>허용</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>차단</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>묻기</translation>
-    </message>
-    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>연결 요청: 사용자의 결정이 있을 때까지 연결을 일시 중지합니다</translation>
     </message>
@@ -2450,14 +2445,6 @@ Please check other program with the same path.</source>
         <translation>편집</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>허용</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>차단</translation>
-    </message>
-    <message>
         <source>Add</source>
         <translation>추가</translation>
     </message>
@@ -2552,10 +2539,6 @@ Please check other program with the same path.</source>
     <message>
         <source>Timer</source>
         <translation>타이머</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>묻기</translation>
     </message>
     <message>
         <source>Connections</source>
@@ -2661,18 +2644,6 @@ Please check other program with the same path.</source>
         <translation>사용함</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>허용</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>차단</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>묻기</translation>
-    </message>
-    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>연결 요청: 사용자의 결정이 있을 때까지 연결을 일시 중지합니다</translation>
     </message>
@@ -2741,6 +2712,12 @@ Please check other program with the same path.</source>
         <translation>아래로 이동</translation>
     </message>
     <message>
+        <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
+
+Save the changes?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Global rules count exceeded!</source>
         <translation>전역 규칙 수가 초과되었습니다!</translation>
     </message>
@@ -2772,8 +2749,16 @@ Please check other program with the same path.</source>
 <context>
     <name>RuleListModel</name>
     <message>
+        <source>Terminating Rule:</source>
+        <translation>종료 규칙:</translation>
+    </message>
+    <message>
         <source>Rule</source>
         <translation>규칙</translation>
+    </message>
+    <message>
+        <source>Terminating Rule</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Time Period</source>
@@ -2872,6 +2857,10 @@ Please check other program with the same path.</source>
         <source>Cannot update Rule&apos;s name</source>
         <translation>규칙 이름을 업데이트할 수 없음(&amp;S)</translation>
     </message>
+    <message>
+        <source>Cannot add the default Preset Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RulesWindow</name>
@@ -2884,8 +2873,16 @@ Please check other program with the same path.</source>
         <translation>추가</translation>
     </message>
     <message>
+        <source>Duplicate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Remove</source>
         <translation>제거</translation>
+    </message>
+    <message>
+        <source>Add Default Preset Rules</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Rules</source>
@@ -3393,22 +3390,6 @@ Packet loss: %2</source>
     <message>
         <source>Terminating Rule:</source>
         <translation>종료 규칙:</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>허용</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>차단</translation>
-    </message>
-    <message>
-        <source>Drop</source>
-        <translation>버리기</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>묻기</translation>
     </message>
     <message>
         <source>Alert</source>

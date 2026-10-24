@@ -29,6 +29,25 @@
     </message>
 </context>
 <context>
+    <name>ActionRange</name>
+    <message>
+        <source>Allow</source>
+        <translation>Cho phép</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Chặn</translation>
+    </message>
+    <message>
+        <source>Ask</source>
+        <translation>Hỏi</translation>
+    </message>
+    <message>
+        <source>Drop</source>
+        <translation>Hủy (Drop)</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -88,23 +107,15 @@
         <translation>Thời gian tạo</translation>
     </message>
     <message>
-        <source>Block</source>
-        <translation>Chặn</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>Hỏi</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>Cho phép</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>Tên</translation>
     </message>
     <message>
         <source>Groups</source>
+        <translation>Nhóm</translation>
+    </message>
+    <message>
+        <source>Group</source>
         <translation>Nhóm</translation>
     </message>
     <message>
@@ -174,32 +185,28 @@
         <translation>Các kết nối đang tạm dừng</translation>
     </message>
     <message>
-        <source>&amp;Allow once</source>
-        <translation>Cho phép một lầ&amp;n</translation>
-    </message>
-    <message>
-        <source>Allow &amp;Process</source>
-        <translation>Cho phép tiế&amp;n trình</translation>
-    </message>
-    <message>
         <source>Allow the process till its exit or for the time by the menu</source>
         <translation>Cho phép tiến trình cho đến khi thoát hoặc theo thời gian từ menu</translation>
-    </message>
-    <message>
-        <source>&amp;Block once</source>
-        <translation>Chặn một lầ&amp;n</translation>
-    </message>
-    <message>
-        <source>&amp;Continue</source>
-        <translation>Tiế&amp;p tục</translation>
     </message>
     <message>
         <source>Continue by the current rules: the still paused ones are blocked</source>
         <translation>Tiếp tục theo các quy tắc hiện tại: các kết nối vẫn đang tạm dừng sẽ bị chặn</translation>
     </message>
     <message>
-        <source>Add &amp;Filter</source>
-        <translation>Thêm bộ l&amp;ọc</translation>
+        <source>Allow once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow Process</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Continue</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -441,6 +448,10 @@
         <translation>Loopback</translation>
     </message>
     <message>
+        <source>Terminating Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Inherited from: %1</source>
         <translation>Kế thừa từ: %1</translation>
     </message>
@@ -581,24 +592,8 @@
         <translation>Hành động:</translation>
     </message>
     <message>
-        <source>By &amp;Rule</source>
-        <translation>Theo quy tắ&amp;c</translation>
-    </message>
-    <message>
         <source>The Rule&apos;s action is applied</source>
         <translation>Hành động của quy tắc được áp dụng</translation>
-    </message>
-    <message>
-        <source>&amp;Allow</source>
-        <translation>&amp;Cho phép</translation>
-    </message>
-    <message>
-        <source>&amp;Block</source>
-        <translation>Chặ&amp;n</translation>
-    </message>
-    <message>
-        <source>&amp;Drop</source>
-        <translation>&amp;Loại bỏ</translation>
     </message>
     <message>
         <source>Block silently, without a response</source>
@@ -617,8 +612,12 @@
         <translation>Kết nối đến</translation>
     </message>
     <message>
-        <source>A&amp;sk</source>
-        <translation>&amp;Hỏi</translation>
+        <source>Filter Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>By Rule</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
@@ -713,6 +712,10 @@
         <translation>Sao chép văn bản</translation>
     </message>
     <message>
+        <source>Paste Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -731,6 +734,10 @@
     <message>
         <source>All, except these</source>
         <translation>Tất cả, ngoại trừ các mục này</translation>
+    </message>
+    <message>
+        <source>The text must be one line of filters</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Clear</source>
@@ -2122,18 +2129,6 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
         <translation>Kế thừa quy tắc:</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>Cho phép</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Chặn</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>Hỏi</translation>
-    </message>
-    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>Hỏi khi kết nối: tạm dừng kết nối cho đến khi người dùng quyết định</translation>
     </message>
@@ -2450,14 +2445,6 @@ Vui lòng kiểm tra chương trình khác có cùng đường dẫn.</translati
         <translation>Chỉnh sửa</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>Cho phép</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Chặn</translation>
-    </message>
-    <message>
         <source>Add</source>
         <translation>Thêm</translation>
     </message>
@@ -2552,10 +2539,6 @@ Vui lòng kiểm tra chương trình khác có cùng đường dẫn.</translati
     <message>
         <source>Timer</source>
         <translation>Bộ hẹn giờ</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>Hỏi</translation>
     </message>
     <message>
         <source>Connections</source>
@@ -2661,18 +2644,6 @@ Vui lòng kiểm tra chương trình khác có cùng đường dẫn.</translati
         <translation>Đã bật</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>Cho phép</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Chặn</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>Hỏi</translation>
-    </message>
-    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>Hỏi khi kết nối: tạm dừng kết nối cho đến khi người dùng quyết định</translation>
     </message>
@@ -2741,6 +2712,12 @@ Vui lòng kiểm tra chương trình khác có cùng đường dẫn.</translati
         <translation>Di chuyển xuống</translation>
     </message>
     <message>
+        <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
+
+Save the changes?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Global rules count exceeded!</source>
         <translation>Đã vượt quá số lượng quy tắc chung!</translation>
     </message>
@@ -2772,8 +2749,16 @@ Vui lòng kiểm tra chương trình khác có cùng đường dẫn.</translati
 <context>
     <name>RuleListModel</name>
     <message>
+        <source>Terminating Rule:</source>
+        <translation>Quy tắc kết thúc:</translation>
+    </message>
+    <message>
         <source>Rule</source>
         <translation>Quy tắc</translation>
+    </message>
+    <message>
+        <source>Terminating Rule</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Time Period</source>
@@ -2872,6 +2857,10 @@ Vui lòng kiểm tra chương trình khác có cùng đường dẫn.</translati
         <source>Cannot update Rule&apos;s name</source>
         <translation>Không thể cập nhật tên quy tắc</translation>
     </message>
+    <message>
+        <source>Cannot add the default Preset Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RulesWindow</name>
@@ -2884,8 +2873,16 @@ Vui lòng kiểm tra chương trình khác có cùng đường dẫn.</translati
         <translation>Thêm</translation>
     </message>
     <message>
+        <source>Duplicate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Remove</source>
         <translation>Gỡ bỏ</translation>
+    </message>
+    <message>
+        <source>Add Default Preset Rules</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Rules</source>
@@ -3393,22 +3390,6 @@ Mất gói tin: %2</translation>
     <message>
         <source>Terminating Rule:</source>
         <translation>Quy tắc kết thúc:</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>Cho phép</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Chặn</translation>
-    </message>
-    <message>
-        <source>Drop</source>
-        <translation>Hủy (Drop)</translation>
-    </message>
-    <message>
-        <source>Ask</source>
-        <translation>Hỏi</translation>
     </message>
     <message>
         <source>Alert</source>
