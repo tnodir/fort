@@ -44,6 +44,8 @@ bool PresetRulesManager::sync(SyncMode mode)
 
     m_syncedVersion = Fort::settings()->rulePresetVersion();
 
+    mode = actualSyncMode(mode);
+
     if (!isSyncNeeded(mode, version))
         return true;
 
@@ -78,17 +80,22 @@ SqliteDb *PresetRulesManager::sqliteDb() const
     return m_confRuleManager->sqliteDb();
 }
 
+PresetRulesManager::SyncMode PresetRulesManager::actualSyncMode(SyncMode mode) const
+{
+    // Not set up yet (an old profile): as a new conf
+    if (m_syncedVersion.isEmpty() && m_ruleIds.isEmpty())
+        return SyncRestore;
+
+    return mode;
+}
+
 bool PresetRulesManager::isSyncNeeded(SyncMode mode, const QString &version) const
 {
     if (mode == SyncRestore)
         return true;
 
-    // Not set up yet (an old profile): only by the user; else the .ini was reset
-    if (m_syncedVersion.isEmpty()) {
-        return !m_ruleIds.isEmpty();
-    }
-
-    return version > m_syncedVersion; // a newer file
+    // The .ini was reset; else a newer file
+    return m_syncedVersion.isEmpty() || version > m_syncedVersion;
 }
 
 bool PresetRulesManager::loadRuleIds()

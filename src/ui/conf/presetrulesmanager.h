@@ -38,6 +38,7 @@ public:
 private:
     SqliteDb *sqliteDb() const;
 
+    SyncMode actualSyncMode(SyncMode mode) const;
     bool isSyncNeeded(SyncMode mode, const QString &version) const;
 
     bool loadRuleIds();
