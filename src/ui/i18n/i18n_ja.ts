@@ -194,19 +194,19 @@
     </message>
     <message>
         <source>Allow once</source>
-        <translation type="unfinished"></translation>
+        <translation>今回のみ許可</translation>
     </message>
     <message>
         <source>Allow Process</source>
-        <translation type="unfinished"></translation>
+        <translation>プロセスを許可</translation>
     </message>
     <message>
         <source>Block once</source>
-        <translation type="unfinished"></translation>
+        <translation>今回のみブロック</translation>
     </message>
     <message>
         <source>Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>続行</translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -449,7 +449,7 @@
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>終了ルール</translation>
     </message>
     <message>
         <source>Inherited from: %1</source>
@@ -613,11 +613,11 @@
     </message>
     <message>
         <source>Filter Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルター設定エラー</translation>
     </message>
     <message>
         <source>By Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>ルールによる</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
@@ -713,7 +713,7 @@
     </message>
     <message>
         <source>Paste Text</source>
-        <translation type="unfinished"></translation>
+        <translation>テキストを貼り付け</translation>
     </message>
     <message>
         <source>OK</source>
@@ -737,7 +737,7 @@
     </message>
     <message>
         <source>The text must be one line of filters</source>
-        <translation type="unfinished"></translation>
+        <translation>テキストは 1 行のフィルターである必要があります</translation>
     </message>
     <message>
         <source>Clear</source>
@@ -2715,7 +2715,9 @@ Please check other program with the same path.</source>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>デフォルトのプリセットルールはプログラムの新バージョンによって更新されます。有効フラグとトレイメニューフラグを除き、変更は失われます。変更を保持するには複製してください。
+
+変更を保存しますか?</translation>
     </message>
     <message>
         <source>Global rules count exceeded!</source>
@@ -2758,7 +2760,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>終了ルール</translation>
     </message>
     <message>
         <source>Time Period</source>
@@ -2859,7 +2861,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Cannot add the default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>デフォルトのプリセットルールを追加できません</translation>
     </message>
 </context>
 <context>
@@ -2874,7 +2876,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Duplicate</source>
-        <translation type="unfinished"></translation>
+        <translation>複製</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2882,7 +2884,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Add Default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>デフォルトのプリセットルールを追加</translation>
     </message>
     <message>
         <source>Rules</source>
