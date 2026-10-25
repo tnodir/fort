@@ -194,19 +194,19 @@
     </message>
     <message>
         <source>Allow once</source>
-        <translation type="unfinished"></translation>
+        <translation>한 번만 허용</translation>
     </message>
     <message>
         <source>Allow Process</source>
-        <translation type="unfinished"></translation>
+        <translation>프로세스 허용</translation>
     </message>
     <message>
         <source>Block once</source>
-        <translation type="unfinished"></translation>
+        <translation>한 번 차단</translation>
     </message>
     <message>
         <source>Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>계속</translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -449,7 +449,7 @@
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>규칙 종료 중</translation>
     </message>
     <message>
         <source>Inherited from: %1</source>
@@ -613,11 +613,11 @@
     </message>
     <message>
         <source>Filter Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 구성 오류</translation>
     </message>
     <message>
         <source>By Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>규칙에 따라</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
@@ -713,7 +713,7 @@
     </message>
     <message>
         <source>Paste Text</source>
-        <translation type="unfinished"></translation>
+        <translation>텍스트 붙여넣기</translation>
     </message>
     <message>
         <source>OK</source>
@@ -737,7 +737,7 @@
     </message>
     <message>
         <source>The text must be one line of filters</source>
-        <translation type="unfinished"></translation>
+        <translation>텍스트는 필터 한 줄이어야 합니다</translation>
     </message>
     <message>
         <source>Clear</source>
@@ -2715,7 +2715,9 @@ Please check other program with the same path.</source>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>프로그램의 새 버전이 출시되면 기본 사전 설정 규칙이 업데이트됩니다. 이 과정에서 활성화 및 &apos;트레이 메뉴 설정 항목을 제외한 나머지 변경 사항은 모두 사라집니다. 변경 사항을 유지하려면 해당 규칙을 복제해 두세요.
+
+변경 사항을 저장하시겠습니까?</translation>
     </message>
     <message>
         <source>Global rules count exceeded!</source>
@@ -2750,7 +2752,7 @@ Save the changes?</source>
     <name>RuleListModel</name>
     <message>
         <source>Terminating Rule:</source>
-        <translation>종료 규칙:</translation>
+        <translation>규칙 종료:</translation>
     </message>
     <message>
         <source>Rule</source>
@@ -2758,7 +2760,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>규칙 종료</translation>
     </message>
     <message>
         <source>Time Period</source>
@@ -2859,7 +2861,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Cannot add the default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>기본 사전 설정 규칙을 추가할 수 없습니다</translation>
     </message>
 </context>
 <context>
@@ -2874,7 +2876,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Duplicate</source>
-        <translation type="unfinished"></translation>
+        <translation>복제</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2882,7 +2884,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Add Default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>기본 사전 설정 규칙 추가</translation>
     </message>
     <message>
         <source>Rules</source>
