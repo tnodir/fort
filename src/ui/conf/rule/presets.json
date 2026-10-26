@@ -1,5 +1,5 @@
 {
-    "version": "2026102002",
+    "version": "2026102601",
     "rules": [
         {
             "code": "localhost",
@@ -82,6 +82,36 @@
             "notes": "Ping and the network's error messages.",
             "text": [
                 "proto(ICMP, ICMPv6)"
+            ]
+        },
+        {
+            "code": "ping-outbound",
+            "since": "2026102601",
+            "name": "Ping: Outbound",
+            "notes": "The outbound echo requests of ping and traceroute (its Time Exceeded messages are ICMP Errors).",
+            "text": [
+                "proto(ICMP):icmp_type(8):dir(OUT) # Echo Request",
+                "proto(ICMPv6):icmp_type(128):dir(OUT) # Echo Request"
+            ]
+        },
+        {
+            "code": "ping-inbound",
+            "since": "2026102601",
+            "name": "Ping: Inbound",
+            "notes": "The inbound echo requests: this PC answers to ping.",
+            "text": [
+                "proto(ICMP):icmp_type(8):dir(IN) # Echo Request",
+                "proto(ICMPv6):icmp_type(128):dir(IN) # Echo Request"
+            ]
+        },
+        {
+            "code": "icmp-errors",
+            "since": "2026102601",
+            "name": "ICMP Errors",
+            "notes": "The inbound network's error messages: Destination Unreachable (incl. Fragmentation Needed and Packet Too Big of the Path MTU Discovery), Time Exceeded (traceroute), Parameter Problem.",
+            "text": [
+                "proto(ICMP):icmp_type(3, 11, 12):dir(IN) # Destination Unreachable, Time Exceeded, Parameter Problem",
+                "proto(ICMPv6):icmp_type(1-4):dir(IN) # Destination Unreachable, Packet Too Big, Time Exceeded, Parameter Problem"
             ]
         },
         {
@@ -220,6 +250,27 @@
             ]
         },
         {
+            "code": "file-printer-sharing-private",
+            "since": "2026102601",
+            "name": "File and Printer Sharing: Private Networks",
+            "notes": "SMB, NetBIOS and the network printers in the Local Network of the Private and Domain networks' profiles (e.g. not in a public Wi-Fi): filtered only with the \"Filter Local Network\" option.",
+            "text": [
+                "profile(PRIVATE, DOMAIN):area(LAN):tcp(139, 445) # SMB",
+                "profile(PRIVATE, DOMAIN):area(LAN):udp(137, 138) # NetBIOS",
+                "profile(PRIVATE, DOMAIN):area(LAN):tcp(631, 9100):dir(OUT) # Printing: IPP, raw"
+            ]
+        },
+        {
+            "code": "network-discovery-private",
+            "since": "2026102601",
+            "name": "Network Discovery: Private Networks",
+            "notes": "The devices' and services' discovery in the Local Network of the Private and Domain networks' profiles (e.g. not in a public Wi-Fi): filtered only with the \"Filter Local Network\" option.",
+            "text": [
+                "profile(PRIVATE, DOMAIN):area(LAN):udp(1900, 3702, 5353, 5355) # SSDP, WS-Discovery, mDNS, LLMNR",
+                "profile(PRIVATE, DOMAIN):area(LAN):tcp(5357, 5358) # WSD"
+            ]
+        },
+        {
             "code": "delivery-optimization",
             "since": "2026102002",
             "name": "Delivery Optimization",
@@ -236,6 +287,39 @@
             "blocked": true,
             "text": [
                 "local_port(3389):dir(IN)"
+            ]
+        },
+        {
+            "code": "block-inbound-smb-rpc-inet",
+            "since": "2026102601",
+            "name": "Block Inbound SMB, RPC from Internet",
+            "notes": "The inbound RPC, NetBIOS and SMB connections from the Internet's addresses, e.g. of the network worms: received by the \"System\" process and services.",
+            "blocked": true,
+            "text": [
+                "area(INET):local_port(135):dir(IN) # RPC Endpoint Mapper",
+                "area(INET):local_port(137-139):dir(IN) # NetBIOS",
+                "area(INET):local_port(445):dir(IN) # SMB"
+            ]
+        },
+        {
+            "code": "block-outbound-smb-inet",
+            "since": "2026102601",
+            "name": "Block Outbound SMB to Internet",
+            "notes": "The connections to the Internet's file shares: a link to \"\\\\host\\share\" (in a web page, a document, an email) sends the user's NTLM hash to the host.",
+            "blocked": true,
+            "text": [
+                "area(INET):tcp(139, 445):dir(OUT)"
+            ]
+        },
+        {
+            "code": "block-ping-inbound",
+            "since": "2026102601",
+            "name": "Block Inbound Ping",
+            "notes": "The inbound echo requests: this PC doesn't answer to ping.",
+            "blocked": true,
+            "text": [
+                "proto(ICMP):icmp_type(8):dir(IN) # Echo Request",
+                "proto(ICMPv6):icmp_type(128):dir(IN) # Echo Request"
             ]
         },
         {
