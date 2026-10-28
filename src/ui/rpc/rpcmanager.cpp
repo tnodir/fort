@@ -152,6 +152,7 @@ bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args, QVar
         return false;
 
     m_resultRequestId = client()->lastRequestId();
+    m_resultCommand = Control::CommandNone;
 
     if (!waitResult()) {
         showErrorBox(tr("Service isn't responding."));

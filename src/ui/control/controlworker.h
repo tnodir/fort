@@ -51,7 +51,7 @@ public:
     bool postCommand(Control::Command command, const QVariantList &args = {});
 
     bool sendResult(quint32 requestId, bool ok, const QVariantList &args = {});
-    bool waitResult(Control::Command &resultCommand, int msecs = 700) const;
+    bool waitResult(const Control::Command &resultCommand, int msecs = 700) const;
 
     bool waitForSent(int msecs = 700) const;
     bool waitForRead(int msecs = 700) const;

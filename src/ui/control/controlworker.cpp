@@ -261,25 +261,25 @@ bool ControlWorker::sendResult(quint32 requestId, bool ok, const QVariantList &a
     return sendRequest(ok ? Control::Rpc_Result_Ok : Control::Rpc_Result_Error, requestId, args);
 }
 
-bool ControlWorker::waitResult(Control::Command &resultCommand, int msecs) const
+bool ControlWorker::waitResult(const Control::Command &resultCommand, int msecs) const
 {
-    resultCommand = Control::CommandNone;
-
     // Other messages from the server must not prolong the wait for the result
     const QDeadlineTimer deadline(3 * msecs);
 
     int waitCount = 3;
-    do {
+
+    // QLocalSocket::waitForBytesWritten() reads the pipe too: the result may be read already
+    while (resultCommand == Control::CommandNone) {
+        if (deadline.hasExpired())
+            return false;
+
         const int waitMsecs = qMin(msecs, int(deadline.remainingTime()));
 
         if (!waitForRead(waitMsecs) && --waitCount <= 0)
             return false;
+    }
 
-        if (resultCommand != Control::CommandNone)
-            return true;
-    } while (!deadline.hasExpired());
-
-    return false;
+    return true;
 }
 
 bool ControlWorker::waitForSent(int msecs) const

@@ -156,7 +156,7 @@ bool ControlManager::postCommand(
     ControlWorker w(&socket);
     w.setupForAsync();
 
-    Control::Command commandOk;
+    Control::Command commandOk = Control::CommandNone;
 
     connect(&w, &ControlWorker::requestReady, this,
             [&commandOk, r](
