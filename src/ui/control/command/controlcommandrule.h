@@ -6,8 +6,6 @@
 class ControlCommandRule : public ControlCommandBase
 {
 public:
-    bool prepareClientArgs(QVariantList &args, ProcessCommandResult &r) const override;
-
     bool processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const override;
 
 protected:

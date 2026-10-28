@@ -337,20 +337,6 @@ bool processCommandRuleAction(
 
 }
 
-bool ControlCommandRule::prepareClientArgs(QVariantList &args, ProcessCommandResult &r) const
-{
-    if (!ControlCommandBase::prepareClientArgs(args, r))
-        return false;
-
-    // The rule's text is replaced by a non-empty one; a new rule may have no text
-    if (clientRuleAction(args) == RuleActionSetText && args[2].toString().isEmpty()) {
-        r.errorMessage = "Empty file";
-        return false;
-    }
-
-    return true;
-}
-
 bool ControlCommandRule::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const
 {
     bool report = false;
