@@ -26,7 +26,6 @@
 #include <manager/windowmanager.h>
 #include <model/rulesetmodel.h>
 #include <util/conf/confbuffer.h>
-#include <util/conf/confutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/net/actionrange.h>
@@ -627,12 +626,10 @@ bool RuleEditDialog::validateEditName() const
 bool RuleEditDialog::validateComboRuleType() const
 {
     const auto ruleType = Rule::RuleType(m_comboRuleType->currentIndex());
-    if (ruleType == Rule::GlobalBeforeAppsRule || ruleType == Rule::GlobalAfterAppsRule) {
-        if (confRuleManager()->rulesCountByType(ruleType) >= ConfUtil::ruleGlobalMaxCount()) {
-            windowManager()->showErrorBox(tr("Global rules count exceeded!"));
-            focusGeneralField(m_comboRuleType);
-            return false;
-        }
+    if (confRuleManager()->isGlobalRulesCountExceeded(ruleType)) {
+        windowManager()->showErrorBox(tr("Global rules count exceeded!"));
+        focusGeneralField(m_comboRuleType);
+        return false;
     }
 
     return true;

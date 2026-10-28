@@ -313,6 +313,14 @@ int ConfRuleManager::rulesCountByType(Rule::RuleType ruleType)
     return DbQuery(sqliteDb()).sql(sqlSelectRulesCountByType).vars({ ruleType }).execute().toInt();
 }
 
+bool ConfRuleManager::isGlobalRulesCountExceeded(Rule::RuleType ruleType)
+{
+    const bool isGlobal =
+            (ruleType == Rule::GlobalBeforeAppsRule || ruleType == Rule::GlobalAfterAppsRule);
+
+    return isGlobal && rulesCountByType(ruleType) >= ConfUtil::ruleGlobalMaxCount();
+}
+
 bool ConfRuleManager::checkRuleSetValid(quint16 ruleId, quint16 subRuleId, int extraDepth)
 {
     const auto list = DbQuery(sqliteDb())

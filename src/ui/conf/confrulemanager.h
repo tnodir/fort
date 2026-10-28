@@ -30,6 +30,9 @@ public:
     void saveRuleSet(Rule &rule);
 
     int rulesCountByType(Rule::RuleType ruleType);
+
+    // The Global rules of the type are of the max count: no new one
+    bool isGlobalRulesCountExceeded(Rule::RuleType ruleType);
     bool checkRuleSetValid(quint16 ruleId, quint16 subRuleId, int extraDepth = 0);
 
     bool syncPresetRules(PresetRulesManager::SyncMode mode);
