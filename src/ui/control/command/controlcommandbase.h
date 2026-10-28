@@ -18,6 +18,9 @@ public:
 
     virtual bool processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const = 0;
 
+    // The command shows the windows, which the service has none of
+    virtual bool needsWindows(const QVariantList & /*args*/) const { return false; }
+
 protected:
     // Client: The <file-path> argument's file to send its text instead of the path,
     // or to write the result's text to

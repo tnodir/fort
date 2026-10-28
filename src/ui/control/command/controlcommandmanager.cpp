@@ -3,6 +3,7 @@
 #include <control/controlmanager.h>
 #include <control/controlworker.h>
 #include <fortglobal.h>
+#include <fortsettings.h>
 #include <rpc/rpcmanager.h>
 
 #include "controlcommandaddr.h"
@@ -76,6 +77,16 @@ const ControlCommandBase *commandByType(Control::Command command)
             command, commandList, Control::CommandHome, Control::CommandWindow, &commandRpc);
 }
 
+bool checkCommandWindows(
+        const ControlCommandBase *command, const QVariantList &args, ProcessCommandResult &r)
+{
+    if (!command->needsWindows(args) || !Fort::settings()->isService())
+        return true;
+
+    r.errorMessage = "The service has no windows: run the tray process";
+    return false;
+}
+
 }
 
 bool ControlCommandManager::processCommandClient(
@@ -92,7 +103,7 @@ bool ControlCommandManager::processCommand(const ProcessCommandArgs &p, ProcessC
 {
     const ControlCommandBase *command = commandByType(p.command);
 
-    const bool ok = command->processCommand(p, r);
+    const bool ok = checkCommandWindows(command, p.args, r) && command->processCommand(p, r);
 
     if (command != &commandRpc) {
         ControlCommandUtil::uncheckCommandActionPassword();
