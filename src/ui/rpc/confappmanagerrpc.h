@@ -14,7 +14,6 @@ public:
     explicit ConfAppManagerRpc(QObject *parent = nullptr);
 
     bool addOrUpdateAppPath(const QString &appOriginPath, App::Action action) override;
-    bool deleteAppPath(const QString &appOriginPath) override;
 
     bool addOrUpdateApp(App &app, bool onlyUpdate = false) override;
     bool updateApp(App &app) override;

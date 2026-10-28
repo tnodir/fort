@@ -20,12 +20,6 @@ bool processConfAppManager_addOrUpdateAppPath(
             p.args.value(0).toString(), App::Action(p.args.value(1).toInt()));
 }
 
-bool processConfAppManager_deleteAppPath(
-        ConfAppManager *confAppManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
-{
-    return confAppManager->deleteAppPath(p.args.value(0).toString());
-}
-
 bool processConfAppManager_addOrUpdateApp(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
@@ -104,7 +98,6 @@ using processConfAppManager_func = bool (*)(
 
 static const processConfAppManager_func processConfAppManager_funcList[] = {
     &processConfAppManager_addOrUpdateAppPath, // Rpc_ConfAppManager_addOrUpdateAppPath,
-    &processConfAppManager_deleteAppPath, // Rpc_ConfAppManager_deleteAppPath,
     &processConfAppManager_addOrUpdateApp, // Rpc_ConfAppManager_addOrUpdateApp,
     &processConfAppManager_updateApp, // Rpc_ConfAppManager_updateApp,
     &processConfAppManager_updateAppName, // Rpc_ConfAppManager_updateAppName,
@@ -135,11 +128,6 @@ bool ConfAppManagerRpc::addOrUpdateAppPath(const QString &appOriginPath, App::Ac
 {
     return rpcManager()->doOnServer(
             Control::Rpc_ConfAppManager_addOrUpdateAppPath, { appOriginPath, int(action) });
-}
-
-bool ConfAppManagerRpc::deleteAppPath(const QString &appOriginPath)
-{
-    return rpcManager()->doOnServer(Control::Rpc_ConfAppManager_deleteAppPath, { appOriginPath });
 }
 
 bool ConfAppManagerRpc::addOrUpdateApp(App &app, bool onlyUpdate)

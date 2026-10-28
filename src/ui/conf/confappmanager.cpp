@@ -418,17 +418,6 @@ bool ConfAppManager::addOrUpdateAppPath(const QString &appOriginPath, App::Actio
     return ok;
 }
 
-bool ConfAppManager::deleteAppPath(const QString &appOriginPath)
-{
-    QString normPath;
-    const qint64 appId = appIdByPath(appOriginPath, normPath);
-
-    if (appId <= 0)
-        return false; // does not exist
-
-    return deleteApps({ appId });
-}
-
 bool ConfAppManager::addOrUpdateApp(App &app, bool onlyUpdate)
 {
     bool ok = false;
