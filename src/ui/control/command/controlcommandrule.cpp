@@ -9,6 +9,8 @@
 #include <util/conf/confbuffer.h>
 #include <util/fileutil.h>
 
+#include "controlcommandutil.h"
+
 using namespace Fort;
 
 namespace {
@@ -214,12 +216,8 @@ bool ControlCommandRule::processCommand(const ProcessCommandArgs &p, ProcessComm
         return false;
     }
 
-    if (!checkCommandActionPassword(r, ruleAction))
+    if (!ControlCommandUtil::checkCommandActionPassword(r, ruleAction))
         return false;
 
-    const bool ok = processCommandRuleAction(r, p.args, ruleAction, report);
-
-    uncheckCommandActionPassword();
-
-    return ok;
+    return processCommandRuleAction(r, p.args, ruleAction, report);
 }

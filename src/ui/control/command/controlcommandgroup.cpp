@@ -4,6 +4,8 @@
 #include <conf/group.h>
 #include <fortglobal.h>
 
+#include "controlcommandutil.h"
+
 using namespace Fort;
 
 namespace {
@@ -79,14 +81,10 @@ bool ControlCommandGroup::processCommand(const ProcessCommandArgs &p, ProcessCom
         return false;
     }
 
-    if (!checkCommandActionPassword(r, groupAction))
+    if (!ControlCommandUtil::checkCommandActionPassword(r, groupAction))
         return false;
 
     const int groupId = p.args.value(1).toInt();
 
-    const bool ok = processCommandGroupAction(r, groupId, groupAction, report);
-
-    uncheckCommandActionPassword();
-
-    return ok;
+    return processCommandGroupAction(r, groupId, groupAction, report);
 }

@@ -16,6 +16,7 @@
 #include "controlcommandprog.h"
 #include "controlcommandrpc.h"
 #include "controlcommandrule.h"
+#include "controlcommandutil.h"
 #include "controlcommandzone.h"
 
 namespace {
@@ -71,6 +72,10 @@ bool ControlCommandManager::processCommand(const ProcessCommandArgs &p, ProcessC
     const ControlCommandBase *command = commandByType(p.command);
 
     const bool ok = command->processCommand(p, r);
+
+    if (command != &commandRpc) {
+        ControlCommandUtil::uncheckCommandActionPassword();
+    }
 
     if (!ok && r.errorMessage.isEmpty()) {
         r.errorMessage = "Invalid command";

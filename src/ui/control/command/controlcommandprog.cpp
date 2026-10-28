@@ -7,6 +7,8 @@
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
 
+#include "controlcommandutil.h"
+
 using namespace Fort;
 
 namespace {
@@ -107,12 +109,8 @@ bool ControlCommandProg::processCommand(const ProcessCommandArgs &p, ProcessComm
         return false;
     }
 
-    if (!checkCommandActionPassword(r, progAction))
+    if (!ControlCommandUtil::checkCommandActionPassword(r, progAction))
         return false;
 
-    const bool ok = processCommandProgAction(r, appPath, progAction, report);
-
-    uncheckCommandActionPassword();
-
-    return ok;
+    return processCommandProgAction(r, appPath, progAction, report);
 }

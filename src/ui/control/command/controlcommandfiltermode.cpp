@@ -4,6 +4,8 @@
 #include <conf/firewallconf.h>
 #include <fortglobal.h>
 
+#include "controlcommandutil.h"
+
 using namespace Fort;
 
 namespace {
@@ -79,12 +81,8 @@ bool ControlCommandFilterMode::processCommand(
         return false;
     }
 
-    if (!checkCommandActionPassword(r, filterMode))
+    if (!ControlCommandUtil::checkCommandActionPassword(r, filterMode))
         return false;
 
-    const bool ok = processCommandFilterModeAction(r, filterMode, report);
-
-    uncheckCommandActionPassword();
-
-    return ok;
+    return processCommandFilterModeAction(r, filterMode, report);
 }

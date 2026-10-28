@@ -3,6 +3,8 @@
 #include <conf/confappmanager.h>
 #include <fortglobal.h>
 
+#include "controlcommandutil.h"
+
 using namespace Fort;
 
 namespace {
@@ -41,12 +43,8 @@ bool ControlCommandConf::processCommand(const ProcessCommandArgs &p, ProcessComm
         return false;
     }
 
-    if (!checkCommandActionPassword(r, confAction, ConfActionUpdateDriver))
+    if (!ControlCommandUtil::checkCommandActionPassword(r, confAction, ConfActionUpdateDriver))
         return false;
 
-    const bool ok = processCommandConfAction(confAction);
-
-    uncheckCommandActionPassword();
-
-    return ok;
+    return processCommandConfAction(confAction);
 }

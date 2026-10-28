@@ -4,6 +4,8 @@
 #include <fortglobal.h>
 #include <stat/statmanager.h>
 
+#include "controlcommandutil.h"
+
 using namespace Fort;
 
 namespace {
@@ -57,14 +59,10 @@ bool ControlCommandBackup::processCommand(
         return false;
     }
 
-    if (!checkCommandActionPassword(r, backupAction))
+    if (!ControlCommandUtil::checkCommandActionPassword(r, backupAction))
         return false;
 
     const QString dirPath = p.args.value(1).toString();
 
-    const bool ok = processCommandBackupAction(backupAction, dirPath);
-
-    uncheckCommandActionPassword();
-
-    return ok;
+    return processCommandBackupAction(backupAction, dirPath);
 }

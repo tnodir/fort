@@ -4,6 +4,8 @@
 #include <task/taskinfozonedownloader.h>
 #include <task/taskmanager.h>
 
+#include "controlcommandutil.h"
+
 using namespace Fort;
 
 namespace {
@@ -43,12 +45,8 @@ bool ControlCommandZone::processCommand(const ProcessCommandArgs &p, ProcessComm
         return false;
     }
 
-    if (!checkCommandActionPassword(r, zoneAction))
+    if (!ControlCommandUtil::checkCommandActionPassword(r, zoneAction))
         return false;
 
-    const bool ok = processCommandZoneAction(zoneAction);
-
-    uncheckCommandActionPassword();
-
-    return ok;
+    return processCommandZoneAction(zoneAction);
 }
