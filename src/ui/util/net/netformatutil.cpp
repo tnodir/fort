@@ -19,6 +19,22 @@ struct sock_addr
 
 #define sock_addr_get_inp(sap) ((void *) &(sap)->u.in.sin_addr)
 
+namespace {
+
+QString trimIpText(const QString &text)
+{
+    const QString ipText = text.trimmed();
+
+    // IPv6 address in brackets
+    if (ipText.startsWith('[') && ipText.endsWith(']')) {
+        return ipText.mid(1, ipText.size() - 2);
+    }
+
+    return ipText;
+}
+
+}
+
 quint32 NetFormatUtil::textToIp4(const QStringView text, bool *ok)
 {
     quint32 ip4;
@@ -83,6 +99,23 @@ QString NetFormatUtil::ip6ToText(const ip6_addr_t ip)
 QString NetFormatUtil::ipToText(const ip_addr_t ip, bool isIPv6)
 {
     return isIPv6 ? ip6ToText(ip.v6) : ip4ToText(ip.v4);
+}
+
+bool NetFormatUtil::textToIp(const QString &text, ip_addr_t &ip, bool &isIPv6)
+{
+    const QString ipText = trimIpText(text);
+
+    isIPv6 = ipText.contains(':');
+
+    bool ok = false;
+
+    if (isIPv6) {
+        ip.v6 = textToIp6(ipText, &ok);
+    } else {
+        ip.v4 = textToIp4(ipText, &ok);
+    }
+
+    return ok;
 }
 
 QString NetFormatUtil::ipToAddressText(const ip_addr_t ip, bool isIPv6)

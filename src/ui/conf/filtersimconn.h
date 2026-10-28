@@ -7,6 +7,12 @@
 
 struct FilterSimConn
 {
+    // Set the remote address by its text; loopback for a loopback address too
+    bool setRemoteIp(const QString &text, bool isLoopback = false);
+
+    // Set the local address by its text of the remote address's IP version; empty for any
+    bool setLocalIp(const QString &text);
+
     DriverCommon::ConnFilterResult result = DriverCommon::ConnFilterAllowed;
 
     // The input: direction, IP version, profile, loopback, protocol, addresses and ports.

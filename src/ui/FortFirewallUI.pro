@@ -27,6 +27,7 @@ SOURCES += \
     conf/confspeedlimitmanager.cpp \
     conf/conftimeperiodmanager.cpp \
     conf/confzonemanager.cpp \
+    conf/filtersimconn.cpp \
     conf/firewallconf.cpp \
     conf/group.cpp \
     conf/inioptions.cpp \

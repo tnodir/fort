@@ -27,6 +27,8 @@ public:
     static QByteArrayView ip6ToArrayView(const ip6_addr_t &ip);
     static const ip6_addr_t &arrayViewToIp6(const QByteArrayView &buf);
 
+    static bool isLoopbackIp(const ip_addr_t &ip, bool isIPv6);
+
     static QString getHostName(const QString &address);
 
     static QStringList localIpNetworks();

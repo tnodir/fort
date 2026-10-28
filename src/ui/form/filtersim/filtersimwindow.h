@@ -49,7 +49,7 @@ private:
     void simulateConnNow();
 
     bool fillSimConn(FilterSimConn &simConn) const;
-    bool fillConnAddresses(FORT_CONF_META_CONN &conn) const;
+    bool fillConnAddresses(FilterSimConn &simConn) const;
 
     void updateResult();
     void clearResult();

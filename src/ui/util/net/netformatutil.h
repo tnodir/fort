@@ -25,6 +25,9 @@ public:
 
     static QString ipToText(const ip_addr_t ip, bool isIPv6 = false);
 
+    // Convert IPv4 or IPv6 address from text to number: "1.1.1.1", "::1" or "[::1]"
+    static bool textToIp(const QString &text, ip_addr_t &ip, bool &isIPv6);
+
     // e.g. "1.1.1.1", "[::1]": the IPv6 address is in brackets, as in the rules' text
     static QString ipToAddressText(const ip_addr_t ip, bool isIPv6 = false);
 };

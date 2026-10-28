@@ -80,46 +80,6 @@ QLabel *createResultLabel()
     return c;
 }
 
-QString trimIpText(const QString &text)
-{
-    const QString ipText = text.trimmed();
-
-    // IPv6 address in brackets
-    if (ipText.startsWith('[') && ipText.endsWith(']')) {
-        return ipText.mid(1, ipText.size() - 2);
-    }
-
-    return ipText;
-}
-
-bool textToIp(const QString &text, ip_addr_t &ip, bool &isIPv6)
-{
-    const QString ipText = trimIpText(text);
-
-    isIPv6 = ipText.contains(':');
-
-    bool ok = false;
-
-    if (isIPv6) {
-        ip.v6 = NetFormatUtil::textToIp6(ipText, &ok);
-    } else {
-        ip.v4 = NetFormatUtil::textToIp4(ipText, &ok);
-    }
-
-    return ok;
-}
-
-bool isLoopbackIp(const ip_addr_t &ip, bool isIPv6)
-{
-    if (isIPv6) {
-        static const ip6_addr_t loopbackIp6 = NetFormatUtil::textToIp6("::1");
-
-        return memcmp(&ip.v6, &loopbackIp6, sizeof(ip6_addr_t)) == 0;
-    }
-
-    return (ip.v4 >> 24) == 127; // 127.0.0.0/8
-}
-
 QString resultIconPath(DriverCommon::ConnFilterResult result)
 {
     // Sync with enum DriverCommon::ConnFilterResult
@@ -511,7 +471,7 @@ bool FilterSimWindow::fillSimConn(FilterSimConn &simConn) const
 {
     FORT_CONF_META_CONN &conn = simConn.conn;
 
-    if (!fillConnAddresses(conn))
+    if (!fillConnAddresses(simConn))
         return false;
 
     conn.ip_proto = m_protocolSelector->protocol();
@@ -525,25 +485,14 @@ bool FilterSimWindow::fillSimConn(FilterSimConn &simConn) const
     return true;
 }
 
-bool FilterSimWindow::fillConnAddresses(FORT_CONF_META_CONN &conn) const
+bool FilterSimWindow::fillConnAddresses(FilterSimConn &simConn) const
 {
-    bool isIPv6 = false;
-
-    if (!textToIp(m_editRemoteIp->text(), conn.remote_ip, isIPv6)) {
+    if (!simConn.setRemoteIp(m_editRemoteIp->text(), m_cbLoopback->isChecked())) {
         showInputError(tr("Invalid remote IP address"));
         return false;
     }
 
-    conn.isIPv6 = isIPv6;
-    conn.is_loopback = m_cbLoopback->isChecked() || isLoopbackIp(conn.remote_ip, isIPv6);
-
-    const QString localIpText = m_editLocalIp->text().trimmed();
-    if (localIpText.isEmpty())
-        return true;
-
-    bool isLocalIPv6 = false;
-
-    if (!textToIp(localIpText, conn.local_ip, isLocalIPv6) || isLocalIPv6 != isIPv6) {
+    if (!simConn.setLocalIp(m_editLocalIp->text())) {
         showInputError(tr("Invalid local IP address"));
         return false;
     }

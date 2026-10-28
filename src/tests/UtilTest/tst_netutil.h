@@ -60,6 +60,27 @@ TEST_F(NetUtilTest, ipAddressText)
     ASSERT_EQ(NetFormatUtil::ipToAddressText(ip, /*isIPv6=*/true), "[::1]");
 }
 
+TEST_F(NetUtilTest, textToIp)
+{
+    ip_addr_t ip;
+    bool isIPv6 = true;
+
+    ASSERT_TRUE(NetFormatUtil::textToIp(" 127.0.0.2 ", ip, isIPv6));
+    ASSERT_FALSE(isIPv6);
+    ASSERT_EQ(NetFormatUtil::ipToText(ip), "127.0.0.2");
+    ASSERT_TRUE(NetUtil::isLoopbackIp(ip, isIPv6));
+
+    ASSERT_TRUE(NetFormatUtil::textToIp("[::1]", ip, isIPv6));
+    ASSERT_TRUE(isIPv6);
+    ASSERT_EQ(NetFormatUtil::ipToText(ip, isIPv6), "::1");
+    ASSERT_TRUE(NetUtil::isLoopbackIp(ip, isIPv6));
+
+    ASSERT_TRUE(NetFormatUtil::textToIp("2001:db8::1", ip, isIPv6));
+    ASSERT_FALSE(NetUtil::isLoopbackIp(ip, isIPv6));
+
+    ASSERT_FALSE(NetFormatUtil::textToIp("1.1.1", ip, isIPv6));
+}
+
 TEST_F(NetUtilTest, ip6Bytes01)
 {
     const ip6_addr_t ip = NetFormatUtil::textToIp6("ff02::1:3");

@@ -7,6 +7,8 @@
 
 #include <util/bitutil.h>
 
+#include "netformatutil.h"
+
 namespace {
 
 QHash<quint8, QString> protocolNumberNamesMap = {
@@ -336,6 +338,17 @@ const ip6_addr_t &NetUtil::arrayViewToIp6(const QByteArrayView &buf)
         return zeroIp6;
 
     return *reinterpret_cast<const ip6_addr_t *>(buf.data());
+}
+
+bool NetUtil::isLoopbackIp(const ip_addr_t &ip, bool isIPv6)
+{
+    if (isIPv6) {
+        static const ip6_addr_t loopbackIp6 = NetFormatUtil::textToIp6("::1");
+
+        return memcmp(&ip.v6, &loopbackIp6, sizeof(ip6_addr_t)) == 0;
+    }
+
+    return (ip.v4 >> 24) == 127; // 127.0.0.0/8
 }
 
 QString NetUtil::getHostName(const QString &address)
