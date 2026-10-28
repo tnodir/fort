@@ -190,7 +190,7 @@ bool setAppFields(ProcessCommandResult &r, App &app, const QVariantList &args)
 
 bool getAppFields(ProcessCommandResult &r, const App &app)
 {
-    r.errorMessage = ControlCommandUtil::fieldsToText(appFields(app));
+    r.errorMessage = ControlCommandUtil::fieldsToTextWithId(appFields(app), app.appId);
 
     return true;
 }
