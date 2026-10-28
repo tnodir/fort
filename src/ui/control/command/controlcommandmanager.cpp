@@ -18,6 +18,7 @@
 #include "controlcommandprog.h"
 #include "controlcommandrpc.h"
 #include "controlcommandrule.h"
+#include "controlcommandsimulate.h"
 #include "controlcommandutil.h"
 #include "controlcommandzone.h"
 
@@ -36,6 +37,7 @@ inline constexpr ControlCommandZone commandZone;
 inline constexpr ControlCommandRule commandRule;
 inline constexpr ControlCommandAddr commandAddr;
 inline constexpr ControlCommandPeriod commandPeriod;
+inline constexpr ControlCommandSimulate commandSimulate;
 
 inline constexpr ControlCommandRpc commandRpc;
 
@@ -53,12 +55,13 @@ inline constexpr const ControlCommandBase *commandList[] = {
     &commandRule, // Control::CommandRule,
     &commandAddr, // Control::CommandAddr,
     &commandPeriod, // Control::CommandPeriod,
+    &commandSimulate, // Control::CommandSimulate,
 };
 
 const ControlCommandBase *commandByType(Control::Command command)
 {
     return RpcManager::getProcessFunc<const ControlCommandBase>(
-            command, commandList, Control::CommandHome, Control::CommandPeriod, &commandRpc);
+            command, commandList, Control::CommandHome, Control::CommandSimulate, &commandRpc);
 }
 
 }
