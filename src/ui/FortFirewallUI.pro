@@ -35,6 +35,7 @@ SOURCES += \
     conf/speedlimit.cpp \
     conf/timeperiod.cpp \
     conf/zone.cpp \
+    control/command/controlcommandaddr.cpp \
     control/command/controlcommandbackup.cpp \
     control/command/controlcommandbase.cpp \
     control/command/controlcommandblock.cpp \
@@ -355,6 +356,7 @@ HEADERS += \
     conf/speedlimit.h \
     conf/timeperiod.h \
     conf/zone.h \
+    control/command/controlcommandaddr.h \
     control/command/controlcommandbackup.h \
     control/command/controlcommandbase.h \
     control/command/controlcommandblock.h \

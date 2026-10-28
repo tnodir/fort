@@ -32,6 +32,10 @@ public:
     static int nameIndex(const QVariantMap &fields, const QString &key, const QStringList &names,
             QString &errorMessage);
 
+    // The ids of a mask, 1-32, separated by commas
+    static bool parseIds(const QString &text, QVariant &ids);
+    static QString idsText(const QVariant &ids);
+
     // The mask's ids as a list
     static QVariant maskIds(quint32 mask);
     static quint32 idsMask(const QVariant &ids);

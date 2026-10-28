@@ -5,6 +5,7 @@
 #include <fortglobal.h>
 #include <rpc/rpcmanager.h>
 
+#include "controlcommandaddr.h"
 #include "controlcommandbackup.h"
 #include "controlcommandblock.h"
 #include "controlcommandconf.h"
@@ -32,6 +33,7 @@ inline constexpr ControlCommandConf commandConf;
 inline constexpr ControlCommandBackup commandBackup;
 inline constexpr ControlCommandZone commandZone;
 inline constexpr ControlCommandRule commandRule;
+inline constexpr ControlCommandAddr commandAddr;
 
 inline constexpr ControlCommandRpc commandRpc;
 
@@ -47,12 +49,13 @@ inline constexpr const ControlCommandBase *commandList[] = {
     &commandBackup, // Control::CommandBackup,
     &commandZone, // Control::CommandZone,
     &commandRule, // Control::CommandRule,
+    &commandAddr, // Control::CommandAddr,
 };
 
 const ControlCommandBase *commandByType(Control::Command command)
 {
     return RpcManager::getProcessFunc<const ControlCommandBase>(
-            command, commandList, Control::CommandHome, Control::CommandRule, &commandRpc);
+            command, commandList, Control::CommandHome, Control::CommandAddr, &commandRpc);
 }
 
 }

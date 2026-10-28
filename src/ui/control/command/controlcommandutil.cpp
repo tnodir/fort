@@ -29,27 +29,10 @@ QString clientFilePath(const QVariantList &args)
     return currentDir.absoluteFilePath(args.value(clientFileArgIndex).toString());
 }
 
-bool parseIds(const QString &text, QVariant &value)
-{
-    QVariantList ids;
-
-    for (const auto &idText : text.split(',', Qt::SkipEmptyParts)) {
-        const int id = idText.toInt();
-        if (id < 1 || id > 32)
-            return false;
-
-        ids.append(id);
-    }
-
-    value = ids;
-
-    return true;
-}
-
 bool parseValue(const QString &text, QVariant &value)
 {
     if (value.metaType().id() == QMetaType::QVariantList) {
-        return parseIds(text, value);
+        return ControlCommandUtil::parseIds(text, value);
     }
 
     return VariantUtil::parseValue(text, value);
@@ -86,7 +69,7 @@ QString valueText(const QVariant &value)
 {
     switch (value.metaType().id()) {
     case QMetaType::QVariantList: {
-        return value.toStringList().join(',');
+        return ControlCommandUtil::idsText(value);
     }
     case QMetaType::QString: {
         return stringText(value.toString());
@@ -157,6 +140,28 @@ int ControlCommandUtil::nameIndex(const QVariantMap &fields, const QString &key,
     }
 
     return index;
+}
+
+bool ControlCommandUtil::parseIds(const QString &text, QVariant &ids)
+{
+    QVariantList list;
+
+    for (const auto &idText : text.split(',', Qt::SkipEmptyParts)) {
+        const int id = idText.toInt();
+        if (id < 1 || id > 32)
+            return false;
+
+        list.append(id);
+    }
+
+    ids = list;
+
+    return true;
+}
+
+QString ControlCommandUtil::idsText(const QVariant &ids)
+{
+    return ids.toStringList().join(',');
 }
 
 QVariant ControlCommandUtil::maskIds(quint32 mask)

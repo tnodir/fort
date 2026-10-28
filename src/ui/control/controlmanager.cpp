@@ -110,6 +110,7 @@ bool ControlManager::processCommandClient(ProcessCommandResult &r)
         { "backup", Control::CommandBackup },
         { "zone", Control::CommandZone },
         { "rule", Control::CommandRule },
+        { "addr", Control::CommandAddr },
     };
 
     const auto settings = Fort::settings();
