@@ -17,6 +17,7 @@
 #include <util/variantutil.h>
 
 #include "command/controlcommandmanager.h"
+#include "command/controlcommandutil.h"
 #include "controlworker.h"
 
 using namespace Fort;
@@ -26,6 +27,14 @@ namespace {
 const QLoggingCategory LC("control");
 
 inline constexpr int maxClientsCount = 9;
+
+bool postCommandError(ProcessCommandResult *r, const char *errorMessage)
+{
+    if (r) {
+        ControlCommandUtil::setErrorResult(*r, errorMessage);
+    }
+    return false;
+}
 
 }
 
@@ -170,16 +179,19 @@ bool ControlManager::postCommand(
             });
 
     // Connect to UI process or Service
-    if (!connectToAnyServer(w))
-        return false;
+    if (!connectToAnyServer(w)) {
+        return postCommandError(r, "Cannot connect to the running instance");
+    }
 
     // Send data
-    if (!w.postCommand(command, args))
-        return false;
+    if (!w.postCommand(command, args)) {
+        return postCommandError(r, "Cannot send the command");
+    }
 
     // Read response
-    if (!w.waitResult(commandOk))
-        return false;
+    if (!w.waitResult(commandOk)) {
+        return postCommandError(r, "No result from the running instance");
+    }
 
     w.closeForAsync();
 
