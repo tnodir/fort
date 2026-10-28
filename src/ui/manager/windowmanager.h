@@ -216,11 +216,6 @@ private:
 
     void windowClosed(WindowCode code);
 
-    using WindowFunc = bool (WindowManager::*)(void);
-    using WindowFuncArray = std::array<WindowFunc, WindowCount>;
-
-    bool doWindowFunc(const WindowFuncArray &funcs, WindowCode code);
-
 private:
     bool m_isAppQuitting = false;
 

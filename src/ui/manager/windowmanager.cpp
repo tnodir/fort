@@ -772,16 +772,6 @@ void WindowManager::windowClosed(WindowCode code)
     }
 }
 
-bool WindowManager::doWindowFunc(const WindowFuncArray &funcs, WindowCode code)
-{
-    const int index = BitUtil::bitScanForward(code);
-
-    if (Q_UNLIKELY(index < 0 || code >= WindowCount))
-        return false;
-
-    return std::invoke(funcs[index], this);
-}
-
 bool WindowManager::activateModalWidget()
 {
     auto w = QApplication::activeModalWidget();
