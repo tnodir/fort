@@ -24,7 +24,7 @@ protected:
     /* The program's connections only: by its id or path */
     bool isSearching() const override { return true; }
 
-    qint64 lastConnsIdMin(qint64 idMax) const override;
+    qint64 lastConnsIdMin(qint64 idMax, int count) const override;
 
     QString sqlSearchWhere() const override;
     void fillSearchVars(QVariantList &vars) const override;

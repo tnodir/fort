@@ -19,7 +19,7 @@ bool AppConnSearchModel::canFilterApp(const App &app)
     return app.isValid() || !app.connFilterPath().isEmpty();
 }
 
-qint64 AppConnSearchModel::lastConnsIdMin(qint64 /*idMax*/) const
+qint64 AppConnSearchModel::lastConnsIdMin(qint64 /*idMax*/, int count) const
 {
     /* The program's last connections */
     return DbQuery(sqliteDb())
@@ -28,7 +28,7 @@ qint64 AppConnSearchModel::lastConnsIdMin(qint64 /*idMax*/) const
                     DbVar::nullable(confAppId()),
                     DbVar::nullable(appPath()),
                     1,
-                    searchConnsMax - 1,
+                    count - 1,
             })
             .execute()
             .toLongLong();

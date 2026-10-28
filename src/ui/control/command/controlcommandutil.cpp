@@ -38,17 +38,27 @@ bool parseValue(const QString &text, QVariant &value)
     return VariantUtil::parseValue(text, value);
 }
 
-bool parseFieldArg(const QString &arg, QVariantMap &fields, QString &errorMessage)
+QString argKey(const QString &arg)
 {
     const int sepIndex = arg.indexOf('=');
-    const auto it = fields.find(arg.left(sepIndex));
 
-    if (sepIndex <= 0 || it == fields.end()) {
+    return (sepIndex > 0) ? arg.left(sepIndex) : QString();
+}
+
+bool parseFieldArg(const QString &arg, QVariantMap &fields, QString &errorMessage)
+{
+    const QString key = argKey(arg);
+    const auto it = fields.find(key);
+
+    if (key.isEmpty() || it == fields.end()) {
         errorMessage = "Invalid field: " + arg;
         return false;
     }
 
-    if (!parseValue(arg.mid(sepIndex + 1), it.value())) {
+    const QString text = arg.mid(key.size() + 1);
+
+    if (!parseValue(text, it.value())) {
+        errorMessage = ControlCommandUtil::invalidValueText(key, text);
         return false;
     }
 
@@ -122,6 +132,13 @@ bool ControlCommandUtil::parseFieldArgs(
     }
 
     return true;
+}
+
+bool ControlCommandUtil::isFieldArg(const QString &arg, const QVariantMap &fields)
+{
+    const QString key = argKey(arg);
+
+    return !key.isEmpty() && fields.contains(key);
 }
 
 QString ControlCommandUtil::invalidValueText(const QString &key, const QString &text)

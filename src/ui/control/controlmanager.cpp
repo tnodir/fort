@@ -113,6 +113,7 @@ bool ControlManager::processCommandClient(ProcessCommandResult &r)
         { "addr", Control::CommandAddr },
         { "period", Control::CommandPeriod },
         { "simulate", Control::CommandSimulate },
+        { "conn", Control::CommandConn },
     };
 
     const auto settings = Fort::settings();

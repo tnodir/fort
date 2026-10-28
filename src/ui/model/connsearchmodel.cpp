@@ -154,9 +154,9 @@ void ConnSearchModel::updateSearch()
     resetConnRows(idMin, idMax);
 }
 
-qint64 ConnSearchModel::lastConnsIdMin(qint64 idMax) const
+qint64 ConnSearchModel::lastConnsIdMin(qint64 idMax, int count) const
 {
-    return idMax - searchConnsMax + 1;
+    return idMax - count + 1;
 }
 
 QString ConnSearchModel::sqlSearchWhere() const
@@ -164,13 +164,13 @@ QString ConnSearchModel::sqlSearchWhere() const
     return " WHERE t.conn_id > ?1";
 }
 
-qint64 ConnSearchModel::searchConnIdMin()
+qint64 ConnSearchModel::searchConnIdMin(int count)
 {
     qint64 idMin = 0, idMax = 0;
     fillConnIdRange(idMin, idMax);
 
     /* Search in the last connections only */
-    return qMax(idMin, lastConnsIdMin(idMax));
+    return qMax(idMin, lastConnsIdMin(idMax, count));
 }
 
 void ConnSearchModel::applyTextFilter()
@@ -247,11 +247,11 @@ void ConnSearchModel::appendMatchedConnRows(const QVector<ConnRow> &connRows)
     endInsertRows();
 }
 
-void ConnSearchModel::loadConnRows(qint64 connIdFrom, QVector<ConnRow> &connRows)
+void ConnSearchModel::loadConnRows(qint64 connIdFrom, QVector<ConnRow> &connRows, int count)
 {
     const QString sql = sqlBase() + sqlSearchWhere() + " ORDER BY t.conn_id LIMIT ?2;";
 
-    QVariantList vars = { connIdFrom, searchConnsMax };
+    QVariantList vars = { connIdFrom, count };
     fillSearchVars(vars);
 
     SqliteStmt stmt;

@@ -25,6 +25,9 @@ public:
     static bool parseFieldArgs(
             const QVariantList &args, int index, QVariantMap &fields, QString &errorMessage);
 
+    // The argument is "key=value" of the fields' key
+    static bool isFieldArg(const QString &arg, const QVariantMap &fields);
+
     // The error message of the field's invalid value
     static QString invalidValueText(const QString &key, const QString &text);
 

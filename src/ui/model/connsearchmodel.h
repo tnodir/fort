@@ -21,6 +21,12 @@ public:
     /* The search is applied */
     bool isFiltering() const { return !m_textMatcher.isEmpty(); }
 
+    /* The first of the last connections to search */
+    qint64 searchConnIdMin(int count = searchConnsMax);
+
+    /* The not matched rows too */
+    void loadConnRows(qint64 connIdFrom, QVector<ConnRow> &connRows, int count = searchConnsMax);
+
 public slots:
     void updateSearchLater();
 
@@ -45,7 +51,7 @@ protected:
     virtual bool isSearching() const { return isFiltering(); }
 
     /* The first of the last connections to search */
-    virtual qint64 lastConnsIdMin(qint64 idMax) const;
+    virtual qint64 lastConnsIdMin(qint64 idMax, int count) const;
 
     virtual QString sqlSearchWhere() const;
     virtual void fillSearchVars(QVariantList & /*vars*/) const { }
@@ -60,12 +66,7 @@ protected:
     void appendConnRows(qint64 connIdFrom);
     void appendMatchedConnRows(const QVector<ConnRow> &connRows);
 
-    /* The not matched rows too */
-    void loadConnRows(qint64 connIdFrom, QVector<ConnRow> &connRows);
-
 private:
-    qint64 searchConnIdMin();
-
     void removeConnRowsBefore(qint64 idMin);
 
 private:

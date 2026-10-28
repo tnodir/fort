@@ -65,6 +65,16 @@ TEST_F(ControlCommandUtilTest, parseFieldArgsBad)
     }
 }
 
+TEST_F(ControlCommandUtilTest, isFieldArg)
+{
+    ASSERT_TRUE(ControlCommandUtil::isFieldArg("count=1", fields()));
+    ASSERT_TRUE(ControlCommandUtil::isFieldArg("name=", fields()));
+
+    ASSERT_FALSE(ControlCommandUtil::isFieldArg("count", fields()));
+    ASSERT_FALSE(ControlCommandUtil::isFieldArg("=1", fields()));
+    ASSERT_FALSE(ControlCommandUtil::isFieldArg("C:\\a=b\\c.exe", fields()));
+}
+
 TEST_F(ControlCommandUtilTest, nameIndex)
 {
     const QStringList names = { "A", "B" };

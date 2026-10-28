@@ -9,6 +9,7 @@
 #include "controlcommandbackup.h"
 #include "controlcommandblock.h"
 #include "controlcommandconf.h"
+#include "controlcommandconn.h"
 #include "controlcommandfilter.h"
 #include "controlcommandfiltermode.h"
 #include "controlcommandgraph.h"
@@ -38,6 +39,7 @@ inline constexpr ControlCommandRule commandRule;
 inline constexpr ControlCommandAddr commandAddr;
 inline constexpr ControlCommandPeriod commandPeriod;
 inline constexpr ControlCommandSimulate commandSimulate;
+inline constexpr ControlCommandConn commandConn;
 
 inline constexpr ControlCommandRpc commandRpc;
 
@@ -56,12 +58,13 @@ inline constexpr const ControlCommandBase *commandList[] = {
     &commandAddr, // Control::CommandAddr,
     &commandPeriod, // Control::CommandPeriod,
     &commandSimulate, // Control::CommandSimulate,
+    &commandConn, // Control::CommandConn,
 };
 
 const ControlCommandBase *commandByType(Control::Command command)
 {
     return RpcManager::getProcessFunc<const ControlCommandBase>(
-            command, commandList, Control::CommandHome, Control::CommandSimulate, &commandRpc);
+            command, commandList, Control::CommandHome, Control::CommandConn, &commandRpc);
 }
 
 }
