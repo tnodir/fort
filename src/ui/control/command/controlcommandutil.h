@@ -10,6 +10,9 @@ class Rule;
 class ControlCommandUtil
 {
 public:
+    // The command's error result, e.g. of its object not found
+    static void setErrorResult(ProcessCommandResult &r, const QString &errorMessage);
+
     // The password is checked temporarily: unchecked after the command by its manager
     static bool checkCommandActionPassword(
             ProcessCommandResult &r, quint32 action, quint32 passwordNotRequiredActions = 0);
@@ -17,14 +20,24 @@ public:
     static void uncheckCommandActionPassword();
 
     // Set the fields by the "key=value" arguments from the index:
-    // the keys and the values' types are of the fields
+    // the keys and the values' types are of the fields;
+    // a list is of the ids of a mask, 1-32, separated by commas
     static bool parseFieldArgs(
             const QVariantList &args, int index, QVariantMap &fields, QString &errorMessage);
 
     // The error message of the field's invalid value
     static QString invalidValueText(const QString &key, const QString &text);
 
-    // The "key=value" pairs separated by spaces, the booleans as 0 or 1
+    // The field's value index in the names, -1 when invalid
+    static int nameIndex(const QVariantMap &fields, const QString &key, const QStringList &names,
+            QString &errorMessage);
+
+    // The mask's ids as a list
+    static QVariant maskIds(quint32 mask);
+    static quint32 idsMask(const QVariant &ids);
+
+    // The "key=value" pairs separated by spaces, the booleans as 0 or 1,
+    // a text with spaces or quotes in quotes, its quotes doubled
     static QString fieldsToText(const QVariantMap &fields);
 
     // Client: Replace the <file-path> argument with its file's text

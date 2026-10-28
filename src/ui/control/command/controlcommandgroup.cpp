@@ -56,8 +56,7 @@ bool processCommandGroupAction(
     Group group;
 
     if (!confGroupManager->loadGroupById(group, groupId)) {
-        r.commandResult = Control::CommandResultError;
-        r.errorMessage = "Group not found";
+        ControlCommandUtil::setErrorResult(r, "Group not found");
         return true;
     }
 

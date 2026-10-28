@@ -7,6 +7,9 @@ class ControlCommandProg : public ControlCommandBase
 {
 public:
     bool processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const override;
+
+protected:
+    ClientFileArg clientFileArg(const QVariantList &args) const override;
 };
 
 #endif // CONTROLCOMMANDPROG_H

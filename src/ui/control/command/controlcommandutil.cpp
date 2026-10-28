@@ -27,6 +27,32 @@ QString clientFilePath(const QVariantList &args)
     return currentDir.absoluteFilePath(args.value(clientFileArgIndex).toString());
 }
 
+bool parseIds(const QString &text, QVariant &value)
+{
+    QVariantList ids;
+
+    for (const auto &idText : text.split(',', Qt::SkipEmptyParts)) {
+        const int id = idText.toInt();
+        if (id < 1 || id > 32)
+            return false;
+
+        ids.append(id);
+    }
+
+    value = ids;
+
+    return true;
+}
+
+bool parseValue(const QString &text, QVariant &value)
+{
+    if (value.metaType().id() == QMetaType::QVariantList) {
+        return parseIds(text, value);
+    }
+
+    return VariantUtil::parseValue(text, value);
+}
+
 bool parseFieldArg(const QString &arg, QVariantMap &fields, QString &errorMessage)
 {
     const int sepIndex = arg.indexOf('=');
@@ -37,13 +63,41 @@ bool parseFieldArg(const QString &arg, QVariantMap &fields, QString &errorMessag
         return false;
     }
 
-    if (!VariantUtil::parseValue(arg.mid(sepIndex + 1), it.value())) {
+    if (!parseValue(arg.mid(sepIndex + 1), it.value())) {
         return false;
     }
 
     return true;
 }
 
+QString stringText(QString text)
+{
+    if (!(text.contains(' ') || text.contains('"')))
+        return text;
+
+    return '"' + text.replace('"', "\"\"") + '"';
+}
+
+QString valueText(const QVariant &value)
+{
+    switch (value.metaType().id()) {
+    case QMetaType::QVariantList: {
+        return value.toStringList().join(',');
+    }
+    case QMetaType::QString: {
+        return stringText(value.toString());
+    }
+    default:
+        return VariantUtil::toText(value);
+    }
+}
+
+}
+
+void ControlCommandUtil::setErrorResult(ProcessCommandResult &r, const QString &errorMessage)
+{
+    r.commandResult = Control::CommandResultError;
+    r.errorMessage = errorMessage;
 }
 
 bool ControlCommandUtil::checkCommandActionPassword(
@@ -88,6 +142,43 @@ QString ControlCommandUtil::invalidValueText(const QString &key, const QString &
     return "Invalid value: " + key + '=' + text;
 }
 
+int ControlCommandUtil::nameIndex(const QVariantMap &fields, const QString &key,
+        const QStringList &names, QString &errorMessage)
+{
+    const QString text = fields[key].toString();
+    const int index = names.indexOf(text);
+
+    if (index < 0) {
+        errorMessage = invalidValueText(key, text);
+    }
+
+    return index;
+}
+
+QVariant ControlCommandUtil::maskIds(quint32 mask)
+{
+    QVariantList ids;
+
+    for (int id = 1; mask != 0; ++id, mask >>= 1) {
+        if ((mask & 1) != 0) {
+            ids.append(id);
+        }
+    }
+
+    return ids;
+}
+
+quint32 ControlCommandUtil::idsMask(const QVariant &ids)
+{
+    quint32 mask = 0;
+
+    for (const QVariant &id : ids.toList()) {
+        mask |= quint32(1) << (id.toInt() - 1);
+    }
+
+    return mask;
+}
+
 QString ControlCommandUtil::fieldsToText(const QVariantMap &fields)
 {
     QStringList list;
@@ -100,7 +191,7 @@ QString ControlCommandUtil::fieldsToText(const QVariantMap &fields)
         const QVariant &value = it.value();
 #endif
 
-        list.append(key + '=' + VariantUtil::toText(value));
+        list.append(key + '=' + valueText(value));
     }
 
     return list.join(' ');
