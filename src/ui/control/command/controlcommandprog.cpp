@@ -291,6 +291,13 @@ bool ControlCommandProg::processCommand(const ProcessCommandArgs &p, ProcessComm
     return processCommandProgAction(r, p.args, progAction, report);
 }
 
+bool ControlCommandProg::needsWindows(const QVariantList &args) const
+{
+    // The add action shows the program's edit form
+    bool report = false;
+    return progActionByText(args.value(0).toString(), report) == ProgActionAdd;
+}
+
 ControlCommandBase::ClientFileArg ControlCommandProg::clientFileArg(const QVariantList &args) const
 {
     switch (clientProgAction(args)) {
