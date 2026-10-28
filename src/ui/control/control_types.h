@@ -28,6 +28,7 @@ enum Command : qint8 {
     CommandConn,
     CommandTraffic,
     CommandPending,
+    CommandWindow,
 
     Rpc_Result_Ok,
     Rpc_Result_Error,

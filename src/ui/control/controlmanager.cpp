@@ -116,6 +116,7 @@ bool ControlManager::processCommandClient(ProcessCommandResult &r)
         { "conn", Control::CommandConn },
         { "traffic", Control::CommandTraffic },
         { "pending", Control::CommandPending },
+        { "window", Control::CommandWindow },
     };
 
     const auto settings = Fort::settings();

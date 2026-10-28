@@ -23,6 +23,11 @@ bool WindowManagerFake::showProgramEditForm(const QString & /*appPath*/)
     return false;
 }
 
+bool WindowManagerFake::showOptionsWindowTab(int /*index*/)
+{
+    return false;
+}
+
 bool WindowManagerFake::setWindowVisibleByCode(
         WindowCode /*code*/, const QVariant & /*visibleOrSwitch*/, bool /*activate*/)
 {

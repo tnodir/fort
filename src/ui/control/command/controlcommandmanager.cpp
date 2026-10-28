@@ -23,6 +23,7 @@
 #include "controlcommandsimulate.h"
 #include "controlcommandtraffic.h"
 #include "controlcommandutil.h"
+#include "controlcommandwindow.h"
 #include "controlcommandzone.h"
 
 namespace {
@@ -44,6 +45,7 @@ inline constexpr ControlCommandSimulate commandSimulate;
 inline constexpr ControlCommandConn commandConn;
 inline constexpr ControlCommandTraffic commandTraffic;
 inline constexpr ControlCommandPending commandPending;
+inline constexpr ControlCommandWindow commandWindow;
 
 inline constexpr ControlCommandRpc commandRpc;
 
@@ -65,12 +67,13 @@ inline constexpr const ControlCommandBase *commandList[] = {
     &commandConn, // Control::CommandConn,
     &commandTraffic, // Control::CommandTraffic,
     &commandPending, // Control::CommandPending,
+    &commandWindow, // Control::CommandWindow,
 };
 
 const ControlCommandBase *commandByType(Control::Command command)
 {
     return RpcManager::getProcessFunc<const ControlCommandBase>(
-            command, commandList, Control::CommandHome, Control::CommandPending, &commandRpc);
+            command, commandList, Control::CommandHome, Control::CommandWindow, &commandRpc);
 }
 
 }

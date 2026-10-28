@@ -56,6 +56,7 @@ SOURCES += \
     control/command/controlcommandsimulate.cpp \
     control/command/controlcommandtraffic.cpp \
     control/command/controlcommandutil.cpp \
+    control/command/controlcommandwindow.cpp \
     control/command/controlcommandzone.cpp \
     control/control.cpp \
     control/controlmanager.cpp \
@@ -383,6 +384,7 @@ HEADERS += \
     control/command/controlcommandsimulate.h \
     control/command/controlcommandtraffic.h \
     control/command/controlcommandutil.h \
+    control/command/controlcommandwindow.h \
     control/command/controlcommandzone.h \
     control/control.h \
     control/control_types.h \
