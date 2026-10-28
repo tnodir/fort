@@ -3,6 +3,8 @@
 #include <QDir>
 #include <QStringList>
 
+#include <algorithm>
+
 #include <conf/confrulemanager.h>
 #include <conf/rule.h>
 #include <fortglobal.h>
@@ -72,7 +74,9 @@ bool parseFieldArg(const QString &arg, QVariantMap &fields, QString &errorMessag
 
 QString stringText(QString text)
 {
-    if (!(text.contains(' ') || text.contains('"')))
+    const bool isQuoted =
+            std::any_of(text.begin(), text.end(), [](QChar c) { return c.isSpace() || c == '"'; });
+    if (!isQuoted)
         return text;
 
     return '"' + text.replace('"', "\"\"") + '"';

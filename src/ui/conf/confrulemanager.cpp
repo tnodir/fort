@@ -53,7 +53,8 @@ const char *const sqlSelectRuleById = "SELECT" SELECT_RULE_FIELDS ", t.name, t.n
                                       "  LEFT JOIN rule_menu menu ON menu.rule_id = t.rule_id"
                                       "  WHERE t.rule_id = ?1;";
 
-const char *const sqlSelectRulesByName = "SELECT" SELECT_RULE_FIELDS "  FROM rule t"
+const char *const sqlSelectRulesByName = "SELECT" SELECT_RULE_FIELDS ", t.notes"
+                                         "  FROM rule t"
                                          "  LEFT JOIN rule_menu menu ON menu.rule_id = t.rule_id"
                                          "  WHERE t.name = ?1"
                                          "  ORDER BY t.rule_id;";
@@ -257,6 +258,7 @@ QVector<Rule> ConfRuleManager::getRulesByName(const QString &ruleName) const
         Rule rule;
         fillRule(rule, stmt);
         rule.ruleName = ruleName;
+        rule.notes = stmt.columnText(20);
 
         ruleList.append(rule);
     }

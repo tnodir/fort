@@ -90,7 +90,8 @@ TEST_F(ControlCommandUtilTest, fieldsToText)
             "count=5 flag=0 id=7 ids=2 name=A seconds=30");
     ASSERT_EQ(ControlCommandUtil::fieldsToText({ { "flag", true } }), "flag=1");
     ASSERT_EQ(ControlCommandUtil::fieldsToText({ { "ids", QVariantList { 1, 3 } } }), "ids=1,3");
-    ASSERT_EQ(ControlCommandUtil::fieldsToText({ { "a", "B C" }, { "b", "D\"E" } }),
-            "a=\"B C\" b=\"D\"\"E\"");
+    ASSERT_EQ(
+            ControlCommandUtil::fieldsToText({ { "a", "B C" }, { "b", "D\"E" }, { "c", "F\nG" } }),
+            "a=\"B C\" b=\"D\"\"E\" c=\"F\nG\"");
     ASSERT_EQ(ControlCommandUtil::fieldsToText({}), QString());
 }

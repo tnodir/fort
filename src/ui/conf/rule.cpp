@@ -47,6 +47,20 @@ bool Rule::isPeriodEqual(const Rule &o) const
     return periodEnabled == o.periodEnabled && periodId == o.periodId;
 }
 
+quint8 Rule::actionTypeId() const
+{
+    if (!blocked)
+        return FORT_RULE_FILTER_ACTION_ALLOW;
+
+    return ask ? FORT_RULE_FILTER_ACTION_ASK : FORT_RULE_FILTER_ACTION_BLOCK;
+}
+
+void Rule::setActionTypeId(quint8 actionTypeId)
+{
+    blocked = (actionTypeId != FORT_RULE_FILTER_ACTION_ALLOW);
+    ask = (actionTypeId == FORT_RULE_FILTER_ACTION_ASK);
+}
+
 quint8 Rule::terminateActionTypeId() const
 {
     if (!terminateBlocked)

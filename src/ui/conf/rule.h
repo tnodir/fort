@@ -32,6 +32,10 @@ public:
     bool isZonesEqual(const Rule &o) const;
     bool isPeriodEqual(const Rule &o) const;
 
+    // By the flags: Allow, Block or Ask of FORT_RULE_FILTER_ACTION_*
+    quint8 actionTypeId() const;
+    void setActionTypeId(quint8 actionTypeId);
+
     // By the Terminating flags: Allow, Block, Ask or Drop of FORT_RULE_FILTER_ACTION_*
     quint8 terminateActionTypeId() const;
     void setTerminateActionTypeId(quint8 actionTypeId);

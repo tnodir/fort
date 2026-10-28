@@ -37,7 +37,7 @@ public:
     static quint32 idsMask(const QVariant &ids);
 
     // The "key=value" pairs separated by spaces, the booleans as 0 or 1,
-    // a text with spaces or quotes in quotes, its quotes doubled
+    // a text with white spaces or quotes in quotes, its quotes doubled
     static QString fieldsToText(const QVariantMap &fields);
 
     // Client: Replace the <file-path> argument with its file's text
