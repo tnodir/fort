@@ -265,7 +265,12 @@ bool addRule(ProcessCommandResult &r, const QVariantList &args)
     if (!ControlCommandUtil::validateRuleText(r, rule.ruleText))
         return false;
 
-    return setRuleFields(r, rule, args, 3);
+    if (!setRuleFields(r, rule, args, 3))
+        return false;
+
+    r.errorMessage = QString::number(rule.ruleId);
+
+    return true;
 }
 
 bool setRuleText(ProcessCommandResult &r, const Rule &rule, const QString &ruleText)
