@@ -23,6 +23,7 @@ enum Command : qint8 {
     CommandZone,
     CommandRule,
     CommandAddr,
+    CommandPeriod,
 
     Rpc_Result_Ok,
     Rpc_Result_Error,

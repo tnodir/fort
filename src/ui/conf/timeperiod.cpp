@@ -6,6 +6,27 @@
 
 namespace {
 
+bool parseTime(const QString &text, QString &time)
+{
+    const QTime t = DateUtil::parseTimeText(text);
+    if (!t.isValid())
+        return false;
+
+    time = DateUtil::timeText(t);
+
+    return true;
+}
+
+// "hh:mm-hh:mm"
+bool parseTimeRange(const QString &text, TimePeriodInterval &interval)
+{
+    const QStringList times = text.split('-');
+    if (times.size() != 2)
+        return false;
+
+    return parseTime(times[0], interval.timeFrom) && parseTime(times[1], interval.timeTo);
+}
+
 int prevDayOfWeek(int dayOfWeek)
 {
     return (dayOfWeek == Qt::Monday) ? Qt::Sunday : (dayOfWeek - 1);
@@ -125,4 +146,38 @@ QString TimePeriod::intervalsText(const TimePeriodIntervals &intervals)
     }
 
     return list.join("; ");
+}
+
+bool TimePeriod::parseIntervals(const QString &text, TimePeriodIntervals &intervals)
+{
+    intervals.clear();
+
+    TimePeriodInterval interval { .weekDays = 0 };
+
+    for (const QString &part : text.split(',')) {
+        const int timeIndex = part.indexOf('/');
+
+        const quint8 weekDays = DateUtil::parseWeekDays(part.left(timeIndex));
+        if (weekDays == 0)
+            return false;
+
+        interval.weekDays |= weekDays;
+
+        if (timeIndex < 0)
+            continue; // the days of the next part's time
+
+        if (!parseTimeRange(part.mid(timeIndex + 1), interval))
+            return false;
+
+        intervals.append(interval);
+        interval = { .weekDays = 0 };
+    }
+
+    // The whole days
+    if (interval.weekDays != 0) {
+        interval.timeFrom = interval.timeTo = "00:00";
+        intervals.append(interval);
+    }
+
+    return !intervals.isEmpty();
 }

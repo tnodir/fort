@@ -46,6 +46,7 @@ SOURCES += \
     control/command/controlcommandgroup.cpp \
     control/command/controlcommandhome.cpp \
     control/command/controlcommandmanager.cpp \
+    control/command/controlcommandperiod.cpp \
     control/command/controlcommandprog.cpp \
     control/command/controlcommandrpc.cpp \
     control/command/controlcommandrule.cpp \
@@ -367,6 +368,7 @@ HEADERS += \
     control/command/controlcommandgroup.h \
     control/command/controlcommandhome.h \
     control/command/controlcommandmanager.h \
+    control/command/controlcommandperiod.h \
     control/command/controlcommandprog.h \
     control/command/controlcommandrpc.h \
     control/command/controlcommandrule.h \

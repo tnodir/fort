@@ -125,3 +125,41 @@ TEST_F(TimePeriodTest, weekDaysText)
     interval.weekDays = 0;
     ASSERT_EQ(interval.weekDaysText(), QString());
 }
+
+TEST_F(TimePeriodTest, parseIntervals)
+{
+    TimePeriodIntervals intervals;
+
+    ASSERT_TRUE(TimePeriod::parseIntervals("1-5/09:00-18:00,6,7/10:00-12:00", intervals));
+    ASSERT_EQ(intervals.size(), 2);
+    ASSERT_EQ(intervals[0].weekDays, 0x1F);
+    ASSERT_EQ(intervals[0].timeFrom, "09:00");
+    ASSERT_EQ(intervals[0].timeTo, "18:00");
+    ASSERT_EQ(intervals[1].weekDays,
+            DateUtil::weekDayBit(Qt::Saturday) | DateUtil::weekDayBit(Qt::Sunday));
+    ASSERT_EQ(intervals[1].timeFrom, "10:00");
+    ASSERT_EQ(intervals[1].timeTo, "12:00");
+
+    ASSERT_TRUE(TimePeriod::parseIntervals("7/22:00-06:30,1,3-4", intervals));
+    ASSERT_EQ(intervals.size(), 2);
+    ASSERT_EQ(intervals[0].weekDays, DateUtil::weekDayBit(Qt::Sunday));
+    ASSERT_EQ(intervals[0].timeFrom, "22:00");
+    ASSERT_EQ(intervals[0].timeTo, "06:30");
+    ASSERT_EQ(intervals[1].weekDays,
+            DateUtil::weekDayBit(Qt::Monday) | DateUtil::weekDayBit(Qt::Wednesday)
+                    | DateUtil::weekDayBit(Qt::Thursday));
+    ASSERT_EQ(intervals[1].timeFrom, "00:00");
+    ASSERT_EQ(intervals[1].timeTo, "00:00");
+}
+
+TEST_F(TimePeriodTest, parseIntervalsBad)
+{
+    const QStringList badTexts = { "", ",1", "1,", "0", "8", "x", "5-1", "1-2-3", "1/09:00",
+        "1/09:00-", "1/24:00-10:00", "1/09:60-10:00", "1/09:00-10:00-11:00", "1/9:00-10:00x" };
+
+    for (const QString &text : badTexts) {
+        TimePeriodIntervals intervals;
+
+        ASSERT_FALSE(TimePeriod::parseIntervals(text, intervals)) << text.toStdString();
+    }
+}

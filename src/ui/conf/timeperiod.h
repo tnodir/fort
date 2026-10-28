@@ -51,6 +51,11 @@ public:
 
     static QString intervalsText(const TimePeriodIntervals &intervals);
 
+    // The intervals by the list of week days, "d" or "d-d" (Monday = 1), each list ending
+    // with its time "/hh:mm-hh:mm", e.g. "1-5/09:00-18:00,6,7/10:00-12:00";
+    // the last list without time is of the whole days
+    static bool parseIntervals(const QString &text, TimePeriodIntervals &intervals);
+
 public:
     bool enabled = true;
 
