@@ -114,6 +114,7 @@ bool ControlManager::processCommandClient(ProcessCommandResult &r)
         { "period", Control::CommandPeriod },
         { "simulate", Control::CommandSimulate },
         { "conn", Control::CommandConn },
+        { "traffic", Control::CommandTraffic },
     };
 
     const auto settings = Fort::settings();

@@ -372,21 +372,6 @@ bool StatManager::resetAppTrafTotals()
     return ok;
 }
 
-qint64 StatManager::getAppId(const QString &appPath)
-{
-    qint64 appId = INVALID_APP_ID;
-
-    SqliteStmt *stmt = getStmt(StatSql::sqlSelectAppId);
-
-    stmt->bindText(1, appPath);
-    if (stmt->step() == SqliteStmt::StepRow) {
-        appId = stmt->columnInt64();
-    }
-    stmt->reset();
-
-    return appId;
-}
-
 qint64 StatManager::createAppId(const QString &appPath, quint32 confAppId, qint64 unixTime)
 {
     const auto appName = appInfoCache()->appName(appPath);
@@ -539,6 +524,21 @@ bool StatManager::updateTraffic(SqliteStmt *stmt, quint64 inBytes, quint64 outBy
     }
 
     return sqliteDb()->done(stmt);
+}
+
+qint64 StatManager::getAppId(const QString &appPath)
+{
+    qint64 appId = INVALID_APP_ID;
+
+    SqliteStmt *stmt = getStmt(StatSql::sqlSelectAppId);
+
+    stmt->bindText(1, appPath);
+    if (stmt->step() == SqliteStmt::StepRow) {
+        appId = stmt->columnInt64();
+    }
+    stmt->reset();
+
+    return appId;
 }
 
 qint32 StatManager::getTrafficTime(const char *sql, qint64 appId)

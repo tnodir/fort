@@ -26,6 +26,7 @@ enum Command : qint8 {
     CommandPeriod,
     CommandSimulate,
     CommandConn,
+    CommandTraffic,
 
     Rpc_Result_Ok,
     Rpc_Result_Error,

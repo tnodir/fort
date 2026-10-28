@@ -35,6 +35,9 @@ public:
 
     virtual bool resetAppTrafTotals();
 
+    // The app's id by its path, -1 if not found
+    qint64 getAppId(const QString &appPath);
+
     qint32 getTrafficTime(const char *sql, qint64 appId = 0);
 
     void getTraffic(
@@ -81,7 +84,6 @@ private:
     void removeCachedAppId(const QString &appPath);
     void clearAppIdCache();
 
-    qint64 getAppId(const QString &appPath);
     qint64 createAppId(const QString &appPath, quint32 confAppId, qint64 unixTime);
     qint64 getOrCreateAppId(const QString &appPath, quint32 confAppId, qint64 unixTime = 0);
     qint64 getOrCreateCachedAppId(const QString &appPath, quint32 confAppId, qint64 unixTime = 0);
