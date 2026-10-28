@@ -53,6 +53,9 @@ public:
     // The rule of the unique name
     static bool findRuleByName(const QString &ruleName, Rule &rule, QString &errorMessage);
 
+    // The empty name is of no rule, 0
+    static bool findRuleIdByName(const QString &ruleName, quint16 &ruleId, QString &errorMessage);
+
     // The rule's text is valid, else its error message
     static bool validateRuleText(ProcessCommandResult &r, const QString &ruleText);
 };

@@ -257,6 +257,19 @@ bool ControlCommandUtil::findRuleByName(const QString &ruleName, Rule &rule, QSt
     return true;
 }
 
+bool ControlCommandUtil::findRuleIdByName(
+        const QString &ruleName, quint16 &ruleId, QString &errorMessage)
+{
+    Rule rule;
+
+    if (!ruleName.isEmpty() && !findRuleByName(ruleName, rule, errorMessage))
+        return false;
+
+    ruleId = rule.ruleId;
+
+    return true;
+}
+
 bool ControlCommandUtil::validateRuleText(ProcessCommandResult &r, const QString &ruleText)
 {
     if (ruleText.isEmpty())

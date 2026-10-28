@@ -170,18 +170,6 @@ bool fillAppAction(ProcessCommandResult &r, App &app, const QVariantMap &fields)
     return true;
 }
 
-bool fillAppRule(ProcessCommandResult &r, App &app, const QString &ruleName)
-{
-    Rule rule;
-
-    if (!ruleName.isEmpty() && !ControlCommandUtil::findRuleByName(ruleName, rule, r.errorMessage))
-        return false;
-
-    app.ruleId = rule.ruleId;
-
-    return true;
-}
-
 bool setAppFields(ProcessCommandResult &r, App &app, const QVariantList &args)
 {
     QVariantMap fields = appFields(app);
@@ -189,7 +177,9 @@ bool setAppFields(ProcessCommandResult &r, App &app, const QVariantList &args)
     if (!ControlCommandUtil::parseFieldArgs(args, 2, fields, r.errorMessage))
         return false;
 
-    if (!(fillAppAction(r, app, fields) && fillAppRule(r, app, fields["rule"].toString())))
+    if (!(fillAppAction(r, app, fields)
+                && ControlCommandUtil::findRuleIdByName(
+                        fields["rule"].toString(), app.ruleId, r.errorMessage)))
         return false;
 
     fillAppFlags(app, fields);
