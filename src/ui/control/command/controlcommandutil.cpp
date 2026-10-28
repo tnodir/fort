@@ -1,15 +1,31 @@
 #include "controlcommandutil.h"
 
+#include <QDir>
 #include <QStringList>
 
+#include <conf/confrulemanager.h>
+#include <conf/rule.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
+#include <util/conf/confbuffer.h>
+#include <util/fileutil.h>
 #include <util/variantutil.h>
 
 using namespace Fort;
 
 namespace {
+
+// The <file-path> argument's index, after the action and its object
+inline constexpr int clientFileArgIndex = 2;
+
+QString clientFilePath(const QVariantList &args)
+{
+    // The working directory is changed to the program's one on startup
+    const QDir currentDir(settings()->initialCurrentPath());
+
+    return currentDir.absoluteFilePath(args.value(clientFileArgIndex).toString());
+}
 
 bool parseFieldArg(const QString &arg, QVariantMap &fields, QString &errorMessage)
 {
@@ -88,4 +104,69 @@ QString ControlCommandUtil::fieldsToText(const QVariantMap &fields)
     }
 
     return list.join(' ');
+}
+
+bool ControlCommandUtil::readClientFileArg(QVariantList &args, ProcessCommandResult &r)
+{
+    const QString filePath = clientFilePath(args);
+
+    if (!FileUtil::fileExists(filePath)) {
+        r.errorMessage = "File not found";
+        return false;
+    }
+
+    // A directory or an unreadable file
+    QString text;
+    if (!FileUtil::readFile(filePath, text)) {
+        r.errorMessage = "Cannot read the file";
+        return false;
+    }
+
+    // The texts' lines are split by '\n'
+    args[clientFileArgIndex] = text.replace("\r\n", "\n");
+
+    return true;
+}
+
+bool ControlCommandUtil::writeClientFileArg(const QVariantList &args, ProcessCommandResult &r)
+{
+    if (r.commandResult == Control::CommandResultError)
+        return true;
+
+    if (!FileUtil::writeFile(clientFilePath(args), r.errorMessage)) {
+        r.errorMessage = "Cannot write the file";
+        return false;
+    }
+
+    r.errorMessage.clear();
+
+    return true;
+}
+
+bool ControlCommandUtil::findRuleByName(const QString &ruleName, Rule &rule, QString &errorMessage)
+{
+    const auto ruleList = confRuleManager()->getRulesByName(ruleName);
+
+    if (ruleList.size() != 1) {
+        errorMessage = ruleList.isEmpty() ? "Rule not found" : "Rule name is ambiguous";
+        return false;
+    }
+
+    rule = ruleList.first();
+
+    return true;
+}
+
+bool ControlCommandUtil::validateRuleText(ProcessCommandResult &r, const QString &ruleText)
+{
+    if (ruleText.isEmpty())
+        return true;
+
+    ConfBuffer confBuf;
+    if (!confBuf.validateRuleText(ruleText)) {
+        r.errorMessage = confBuf.errorMessage();
+        return false;
+    }
+
+    return true;
 }

@@ -6,11 +6,25 @@
 class ControlCommandBase
 {
 public:
+    enum ClientFileArg : qint8 {
+        ClientFileNone = 0,
+        ClientFileRead,
+        ClientFileWrite,
+    };
+
     // Client: Read or write the files of the user
     virtual bool prepareClientArgs(QVariantList &args, ProcessCommandResult &r) const;
-    virtual bool processClientResult(const QVariantList &args, ProcessCommandResult &r) const;
+    bool processClientResult(const QVariantList &args, ProcessCommandResult &r) const;
 
     virtual bool processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const = 0;
+
+protected:
+    // Client: The <file-path> argument's file to send its text instead of the path,
+    // or to write the result's text to
+    virtual ClientFileArg clientFileArg(const QVariantList & /*args*/) const
+    {
+        return ClientFileNone;
+    }
 };
 
 #endif // CONTROLCOMMANDBASE_H

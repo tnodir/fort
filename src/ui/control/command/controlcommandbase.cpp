@@ -1,13 +1,20 @@
 #include "controlcommandbase.h"
 
-bool ControlCommandBase::prepareClientArgs(
-        QVariantList & /*args*/, ProcessCommandResult & /*r*/) const
+#include "controlcommandutil.h"
+
+bool ControlCommandBase::prepareClientArgs(QVariantList &args, ProcessCommandResult &r) const
 {
-    return true;
+    if (clientFileArg(args) != ClientFileRead)
+        return true;
+
+    return ControlCommandUtil::readClientFileArg(args, r);
 }
 
 bool ControlCommandBase::processClientResult(
-        const QVariantList & /*args*/, ProcessCommandResult & /*r*/) const
+        const QVariantList &args, ProcessCommandResult &r) const
 {
-    return true;
+    if (clientFileArg(args) != ClientFileWrite)
+        return true;
+
+    return ControlCommandUtil::writeClientFileArg(args, r);
 }

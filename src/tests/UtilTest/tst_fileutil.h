@@ -83,6 +83,26 @@ TEST_F(FileUtilTest, realPathCase)
     ASSERT_TRUE(realPath.endsWith(R"(\MiXeD\FiLe.txt)"));
 }
 
+TEST_F(FileUtilTest, readFile)
+{
+    QTemporaryDir tempDir;
+    ASSERT_TRUE(tempDir.isValid());
+
+    const QString filePath = tempDir.filePath("file.txt");
+    ASSERT_TRUE(FileUtil::writeFile(filePath, "A"));
+
+    QString text;
+    ASSERT_TRUE(FileUtil::readFile(filePath, text));
+    ASSERT_EQ(text, "A");
+
+    ASSERT_TRUE(FileUtil::writeFile(filePath, QString()));
+    ASSERT_TRUE(FileUtil::readFile(filePath, text));
+    ASSERT_EQ(text, QString());
+
+    ASSERT_FALSE(FileUtil::readFile(tempDir.path(), text));
+    ASSERT_FALSE(FileUtil::readFile(tempDir.filePath("none.txt"), text));
+}
+
 TEST_F(FileUtilTest, process)
 {
     const ProcessInfo pi(ProcessInfo::currentPid());

@@ -62,7 +62,7 @@ bool linkFile(const QString &filePath, const QString &linkPath);
 
 bool removeFilesByPrefix(const QString &filePath);
 
-QString readFile(const QString &filePath);
+bool readFile(const QString &filePath, QString &text);
 QByteArray readFileData(const QString &filePath, qint64 maxSize = -1);
 
 bool writeFile(const QString &filePath, const QString &text);

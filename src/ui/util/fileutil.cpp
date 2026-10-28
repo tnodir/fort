@@ -364,9 +364,15 @@ bool removeFilesByPrefix(const QString &filePath)
     return true;
 }
 
-QString readFile(const QString &filePath)
+bool readFile(const QString &filePath, QString &text)
 {
-    return QString::fromUtf8(readFileData(filePath));
+    QFile file(filePath);
+    if (!file.open(QFile::ReadOnly))
+        return false;
+
+    text = QString::fromUtf8(file.readAll());
+
+    return true;
 }
 
 QByteArray readFileData(const QString &filePath, qint64 maxSize)
