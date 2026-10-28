@@ -25,6 +25,7 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(CommandSimulate),
     CASE_STRING(CommandConn),
     CASE_STRING(CommandTraffic),
+    CASE_STRING(CommandPending),
 
     CASE_STRING(Rpc_Result_Ok),
     CASE_STRING(Rpc_Result_Error),
@@ -194,6 +195,7 @@ static const RpcManager g_commandManagers[] = {
     Rpc_NoneManager, // CommandSimulate,
     Rpc_NoneManager, // CommandConn,
     Rpc_NoneManager, // CommandTraffic,
+    Rpc_NoneManager, // CommandPending,
 
     Rpc_NoneManager, // Rpc_Result_Ok,
     Rpc_NoneManager, // Rpc_Result_Error,
@@ -339,6 +341,7 @@ static const qint8 g_commandValidations[] = {
     0, // CommandSimulate,
     0, // CommandConn,
     0, // CommandTraffic,
+    0, // CommandPending,
 
     0, // Rpc_Result_Ok,
     0, // Rpc_Result_Error,

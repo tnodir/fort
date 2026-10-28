@@ -42,17 +42,6 @@ QVariantMap connFields(const ConnRow &connRow)
     };
 }
 
-void fillConnsText(ProcessCommandResult &r, const QVector<ConnRow> &connRows)
-{
-    QStringList lines;
-
-    for (const ConnRow &connRow : connRows) {
-        lines.append(ControlCommandUtil::fieldsToText(connFields(connRow)));
-    }
-
-    r.errorMessage = lines.join('\n');
-}
-
 bool listConns(ProcessCommandResult &r, const QVariantList &args)
 {
     // Without "after": the last connections
@@ -82,7 +71,7 @@ bool listConns(ProcessCommandResult &r, const QVariantList &args)
     QVector<ConnRow> connRows;
     model->loadConnRows(connIdFrom, connRows, limit);
 
-    fillConnsText(r, connRows);
+    r.errorMessage = ControlCommandConn::connsText(connRows);
 
     return true;
 }
@@ -100,6 +89,17 @@ bool ControlCommandConn::processCommand(const ProcessCommandArgs &p, ProcessComm
         return false;
 
     return listConns(r, p.args);
+}
+
+QString ControlCommandConn::connsText(const QVector<ConnRow> &connRows)
+{
+    QStringList lines;
+
+    for (const ConnRow &connRow : connRows) {
+        lines.append(ControlCommandUtil::fieldsToText(connFields(connRow)));
+    }
+
+    return lines.join('\n');
 }
 
 void ControlCommandConn::setModelApp(AppConnSearchModel &model, const QString &appPath)

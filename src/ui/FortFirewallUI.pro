@@ -48,6 +48,7 @@ SOURCES += \
     control/command/controlcommandgroup.cpp \
     control/command/controlcommandhome.cpp \
     control/command/controlcommandmanager.cpp \
+    control/command/controlcommandpending.cpp \
     control/command/controlcommandperiod.cpp \
     control/command/controlcommandprog.cpp \
     control/command/controlcommandrpc.cpp \
@@ -208,6 +209,7 @@ SOURCES += \
     model/connlistmodel.cpp \
     model/connsearchmodel.cpp \
     model/grouplistmodel.cpp \
+    model/pendingconnsearchmodel.cpp \
     model/rulelistmodel.cpp \
     model/rulesetmodel.cpp \
     model/servicelistmodel.cpp \
@@ -373,6 +375,7 @@ HEADERS += \
     control/command/controlcommandgroup.h \
     control/command/controlcommandhome.h \
     control/command/controlcommandmanager.h \
+    control/command/controlcommandpending.h \
     control/command/controlcommandperiod.h \
     control/command/controlcommandprog.h \
     control/command/controlcommandrpc.h \
@@ -539,6 +542,7 @@ HEADERS += \
     model/connlistmodel.h \
     model/connsearchmodel.h \
     model/grouplistmodel.h \
+    model/pendingconnsearchmodel.h \
     model/rulelistmodel.h \
     model/rulesetmodel.h \
     model/servicelistmodel.h \

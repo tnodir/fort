@@ -15,6 +15,7 @@
 #include "controlcommandgraph.h"
 #include "controlcommandgroup.h"
 #include "controlcommandhome.h"
+#include "controlcommandpending.h"
 #include "controlcommandperiod.h"
 #include "controlcommandprog.h"
 #include "controlcommandrpc.h"
@@ -42,6 +43,7 @@ inline constexpr ControlCommandPeriod commandPeriod;
 inline constexpr ControlCommandSimulate commandSimulate;
 inline constexpr ControlCommandConn commandConn;
 inline constexpr ControlCommandTraffic commandTraffic;
+inline constexpr ControlCommandPending commandPending;
 
 inline constexpr ControlCommandRpc commandRpc;
 
@@ -62,12 +64,13 @@ inline constexpr const ControlCommandBase *commandList[] = {
     &commandSimulate, // Control::CommandSimulate,
     &commandConn, // Control::CommandConn,
     &commandTraffic, // Control::CommandTraffic,
+    &commandPending, // Control::CommandPending,
 };
 
 const ControlCommandBase *commandByType(Control::Command command)
 {
     return RpcManager::getProcessFunc<const ControlCommandBase>(
-            command, commandList, Control::CommandHome, Control::CommandTraffic, &commandRpc);
+            command, commandList, Control::CommandHome, Control::CommandPending, &commandRpc);
 }
 
 }
