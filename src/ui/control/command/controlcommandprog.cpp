@@ -229,11 +229,14 @@ bool processCommandAppAction(
     }
 
     switch (progAction) {
-    case ProgActionSet: {
-        return setAppFields(r, app, args);
+    case ProgActionDel: {
+        return confAppManager()->deleteApps({ app.appId });
     }
     case ProgActionGet: {
         return getAppFields(r, app);
+    }
+    case ProgActionSet: {
+        return setAppFields(r, app, args);
     }
     case ProgActionSetFilters: {
         return setAppFilters(r, app, args.value(2).toString());
@@ -246,8 +249,8 @@ bool processCommandAppAction(
 bool processCommandProgAction(
         ProcessCommandResult &r, const QVariantList &args, ProgAction progAction, bool report)
 {
-    // Report or the App's fields
-    if (report || progAction >= ProgActionSet) {
+    // Report, Delete or the App's fields
+    if (report || progAction >= ProgActionDel) {
         return processCommandAppAction(r, args, progAction, report);
     }
 
@@ -256,9 +259,6 @@ bool processCommandProgAction(
     switch (progAction) {
     case ProgActionAdd: {
         return windowManager()->showProgramEditForm(appPath);
-    }
-    case ProgActionDel: {
-        return confAppManager()->deleteAppPath(appPath);
     }
     default: // Allow, Block, Kill or Ask
         return confAppManager()->addOrUpdateAppPath(appPath, appActionByProg(progAction));
