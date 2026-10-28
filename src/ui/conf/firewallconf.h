@@ -182,6 +182,10 @@ public:
     QVariant toVariant(const IniOptions &ini, bool onlyEdited = false) const;
     void fromVariant(IniOptions &ini, const QVariant &v, bool onlyEdited = false);
 
+    // The flags' map by their names
+    QVariant flagsToVariant() const;
+    void flagsFromVariant(const QVariant &v);
+
     static QVariant editedFlagsToVariant(uint editedFlags);
     static uint editedFlagsFromVariant(const QVariant &v);
 
@@ -190,9 +194,6 @@ public slots:
 
 private:
     void setupAddressGroups();
-
-    QVariant flagsToVariant() const;
-    void flagsFromVariant(const QVariant &v);
 
     QVariant addressesToVariant() const;
     void addressesFromVariant(const QVariant &v);

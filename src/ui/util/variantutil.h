@@ -23,6 +23,15 @@ public:
         list.push_back(v); // append() merges the list, does not insert
     }
 
+    // Set the value by the text in the value's type:
+    // a boolean by 0, 1, false or true, a number in the type's range
+    static bool parseValue(const QString &text, QVariant &value);
+    static bool parseBool(const QString &text, QVariant &value);
+    static bool parseNumber(const QString &text, QVariant &value);
+
+    // The value's text, a boolean as 0 or 1, a char as a number
+    static QString toText(const QVariant &value);
+
     static QVariant userData(QObject *o);
     static void setUserData(QObject *o, const QVariant &v = {});
 };

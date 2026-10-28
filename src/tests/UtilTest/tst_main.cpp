@@ -1,6 +1,7 @@
 #include "tst_bitutil.h"
 #include "tst_confutil.h"
 #include "tst_connfilter.h"
+#include "tst_controlcommandutil.h"
 #include "tst_dateutil.h"
 #include "tst_fileutil.h"
 #include "tst_filterline.h"

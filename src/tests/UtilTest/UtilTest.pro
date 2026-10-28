@@ -5,6 +5,7 @@ HEADERS += \
     tst_bitutil.h \
     tst_confutil.h \
     tst_connfilter.h \
+    tst_controlcommandutil.h \
     tst_dateutil.h \
     tst_fileutil.h \
     tst_filterline.h \
