@@ -251,6 +251,19 @@ TEST_F(NetUtilTest, protocolNames)
                                     "UDP\n"
                                     "ICMPv6\n"
                                     "RAWSOCKET\n"));
+
+    bool ok = false;
+
+    ASSERT_EQ(NetUtil::protocolNumber(u"udp", ok), 17);
+    ASSERT_TRUE(ok);
+
+    ASSERT_EQ(NetUtil::protocolNumber(u"255", ok), 255);
+    ASSERT_TRUE(ok);
+
+    NetUtil::protocolNumber(u"256", ok);
+    ASSERT_FALSE(ok);
+
+    ASSERT_FALSE(protoRange.fromText("300"));
 }
 
 TEST_F(NetUtilTest, ipVerRanges)

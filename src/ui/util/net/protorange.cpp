@@ -131,12 +131,7 @@ bool ProtoRange::parseProtoNumber(const QStringView proto, proto_t &v)
         return true;
 
     bool ok;
-
-    if (proto.at(0).isDigit()) {
-        v = proto.toUShort(&ok);
-    } else {
-        v = NetUtil::protocolNumber(proto, ok);
-    }
+    v = NetUtil::protocolNumber(proto, ok);
 
     if (!ok) {
         setErrorMessage(tr("Bad Protocol"));

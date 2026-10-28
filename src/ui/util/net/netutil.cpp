@@ -405,6 +405,12 @@ QString NetUtil::protocolName(quint8 ipProto)
 
 quint8 NetUtil::protocolNumber(const QStringView name, bool &ok)
 {
+    if (!name.isEmpty() && name.at(0).isDigit()) {
+        const uint v = name.toUInt(&ok);
+        ok = ok && (v <= 0xFF);
+        return quint8(v);
+    }
+
     const auto nameUpper = name.toString().toUpper();
 
     constexpr qint16 invalidProtocolValue = -1;

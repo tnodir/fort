@@ -33,6 +33,8 @@ public:
     static QString localIpNetworksText(int count = -1);
 
     static QString protocolName(quint8 ipProto);
+
+    // The protocol's number by its name or number, e.g. "TCP" or "6"
     static quint8 protocolNumber(const QStringView name, bool &ok);
 
     static QString serviceName(quint16 port);
