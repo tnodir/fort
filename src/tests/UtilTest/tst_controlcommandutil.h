@@ -104,4 +104,6 @@ TEST_F(ControlCommandUtilTest, fieldsToText)
             ControlCommandUtil::fieldsToText({ { "a", "B C" }, { "b", "D\"E" }, { "c", "F\nG" } }),
             "a=\"B C\" b=\"D\"\"E\" c=\"F\nG\"");
     ASSERT_EQ(ControlCommandUtil::fieldsToText({}), QString());
+    ASSERT_EQ(
+            ControlCommandUtil::fieldsToTextWithId({ { "a", 1 }, { "z", 2 } }, 3), "a=1 id=3 z=2");
 }

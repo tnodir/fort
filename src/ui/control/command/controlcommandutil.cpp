@@ -223,6 +223,13 @@ QString ControlCommandUtil::fieldsToText(const QVariantMap &fields)
     return list.join(' ');
 }
 
+QString ControlCommandUtil::fieldsToTextWithId(QVariantMap fields, const QVariant &id)
+{
+    fields.insert("id", id);
+
+    return fieldsToText(fields);
+}
+
 bool ControlCommandUtil::readClientFileArg(QVariantList &args, ProcessCommandResult &r)
 {
     const QString filePath = clientFilePath(args);

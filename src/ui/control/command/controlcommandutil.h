@@ -47,6 +47,9 @@ public:
     // a text with white spaces or quotes in quotes, its quotes doubled
     static QString fieldsToText(const QVariantMap &fields);
 
+    // The text of the fields with the read-only "id", not a key to set
+    static QString fieldsToTextWithId(QVariantMap fields, const QVariant &id);
+
     // Client: Replace the <file-path> argument with its file's text
     static bool readClientFileArg(QVariantList &args, ProcessCommandResult &r);
 

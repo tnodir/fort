@@ -245,7 +245,8 @@ bool setRuleFields(ProcessCommandResult &r, Rule &rule, const QVariantList &args
 
 bool getRuleFields(ProcessCommandResult &r, const Rule &rule)
 {
-    r.errorMessage = ControlCommandUtil::fieldsToText(ruleFields(rule));
+    r.errorMessage = ControlCommandUtil::fieldsToTextWithId(
+            ruleFields(rule), QVariant::fromValue(rule.ruleId));
 
     return true;
 }
