@@ -212,16 +212,26 @@ ReadyMemoGroup=Dosarul Meniului de Start:
 ReadyMemoTasks=Sarcini Suplimentare:
 
 ; *** TDownloadWizardPage wizard page and DownloadTemporaryFile
-DownloadingLabel=Descarc file suplimentare...
+DownloadingLabel2=Descarc filele...
 ButtonStopDownload=O&prește descărcarea
 StopDownload=Sigur vrei să oprești descărcarea?
 ErrorDownloadAborted=Descărcare abandonată
 ErrorDownloadFailed=Descărcare eșuată: %1 %2
 ErrorDownloadSizeFailed=Obținerea mărimii a eșuat: %1 %2
-ErrorFileHash1=Hașul filei a eșuat: %1
-ErrorFileHash2=Hașul filei e nevalid: așteptat %1, găsit %2
 ErrorProgress=Progres nevalid: %1 of %2
 ErrorFileSize=Mărime a filei nevalidă: așteptată %1, găsită %2
+
+; *** TExtractionWizardPage wizard page and ExtractArchive
+ExtractingLabel=Extrag filele...
+ButtonStopExtraction=O&prește extragerea
+StopExtraction=Sigur vrei să oprești extragerea?
+ErrorExtractionAborted=Extragere abandonată
+ErrorExtractionFailed=Extragere eșuată: %1
+
+; *** Archive extraction failure details
+ArchiveIncorrectPassword=Parola este incorectă
+ArchiveIsCorrupted=Arhiva este coruptă
+ArchiveUnsupportedFormat=Formatul arhivei nu este acceptat
 
 ; *** "Preparing to Install" wizard page
 WizardPreparing=Pregătire pentru Instalare
@@ -267,11 +277,15 @@ AbortRetryIgnoreSelectAction=Selectează acțiunea
 AbortRetryIgnoreRetry=Încearcă din &nou
 AbortRetryIgnoreIgnore=&Ignoră eroarea și continuă
 AbortRetryIgnoreCancel=Anulează instalarea
+RetryCancelSelectAction=Selectează acțiunea
+RetryCancelRetry=Încearcă din &nou
+RetryCancelCancel=Anulează
 
 ; *** Installation status messages
 StatusClosingApplications=Închid aplicațiile...
 StatusCreateDirs=Creez dosarele...
 StatusExtractFiles=Extrag filele...
+StatusDownloadFiles=Descarc filele...
 StatusCreateIcons=Creez scurtăturile...
 StatusCreateIniEntries=Creez intrările INI...
 StatusCreateRegistryEntries=Creez intrările în registru...
@@ -301,6 +315,14 @@ FileAbortRetryIgnoreSkipNotRecommended=&Sari peste această filă (nerecomandat)
 FileAbortRetryIgnoreIgnoreNotRecommended=&Ignoră eroarea și continuă (nerecomandat)
 SourceIsCorrupted=Fila sursă este stricată (coruptă)
 SourceDoesntExist=Fila sursă "%1" nu există
+SourceVerificationFailed=Verificarea filei sursă a eșuat: %1
+VerificationSignatureDoesntExist=Fila de semnătură "%1" nu există
+VerificationSignatureInvalid=Fila de semnătură "%1" este nevalidă
+VerificationKeyNotFound=Fila de semnătură "%1" folosește o cheie necunoscută
+VerificationFileNameIncorrect=Numele filei este incorect
+VerificationFileTagIncorrect=Eticheta filei este incorectă
+VerificationFileSizeIncorrect=Mărimea filei este incorectă
+VerificationFileHashIncorrect=Hașul filei este incorect
 ExistingFileReadOnly2=Fila deja existentă nu poate fi înlocuită pentru că-i marcată doar-citire.
 ExistingFileReadOnlyRetry=Înlătu&ră atributul doar-citire și reîncearcă
 ExistingFileReadOnlyKeepExisting=&Păstrează fila existentă
@@ -319,6 +341,8 @@ ErrorChangingAttr=A apărut o eroare în timpul schimbării atributelor filei de
 ErrorCreatingTemp=A apărut o eroare în timpul creării filei în dosarul de destinație:
 ErrorReadingSource=A apărut o eroare în timpul citirii filei sursă:
 ErrorCopying=A apărut o eroare în timpul copierii filei:
+ErrorDownloading=A apărut o eroare în timpul descărcării filei:
+ErrorExtracting=A apărut o eroare în timpul extragerii arhivei:
 ErrorReplacingExistingFile=A apărut o eroare în timpul înlocuirii filei deja existente:
 ErrorRestartReplace=Repornirea/Înlocuirea a eșuat:
 ErrorRenamingTemp=A apărut o eroare în timpul renumirii unei file din dosarul de destinație:
