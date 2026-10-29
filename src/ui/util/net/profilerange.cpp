@@ -4,6 +4,22 @@
 
 #include <util/conf/confdata.h>
 
+namespace {
+
+struct ProfileType
+{
+    quint8 id;
+    const char *name;
+};
+
+inline constexpr ProfileType g_profileTypes[] = {
+    { FORT_RULE_FILTER_PROFILE_PUBLIC, "Public" },
+    { FORT_RULE_FILTER_PROFILE_PRIVATE, "Private" },
+    { FORT_RULE_FILTER_PROFILE_DOMAIN, "Domain" },
+};
+
+}
+
 ProfileRange::ProfileRange(QObject *parent) : TextRange(parent) { }
 
 bool ProfileRange::isEmpty() const
@@ -20,28 +36,31 @@ void ProfileRange::clear()
 
 void ProfileRange::toList(QStringList &list) const
 {
-    if (m_profileId == FORT_RULE_FILTER_PROFILE_PUBLIC) {
-        list << "PUBLIC";
+    for (const auto &profileType : g_profileTypes) {
+        if (profileType.id == m_profileId) {
+            list << QString(profileType.name).toUpper();
+        }
     }
-    if (m_profileId == FORT_RULE_FILTER_PROFILE_PRIVATE) {
-        list << "PRIVATE";
+}
+
+quint8 ProfileRange::profileIdByName(const QString &name)
+{
+    for (const auto &profileType : g_profileTypes) {
+        if (name.compare(QLatin1String(profileType.name), Qt::CaseInsensitive) == 0) {
+            return profileType.id;
+        }
     }
-    if (m_profileId == FORT_RULE_FILTER_PROFILE_DOMAIN) {
-        list << "DOMAIN";
-    }
+
+    return 0;
 }
 
 TextRange::ParseError ProfileRange::parseText(const QString &text)
 {
-    if (text == "PUBLIC") {
-        m_profileId = FORT_RULE_FILTER_PROFILE_PUBLIC;
-    } else if (text == "PRIVATE") {
-        m_profileId = FORT_RULE_FILTER_PROFILE_PRIVATE;
-    } else if (text == "DOMAIN") {
-        m_profileId = FORT_RULE_FILTER_PROFILE_DOMAIN;
-    } else {
+    const quint8 profileId = profileIdByName(text);
+    if (profileId == 0)
         return ErrorBadText;
-    }
+
+    m_profileId = profileId;
 
     return ErrorOk;
 }

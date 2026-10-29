@@ -21,6 +21,12 @@ public:
 
     void toList(QStringList &list) const override;
 
+    /* The direction's name in the rule text */
+    static QString directionName(bool inbound);
+
+    /* The direction's id by its name, 0 - unknown */
+    static quint8 directionIdByName(const QString &name);
+
     void write(ConfData &confData) const override;
 
 protected:

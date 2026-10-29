@@ -20,6 +20,9 @@ public:
 
     void toList(QStringList &list) const override;
 
+    /* The profile's id by its name, 0 - unknown */
+    static quint8 profileIdByName(const QString &name);
+
     void write(ConfData &confData) const override;
 
 protected:
