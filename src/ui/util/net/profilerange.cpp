@@ -9,13 +9,14 @@ namespace {
 struct ProfileType
 {
     quint8 id;
-    const char *name;
+    const char *name; // also the translated text's source
 };
 
+// By their ids: Public, Private, Domain
 inline constexpr ProfileType g_profileTypes[] = {
-    { FORT_RULE_FILTER_PROFILE_PUBLIC, "Public" },
-    { FORT_RULE_FILTER_PROFILE_PRIVATE, "Private" },
-    { FORT_RULE_FILTER_PROFILE_DOMAIN, "Domain" },
+    { FORT_RULE_FILTER_PROFILE_PUBLIC, QT_TRANSLATE_NOOP("ProfileRange", "Public") },
+    { FORT_RULE_FILTER_PROFILE_PRIVATE, QT_TRANSLATE_NOOP("ProfileRange", "Private") },
+    { FORT_RULE_FILTER_PROFILE_DOMAIN, QT_TRANSLATE_NOOP("ProfileRange", "Domain") },
 };
 
 }
@@ -52,6 +53,15 @@ quint8 ProfileRange::profileIdByName(const QString &name)
     }
 
     return 0;
+}
+
+QStringList ProfileRange::profileTexts()
+{
+    QStringList list;
+    for (const auto &profileType : g_profileTypes) {
+        list << tr(profileType.name);
+    }
+    return list;
 }
 
 TextRange::ParseError ProfileRange::parseText(const QString &text)

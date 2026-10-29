@@ -23,6 +23,9 @@ public:
     /* The profile's id by its name, 0 - unknown */
     static quint8 profileIdByName(const QString &name);
 
+    /* The profiles' translated texts in their ids' order: 1 - Public, 2 - Private, 3 - Domain */
+    static QStringList profileTexts();
+
     void write(ConfData &confData) const override;
 
 protected:

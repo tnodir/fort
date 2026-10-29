@@ -29,6 +29,7 @@
 #include <util/iconcache.h>
 #include <util/net/actionrange.h>
 #include <util/net/netformatutil.h>
+#include <util/net/profilerange.h>
 #include <util/stringutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
@@ -241,12 +242,9 @@ void FilterSimWindow::retranslateComboDirection()
 
 void FilterSimWindow::retranslateComboProfile()
 {
-    // Sync with the profile ids: 1 - Public, 2 - Private, 3 - Domain
-    const QStringList list = { tr("Public"), tr("Private"), tr("Domain") };
-
     const int currentIndex = qMax(m_comboProfile->currentIndex(), 0);
 
-    ControlUtil::setComboBoxTexts(m_comboProfile, list, currentIndex);
+    ControlUtil::setComboBoxTexts(m_comboProfile, ProfileRange::profileTexts(), currentIndex);
 }
 
 void FilterSimWindow::setupUi()
