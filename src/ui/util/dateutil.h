@@ -44,6 +44,16 @@ public:
 
     static QTime parseTime(const QString &time);
 
+    // In format "HH:mm", the time invalid when the text isn't
+    static QString timeText(const QTime &time);
+    static QTime parseTimeText(const QString &text);
+
+    // Monday = 1 << 0, ..., Sunday = 1 << 6
+    static quint8 weekDayBit(int dayOfWeek);
+
+    // In format "d" or "d-d" (Monday = 1), the mask 0 when the text isn't
+    static quint8 parseWeekDays(const QString &text);
+
     static QTime timeLeft(const QDateTime &dateTime, const QDateTime &fromDateTime = now());
     static QString formatTimeLeft(const QTime &time);
 

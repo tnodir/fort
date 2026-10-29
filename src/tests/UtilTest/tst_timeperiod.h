@@ -3,6 +3,7 @@
 #include <googletest.h>
 
 #include <conf/timeperiod.h>
+#include <util/dateutil.h>
 
 class TimePeriodTest : public Test
 {
@@ -16,19 +17,10 @@ void TimePeriodTest::SetUp() { }
 
 void TimePeriodTest::TearDown() { }
 
-namespace {
-
-inline constexpr quint8 weekDayBit(int dayOfWeek)
-{
-    return quint8(1u << (dayOfWeek - 1));
-}
-
-}
-
 TEST_F(TimePeriodTest, intervalIsActive)
 {
     TimePeriodInterval interval;
-    interval.weekDays = weekDayBit(Qt::Monday) | weekDayBit(Qt::Wednesday);
+    interval.weekDays = DateUtil::weekDayBit(Qt::Monday) | DateUtil::weekDayBit(Qt::Wednesday);
     interval.timeFrom = "09:00";
     interval.timeTo = "18:00";
 
@@ -45,7 +37,7 @@ TEST_F(TimePeriodTest, intervalIsActive)
 TEST_F(TimePeriodTest, intervalOverMidnight)
 {
     TimePeriodInterval interval;
-    interval.weekDays = weekDayBit(Qt::Monday) | weekDayBit(Qt::Sunday);
+    interval.weekDays = DateUtil::weekDayBit(Qt::Monday) | DateUtil::weekDayBit(Qt::Sunday);
     interval.timeFrom = "22:00";
     interval.timeTo = "06:00";
 
@@ -63,7 +55,7 @@ TEST_F(TimePeriodTest, intervalOverMidnight)
 TEST_F(TimePeriodTest, intervalWholeDay)
 {
     TimePeriodInterval interval;
-    interval.weekDays = weekDayBit(Qt::Saturday) | weekDayBit(Qt::Sunday);
+    interval.weekDays = DateUtil::weekDayBit(Qt::Saturday) | DateUtil::weekDayBit(Qt::Sunday);
     interval.timeFrom = "00:00";
     interval.timeTo = "00:00";
 
@@ -91,7 +83,7 @@ TEST_F(TimePeriodTest, periodIsActive)
     ASSERT_FALSE(period.isActive(monday)); // no intervals
 
     TimePeriodInterval interval;
-    interval.weekDays = weekDayBit(Qt::Monday);
+    interval.weekDays = DateUtil::weekDayBit(Qt::Monday);
     interval.timeFrom = "08:00";
     interval.timeTo = "12:00";
 
@@ -120,13 +112,14 @@ TEST_F(TimePeriodTest, weekDaysText)
     TimePeriodInterval interval;
     ASSERT_EQ(interval.weekDaysText(), dayName(Qt::Monday) + QChar(0x2013) + dayName(Qt::Sunday));
 
-    interval.weekDays = weekDayBit(Qt::Monday) | weekDayBit(Qt::Tuesday) | weekDayBit(Qt::Wednesday)
-            | weekDayBit(Qt::Saturday) | weekDayBit(Qt::Sunday);
+    interval.weekDays = DateUtil::weekDayBit(Qt::Monday) | DateUtil::weekDayBit(Qt::Tuesday)
+            | DateUtil::weekDayBit(Qt::Wednesday) | DateUtil::weekDayBit(Qt::Saturday)
+            | DateUtil::weekDayBit(Qt::Sunday);
     ASSERT_EQ(interval.weekDaysText(),
             dayName(Qt::Monday) + QChar(0x2013) + dayName(Qt::Wednesday) + ", "
                     + dayName(Qt::Saturday) + ", " + dayName(Qt::Sunday));
 
-    interval.weekDays = weekDayBit(Qt::Thursday);
+    interval.weekDays = DateUtil::weekDayBit(Qt::Thursday);
     ASSERT_EQ(interval.weekDaysText(), dayName(Qt::Thursday));
 
     interval.weekDays = 0;

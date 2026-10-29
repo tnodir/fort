@@ -28,7 +28,7 @@ QString weekDaysRangeText(const QLocale &locale, int firstDay, int lastDay)
 
 bool TimePeriodInterval::hasWeekDay(int dayOfWeek) const
 {
-    return (weekDays & (1u << (dayOfWeek - 1))) != 0;
+    return (weekDays & DateUtil::weekDayBit(dayOfWeek)) != 0;
 }
 
 bool TimePeriodInterval::isActive(int dayOfWeek, QTime time) const

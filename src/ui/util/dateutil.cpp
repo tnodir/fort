@@ -5,6 +5,8 @@
 
 namespace {
 
+inline constexpr char timeTextFormat[] = "HH:mm";
+
 quint8 parseTimeHour(const QString &time)
 {
     return quint8(QStringView(time).left(2).toUInt());
@@ -13,6 +15,14 @@ quint8 parseTimeHour(const QString &time)
 quint8 parseTimeMinute(const QString &time)
 {
     return quint8(QStringView(time).right(2).toUInt());
+}
+
+bool parseWeekDay(const QString &text, int &day)
+{
+    bool ok;
+    day = text.toInt(&ok);
+
+    return ok && day >= Qt::Monday && day <= Qt::Sunday;
 }
 
 void addTimePart(QStringList &list, int value, const QString &text)
@@ -157,6 +167,42 @@ QTime DateUtil::parseTime(const QString &time)
     const quint8 minute = parseTimeMinute(time);
 
     return QTime(hour, minute);
+}
+
+QString DateUtil::timeText(const QTime &time)
+{
+    return time.toString(timeTextFormat);
+}
+
+QTime DateUtil::parseTimeText(const QString &text)
+{
+    return QTime::fromString(text, timeTextFormat);
+}
+
+quint8 DateUtil::weekDayBit(int dayOfWeek)
+{
+    return quint8(1u << (dayOfWeek - 1));
+}
+
+quint8 DateUtil::parseWeekDays(const QString &text)
+{
+    const int sepIndex = text.indexOf('-');
+    const QString lastDayText = (sepIndex < 0) ? text : text.mid(sepIndex + 1);
+
+    int firstDay, lastDay;
+    if (!(parseWeekDay(text.left(sepIndex), firstDay) && parseWeekDay(lastDayText, lastDay)))
+        return 0;
+
+    if (firstDay > lastDay)
+        return 0;
+
+    quint8 weekDays = 0;
+
+    for (int day = firstDay; day <= lastDay; ++day) {
+        weekDays |= weekDayBit(day);
+    }
+
+    return weekDays;
 }
 
 QTime DateUtil::timeLeft(const QDateTime &dateTime, const QDateTime &fromDateTime)

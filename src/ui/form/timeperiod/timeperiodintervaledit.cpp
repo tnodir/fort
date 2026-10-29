@@ -7,6 +7,7 @@
 
 #include <form/controls/controlutil.h>
 #include <form/controls/selector/weekdaysselector.h>
+#include <util/dateutil.h>
 
 namespace {
 
@@ -21,17 +22,12 @@ QTimeEdit *createTimeEdit()
     return c;
 }
 
-QString fromTime(const QTime &time)
-{
-    return time.toString(timeFormat);
-}
-
 QTime toTime(const QString &text)
 {
     if (text.isEmpty())
         return QTime(0, 0);
 
-    return QTime::fromString(text, timeFormat);
+    return DateUtil::parseTimeText(text);
 }
 
 }
@@ -46,8 +42,8 @@ TimePeriodInterval TimePeriodIntervalEdit::interval() const
     TimePeriodInterval interval;
 
     interval.weekDays = m_weekDaysSelector->weekDays();
-    interval.timeFrom = fromTime(m_timeFrom->time());
-    interval.timeTo = fromTime(m_timeTo->time());
+    interval.timeFrom = DateUtil::timeText(m_timeFrom->time());
+    interval.timeTo = DateUtil::timeText(m_timeTo->time());
 
     return interval;
 }
