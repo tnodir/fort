@@ -32,7 +32,7 @@
     <name>ActionRange</name>
     <message>
         <source>Allow</source>
-        <translation type="unfinished"></translation>
+        <translation>İzin Ver</translation>
     </message>
     <message>
         <source>Block</source>
@@ -40,11 +40,11 @@
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>Sor</translation>
     </message>
     <message>
         <source>Drop</source>
-        <translation type="unfinished"></translation>
+        <translation>Düşür</translation>
     </message>
 </context>
 <context>
@@ -82,11 +82,11 @@
     <name>AppConnsWindow</name>
     <message>
         <source>Program Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Program Bağlantıları</translation>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre Ekle</translation>
     </message>
 </context>
 <context>
@@ -120,7 +120,7 @@
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>Hız Sınırları</translation>
     </message>
     <message>
         <source>File Path</source>
@@ -171,50 +171,50 @@
     <name>AppPendingConnSearchModel</name>
     <message>
         <source>No longer paused</source>
-        <translation type="unfinished"></translation>
+        <translation>Artık duraklatılmış değil</translation>
     </message>
     <message>
         <source>Blocked in %1 s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 sn içinde engellendi</translation>
     </message>
 </context>
 <context>
     <name>AppPendingConnsWindow</name>
     <message>
         <source>Paused Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Duraklatılan Bağlantılar</translation>
     </message>
     <message>
         <source>Allow the process till its exit or for the time by the menu</source>
-        <translation type="unfinished"></translation>
+        <translation>İşleme çıkışına kadar veya menüdeki süre boyunca izin ver</translation>
     </message>
     <message>
         <source>Continue by the current rules: the still paused ones are blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>Mevcut kurallarla devam et: hâlâ duraklatılmış olanlar engellenir</translation>
     </message>
     <message>
         <source>Allow once</source>
-        <translation type="unfinished"></translation>
+        <translation>Bir kez izin ver</translation>
     </message>
     <message>
         <source>Allow Process</source>
-        <translation type="unfinished"></translation>
+        <translation>İşleme İzin Ver</translation>
     </message>
     <message>
         <source>Block once</source>
-        <translation type="unfinished"></translation>
+        <translation>Bir kez engelle</translation>
     </message>
     <message>
         <source>Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>Devam</translation>
     </message>
     <message>
         <source>10 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>10 saniye</translation>
     </message>
     <message>
         <source>30 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>30 saniye</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -222,11 +222,11 @@
     </message>
     <message>
         <source>5 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>5 dakika</translation>
     </message>
     <message>
         <source>10 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>10 dakika</translation>
     </message>
     <message>
         <source>30 minutes</source>
@@ -325,27 +325,27 @@
     </message>
     <message>
         <source>Blocked Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>Engellenen İnternet adresi</translation>
     </message>
     <message>
         <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;Bağlantı Kurmayı İste&quot; sınırı</translation>
     </message>
     <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;Bağlantı Kurmayı İste&quot; ile duraklatıldı</translation>
     </message>
     <message>
         <source>Allowed once by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;Bağlantı Kurmayı İste&quot; ile bir kez izin verildi</translation>
     </message>
     <message>
         <source>Blocked by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;Bağlantı Kurmayı İste&quot; ile engellendi</translation>
     </message>
     <message>
         <source>Process allowed by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;Bağlantı Kurmayı İste&quot; ile işleme izin verildi</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -417,19 +417,19 @@
     </message>
     <message>
         <source>Block Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Gelenleri Engelle</translation>
     </message>
     <message>
         <source>Program&apos;s Network Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Programın Ağ Filtresi</translation>
     </message>
     <message>
         <source>Block Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Gidenleri Engelle</translation>
     </message>
     <message>
         <source>Allowed Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>İzin verilen İnternet adresi</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -445,19 +445,19 @@
     </message>
     <message>
         <source>Loopback</source>
-        <translation type="unfinished"></translation>
+        <translation>Geri Döngü</translation>
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Sonlandırma Kuralı</translation>
     </message>
     <message>
         <source>Inherited from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Devralınan: %1</translation>
     </message>
     <message>
         <source>Dropped</source>
-        <translation type="unfinished"></translation>
+        <translation>Düşürüldü</translation>
     </message>
     <message>
         <source>Local Host Name</source>
@@ -500,7 +500,7 @@
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre Simülatörü</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -575,7 +575,7 @@
     </message>
     <message>
         <source>%1d</source>
-        <translation type="unfinished"></translation>
+        <translation>%1g</translation>
     </message>
 </context>
 <context>
@@ -593,59 +593,59 @@
     </message>
     <message>
         <source>The Rule&apos;s action is applied</source>
-        <translation type="unfinished"></translation>
+        <translation>Kuralın eylemi uygulanır</translation>
     </message>
     <message>
         <source>Block silently, without a response</source>
-        <translation type="unfinished"></translation>
+        <translation>Yanıt vermeden sessizce engelle</translation>
     </message>
     <message>
         <source>Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>Yön:</translation>
     </message>
     <message>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>Herhangi</translation>
     </message>
     <message>
         <source>Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Gelen</translation>
     </message>
     <message>
         <source>Filter Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre Yapılandırma Hatası</translation>
     </message>
     <message>
         <source>By Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Kurala Göre</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>Bağlantı Kurmayı İste: kullanıcı karar verene kadar bağlantıyı duraklat</translation>
     </message>
     <message>
         <source>Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Giden</translation>
     </message>
     <message>
         <source>Protocol:</source>
-        <translation type="unfinished"></translation>
+        <translation>Protokol:</translation>
     </message>
     <message>
         <source>Area:</source>
-        <translation type="unfinished"></translation>
+        <translation>Alan:</translation>
     </message>
     <message>
         <source>Localhost</source>
-        <translation type="unfinished"></translation>
+        <translation>Localhost</translation>
     </message>
     <message>
         <source>LAN</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN</translation>
     </message>
     <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN: Seçeneklerdeki &quot;Yerel Alan Ağı&quot; adreslerine göre</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -653,47 +653,47 @@
     </message>
     <message>
         <source>Remote IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>Uzak IP:</translation>
     </message>
     <message>
         <source>Remote Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Uzak Port:</translation>
     </message>
     <message>
         <source>Local IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>Yerel IP:</translation>
     </message>
     <message>
         <source>Equal to the Remote IP</source>
-        <translation type="unfinished"></translation>
+        <translation>Uzak IP&apos;ye eşit</translation>
     </message>
     <message>
         <source>Local Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Yerel Port:</translation>
     </message>
     <message>
         <source>Equal to the Remote Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Uzak Port&apos;a eşit</translation>
     </message>
     <message>
         <source>Options:</source>
-        <translation type="unfinished"></translation>
+        <translation>Seçenekler:</translation>
     </message>
     <message>
         <source>Log</source>
-        <translation type="unfinished"></translation>
+        <translation>Günlük</translation>
     </message>
     <message>
         <source>Collect the connection, even if the Rule doesn&apos;t</source>
-        <translation type="unfinished"></translation>
+        <translation>Kural toplamasa bile bağlantıyı topla</translation>
     </message>
     <message>
         <source>No Log</source>
-        <translation type="unfinished"></translation>
+        <translation>Günlük Yok</translation>
     </message>
     <message>
         <source>Don&apos;t collect the connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Bağlantıyı toplama</translation>
     </message>
     <message>
         <source>Alert</source>
@@ -701,19 +701,19 @@
     </message>
     <message>
         <source>Collect the connection as alerted, also with &quot;Alerted only&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Bağlantıyı uyarı verilmiş olarak topla, &quot;Yalnızca Uyarı Verilenler&quot; ile de</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Metin</translation>
     </message>
     <message>
         <source>Copy Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Metni Kopyala</translation>
     </message>
     <message>
         <source>Paste Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Metni Yapıştır</translation>
     </message>
     <message>
         <source>OK</source>
@@ -725,34 +725,34 @@
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre Ekle</translation>
     </message>
     <message>
         <source>Edit Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtreyi Düzenle</translation>
     </message>
     <message>
         <source>All, except these</source>
-        <translation type="unfinished"></translation>
+        <translation>Bunlar hariç hepsi</translation>
     </message>
     <message>
         <source>The text must be one line of filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Metin, tek satırlık filtrelerden oluşmalıdır</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>Temizle</translation>
     </message>
 </context>
 <context>
     <name>FilterSimController</name>
     <message>
         <source>Cannot simulate the connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Bağlantı simüle edilemiyor</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre Simülatörü</translation>
     </message>
 </context>
 <context>
@@ -763,19 +763,19 @@
     </message>
     <message>
         <source>Ignored: other firewalls decide</source>
-        <translation type="unfinished"></translation>
+        <translation>Yok sayıldı: diğer güvenlik duvarları karar verir</translation>
     </message>
     <message>
         <source>Not found</source>
-        <translation type="unfinished"></translation>
+        <translation>Bulunamadı</translation>
     </message>
     <message>
         <source>Connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Bağlantı</translation>
     </message>
     <message>
         <source>Program Path:</source>
-        <translation type="unfinished"></translation>
+        <translation>Program Yolu:</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -783,47 +783,47 @@
     </message>
     <message>
         <source>Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>Yön:</translation>
     </message>
     <message>
         <source>Protocol:</source>
-        <translation type="unfinished"></translation>
+        <translation>Protokol:</translation>
     </message>
     <message>
         <source>Remote IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>Uzak IP:</translation>
     </message>
     <message>
         <source>Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Port:</translation>
     </message>
     <message>
         <source>Local IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>Yerel IP:</translation>
     </message>
     <message>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>Herhangi</translation>
     </message>
     <message>
         <source>Loopback</source>
-        <translation type="unfinished"></translation>
+        <translation>Geri Döngü</translation>
     </message>
     <message>
         <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bu bilgisayarın bir adresine bağlantı. 127.0.0.0/8 ve ::1 adresleri her zaman geri döngüdür.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ağ Profili:</translation>
     </message>
     <message>
         <source>Simulate</source>
-        <translation type="unfinished"></translation>
+        <translation>Simüle Et</translation>
     </message>
     <message>
         <source>Result</source>
-        <translation type="unfinished"></translation>
+        <translation>Sonuç</translation>
     </message>
     <message>
         <source>Action:</source>
@@ -831,35 +831,35 @@
     </message>
     <message>
         <source>Reason:</source>
-        <translation type="unfinished"></translation>
+        <translation>Neden:</translation>
     </message>
     <message>
         <source>Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kural:</translation>
     </message>
     <message>
         <source>Zone:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bölge:</translation>
     </message>
     <message>
         <source>Program:</source>
-        <translation type="unfinished"></translation>
+        <translation>Program:</translation>
     </message>
     <message>
         <source>The program is checked by its path: the settings propagated from a parent process aren&apos;t taken into account.</source>
-        <translation type="unfinished"></translation>
+        <translation>Program yoluna göre denetlenir: üst işlemden aktarılan ayarlar dikkate alınmaz.</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre Simülatörü</translation>
     </message>
     <message>
         <source>Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Gelen</translation>
     </message>
     <message>
         <source>Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Giden</translation>
     </message>
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
@@ -867,11 +867,11 @@
     </message>
     <message>
         <source>Invalid remote IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>Geçersiz uzak IP adresi</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>Geçersiz yerel IP adresi</translation>
     </message>
 </context>
 <context>
@@ -894,19 +894,19 @@
     </message>
     <message>
         <source>Internet Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>İnternet Adresleri</translation>
     </message>
     <message>
         <source>Local Network Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Yerel Ağ Adresleri</translation>
     </message>
     <message>
         <source>Allow Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Adreslere İzin Ver</translation>
     </message>
     <message>
         <source>Block Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresleri Engelle</translation>
     </message>
     <message>
         <source>Ask to Connect</source>
@@ -937,7 +937,7 @@
     <name>FontSelector</name>
     <message>
         <source>Select Font</source>
-        <translation type="unfinished"></translation>
+        <translation>Yazı Tipi Seç</translation>
     </message>
 </context>
 <context>
@@ -948,7 +948,7 @@
     </message>
     <message>
         <source>Install the Windows Service now?</source>
-        <translation type="unfinished"></translation>
+        <translation>Windows Hizmeti şimdi yüklensin mi?</translation>
     </message>
     <message>
         <source>Are you sure you want to quit the program?</source>
@@ -956,7 +956,7 @@
     </message>
     <message>
         <source>Remove the Windows Service and the Driver before quitting?</source>
-        <translation type="unfinished"></translation>
+        <translation>Çıkmadan önce Windows Hizmeti ve Sürücü kaldırılsın mı?</translation>
     </message>
     <message>
         <source>Quota Alert</source>
@@ -991,11 +991,11 @@
     </message>
     <message>
         <source>5 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>5 dakika</translation>
     </message>
     <message>
         <source>10 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>10 dakika</translation>
     </message>
     <message>
         <source>30 minutes</source>
@@ -1026,19 +1026,19 @@
     </message>
     <message>
         <source>Hide Y axis scale labels</source>
-        <translation type="unfinished"></translation>
+        <translation>Y ekseni ölçek etiketlerini gizle</translation>
     </message>
     <message>
         <source>Animation</source>
-        <translation type="unfinished"></translation>
+        <translation>Animasyon</translation>
     </message>
     <message>
         <source>Axis ticks</source>
-        <translation type="unfinished"></translation>
+        <translation>Eksen işaretleri</translation>
     </message>
     <message>
         <source>Show:</source>
-        <translation type="unfinished"></translation>
+        <translation>Göster:</translation>
     </message>
     <message>
         <source>Total</source>
@@ -1062,7 +1062,7 @@
     </message>
     <message>
         <source>Bar width:</source>
-        <translation type="unfinished"></translation>
+        <translation>Çubuk genişliği:</translation>
     </message>
     <message>
         <source>Max seconds:</source>
@@ -1070,7 +1070,7 @@
     </message>
     <message>
         <source>Graph type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Grafik türü:</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -1078,7 +1078,7 @@
     </message>
     <message>
         <source>Border:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kenarlık:</translation>
     </message>
     <message>
         <source>Download:</source>
@@ -1090,7 +1090,7 @@
     </message>
     <message>
         <source>Total:</source>
-        <translation type="unfinished"></translation>
+        <translation>Toplam:</translation>
     </message>
     <message>
         <source>Axis:</source>
@@ -1110,31 +1110,31 @@
     </message>
     <message>
         <source>Maximized</source>
-        <translation type="unfinished"></translation>
+        <translation>Büyütülmüş</translation>
     </message>
     <message>
         <source>X:</source>
-        <translation type="unfinished"></translation>
+        <translation>X:</translation>
     </message>
     <message>
         <source>Y:</source>
-        <translation type="unfinished"></translation>
+        <translation>Y:</translation>
     </message>
     <message>
         <source>Width:</source>
-        <translation type="unfinished"></translation>
+        <translation>Genişlik:</translation>
     </message>
     <message>
         <source>Height:</source>
-        <translation type="unfinished"></translation>
+        <translation>Yükseklik:</translation>
     </message>
     <message>
         <source>Column</source>
-        <translation type="unfinished"></translation>
+        <translation>Sütun</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Çizgi</translation>
     </message>
     <message>
         <source>Window</source>
@@ -1154,7 +1154,7 @@
     </message>
     <message>
         <source>Window Geometry</source>
-        <translation type="unfinished"></translation>
+        <translation>Pencere Geometrisi</translation>
     </message>
     <message>
         <source>Fixed speed:</source>
@@ -1181,11 +1181,11 @@
     <name>GroupEditDialog</name>
     <message>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ad:</translation>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Notlar:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -1197,19 +1197,19 @@
     </message>
     <message>
         <source>A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel grubu yoksa gruplarından HERHANGİ BİRİ etkinse etkindir.</translation>
     </message>
     <message>
         <source>Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kural:</translation>
     </message>
     <message>
         <source>The Rule is applied to the Group&apos;s programs before their own Rule, while the Group is active.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kural, Grup etkinken Grubun programlarına kendi Kurallarından önce uygulanır.</translation>
     </message>
     <message>
         <source>The Group is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>Grup yalnızca bu Zaman Diliminde etkindir.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -1221,7 +1221,7 @@
     </message>
     <message>
         <source>Edit Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Grubu Düzenle</translation>
     </message>
 </context>
 <context>
@@ -1239,19 +1239,19 @@
     <name>GroupsController</name>
     <message>
         <source>Group Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Grup Yapılandırma Hatası</translation>
     </message>
     <message>
         <source>Cannot edit Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Grup Düzenlenemiyor</translation>
     </message>
     <message>
         <source>Cannot delete Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Grup Silinemiyor</translation>
     </message>
     <message>
         <source>Cannot update Group&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Grubun Adı Güncellenemiyor</translation>
     </message>
 </context>
 <context>
@@ -1259,7 +1259,8 @@
     <message>
         <source>Select Groups.
 A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>Grupları seç.
+Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel grubu yoksa gruplarından HERHANGİ BİRİ etkinse etkindir.</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -1267,7 +1268,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>(exclusive)</source>
-        <translation type="unfinished"></translation>
+        <translation>(özel)</translation>
     </message>
 </context>
 <context>
@@ -1290,7 +1291,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Are you sure to remove selected group?</source>
-        <translation type="unfinished"></translation>
+        <translation>Seçili grubu kaldırmak istediğinden emin misin?</translation>
     </message>
 </context>
 <context>
@@ -1482,7 +1483,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Style Sheet:</source>
-        <translation type="unfinished"></translation>
+        <translation>Stil Sayfası:</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -1490,11 +1491,11 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Font:</source>
-        <translation type="unfinished"></translation>
+        <translation>Yazı Tipi:</translation>
     </message>
     <message>
         <source>Icon Size in Lists:</source>
-        <translation type="unfinished"></translation>
+        <translation>Listelerdeki Simge Boyutu:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -1626,7 +1627,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Style Sheets (*.qss);;All files (*.*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Stil Sayfaları (*.qss);;Tüm dosyalar (*.*)</translation>
     </message>
     <message>
         <source>Exclude from screen capture</source>
@@ -1682,11 +1683,11 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Show Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Trafiği Göster</translation>
     </message>
     <message>
         <source>Show Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Bağlantıları Göster</translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
@@ -1869,11 +1870,11 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     </message>
     <message>
         <source>10 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>10 saniye</translation>
     </message>
     <message>
         <source>30 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>30 saniye</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
@@ -1957,11 +1958,11 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     </message>
     <message>
         <source>Block traffic for disabled Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Devre dışı Gruplar için trafiği engelle</translation>
     </message>
     <message>
         <source>Speed Limiter Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Hız Sınırlayıcı Etkin</translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
@@ -1969,7 +1970,7 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     </message>
     <message>
         <source>Ask to Connect seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bağlantı Kurmayı İste saniyeleri:</translation>
     </message>
     <message>
         <source>Disable command line management</source>
@@ -2081,15 +2082,15 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     <name>ProfileRange</name>
     <message>
         <source>Public</source>
-        <translation type="unfinished"></translation>
+        <translation>Genel</translation>
     </message>
     <message>
         <source>Private</source>
-        <translation type="unfinished"></translation>
+        <translation>Özel</translation>
     </message>
     <message>
         <source>Domain</source>
-        <translation type="unfinished"></translation>
+        <translation>Etki Alanı</translation>
     </message>
 </context>
 <context>
@@ -2132,7 +2133,7 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>Bağlantı Kurmayı İste: kullanıcı karar verene kadar bağlantıyı duraklat</translation>
     </message>
     <message>
         <source>Kill Process</source>
@@ -2271,7 +2272,7 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     </message>
     <message>
         <source>Paused Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Duraklatılan Bağlantılar</translation>
     </message>
     <message>
         <source>Switch Wildcard</source>
@@ -2321,7 +2322,7 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     <name>ProgNetworkPage</name>
     <message>
         <source>Block:</source>
-        <translation type="unfinished"></translation>
+        <translation>Engelle:</translation>
     </message>
     <message>
         <source>In</source>
@@ -2329,7 +2330,7 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     </message>
     <message>
         <source>Block Inbound Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Gelen Bağlantıları Engelle</translation>
     </message>
     <message>
         <source>Out</source>
@@ -2337,7 +2338,7 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     </message>
     <message>
         <source>Block Outbound Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Giden Bağlantıları Engelle</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -2357,11 +2358,11 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     </message>
     <message>
         <source>No Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Sınır Yok</translation>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre Ekle</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2547,11 +2548,11 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
     </message>
     <message>
         <source>Obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>Eski</translation>
     </message>
     <message>
         <source>Filter by Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Gruplara Göre Filtrele</translation>
     </message>
     <message>
         <source>Disable</source>
@@ -2646,7 +2647,7 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>Bağlantı Kurmayı İste: kullanıcı karar verene kadar bağlantıyı duraklat</translation>
     </message>
     <message>
         <source>Exclusive</source>
@@ -2654,11 +2655,11 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre Ekle</translation>
     </message>
     <message>
         <source>The Rule is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kural yalnızca bu Zaman Diliminde etkindir.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -2694,7 +2695,7 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
     </message>
     <message>
         <source>Presets</source>
-        <translation type="unfinished"></translation>
+        <translation>Ön Ayarlar</translation>
     </message>
     <message>
         <source>More</source>
@@ -2716,7 +2717,9 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Varsayılan Önceden Ayarlanmış Kural programın yeni sürümleriyle güncellenir: Etkin ve Tepsi Menüsü işaretleri dışındaki değişiklikleriniz kaybolacaktır. Korumak için çoğaltın.
+
+Değişiklikler kaydedilsin mi?</translation>
     </message>
     <message>
         <source>Global rules count exceeded!</source>
@@ -2759,11 +2762,11 @@ Save the changes?</source>
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Sonlandırma Kuralı</translation>
     </message>
     <message>
         <source>Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaman Dilimi</translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -2860,7 +2863,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Cannot add the default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Varsayılan Önceden Ayarlanmış Kurallar eklenemiyor</translation>
     </message>
 </context>
 <context>
@@ -2875,7 +2878,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Duplicate</source>
-        <translation type="unfinished"></translation>
+        <translation>Çoğalt</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2883,7 +2886,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Add Default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Varsayılan Önceden Ayarlanmış Kuralları Ekle</translation>
     </message>
     <message>
         <source>Rules</source>
@@ -2970,15 +2973,15 @@ Save the changes?</source>
     </message>
     <message>
         <source>Each 5 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>Her 5 dakikada</translation>
     </message>
     <message>
         <source>Each 15 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>Her 15 dakikada</translation>
     </message>
     <message>
         <source>Each 30 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>Her 30 dakikada</translation>
     </message>
     <message>
         <source> minute(s)</source>
@@ -3029,15 +3032,15 @@ Save the changes?</source>
     </message>
     <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
-        <translation type="unfinished"></translation>
+        <translation>Değişiklikler sistem tarafından sıfırlandı. Hizmeti yeniden izlenebilir yapın.</translation>
     </message>
     <message>
         <source>Please restart the service to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Değişiklikleri uygulamak için lütfen hizmeti yeniden başlatın.</translation>
     </message>
     <message>
         <source>Please restart the computer to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Değişiklikleri uygulamak için lütfen bilgisayarı yeniden başlatın.</translation>
     </message>
 </context>
 <context>
@@ -3056,7 +3059,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Restart Service</source>
-        <translation type="unfinished"></translation>
+        <translation>Hizmeti Yeniden Başlat</translation>
     </message>
     <message>
         <source>Add Program</source>
@@ -3080,30 +3083,30 @@ Save the changes?</source>
     </message>
     <message>
         <source>Restart the service &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;%1&quot; hizmeti yeniden başlatılsın mı?</translation>
     </message>
     <message>
         <source>Restart the service &quot;%1&quot; to apply the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Değişiklikleri uygulamak için &quot;%1&quot; hizmeti yeniden başlatılsın mı?</translation>
     </message>
     <message>
         <source>Please restart the computer to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Değişiklikleri uygulamak için lütfen bilgisayarı yeniden başlatın.</translation>
     </message>
     <message>
         <source>Cannot restart the service &quot;%1&quot;.</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;%1&quot; hizmeti yeniden başlatılamıyor.</translation>
     </message>
 </context>
 <context>
     <name>SpeedLimitEditDialog</name>
     <message>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ad:</translation>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Notlar:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -3119,7 +3122,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Speed:</source>
-        <translation type="unfinished"></translation>
+        <translation>Hız:</translation>
     </message>
     <message>
         <source>Latency:</source>
@@ -3131,11 +3134,11 @@ Save the changes?</source>
     </message>
     <message>
         <source>Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Arabellek Boyutu:</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>Hız Sınırı yalnızca bu Zaman Diliminde etkindir.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -3147,7 +3150,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Edit Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Hız Sınırını Düzenle</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -3159,19 +3162,20 @@ Save the changes?</source>
     <message>
         <source>Buffer overflow: %1
 Packet loss: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Arabellek taşması: %1
+Paket kaybı: %2</translation>
     </message>
     <message>
         <source>Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Hız Sınırı</translation>
     </message>
     <message>
         <source>Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Kuyruk</translation>
     </message>
     <message>
         <source>Dropped</source>
-        <translation type="unfinished"></translation>
+        <translation>Düşürüldü</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -3186,19 +3190,19 @@ Packet loss: %2</source>
     <name>SpeedLimitsController</name>
     <message>
         <source>Speed Limit Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Hız Sınırı Yapılandırma Hatası</translation>
     </message>
     <message>
         <source>Cannot edit Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Hız Sınırı Düzenlenemiyor</translation>
     </message>
     <message>
         <source>Cannot delete Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Hız Sınırı Silinemiyor</translation>
     </message>
     <message>
         <source>Cannot update Speed Limit&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Hız Sınırının Adı Güncellenemiyor</translation>
     </message>
 </context>
 <context>
@@ -3217,11 +3221,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>Hız Sınırları</translation>
     </message>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Seçili hız sınırını kaldırmak istediğinden emin misin?</translation>
     </message>
 </context>
 <context>
@@ -3308,11 +3312,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Collect Traffic re-injected by other drivers</source>
-        <translation type="unfinished"></translation>
+        <translation>Diğer sürücüler tarafından yeniden enjekte edilen trafiği topla</translation>
     </message>
     <message>
         <source>The Traffic is collected only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>Trafik yalnızca bu Zaman Diliminde toplanır.</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
@@ -3378,7 +3382,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Interval, minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>Aralık, dakika</translation>
     </message>
     <message>
         <source>Maximum retries count</source>
@@ -3400,11 +3404,11 @@ Packet loss: %2</source>
     <name>TimePeriodEditDialog</name>
     <message>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ad:</translation>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Notlar:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -3412,19 +3416,19 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>The disabled Time Period doesn&apos;t restrict its Groups and Speed Limits.</source>
-        <translation type="unfinished"></translation>
+        <translation>Devre dışı Zaman Dilimi, Gruplarını ve Hız Sınırlarını kısıtlamaz.</translation>
     </message>
     <message>
         <source>Intervals:</source>
-        <translation type="unfinished"></translation>
+        <translation>Aralıklar:</translation>
     </message>
     <message>
         <source>The Time Period is active in ANY of its intervals.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaman Dilimi, aralıklarından HERHANGİ BİRİNDE etkindir.</translation>
     </message>
     <message>
         <source>Add Interval</source>
-        <translation type="unfinished"></translation>
+        <translation>Aralık Ekle</translation>
     </message>
     <message>
         <source>OK</source>
@@ -3436,18 +3440,18 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Edit Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaman Dilimini Düzenle</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodIntervalEdit</name>
     <message>
         <source>From</source>
-        <translation type="unfinished"></translation>
+        <translation>Başlangıç</translation>
     </message>
     <message>
         <source>To (the same time means the whole 24 hours)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bitiş (aynı saat, tüm 24 saat anlamına gelir)</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -3458,11 +3462,11 @@ Packet loss: %2</source>
     <name>TimePeriodListModel</name>
     <message>
         <source>Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaman Dilimi</translation>
     </message>
     <message>
         <source>Intervals</source>
-        <translation type="unfinished"></translation>
+        <translation>Aralıklar</translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -3473,34 +3477,34 @@ Packet loss: %2</source>
     <name>TimePeriodSelector</name>
     <message>
         <source>Time Period:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaman Dilimi:</translation>
     </message>
     <message>
         <source>No Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Dilim Yok</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaman Dilimleri</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodsController</name>
     <message>
         <source>Time Period Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaman Dilimi Yapılandırma Hatası</translation>
     </message>
     <message>
         <source>Cannot edit Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaman Dilimi Düzenlenemiyor</translation>
     </message>
     <message>
         <source>Cannot delete Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaman Dilimi Silinemiyor</translation>
     </message>
     <message>
         <source>Cannot update Time Period&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaman Diliminin Adı Güncellenemiyor</translation>
     </message>
 </context>
 <context>
@@ -3519,11 +3523,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaman Dilimleri</translation>
     </message>
     <message>
         <source>Are you sure to remove selected time period?</source>
-        <translation type="unfinished"></translation>
+        <translation>Seçili zaman dilimini kaldırmak istediğinden emin misin?</translation>
     </message>
 </context>
 <context>
@@ -3651,15 +3655,15 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>Hız Sınırları</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaman Dilimleri</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre Simülatörü</translation>
     </message>
     <message>
         <source>Traffic Graph</source>
@@ -3671,7 +3675,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Group Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>Grup Değiştirici</translation>
     </message>
     <message>
         <source>Quit</source>
@@ -3749,11 +3753,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Week Days</source>
-        <translation type="unfinished"></translation>
+        <translation>Hafta Günleri</translation>
     </message>
     <message>
         <source>No Days</source>
-        <translation type="unfinished"></translation>
+        <translation>Gün Yok</translation>
     </message>
 </context>
 <context>

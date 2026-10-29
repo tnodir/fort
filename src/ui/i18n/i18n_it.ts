@@ -40,11 +40,11 @@
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>Chiedi</translation>
     </message>
     <message>
         <source>Drop</source>
-        <translation type="unfinished"></translation>
+        <translation>Scarta</translation>
     </message>
 </context>
 <context>
@@ -82,11 +82,11 @@
     <name>AppConnsWindow</name>
     <message>
         <source>Program Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Connessioni programma</translation>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiungi filtro</translation>
     </message>
 </context>
 <context>
@@ -120,7 +120,7 @@
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>Limiti di velocità</translation>
     </message>
     <message>
         <source>File Path</source>
@@ -171,50 +171,50 @@
     <name>AppPendingConnSearchModel</name>
     <message>
         <source>No longer paused</source>
-        <translation type="unfinished"></translation>
+        <translation>Non più in pausa</translation>
     </message>
     <message>
         <source>Blocked in %1 s</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloccata tra %1 s</translation>
     </message>
 </context>
 <context>
     <name>AppPendingConnsWindow</name>
     <message>
         <source>Paused Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Connessioni in pausa</translation>
     </message>
     <message>
         <source>Allow the process till its exit or for the time by the menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Consenti il processo fino alla sua uscita o per il tempo scelto dal menu</translation>
     </message>
     <message>
         <source>Continue by the current rules: the still paused ones are blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>Continua secondo le regole attuali: quelle ancora in pausa vengono bloccate</translation>
     </message>
     <message>
         <source>Allow once</source>
-        <translation type="unfinished"></translation>
+        <translation>Consenti una volta</translation>
     </message>
     <message>
         <source>Allow Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Consenti processo</translation>
     </message>
     <message>
         <source>Block once</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca una volta</translation>
     </message>
     <message>
         <source>Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>Continua</translation>
     </message>
     <message>
         <source>10 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>10 secondi</translation>
     </message>
     <message>
         <source>30 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>30 secondi</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -325,27 +325,27 @@
     </message>
     <message>
         <source>Blocked Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>Indirizzo Internet bloccato</translation>
     </message>
     <message>
         <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Limite di &quot;Chiedi connessione&quot;</translation>
     </message>
     <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>In pausa per &quot;Chiedi connessione&quot;</translation>
     </message>
     <message>
         <source>Allowed once by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Consentita una volta da &quot;Chiedi connessione&quot;</translation>
     </message>
     <message>
         <source>Blocked by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloccata da &quot;Chiedi connessione&quot;</translation>
     </message>
     <message>
         <source>Process allowed by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Processo consentito da &quot;Chiedi connessione&quot;</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -417,19 +417,19 @@
     </message>
     <message>
         <source>Block Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca in entrata</translation>
     </message>
     <message>
         <source>Program&apos;s Network Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtro di rete del programma</translation>
     </message>
     <message>
         <source>Block Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca in uscita</translation>
     </message>
     <message>
         <source>Allowed Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>Indirizzo Internet consentito</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -445,19 +445,19 @@
     </message>
     <message>
         <source>Loopback</source>
-        <translation type="unfinished"></translation>
+        <translation>Loopback</translation>
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Regola terminante</translation>
     </message>
     <message>
         <source>Inherited from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Ereditato da: %1</translation>
     </message>
     <message>
         <source>Dropped</source>
-        <translation type="unfinished"></translation>
+        <translation>Scartata</translation>
     </message>
     <message>
         <source>Local Host Name</source>
@@ -500,7 +500,7 @@
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulatore filtro</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -575,7 +575,7 @@
     </message>
     <message>
         <source>%1d</source>
-        <translation type="unfinished"></translation>
+        <translation>%1g</translation>
     </message>
 </context>
 <context>
@@ -593,59 +593,59 @@
     </message>
     <message>
         <source>The Rule&apos;s action is applied</source>
-        <translation type="unfinished"></translation>
+        <translation>Viene applicata l&apos;azione della regola</translation>
     </message>
     <message>
         <source>Block silently, without a response</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca silenziosamente, senza risposta</translation>
     </message>
     <message>
         <source>Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>Direzione:</translation>
     </message>
     <message>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>Qualsiasi</translation>
     </message>
     <message>
         <source>Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>In entrata</translation>
     </message>
     <message>
         <source>Filter Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore configurazione filtro</translation>
     </message>
     <message>
         <source>By Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Dalla regola</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>Chiedi connessione: sospendi la connessione fino alla decisione dell&apos;utente</translation>
     </message>
     <message>
         <source>Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>In uscita</translation>
     </message>
     <message>
         <source>Protocol:</source>
-        <translation type="unfinished"></translation>
+        <translation>Protocollo:</translation>
     </message>
     <message>
         <source>Area:</source>
-        <translation type="unfinished"></translation>
+        <translation>Area:</translation>
     </message>
     <message>
         <source>Localhost</source>
-        <translation type="unfinished"></translation>
+        <translation>Localhost</translation>
     </message>
     <message>
         <source>LAN</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN</translation>
     </message>
     <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN: secondo gli indirizzi della &quot;Rete locale&quot; nelle opzioni</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -653,47 +653,47 @@
     </message>
     <message>
         <source>Remote IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>IP remoto:</translation>
     </message>
     <message>
         <source>Remote Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Porta remota:</translation>
     </message>
     <message>
         <source>Local IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>IP locale:</translation>
     </message>
     <message>
         <source>Equal to the Remote IP</source>
-        <translation type="unfinished"></translation>
+        <translation>Uguale all&apos;IP remoto</translation>
     </message>
     <message>
         <source>Local Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Porta locale:</translation>
     </message>
     <message>
         <source>Equal to the Remote Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Uguale alla porta remota</translation>
     </message>
     <message>
         <source>Options:</source>
-        <translation type="unfinished"></translation>
+        <translation>Opzioni:</translation>
     </message>
     <message>
         <source>Log</source>
-        <translation type="unfinished"></translation>
+        <translation>Registra</translation>
     </message>
     <message>
         <source>Collect the connection, even if the Rule doesn&apos;t</source>
-        <translation type="unfinished"></translation>
+        <translation>Raccogli la connessione, anche se la regola non lo fa</translation>
     </message>
     <message>
         <source>No Log</source>
-        <translation type="unfinished"></translation>
+        <translation>Non registrare</translation>
     </message>
     <message>
         <source>Don&apos;t collect the connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Non raccogliere la connessione</translation>
     </message>
     <message>
         <source>Alert</source>
@@ -701,19 +701,19 @@
     </message>
     <message>
         <source>Collect the connection as alerted, also with &quot;Alerted only&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Raccogli la connessione come in allerta, anche con &quot;Solo in allerta&quot;</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Testo</translation>
     </message>
     <message>
         <source>Copy Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Copia testo</translation>
     </message>
     <message>
         <source>Paste Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Incolla testo</translation>
     </message>
     <message>
         <source>OK</source>
@@ -725,34 +725,34 @@
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiungi filtro</translation>
     </message>
     <message>
         <source>Edit Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifica filtro</translation>
     </message>
     <message>
         <source>All, except these</source>
-        <translation type="unfinished"></translation>
+        <translation>Tutti, tranne questi</translation>
     </message>
     <message>
         <source>The text must be one line of filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Il testo deve essere una sola riga di filtri</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancella</translation>
     </message>
 </context>
 <context>
     <name>FilterSimController</name>
     <message>
         <source>Cannot simulate the connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile simulare la connessione</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulatore filtro</translation>
     </message>
 </context>
 <context>
@@ -763,19 +763,19 @@
     </message>
     <message>
         <source>Ignored: other firewalls decide</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignorata: decidono altri firewall</translation>
     </message>
     <message>
         <source>Not found</source>
-        <translation type="unfinished"></translation>
+        <translation>Non trovato</translation>
     </message>
     <message>
         <source>Connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Connessione</translation>
     </message>
     <message>
         <source>Program Path:</source>
-        <translation type="unfinished"></translation>
+        <translation>Percorso programma:</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -783,47 +783,47 @@
     </message>
     <message>
         <source>Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>Direzione:</translation>
     </message>
     <message>
         <source>Protocol:</source>
-        <translation type="unfinished"></translation>
+        <translation>Protocollo:</translation>
     </message>
     <message>
         <source>Remote IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>IP remoto:</translation>
     </message>
     <message>
         <source>Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Porta:</translation>
     </message>
     <message>
         <source>Local IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>IP locale:</translation>
     </message>
     <message>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>Qualsiasi</translation>
     </message>
     <message>
         <source>Loopback</source>
-        <translation type="unfinished"></translation>
+        <translation>Loopback</translation>
     </message>
     <message>
         <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
-        <translation type="unfinished"></translation>
+        <translation>La connessione a un indirizzo di questo computer. Gli indirizzi 127.0.0.0/8 e ::1 sono sempre loopback.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>Profilo di rete:</translation>
     </message>
     <message>
         <source>Simulate</source>
-        <translation type="unfinished"></translation>
+        <translation>Simula</translation>
     </message>
     <message>
         <source>Result</source>
-        <translation type="unfinished"></translation>
+        <translation>Risultato</translation>
     </message>
     <message>
         <source>Action:</source>
@@ -831,35 +831,35 @@
     </message>
     <message>
         <source>Reason:</source>
-        <translation type="unfinished"></translation>
+        <translation>Motivo:</translation>
     </message>
     <message>
         <source>Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>Regola:</translation>
     </message>
     <message>
         <source>Zone:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zona:</translation>
     </message>
     <message>
         <source>Program:</source>
-        <translation type="unfinished"></translation>
+        <translation>Programma:</translation>
     </message>
     <message>
         <source>The program is checked by its path: the settings propagated from a parent process aren&apos;t taken into account.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il programma viene verificato in base al suo percorso: le impostazioni ereditate da un processo padre non vengono prese in considerazione.</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulatore filtro</translation>
     </message>
     <message>
         <source>Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>In entrata</translation>
     </message>
     <message>
         <source>Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>In uscita</translation>
     </message>
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
@@ -867,11 +867,11 @@
     </message>
     <message>
         <source>Invalid remote IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>Indirizzo IP remoto non valido</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>Indirizzo IP locale non valido</translation>
     </message>
 </context>
 <context>
@@ -894,19 +894,19 @@
     </message>
     <message>
         <source>Internet Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Indirizzi Internet</translation>
     </message>
     <message>
         <source>Local Network Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Indirizzi della rete locale</translation>
     </message>
     <message>
         <source>Allow Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Indirizzi consentiti</translation>
     </message>
     <message>
         <source>Block Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Indirizzi bloccati</translation>
     </message>
     <message>
         <source>Ask to Connect</source>
@@ -937,7 +937,7 @@
     <name>FontSelector</name>
     <message>
         <source>Select Font</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleziona carattere</translation>
     </message>
 </context>
 <context>
@@ -948,7 +948,7 @@
     </message>
     <message>
         <source>Install the Windows Service now?</source>
-        <translation type="unfinished"></translation>
+        <translation>Installare ora il servizio Windows?</translation>
     </message>
     <message>
         <source>Are you sure you want to quit the program?</source>
@@ -956,7 +956,7 @@
     </message>
     <message>
         <source>Remove the Windows Service and the Driver before quitting?</source>
-        <translation type="unfinished"></translation>
+        <translation>Rimuovere il servizio Windows e il driver prima di uscire?</translation>
     </message>
     <message>
         <source>Quota Alert</source>
@@ -1026,19 +1026,19 @@
     </message>
     <message>
         <source>Hide Y axis scale labels</source>
-        <translation type="unfinished"></translation>
+        <translation>Nascondi le etichette della scala dell&apos;asse Y</translation>
     </message>
     <message>
         <source>Animation</source>
-        <translation type="unfinished"></translation>
+        <translation>Animazione</translation>
     </message>
     <message>
         <source>Axis ticks</source>
-        <translation type="unfinished"></translation>
+        <translation>Tacche degli assi</translation>
     </message>
     <message>
         <source>Show:</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra:</translation>
     </message>
     <message>
         <source>Total</source>
@@ -1062,7 +1062,7 @@
     </message>
     <message>
         <source>Bar width:</source>
-        <translation type="unfinished"></translation>
+        <translation>Larghezza barre:</translation>
     </message>
     <message>
         <source>Max seconds:</source>
@@ -1070,7 +1070,7 @@
     </message>
     <message>
         <source>Graph type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tipo di grafico:</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -1078,7 +1078,7 @@
     </message>
     <message>
         <source>Border:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bordo:</translation>
     </message>
     <message>
         <source>Download:</source>
@@ -1090,7 +1090,7 @@
     </message>
     <message>
         <source>Total:</source>
-        <translation type="unfinished"></translation>
+        <translation>Totale:</translation>
     </message>
     <message>
         <source>Axis:</source>
@@ -1110,31 +1110,31 @@
     </message>
     <message>
         <source>Maximized</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingrandita</translation>
     </message>
     <message>
         <source>X:</source>
-        <translation type="unfinished"></translation>
+        <translation>X:</translation>
     </message>
     <message>
         <source>Y:</source>
-        <translation type="unfinished"></translation>
+        <translation>Y:</translation>
     </message>
     <message>
         <source>Width:</source>
-        <translation type="unfinished"></translation>
+        <translation>Larghezza:</translation>
     </message>
     <message>
         <source>Height:</source>
-        <translation type="unfinished"></translation>
+        <translation>Altezza:</translation>
     </message>
     <message>
         <source>Column</source>
-        <translation type="unfinished"></translation>
+        <translation>Colonne</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Linea</translation>
     </message>
     <message>
         <source>Window</source>
@@ -1154,7 +1154,7 @@
     </message>
     <message>
         <source>Window Geometry</source>
-        <translation type="unfinished"></translation>
+        <translation>Geometria della finestra</translation>
     </message>
     <message>
         <source>Fixed speed:</source>
@@ -1185,7 +1185,7 @@
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Note:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -1197,19 +1197,19 @@
     </message>
     <message>
         <source>A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>Un programma è abilitato solo se QUALSIASI suo gruppo esclusivo è abilitato oppure, in assenza di gruppi esclusivi, se QUALSIASI suo gruppo è abilitato.</translation>
     </message>
     <message>
         <source>Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>Regola:</translation>
     </message>
     <message>
         <source>The Rule is applied to the Group&apos;s programs before their own Rule, while the Group is active.</source>
-        <translation type="unfinished"></translation>
+        <translation>La regola viene applicata ai programmi del gruppo prima della loro regola, finché il gruppo è attivo.</translation>
     </message>
     <message>
         <source>The Group is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il gruppo è attivo solo in questo periodo di tempo.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -1221,7 +1221,7 @@
     </message>
     <message>
         <source>Edit Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifica gruppo</translation>
     </message>
 </context>
 <context>
@@ -1239,19 +1239,19 @@
     <name>GroupsController</name>
     <message>
         <source>Group Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore configurazione gruppo</translation>
     </message>
     <message>
         <source>Cannot edit Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile modificare il gruppo</translation>
     </message>
     <message>
         <source>Cannot delete Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile eliminare il gruppo</translation>
     </message>
     <message>
         <source>Cannot update Group&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile aggiornare nome gruppo</translation>
     </message>
 </context>
 <context>
@@ -1259,7 +1259,8 @@
     <message>
         <source>Select Groups.
 A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleziona gruppi.
+Un programma è abilitato solo se QUALSIASI suo gruppo esclusivo è abilitato oppure, in assenza di gruppi esclusivi, se QUALSIASI suo gruppo è abilitato.</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -1267,7 +1268,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>(exclusive)</source>
-        <translation type="unfinished"></translation>
+        <translation>(esclusivo)</translation>
     </message>
 </context>
 <context>
@@ -1290,7 +1291,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Are you sure to remove selected group?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sei sicuro di voler rimuovere il gruppo selezionato?</translation>
     </message>
 </context>
 <context>
@@ -1482,7 +1483,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Style Sheet:</source>
-        <translation type="unfinished"></translation>
+        <translation>Foglio di stile:</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -1490,11 +1491,11 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Font:</source>
-        <translation type="unfinished"></translation>
+        <translation>Carattere:</translation>
     </message>
     <message>
         <source>Icon Size in Lists:</source>
-        <translation type="unfinished"></translation>
+        <translation>Dimensione icone negli elenchi:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -1626,7 +1627,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Style Sheets (*.qss);;All files (*.*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Fogli di stile (*.qss);;Tutti i file (*.*)</translation>
     </message>
     <message>
         <source>Exclude from screen capture</source>
@@ -1682,11 +1683,11 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Show Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra traffico</translation>
     </message>
     <message>
         <source>Show Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra connessioni</translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
@@ -1869,11 +1870,11 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>10 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>10 secondi</translation>
     </message>
     <message>
         <source>30 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>30 secondi</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
@@ -1957,11 +1958,11 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>Block traffic for disabled Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca il traffico per i gruppi disabilitati</translation>
     </message>
     <message>
         <source>Speed Limiter Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Limitatore di velocità abilitato</translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
@@ -1969,7 +1970,7 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>Ask to Connect seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>Secondi per &quot;Chiedi connessione&quot;:</translation>
     </message>
     <message>
         <source>Disable command line management</source>
@@ -2081,15 +2082,15 @@ Assicurati di avere un nuovo backup.</translation>
     <name>ProfileRange</name>
     <message>
         <source>Public</source>
-        <translation type="unfinished"></translation>
+        <translation>Pubblica</translation>
     </message>
     <message>
         <source>Private</source>
-        <translation type="unfinished"></translation>
+        <translation>Privata</translation>
     </message>
     <message>
         <source>Domain</source>
-        <translation type="unfinished"></translation>
+        <translation>Dominio</translation>
     </message>
 </context>
 <context>
@@ -2132,7 +2133,7 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>Chiedi connessione: sospendi la connessione fino alla decisione dell&apos;utente</translation>
     </message>
     <message>
         <source>Kill Process</source>
@@ -2271,7 +2272,7 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>Paused Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Connessioni in pausa</translation>
     </message>
     <message>
         <source>Switch Wildcard</source>
@@ -2321,7 +2322,7 @@ Assicurati di avere un nuovo backup.</translation>
     <name>ProgNetworkPage</name>
     <message>
         <source>Block:</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca:</translation>
     </message>
     <message>
         <source>In</source>
@@ -2329,7 +2330,7 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>Block Inbound Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca connessioni in entrata</translation>
     </message>
     <message>
         <source>Out</source>
@@ -2337,7 +2338,7 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>Block Outbound Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca connessioni in uscita</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -2357,11 +2358,11 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>No Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Nessun limite</translation>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiungi filtro</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2544,15 +2545,15 @@ Controllare un altro programma con lo stesso percorso.</translation>
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Connessioni</translation>
     </message>
     <message>
         <source>Obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>Obsoleti</translation>
     </message>
     <message>
         <source>Filter by Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtra per gruppi</translation>
     </message>
     <message>
         <source>Disable</source>
@@ -2606,7 +2607,7 @@ Controllare un altro programma con lo stesso percorso.</translation>
     <name>ProtocolSelector</name>
     <message>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation>Personalizzato</translation>
     </message>
 </context>
 <context>
@@ -2647,7 +2648,7 @@ Controllare un altro programma con lo stesso percorso.</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>Chiedi connessione: sospendi la connessione fino alla decisione dell&apos;utente</translation>
     </message>
     <message>
         <source>Exclusive</source>
@@ -2655,11 +2656,11 @@ Controllare un altro programma con lo stesso percorso.</translation>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiungi filtro</translation>
     </message>
     <message>
         <source>The Rule is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>La regola è attiva solo in questo periodo di tempo.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -2695,7 +2696,7 @@ Controllare un altro programma con lo stesso percorso.</translation>
     </message>
     <message>
         <source>Presets</source>
-        <translation type="unfinished"></translation>
+        <translation>Preimpostate</translation>
     </message>
     <message>
         <source>More</source>
@@ -2717,7 +2718,9 @@ Controllare un altro programma con lo stesso percorso.</translation>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>La regola preimpostata predefinita viene aggiornata dalle nuove versioni del programma: le tue modifiche andranno perse, tranne i flag Abilitata e Menu vassoio. Duplicala per mantenerle.
+
+Salvare le modifiche?</translation>
     </message>
     <message>
         <source>Global rules count exceeded!</source>
@@ -2760,11 +2763,11 @@ Save the changes?</source>
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Regola terminante</translation>
     </message>
     <message>
         <source>Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Periodo di tempo</translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -2861,7 +2864,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Cannot add the default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile aggiungere le regole preimpostate predefinite</translation>
     </message>
 </context>
 <context>
@@ -2876,7 +2879,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Duplicate</source>
-        <translation type="unfinished"></translation>
+        <translation>Duplica</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2884,7 +2887,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Add Default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiungi regole preimpostate predefinite</translation>
     </message>
     <message>
         <source>Rules</source>
@@ -2971,15 +2974,15 @@ Save the changes?</source>
     </message>
     <message>
         <source>Each 5 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>Ogni 5 minuti</translation>
     </message>
     <message>
         <source>Each 15 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>Ogni 15 minuti</translation>
     </message>
     <message>
         <source>Each 30 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>Ogni 30 minuti</translation>
     </message>
     <message>
         <source> minute(s)</source>
@@ -3030,15 +3033,15 @@ Save the changes?</source>
     </message>
     <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le modifiche sono state reimpostate dal sistema. Rendi di nuovo tracciabile il servizio.</translation>
     </message>
     <message>
         <source>Please restart the service to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavvia il servizio per applicare le modifiche.</translation>
     </message>
     <message>
         <source>Please restart the computer to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavvia il computer per applicare le modifiche.</translation>
     </message>
 </context>
 <context>
@@ -3057,7 +3060,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Restart Service</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavvia servizio</translation>
     </message>
     <message>
         <source>Add Program</source>
@@ -3081,19 +3084,19 @@ Save the changes?</source>
     </message>
     <message>
         <source>Restart the service &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavviare il servizio &quot;%1&quot;?</translation>
     </message>
     <message>
         <source>Restart the service &quot;%1&quot; to apply the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavviare il servizio &quot;%1&quot; per applicare le modifiche?</translation>
     </message>
     <message>
         <source>Please restart the computer to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavvia il computer per applicare le modifiche.</translation>
     </message>
     <message>
         <source>Cannot restart the service &quot;%1&quot;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile riavviare il servizio &quot;%1&quot;.</translation>
     </message>
 </context>
 <context>
@@ -3104,7 +3107,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Note:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -3120,7 +3123,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Speed:</source>
-        <translation type="unfinished"></translation>
+        <translation>Velocità:</translation>
     </message>
     <message>
         <source>Latency:</source>
@@ -3132,11 +3135,11 @@ Save the changes?</source>
     </message>
     <message>
         <source>Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Dimensione buffer:</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il limite di velocità è attivo solo in questo periodo di tempo.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -3148,11 +3151,11 @@ Save the changes?</source>
     </message>
     <message>
         <source>Edit Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifica limite di velocità</translation>
     </message>
     <message>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation>Personalizzato</translation>
     </message>
 </context>
 <context>
@@ -3160,19 +3163,20 @@ Save the changes?</source>
     <message>
         <source>Buffer overflow: %1
 Packet loss: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Overflow del buffer: %1
+Perdita pacchetti: %2</translation>
     </message>
     <message>
         <source>Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Limite di velocità</translation>
     </message>
     <message>
         <source>Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Coda</translation>
     </message>
     <message>
         <source>Dropped</source>
-        <translation type="unfinished"></translation>
+        <translation>Scartati</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -3187,19 +3191,19 @@ Packet loss: %2</source>
     <name>SpeedLimitsController</name>
     <message>
         <source>Speed Limit Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore configurazione limite di velocità</translation>
     </message>
     <message>
         <source>Cannot edit Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile modificare il limite di velocità</translation>
     </message>
     <message>
         <source>Cannot delete Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile eliminare il limite di velocità</translation>
     </message>
     <message>
         <source>Cannot update Speed Limit&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile aggiornare nome limite di velocità</translation>
     </message>
 </context>
 <context>
@@ -3218,11 +3222,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>Limiti di velocità</translation>
     </message>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sei sicuro di voler rimuovere il limite di velocità selezionato?</translation>
     </message>
 </context>
 <context>
@@ -3309,11 +3313,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Collect Traffic re-injected by other drivers</source>
-        <translation type="unfinished"></translation>
+        <translation>Raccogli il traffico reiniettato da altri driver</translation>
     </message>
     <message>
         <source>The Traffic is collected only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il traffico viene raccolto solo in questo periodo di tempo.</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
@@ -3379,7 +3383,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Interval, minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>Intervallo, minuti</translation>
     </message>
     <message>
         <source>Maximum retries count</source>
@@ -3405,7 +3409,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Note:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -3413,19 +3417,19 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>The disabled Time Period doesn&apos;t restrict its Groups and Speed Limits.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il periodo di tempo disabilitato non limita i suoi gruppi e limiti di velocità.</translation>
     </message>
     <message>
         <source>Intervals:</source>
-        <translation type="unfinished"></translation>
+        <translation>Intervalli:</translation>
     </message>
     <message>
         <source>The Time Period is active in ANY of its intervals.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il periodo di tempo è attivo in QUALSIASI suo intervallo.</translation>
     </message>
     <message>
         <source>Add Interval</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiungi intervallo</translation>
     </message>
     <message>
         <source>OK</source>
@@ -3437,18 +3441,18 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Edit Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifica periodo di tempo</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodIntervalEdit</name>
     <message>
         <source>From</source>
-        <translation type="unfinished"></translation>
+        <translation>Da</translation>
     </message>
     <message>
         <source>To (the same time means the whole 24 hours)</source>
-        <translation type="unfinished"></translation>
+        <translation>A (lo stesso orario indica le 24 ore intere)</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -3459,11 +3463,11 @@ Packet loss: %2</source>
     <name>TimePeriodListModel</name>
     <message>
         <source>Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Periodo di tempo</translation>
     </message>
     <message>
         <source>Intervals</source>
-        <translation type="unfinished"></translation>
+        <translation>Intervalli</translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -3474,34 +3478,34 @@ Packet loss: %2</source>
     <name>TimePeriodSelector</name>
     <message>
         <source>Time Period:</source>
-        <translation type="unfinished"></translation>
+        <translation>Periodo di tempo:</translation>
     </message>
     <message>
         <source>No Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Nessun periodo</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>Periodi di tempo</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodsController</name>
     <message>
         <source>Time Period Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore configurazione periodo di tempo</translation>
     </message>
     <message>
         <source>Cannot edit Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile modificare il periodo di tempo</translation>
     </message>
     <message>
         <source>Cannot delete Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile eliminare il periodo di tempo</translation>
     </message>
     <message>
         <source>Cannot update Time Period&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile aggiornare nome periodo di tempo</translation>
     </message>
 </context>
 <context>
@@ -3520,11 +3524,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>Periodi di tempo</translation>
     </message>
     <message>
         <source>Are you sure to remove selected time period?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sei sicuro di voler rimuovere il periodo di tempo selezionato?</translation>
     </message>
 </context>
 <context>
@@ -3652,15 +3656,15 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>Limiti di velocità</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>Periodi di tempo</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulatore filtro</translation>
     </message>
     <message>
         <source>Traffic Graph</source>
@@ -3672,7 +3676,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Group Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>Modificatore gruppi</translation>
     </message>
     <message>
         <source>Quit</source>
@@ -3750,11 +3754,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Week Days</source>
-        <translation type="unfinished"></translation>
+        <translation>Giorni della settimana</translation>
     </message>
     <message>
         <source>No Days</source>
-        <translation type="unfinished"></translation>
+        <translation>Nessun giorno</translation>
     </message>
 </context>
 <context>

@@ -40,7 +40,7 @@
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>Demander</translation>
     </message>
     <message>
         <source>Drop</source>
@@ -194,19 +194,19 @@
     </message>
     <message>
         <source>Allow once</source>
-        <translation type="unfinished"></translation>
+        <translation>Autoriser une fois</translation>
     </message>
     <message>
         <source>Allow Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Autoriser le processus</translation>
     </message>
     <message>
         <source>Block once</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer une fois</translation>
     </message>
     <message>
         <source>Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>Continuer</translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -449,7 +449,7 @@
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Règle de terminaison</translation>
     </message>
     <message>
         <source>Inherited from: %1</source>
@@ -613,11 +613,11 @@
     </message>
     <message>
         <source>Filter Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur de configuration du filtre</translation>
     </message>
     <message>
         <source>By Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Par règle</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
@@ -713,7 +713,7 @@
     </message>
     <message>
         <source>Paste Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Coller le texte</translation>
     </message>
     <message>
         <source>OK</source>
@@ -737,7 +737,7 @@
     </message>
     <message>
         <source>The text must be one line of filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Le texte doit être une seule ligne de filtres</translation>
     </message>
     <message>
         <source>Clear</source>
@@ -937,7 +937,7 @@
     <name>FontSelector</name>
     <message>
         <source>Select Font</source>
-        <translation type="unfinished"></translation>
+        <translation>Choisir une police</translation>
     </message>
 </context>
 <context>
@@ -1026,7 +1026,7 @@
     </message>
     <message>
         <source>Hide Y axis scale labels</source>
-        <translation type="unfinished"></translation>
+        <translation>Masquer les étiquettes de l&apos;échelle de l&apos;axe Y</translation>
     </message>
     <message>
         <source>Animation</source>
@@ -1110,23 +1110,23 @@
     </message>
     <message>
         <source>Maximized</source>
-        <translation type="unfinished"></translation>
+        <translation>Agrandie</translation>
     </message>
     <message>
         <source>X:</source>
-        <translation type="unfinished"></translation>
+        <translation>X :</translation>
     </message>
     <message>
         <source>Y:</source>
-        <translation type="unfinished"></translation>
+        <translation>Y :</translation>
     </message>
     <message>
         <source>Width:</source>
-        <translation type="unfinished"></translation>
+        <translation>Largeur :</translation>
     </message>
     <message>
         <source>Height:</source>
-        <translation type="unfinished"></translation>
+        <translation>Hauteur :</translation>
     </message>
     <message>
         <source>Column</source>
@@ -1154,7 +1154,7 @@
     </message>
     <message>
         <source>Window Geometry</source>
-        <translation type="unfinished"></translation>
+        <translation>Géométrie de la fenêtre</translation>
     </message>
     <message>
         <source>Fixed speed:</source>
@@ -1491,11 +1491,11 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
     </message>
     <message>
         <source>Font:</source>
-        <translation type="unfinished"></translation>
+        <translation>Police :</translation>
     </message>
     <message>
         <source>Icon Size in Lists:</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille des icônes dans les listes :</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -2718,7 +2718,9 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>La règle prédéfinie par défaut est mise à jour par les nouvelles versions du programme : vos modifications seront perdues, sauf les indicateurs Activé et Menu de la barre d&apos;état. Dupliquez-la pour les conserver.
+
+Enregistrer les modifications ?</translation>
     </message>
     <message>
         <source>Global rules count exceeded!</source>
@@ -2761,7 +2763,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Règle de terminaison</translation>
     </message>
     <message>
         <source>Time Period</source>
@@ -2862,7 +2864,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Cannot add the default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d&apos;ajouter les règles prédéfinies par défaut</translation>
     </message>
 </context>
 <context>
@@ -2877,7 +2879,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Duplicate</source>
-        <translation type="unfinished"></translation>
+        <translation>Dupliquer</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2885,7 +2887,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Add Default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter les règles prédéfinies par défaut</translation>
     </message>
     <message>
         <source>Rules</source>

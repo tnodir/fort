@@ -40,11 +40,11 @@
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>询问</translation>
     </message>
     <message>
         <source>Drop</source>
-        <translation type="unfinished"></translation>
+        <translation>丢弃</translation>
     </message>
 </context>
 <context>
@@ -82,11 +82,11 @@
     <name>AppConnsWindow</name>
     <message>
         <source>Program Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>应用程序连接</translation>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>添加过滤器</translation>
     </message>
 </context>
 <context>
@@ -171,50 +171,50 @@
     <name>AppPendingConnSearchModel</name>
     <message>
         <source>No longer paused</source>
-        <translation type="unfinished"></translation>
+        <translation>不再暂停</translation>
     </message>
     <message>
         <source>Blocked in %1 s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 秒后阻止</translation>
     </message>
 </context>
 <context>
     <name>AppPendingConnsWindow</name>
     <message>
         <source>Paused Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>已暂停的连接</translation>
     </message>
     <message>
         <source>Allow the process till its exit or for the time by the menu</source>
-        <translation type="unfinished"></translation>
+        <translation>允许该进程直到其退出，或按菜单中的时长允许</translation>
     </message>
     <message>
         <source>Continue by the current rules: the still paused ones are blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>按当前规则继续：仍处于暂停状态的连接将被阻止</translation>
     </message>
     <message>
         <source>Allow once</source>
-        <translation type="unfinished"></translation>
+        <translation>允许一次</translation>
     </message>
     <message>
         <source>Allow Process</source>
-        <translation type="unfinished"></translation>
+        <translation>允许进程</translation>
     </message>
     <message>
         <source>Block once</source>
-        <translation type="unfinished"></translation>
+        <translation>阻止一次</translation>
     </message>
     <message>
         <source>Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>继续</translation>
     </message>
     <message>
         <source>10 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>10 秒</translation>
     </message>
     <message>
         <source>30 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>30 秒</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -325,27 +325,27 @@
     </message>
     <message>
         <source>Blocked Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>已阻止的互联网地址</translation>
     </message>
     <message>
         <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>“请求连接”的限制</translation>
     </message>
     <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>被“请求连接”暂停</translation>
     </message>
     <message>
         <source>Allowed once by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>被“请求连接”允许一次</translation>
     </message>
     <message>
         <source>Blocked by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>被“请求连接”阻止</translation>
     </message>
     <message>
         <source>Process allowed by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>进程被“请求连接”允许</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -421,15 +421,15 @@
     </message>
     <message>
         <source>Program&apos;s Network Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>应用程序的网络过滤器</translation>
     </message>
     <message>
         <source>Block Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>阻止出站</translation>
     </message>
     <message>
         <source>Allowed Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>已允许的互联网地址</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -445,15 +445,15 @@
     </message>
     <message>
         <source>Loopback</source>
-        <translation type="unfinished"></translation>
+        <translation>回环</translation>
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>结束规则</translation>
     </message>
     <message>
         <source>Inherited from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>继承自：%1</translation>
     </message>
     <message>
         <source>Dropped</source>
@@ -500,7 +500,7 @@
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>过滤器模拟器</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -575,7 +575,7 @@
     </message>
     <message>
         <source>%1d</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 天</translation>
     </message>
 </context>
 <context>
@@ -593,19 +593,19 @@
     </message>
     <message>
         <source>The Rule&apos;s action is applied</source>
-        <translation type="unfinished"></translation>
+        <translation>应用规则的动作</translation>
     </message>
     <message>
         <source>Block silently, without a response</source>
-        <translation type="unfinished"></translation>
+        <translation>静默阻止，不发送响应</translation>
     </message>
     <message>
         <source>Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>方向：</translation>
     </message>
     <message>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>任意</translation>
     </message>
     <message>
         <source>Inbound</source>
@@ -613,39 +613,39 @@
     </message>
     <message>
         <source>Filter Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>过滤器配置错误</translation>
     </message>
     <message>
         <source>By Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>按规则</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>请求连接：暂停连接，直到用户做出决定</translation>
     </message>
     <message>
         <source>Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>出站</translation>
     </message>
     <message>
         <source>Protocol:</source>
-        <translation type="unfinished"></translation>
+        <translation>协议：</translation>
     </message>
     <message>
         <source>Area:</source>
-        <translation type="unfinished"></translation>
+        <translation>范围：</translation>
     </message>
     <message>
         <source>Localhost</source>
-        <translation type="unfinished"></translation>
+        <translation>本地主机</translation>
     </message>
     <message>
         <source>LAN</source>
-        <translation type="unfinished"></translation>
+        <translation>局域网</translation>
     </message>
     <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
-        <translation type="unfinished"></translation>
+        <translation>局域网：按选项中的“局域网”地址</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -653,47 +653,47 @@
     </message>
     <message>
         <source>Remote IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>远程 IP：</translation>
     </message>
     <message>
         <source>Remote Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>远程端口：</translation>
     </message>
     <message>
         <source>Local IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>本地 IP：</translation>
     </message>
     <message>
         <source>Equal to the Remote IP</source>
-        <translation type="unfinished"></translation>
+        <translation>等于远程 IP</translation>
     </message>
     <message>
         <source>Local Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>本地端口：</translation>
     </message>
     <message>
         <source>Equal to the Remote Port</source>
-        <translation type="unfinished"></translation>
+        <translation>等于远程端口</translation>
     </message>
     <message>
         <source>Options:</source>
-        <translation type="unfinished"></translation>
+        <translation>选项：</translation>
     </message>
     <message>
         <source>Log</source>
-        <translation type="unfinished"></translation>
+        <translation>记录</translation>
     </message>
     <message>
         <source>Collect the connection, even if the Rule doesn&apos;t</source>
-        <translation type="unfinished"></translation>
+        <translation>收集该连接，即使规则不收集</translation>
     </message>
     <message>
         <source>No Log</source>
-        <translation type="unfinished"></translation>
+        <translation>不记录</translation>
     </message>
     <message>
         <source>Don&apos;t collect the connection</source>
-        <translation type="unfinished"></translation>
+        <translation>不收集该连接</translation>
     </message>
     <message>
         <source>Alert</source>
@@ -701,19 +701,19 @@
     </message>
     <message>
         <source>Collect the connection as alerted, also with &quot;Alerted only&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>将该连接收集为已提示，同样适用于“仅提示”</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation>文本</translation>
     </message>
     <message>
         <source>Copy Text</source>
-        <translation type="unfinished"></translation>
+        <translation>复制文本</translation>
     </message>
     <message>
         <source>Paste Text</source>
-        <translation type="unfinished"></translation>
+        <translation>粘贴文本</translation>
     </message>
     <message>
         <source>OK</source>
@@ -725,34 +725,34 @@
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>添加过滤器</translation>
     </message>
     <message>
         <source>Edit Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>编辑过滤器</translation>
     </message>
     <message>
         <source>All, except these</source>
-        <translation type="unfinished"></translation>
+        <translation>全部，除这些以外</translation>
     </message>
     <message>
         <source>The text must be one line of filters</source>
-        <translation type="unfinished"></translation>
+        <translation>文本必须是单行过滤器</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>清除</translation>
     </message>
 </context>
 <context>
     <name>FilterSimController</name>
     <message>
         <source>Cannot simulate the connection</source>
-        <translation type="unfinished"></translation>
+        <translation>无法模拟该连接</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>过滤器模拟器</translation>
     </message>
 </context>
 <context>
@@ -763,19 +763,19 @@
     </message>
     <message>
         <source>Ignored: other firewalls decide</source>
-        <translation type="unfinished"></translation>
+        <translation>已忽略：由其他防火墙决定</translation>
     </message>
     <message>
         <source>Not found</source>
-        <translation type="unfinished"></translation>
+        <translation>未找到</translation>
     </message>
     <message>
         <source>Connection</source>
-        <translation type="unfinished"></translation>
+        <translation>连接</translation>
     </message>
     <message>
         <source>Program Path:</source>
-        <translation type="unfinished"></translation>
+        <translation>应用程序路径：</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -783,47 +783,47 @@
     </message>
     <message>
         <source>Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>方向：</translation>
     </message>
     <message>
         <source>Protocol:</source>
-        <translation type="unfinished"></translation>
+        <translation>协议：</translation>
     </message>
     <message>
         <source>Remote IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>远程 IP：</translation>
     </message>
     <message>
         <source>Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>端口：</translation>
     </message>
     <message>
         <source>Local IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>本地 IP：</translation>
     </message>
     <message>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>任意</translation>
     </message>
     <message>
         <source>Loopback</source>
-        <translation type="unfinished"></translation>
+        <translation>回环</translation>
     </message>
     <message>
         <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
-        <translation type="unfinished"></translation>
+        <translation>连接到本计算机的地址。地址 127.0.0.0/8 和 ::1 始终是回环地址。</translation>
     </message>
     <message>
         <source>Network Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>网络配置文件：</translation>
     </message>
     <message>
         <source>Simulate</source>
-        <translation type="unfinished"></translation>
+        <translation>模拟</translation>
     </message>
     <message>
         <source>Result</source>
-        <translation type="unfinished"></translation>
+        <translation>结果</translation>
     </message>
     <message>
         <source>Action:</source>
@@ -831,7 +831,7 @@
     </message>
     <message>
         <source>Reason:</source>
-        <translation type="unfinished"></translation>
+        <translation>原因：</translation>
     </message>
     <message>
         <source>Rule:</source>
@@ -839,19 +839,19 @@
     </message>
     <message>
         <source>Zone:</source>
-        <translation type="unfinished"></translation>
+        <translation>区域：</translation>
     </message>
     <message>
         <source>Program:</source>
-        <translation type="unfinished"></translation>
+        <translation>应用程序：</translation>
     </message>
     <message>
         <source>The program is checked by its path: the settings propagated from a parent process aren&apos;t taken into account.</source>
-        <translation type="unfinished"></translation>
+        <translation>应用程序按其路径检查：不考虑从父进程传递的设置。</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>过滤器模拟器</translation>
     </message>
     <message>
         <source>Inbound</source>
@@ -859,7 +859,7 @@
     </message>
     <message>
         <source>Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>出站</translation>
     </message>
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
@@ -867,11 +867,11 @@
     </message>
     <message>
         <source>Invalid remote IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>无效的远程 IP 地址</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>无效的本地 IP 地址</translation>
     </message>
 </context>
 <context>
@@ -894,19 +894,19 @@
     </message>
     <message>
         <source>Internet Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>互联网地址</translation>
     </message>
     <message>
         <source>Local Network Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>本地网络地址</translation>
     </message>
     <message>
         <source>Allow Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>允许的地址</translation>
     </message>
     <message>
         <source>Block Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>阻止的地址</translation>
     </message>
     <message>
         <source>Ask to Connect</source>
@@ -937,7 +937,7 @@
     <name>FontSelector</name>
     <message>
         <source>Select Font</source>
-        <translation type="unfinished"></translation>
+        <translation>选择字体</translation>
     </message>
 </context>
 <context>
@@ -948,7 +948,7 @@
     </message>
     <message>
         <source>Install the Windows Service now?</source>
-        <translation type="unfinished"></translation>
+        <translation>现在安装 Windows 服务吗？</translation>
     </message>
     <message>
         <source>Are you sure you want to quit the program?</source>
@@ -956,7 +956,7 @@
     </message>
     <message>
         <source>Remove the Windows Service and the Driver before quitting?</source>
-        <translation type="unfinished"></translation>
+        <translation>退出前删除 Windows 服务和驱动吗？</translation>
     </message>
     <message>
         <source>Quota Alert</source>
@@ -1026,19 +1026,19 @@
     </message>
     <message>
         <source>Hide Y axis scale labels</source>
-        <translation type="unfinished"></translation>
+        <translation>隐藏 Y 轴刻度标签</translation>
     </message>
     <message>
         <source>Animation</source>
-        <translation type="unfinished"></translation>
+        <translation>动画</translation>
     </message>
     <message>
         <source>Axis ticks</source>
-        <translation type="unfinished"></translation>
+        <translation>坐标轴刻度</translation>
     </message>
     <message>
         <source>Show:</source>
-        <translation type="unfinished"></translation>
+        <translation>显示：</translation>
     </message>
     <message>
         <source>Total</source>
@@ -1062,7 +1062,7 @@
     </message>
     <message>
         <source>Bar width:</source>
-        <translation type="unfinished"></translation>
+        <translation>柱宽：</translation>
     </message>
     <message>
         <source>Max seconds:</source>
@@ -1070,7 +1070,7 @@
     </message>
     <message>
         <source>Graph type:</source>
-        <translation type="unfinished"></translation>
+        <translation>图表类型：</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -1078,7 +1078,7 @@
     </message>
     <message>
         <source>Border:</source>
-        <translation type="unfinished"></translation>
+        <translation>边框：</translation>
     </message>
     <message>
         <source>Download:</source>
@@ -1090,7 +1090,7 @@
     </message>
     <message>
         <source>Total:</source>
-        <translation type="unfinished"></translation>
+        <translation>总计：</translation>
     </message>
     <message>
         <source>Axis:</source>
@@ -1110,31 +1110,31 @@
     </message>
     <message>
         <source>Maximized</source>
-        <translation type="unfinished"></translation>
+        <translation>最大化</translation>
     </message>
     <message>
         <source>X:</source>
-        <translation type="unfinished"></translation>
+        <translation>X：</translation>
     </message>
     <message>
         <source>Y:</source>
-        <translation type="unfinished"></translation>
+        <translation>Y：</translation>
     </message>
     <message>
         <source>Width:</source>
-        <translation type="unfinished"></translation>
+        <translation>宽度：</translation>
     </message>
     <message>
         <source>Height:</source>
-        <translation type="unfinished"></translation>
+        <translation>高度：</translation>
     </message>
     <message>
         <source>Column</source>
-        <translation type="unfinished"></translation>
+        <translation>柱形</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation type="unfinished"></translation>
+        <translation>折线</translation>
     </message>
     <message>
         <source>Window</source>
@@ -1154,7 +1154,7 @@
     </message>
     <message>
         <source>Window Geometry</source>
-        <translation type="unfinished"></translation>
+        <translation>窗口几何</translation>
     </message>
     <message>
         <source>Fixed speed:</source>
@@ -1483,7 +1483,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Style Sheet:</source>
-        <translation type="unfinished"></translation>
+        <translation>样式表：</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -1491,11 +1491,11 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Font:</source>
-        <translation type="unfinished"></translation>
+        <translation>字体：</translation>
     </message>
     <message>
         <source>Icon Size in Lists:</source>
-        <translation type="unfinished"></translation>
+        <translation>列表中的图标大小：</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -1627,7 +1627,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Style Sheets (*.qss);;All files (*.*)</source>
-        <translation type="unfinished"></translation>
+        <translation>样式表 (*.qss);;所有文件 (*.*)</translation>
     </message>
     <message>
         <source>Exclude from screen capture</source>
@@ -1683,11 +1683,11 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Show Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>显示流量</translation>
     </message>
     <message>
         <source>Show Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>显示连接</translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
@@ -1870,11 +1870,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>10 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>10 秒</translation>
     </message>
     <message>
         <source>30 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>30 秒</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
@@ -1970,7 +1970,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Ask to Connect seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>请求连接的秒数：</translation>
     </message>
     <message>
         <source>Disable command line management</source>
@@ -2082,15 +2082,15 @@ Make sure that you have a fresh backup.</source>
     <name>ProfileRange</name>
     <message>
         <source>Public</source>
-        <translation type="unfinished"></translation>
+        <translation>公用</translation>
     </message>
     <message>
         <source>Private</source>
-        <translation type="unfinished"></translation>
+        <translation>专用</translation>
     </message>
     <message>
         <source>Domain</source>
-        <translation type="unfinished"></translation>
+        <translation>域</translation>
     </message>
 </context>
 <context>
@@ -2133,7 +2133,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>请求连接：暂停连接，直到用户做出决定</translation>
     </message>
     <message>
         <source>Kill Process</source>
@@ -2272,7 +2272,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Paused Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>已暂停的连接</translation>
     </message>
     <message>
         <source>Switch Wildcard</source>
@@ -2338,7 +2338,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block Outbound Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>阻止出站连接</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -2362,7 +2362,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>添加过滤器</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2545,7 +2545,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>连接</translation>
     </message>
     <message>
         <source>Obsolete</source>
@@ -2648,7 +2648,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>请求连接：暂停连接，直到用户做出决定</translation>
     </message>
     <message>
         <source>Exclusive</source>
@@ -2656,11 +2656,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>添加过滤器</translation>
     </message>
     <message>
         <source>The Rule is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>该规则仅在此时间段内激活。</translation>
     </message>
     <message>
         <source>OK</source>
@@ -2696,7 +2696,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Presets</source>
-        <translation type="unfinished"></translation>
+        <translation>预设</translation>
     </message>
     <message>
         <source>More</source>
@@ -2718,7 +2718,9 @@ Please check other program with the same path.</source>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>默认预设规则会随程序的新版本更新：您的更改将丢失，已启用和托盘菜单标志除外。请复制该规则以保留更改。
+
+要保存更改吗？</translation>
     </message>
     <message>
         <source>Global rules count exceeded!</source>
@@ -2761,7 +2763,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>结束规则</translation>
     </message>
     <message>
         <source>Time Period</source>
@@ -2862,7 +2864,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Cannot add the default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>无法添加默认预设规则</translation>
     </message>
 </context>
 <context>
@@ -2877,7 +2879,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Duplicate</source>
-        <translation type="unfinished"></translation>
+        <translation>复制规则</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2885,7 +2887,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Add Default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>添加默认预设规则</translation>
     </message>
     <message>
         <source>Rules</source>
@@ -2972,15 +2974,15 @@ Save the changes?</source>
     </message>
     <message>
         <source>Each 5 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>每 5 分钟</translation>
     </message>
     <message>
         <source>Each 15 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>每 15 分钟</translation>
     </message>
     <message>
         <source>Each 30 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>每 30 分钟</translation>
     </message>
     <message>
         <source> minute(s)</source>
@@ -3311,11 +3313,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Collect Traffic re-injected by other drivers</source>
-        <translation type="unfinished"></translation>
+        <translation>收集其他驱动重新注入的流量</translation>
     </message>
     <message>
         <source>The Traffic is collected only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>仅在此时间段内收集流量。</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
@@ -3381,7 +3383,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Interval, minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>间隔（分钟）</translation>
     </message>
     <message>
         <source>Maximum retries count</source>
@@ -3662,7 +3664,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>过滤器模拟器</translation>
     </message>
     <message>
         <source>Traffic Graph</source>

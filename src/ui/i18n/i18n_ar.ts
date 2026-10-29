@@ -40,11 +40,11 @@
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>اسأل</translation>
     </message>
     <message>
         <source>Drop</source>
-        <translation type="unfinished"></translation>
+        <translation>إسقاط</translation>
     </message>
 </context>
 <context>
@@ -82,11 +82,11 @@
     <name>AppConnsWindow</name>
     <message>
         <source>Program Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>اتصالات البرنامج</translation>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>إضافة مرشّح</translation>
     </message>
 </context>
 <context>
@@ -120,7 +120,7 @@
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>حدود السرعة</translation>
     </message>
     <message>
         <source>File Path</source>
@@ -156,65 +156,65 @@
     </message>
     <message>
         <source>Allowed Zones:</source>
-        <translation type="unfinished"></translation>
+        <translation>المناطق المسموح بها:</translation>
     </message>
     <message>
         <source>Blocked Zones:</source>
-        <translation type="unfinished"></translation>
+        <translation>المناطق المحظورة:</translation>
     </message>
     <message>
         <source>Time left: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>الوقت المتبقي: %1</translation>
     </message>
 </context>
 <context>
     <name>AppPendingConnSearchModel</name>
     <message>
         <source>No longer paused</source>
-        <translation type="unfinished"></translation>
+        <translation>لم يعد متوقفًا مؤقتًا</translation>
     </message>
     <message>
         <source>Blocked in %1 s</source>
-        <translation type="unfinished"></translation>
+        <translation>سيُحظر خلال %1 ث</translation>
     </message>
 </context>
 <context>
     <name>AppPendingConnsWindow</name>
     <message>
         <source>Paused Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>الاتصالات المتوقفة مؤقتًا</translation>
     </message>
     <message>
         <source>Allow the process till its exit or for the time by the menu</source>
-        <translation type="unfinished"></translation>
+        <translation>السماح للعملية حتى خروجها أو للمدة المحددة من القائمة</translation>
     </message>
     <message>
         <source>Continue by the current rules: the still paused ones are blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>المتابعة وفق القواعد الحالية: الاتصالات التي ما زالت متوقفة مؤقتًا تُحظر</translation>
     </message>
     <message>
         <source>Allow once</source>
-        <translation type="unfinished"></translation>
+        <translation>السماح مرة واحدة</translation>
     </message>
     <message>
         <source>Allow Process</source>
-        <translation type="unfinished"></translation>
+        <translation>السماح للعملية</translation>
     </message>
     <message>
         <source>Block once</source>
-        <translation type="unfinished"></translation>
+        <translation>الحظر مرة واحدة</translation>
     </message>
     <message>
         <source>Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>متابعة</translation>
     </message>
     <message>
         <source>10 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>10 ثوانٍ</translation>
     </message>
     <message>
         <source>30 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>30 ثانية</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -238,7 +238,7 @@
     </message>
     <message>
         <source>3 hours</source>
-        <translation type="unfinished"></translation>
+        <translation>3 ساعات</translation>
     </message>
     <message>
         <source>6 hours</source>
@@ -325,27 +325,27 @@
     </message>
     <message>
         <source>Blocked Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>عنوان إنترنت محظور</translation>
     </message>
     <message>
         <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>حد &quot;نبهني عند محاولة الاتصال&quot;</translation>
     </message>
     <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>متوقف مؤقتًا بواسطة &quot;نبهني عند محاولة الاتصال&quot;</translation>
     </message>
     <message>
         <source>Allowed once by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>مسموح مرة واحدة بواسطة &quot;نبهني عند محاولة الاتصال&quot;</translation>
     </message>
     <message>
         <source>Blocked by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>محظور بواسطة &quot;نبهني عند محاولة الاتصال&quot;</translation>
     </message>
     <message>
         <source>Process allowed by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>عملية مسموح بها بواسطة &quot;نبهني عند محاولة الاتصال&quot;</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -417,19 +417,19 @@
     </message>
     <message>
         <source>Block Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>حظر الوارد</translation>
     </message>
     <message>
         <source>Program&apos;s Network Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>مرشّح الشبكة للبرنامج</translation>
     </message>
     <message>
         <source>Block Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>حظر الصادر</translation>
     </message>
     <message>
         <source>Allowed Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>عنوان إنترنت مسموح</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -445,43 +445,43 @@
     </message>
     <message>
         <source>Loopback</source>
-        <translation type="unfinished"></translation>
+        <translation>الحلقة المرتدة</translation>
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>قاعدة الإنهاء</translation>
     </message>
     <message>
         <source>Inherited from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>موروث من: %1</translation>
     </message>
     <message>
         <source>Dropped</source>
-        <translation type="unfinished"></translation>
+        <translation>مُسقَط</translation>
     </message>
     <message>
         <source>Local Host Name</source>
-        <translation type="unfinished"></translation>
+        <translation>اسم المضيف المحلي</translation>
     </message>
     <message>
         <source>Local IP</source>
-        <translation type="unfinished"></translation>
+        <translation>عنوان IP المحلي</translation>
     </message>
     <message>
         <source>Local Port</source>
-        <translation type="unfinished"></translation>
+        <translation>المنفذ المحلي</translation>
     </message>
     <message>
         <source>Remote Host Name</source>
-        <translation type="unfinished"></translation>
+        <translation>اسم المضيف البعيد</translation>
     </message>
     <message>
         <source>Remote IP</source>
-        <translation type="unfinished"></translation>
+        <translation>عنوان IP البعيد</translation>
     </message>
     <message>
         <source>Remote Port</source>
-        <translation type="unfinished"></translation>
+        <translation>المنفذ البعيد</translation>
     </message>
 </context>
 <context>
@@ -500,7 +500,7 @@
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>محاكي المرشّح</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -540,7 +540,7 @@
     </message>
     <message>
         <source>Copy as Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>نسخ كمرشّح</translation>
     </message>
     <message>
         <source>Stretch last column</source>
@@ -548,7 +548,7 @@
     </message>
     <message>
         <source>Lookup IP</source>
-        <translation type="unfinished"></translation>
+        <translation>البحث عن عنوان IP</translation>
     </message>
     <message>
         <source>Connections</source>
@@ -559,23 +559,23 @@
     <name>DateUtil</name>
     <message>
         <source>&gt;%1h</source>
-        <translation type="unfinished"></translation>
+        <translation>&gt;%1 س</translation>
     </message>
     <message>
         <source>%1h</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 س</translation>
     </message>
     <message>
         <source>%1m</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 د</translation>
     </message>
     <message>
         <source>%1s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ث</translation>
     </message>
     <message>
         <source>%1d</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ي</translation>
     </message>
 </context>
 <context>
@@ -593,59 +593,59 @@
     </message>
     <message>
         <source>The Rule&apos;s action is applied</source>
-        <translation type="unfinished"></translation>
+        <translation>يُطبَّق إجراء القاعدة</translation>
     </message>
     <message>
         <source>Block silently, without a response</source>
-        <translation type="unfinished"></translation>
+        <translation>الحظر الصامت، دون رد</translation>
     </message>
     <message>
         <source>Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>الاتجاه:</translation>
     </message>
     <message>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>أي</translation>
     </message>
     <message>
         <source>Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>وارد</translation>
     </message>
     <message>
         <source>Filter Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>خطأ في إعدادات المرشّح</translation>
     </message>
     <message>
         <source>By Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>حسب القاعدة</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>نبهني عند محاولة الاتصال: إيقاف الاتصال مؤقتًا حتى يقرر المستخدم</translation>
     </message>
     <message>
         <source>Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>صادر</translation>
     </message>
     <message>
         <source>Protocol:</source>
-        <translation type="unfinished"></translation>
+        <translation>البروتوكول:</translation>
     </message>
     <message>
         <source>Area:</source>
-        <translation type="unfinished"></translation>
+        <translation>النطاق:</translation>
     </message>
     <message>
         <source>Localhost</source>
-        <translation type="unfinished"></translation>
+        <translation>المضيف المحلي</translation>
     </message>
     <message>
         <source>LAN</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN</translation>
     </message>
     <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN: حسب عناوين &quot;شبكة المنطقة المحلية&quot; في الخيارات</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -653,67 +653,67 @@
     </message>
     <message>
         <source>Remote IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>عنوان IP البعيد:</translation>
     </message>
     <message>
         <source>Remote Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>المنفذ البعيد:</translation>
     </message>
     <message>
         <source>Local IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>عنوان IP المحلي:</translation>
     </message>
     <message>
         <source>Equal to the Remote IP</source>
-        <translation type="unfinished"></translation>
+        <translation>مساوٍ لعنوان IP البعيد</translation>
     </message>
     <message>
         <source>Local Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>المنفذ المحلي:</translation>
     </message>
     <message>
         <source>Equal to the Remote Port</source>
-        <translation type="unfinished"></translation>
+        <translation>مساوٍ للمنفذ البعيد</translation>
     </message>
     <message>
         <source>Options:</source>
-        <translation type="unfinished"></translation>
+        <translation>الخيارات:</translation>
     </message>
     <message>
         <source>Log</source>
-        <translation type="unfinished"></translation>
+        <translation>تسجيل</translation>
     </message>
     <message>
         <source>Collect the connection, even if the Rule doesn&apos;t</source>
-        <translation type="unfinished"></translation>
+        <translation>تسجيل الاتصال، حتى لو كانت القاعدة لا تسجّله</translation>
     </message>
     <message>
         <source>No Log</source>
-        <translation type="unfinished"></translation>
+        <translation>بدون تسجيل</translation>
     </message>
     <message>
         <source>Don&apos;t collect the connection</source>
-        <translation type="unfinished"></translation>
+        <translation>عدم تسجيل الاتصال</translation>
     </message>
     <message>
         <source>Alert</source>
-        <translation type="unfinished"></translation>
+        <translation>تنبيه</translation>
     </message>
     <message>
         <source>Collect the connection as alerted, also with &quot;Alerted only&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>تسجيل الاتصال كمنبَّه عنه، حتى مع خيار &quot;التي تم التحذير عنها&quot;</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation>نص</translation>
     </message>
     <message>
         <source>Copy Text</source>
-        <translation type="unfinished"></translation>
+        <translation>نسخ النص</translation>
     </message>
     <message>
         <source>Paste Text</source>
-        <translation type="unfinished"></translation>
+        <translation>لصق النص</translation>
     </message>
     <message>
         <source>OK</source>
@@ -725,34 +725,34 @@
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>إضافة مرشّح</translation>
     </message>
     <message>
         <source>Edit Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>تعديل المرشّح</translation>
     </message>
     <message>
         <source>All, except these</source>
-        <translation type="unfinished"></translation>
+        <translation>الكل، باستثناء هذه</translation>
     </message>
     <message>
         <source>The text must be one line of filters</source>
-        <translation type="unfinished"></translation>
+        <translation>يجب أن يكون النص سطرًا واحدًا من المرشّحات</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>مسح</translation>
     </message>
 </context>
 <context>
     <name>FilterSimController</name>
     <message>
         <source>Cannot simulate the connection</source>
-        <translation type="unfinished"></translation>
+        <translation>لا يمكن محاكاة الاتصال</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>محاكي المرشّح</translation>
     </message>
 </context>
 <context>
@@ -763,19 +763,19 @@
     </message>
     <message>
         <source>Ignored: other firewalls decide</source>
-        <translation type="unfinished"></translation>
+        <translation>متجاهَل: تقرر جدران حماية أخرى</translation>
     </message>
     <message>
         <source>Not found</source>
-        <translation type="unfinished"></translation>
+        <translation>غير موجود</translation>
     </message>
     <message>
         <source>Connection</source>
-        <translation type="unfinished"></translation>
+        <translation>الاتصال</translation>
     </message>
     <message>
         <source>Program Path:</source>
-        <translation type="unfinished"></translation>
+        <translation>مسار البرنامج:</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -783,47 +783,47 @@
     </message>
     <message>
         <source>Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>الاتجاه:</translation>
     </message>
     <message>
         <source>Protocol:</source>
-        <translation type="unfinished"></translation>
+        <translation>البروتوكول:</translation>
     </message>
     <message>
         <source>Remote IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>عنوان IP البعيد:</translation>
     </message>
     <message>
         <source>Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>المنفذ:</translation>
     </message>
     <message>
         <source>Local IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>عنوان IP المحلي:</translation>
     </message>
     <message>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>أي</translation>
     </message>
     <message>
         <source>Loopback</source>
-        <translation type="unfinished"></translation>
+        <translation>الحلقة المرتدة</translation>
     </message>
     <message>
         <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
-        <translation type="unfinished"></translation>
+        <translation>الاتصال بعنوان في هذا الحاسوب. العناوين 127.0.0.0/8 و ::1 هي دائمًا حلقة مرتدة.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>ملف تعريف الشبكة:</translation>
     </message>
     <message>
         <source>Simulate</source>
-        <translation type="unfinished"></translation>
+        <translation>محاكاة</translation>
     </message>
     <message>
         <source>Result</source>
-        <translation type="unfinished"></translation>
+        <translation>النتيجة</translation>
     </message>
     <message>
         <source>Action:</source>
@@ -831,35 +831,35 @@
     </message>
     <message>
         <source>Reason:</source>
-        <translation type="unfinished"></translation>
+        <translation>السبب:</translation>
     </message>
     <message>
         <source>Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>القاعدة:</translation>
     </message>
     <message>
         <source>Zone:</source>
-        <translation type="unfinished"></translation>
+        <translation>المنطقة:</translation>
     </message>
     <message>
         <source>Program:</source>
-        <translation type="unfinished"></translation>
+        <translation>البرنامج:</translation>
     </message>
     <message>
         <source>The program is checked by its path: the settings propagated from a parent process aren&apos;t taken into account.</source>
-        <translation type="unfinished"></translation>
+        <translation>يُفحص البرنامج حسب مساره: لا تؤخذ في الحسبان الإعدادات الموروثة من العملية الأم.</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>محاكي المرشّح</translation>
     </message>
     <message>
         <source>Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>وارد</translation>
     </message>
     <message>
         <source>Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>صادر</translation>
     </message>
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
@@ -867,11 +867,11 @@
     </message>
     <message>
         <source>Invalid remote IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>عنوان IP البعيد غير صالح</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>عنوان IP المحلي غير صالح</translation>
     </message>
 </context>
 <context>
@@ -894,19 +894,19 @@
     </message>
     <message>
         <source>Internet Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>عناوين الإنترنت</translation>
     </message>
     <message>
         <source>Local Network Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>عناوين الشبكة المحلية</translation>
     </message>
     <message>
         <source>Allow Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>السماح بالعناوين</translation>
     </message>
     <message>
         <source>Block Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>حظر العناوين</translation>
     </message>
     <message>
         <source>Ask to Connect</source>
@@ -937,7 +937,7 @@
     <name>FontSelector</name>
     <message>
         <source>Select Font</source>
-        <translation type="unfinished"></translation>
+        <translation>اختيار الخط</translation>
     </message>
 </context>
 <context>
@@ -948,7 +948,7 @@
     </message>
     <message>
         <source>Install the Windows Service now?</source>
-        <translation type="unfinished"></translation>
+        <translation>تثبيت خدمة Windows الآن؟</translation>
     </message>
     <message>
         <source>Are you sure you want to quit the program?</source>
@@ -956,7 +956,7 @@
     </message>
     <message>
         <source>Remove the Windows Service and the Driver before quitting?</source>
-        <translation type="unfinished"></translation>
+        <translation>إزالة خدمة Windows والتعريفات قبل الخروج؟</translation>
     </message>
     <message>
         <source>Quota Alert</source>
@@ -1026,19 +1026,19 @@
     </message>
     <message>
         <source>Hide Y axis scale labels</source>
-        <translation type="unfinished"></translation>
+        <translation>إخفاء تسميات مقياس المحور Y</translation>
     </message>
     <message>
         <source>Animation</source>
-        <translation type="unfinished"></translation>
+        <translation>الحركة</translation>
     </message>
     <message>
         <source>Axis ticks</source>
-        <translation type="unfinished"></translation>
+        <translation>علامات المحور</translation>
     </message>
     <message>
         <source>Show:</source>
-        <translation type="unfinished"></translation>
+        <translation>عرض:</translation>
     </message>
     <message>
         <source>Total</source>
@@ -1046,7 +1046,7 @@
     </message>
     <message>
         <source>Download</source>
-        <translation type="unfinished"></translation>
+        <translation>تنزيل</translation>
     </message>
     <message>
         <source>Upload</source>
@@ -1062,7 +1062,7 @@
     </message>
     <message>
         <source>Bar width:</source>
-        <translation type="unfinished"></translation>
+        <translation>عرض الشريط:</translation>
     </message>
     <message>
         <source>Max seconds:</source>
@@ -1070,7 +1070,7 @@
     </message>
     <message>
         <source>Graph type:</source>
-        <translation type="unfinished"></translation>
+        <translation>نوع المخطط:</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -1078,7 +1078,7 @@
     </message>
     <message>
         <source>Border:</source>
-        <translation type="unfinished"></translation>
+        <translation>الحد:</translation>
     </message>
     <message>
         <source>Download:</source>
@@ -1090,7 +1090,7 @@
     </message>
     <message>
         <source>Total:</source>
-        <translation type="unfinished"></translation>
+        <translation>المجموع:</translation>
     </message>
     <message>
         <source>Axis:</source>
@@ -1110,31 +1110,31 @@
     </message>
     <message>
         <source>Maximized</source>
-        <translation type="unfinished"></translation>
+        <translation>مكبّرة</translation>
     </message>
     <message>
         <source>X:</source>
-        <translation type="unfinished"></translation>
+        <translation>X:</translation>
     </message>
     <message>
         <source>Y:</source>
-        <translation type="unfinished"></translation>
+        <translation>Y:</translation>
     </message>
     <message>
         <source>Width:</source>
-        <translation type="unfinished"></translation>
+        <translation>العرض:</translation>
     </message>
     <message>
         <source>Height:</source>
-        <translation type="unfinished"></translation>
+        <translation>الارتفاع:</translation>
     </message>
     <message>
         <source>Column</source>
-        <translation type="unfinished"></translation>
+        <translation>أعمدة</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation type="unfinished"></translation>
+        <translation>خطوط</translation>
     </message>
     <message>
         <source>Window</source>
@@ -1154,7 +1154,7 @@
     </message>
     <message>
         <source>Window Geometry</source>
-        <translation type="unfinished"></translation>
+        <translation>أبعاد النافذة</translation>
     </message>
     <message>
         <source>Fixed speed:</source>
@@ -1170,11 +1170,11 @@
     </message>
     <message>
         <source>Tick label size:</source>
-        <translation type="unfinished"></translation>
+        <translation>حجم تسمية العلامات:</translation>
     </message>
     <message>
         <source>Show speed</source>
-        <translation type="unfinished"></translation>
+        <translation>عرض السرعة</translation>
     </message>
 </context>
 <context>
@@ -1185,7 +1185,7 @@
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>ملاحظات:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -1197,19 +1197,19 @@
     </message>
     <message>
         <source>A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>يكون البرنامج مفعّلًا فقط إذا كانت أي من مجموعاته الحصرية مفعّلة، أو، في حال عدم وجود مجموعات حصرية، إذا كانت أي من مجموعاته مفعّلة.</translation>
     </message>
     <message>
         <source>Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>القاعدة:</translation>
     </message>
     <message>
         <source>The Rule is applied to the Group&apos;s programs before their own Rule, while the Group is active.</source>
-        <translation type="unfinished"></translation>
+        <translation>تُطبَّق القاعدة على برامج المجموعة قبل قاعدة كل منها، طالما المجموعة نشطة.</translation>
     </message>
     <message>
         <source>The Group is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>تكون المجموعة نشطة فقط في هذه الفترة الزمنية.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -1221,7 +1221,7 @@
     </message>
     <message>
         <source>Edit Group</source>
-        <translation type="unfinished"></translation>
+        <translation>تعديل المجموعة</translation>
     </message>
 </context>
 <context>
@@ -1239,19 +1239,19 @@
     <name>GroupsController</name>
     <message>
         <source>Group Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>خطأ في إعدادات المجموعة</translation>
     </message>
     <message>
         <source>Cannot edit Group</source>
-        <translation type="unfinished"></translation>
+        <translation>لا يمكن تعديل المجموعة</translation>
     </message>
     <message>
         <source>Cannot delete Group</source>
-        <translation type="unfinished"></translation>
+        <translation>لا يمكن حذف المجموعة</translation>
     </message>
     <message>
         <source>Cannot update Group&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>لا يمكن تحديث اسم المجموعة</translation>
     </message>
 </context>
 <context>
@@ -1259,7 +1259,8 @@
     <message>
         <source>Select Groups.
 A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>اختيار المجموعات.
+يكون البرنامج مفعّلًا فقط إذا كانت أي من مجموعاته الحصرية مفعّلة، أو، في حال عدم وجود مجموعات حصرية، إذا كانت أي من مجموعاته مفعّلة.</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -1267,7 +1268,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>(exclusive)</source>
-        <translation type="unfinished"></translation>
+        <translation>(حصرية)</translation>
     </message>
 </context>
 <context>
@@ -1282,7 +1283,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>حذف</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -1290,7 +1291,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Are you sure to remove selected group?</source>
-        <translation type="unfinished"></translation>
+        <translation>هل تريد حذف المجموعة المحددة؟</translation>
     </message>
 </context>
 <context>
@@ -1408,7 +1409,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Portable Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>قابل للنقل، مثبّت</translation>
     </message>
 </context>
 <context>
@@ -1482,7 +1483,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Style Sheet:</source>
-        <translation type="unfinished"></translation>
+        <translation>ورقة الأنماط:</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -1490,11 +1491,11 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Font:</source>
-        <translation type="unfinished"></translation>
+        <translation>الخط:</translation>
     </message>
     <message>
         <source>Icon Size in Lists:</source>
-        <translation type="unfinished"></translation>
+        <translation>حجم الأيقونة في القوائم:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -1626,7 +1627,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Style Sheets (*.qss);;All files (*.*)</source>
-        <translation type="unfinished"></translation>
+        <translation>أوراق الأنماط (*.qss);;كل الملفات (*.*)</translation>
     </message>
     <message>
         <source>Exclude from screen capture</source>
@@ -1674,39 +1675,39 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Show window icons as in tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation>عرض أيقونات النوافذ كأيقونة الدُرج</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>تأجيل التنبيهات</translation>
     </message>
     <message>
         <source>Show Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>عرض حركة البيانات</translation>
     </message>
     <message>
         <source>Show Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>عرض الاتصالات</translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>تبديل تأجيل التنبيهات</translation>
     </message>
     <message>
         <source>Auto-Show Window</source>
-        <translation type="unfinished"></translation>
+        <translation>عرض النافذة تلقائيًا</translation>
     </message>
     <message>
         <source>Auto-Show Window, when Tray Icon is hidden</source>
-        <translation type="unfinished"></translation>
+        <translation>عرض النافذة تلقائيًا، عندما تكون أيقونة الدُرج مخفية</translation>
     </message>
     <message>
         <source>Auto-focus the alert window, when it&apos;s shown</source>
-        <translation type="unfinished"></translation>
+        <translation>تركيز نافذة التنبيه تلقائيًا عند ظهورها</translation>
     </message>
     <message>
         <source>Switch Window visibility</source>
-        <translation type="unfinished"></translation>
+        <translation>تبديل ظهور النافذة</translation>
     </message>
 </context>
 <context>
@@ -1869,11 +1870,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>10 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>10 ثوانٍ</translation>
     </message>
     <message>
         <source>30 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>30 ثانية</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
@@ -1957,11 +1958,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block traffic for disabled Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>حظر حركة المرور للمجموعات المعطلة</translation>
     </message>
     <message>
         <source>Speed Limiter Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>تفعيل محدد السرعة</translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
@@ -1969,11 +1970,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Ask to Connect seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>ثوانٍ لـ &quot;نبهني عند محاولة الاتصال&quot;:</translation>
     </message>
     <message>
         <source>Disable command line management</source>
-        <translation type="unfinished"></translation>
+        <translation>تعطيل الإدارة عبر سطر الأوامر</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -2009,19 +2010,19 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Filter Off seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>ثوانٍ لإيقاف المرشّح:</translation>
     </message>
     <message>
         <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation type="unfinished"></translation>
+        <translation>حذف البرامج المنبَّه عنها عند إيقاف التعلم التلقائي</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
-        <translation type="unfinished"></translation>
+        <translation>تتبع أحداث التعريفات</translation>
     </message>
     <message>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
-        <translation type="unfinished"></translation>
+        <translation>عدم حذف آخر مثبّت تم تنزيله بعد التثبيت</translation>
     </message>
     <message>
         <source>1 hour</source>
@@ -2029,7 +2030,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>1 day</source>
-        <translation type="unfinished"></translation>
+        <translation>يوم واحد</translation>
     </message>
 </context>
 <context>
@@ -2081,15 +2082,15 @@ Make sure that you have a fresh backup.</source>
     <name>ProfileRange</name>
     <message>
         <source>Public</source>
-        <translation type="unfinished"></translation>
+        <translation>عامة</translation>
     </message>
     <message>
         <source>Private</source>
-        <translation type="unfinished"></translation>
+        <translation>خاصة</translation>
     </message>
     <message>
         <source>Domain</source>
-        <translation type="unfinished"></translation>
+        <translation>النطاق</translation>
     </message>
 </context>
 <context>
@@ -2120,11 +2121,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Set Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>تعيين الأيقونة</translation>
     </message>
     <message>
         <source>Delete Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>حذف الأيقونة</translation>
     </message>
     <message>
         <source>Rules inheritance:</source>
@@ -2132,7 +2133,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>نبهني عند محاولة الاتصال: إيقاف الاتصال مؤقتًا حتى يقرر المستخدم</translation>
     </message>
     <message>
         <source>Kill Process</source>
@@ -2212,7 +2213,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>3 hours</source>
-        <translation type="unfinished"></translation>
+        <translation>3 ساعات</translation>
     </message>
     <message>
         <source>6 hours</source>
@@ -2240,7 +2241,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>%1 minute(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 دقيقة</translation>
     </message>
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
@@ -2248,30 +2249,30 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Icon for program</source>
-        <translation type="unfinished"></translation>
+        <translation>أيقونة البرنامج</translation>
     </message>
     <message>
         <source>Icons (*.ico; *.png)</source>
-        <translation type="unfinished"></translation>
+        <translation>الأيقونات (*.ico; *.png)</translation>
     </message>
 </context>
 <context>
     <name>ProgMainPage</name>
     <message>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation>عام</translation>
     </message>
     <message>
         <source>Network Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>مرشّحات الشبكة</translation>
     </message>
     <message>
         <source>More</source>
-        <translation type="unfinished"></translation>
+        <translation>المزيد</translation>
     </message>
     <message>
         <source>Paused Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>الاتصالات المتوقفة مؤقتًا</translation>
     </message>
     <message>
         <source>Switch Wildcard</source>
@@ -2321,7 +2322,7 @@ Make sure that you have a fresh backup.</source>
     <name>ProgNetworkPage</name>
     <message>
         <source>Block:</source>
-        <translation type="unfinished"></translation>
+        <translation>حظر:</translation>
     </message>
     <message>
         <source>In</source>
@@ -2329,7 +2330,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block Inbound Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>حظر الاتصالات الواردة</translation>
     </message>
     <message>
         <source>Out</source>
@@ -2337,7 +2338,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block Outbound Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>حظر الاتصالات الصادرة</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -2357,15 +2358,15 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>No Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>بدون حد</translation>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>إضافة مرشّح</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>حذف</translation>
     </message>
     <message>
         <source>Edit</source>
@@ -2410,7 +2411,8 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Failed to save the program!
 Please check other program with the same path.</source>
-        <translation type="unfinished"></translation>
+        <translation>فشل حفظ البرنامج!
+يرجى التحقق من برنامج آخر بالمسار نفسه.</translation>
     </message>
 </context>
 <context>
@@ -2523,11 +2525,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Remove Alerted Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>حذف البرامج المنبَّه عنها</translation>
     </message>
     <message>
         <source>Are you sure to remove alerted programs?</source>
-        <translation type="unfinished"></translation>
+        <translation>هل تريد حذف البرامج المنبَّه عنها؟</translation>
     </message>
     <message>
         <source>Copy Path</source>
@@ -2539,7 +2541,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Timer</source>
-        <translation type="unfinished"></translation>
+        <translation>المؤقت</translation>
     </message>
     <message>
         <source>Connections</source>
@@ -2547,15 +2549,15 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>مفقود</translation>
     </message>
     <message>
         <source>Filter by Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>تصفية حسب المجموعات</translation>
     </message>
     <message>
         <source>Disable</source>
-        <translation type="unfinished"></translation>
+        <translation>تعطيل</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -2579,7 +2581,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>3 hours</source>
-        <translation type="unfinished"></translation>
+        <translation>3 ساعات</translation>
     </message>
     <message>
         <source>6 hours</source>
@@ -2646,7 +2648,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>نبهني عند محاولة الاتصال: إيقاف الاتصال مؤقتًا حتى يقرر المستخدم</translation>
     </message>
     <message>
         <source>Exclusive</source>
@@ -2654,11 +2656,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>إضافة مرشّح</translation>
     </message>
     <message>
         <source>The Rule is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>تكون القاعدة نشطة فقط في هذه الفترة الزمنية.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -2690,15 +2692,15 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation>عام</translation>
     </message>
     <message>
         <source>Presets</source>
-        <translation type="unfinished"></translation>
+        <translation>المعدّة مسبقًا</translation>
     </message>
     <message>
         <source>More</source>
-        <translation type="unfinished"></translation>
+        <translation>المزيد</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2716,7 +2718,9 @@ Please check other program with the same path.</source>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>تُحدَّث القاعدة المعدّة مسبقًا الافتراضية مع الإصدارات الجديدة للبرنامج: ستفقد تغييراتك، باستثناء علامتي التفعيل وقائمة الدُرج. كرّرها للاحتفاظ بها.
+
+حفظ التغييرات؟</translation>
     </message>
     <message>
         <source>Global rules count exceeded!</source>
@@ -2732,11 +2736,11 @@ Save the changes?</source>
     </message>
     <message>
         <source>Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>قائمة الدُرج</translation>
     </message>
     <message>
         <source>Inline Zones</source>
-        <translation type="unfinished"></translation>
+        <translation>مناطق نصية</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
@@ -2759,11 +2763,11 @@ Save the changes?</source>
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>قاعدة الإنهاء</translation>
     </message>
     <message>
         <source>Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>الفترة الزمنية</translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -2860,7 +2864,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Cannot add the default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>لا يمكن إضافة القواعد المعدّة مسبقًا الافتراضية</translation>
     </message>
 </context>
 <context>
@@ -2875,7 +2879,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Duplicate</source>
-        <translation type="unfinished"></translation>
+        <translation>تكرار</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2883,7 +2887,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Add Default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>إضافة القواعد المعدّة مسبقًا الافتراضية</translation>
     </message>
     <message>
         <source>Rules</source>
@@ -2970,15 +2974,15 @@ Save the changes?</source>
     </message>
     <message>
         <source>Each 5 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>كل 5 دقائق</translation>
     </message>
     <message>
         <source>Each 15 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>كل 15 دقيقة</translation>
     </message>
     <message>
         <source>Each 30 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>كل 30 دقيقة</translation>
     </message>
     <message>
         <source> minute(s)</source>
@@ -3029,15 +3033,15 @@ Save the changes?</source>
     </message>
     <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
-        <translation type="unfinished"></translation>
+        <translation>تمت إعادة ضبط التغييرات بواسطة النظام. اجعل الخدمة قابلة للتتبع مرة أخرى.</translation>
     </message>
     <message>
         <source>Please restart the service to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>يرجى إعادة تشغيل الخدمة لتطبيق التغييرات.</translation>
     </message>
     <message>
         <source>Please restart the computer to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>يرجى إعادة تشغيل الحاسوب لتطبيق التغييرات.</translation>
     </message>
 </context>
 <context>
@@ -3056,7 +3060,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Restart Service</source>
-        <translation type="unfinished"></translation>
+        <translation>إعادة تشغيل الخدمة</translation>
     </message>
     <message>
         <source>Add Program</source>
@@ -3080,19 +3084,19 @@ Save the changes?</source>
     </message>
     <message>
         <source>Restart the service &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>إعادة تشغيل الخدمة &quot;%1&quot;؟</translation>
     </message>
     <message>
         <source>Restart the service &quot;%1&quot; to apply the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>إعادة تشغيل الخدمة &quot;%1&quot; لتطبيق التغييرات؟</translation>
     </message>
     <message>
         <source>Please restart the computer to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>يرجى إعادة تشغيل الحاسوب لتطبيق التغييرات.</translation>
     </message>
     <message>
         <source>Cannot restart the service &quot;%1&quot;.</source>
-        <translation type="unfinished"></translation>
+        <translation>لا يمكن إعادة تشغيل الخدمة &quot;%1&quot;.</translation>
     </message>
 </context>
 <context>
@@ -3103,7 +3107,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>ملاحظات:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -3111,7 +3115,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Download</source>
-        <translation type="unfinished"></translation>
+        <translation>تنزيل</translation>
     </message>
     <message>
         <source>Upload</source>
@@ -3119,7 +3123,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Speed:</source>
-        <translation type="unfinished"></translation>
+        <translation>السرعة:</translation>
     </message>
     <message>
         <source>Latency:</source>
@@ -3131,11 +3135,11 @@ Save the changes?</source>
     </message>
     <message>
         <source>Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>حجم المخزن المؤقت:</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>يكون حد السرعة نشطًا فقط في هذه الفترة الزمنية.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -3147,7 +3151,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Edit Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>تعديل حد السرعة</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -3159,19 +3163,20 @@ Save the changes?</source>
     <message>
         <source>Buffer overflow: %1
 Packet loss: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>امتلاء المخزن المؤقت: %1
+الحزم الضائعة: %2</translation>
     </message>
     <message>
         <source>Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>حد السرعة</translation>
     </message>
     <message>
         <source>Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>قائمة الانتظار</translation>
     </message>
     <message>
         <source>Dropped</source>
-        <translation type="unfinished"></translation>
+        <translation>مُسقَط</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -3186,19 +3191,19 @@ Packet loss: %2</source>
     <name>SpeedLimitsController</name>
     <message>
         <source>Speed Limit Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>خطأ في إعدادات حد السرعة</translation>
     </message>
     <message>
         <source>Cannot edit Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>لا يمكن تعديل حد السرعة</translation>
     </message>
     <message>
         <source>Cannot delete Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>لا يمكن حذف حد السرعة</translation>
     </message>
     <message>
         <source>Cannot update Speed Limit&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>لا يمكن تحديث اسم حد السرعة</translation>
     </message>
 </context>
 <context>
@@ -3213,15 +3218,15 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>حذف</translation>
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>حدود السرعة</translation>
     </message>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
-        <translation type="unfinished"></translation>
+        <translation>هل تريد حذف حد السرعة المحدد؟</translation>
     </message>
 </context>
 <context>
@@ -3308,11 +3313,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Collect Traffic re-injected by other drivers</source>
-        <translation type="unfinished"></translation>
+        <translation>تسجيل حركة البيانات المعاد حقنها بواسطة تعريفات أخرى</translation>
     </message>
     <message>
         <source>The Traffic is collected only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>تُسجَّل حركة البيانات فقط في هذه الفترة الزمنية.</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
@@ -3340,7 +3345,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
-        <translation type="unfinished"></translation>
+        <translation>مسح الاتصالات عند الخروج (لتقليل الكتابة على القرص)</translation>
     </message>
 </context>
 <context>
@@ -3378,7 +3383,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Interval, minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>الفاصل، بالدقائق</translation>
     </message>
     <message>
         <source>Maximum retries count</source>
@@ -3393,7 +3398,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Alert</source>
-        <translation type="unfinished"></translation>
+        <translation>تنبيه</translation>
     </message>
 </context>
 <context>
@@ -3404,7 +3409,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>ملاحظات:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -3412,19 +3417,19 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>The disabled Time Period doesn&apos;t restrict its Groups and Speed Limits.</source>
-        <translation type="unfinished"></translation>
+        <translation>الفترة الزمنية المعطلة لا تقيّد مجموعاتها وحدود السرعة الخاصة بها.</translation>
     </message>
     <message>
         <source>Intervals:</source>
-        <translation type="unfinished"></translation>
+        <translation>الفواصل:</translation>
     </message>
     <message>
         <source>The Time Period is active in ANY of its intervals.</source>
-        <translation type="unfinished"></translation>
+        <translation>تكون الفترة الزمنية نشطة في أي من فواصلها.</translation>
     </message>
     <message>
         <source>Add Interval</source>
-        <translation type="unfinished"></translation>
+        <translation>إضافة فاصل</translation>
     </message>
     <message>
         <source>OK</source>
@@ -3436,33 +3441,33 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Edit Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>تعديل الفترة الزمنية</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodIntervalEdit</name>
     <message>
         <source>From</source>
-        <translation type="unfinished"></translation>
+        <translation>من</translation>
     </message>
     <message>
         <source>To (the same time means the whole 24 hours)</source>
-        <translation type="unfinished"></translation>
+        <translation>إلى (الوقت نفسه يعني 24 ساعة كاملة)</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>حذف</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodListModel</name>
     <message>
         <source>Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>الفترة الزمنية</translation>
     </message>
     <message>
         <source>Intervals</source>
-        <translation type="unfinished"></translation>
+        <translation>الفواصل</translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -3473,34 +3478,34 @@ Packet loss: %2</source>
     <name>TimePeriodSelector</name>
     <message>
         <source>Time Period:</source>
-        <translation type="unfinished"></translation>
+        <translation>الفترة الزمنية:</translation>
     </message>
     <message>
         <source>No Period</source>
-        <translation type="unfinished"></translation>
+        <translation>بدون فترة</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>الفترات الزمنية</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodsController</name>
     <message>
         <source>Time Period Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>خطأ في إعدادات الفترة الزمنية</translation>
     </message>
     <message>
         <source>Cannot edit Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>لا يمكن تعديل الفترة الزمنية</translation>
     </message>
     <message>
         <source>Cannot delete Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>لا يمكن حذف الفترة الزمنية</translation>
     </message>
     <message>
         <source>Cannot update Time Period&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>لا يمكن تحديث اسم الفترة الزمنية</translation>
     </message>
 </context>
 <context>
@@ -3515,15 +3520,15 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>حذف</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>الفترات الزمنية</translation>
     </message>
     <message>
         <source>Are you sure to remove selected time period?</source>
-        <translation type="unfinished"></translation>
+        <translation>هل تريد حذف الفترة الزمنية المحددة؟</translation>
     </message>
 </context>
 <context>
@@ -3621,7 +3626,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Make this tab active when window opens?</source>
-        <translation type="unfinished"></translation>
+        <translation>جعل هذا التبويب نشطًا عند فتح النافذة؟</translation>
     </message>
     <message>
         <source>Traffic</source>
@@ -3651,15 +3656,15 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>حدود السرعة</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>الفترات الزمنية</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>محاكي المرشّح</translation>
     </message>
     <message>
         <source>Traffic Graph</source>
@@ -3671,7 +3676,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Group Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>معدّل المجموعات</translation>
     </message>
     <message>
         <source>Quit</source>
@@ -3719,11 +3724,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>تأجيل التنبيهات</translation>
     </message>
     <message>
         <source>Rule Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>معدّل القواعد</translation>
     </message>
     <message>
         <source>Traffic</source>
@@ -3749,11 +3754,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Week Days</source>
-        <translation type="unfinished"></translation>
+        <translation>أيام الأسبوع</translation>
     </message>
     <message>
         <source>No Days</source>
-        <translation type="unfinished"></translation>
+        <translation>بدون أيام</translation>
     </message>
 </context>
 <context>

@@ -71,7 +71,7 @@
     </message>
     <message>
         <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
-        <translation>Фильтр локальных Loopback (127.0.0.0/8) и Broadcast (255.255.255.255) адресов</translation>
+        <translation>Фильтр локальных адресов Loopback (127.0.0.0/8) и Broadcast (255.255.255.255)</translation>
     </message>
     <message>
         <source>Filter Local Network</source>
@@ -124,11 +124,11 @@
     </message>
     <message>
         <source>File Path</source>
-        <translation>Путь файла</translation>
+        <translation>Путь к файлу</translation>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation>Убить процесс</translation>
+        <translation>Завершить процесс</translation>
     </message>
     <message>
         <source>Action</source>
@@ -144,7 +144,7 @@
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation>Блокировать Интернет трафик</translation>
+        <translation>Блокировать интернет-трафик</translation>
     </message>
     <message>
         <source>Zones</source>
@@ -272,7 +272,7 @@
     </message>
     <message>
         <source>Too many IP addresses</source>
-        <translation>Слишком много IP адресов</translation>
+        <translation>Слишком много IP-адресов</translation>
     </message>
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
@@ -291,7 +291,7 @@
     </message>
     <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Сперва установите Fort Firewall v%1 и сохраните Опции пожалуйста.</translation>
+        <translation>Пожалуйста, сначала установите Fort Firewall v%1 и сохраните в нём Опции.</translation>
     </message>
     <message>
         <source>Cannot load Settings</source>
@@ -325,27 +325,27 @@
     </message>
     <message>
         <source>Blocked Internet address</source>
-        <translation>Заблокированный Интернет адрес</translation>
+        <translation>Заблокированный интернет-адрес</translation>
     </message>
     <message>
         <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation>Лимит &quot;Спрашивать для соединения&quot;</translation>
+        <translation>Лимит функции &quot;Запрос на соединение&quot;</translation>
     </message>
     <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
-        <translation>Приостановлено по &quot;Спрашивать для соединения&quot;</translation>
+        <translation>Приостановлено функцией &quot;Запрос на соединение&quot;</translation>
     </message>
     <message>
         <source>Allowed once by &quot;Ask to Connect&quot;</source>
-        <translation>Разрешено однократно по &quot;Спрашивать для соединения&quot;</translation>
+        <translation>Разрешено однократно функцией &quot;Запрос на соединение&quot;</translation>
     </message>
     <message>
         <source>Blocked by &quot;Ask to Connect&quot;</source>
-        <translation>Заблокировано по &quot;Спрашивать для соединения&quot;</translation>
+        <translation>Заблокировано функцией &quot;Запрос на соединение&quot;</translation>
     </message>
     <message>
         <source>Process allowed by &quot;Ask to Connect&quot;</source>
-        <translation>Процесс разрешён по &quot;Спрашивать для соединения&quot;</translation>
+        <translation>Процесс разрешён функцией &quot;Запрос на соединение&quot;</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -429,7 +429,7 @@
     </message>
     <message>
         <source>Allowed Internet address</source>
-        <translation>Разрешённый Интернет адрес</translation>
+        <translation>Разрешённый интернет-адрес</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -520,7 +520,7 @@
     </message>
     <message>
         <source>Auto scroll</source>
-        <translation>Авто промотка</translation>
+        <translation>Автопрокрутка</translation>
     </message>
     <message>
         <source>Show host names</source>
@@ -528,7 +528,7 @@
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
-        <translation>Удалить соединения до выбранного?</translation>
+        <translation>Удалить соединения до выбранной строки?</translation>
     </message>
     <message>
         <source>Are you sure to remove all connections?</source>
@@ -582,7 +582,7 @@
     <name>DbErrorManager</name>
     <message>
         <source>Profile&apos;s drive mounted</source>
-        <translation>Том профиля был демонтирован</translation>
+        <translation>Том профиля смонтирован</translation>
     </message>
 </context>
 <context>
@@ -621,7 +621,7 @@
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation>Спрашивать для соединения: приостановить соединение до решения пользователя</translation>
+        <translation>Запрос на соединение: приостановить соединение до решения пользователя</translation>
     </message>
     <message>
         <source>Outbound</source>
@@ -759,7 +759,7 @@
     <name>FilterSimWindow</name>
     <message>
         <source>Ask to Connect</source>
-        <translation>Спрашивать для соединения</translation>
+        <translation>Запрос на соединение</translation>
     </message>
     <message>
         <source>Ignored: other firewalls decide</source>
@@ -775,7 +775,7 @@
     </message>
     <message>
         <source>Program Path:</source>
-        <translation>Путь программы:</translation>
+        <translation>Путь к программе:</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -878,7 +878,7 @@
     <name>FirewallConf</name>
     <message>
         <source>Auto-Learn</source>
-        <translation>Авто-обучение</translation>
+        <translation>Автообучение</translation>
     </message>
     <message>
         <source>Block, if not allowed</source>
@@ -886,11 +886,11 @@
     </message>
     <message>
         <source>Allow, if not blocked</source>
-        <translation>Разрешить, если не блокировано</translation>
+        <translation>Разрешить, если не заблокировано</translation>
     </message>
     <message>
         <source>Ignore, if not blocked or allowed</source>
-        <translation>Игнорировать, если не блокировано или не разрешено</translation>
+        <translation>Игнорировать, если не заблокировано и не разрешено</translation>
     </message>
     <message>
         <source>Internet Addresses</source>
@@ -910,7 +910,7 @@
     </message>
     <message>
         <source>Ask to Connect</source>
-        <translation>Спрашивать для соединения</translation>
+        <translation>Запрос на соединение</translation>
     </message>
     <message>
         <source>Block All Traffic</source>
@@ -918,7 +918,7 @@
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation>Блокировать Интернет трафик</translation>
+        <translation>Блокировать интернет-трафик</translation>
     </message>
     <message>
         <source>No Block</source>
@@ -926,11 +926,11 @@
     </message>
     <message>
         <source>Block Internet and LAN Traffic</source>
-        <translation>Блокировать Интернет и LAN трафик</translation>
+        <translation>Блокировать интернет- и LAN-трафик</translation>
     </message>
     <message>
         <source>Block LAN Traffic</source>
-        <translation>Блокировать LAN трафик</translation>
+        <translation>Блокировать LAN-трафик</translation>
     </message>
 </context>
 <context>
@@ -983,7 +983,7 @@
     </message>
     <message>
         <source>Session lockout</source>
-        <translation>Блокировка сессии</translation>
+        <translation>Блокировка сеанса</translation>
     </message>
     <message>
         <source>Program exit</source>
@@ -1102,7 +1102,7 @@
     </message>
     <message>
         <source>Label:</source>
-        <translation>Маркировка:</translation>
+        <translation>Подпись:</translation>
     </message>
     <message>
         <source>Grid:</source>
@@ -1162,7 +1162,7 @@
     </message>
     <message>
         <source>Custom</source>
-        <translation>Нестандартный</translation>
+        <translation>Другое</translation>
     </message>
     <message>
         <source>Auto-scale</source>
@@ -1193,7 +1193,7 @@
     </message>
     <message>
         <source>Exclusive</source>
-        <translation>Эксклюзив</translation>
+        <translation>Эксклюзивная</translation>
     </message>
     <message>
         <source>A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
@@ -1232,7 +1232,7 @@
     </message>
     <message>
         <source>Change Time</source>
-        <translation>Время Изменения</translation>
+        <translation>Время изменения</translation>
     </message>
 </context>
 <context>
@@ -1243,7 +1243,7 @@
     </message>
     <message>
         <source>Cannot edit Group</source>
-        <translation>Невозможно обновить Группу</translation>
+        <translation>Невозможно изменить Группу</translation>
     </message>
     <message>
         <source>Cannot delete Group</source>
@@ -1268,7 +1268,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>(exclusive)</source>
-        <translation>(эксклюзив)</translation>
+        <translation>(эксклюзивная)</translation>
     </message>
 </context>
 <context>
@@ -1393,7 +1393,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Auto-run:</source>
-        <translation>Авто-запуск:</translation>
+        <translation>Автозапуск:</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -1519,11 +1519,11 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Show Icon</source>
-        <translation>Показать Иконку</translation>
+        <translation>Показать значок</translation>
     </message>
     <message>
         <source>Animate Alert Icon</source>
-        <translation>Анимировать иконку оповещения</translation>
+        <translation>Анимировать значок оповещения</translation>
     </message>
     <message>
         <source>Maximum count of Groups in menu:</source>
@@ -1563,27 +1563,27 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Single Click</source>
-        <translation>Единичное нажатие</translation>
+        <translation>Одиночный щелчок</translation>
     </message>
     <message>
         <source>Ctrl + Single Click</source>
-        <translation>Ctrl + Единичное нажатие</translation>
+        <translation>Ctrl + Одиночный щелчок</translation>
     </message>
     <message>
         <source>Alt + Single Click</source>
-        <translation>Alt + Единичное нажатие</translation>
+        <translation>Alt + Одиночный щелчок</translation>
     </message>
     <message>
         <source>Double Click</source>
-        <translation>Двойное нажатие</translation>
+        <translation>Двойной щелчок</translation>
     </message>
     <message>
         <source>Middle Click</source>
-        <translation>Нажатие средней кнопки</translation>
+        <translation>Щелчок средней кнопкой</translation>
     </message>
     <message>
         <source>Right Click</source>
-        <translation>Нажатие правой кнопки</translation>
+        <translation>Щелчок правой кнопкой</translation>
     </message>
     <message>
         <source>Show My Fort</source>
@@ -1607,7 +1607,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Switch Filter Enabled</source>
-        <translation>Переключить &quot;Фильтр включен&quot;</translation>
+        <translation>Переключить &quot;Фильтр включён&quot;</translation>
     </message>
     <message>
         <source>Show Block Traffic Menu</source>
@@ -1619,7 +1619,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Show Tray Menu</source>
-        <translation>Показать меню</translation>
+        <translation>Показать меню в трее</translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -1635,7 +1635,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Show Alert Icon</source>
-        <translation>Показать иконку оповещения</translation>
+        <translation>Показать значок оповещения</translation>
     </message>
     <message>
         <source>Programs</source>
@@ -1643,7 +1643,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
-        <translation>Оповещение о новых программах через Системные сообщения</translation>
+        <translation>Использовать системные уведомления о новых программах</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
@@ -1655,7 +1655,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Alert Window is auto-active</source>
-        <translation>Окно Оповещения авто-активно</translation>
+        <translation>Окно Оповещения активируется автоматически</translation>
     </message>
     <message>
         <source>Operations from Tray Menu</source>
@@ -1671,11 +1671,11 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Auto-Clear alerts on window close</source>
-        <translation>Авто-удаление оповещений при закрытии окна</translation>
+        <translation>Автоочистка оповещений при закрытии окна</translation>
     </message>
     <message>
         <source>Show window icons as in tray icon</source>
-        <translation>Показывать значки окон как на панели задач</translation>
+        <translation>Показывать значки окон как у значка в трее</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
@@ -1703,7 +1703,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Auto-focus the alert window, when it&apos;s shown</source>
-        <translation>Авто-фокусировка окна оповещения при показе</translation>
+        <translation>Автофокус окна оповещения при показе</translation>
     </message>
     <message>
         <source>Switch Window visibility</source>
@@ -1722,11 +1722,11 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Bad IP address</source>
-        <translation>Некорректный IP адрес</translation>
+        <translation>Некорректный IP-адрес</translation>
     </message>
     <message>
         <source>Bad second IP address</source>
-        <translation>Некорректный второй IP адрес</translation>
+        <translation>Некорректный второй IP-адрес</translation>
     </message>
     <message>
         <source>Bad range</source>
@@ -1752,7 +1752,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>IP Addresses</source>
-        <translation>IP Адреса</translation>
+        <translation>IP-адреса</translation>
     </message>
     <message>
         <source>Statistics</source>
@@ -1839,19 +1839,19 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Cannot save the options</source>
-        <translation>Невозможно сохранить настройки</translation>
+        <translation>Невозможно сохранить опции</translation>
     </message>
     <message>
         <source>All Options and Programs will be replaced after successful import. Continue?
 
 Make sure that you have a fresh backup.</source>
-        <translation>Все настройки и программы будут заменены после успешного импорта. Продолжить?
+        <translation>Все опции и программы будут заменены после успешного импорта. Продолжить?
 
 Убедитесь, что у вас есть свежая резервная копия.</translation>
     </message>
     <message>
         <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation>Только новые программы будут добавлены после успешного импорта. Продолжить?</translation>
+        <translation>После успешного импорта будут добавлены только новые программы. Продолжить?</translation>
     </message>
 </context>
 <context>
@@ -1862,7 +1862,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Filter Enabled</source>
-        <translation>Фильтр включен</translation>
+        <translation>Фильтр включён</translation>
     </message>
     <message>
         <source>Password:</source>
@@ -1894,11 +1894,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Log debug messages</source>
-        <translation>Лог дебаг сообщений</translation>
+        <translation>Записывать отладочные сообщения в лог</translation>
     </message>
     <message>
         <source>Show log messages in console</source>
-        <translation>Логи в консоле</translation>
+        <translation>Выводить сообщения лога в консоль</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
@@ -1914,7 +1914,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Check password on Uninstall</source>
-        <translation>Проверить пароль при деинсталляции</translation>
+        <translation>Проверять пароль при деинсталляции</translation>
     </message>
     <message>
         <source>Programs</source>
@@ -1930,7 +1930,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Purge Obsolete only on mounted drives</source>
-        <translation>Очистить устаревшее только на монтированных дисках</translation>
+        <translation>Очищать устаревшее только на смонтированных дисках</translation>
     </message>
     <message>
         <source>Block Traffic:</source>
@@ -1938,7 +1938,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Auto Update</source>
-        <translation>Авто-обновление</translation>
+        <translation>Автообновление</translation>
     </message>
     <message>
         <source>Keep current version</source>
@@ -1946,11 +1946,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Auto-download new version</source>
-        <translation>Авто-скачивание новой версии</translation>
+        <translation>Автоскачивание новой версии</translation>
     </message>
     <message>
         <source>Auto-install after download</source>
-        <translation>Авто-установка после скачивания</translation>
+        <translation>Автоустановка после скачивания</translation>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
@@ -1966,11 +1966,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
-        <translation>Секунды авто-обучения:</translation>
+        <translation>Секунды автообучения:</translation>
     </message>
     <message>
         <source>Ask to Connect seconds:</source>
-        <translation>Секунды &quot;Спрашивать для соединения&quot;:</translation>
+        <translation>Секунды запроса на соединение:</translation>
     </message>
     <message>
         <source>Disable command line management</source>
@@ -1978,7 +1978,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Custom</source>
-        <translation>Нестандартный</translation>
+        <translation>Другое</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -2014,7 +2014,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation>Удалить оповещённые программы при отключении Авто-обучения</translation>
+        <translation>Удалить оповещённые программы при отключении автообучения</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
@@ -2097,11 +2097,11 @@ Make sure that you have a fresh backup.</source>
     <name>ProgGeneralPage</name>
     <message>
         <source>Wildcard Paths:</source>
-        <translation>Подстановочные пути:</translation>
+        <translation>Маски путей:</translation>
     </message>
     <message>
         <source>File Path:</source>
-        <translation>Путь файла:</translation>
+        <translation>Путь к файлу:</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -2121,11 +2121,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Set Icon</source>
-        <translation>Установить иконку</translation>
+        <translation>Установить значок</translation>
     </message>
     <message>
         <source>Delete Icon</source>
-        <translation>Удалить иконку</translation>
+        <translation>Удалить значок</translation>
     </message>
     <message>
         <source>Rules inheritance:</source>
@@ -2133,11 +2133,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation>Спрашивать для соединения: приостановить соединение до решения пользователя</translation>
+        <translation>Запрос на соединение: приостановить соединение до решения пользователя</translation>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation>Убить процесс</translation>
+        <translation>Завершить процесс</translation>
     </message>
     <message>
         <source>Schedule</source>
@@ -2153,7 +2153,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source># Name wildcard:</source>
-        <translation># Подстановка в имени:</translation>
+        <translation># Маска имени:</translation>
     </message>
     <message>
         <source># Environment Variable:</source>
@@ -2185,7 +2185,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Custom</source>
-        <translation>Нестандартный</translation>
+        <translation>Другое</translation>
     </message>
     <message>
         <source>1 second</source>
@@ -2249,11 +2249,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Icon for program</source>
-        <translation>Иконка для программы</translation>
+        <translation>Значок для программы</translation>
     </message>
     <message>
         <source>Icons (*.ico; *.png)</source>
-        <translation>Иконки (*.ico; *.png)</translation>
+        <translation>Значки (*.ico; *.png)</translation>
     </message>
 </context>
 <context>
@@ -2268,7 +2268,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>More</source>
-        <translation>Больше</translation>
+        <translation>Дополнительно</translation>
     </message>
     <message>
         <source>Paused Connections</source>
@@ -2276,7 +2276,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Switch Wildcard</source>
-        <translation>Переключить режим подстановочных знаков</translation>
+        <translation>Переключить режим маски</translation>
     </message>
     <message>
         <source>Connections</source>
@@ -2295,7 +2295,7 @@ Make sure that you have a fresh backup.</source>
     <name>ProgMorePage</name>
     <message>
         <source>Kill child processes</source>
-        <translation>Убить дочерние процессы</translation>
+        <translation>Завершать дочерние процессы</translation>
     </message>
     <message>
         <source>Parked</source>
@@ -2346,7 +2346,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation>Блокировать Интернет трафик</translation>
+        <translation>Блокировать интернет-трафик</translation>
     </message>
     <message>
         <source>Download:</source>
@@ -2395,7 +2395,7 @@ Make sure that you have a fresh backup.</source>
 
 Be careful when killing a system services or other important programs!
 It can cause a Windows malfunction or totally unusable.</source>
-        <translation>Внимание: Эта опция очень опасна!!!
+        <translation>Внимание: эта опция очень опасна!!!
 
 Будьте осторожны, прекращая работу системных служб или других важных программ!
 Это может привести к сбоям в работе Windows или полной неработоспособности.</translation>
@@ -2419,7 +2419,7 @@ Please check other program with the same path.</source>
     <name>ProgramEditDialog</name>
     <message>
         <source>Edit Wildcard</source>
-        <translation>Редактирование подстановки</translation>
+        <translation>Редактирование маски</translation>
     </message>
     <message>
         <source>Edit Program</source>
@@ -2477,19 +2477,19 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Find</source>
-        <translation>Поиск</translation>
+        <translation>Найти</translation>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation>Убить процесс</translation>
+        <translation>Завершить процесс</translation>
     </message>
     <message>
         <source>Add Wildcard</source>
-        <translation>Добавить подстановку</translation>
+        <translation>Добавить маску</translation>
     </message>
     <message>
         <source>Review Alerts</source>
-        <translation>Обзор оповещений</translation>
+        <translation>Просмотр оповещений</translation>
     </message>
     <message>
         <source>Filters</source>
@@ -2501,7 +2501,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Wildcard Paths</source>
-        <translation>Подстановочные пути</translation>
+        <translation>Маски путей</translation>
     </message>
     <message>
         <source>Parked</source>
@@ -2607,7 +2607,7 @@ Please check other program with the same path.</source>
     <name>ProtocolSelector</name>
     <message>
         <source>Custom</source>
-        <translation>Нестандартный</translation>
+        <translation>Другое</translation>
     </message>
 </context>
 <context>
@@ -2648,11 +2648,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation>Спрашивать для соединения: приостановить соединение до решения пользователя</translation>
+        <translation>Запрос на соединение: приостановить соединение до решения пользователя</translation>
     </message>
     <message>
         <source>Exclusive</source>
-        <translation>Эксклюзив</translation>
+        <translation>Эксклюзивное</translation>
     </message>
     <message>
         <source>Add Filter</source>
@@ -2684,11 +2684,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source># IP address and port:</source>
-        <translation># IP адрес и порт:</translation>
+        <translation># IP-адрес и порт:</translation>
     </message>
     <message>
         <source>Add Preset Rule</source>
-        <translation>Добавить заданное правило</translation>
+        <translation>Добавить шаблонное правило</translation>
     </message>
     <message>
         <source>General</source>
@@ -2696,11 +2696,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Presets</source>
-        <translation>Заданные</translation>
+        <translation>Шаблонные</translation>
     </message>
     <message>
         <source>More</source>
-        <translation>Больше</translation>
+        <translation>Дополнительно</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2718,7 +2718,7 @@ Please check other program with the same path.</source>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
-        <translation>Заданное правило по умолчанию обновляется новыми версиями программы: ваши изменения будут потеряны, кроме флагов &quot;Включено&quot; и &quot;Меню в трее&quot;. Дублируйте его, чтобы сохранить их.
+        <translation>Шаблонное правило по умолчанию обновляется новыми версиями программы: ваши изменения будут потеряны, кроме флагов &quot;Включено&quot; и &quot;Меню в трее&quot;. Дублируйте его, чтобы сохранить их.
 
 Сохранить изменения?</translation>
     </message>
@@ -2771,7 +2771,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Change Time</source>
-        <translation>Время Изменения</translation>
+        <translation>Время изменения</translation>
     </message>
     <message>
         <source>Application Rules</source>
@@ -2787,7 +2787,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Preset Rules</source>
-        <translation>Заданные правила</translation>
+        <translation>Шаблонные правила</translation>
     </message>
 </context>
 <context>
@@ -2825,7 +2825,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Extra filter name: %1</source>
-        <translation>Имя дополнительного фильтра: %1</translation>
+        <translation>Лишнее имя фильтра: %1</translation>
     </message>
     <message>
         <source>Bad filter name: %1</source>
@@ -2852,7 +2852,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Cannot edit Rule</source>
-        <translation>Невозможно обновить Правило</translation>
+        <translation>Невозможно изменить Правило</translation>
     </message>
     <message>
         <source>Cannot delete Rule</source>
@@ -2864,7 +2864,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Cannot add the default Preset Rules</source>
-        <translation>Невозможно добавить заданные правила по умолчанию</translation>
+        <translation>Невозможно добавить шаблонные правила по умолчанию</translation>
     </message>
 </context>
 <context>
@@ -2887,7 +2887,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Add Default Preset Rules</source>
-        <translation>Добавить заданные правила по умолчанию</translation>
+        <translation>Добавить шаблонные правила по умолчанию</translation>
     </message>
     <message>
         <source>Rules</source>
@@ -2926,7 +2926,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Custom</source>
-        <translation>Нестандартный</translation>
+        <translation>Другое</translation>
     </message>
     <message>
         <source>Hourly</source>
@@ -3025,7 +3025,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Display Name</source>
-        <translation>Описание</translation>
+        <translation>Отображаемое имя</translation>
     </message>
     <message>
         <source>Process ID</source>
@@ -3052,11 +3052,11 @@ Save the changes?</source>
     </message>
     <message>
         <source>Make Trackable</source>
-        <translation>Трассировать</translation>
+        <translation>Сделать отслеживаемой</translation>
     </message>
     <message>
         <source>Revert Changes</source>
-        <translation>Отменить трассировку</translation>
+        <translation>Отменить изменения</translation>
     </message>
     <message>
         <source>Restart Service</source>
@@ -3155,7 +3155,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Custom</source>
-        <translation>Нестандартный</translation>
+        <translation>Другое</translation>
     </message>
 </context>
 <context>
@@ -3184,7 +3184,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Change Time</source>
-        <translation>Время Изменения</translation>
+        <translation>Время изменения</translation>
     </message>
 </context>
 <context>
@@ -3195,7 +3195,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Cannot edit Speed Limit</source>
-        <translation>Невозможно обновить Ограничение скорости</translation>
+        <translation>Невозможно изменить Ограничение скорости</translation>
     </message>
     <message>
         <source>Cannot delete Speed Limit</source>
@@ -3237,7 +3237,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Collect Traffic, when Filter Disabled</source>
-        <translation>Собирать трафик, когда Фильтр Отключен</translation>
+        <translation>Собирать трафик, когда фильтр отключён</translation>
     </message>
     <message>
         <source>Month starts on:</source>
@@ -3265,15 +3265,15 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Day&apos;s Quota:</source>
-        <translation>Квота на день</translation>
+        <translation>Квота на день:</translation>
     </message>
     <message>
         <source>Month&apos;s Quota:</source>
-        <translation>Квота на месяц</translation>
+        <translation>Квота на месяц:</translation>
     </message>
     <message>
         <source>Custom</source>
-        <translation>Нестандартный</translation>
+        <translation>Другое</translation>
     </message>
     <message>
         <source>Forever</source>
@@ -3333,7 +3333,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Block Internet traffic when quota exceeds</source>
-        <translation>Блокировать Интернет трафик при превышении квоты</translation>
+        <translation>Блокировать интернет-трафик при превышении квоты</translation>
     </message>
     <message>
         <source>Connections</source>
@@ -3341,7 +3341,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Keep count for connections:</source>
-        <translation>Хранить количество для соединений:</translation>
+        <translation>Количество хранимых соединений:</translation>
     </message>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
@@ -3375,7 +3375,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Last Success</source>
-        <translation>Успешный запуск</translation>
+        <translation>Последний успешный запуск</translation>
     </message>
     <message>
         <source>Run On Startup</source>
@@ -3471,7 +3471,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Change Time</source>
-        <translation>Время Изменения</translation>
+        <translation>Время изменения</translation>
     </message>
 </context>
 <context>
@@ -3497,7 +3497,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Cannot edit Time Period</source>
-        <translation>Невозможно обновить Период времени</translation>
+        <translation>Невозможно изменить Период времени</translation>
     </message>
     <message>
         <source>Cannot delete Time Period</source>
@@ -3672,7 +3672,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Filter Enabled</source>
-        <translation>Фильтр включен</translation>
+        <translation>Фильтр включён</translation>
     </message>
     <message>
         <source>Group Modifier</source>
@@ -3784,7 +3784,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Custom URL</source>
-        <translation>Нестандартная ссылка</translation>
+        <translation>Другая ссылка</translation>
     </message>
     <message>
         <source>URL:</source>
@@ -3823,7 +3823,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Last Success</source>
-        <translation>Успешный запуск</translation>
+        <translation>Последняя успешная загрузка</translation>
     </message>
     <message>
         <source>Addresses</source>
@@ -3831,7 +3831,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Last Download</source>
-        <translation>Скачивание</translation>
+        <translation>Последняя загрузка</translation>
     </message>
     <message>
         <source>Addresses from Inline Text</source>
@@ -3858,7 +3858,7 @@ Packet loss: %2</source>
     <name>ZonesController</name>
     <message>
         <source>Cannot edit Zone</source>
-        <translation>Невозможно обновить Зону</translation>
+        <translation>Невозможно изменить Зону</translation>
     </message>
     <message>
         <source>Cannot delete Zone</source>

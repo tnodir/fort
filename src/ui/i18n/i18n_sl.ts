@@ -40,11 +40,11 @@
     </message>
     <message>
         <source>Ask</source>
-        <translation type="unfinished"></translation>
+        <translation>Vprašaj</translation>
     </message>
     <message>
         <source>Drop</source>
-        <translation type="unfinished"></translation>
+        <translation>Zavrži</translation>
     </message>
 </context>
 <context>
@@ -82,11 +82,11 @@
     <name>AppConnsWindow</name>
     <message>
         <source>Program Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Povezave programa</translation>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Dodaj filter</translation>
     </message>
 </context>
 <context>
@@ -120,7 +120,7 @@
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>Omejitve hitrosti</translation>
     </message>
     <message>
         <source>File Path</source>
@@ -171,50 +171,50 @@
     <name>AppPendingConnSearchModel</name>
     <message>
         <source>No longer paused</source>
-        <translation type="unfinished"></translation>
+        <translation>Ni več začasno ustavljena</translation>
     </message>
     <message>
         <source>Blocked in %1 s</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokirano čez %1 s</translation>
     </message>
 </context>
 <context>
     <name>AppPendingConnsWindow</name>
     <message>
         <source>Paused Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Začasno ustavljene povezave</translation>
     </message>
     <message>
         <source>Allow the process till its exit or for the time by the menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Dovoli proces do izhoda ali za čas, izbran v meniju</translation>
     </message>
     <message>
         <source>Continue by the current rules: the still paused ones are blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>Nadaljuj po trenutnih pravilih: še vedno začasno ustavljene povezave se blokirajo</translation>
     </message>
     <message>
         <source>Allow once</source>
-        <translation type="unfinished"></translation>
+        <translation>Dovoli enkrat</translation>
     </message>
     <message>
         <source>Allow Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Dovoli proces</translation>
     </message>
     <message>
         <source>Block once</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokiraj enkrat</translation>
     </message>
     <message>
         <source>Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>Nadaljuj</translation>
     </message>
     <message>
         <source>10 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>10 sekund</translation>
     </message>
     <message>
         <source>30 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>30 sekund</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -325,27 +325,27 @@
     </message>
     <message>
         <source>Blocked Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokiran internetni naslov</translation>
     </message>
     <message>
         <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Omejitev &quot;Vprašaj za povezavo&quot;</translation>
     </message>
     <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Začasno ustavljeno z &quot;Vprašaj za povezavo&quot;</translation>
     </message>
     <message>
         <source>Allowed once by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Enkrat dovoljeno z &quot;Vprašaj za povezavo&quot;</translation>
     </message>
     <message>
         <source>Blocked by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokirano z &quot;Vprašaj za povezavo&quot;</translation>
     </message>
     <message>
         <source>Process allowed by &quot;Ask to Connect&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Proces dovoljen z &quot;Vprašaj za povezavo&quot;</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -417,19 +417,19 @@
     </message>
     <message>
         <source>Block Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokiraj dohodne</translation>
     </message>
     <message>
         <source>Program&apos;s Network Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Omrežni filter programa</translation>
     </message>
     <message>
         <source>Block Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokiraj odhodne</translation>
     </message>
     <message>
         <source>Allowed Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>Dovoljen internetni naslov</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -445,19 +445,19 @@
     </message>
     <message>
         <source>Loopback</source>
-        <translation type="unfinished"></translation>
+        <translation>Povratna zanka</translation>
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Končno pravilo</translation>
     </message>
     <message>
         <source>Inherited from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Podedovano od: %1</translation>
     </message>
     <message>
         <source>Dropped</source>
-        <translation type="unfinished"></translation>
+        <translation>Zavrženo</translation>
     </message>
     <message>
         <source>Local Host Name</source>
@@ -500,7 +500,7 @@
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulator filtra</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -575,7 +575,7 @@
     </message>
     <message>
         <source>%1d</source>
-        <translation type="unfinished"></translation>
+        <translation>%1d</translation>
     </message>
 </context>
 <context>
@@ -593,59 +593,59 @@
     </message>
     <message>
         <source>The Rule&apos;s action is applied</source>
-        <translation type="unfinished"></translation>
+        <translation>Uporabi se dejanje pravila</translation>
     </message>
     <message>
         <source>Block silently, without a response</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokiraj tiho, brez odgovora</translation>
     </message>
     <message>
         <source>Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>Smer:</translation>
     </message>
     <message>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>Poljubno</translation>
     </message>
     <message>
         <source>Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Dohodni</translation>
     </message>
     <message>
         <source>Filter Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Napaka nastavitev filtra</translation>
     </message>
     <message>
         <source>By Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Po pravilu</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>Vprašaj za povezavo: začasno ustavi povezavo do odločitve uporabnika</translation>
     </message>
     <message>
         <source>Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Odhodni</translation>
     </message>
     <message>
         <source>Protocol:</source>
-        <translation type="unfinished"></translation>
+        <translation>Protokol:</translation>
     </message>
     <message>
         <source>Area:</source>
-        <translation type="unfinished"></translation>
+        <translation>Območje:</translation>
     </message>
     <message>
         <source>Localhost</source>
-        <translation type="unfinished"></translation>
+        <translation>Localhost</translation>
     </message>
     <message>
         <source>LAN</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN</translation>
     </message>
     <message>
         <source>LAN: by the &quot;Local Area Network&quot; addresses in Options</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN: po naslovih &quot;Lokalno omrežje&quot; v Možnostih</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -653,47 +653,47 @@
     </message>
     <message>
         <source>Remote IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>Oddaljeni IP:</translation>
     </message>
     <message>
         <source>Remote Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Oddaljena vrata:</translation>
     </message>
     <message>
         <source>Local IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>Lokalni IP:</translation>
     </message>
     <message>
         <source>Equal to the Remote IP</source>
-        <translation type="unfinished"></translation>
+        <translation>Enako oddaljenemu IP</translation>
     </message>
     <message>
         <source>Local Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Lokalna vrata:</translation>
     </message>
     <message>
         <source>Equal to the Remote Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Enako oddaljenim vratom</translation>
     </message>
     <message>
         <source>Options:</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti:</translation>
     </message>
     <message>
         <source>Log</source>
-        <translation type="unfinished"></translation>
+        <translation>Dnevnik</translation>
     </message>
     <message>
         <source>Collect the connection, even if the Rule doesn&apos;t</source>
-        <translation type="unfinished"></translation>
+        <translation>Zberi povezavo, tudi če je pravilo ne zbere</translation>
     </message>
     <message>
         <source>No Log</source>
-        <translation type="unfinished"></translation>
+        <translation>Brez dnevnika</translation>
     </message>
     <message>
         <source>Don&apos;t collect the connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne zbiraj povezave</translation>
     </message>
     <message>
         <source>Alert</source>
@@ -701,19 +701,19 @@
     </message>
     <message>
         <source>Collect the connection as alerted, also with &quot;Alerted only&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Zberi povezavo kot opozorjeno, tudi z &quot;Samo opozorjeno&quot;</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Besedilo</translation>
     </message>
     <message>
         <source>Copy Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopiraj besedilo</translation>
     </message>
     <message>
         <source>Paste Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Prilepi besedilo</translation>
     </message>
     <message>
         <source>OK</source>
@@ -725,34 +725,34 @@
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Dodaj filter</translation>
     </message>
     <message>
         <source>Edit Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Uredi filter</translation>
     </message>
     <message>
         <source>All, except these</source>
-        <translation type="unfinished"></translation>
+        <translation>Vse razen teh</translation>
     </message>
     <message>
         <source>The text must be one line of filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Besedilo mora biti ena vrstica filtrov</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>Počisti</translation>
     </message>
 </context>
 <context>
     <name>FilterSimController</name>
     <message>
         <source>Cannot simulate the connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Povezave ni mogoče simulirati</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulator filtra</translation>
     </message>
 </context>
 <context>
@@ -763,19 +763,19 @@
     </message>
     <message>
         <source>Ignored: other firewalls decide</source>
-        <translation type="unfinished"></translation>
+        <translation>Prezrto: odločajo drugi požarni zidovi</translation>
     </message>
     <message>
         <source>Not found</source>
-        <translation type="unfinished"></translation>
+        <translation>Ni najdeno</translation>
     </message>
     <message>
         <source>Connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Povezava</translation>
     </message>
     <message>
         <source>Program Path:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pot do programa:</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -783,47 +783,47 @@
     </message>
     <message>
         <source>Direction:</source>
-        <translation type="unfinished"></translation>
+        <translation>Smer:</translation>
     </message>
     <message>
         <source>Protocol:</source>
-        <translation type="unfinished"></translation>
+        <translation>Protokol:</translation>
     </message>
     <message>
         <source>Remote IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>Oddaljeni IP:</translation>
     </message>
     <message>
         <source>Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Vrata:</translation>
     </message>
     <message>
         <source>Local IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>Lokalni IP:</translation>
     </message>
     <message>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>Poljubno</translation>
     </message>
     <message>
         <source>Loopback</source>
-        <translation type="unfinished"></translation>
+        <translation>Povratna zanka</translation>
     </message>
     <message>
         <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
-        <translation type="unfinished"></translation>
+        <translation>Povezava na naslov tega računalnika. Naslovi 127.0.0.0/8 in ::1 so vedno povratna zanka.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>Omrežni profil:</translation>
     </message>
     <message>
         <source>Simulate</source>
-        <translation type="unfinished"></translation>
+        <translation>Simuliraj</translation>
     </message>
     <message>
         <source>Result</source>
-        <translation type="unfinished"></translation>
+        <translation>Rezultat</translation>
     </message>
     <message>
         <source>Action:</source>
@@ -831,35 +831,35 @@
     </message>
     <message>
         <source>Reason:</source>
-        <translation type="unfinished"></translation>
+        <translation>Razlog:</translation>
     </message>
     <message>
         <source>Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pravilo:</translation>
     </message>
     <message>
         <source>Zone:</source>
-        <translation type="unfinished"></translation>
+        <translation>Področje:</translation>
     </message>
     <message>
         <source>Program:</source>
-        <translation type="unfinished"></translation>
+        <translation>Program:</translation>
     </message>
     <message>
         <source>The program is checked by its path: the settings propagated from a parent process aren&apos;t taken into account.</source>
-        <translation type="unfinished"></translation>
+        <translation>Program se preverja po poti: nastavitve, podedovane od nadrejenega procesa, se ne upoštevajo.</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulator filtra</translation>
     </message>
     <message>
         <source>Inbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Dohodni</translation>
     </message>
     <message>
         <source>Outbound</source>
-        <translation type="unfinished"></translation>
+        <translation>Odhodni</translation>
     </message>
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
@@ -867,11 +867,11 @@
     </message>
     <message>
         <source>Invalid remote IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>Neveljaven oddaljeni naslov IP</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>Neveljaven lokalni naslov IP</translation>
     </message>
 </context>
 <context>
@@ -894,19 +894,19 @@
     </message>
     <message>
         <source>Internet Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Internetni naslovi</translation>
     </message>
     <message>
         <source>Local Network Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Naslovi lokalnega omrežja</translation>
     </message>
     <message>
         <source>Allow Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Dovoli naslove</translation>
     </message>
     <message>
         <source>Block Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokiraj naslove</translation>
     </message>
     <message>
         <source>Ask to Connect</source>
@@ -937,7 +937,7 @@
     <name>FontSelector</name>
     <message>
         <source>Select Font</source>
-        <translation type="unfinished"></translation>
+        <translation>Izberi pisavo</translation>
     </message>
 </context>
 <context>
@@ -948,7 +948,7 @@
     </message>
     <message>
         <source>Install the Windows Service now?</source>
-        <translation type="unfinished"></translation>
+        <translation>Želite zdaj namestiti storitev Windows?</translation>
     </message>
     <message>
         <source>Are you sure you want to quit the program?</source>
@@ -956,7 +956,7 @@
     </message>
     <message>
         <source>Remove the Windows Service and the Driver before quitting?</source>
-        <translation type="unfinished"></translation>
+        <translation>Želite pred izhodom odstraniti storitev Windows in gonilnik?</translation>
     </message>
     <message>
         <source>Quota Alert</source>
@@ -1026,19 +1026,19 @@
     </message>
     <message>
         <source>Hide Y axis scale labels</source>
-        <translation type="unfinished"></translation>
+        <translation>Skrij oznake merila osi Y</translation>
     </message>
     <message>
         <source>Animation</source>
-        <translation type="unfinished"></translation>
+        <translation>Animacija</translation>
     </message>
     <message>
         <source>Axis ticks</source>
-        <translation type="unfinished"></translation>
+        <translation>Oznake osi</translation>
     </message>
     <message>
         <source>Show:</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikaži:</translation>
     </message>
     <message>
         <source>Total</source>
@@ -1046,7 +1046,7 @@
     </message>
     <message>
         <source>Download</source>
-        <translation type="unfinished"></translation>
+        <translation>Prenos</translation>
     </message>
     <message>
         <source>Upload</source>
@@ -1062,7 +1062,7 @@
     </message>
     <message>
         <source>Bar width:</source>
-        <translation type="unfinished"></translation>
+        <translation>Širina stolpca:</translation>
     </message>
     <message>
         <source>Max seconds:</source>
@@ -1070,7 +1070,7 @@
     </message>
     <message>
         <source>Graph type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Vrsta grafa:</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -1078,7 +1078,7 @@
     </message>
     <message>
         <source>Border:</source>
-        <translation type="unfinished"></translation>
+        <translation>Rob:</translation>
     </message>
     <message>
         <source>Download:</source>
@@ -1090,7 +1090,7 @@
     </message>
     <message>
         <source>Total:</source>
-        <translation type="unfinished"></translation>
+        <translation>Skupno:</translation>
     </message>
     <message>
         <source>Axis:</source>
@@ -1110,31 +1110,31 @@
     </message>
     <message>
         <source>Maximized</source>
-        <translation type="unfinished"></translation>
+        <translation>Maksimirano</translation>
     </message>
     <message>
         <source>X:</source>
-        <translation type="unfinished"></translation>
+        <translation>X:</translation>
     </message>
     <message>
         <source>Y:</source>
-        <translation type="unfinished"></translation>
+        <translation>Y:</translation>
     </message>
     <message>
         <source>Width:</source>
-        <translation type="unfinished"></translation>
+        <translation>Širina:</translation>
     </message>
     <message>
         <source>Height:</source>
-        <translation type="unfinished"></translation>
+        <translation>Višina:</translation>
     </message>
     <message>
         <source>Column</source>
-        <translation type="unfinished"></translation>
+        <translation>Stolpec</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Črta</translation>
     </message>
     <message>
         <source>Window</source>
@@ -1154,7 +1154,7 @@
     </message>
     <message>
         <source>Window Geometry</source>
-        <translation type="unfinished"></translation>
+        <translation>Geometrija okna</translation>
     </message>
     <message>
         <source>Fixed speed:</source>
@@ -1185,7 +1185,7 @@
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Opombe:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -1197,19 +1197,19 @@
     </message>
     <message>
         <source>A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih skupin ali, brez ekskluzivnih skupin, KATERAKOLI od njegovih skupin.</translation>
     </message>
     <message>
         <source>Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pravilo:</translation>
     </message>
     <message>
         <source>The Rule is applied to the Group&apos;s programs before their own Rule, while the Group is active.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pravilo se uporabi za programe skupine pred njihovim lastnim pravilom, dokler je skupina aktivna.</translation>
     </message>
     <message>
         <source>The Group is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>Skupina je aktivna samo v tem časovnem obdobju.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -1221,7 +1221,7 @@
     </message>
     <message>
         <source>Edit Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Uredi skupino</translation>
     </message>
 </context>
 <context>
@@ -1239,19 +1239,19 @@
     <name>GroupsController</name>
     <message>
         <source>Group Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Napaka nastavitev skupine</translation>
     </message>
     <message>
         <source>Cannot edit Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Skupine ni mogoče urejati</translation>
     </message>
     <message>
         <source>Cannot delete Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Skupine ni mogoče izbrisati</translation>
     </message>
     <message>
         <source>Cannot update Group&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Imena skupine ni mogoče posodobiti</translation>
     </message>
 </context>
 <context>
@@ -1259,7 +1259,8 @@
     <message>
         <source>Select Groups.
 A program is enabled only if ANY of its exclusive groups is enabled, or, without exclusive groups, ANY of its groups is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>Izberi skupine.
+Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih skupin ali, brez ekskluzivnih skupin, KATERAKOLI od njegovih skupin.</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -1267,7 +1268,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>(exclusive)</source>
-        <translation type="unfinished"></translation>
+        <translation>(ekskluzivna)</translation>
     </message>
 </context>
 <context>
@@ -1290,7 +1291,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Are you sure to remove selected group?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ali ste prepričani, da želite odstraniti izbrano skupino?</translation>
     </message>
 </context>
 <context>
@@ -1482,7 +1483,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Style Sheet:</source>
-        <translation type="unfinished"></translation>
+        <translation>Slogovna datoteka:</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -1490,11 +1491,11 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Font:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pisava:</translation>
     </message>
     <message>
         <source>Icon Size in Lists:</source>
-        <translation type="unfinished"></translation>
+        <translation>Velikost ikon na seznamih:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -1626,7 +1627,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Style Sheets (*.qss);;All files (*.*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Slogovne datoteke (*.qss);;Vse datoteke (*.*)</translation>
     </message>
     <message>
         <source>Exclude from screen capture</source>
@@ -1682,11 +1683,11 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Show Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikaži promet</translation>
     </message>
     <message>
         <source>Show Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikaži povezave</translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
@@ -1869,11 +1870,11 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>10 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>10 sekund</translation>
     </message>
     <message>
         <source>30 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>30 sekund</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
@@ -1957,11 +1958,11 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>Block traffic for disabled Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokiraj promet za onemogočene skupine</translation>
     </message>
     <message>
         <source>Speed Limiter Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Omejevalnik hitrosti omogočen</translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
@@ -1969,7 +1970,7 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>Ask to Connect seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>Sekunde za Vprašaj za povezavo:</translation>
     </message>
     <message>
         <source>Disable command line management</source>
@@ -2081,15 +2082,15 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <name>ProfileRange</name>
     <message>
         <source>Public</source>
-        <translation type="unfinished"></translation>
+        <translation>Javno</translation>
     </message>
     <message>
         <source>Private</source>
-        <translation type="unfinished"></translation>
+        <translation>Zasebno</translation>
     </message>
     <message>
         <source>Domain</source>
-        <translation type="unfinished"></translation>
+        <translation>Domena</translation>
     </message>
 </context>
 <context>
@@ -2132,7 +2133,7 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>Vprašaj za povezavo: začasno ustavi povezavo do odločitve uporabnika</translation>
     </message>
     <message>
         <source>Kill Process</source>
@@ -2271,7 +2272,7 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>Paused Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Začasno ustavljene povezave</translation>
     </message>
     <message>
         <source>Switch Wildcard</source>
@@ -2321,7 +2322,7 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <name>ProgNetworkPage</name>
     <message>
         <source>Block:</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokiraj:</translation>
     </message>
     <message>
         <source>In</source>
@@ -2329,7 +2330,7 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>Block Inbound Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokiraj dohodne povezave</translation>
     </message>
     <message>
         <source>Out</source>
@@ -2337,7 +2338,7 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>Block Outbound Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokiraj odhodne povezave</translation>
     </message>
     <message>
         <source>Internet</source>
@@ -2357,11 +2358,11 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>No Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Brez omejitve</translation>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Dodaj filter</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2548,11 +2549,11 @@ Preverite drug program z isto potjo.</translation>
     </message>
     <message>
         <source>Obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>Zastarelo</translation>
     </message>
     <message>
         <source>Filter by Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtriraj po skupinah</translation>
     </message>
     <message>
         <source>Disable</source>
@@ -2647,7 +2648,7 @@ Preverite drug program z isto potjo.</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
-        <translation type="unfinished"></translation>
+        <translation>Vprašaj za povezavo: začasno ustavi povezavo do odločitve uporabnika</translation>
     </message>
     <message>
         <source>Exclusive</source>
@@ -2655,11 +2656,11 @@ Preverite drug program z isto potjo.</translation>
     </message>
     <message>
         <source>Add Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Dodaj filter</translation>
     </message>
     <message>
         <source>The Rule is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pravilo je aktivno samo v tem časovnem obdobju.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -2695,7 +2696,7 @@ Preverite drug program z isto potjo.</translation>
     </message>
     <message>
         <source>Presets</source>
-        <translation type="unfinished"></translation>
+        <translation>Prednastavitve</translation>
     </message>
     <message>
         <source>More</source>
@@ -2717,7 +2718,9 @@ Preverite drug program z isto potjo.</translation>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Privzeto prednastavljeno pravilo posodobijo nove različice programa: vaše spremembe bodo izgubljene, razen zastavic Omogočeno in Meni pladnja. Podvojite ga, da jih ohranite.
+
+Shraniti spremembe?</translation>
     </message>
     <message>
         <source>Global rules count exceeded!</source>
@@ -2760,11 +2763,11 @@ Save the changes?</source>
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Končno pravilo</translation>
     </message>
     <message>
         <source>Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Časovno obdobje</translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -2861,7 +2864,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Cannot add the default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Privzetih prednastavljenih pravil ni mogoče dodati</translation>
     </message>
 </context>
 <context>
@@ -2876,7 +2879,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Duplicate</source>
-        <translation type="unfinished"></translation>
+        <translation>Podvoji</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2884,7 +2887,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Add Default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Dodaj privzeta prednastavljena pravila</translation>
     </message>
     <message>
         <source>Rules</source>
@@ -2971,15 +2974,15 @@ Save the changes?</source>
     </message>
     <message>
         <source>Each 5 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>Vsakih 5 minut</translation>
     </message>
     <message>
         <source>Each 15 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>Vsakih 15 minut</translation>
     </message>
     <message>
         <source>Each 30 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>Vsakih 30 minut</translation>
     </message>
     <message>
         <source> minute(s)</source>
@@ -3030,15 +3033,15 @@ Save the changes?</source>
     </message>
     <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
-        <translation type="unfinished"></translation>
+        <translation>Spremembe je ponastavil sistem. Storitev znova nastavite kot sledljivo.</translation>
     </message>
     <message>
         <source>Please restart the service to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Znova zaženite storitev, da se spremembe uveljavijo.</translation>
     </message>
     <message>
         <source>Please restart the computer to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Znova zaženite računalnik, da se spremembe uveljavijo.</translation>
     </message>
 </context>
 <context>
@@ -3057,7 +3060,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Restart Service</source>
-        <translation type="unfinished"></translation>
+        <translation>Znova zaženi storitev</translation>
     </message>
     <message>
         <source>Add Program</source>
@@ -3081,19 +3084,19 @@ Save the changes?</source>
     </message>
     <message>
         <source>Restart the service &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>Želite znova zagnati storitev &quot;%1&quot;?</translation>
     </message>
     <message>
         <source>Restart the service &quot;%1&quot; to apply the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Želite znova zagnati storitev &quot;%1&quot;, da se spremembe uveljavijo?</translation>
     </message>
     <message>
         <source>Please restart the computer to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Znova zaženite računalnik, da se spremembe uveljavijo.</translation>
     </message>
     <message>
         <source>Cannot restart the service &quot;%1&quot;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Storitve &quot;%1&quot; ni mogoče znova zagnati.</translation>
     </message>
 </context>
 <context>
@@ -3104,7 +3107,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Opombe:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -3112,7 +3115,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Download</source>
-        <translation type="unfinished"></translation>
+        <translation>Prenos</translation>
     </message>
     <message>
         <source>Upload</source>
@@ -3120,7 +3123,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Speed:</source>
-        <translation type="unfinished"></translation>
+        <translation>Hitrost:</translation>
     </message>
     <message>
         <source>Latency:</source>
@@ -3132,11 +3135,11 @@ Save the changes?</source>
     </message>
     <message>
         <source>Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Velikost medpomnilnika:</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>Omejitev hitrosti je aktivna samo v tem časovnem obdobju.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -3148,7 +3151,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Edit Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Uredi omejitev hitrosti</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -3160,19 +3163,20 @@ Save the changes?</source>
     <message>
         <source>Buffer overflow: %1
 Packet loss: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Prekoračitev medpomnilnika: %1
+Izguba paketov: %2</translation>
     </message>
     <message>
         <source>Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Omejitev hitrosti</translation>
     </message>
     <message>
         <source>Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Čakalna vrsta</translation>
     </message>
     <message>
         <source>Dropped</source>
-        <translation type="unfinished"></translation>
+        <translation>Zavrženo</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -3187,19 +3191,19 @@ Packet loss: %2</source>
     <name>SpeedLimitsController</name>
     <message>
         <source>Speed Limit Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Napaka nastavitev omejitve hitrosti</translation>
     </message>
     <message>
         <source>Cannot edit Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Omejitve hitrosti ni mogoče urejati</translation>
     </message>
     <message>
         <source>Cannot delete Speed Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Omejitve hitrosti ni mogoče izbrisati</translation>
     </message>
     <message>
         <source>Cannot update Speed Limit&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Imena omejitve hitrosti ni mogoče posodobiti</translation>
     </message>
 </context>
 <context>
@@ -3218,11 +3222,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>Omejitve hitrosti</translation>
     </message>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ali ste prepričani, da želite odstraniti izbrano omejitev hitrosti?</translation>
     </message>
 </context>
 <context>
@@ -3309,11 +3313,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Collect Traffic re-injected by other drivers</source>
-        <translation type="unfinished"></translation>
+        <translation>Zberi promet, ki so ga ponovno vstavili drugi gonilniki</translation>
     </message>
     <message>
         <source>The Traffic is collected only in this Time Period.</source>
-        <translation type="unfinished"></translation>
+        <translation>Promet se zbira samo v tem časovnem obdobju.</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
@@ -3379,7 +3383,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Interval, minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>Interval, minute</translation>
     </message>
     <message>
         <source>Maximum retries count</source>
@@ -3405,7 +3409,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Opombe:</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -3413,19 +3417,19 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>The disabled Time Period doesn&apos;t restrict its Groups and Speed Limits.</source>
-        <translation type="unfinished"></translation>
+        <translation>Onemogočeno časovno obdobje ne omejuje svojih skupin in omejitev hitrosti.</translation>
     </message>
     <message>
         <source>Intervals:</source>
-        <translation type="unfinished"></translation>
+        <translation>Intervali:</translation>
     </message>
     <message>
         <source>The Time Period is active in ANY of its intervals.</source>
-        <translation type="unfinished"></translation>
+        <translation>Časovno obdobje je aktivno v KATEREMKOLI od svojih intervalov.</translation>
     </message>
     <message>
         <source>Add Interval</source>
-        <translation type="unfinished"></translation>
+        <translation>Dodaj interval</translation>
     </message>
     <message>
         <source>OK</source>
@@ -3437,18 +3441,18 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Edit Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Uredi časovno obdobje</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodIntervalEdit</name>
     <message>
         <source>From</source>
-        <translation type="unfinished"></translation>
+        <translation>Od</translation>
     </message>
     <message>
         <source>To (the same time means the whole 24 hours)</source>
-        <translation type="unfinished"></translation>
+        <translation>Do (isti čas pomeni celih 24 ur)</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -3459,11 +3463,11 @@ Packet loss: %2</source>
     <name>TimePeriodListModel</name>
     <message>
         <source>Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Časovno obdobje</translation>
     </message>
     <message>
         <source>Intervals</source>
-        <translation type="unfinished"></translation>
+        <translation>Intervali</translation>
     </message>
     <message>
         <source>Change Time</source>
@@ -3474,34 +3478,34 @@ Packet loss: %2</source>
     <name>TimePeriodSelector</name>
     <message>
         <source>Time Period:</source>
-        <translation type="unfinished"></translation>
+        <translation>Časovno obdobje:</translation>
     </message>
     <message>
         <source>No Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Brez obdobja</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>Časovna obdobja</translation>
     </message>
 </context>
 <context>
     <name>TimePeriodsController</name>
     <message>
         <source>Time Period Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Napaka nastavitev časovnega obdobja</translation>
     </message>
     <message>
         <source>Cannot edit Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Časovnega obdobja ni mogoče urejati</translation>
     </message>
     <message>
         <source>Cannot delete Time Period</source>
-        <translation type="unfinished"></translation>
+        <translation>Časovnega obdobja ni mogoče izbrisati</translation>
     </message>
     <message>
         <source>Cannot update Time Period&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Imena časovnega obdobja ni mogoče posodobiti</translation>
     </message>
 </context>
 <context>
@@ -3520,11 +3524,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>Časovna obdobja</translation>
     </message>
     <message>
         <source>Are you sure to remove selected time period?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ali ste prepričani, da želite odstraniti izbrano časovno obdobje?</translation>
     </message>
 </context>
 <context>
@@ -3652,15 +3656,15 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Speed Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>Omejitve hitrosti</translation>
     </message>
     <message>
         <source>Time Periods</source>
-        <translation type="unfinished"></translation>
+        <translation>Časovna obdobja</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulator filtra</translation>
     </message>
     <message>
         <source>Traffic Graph</source>
@@ -3672,7 +3676,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Group Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>Spreminjevalec skupin</translation>
     </message>
     <message>
         <source>Quit</source>
@@ -3750,11 +3754,11 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Week Days</source>
-        <translation type="unfinished"></translation>
+        <translation>Dnevi v tednu</translation>
     </message>
     <message>
         <source>No Days</source>
-        <translation type="unfinished"></translation>
+        <translation>Brez dni</translation>
     </message>
 </context>
 <context>

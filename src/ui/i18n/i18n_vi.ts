@@ -194,19 +194,19 @@
     </message>
     <message>
         <source>Allow once</source>
-        <translation type="unfinished"></translation>
+        <translation>Cho phép một lần</translation>
     </message>
     <message>
         <source>Allow Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Cho phép tiến trình</translation>
     </message>
     <message>
         <source>Block once</source>
-        <translation type="unfinished"></translation>
+        <translation>Chặn một lần</translation>
     </message>
     <message>
         <source>Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>Tiếp tục</translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -449,7 +449,7 @@
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Quy tắc kết thúc</translation>
     </message>
     <message>
         <source>Inherited from: %1</source>
@@ -613,11 +613,11 @@
     </message>
     <message>
         <source>Filter Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Lỗi cấu hình bộ lọc</translation>
     </message>
     <message>
         <source>By Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Theo quy tắc</translation>
     </message>
     <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
@@ -713,7 +713,7 @@
     </message>
     <message>
         <source>Paste Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Dán văn bản</translation>
     </message>
     <message>
         <source>OK</source>
@@ -737,7 +737,7 @@
     </message>
     <message>
         <source>The text must be one line of filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Văn bản phải là một dòng bộ lọc</translation>
     </message>
     <message>
         <source>Clear</source>
@@ -2718,7 +2718,9 @@ Vui lòng kiểm tra chương trình khác có cùng đường dẫn.</translati
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Quy tắc cấu hình mẫu (Preset) mặc định được cập nhật theo các phiên bản mới của chương trình: các thay đổi của bạn sẽ bị mất, trừ các cờ Đã bật và Menu khay hệ thống. Hãy nhân bản nó để giữ lại.
+
+Lưu các thay đổi?</translation>
     </message>
     <message>
         <source>Global rules count exceeded!</source>
@@ -2761,7 +2763,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Terminating Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Quy tắc kết thúc</translation>
     </message>
     <message>
         <source>Time Period</source>
@@ -2862,7 +2864,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Cannot add the default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Không thể thêm các quy tắc cấu hình mẫu (Preset) mặc định</translation>
     </message>
 </context>
 <context>
@@ -2877,7 +2879,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Duplicate</source>
-        <translation type="unfinished"></translation>
+        <translation>Nhân bản</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2885,7 +2887,7 @@ Save the changes?</source>
     </message>
     <message>
         <source>Add Default Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Thêm các quy tắc cấu hình mẫu (Preset) mặc định</translation>
     </message>
     <message>
         <source>Rules</source>
