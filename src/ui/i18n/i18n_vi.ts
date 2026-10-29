@@ -862,18 +862,6 @@
         <translation>Kết nối đi</translation>
     </message>
     <message>
-        <source>Public</source>
-        <translation>Công khai (Public)</translation>
-    </message>
-    <message>
-        <source>Private</source>
-        <translation>Riêng tư (Private)</translation>
-    </message>
-    <message>
-        <source>Domain</source>
-        <translation>Miền (Domain)</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Chương trình (*.exe);;Tất cả tệp (*.*)</translation>
     </message>
@@ -2088,6 +2076,21 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
     <message>
         <source>Bad Port</source>
         <translation>Cổng sai</translation>
+    </message>
+</context>
+<context>
+    <name>ProfileRange</name>
+    <message>
+        <source>Public</source>
+        <translation>Công khai (Public)</translation>
+    </message>
+    <message>
+        <source>Private</source>
+        <translation>Riêng tư (Private)</translation>
+    </message>
+    <message>
+        <source>Domain</source>
+        <translation>Miền (Domain)</translation>
     </message>
 </context>
 <context>

@@ -862,18 +862,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Public</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Private</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Domain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programas (*.exe);;Todos los archivos (*.*)</translation>
     </message>
@@ -2087,6 +2075,21 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     <message>
         <source>Bad Port</source>
         <translation>Puerto incorrecto</translation>
+    </message>
+</context>
+<context>
+    <name>ProfileRange</name>
+    <message>
+        <source>Public</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Private</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Domain</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

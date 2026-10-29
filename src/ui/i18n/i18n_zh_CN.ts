@@ -862,18 +862,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Public</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Private</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Domain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>应用程序 (*.exe);;所有文件 (*.*)</translation>
     </message>
@@ -2088,6 +2076,21 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Bad Port</source>
         <translation>端口错误</translation>
+    </message>
+</context>
+<context>
+    <name>ProfileRange</name>
+    <message>
+        <source>Public</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Private</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Domain</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

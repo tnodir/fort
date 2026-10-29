@@ -862,18 +862,6 @@
         <translation>아웃바운드</translation>
     </message>
     <message>
-        <source>Public</source>
-        <translation>공개</translation>
-    </message>
-    <message>
-        <source>Private</source>
-        <translation>비공개</translation>
-    </message>
-    <message>
-        <source>Domain</source>
-        <translation>도메인</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>프로그램 (*.exe);;모든 파일 (*.*)</translation>
     </message>
@@ -2088,6 +2076,21 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Bad Port</source>
         <translation>잘못된 포트</translation>
+    </message>
+</context>
+<context>
+    <name>ProfileRange</name>
+    <message>
+        <source>Public</source>
+        <translation>공개</translation>
+    </message>
+    <message>
+        <source>Private</source>
+        <translation>비공개</translation>
+    </message>
+    <message>
+        <source>Domain</source>
+        <translation>도메인</translation>
     </message>
 </context>
 <context>

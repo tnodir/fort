@@ -862,18 +862,6 @@
         <translation>Исходящие</translation>
     </message>
     <message>
-        <source>Public</source>
-        <translation>Общедоступный</translation>
-    </message>
-    <message>
-        <source>Private</source>
-        <translation>Частный</translation>
-    </message>
-    <message>
-        <source>Domain</source>
-        <translation>Доменный</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Программы (*.exe);;Все файлы (*.*)</translation>
     </message>
@@ -2088,6 +2076,21 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Bad Port</source>
         <translation>Некорректный порт</translation>
+    </message>
+</context>
+<context>
+    <name>ProfileRange</name>
+    <message>
+        <source>Public</source>
+        <translation>Общедоступный</translation>
+    </message>
+    <message>
+        <source>Private</source>
+        <translation>Частный</translation>
+    </message>
+    <message>
+        <source>Domain</source>
+        <translation>Доменный</translation>
     </message>
 </context>
 <context>

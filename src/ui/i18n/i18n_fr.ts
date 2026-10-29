@@ -862,18 +862,6 @@
         <translation>Sortant</translation>
     </message>
     <message>
-        <source>Public</source>
-        <translation>Public</translation>
-    </message>
-    <message>
-        <source>Private</source>
-        <translation>Privé</translation>
-    </message>
-    <message>
-        <source>Domain</source>
-        <translation>Domaine</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programmes (*.exe);;Tous les fichiers (*.*)</translation>
     </message>
@@ -2088,6 +2076,21 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     <message>
         <source>Bad Port</source>
         <translation>Mauvais Port</translation>
+    </message>
+</context>
+<context>
+    <name>ProfileRange</name>
+    <message>
+        <source>Public</source>
+        <translation>Public</translation>
+    </message>
+    <message>
+        <source>Private</source>
+        <translation>Privé</translation>
+    </message>
+    <message>
+        <source>Domain</source>
+        <translation>Domaine</translation>
     </message>
 </context>
 <context>

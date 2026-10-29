@@ -862,18 +862,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Public</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Private</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Domain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programlar (*.exe);;Tüm dosyalar (*.*)</translation>
     </message>
@@ -2087,6 +2075,21 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     <message>
         <source>Bad Port</source>
         <translation>Geçersiz Port</translation>
+    </message>
+</context>
+<context>
+    <name>ProfileRange</name>
+    <message>
+        <source>Public</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Private</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Domain</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -862,18 +862,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Public</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Private</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Domain</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation></translation>
     </message>
@@ -2084,6 +2072,21 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Bad Port</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ProfileRange</name>
+    <message>
+        <source>Public</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Private</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Domain</source>
         <translation></translation>
     </message>
 </context>

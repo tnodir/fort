@@ -862,18 +862,6 @@
         <translation>送信</translation>
     </message>
     <message>
-        <source>Public</source>
-        <translation>パブリック</translation>
-    </message>
-    <message>
-        <source>Private</source>
-        <translation>プライベート</translation>
-    </message>
-    <message>
-        <source>Domain</source>
-        <translation>ドメイン</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>プログラム (*.exe);;すべてのファイル (*.*)</translation>
     </message>
@@ -2088,6 +2076,21 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Bad Port</source>
         <translation>不正なポート</translation>
+    </message>
+</context>
+<context>
+    <name>ProfileRange</name>
+    <message>
+        <source>Public</source>
+        <translation>パブリック</translation>
+    </message>
+    <message>
+        <source>Private</source>
+        <translation>プライベート</translation>
+    </message>
+    <message>
+        <source>Domain</source>
+        <translation>ドメイン</translation>
     </message>
 </context>
 <context>
