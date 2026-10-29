@@ -24,6 +24,7 @@
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/net/actionrange.h>
+#include <util/net/dirrange.h>
 #include <util/textareautil.h>
 
 using namespace Fort;
@@ -31,7 +32,10 @@ using namespace Fort;
 namespace {
 
 // By the Direction check box's index
-const QStringList directionNames = { "In", "Out" };
+const QStringList directionNames = {
+    DirRange::directionName(/*inbound=*/true),
+    DirRange::directionName(/*inbound=*/false),
+};
 
 // By the Protocol check box's index
 const QStringList protocolNames = { "TCP", "UDP" };
