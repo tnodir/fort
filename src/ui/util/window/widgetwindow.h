@@ -10,16 +10,14 @@ class WidgetWindow : public QWidget
 public:
     explicit WidgetWindow(QWidget *parent = nullptr, Qt::WindowFlags f = {});
 
-    void showWindow(bool activate = true);
-    void exposeWindow();
+    void showWindow(bool activate = true, bool expose = false);
 
     void centerTo(QWidget *w);
     void centerTo(QScreen *s);
 
     void moveNextTo(QWidget *w, int spacing = 10);
 
-    static void showWidget(QWidget *w, bool activate = true);
-    static void exposeWidget(QWidget *w);
+    static void showWidget(QWidget *w, bool activate = true, bool expose = false);
     static void excludeWindowFromCapture(QWidget *w, bool exclude = true);
 
 signals:
@@ -52,6 +50,9 @@ protected:
     bool event(QEvent *event) override;
 
     void ensureWindowScreenBounds();
+
+private:
+    static void exposeWidget(QWidget *w);
 };
 
 #endif // WIDGETWINDOW_H

@@ -95,7 +95,10 @@ public slots:
 
     void showSplashScreen();
 
-    bool showHomeWindow() { return showWindowByCode(WindowHome); }
+    bool showHomeWindow(bool expose = false)
+    {
+        return showWindowByCode(WindowHome, /*activate=*/true, expose);
+    }
 
     virtual bool exposeHomeWindow();
     void showHomeWindowAbout();
@@ -146,7 +149,7 @@ public slots:
     virtual bool setWindowVisibleByCode(
             WindowCode code, const QVariant &visibleOrSwitch = {}, bool activate = true);
 
-    bool showWindowByCode(WindowCode code, bool activate = true);
+    bool showWindowByCode(WindowCode code, bool activate = true, bool expose = false);
     bool closeWindowByCode(WindowCode code);
     void switchWindowByCode(WindowCode code);
 

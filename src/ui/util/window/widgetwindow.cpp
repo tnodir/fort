@@ -44,18 +44,13 @@ int nextToX(const QRect &r, int width, const QRect &screen)
 
 WidgetWindow::WidgetWindow(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f) { }
 
-void WidgetWindow::showWindow(bool activate)
+void WidgetWindow::showWindow(bool activate, bool expose)
 {
     if (isHidden()) {
         emit aboutToShow();
     }
 
-    showWidget(this, activate);
-}
-
-void WidgetWindow::exposeWindow()
-{
-    exposeWidget(this);
+    showWidget(this, activate, expose);
 }
 
 void WidgetWindow::centerTo(QWidget *w)
@@ -82,7 +77,7 @@ void WidgetWindow::moveNextTo(QWidget *w, int spacing)
             nextToX(r, frameSize.width(), screen), nextToY(r, frameSize.height(), screen, spacing));
 }
 
-void WidgetWindow::showWidget(QWidget *w, bool activate)
+void WidgetWindow::showWidget(QWidget *w, bool activate, bool expose)
 {
     if (w->isMinimized()) {
         w->setWindowState(w->windowState() ^ Qt::WindowMinimized);
@@ -93,6 +88,10 @@ void WidgetWindow::showWidget(QWidget *w, bool activate)
 
     if (activate) {
         w->activateWindow();
+    }
+
+    if (expose) {
+        exposeWidget(w);
     }
 }
 

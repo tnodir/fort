@@ -11,27 +11,27 @@ namespace {
 
 struct WindowShow
 {
+    bool activate : 1 = true;
+    bool expose : 1 = false;
+    WindowCode code;
     const char *name;
-    bool (*show)();
-    bool (*showTab)(int index); // of the window with tabs
 };
 
 // As by the "home show" and "graph show": the home window exposed, the graph not activated
 inline constexpr WindowShow windowShows[] = {
-    { "home", [] { return windowManager()->exposeHomeWindow(); } },
-    { "programs", [] { return windowManager()->showProgramsWindow(); } },
-    { "options", [] { return windowManager()->showOptionsWindow(); },
-            [](int index) { return windowManager()->showOptionsWindowTab(index); } },
-    { "rules", [] { return windowManager()->showRulesWindow(); } },
-    { "zones", [] { return windowManager()->showZonesWindow(); } },
-    { "groups", [] { return windowManager()->showGroupsWindow(); } },
-    { "speed-limits", [] { return windowManager()->showSpeedLimitsWindow(); } },
-    { "time-periods", [] { return windowManager()->showTimePeriodsWindow(); } },
-    { "connections", [] { return windowManager()->showConnectionsWindow(); } },
-    { "statistics", [] { return windowManager()->showTrafficWindow(); } },
-    { "services", [] { return windowManager()->showServicesWindow(); } },
-    { "filter-sim", [] { return windowManager()->showFilterSimWindow(); } },
-    { "graph", [] { return windowManager()->showGraphWindow(); } },
+    { .expose = true, .code = WindowHome, .name = "home" },
+    { .code = WindowPrograms, .name = "programs" },
+    { .code = WindowOptions, .name = "options" },
+    { .code = WindowRules, .name = "rules" },
+    { .code = WindowZones, .name = "zones" },
+    { .code = WindowGroups, .name = "groups" },
+    { .code = WindowSpeedLimits, .name = "speed-limits" },
+    { .code = WindowTimePeriods, .name = "time-periods" },
+    { .code = WindowConnections, .name = "connections" },
+    { .code = WindowTraffic, .name = "statistics" },
+    { .code = WindowServices, .name = "services" },
+    { .code = WindowFilterSim, .name = "filter-sim" },
+    { .activate = false, .code = WindowGraph, .name = "graph" },
 };
 
 const WindowShow *windowShowByName(const QString &name)
@@ -76,19 +76,18 @@ int optionsTabIndex(const QString &text)
 
 bool showWindowTab(ProcessCommandResult &r, const WindowShow &windowShow, const QString &tabText)
 {
-    if (!windowShow.showTab) {
+    if (windowShow.code != WindowOptions) {
         r.errorMessage = "The window has no tabs";
         return false;
     }
 
-    // Of the Options window only
     const int tabIndex = optionsTabIndex(tabText);
     if (tabIndex < 0) {
         r.errorMessage = "Invalid <tab>: " + tabText;
         return false;
     }
 
-    return windowShow.showTab(tabIndex);
+    return windowManager()->showOptionsWindowTab(tabIndex);
 }
 
 bool showWindow(ProcessCommandResult &r, const QVariantList &args)
@@ -104,7 +103,8 @@ bool showWindow(ProcessCommandResult &r, const QVariantList &args)
     if (args.size() > 2)
         return showWindowTab(r, *windowShow, args[2].toString());
 
-    return windowShow->show();
+    return windowManager()->showWindowByCode(
+            windowShow->code, windowShow->activate, windowShow->expose);
 }
 
 }

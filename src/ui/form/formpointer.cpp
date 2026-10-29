@@ -77,7 +77,7 @@ FormWindow *FormPointer::initialize()
     return w;
 }
 
-bool FormPointer::show(bool activate)
+bool FormPointer::show(bool activate, bool expose)
 {
     auto windowManager = Fort::windowManager();
 
@@ -90,7 +90,7 @@ bool FormPointer::show(bool activate)
         w = initialize();
     }
 
-    w->showWindow(activate);
+    w->showWindow(activate, expose);
 
     windowManager->windowOpened(code());
 

@@ -17,7 +17,7 @@ public:
 
     FormWindow *initialize();
 
-    bool show(bool activate = true);
+    bool show(bool activate = true, bool expose = false);
     bool close(bool isAppQuitting = false);
 
 private:

@@ -432,9 +432,7 @@ void WindowManager::showSplashScreen()
 
 bool WindowManager::exposeHomeWindow()
 {
-    showHomeWindow();
-    homeWindow()->exposeWindow();
-    return true;
+    return showHomeWindow(/*expose=*/true);
 }
 
 void WindowManager::showHomeWindowAbout()
@@ -514,10 +512,10 @@ bool WindowManager::setWindowVisibleByCode(
     return true;
 }
 
-bool WindowManager::showWindowByCode(WindowCode code, bool activate)
+bool WindowManager::showWindowByCode(WindowCode code, bool activate, bool expose)
 {
     auto &form = formByCode(code);
-    return form.show(activate);
+    return form.show(activate, expose);
 }
 
 bool WindowManager::closeWindowByCode(WindowCode code)
