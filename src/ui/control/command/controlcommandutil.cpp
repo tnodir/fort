@@ -10,6 +10,7 @@
 #include <fortglobal.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
+#include <qtcompat.h>
 #include <util/conf/confbuffer.h>
 #include <util/fileutil.h>
 #include <util/variantutil.h>
@@ -209,14 +210,7 @@ QString ControlCommandUtil::fieldsToText(const QVariantMap &fields)
 {
     QStringList list;
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
-    for (const auto &[key, value] : fields.asKeyValueRange()) {
-#else
-    for (auto it = fields.constBegin(); it != fields.constEnd(); ++it) {
-        const QString &key = it.key();
-        const QVariant &value = it.value();
-#endif
-
+    for (const auto &[key, value] : QtCompat::keyValueRange(fields)) {
         list.append(key + '=' + valueText(value));
     }
 

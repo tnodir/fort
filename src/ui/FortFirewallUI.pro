@@ -556,6 +556,7 @@ HEADERS += \
     model/zonelistmodel.h \
     model/zonesourcewrapper.h \
     model/zonetypewrapper.h \
+    qtcompat.h \
     rpc/appinfomanagerrpc.h \
     rpc/autoupdatemanagerrpc.h \
     rpc/confappmanagerrpc.h \

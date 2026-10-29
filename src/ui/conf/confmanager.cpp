@@ -15,6 +15,7 @@
 #include <manager/envmanager.h>
 #include <manager/serviceinfomanager.h>
 #include <manager/windowmanager.h>
+#include <qtcompat.h>
 #include <task/taskinfo.h>
 #include <task/taskinfozonedownloader.h>
 #include <task/taskmanager.h>
@@ -113,10 +114,7 @@ bool updateAppPathsByMap(SqliteDb *db, const AppsMap &appsMap, AppIdsArray &dupA
 
     QSet<QString> appPaths;
 
-    auto it = appsMap.begin();
-    for (; it != appsMap.end(); ++it) {
-        const qint64 appId = it.key();
-        const QString appOriginPath = it.value();
+    for (const auto &[appId, appOriginPath] : QtCompat::keyValueRange(appsMap)) {
         const QString appPath = FileUtil::normalizePath(appOriginPath);
 
         if (Q_LIKELY(!appPaths.contains(appPath))) {
@@ -206,9 +204,8 @@ bool migrateAddrGroupExcludeTexts(SqliteDb *db, const QString &removedLine)
 
     const char *const sql = "UPDATE address_group SET exclude_text = ?2 WHERE addr_group_id = ?1;";
 
-    auto it = textsMap.constBegin();
-    for (; it != textsMap.constEnd(); ++it) {
-        if (!DbQuery(db).sql(sql).vars({ it.key(), it.value() }).executeOk())
+    for (const auto &[addrGroupId, excludeText] : QtCompat::keyValueRange(textsMap)) {
+        if (!DbQuery(db).sql(sql).vars({ addrGroupId, excludeText }).executeOk())
             return false;
     }
 

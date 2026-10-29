@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QVector>
 
+#include <qtcompat.h>
 #include <util/util_types.h>
 
 class ConfData;
@@ -98,11 +99,8 @@ static void ValueRange::fillRangeArrays(const FillRangeArraysArgs<T> &fra)
     ValuePair<T> prevPair;
     int prevIndex = -1;
 
-    auto it = fra.rangeMap.constBegin();
-    auto end = fra.rangeMap.constEnd();
-
-    for (; it != end; ++it) {
-        const ValuePair<T> v { it.key(), it.value() };
+    for (const auto &[from, to] : QtCompat::keyValueRange(fra.rangeMap)) {
+        const ValuePair<T> v { from, to };
 
         // try to merge colliding addresses (v.from > prevPair.from, so v.from - 1 can't overflow)
         if (prevIndex >= 0 && v.from - 1 <= prevPair.to) {

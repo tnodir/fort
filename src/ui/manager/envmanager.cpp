@@ -3,6 +3,7 @@
 #include <QRegularExpression>
 #include <QSettings>
 
+#include <qtcompat.h>
 #include <util/fileutil.h>
 
 EnvManager::EnvManager(QObject *parent) : QObject(parent)
@@ -33,15 +34,7 @@ void EnvManager::onEnvironmentChanged()
 
 bool EnvManager::checkEnvironmentChanged() const
 {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
-    for (const auto &[key, value] : std::as_const(m_cache).asKeyValueRange()) {
-#else
-    auto it = m_cache.constBegin();
-    for (; it != m_cache.constEnd(); ++it) {
-        const auto &key = it.key();
-        const auto &value = it.value();
-#endif
-
+    for (const auto &[key, value] : QtCompat::keyValueRange(m_cache)) {
         const auto newValue = readEnvVar(key);
 
         if (value != newValue)

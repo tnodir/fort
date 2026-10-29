@@ -1,6 +1,7 @@
 #include "confdata.h"
 
 #include <conf/firewallconf.h>
+#include <qtcompat.h>
 #include <util/net/actionrange.h>
 #include <util/net/arearange.h>
 #include <util/net/dirrange.h>
@@ -252,14 +253,7 @@ void ConfData::writeApps(const appdata_map_t &appsMap, bool useHeader)
         *offp++ = 0;
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
-    for (const auto &[kernelPath, appEntryData] : appsMap.asKeyValueRange()) {
-#else
-    auto it = appsMap.constBegin();
-    for (; it != appsMap.constEnd(); ++it) {
-        const auto &kernelPath = it.key();
-        const auto &appEntryData = it.value();
-#endif
+    for (const auto &[kernelPath, appEntryData] : QtCompat::keyValueRange(appsMap)) {
         const int kernelPathSize = kernelPath.size();
         const QByteArray &ruleData = appEntryData.ruleData;
         const quint32 ruleSize = quint32(ruleData.size());

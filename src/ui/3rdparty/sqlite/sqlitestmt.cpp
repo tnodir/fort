@@ -5,6 +5,7 @@
 #include <QHash>
 #include <QImage>
 
+#include <qtcompat.h>
 #include <sqlite.h>
 
 namespace {
@@ -221,11 +222,7 @@ bool SqliteStmt::bindVarsMap(const QVariantHash &varsMap)
     if (varsMap.isEmpty())
         return true;
 
-    auto it = varsMap.constBegin();
-    for (; it != varsMap.constEnd(); ++it) {
-        const QString k = it.key();
-        const QVariant v = it.value();
-
+    for (const auto &[k, v] : QtCompat::keyValueRange(varsMap)) {
         const int index = bindParameterIndex(k);
         if (index == 0)
             return false;

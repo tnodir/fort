@@ -8,6 +8,7 @@
 
 #include <fortglobal.h>
 #include <fortsettings.h>
+#include <qtcompat.h>
 #include <util/json/jsonutil.h>
 
 #include "confrulemanager.h"
@@ -187,12 +188,12 @@ bool PresetRulesManager::updatePreset(quint16 ruleId, const QVariantMap &preset)
 // The ones removed from the file are the user's ones now
 bool PresetRulesManager::clearObsoletePresets(const QSet<QString> &codes)
 {
-    for (auto it = m_ruleIds.constBegin(); it != m_ruleIds.constEnd(); ++it) {
-        if (codes.contains(it.key()))
+    for (const auto &[code, ruleId] : QtCompat::keyValueRange(m_ruleIds)) {
+        if (codes.contains(code))
             continue;
 
-        if (!saveRuleCode(it.value(), /*code=*/ {})) {
-            qCWarning(LC) << "Preset Rules: Clear code error:" << it.key();
+        if (!saveRuleCode(ruleId, /*code=*/ {})) {
+            qCWarning(LC) << "Preset Rules: Clear code error:" << code;
             return false;
         }
     }
