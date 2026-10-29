@@ -28,7 +28,7 @@ FormWindow *createWindow()
     return new T();
 }
 
-using createWindow_func = FormWindow *(*) (void);
+using createWindow_func = FormWindow *(*)(void);
 
 static const createWindow_func createWindow_funcList[] = {
     &createWindow<HomeWindow>,

@@ -132,8 +132,7 @@ bool PresetRulesManager::syncPresets(const QVariantList &presets, SyncMode mode)
     return clearObsoletePresets(codes);
 }
 
-bool PresetRulesManager::syncPreset(
-        const QString &code, const QVariantMap &preset, SyncMode mode)
+bool PresetRulesManager::syncPreset(const QString &code, const QVariantMap &preset, SyncMode mode)
 {
     const quint16 ruleId = m_ruleIds.value(code);
     if (ruleId == 0) {
