@@ -172,8 +172,13 @@ void TableView::selectionChanged(const QItemSelection &selected, const QItemSele
 {
     QTableView::selectionChanged(selected, deselected);
 
-    if (selected.isEmpty())
+    if (selected.isEmpty()) {
+        // The current cell doesn't outlive the selection (e.g. a click below the rows)
+        if (selectionModel()->selection().isEmpty()) {
+            selectionModel()->clearCurrentIndex();
+        }
         return;
+    }
 
     if (!currentIndex().isValid()) {
         setCurrentIndex(selected.indexes().first());
