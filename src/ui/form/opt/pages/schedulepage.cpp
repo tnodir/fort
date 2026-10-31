@@ -75,10 +75,12 @@ void SchedulePage::onRetranslateUi()
     m_btOptions->setText(tr("Options"));
 
     m_cbTaskRunOnStartup->setText(tr("Run On Startup"));
-    m_cbTaskDelayStartup->setText(tr("Delay startup to retry's seconds"));
+    m_cbTaskDelayStartup->setText(tr("Delay startup by the retry delay"));
+    m_cbTaskDelayStartup->setToolTip(
+            tr("Run the task on startup after the delay to retry, not at once"));
 
     m_lsTaskMaxRetries->label()->setText(tr("Maximum retries count:"));
-    m_lscTaskRetrySeconds->label()->setText(tr("Delay seconds to retry:"));
+    m_lscTaskRetrySeconds->label()->setText(tr("Retry delay:"));
     retranslateTaskRetrySeconds();
 
     m_btTaskRun->setText(tr("Run"));

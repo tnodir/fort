@@ -100,8 +100,11 @@ void GraphPage::onRetranslateUi()
     m_graphHoverOpacity->label()->setText(tr("Hover opacity:"));
     m_graphTickLabelSize->label()->setText(tr("Tick label size:"));
     m_graphBarWidth->label()->setText(tr("Bar width:"));
-    m_graphMaxSeconds->label()->setText(tr("Max seconds:"));
+    m_graphMaxSeconds->label()->setText(tr("History length:"));
+    m_graphMaxSeconds->setToolTip(tr("How many seconds of the traffic the graph shows"));
     m_graphFixedSpeed->label()->setText(tr("Fixed speed:"));
+    m_graphFixedSpeed->setToolTip(
+            tr("The constant top of the speed scale instead of the automatic one"));
     retranslateFixedSpeedCombo();
     m_labelGraphType->setText(tr("Graph type:"));
     retranslateGraphTypeCombo();

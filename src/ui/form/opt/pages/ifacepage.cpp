@@ -170,6 +170,7 @@ void IfacePage::onRetranslateUi()
     m_listIconSize->label()->setText(tr("Icon Size in Lists:"));
     m_cbUseSystemLocale->setText(tr("Use System Regional Settings"));
     m_cbExcludeCapture->setText(tr("Exclude from screen capture"));
+    m_cbExcludeCapture->setToolTip(tr("Hide the windows from screenshots and screen recordings"));
 
     m_cbHotKeysEnabled->setText(tr("Enabled"));
     m_cbHotKeysGlobal->setText(tr("Global"));
@@ -181,8 +182,11 @@ void IfacePage::onRetranslateUi()
     m_cbHomeAutoShowWindow->setText(tr("Auto-Show Window"));
     m_cbHomeAutoShowWindow->setToolTip(tr("Auto-Show Window, when Tray Icon is hidden"));
     m_cbHomeAutoShowMenu->setText(tr("Auto-Show Menu"));
+    m_cbHomeAutoShowMenu->setToolTip(tr("Show the menu, when the window is activated"));
     m_cbSplashVisible->setText(tr("Show Splash screen on startup"));
     m_cbUpdateWindowIcons->setText(tr("Show window icons as in tray icon"));
+    m_cbUpdateWindowIcons->setToolTip(
+            tr("The windows' icons follow the tray icon's state (Filter Mode, alerts)"));
 
     m_cbAppNotifyMessage->setText(tr("Use System Notifications for New Programs"));
     m_cbAppAlertAutoShow->setText(tr("Auto-Show Alert Window for New Programs"));
@@ -190,11 +194,16 @@ void IfacePage::onRetranslateUi()
     setAlertModeText(m_cbAppAlertBlockAll, FirewallConf::ModeBlockAll);
     setAlertModeText(m_cbAppAlertAllowAll, FirewallConf::ModeAllowAll);
     m_cbAppAlertAlwaysOnTop->setText(tr("Alert Window is Always on top"));
-    m_cbAppAlertAutoActive->setText(tr("Alert Window is auto-active"));
+    m_cbAppAlertAutoActive->setText(tr("Auto-focus Alert Window"));
     m_cbAppAlertAutoActive->setToolTip(tr("Auto-focus the alert window, when it's shown"));
     m_cbAppAlertAutoClear->setText(tr("Auto-Clear alerts on window close"));
+    m_cbAppAlertAutoClear->setToolTip(
+            tr("Clear the alert marks, when the Programs window is closed"));
     m_cbAppAlertSound->setText(tr("Sound Alert"));
     m_cbSnoozeAlerts->setText(tr("Snooze Alerts"));
+    m_cbSnoozeAlerts->setToolTip(
+            tr("Like turning off Auto-Show Alert Window for New Programs, but quick to "
+               "switch back"));
 
     m_cbTrayShowIcon->setText(tr("Show Icon"));
     m_cbTrayShowAlert->setText(tr("Show Alert Icon"));

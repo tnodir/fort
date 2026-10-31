@@ -78,7 +78,11 @@ void StatisticsPage::onRetranslateUi()
 
     m_cbLogStat->setText(tr("Collect Traffic Statistics"));
     m_cbLogStatNoFilter->setText(tr("Collect Traffic, when Filter Disabled"));
+    m_cbLogStatNoFilter->setToolTip(tr("Keep counting the traffic while the filter is off"));
     m_cbLogStatReinjected->setText(tr("Collect Traffic re-injected by other drivers"));
+    m_cbLogStatReinjected->setToolTip(
+            tr("Count the packets which other drivers send again through the "
+               "firewall"));
     m_activePeriodSelector->retranslateUi();
     m_activePeriodSelector->setToolTip(tr("The Traffic is collected only in this Time Period."));
     m_lscMonthStart->label()->setText(tr("Month starts on:"));
@@ -97,6 +101,9 @@ void StatisticsPage::onRetranslateUi()
     m_cbLogAllowedConn->setText(tr("Collect allowed connections"));
     m_cbLogBlockedConn->setText(tr("Collect blocked connections"));
     m_cbLogAlertedConn->setText(tr("Alerted only"));
+    m_cbLogAlertedConn->setToolTip(
+            tr("Collect only the connections of alerted programs or marked by the Alert "
+               "action"));
     m_cbClearConnOnExit->setText(tr("Clear connections on exit (reduce disk writes)"));
     m_lscConnKeepCount->label()->setText(tr("Keep count for connections:"));
 

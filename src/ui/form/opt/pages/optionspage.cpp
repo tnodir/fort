@@ -153,17 +153,33 @@ void OptionsPage::onRetranslateUi()
     retranslateComboFilterMode();
 
     m_cbGroupBlocked->setText(tr("Block traffic for disabled Groups"));
+    m_cbGroupBlocked->setToolTip(tr("Block the traffic of programs in a disabled Group"));
     m_cbSpeedLimiterEnabled->setText(tr("Speed Limiter Enabled"));
 
-    m_lscFilterOffSeconds->label()->setText(tr("Filter Off seconds:"));
-    m_lscAutoLearnSeconds->label()->setText(tr("Auto-learn seconds:"));
-    m_lscAskToConnectSeconds->label()->setText(tr("Ask to Connect seconds:"));
+    m_lscFilterOffSeconds->label()->setText(tr("Filter Off duration:"));
+    m_lscFilterOffSeconds->setToolTip(
+            tr("How long the filter stays disabled, then it is enabled again (Disabled: no "
+               "limit)"));
+    m_lscAutoLearnSeconds->label()->setText(tr("Auto-learn duration:"));
+    m_lscAutoLearnSeconds->setToolTip(
+            tr("How long the Auto-Learn Filter Mode lasts, then it switches to \"Block, if not "
+               "allowed\" (Disabled: no limit)"));
+    m_lscAskToConnectSeconds->label()->setText(tr("Ask to Connect timeout:"));
+    m_lscAskToConnectSeconds->setToolTip(
+            tr("How long a connection waits for your decision, then it is blocked"));
     retranslateTimedOptions();
 
     m_cbBootFilter->setText(tr("Block traffic when Fort Firewall is not running"));
+    m_cbBootFilter->setToolTip(
+            tr("Keep the boot-time filter, so the traffic is blocked before the firewall starts "
+               "and while it is stopped"));
     m_cbStealthMode->setText(tr("Stealth mode (Prevent port scanning)"));
+    m_cbStealthMode->setToolTip(
+            tr("Don't answer the incoming connection attempts to the closed ports"));
     m_cbNoServiceControl->setText(tr("Disable Service controls"));
+    m_cbNoServiceControl->setToolTip(tr("Don't allow to stop or pause the Service"));
     m_cbDisableCmdLine->setText(tr("Disable command line management"));
+    m_cbDisableCmdLine->setToolTip(tr("Reject the control commands from the command line"));
 
     m_cbCheckPasswordOnUninstall->setText(tr("Check password on Uninstall"));
     m_cbPassword->setText(tr("Password:"));
@@ -172,8 +188,13 @@ void OptionsPage::onRetranslateUi()
     retranslatePasswordLock();
 
     m_cbLogApp->setText(tr("Collect New Programs"));
-    m_cbRemoveLearntApps->setText(tr("Remove alerted programs on Auto-Learn Off"));
+    m_cbLogApp->setToolTip(tr("Add unknown programs which try to connect to the alerted ones"));
+    m_cbRemoveLearntApps->setText(tr("Remove learnt programs on Auto-Learn Off"));
+    m_cbRemoveLearntApps->setToolTip(
+            tr("Delete the alerted programs, when the Auto-Learn Filter Mode is left"));
     m_cbPurgeOnMounted->setText(tr("Purge Obsolete only on mounted drives"));
+    m_cbPurgeOnMounted->setToolTip(
+            tr("Don't delete the programs of the drives which are not mounted now"));
 
     m_cbUpdateKeepCurrentVersion->setText(tr("Keep current version"));
     m_cbUpdateKeepCurrentVersion->setToolTip(
@@ -184,6 +205,8 @@ void OptionsPage::onRetranslateUi()
     m_cbLogDebug->setText(tr("Log debug messages"));
     m_cbLogConsole->setText(tr("Show log messages in console"));
     m_cbTraceEvents->setText(tr("Trace Driver Events"));
+    m_cbTraceEvents->setToolTip(
+            tr("Write the driver's configuration changes to the System event log"));
 }
 
 void OptionsPage::retranslateComboBlockTraffic()
