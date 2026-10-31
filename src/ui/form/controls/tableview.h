@@ -3,6 +3,8 @@
 
 #include <QTableView>
 
+#include <util/model/tablesqlmodel.h>
+
 class TableView : public QTableView
 {
     Q_OBJECT
@@ -32,6 +34,10 @@ public:
     /* Select the row (or the last one) after the model's next reset */
     void selectRowOnReset(int row) { m_resetRow = row; }
 
+    /* Keep the selected rows by their ids (the first column of the model's SELECT):
+     * restore them after the model's reset or refresh; the model must be set already */
+    void keepSelectionByIds();
+
 signals:
     void currentIndexChanged(const QModelIndex &index);
 
@@ -56,16 +62,27 @@ private:
 
     void selectResetRow();
 
+    void rememberSelection();
+    void restoreSelection();
+    void selectRowsByIds(const QVector<TableSqlModel::IdRow> &idRows, qint64 currentId);
+
     int rowScrollPos(int row) const;
 
     void updateRowsHeight();
     int defaultRowsHeight() const;
 
 private:
+    bool m_restoring = false;
+
     int m_resetRow = -1;
     int m_rowsHeight = 0;
 
+    qint64 m_keptCurrentId = 0;
+
     QMenu *m_menu = nullptr;
+    TableSqlModel *m_keptModel = nullptr;
+
+    QVector<qint64> m_keptIds;
 };
 
 #endif // TABLEVIEW_H

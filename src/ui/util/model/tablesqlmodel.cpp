@@ -1,5 +1,7 @@
 #include "tablesqlmodel.h"
 
+#include <QSet>
+
 #include <sqlite/dbquery.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
@@ -22,6 +24,55 @@ void TableSqlModel::sort(int column, Qt::SortOrder order)
         m_sortOrder = order;
 
         reset();
+    }
+}
+
+QVector<qint64> TableSqlModel::idsByRows(const QVector<int> &rows) const
+{
+    QVector<qint64> idList;
+    if (rows.isEmpty())
+        return idList;
+
+    walkIds([&](int row, qint64 id) {
+        if (row == rows.at(idList.size())) {
+            idList.append(id);
+        }
+        return idList.size() < rows.size();
+    });
+
+    return idList;
+}
+
+QVector<TableSqlModel::IdRow> TableSqlModel::rowsByIds(const QVector<qint64> &idList) const
+{
+    const QSet<qint64> idSet(idList.cbegin(), idList.cend());
+
+    QVector<IdRow> rows;
+
+    walkIds([&](int row, qint64 id) {
+        if (idSet.contains(id)) {
+            rows.append({ id, row });
+        }
+        return rows.size() < idList.size();
+    });
+
+    return rows;
+}
+
+void TableSqlModel::walkIds(const std::function<bool(int row, qint64 id)> &visit) const
+{
+    QVariantHash vars;
+    fillQueryVars(vars);
+
+    const auto sql = sqlBase() + sqlWhere() + sqlOrder() + sqlEnd() + ';';
+
+    SqliteStmt stmt;
+    if (!DbQuery(sqliteDb()).sql(sql).vars(vars).prepare(stmt))
+        return;
+
+    for (int row = 0; stmt.step() == SqliteStmt::StepRow; ++row) {
+        if (!visit(row, stmt.columnInt64(0)))
+            break;
     }
 }
 

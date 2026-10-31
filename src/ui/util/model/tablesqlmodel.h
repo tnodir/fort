@@ -1,6 +1,10 @@
 #ifndef TABLESQLMODEL_H
 #define TABLESQLMODEL_H
 
+#include <QVector>
+
+#include <functional>
+
 #include <sqlite/sqlite_types.h>
 
 #include "tableitemmodel.h"
@@ -10,6 +14,12 @@ class TableSqlModel : public TableItemModel
     Q_OBJECT
 
 public:
+    struct IdRow
+    {
+        qint64 id;
+        int row;
+    };
+
     explicit TableSqlModel(QObject *parent = nullptr);
 
     virtual SqliteDb *sqliteDb() const = 0;
@@ -22,6 +32,11 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
+
+    /* The ids (the first column of the SELECT) of the (ascending) rows, read by one pass */
+    QVector<qint64> idsByRows(const QVector<int> &rows) const;
+    /* The ids of the list present now, with their rows (ascending) */
+    QVector<IdRow> rowsByIds(const QVector<qint64> &idList) const;
 
 protected:
     void invalidateRowCache() const override;
@@ -45,6 +60,9 @@ protected:
 
     int sqlRowCount() const { return m_sqlRowCount; }
     void setSqlRowCount(int v) const { m_sqlRowCount = v; }
+
+private:
+    void walkIds(const std::function<bool(int row, qint64 id)> &visit) const;
 
 private:
     int m_sortColumn = -1;

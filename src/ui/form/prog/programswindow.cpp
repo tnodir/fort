@@ -585,6 +585,8 @@ void ProgramsWindow::setupTableApps()
     m_appListView->setMenu(m_btEdit->menu());
 
     connect(m_appListView, &TableView::activated, m_actEditApp, &QAction::trigger);
+
+    m_appListView->keepSelectionByIds();
 }
 
 void ProgramsWindow::setupTableAppsHeader()
@@ -971,13 +973,5 @@ QStringList ProgramsWindow::getAppListNames(const QVector<qint64> &appIdList, in
 
 QVector<qint64> ProgramsWindow::selectedAppIdList() const
 {
-    QVector<qint64> list;
-
-    const auto rows = m_appListView->selectedRows();
-    for (int row : rows) {
-        const auto &appRow = appListModel()->appRowAt(row);
-        list.append(appRow.appId);
-    }
-
-    return list;
+    return appListModel()->idsByRows(m_appListView->selectedRows());
 }
