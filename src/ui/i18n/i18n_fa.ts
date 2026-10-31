@@ -1065,10 +1065,6 @@
         <translation>عرض ستون:</translation>
     </message>
     <message>
-        <source>Max seconds:</source>
-        <translation>حداکثر ثانیه‌ها:</translation>
-    </message>
-    <message>
         <source>Graph type:</source>
         <translation>نوع نمودار:</translation>
     </message>
@@ -1157,8 +1153,20 @@
         <translation>اندازه و موقعیت پنجره</translation>
     </message>
     <message>
+        <source>History length:</source>
+        <translation>طول تاریخچه:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>تعداد ثانیه‌های ترافیک که نمودار نشان می‌دهد</translation>
+    </message>
+    <message>
         <source>Fixed speed:</source>
         <translation>سرعت ثابت:</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>سقف ثابت مقیاس سرعت به‌جای حالت خودکار</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1498,6 +1506,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>اندازه آیکون در فهرست‌ها:</translation>
     </message>
     <message>
+        <source>Hide the windows from screenshots and screen recordings</source>
+        <translation>پنهان کردن پنجره‌ها از اسکرین‌شات‌ها و ضبط صفحه</translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation>فعال</translation>
     </message>
@@ -1514,8 +1526,28 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>نمایش خودکار منو</translation>
     </message>
     <message>
+        <source>Show the menu, when the window is activated</source>
+        <translation>نمایش منو هنگام فعال شدن پنجره</translation>
+    </message>
+    <message>
         <source>Show Splash screen on startup</source>
         <translation>نمایش صفحه آغازین هنگام راه‌اندازی</translation>
+    </message>
+    <message>
+        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>آیکون پنجره‌ها از وضعیت آیکون سینی پیروی می‌کند (حالت فیلتر، هشدارها)</translation>
+    </message>
+    <message>
+        <source>Auto-focus Alert Window</source>
+        <translation>تمرکز خودکار روی پنجره هشدار</translation>
+    </message>
+    <message>
+        <source>Clear the alert marks, when the Programs window is closed</source>
+        <translation>پاک کردن نشان‌های هشدار هنگام بسته شدن پنجره برنامه‌ها</translation>
+    </message>
+    <message>
+        <source>Like turning off Auto-Show Alert Window for New Programs, but quick to switch back</source>
+        <translation>مانند خاموش کردن نمایش خودکار پنجره هشدار برای برنامه‌های جدید، اما بازگرداندن آن سریع است</translation>
     </message>
     <message>
         <source>Show Icon</source>
@@ -1652,10 +1684,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Alert Window is Always on top</source>
         <translation>پنجره هشدار همیشه در بالا باشد</translation>
-    </message>
-    <message>
-        <source>Alert Window is auto-active</source>
-        <translation>پنجره هشدار به‌طور خودکار فعال شود</translation>
     </message>
     <message>
         <source>Operations from Tray Menu</source>
@@ -1865,8 +1893,72 @@ Make sure that you have a fresh backup.</source>
         <translation>فیلتر فعال</translation>
     </message>
     <message>
+        <source>Block the traffic of programs in a disabled Group</source>
+        <translation>مسدود کردن ترافیک برنامه‌های یک گروه غیرفعال</translation>
+    </message>
+    <message>
+        <source>Filter Off duration:</source>
+        <translation>مدت خاموش بودن فیلتر:</translation>
+    </message>
+    <message>
+        <source>How long the filter stays disabled, then it is enabled again (Disabled: no limit)</source>
+        <translation>مدتی که فیلتر غیرفعال می‌ماند و سپس دوباره فعال می‌شود (غیرفعال: بدون محدودیت)</translation>
+    </message>
+    <message>
+        <source>Auto-learn duration:</source>
+        <translation>مدت یادگیری خودکار:</translation>
+    </message>
+    <message>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
+        <translation>مدتی که حالت فیلتر یادگیری خودکار ادامه دارد و سپس به «مسدود، اگر مجاز نباشد» تغییر می‌کند (غیرفعال: بدون محدودیت)</translation>
+    </message>
+    <message>
+        <source>Ask to Connect timeout:</source>
+        <translation>مهلت پرسش برای اتصال:</translation>
+    </message>
+    <message>
+        <source>How long a connection waits for your decision, then it is blocked</source>
+        <translation>مدتی که یک اتصال منتظر تصمیم شما می‌ماند و سپس مسدود می‌شود</translation>
+    </message>
+    <message>
+        <source>Keep the boot-time filter, so the traffic is blocked before the firewall starts and while it is stopped</source>
+        <translation>حفظ فیلتر زمان بوت تا ترافیک پیش از شروع فایروال و در زمان توقف آن مسدود شود</translation>
+    </message>
+    <message>
+        <source>Don&apos;t answer the incoming connection attempts to the closed ports</source>
+        <translation>پاسخ ندادن به تلاش‌های اتصال ورودی به پورت‌های بسته</translation>
+    </message>
+    <message>
+        <source>Don&apos;t allow to stop or pause the Service</source>
+        <translation>اجازه ندادن به توقف یا مکث سرویس</translation>
+    </message>
+    <message>
+        <source>Reject the control commands from the command line</source>
+        <translation>رد دستورهای کنترلی از خط فرمان</translation>
+    </message>
+    <message>
         <source>Password:</source>
         <translation>گذرواژه:</translation>
+    </message>
+    <message>
+        <source>Add unknown programs which try to connect to the alerted ones</source>
+        <translation>افزودن برنامه‌های ناشناخته‌ای که تلاش می‌کنند متصل شوند به برنامه‌های دارای هشدار</translation>
+    </message>
+    <message>
+        <source>Remove learnt programs on Auto-Learn Off</source>
+        <translation>حذف برنامه‌های یادگرفته‌شده هنگام خاموش شدن یادگیری خودکار</translation>
+    </message>
+    <message>
+        <source>Delete the alerted programs, when the Auto-Learn Filter Mode is left</source>
+        <translation>حذف برنامه‌های دارای هشدار هنگام خروج از حالت فیلتر یادگیری خودکار</translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the programs of the drives which are not mounted now</source>
+        <translation>حذف نکردن برنامه‌های درایوهایی که اکنون متصل نیستند</translation>
+    </message>
+    <message>
+        <source>Write the driver&apos;s configuration changes to the System event log</source>
+        <translation>نوشتن تغییرات پیکربندی درایور در گزارش رویدادهای سیستم</translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -1965,14 +2057,6 @@ Make sure that you have a fresh backup.</source>
         <translation>محدودکننده سرعت فعال</translation>
     </message>
     <message>
-        <source>Auto-learn seconds:</source>
-        <translation>ثانیه‌های یادگیری خودکار:</translation>
-    </message>
-    <message>
-        <source>Ask to Connect seconds:</source>
-        <translation>ثانیه‌های پرسش برای اتصال:</translation>
-    </message>
-    <message>
         <source>Disable command line management</source>
         <translation>غیرفعال کردن مدیریت از خط فرمان</translation>
     </message>
@@ -2007,14 +2091,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source> second(s)</source>
         <translation> ثانیه</translation>
-    </message>
-    <message>
-        <source>Filter Off seconds:</source>
-        <translation>ثانیه‌های خاموش بودن فیلتر:</translation>
-    </message>
-    <message>
-        <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation>حذف برنامه‌های دارای هشدار هنگام خاموش شدن یادگیری خودکار</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
@@ -2296,6 +2372,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Kill child processes</source>
         <translation>خاتمه فرایندهای فرزند</translation>
+    </message>
+    <message>
+        <source>Stop the program from starting new child processes (restart the program after changing this option)</source>
+        <translation>جلوگیری از شروع فرایندهای فرزند جدید توسط برنامه (پس از تغییر این گزینه برنامه را دوباره راه‌اندازی کنید)</translation>
     </message>
     <message>
         <source>Parked</source>
@@ -2647,12 +2727,24 @@ Please check other program with the same path.</source>
         <translation>فعال</translation>
     </message>
     <message>
+        <source>Show the Rule in the tray menu to switch it on and off</source>
+        <translation>نمایش قانون در منوی سینی برای روشن و خاموش کردن آن</translation>
+    </message>
+    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>پرسش برای اتصال: توقف اتصال تا تصمیم کاربر</translation>
     </message>
     <message>
         <source>Exclusive</source>
         <translation>انحصاری</translation>
+    </message>
+    <message>
+        <source>Allow Rule: its Preset Rules are checked only when its own zones and text match</source>
+        <translation>قانون مجاز: قوانین از پیش تعیین‌شده آن فقط وقتی بررسی می‌شوند که مناطق و متن خودش مطابقت داشته باشد</translation>
+    </message>
+    <message>
+        <source>Test the zones only by the &quot;zones&quot; filter of the Rule&apos;s text, not as the Rule&apos;s own condition</source>
+        <translation>آزمایش مناطق فقط با فیلتر «zones» در متن قانون، نه به‌عنوان شرط خود قانون</translation>
     </message>
     <message>
         <source>Add Filter</source>
@@ -2961,16 +3053,20 @@ Save the changes?</source>
         <translation>گزینه‌ها</translation>
     </message>
     <message>
-        <source>Delay startup to retry&apos;s seconds</source>
-        <translation>تأخیر در راه‌اندازی به اندازه ثانیه‌های تلاش مجدد</translation>
-    </message>
-    <message>
         <source>Maximum retries count:</source>
         <translation>حداکثر تعداد تلاش مجدد:</translation>
     </message>
     <message>
-        <source>Delay seconds to retry:</source>
-        <translation>ثانیه‌های تأخیر برای تلاش مجدد:</translation>
+        <source>Delay startup by the retry delay</source>
+        <translation>به تأخیر انداختن راه‌اندازی به اندازه تأخیر تلاش مجدد</translation>
+    </message>
+    <message>
+        <source>Run the task on startup after the delay to retry, not at once</source>
+        <translation>اجرای وظیفه هنگام راه‌اندازی پس از تأخیر تلاش مجدد، نه بلافاصله</translation>
+    </message>
+    <message>
+        <source>Retry delay:</source>
+        <translation>تأخیر تلاش مجدد:</translation>
     </message>
     <message>
         <source>Each 5 minutes</source>
@@ -3071,6 +3167,18 @@ Save the changes?</source>
         <translation>یافتن</translation>
     </message>
     <message>
+        <source>Run the service in its own process, so Fort can see it separately from the other services</source>
+        <translation>اجرای سرویس در فرایند جداگانه خودش تا Fort بتواند آن را جدا از سرویس‌های دیگر ببیند</translation>
+    </message>
+    <message>
+        <source>Restore the original configuration of the service</source>
+        <translation>بازگرداندن پیکربندی اصلی سرویس</translation>
+    </message>
+    <message>
+        <source>Restart the service to apply the changes</source>
+        <translation>راه‌اندازی مجدد سرویس برای اعمال تغییرات</translation>
+    </message>
+    <message>
         <source>Refresh</source>
         <translation>تازه‌سازی</translation>
     </message>
@@ -3130,12 +3238,24 @@ Save the changes?</source>
         <translation>تأخیر:</translation>
     </message>
     <message>
+        <source>Optional delay of the packets</source>
+        <translation>تأخیر اختیاری بسته‌ها</translation>
+    </message>
+    <message>
         <source>Packet Loss:</source>
         <translation>از دست رفتن بسته:</translation>
     </message>
     <message>
+        <source>Optional share of the packets to drop (simulated)</source>
+        <translation>سهم اختیاری بسته‌هایی که حذف می‌شوند (شبیه‌سازی‌شده)</translation>
+    </message>
+    <message>
         <source>Buffer Size:</source>
         <translation>اندازه بافر:</translation>
+    </message>
+    <message>
+        <source>Size of the packets&apos; queue; the overflowing packets are dropped (0: unlimited)</source>
+        <translation>اندازه صف بسته‌ها؛ بسته‌های سرریز حذف می‌شوند (0: نامحدود)</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
@@ -3240,6 +3360,14 @@ Packet loss: %2</source>
         <translation>جمع‌آوری ترافیک، وقتی فیلتر غیرفعال است</translation>
     </message>
     <message>
+        <source>Keep counting the traffic while the filter is off</source>
+        <translation>ادامه شمارش ترافیک در زمان خاموش بودن فیلتر</translation>
+    </message>
+    <message>
+        <source>Count the packets which other drivers send again through the firewall</source>
+        <translation>شمارش بسته‌هایی که درایورهای دیگر دوباره از طریق فایروال ارسال می‌کنند</translation>
+    </message>
+    <message>
         <source>Month starts on:</source>
         <translation>شروع ماه در روز:</translation>
     </message>
@@ -3270,6 +3398,10 @@ Packet loss: %2</source>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>سهمیه ماهانه:</translation>
+    </message>
+    <message>
+        <source>Collect only the connections of alerted programs or marked by the Alert action</source>
+        <translation>جمع‌آوری فقط اتصال‌های برنامه‌های دارای هشدار یا علامت‌گذاری‌شده با عمل هشدار</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -3557,10 +3689,6 @@ Packet loss: %2</source>
         <translation>تازه‌سازی</translation>
     </message>
     <message>
-        <source>Remove Application</source>
-        <translation>حذف برنامه</translation>
-    </message>
-    <message>
         <source>Reset Total</source>
         <translation>بازنشانی کل</translation>
     </message>
@@ -3597,10 +3725,6 @@ Packet loss: %2</source>
         <translation>کل</translation>
     </message>
     <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation>آیا از حذف آمار برنامه انتخاب‌شده اطمینان دارید؟</translation>
-    </message>
-    <message>
         <source>Are you sure to reset total statistics?</source>
         <translation>آیا از بازنشانی آمار کل اطمینان دارید؟</translation>
     </message>
@@ -3617,12 +3741,20 @@ Packet loss: %2</source>
         <translation>افزودن برنامه</translation>
     </message>
     <message>
+        <source>Remove Program</source>
+        <translation>حذف برنامه</translation>
+    </message>
+    <message>
         <source>Find</source>
         <translation>یافتن</translation>
     </message>
     <message>
         <source>Search</source>
         <translation>جستجو</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected program?</source>
+        <translation>آیا از حذف آمار برنامه انتخاب‌شده اطمینان دارید؟</translation>
     </message>
     <message>
         <source>Make this tab active when window opens?</source>
@@ -3787,12 +3919,20 @@ Packet loss: %2</source>
         <translation>URL سفارشی</translation>
     </message>
     <message>
+        <source>Use own URL and Form Data instead of the Source&apos;s ones</source>
+        <translation>استفاده از URL و داده‌های فرم خودتان به‌جای مقادیر منبع</translation>
+    </message>
+    <message>
         <source>URL:</source>
         <translation>URL:</translation>
     </message>
     <message>
         <source>Form Data:</source>
         <translation>داده‌های فرم:</translation>
+    </message>
+    <message>
+        <source>The data sent with the download request</source>
+        <translation>داده‌هایی که همراه درخواست دانلود ارسال می‌شوند</translation>
     </message>
     <message>
         <source>OK</source>

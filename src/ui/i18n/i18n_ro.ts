@@ -1065,10 +1065,6 @@
         <translation>Lățimea barei:</translation>
     </message>
     <message>
-        <source>Max seconds:</source>
-        <translation>Secunde maxime:</translation>
-    </message>
-    <message>
         <source>Graph type:</source>
         <translation>Tip de grafic:</translation>
     </message>
@@ -1157,8 +1153,20 @@
         <translation>Geometria ferestrei</translation>
     </message>
     <message>
+        <source>History length:</source>
+        <translation>Lungimea istoricului:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>Câte secunde de trafic arată graficul</translation>
+    </message>
+    <message>
         <source>Fixed speed:</source>
         <translation>Viteză fixă:</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>Limita superioară constantă a scalei de viteză în loc de cea automată</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1498,6 +1506,10 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
         <translation>Dimensiunea pictogramelor în liste:</translation>
     </message>
     <message>
+        <source>Hide the windows from screenshots and screen recordings</source>
+        <translation>Ascunde ferestrele din capturile și înregistrările ecranului</translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation>Activat</translation>
     </message>
@@ -1514,8 +1526,28 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
         <translation>Afișează automat meniul</translation>
     </message>
     <message>
+        <source>Show the menu, when the window is activated</source>
+        <translation>Afișează meniul când fereastra este activată</translation>
+    </message>
+    <message>
         <source>Show Splash screen on startup</source>
         <translation>Afișează ecranul de pornire la lansare</translation>
+    </message>
+    <message>
+        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>Pictogramele ferestrelor urmează starea pictogramei din bara de sistem (mod de filtrare, alerte)</translation>
+    </message>
+    <message>
+        <source>Auto-focus Alert Window</source>
+        <translation>Focalizare automată pe fereastra de alertă</translation>
+    </message>
+    <message>
+        <source>Clear the alert marks, when the Programs window is closed</source>
+        <translation>Șterge marcajele de alertă când fereastra Programe este închisă</translation>
+    </message>
+    <message>
+        <source>Like turning off Auto-Show Alert Window for New Programs, but quick to switch back</source>
+        <translation>Ca dezactivarea afișării automate a ferestrei de alertă pentru programele noi, dar rapid de reactivat</translation>
     </message>
     <message>
         <source>Show Icon</source>
@@ -1652,10 +1684,6 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
     <message>
         <source>Alert Window is Always on top</source>
         <translation>Fereastra de alertă este mereu deasupra</translation>
-    </message>
-    <message>
-        <source>Alert Window is auto-active</source>
-        <translation>Fereastra de alertă se activează automat</translation>
     </message>
     <message>
         <source>Operations from Tray Menu</source>
@@ -1865,8 +1893,72 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
         <translation>Filtru activat</translation>
     </message>
     <message>
+        <source>Block the traffic of programs in a disabled Group</source>
+        <translation>Blochează traficul programelor dintr-un grup dezactivat</translation>
+    </message>
+    <message>
+        <source>Filter Off duration:</source>
+        <translation>Durata filtrului oprit:</translation>
+    </message>
+    <message>
+        <source>How long the filter stays disabled, then it is enabled again (Disabled: no limit)</source>
+        <translation>Cât timp rămâne filtrul dezactivat, apoi este activat din nou (Dezactivat: fără limită)</translation>
+    </message>
+    <message>
+        <source>Auto-learn duration:</source>
+        <translation>Durata învățării automate:</translation>
+    </message>
+    <message>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
+        <translation>Cât durează modul de filtrare Învățare automată, apoi trece la „Blochează, dacă nu este permis” (Dezactivat: fără limită)</translation>
+    </message>
+    <message>
+        <source>Ask to Connect timeout:</source>
+        <translation>Timp de așteptare pentru „Întreabă la conectare”:</translation>
+    </message>
+    <message>
+        <source>How long a connection waits for your decision, then it is blocked</source>
+        <translation>Cât așteaptă o conexiune decizia dvs., apoi este blocată</translation>
+    </message>
+    <message>
+        <source>Keep the boot-time filter, so the traffic is blocked before the firewall starts and while it is stopped</source>
+        <translation>Păstrează filtrul de la pornirea sistemului, astfel încât traficul să fie blocat înainte de pornirea firewall-ului și cât timp este oprit</translation>
+    </message>
+    <message>
+        <source>Don&apos;t answer the incoming connection attempts to the closed ports</source>
+        <translation>Nu răspunde la încercările de conectare de intrare către porturile închise</translation>
+    </message>
+    <message>
+        <source>Don&apos;t allow to stop or pause the Service</source>
+        <translation>Nu permite oprirea sau punerea în pauză a serviciului</translation>
+    </message>
+    <message>
+        <source>Reject the control commands from the command line</source>
+        <translation>Respinge comenzile de control din linia de comandă</translation>
+    </message>
+    <message>
         <source>Password:</source>
         <translation>Parolă:</translation>
+    </message>
+    <message>
+        <source>Add unknown programs which try to connect to the alerted ones</source>
+        <translation>Adaugă la cele alertate programele necunoscute care încearcă să se conecteze</translation>
+    </message>
+    <message>
+        <source>Remove learnt programs on Auto-Learn Off</source>
+        <translation>Elimină programele învățate la oprirea învățării automate</translation>
+    </message>
+    <message>
+        <source>Delete the alerted programs, when the Auto-Learn Filter Mode is left</source>
+        <translation>Șterge programele alertate la ieșirea din modul de filtrare Învățare automată</translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the programs of the drives which are not mounted now</source>
+        <translation>Nu șterge programele de pe unitățile care nu sunt montate acum</translation>
+    </message>
+    <message>
+        <source>Write the driver&apos;s configuration changes to the System event log</source>
+        <translation>Scrie modificările configurației driverului în jurnalul de evenimente al sistemului</translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -1965,14 +2057,6 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
         <translation>Limitator de viteză activat</translation>
     </message>
     <message>
-        <source>Auto-learn seconds:</source>
-        <translation>Secunde de învățare automată:</translation>
-    </message>
-    <message>
-        <source>Ask to Connect seconds:</source>
-        <translation>Secunde pentru „Întreabă la conectare”:</translation>
-    </message>
-    <message>
         <source>Disable command line management</source>
         <translation>Dezactivează gestionarea din linia de comandă</translation>
     </message>
@@ -2007,14 +2091,6 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
     <message>
         <source> second(s)</source>
         <translation> secundă(e)</translation>
-    </message>
-    <message>
-        <source>Filter Off seconds:</source>
-        <translation>Secunde cu filtrul oprit:</translation>
-    </message>
-    <message>
-        <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation>Elimină programele alertate la oprirea învățării automate</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
@@ -2296,6 +2372,10 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
     <message>
         <source>Kill child processes</source>
         <translation>Termină procesele copil</translation>
+    </message>
+    <message>
+        <source>Stop the program from starting new child processes (restart the program after changing this option)</source>
+        <translation>Împiedică programul să pornească procese-copil noi (reporniți programul după modificarea acestei opțiuni)</translation>
     </message>
     <message>
         <source>Parked</source>
@@ -2647,12 +2727,24 @@ Verificați dacă există alt program cu aceeași cale.</translation>
         <translation>Activat</translation>
     </message>
     <message>
+        <source>Show the Rule in the tray menu to switch it on and off</source>
+        <translation>Afișează regula în meniul din bara de sistem pentru a o activa și dezactiva</translation>
+    </message>
+    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>Întreabă la conectare: suspendă conexiunea până la decizia utilizatorului</translation>
     </message>
     <message>
         <source>Exclusive</source>
         <translation>Exclusiv</translation>
+    </message>
+    <message>
+        <source>Allow Rule: its Preset Rules are checked only when its own zones and text match</source>
+        <translation>Regulă de permitere: regulile ei presetate sunt verificate doar când zonele și textul ei se potrivesc</translation>
+    </message>
+    <message>
+        <source>Test the zones only by the &quot;zones&quot; filter of the Rule&apos;s text, not as the Rule&apos;s own condition</source>
+        <translation>Testează zonele doar prin filtrul „zones” din textul regulii, nu ca o condiție proprie a regulii</translation>
     </message>
     <message>
         <source>Add Filter</source>
@@ -2961,16 +3053,20 @@ Salvați modificările?</translation>
         <translation>Opțiuni</translation>
     </message>
     <message>
-        <source>Delay startup to retry&apos;s seconds</source>
-        <translation>Amână pornirea cu secundele de reîncercare</translation>
-    </message>
-    <message>
         <source>Maximum retries count:</source>
         <translation>Numărul maxim de reîncercări:</translation>
     </message>
     <message>
-        <source>Delay seconds to retry:</source>
-        <translation>Secunde de așteptare până la reîncercare:</translation>
+        <source>Delay startup by the retry delay</source>
+        <translation>Amână pornirea cu întârzierea de reîncercare</translation>
+    </message>
+    <message>
+        <source>Run the task on startup after the delay to retry, not at once</source>
+        <translation>Rulează sarcina la pornire după întârzierea de reîncercare, nu imediat</translation>
+    </message>
+    <message>
+        <source>Retry delay:</source>
+        <translation>Întârziere de reîncercare:</translation>
     </message>
     <message>
         <source>Each 5 minutes</source>
@@ -3071,6 +3167,18 @@ Salvați modificările?</translation>
         <translation>Caută</translation>
     </message>
     <message>
+        <source>Run the service in its own process, so Fort can see it separately from the other services</source>
+        <translation>Rulează serviciul în procesul său propriu, astfel încât Fort să îl vadă separat de celelalte servicii</translation>
+    </message>
+    <message>
+        <source>Restore the original configuration of the service</source>
+        <translation>Restaurează configurația originală a serviciului</translation>
+    </message>
+    <message>
+        <source>Restart the service to apply the changes</source>
+        <translation>Repornește serviciul pentru a aplica modificările</translation>
+    </message>
+    <message>
         <source>Refresh</source>
         <translation>Reîmprospătează</translation>
     </message>
@@ -3130,12 +3238,24 @@ Salvați modificările?</translation>
         <translation>Latență:</translation>
     </message>
     <message>
+        <source>Optional delay of the packets</source>
+        <translation>Întârziere opțională a pachetelor</translation>
+    </message>
+    <message>
         <source>Packet Loss:</source>
         <translation>Pierdere de pachete:</translation>
     </message>
     <message>
+        <source>Optional share of the packets to drop (simulated)</source>
+        <translation>Proporție opțională de pachete de abandonat (simulat)</translation>
+    </message>
+    <message>
         <source>Buffer Size:</source>
         <translation>Dimensiunea bufferului:</translation>
+    </message>
+    <message>
+        <source>Size of the packets&apos; queue; the overflowing packets are dropped (0: unlimited)</source>
+        <translation>Dimensiunea cozii de pachete; pachetele care depășesc sunt abandonate (0: nelimitat)</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
@@ -3240,6 +3360,14 @@ Pierdere de pachete: %2</translation>
         <translation>Colectează traficul când filtrul este dezactivat</translation>
     </message>
     <message>
+        <source>Keep counting the traffic while the filter is off</source>
+        <translation>Continuă numărarea traficului cât timp filtrul este oprit</translation>
+    </message>
+    <message>
+        <source>Count the packets which other drivers send again through the firewall</source>
+        <translation>Numără pachetele pe care alte drivere le retrimit prin firewall</translation>
+    </message>
+    <message>
         <source>Month starts on:</source>
         <translation>Luna începe pe:</translation>
     </message>
@@ -3270,6 +3398,10 @@ Pierdere de pachete: %2</translation>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>Cota lunară:</translation>
+    </message>
+    <message>
+        <source>Collect only the connections of alerted programs or marked by the Alert action</source>
+        <translation>Colectează doar conexiunile programelor alertate sau marcate de acțiunea Alertă</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -3557,10 +3689,6 @@ Pierdere de pachete: %2</translation>
         <translation>Reîmprospătează</translation>
     </message>
     <message>
-        <source>Remove Application</source>
-        <translation>Elimină aplicația</translation>
-    </message>
-    <message>
         <source>Reset Total</source>
         <translation>Resetează totalul</translation>
     </message>
@@ -3597,10 +3725,6 @@ Pierdere de pachete: %2</translation>
         <translation>Total</translation>
     </message>
     <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation>Sigur doriți să eliminați statisticile aplicației selectate?</translation>
-    </message>
-    <message>
         <source>Are you sure to reset total statistics?</source>
         <translation>Sigur doriți să resetați statisticile totale?</translation>
     </message>
@@ -3617,12 +3741,20 @@ Pierdere de pachete: %2</translation>
         <translation>Adaugă program</translation>
     </message>
     <message>
+        <source>Remove Program</source>
+        <translation>Elimină programul</translation>
+    </message>
+    <message>
         <source>Find</source>
         <translation>Caută</translation>
     </message>
     <message>
         <source>Search</source>
         <translation>Căutare</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected program?</source>
+        <translation>Sigur doriți să eliminați statisticile programului selectat?</translation>
     </message>
     <message>
         <source>Make this tab active when window opens?</source>
@@ -3787,12 +3919,20 @@ Pierdere de pachete: %2</translation>
         <translation>URL personalizat</translation>
     </message>
     <message>
+        <source>Use own URL and Form Data instead of the Source&apos;s ones</source>
+        <translation>Folosește URL-ul și datele de formular proprii în loc de cele ale sursei</translation>
+    </message>
+    <message>
         <source>URL:</source>
         <translation>URL:</translation>
     </message>
     <message>
         <source>Form Data:</source>
         <translation>Date formular:</translation>
+    </message>
+    <message>
+        <source>The data sent with the download request</source>
+        <translation>Datele trimise cu cererea de descărcare</translation>
     </message>
     <message>
         <source>OK</source>

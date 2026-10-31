@@ -1065,10 +1065,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Max seconds:</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Graph type:</source>
         <translation></translation>
     </message>
@@ -1157,7 +1153,19 @@
         <translation></translation>
     </message>
     <message>
+        <source>History length:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Fixed speed:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
         <translation></translation>
     </message>
     <message>
@@ -1497,6 +1505,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation></translation>
     </message>
     <message>
+        <source>Hide the windows from screenshots and screen recordings</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation></translation>
     </message>
@@ -1513,7 +1525,27 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation></translation>
     </message>
     <message>
+        <source>Show the menu, when the window is activated</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Show Splash screen on startup</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Auto-focus Alert Window</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Clear the alert marks, when the Programs window is closed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Like turning off Auto-Show Alert Window for New Programs, but quick to switch back</source>
         <translation></translation>
     </message>
     <message>
@@ -1650,10 +1682,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Alert Window is Always on top</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Alert Window is auto-active</source>
         <translation></translation>
     </message>
     <message>
@@ -1862,7 +1890,71 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
+        <source>Block the traffic of programs in a disabled Group</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Filter Off duration:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>How long the filter stays disabled, then it is enabled again (Disabled: no limit)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Auto-learn duration:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ask to Connect timeout:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>How long a connection waits for your decision, then it is blocked</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Keep the boot-time filter, so the traffic is blocked before the firewall starts and while it is stopped</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Don&apos;t answer the incoming connection attempts to the closed ports</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Don&apos;t allow to stop or pause the Service</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Reject the control commands from the command line</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Password:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Add unknown programs which try to connect to the alerted ones</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remove learnt programs on Auto-Learn Off</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Delete the alerted programs, when the Auto-Learn Filter Mode is left</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the programs of the drives which are not mounted now</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Write the driver&apos;s configuration changes to the System event log</source>
         <translation></translation>
     </message>
     <message>
@@ -1962,14 +2054,6 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Auto-learn seconds:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Ask to Connect seconds:</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Disable command line management</source>
         <translation></translation>
     </message>
@@ -2003,14 +2087,6 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source> second(s)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Filter Off seconds:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Remove alerted programs on Auto-Learn Off</source>
         <translation></translation>
     </message>
     <message>
@@ -2292,6 +2368,10 @@ Make sure that you have a fresh backup.</source>
     <name>ProgMorePage</name>
     <message>
         <source>Kill child processes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Stop the program from starting new child processes (restart the program after changing this option)</source>
         <translation></translation>
     </message>
     <message>
@@ -2638,11 +2718,23 @@ Please check other program with the same path.</source>
         <translation></translation>
     </message>
     <message>
+        <source>Show the Rule in the tray menu to switch it on and off</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation></translation>
     </message>
     <message>
         <source>Exclusive</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Allow Rule: its Preset Rules are checked only when its own zones and text match</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Test the zones only by the &quot;zones&quot; filter of the Rule&apos;s text, not as the Rule&apos;s own condition</source>
         <translation></translation>
     </message>
     <message>
@@ -2950,15 +3042,19 @@ Save the changes?</source>
         <translation></translation>
     </message>
     <message>
-        <source>Delay startup to retry&apos;s seconds</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Maximum retries count:</source>
         <translation></translation>
     </message>
     <message>
-        <source>Delay seconds to retry:</source>
+        <source>Delay startup by the retry delay</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Run the task on startup after the delay to retry, not at once</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Retry delay:</source>
         <translation></translation>
     </message>
     <message>
@@ -3060,6 +3156,18 @@ Save the changes?</source>
         <translation></translation>
     </message>
     <message>
+        <source>Run the service in its own process, so Fort can see it separately from the other services</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Restore the original configuration of the service</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Restart the service to apply the changes</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Refresh</source>
         <translation></translation>
     </message>
@@ -3119,11 +3227,23 @@ Save the changes?</source>
         <translation></translation>
     </message>
     <message>
+        <source>Optional delay of the packets</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Packet Loss:</source>
         <translation></translation>
     </message>
     <message>
+        <source>Optional share of the packets to drop (simulated)</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Buffer Size:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Size of the packets&apos; queue; the overflowing packets are dropped (0: unlimited)</source>
         <translation></translation>
     </message>
     <message>
@@ -3228,6 +3348,14 @@ Packet loss: %2</source>
         <translation></translation>
     </message>
     <message>
+        <source>Keep counting the traffic while the filter is off</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Count the packets which other drivers send again through the firewall</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Month starts on:</source>
         <translation></translation>
     </message>
@@ -3257,6 +3385,10 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Month&apos;s Quota:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collect only the connections of alerted programs or marked by the Alert action</source>
         <translation></translation>
     </message>
     <message>
@@ -3545,10 +3677,6 @@ Packet loss: %2</source>
         <translation></translation>
     </message>
     <message>
-        <source>Remove Application</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Reset Total</source>
         <translation></translation>
     </message>
@@ -3585,10 +3713,6 @@ Packet loss: %2</source>
         <translation></translation>
     </message>
     <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Are you sure to reset total statistics?</source>
         <translation></translation>
     </message>
@@ -3605,11 +3729,19 @@ Packet loss: %2</source>
         <translation></translation>
     </message>
     <message>
+        <source>Remove Program</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Find</source>
         <translation></translation>
     </message>
     <message>
         <source>Search</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected program?</source>
         <translation></translation>
     </message>
     <message>
@@ -3775,11 +3907,19 @@ Packet loss: %2</source>
         <translation></translation>
     </message>
     <message>
+        <source>Use own URL and Form Data instead of the Source&apos;s ones</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>URL:</source>
         <translation></translation>
     </message>
     <message>
         <source>Form Data:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The data sent with the download request</source>
         <translation></translation>
     </message>
     <message>

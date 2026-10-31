@@ -1065,10 +1065,6 @@
         <translation>عرض الشريط:</translation>
     </message>
     <message>
-        <source>Max seconds:</source>
-        <translation>أقصى عدد للثوان:</translation>
-    </message>
-    <message>
         <source>Graph type:</source>
         <translation>نوع المخطط:</translation>
     </message>
@@ -1157,8 +1153,20 @@
         <translation>أبعاد النافذة</translation>
     </message>
     <message>
+        <source>History length:</source>
+        <translation>طول السجل:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>عدد ثواني حركة المرور التي يعرضها الرسم البياني</translation>
+    </message>
+    <message>
         <source>Fixed speed:</source>
         <translation>السرعة الثابتة:</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>حد أعلى ثابت لمقياس السرعة بدلاً من التلقائي</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1498,6 +1506,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>حجم الأيقونة في القوائم:</translation>
     </message>
     <message>
+        <source>Hide the windows from screenshots and screen recordings</source>
+        <translation>إخفاء النوافذ من لقطات الشاشة وتسجيلاتها</translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation>تفعيل</translation>
     </message>
@@ -1514,8 +1526,28 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>عرض القائمة تلقائيًا</translation>
     </message>
     <message>
+        <source>Show the menu, when the window is activated</source>
+        <translation>إظهار القائمة عند تنشيط النافذة</translation>
+    </message>
+    <message>
         <source>Show Splash screen on startup</source>
         <translation>عرض شعار البرنامج عند التشغيل</translation>
+    </message>
+    <message>
+        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>تتبع أيقونات النوافذ حالة أيقونة علبة النظام (نمط المرشّح، التنبيهات)</translation>
+    </message>
+    <message>
+        <source>Auto-focus Alert Window</source>
+        <translation>تركيز تلقائي على نافذة التنبيه</translation>
+    </message>
+    <message>
+        <source>Clear the alert marks, when the Programs window is closed</source>
+        <translation>مسح علامات التنبيه عند إغلاق نافذة البرامج</translation>
+    </message>
+    <message>
+        <source>Like turning off Auto-Show Alert Window for New Programs, but quick to switch back</source>
+        <translation>مثل إيقاف العرض التلقائي لنافذة التنبيه للبرامج الجديدة، لكن يمكن إعادة تشغيله بسرعة</translation>
     </message>
     <message>
         <source>Show Icon</source>
@@ -1652,10 +1684,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Alert Window is Always on top</source>
         <translation>جعل نافذة التحذير في مقدمة النوافذ دائمًا</translation>
-    </message>
-    <message>
-        <source>Alert Window is auto-active</source>
-        <translation>نافذة التنبيه نشطة تلقائياً</translation>
     </message>
     <message>
         <source>Operations from Tray Menu</source>
@@ -1865,8 +1893,72 @@ Make sure that you have a fresh backup.</source>
         <translation>تفعيل المرشّح</translation>
     </message>
     <message>
+        <source>Block the traffic of programs in a disabled Group</source>
+        <translation>حظر حركة مرور البرامج في مجموعة معطلة</translation>
+    </message>
+    <message>
+        <source>Filter Off duration:</source>
+        <translation>مدة إيقاف المرشّح:</translation>
+    </message>
+    <message>
+        <source>How long the filter stays disabled, then it is enabled again (Disabled: no limit)</source>
+        <translation>المدة التي يبقى فيها المرشّح معطلاً، ثم يُفعَّل مجدداً (معطل: بلا حد)</translation>
+    </message>
+    <message>
+        <source>Auto-learn duration:</source>
+        <translation>مدة التعلم التلقائي:</translation>
+    </message>
+    <message>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
+        <translation>المدة التي يستمر فيها نمط المرشّح تعلم تلقائي، ثم يتحول إلى &quot;حظر، إن لم يكن مسموح&quot; (معطل: بلا حد)</translation>
+    </message>
+    <message>
+        <source>Ask to Connect timeout:</source>
+        <translation>مهلة &quot;نبهني عند محاولة الاتصال&quot;:</translation>
+    </message>
+    <message>
+        <source>How long a connection waits for your decision, then it is blocked</source>
+        <translation>المدة التي ينتظر فيها الاتصال قرارك، ثم يُحظر</translation>
+    </message>
+    <message>
+        <source>Keep the boot-time filter, so the traffic is blocked before the firewall starts and while it is stopped</source>
+        <translation>الإبقاء على مرشّح الإقلاع ليُحظر الاتصال قبل بدء جدار الحماية وأثناء إيقافه</translation>
+    </message>
+    <message>
+        <source>Don&apos;t answer the incoming connection attempts to the closed ports</source>
+        <translation>عدم الرد على محاولات الاتصال الواردة إلى المنافذ المغلقة</translation>
+    </message>
+    <message>
+        <source>Don&apos;t allow to stop or pause the Service</source>
+        <translation>عدم السماح بإيقاف الخدمة أو إيقافها مؤقتاً</translation>
+    </message>
+    <message>
+        <source>Reject the control commands from the command line</source>
+        <translation>رفض أوامر التحكم من سطر الأوامر</translation>
+    </message>
+    <message>
         <source>Password:</source>
         <translation>كلمة المرور:</translation>
+    </message>
+    <message>
+        <source>Add unknown programs which try to connect to the alerted ones</source>
+        <translation>إضافة البرامج المجهولة التي تحاول الاتصال إلى البرامج المنبَّه عنها</translation>
+    </message>
+    <message>
+        <source>Remove learnt programs on Auto-Learn Off</source>
+        <translation>حذف البرامج المتعلَّمة عند إيقاف التعلم التلقائي</translation>
+    </message>
+    <message>
+        <source>Delete the alerted programs, when the Auto-Learn Filter Mode is left</source>
+        <translation>حذف البرامج المنبَّه عنها عند مغادرة نمط المرشّح تعلم تلقائي</translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the programs of the drives which are not mounted now</source>
+        <translation>عدم حذف برامج الأقراص غير المثبّتة حالياً</translation>
+    </message>
+    <message>
+        <source>Write the driver&apos;s configuration changes to the System event log</source>
+        <translation>كتابة تغييرات إعدادات برنامج التشغيل في سجل أحداث النظام</translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -1965,14 +2057,6 @@ Make sure that you have a fresh backup.</source>
         <translation>تفعيل محدد السرعة</translation>
     </message>
     <message>
-        <source>Auto-learn seconds:</source>
-        <translation>التعلم التلقائي للثوان:</translation>
-    </message>
-    <message>
-        <source>Ask to Connect seconds:</source>
-        <translation>ثوانٍ لـ &quot;نبهني عند محاولة الاتصال&quot;:</translation>
-    </message>
-    <message>
         <source>Disable command line management</source>
         <translation>تعطيل الإدارة عبر سطر الأوامر</translation>
     </message>
@@ -2007,14 +2091,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source> second(s)</source>
         <translation> ثوانٍ</translation>
-    </message>
-    <message>
-        <source>Filter Off seconds:</source>
-        <translation>ثوانٍ لإيقاف المرشّح:</translation>
-    </message>
-    <message>
-        <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation>حذف البرامج المنبَّه عنها عند إيقاف التعلم التلقائي</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
@@ -2296,6 +2372,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Kill child processes</source>
         <translation>انهاء العمليات الفرعية</translation>
+    </message>
+    <message>
+        <source>Stop the program from starting new child processes (restart the program after changing this option)</source>
+        <translation>منع البرنامج من بدء عمليات فرعية جديدة (أعد تشغيل البرنامج بعد تغيير هذا الخيار)</translation>
     </message>
     <message>
         <source>Parked</source>
@@ -2647,12 +2727,24 @@ Please check other program with the same path.</source>
         <translation>تفعيل</translation>
     </message>
     <message>
+        <source>Show the Rule in the tray menu to switch it on and off</source>
+        <translation>إظهار القاعدة في قائمة علبة النظام لتشغيلها وإيقافها</translation>
+    </message>
+    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>نبهني عند محاولة الاتصال: إيقاف الاتصال مؤقتًا حتى يقرر المستخدم</translation>
     </message>
     <message>
         <source>Exclusive</source>
         <translation>استثناء</translation>
+    </message>
+    <message>
+        <source>Allow Rule: its Preset Rules are checked only when its own zones and text match</source>
+        <translation>قاعدة سماح: تُفحص قواعدها الأساسية فقط عند تطابق مناطقها ونصها</translation>
+    </message>
+    <message>
+        <source>Test the zones only by the &quot;zones&quot; filter of the Rule&apos;s text, not as the Rule&apos;s own condition</source>
+        <translation>اختبار المناطق فقط بواسطة مرشّح &quot;zones&quot; في نص القاعدة، وليس كشرط للقاعدة نفسها</translation>
     </message>
     <message>
         <source>Add Filter</source>
@@ -2961,16 +3053,20 @@ Save the changes?</source>
         <translation>الخيارات</translation>
     </message>
     <message>
-        <source>Delay startup to retry&apos;s seconds</source>
-        <translation>تأخير بدء تشغيل إعادة المحاولة&apos;s (ثانية)</translation>
-    </message>
-    <message>
         <source>Maximum retries count:</source>
         <translation>الحد الأقصى لعدد المحاولات:</translation>
     </message>
     <message>
-        <source>Delay seconds to retry:</source>
-        <translation>التأخير حتى إعادة المحاولة (ثوانٍ):</translation>
+        <source>Delay startup by the retry delay</source>
+        <translation>تأخير بدء التشغيل بمقدار تأخير إعادة المحاولة</translation>
+    </message>
+    <message>
+        <source>Run the task on startup after the delay to retry, not at once</source>
+        <translation>تشغيل المهمة عند بدء التشغيل بعد تأخير إعادة المحاولة، وليس فوراً</translation>
+    </message>
+    <message>
+        <source>Retry delay:</source>
+        <translation>تأخير إعادة المحاولة:</translation>
     </message>
     <message>
         <source>Each 5 minutes</source>
@@ -3071,6 +3167,18 @@ Save the changes?</source>
         <translation>بحث</translation>
     </message>
     <message>
+        <source>Run the service in its own process, so Fort can see it separately from the other services</source>
+        <translation>تشغيل الخدمة في عمليتها الخاصة ليراها Fort بمعزل عن الخدمات الأخرى</translation>
+    </message>
+    <message>
+        <source>Restore the original configuration of the service</source>
+        <translation>استعادة الإعدادات الأصلية للخدمة</translation>
+    </message>
+    <message>
+        <source>Restart the service to apply the changes</source>
+        <translation>إعادة تشغيل الخدمة لتطبيق التغييرات</translation>
+    </message>
+    <message>
         <source>Refresh</source>
         <translation>تحديث</translation>
     </message>
@@ -3130,12 +3238,24 @@ Save the changes?</source>
         <translation>التأخير:</translation>
     </message>
     <message>
+        <source>Optional delay of the packets</source>
+        <translation>تأخير اختياري للحزم</translation>
+    </message>
+    <message>
         <source>Packet Loss:</source>
         <translation>الحزم الضائعة:</translation>
     </message>
     <message>
+        <source>Optional share of the packets to drop (simulated)</source>
+        <translation>نسبة اختيارية من الحزم التي تُسقَط (محاكاة)</translation>
+    </message>
+    <message>
         <source>Buffer Size:</source>
         <translation>حجم المخزن المؤقت:</translation>
+    </message>
+    <message>
+        <source>Size of the packets&apos; queue; the overflowing packets are dropped (0: unlimited)</source>
+        <translation>حجم قائمة انتظار الحزم؛ تُسقَط الحزم الفائضة (0: غير محدود)</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
@@ -3240,6 +3360,14 @@ Packet loss: %2</source>
         <translation>تسجيل حركة البيانات عند إيقاف المرشّح</translation>
     </message>
     <message>
+        <source>Keep counting the traffic while the filter is off</source>
+        <translation>مواصلة احتساب حركة المرور أثناء إيقاف المرشّح</translation>
+    </message>
+    <message>
+        <source>Count the packets which other drivers send again through the firewall</source>
+        <translation>احتساب الحزم التي ترسلها برامج تشغيل أخرى مجدداً عبر جدار الحماية</translation>
+    </message>
+    <message>
         <source>Month starts on:</source>
         <translation>الشهر يبدأ عند:</translation>
     </message>
@@ -3270,6 +3398,10 @@ Packet loss: %2</source>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>الحصة الشهرية:</translation>
+    </message>
+    <message>
+        <source>Collect only the connections of alerted programs or marked by the Alert action</source>
+        <translation>جمع اتصالات البرامج المنبَّه عنها أو المعلَّمة بإجراء التنبيه فقط</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -3557,10 +3689,6 @@ Packet loss: %2</source>
         <translation>تحديث</translation>
     </message>
     <message>
-        <source>Remove Application</source>
-        <translation>حذف البرامج</translation>
-    </message>
-    <message>
         <source>Reset Total</source>
         <translation>إعادة ضبط المجموع</translation>
     </message>
@@ -3597,10 +3725,6 @@ Packet loss: %2</source>
         <translation>المجموع</translation>
     </message>
     <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation>هل تريد حذف الإحصائيات للتطبيقات المحددة؟</translation>
-    </message>
-    <message>
         <source>Are you sure to reset total statistics?</source>
         <translation>هل تريد إعادة ضبط مجموع الإحصائيات؟</translation>
     </message>
@@ -3617,12 +3741,20 @@ Packet loss: %2</source>
         <translation>إضافة برنامج</translation>
     </message>
     <message>
+        <source>Remove Program</source>
+        <translation>حذف البرنامج</translation>
+    </message>
+    <message>
         <source>Find</source>
         <translation>بحث</translation>
     </message>
     <message>
         <source>Search</source>
         <translation>البحث</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected program?</source>
+        <translation>هل تريد حذف الإحصائيات للبرنامج المحدد؟</translation>
     </message>
     <message>
         <source>Make this tab active when window opens?</source>
@@ -3787,12 +3919,20 @@ Packet loss: %2</source>
         <translation>رابط مخصص</translation>
     </message>
     <message>
+        <source>Use own URL and Form Data instead of the Source&apos;s ones</source>
+        <translation>استخدام عنوان URL وبيانات النموذج الخاصة بدلاً من الخاصة بالمصدر</translation>
+    </message>
+    <message>
         <source>URL:</source>
         <translation>الرابط:</translation>
     </message>
     <message>
         <source>Form Data:</source>
         <translation>من البيانات:</translation>
+    </message>
+    <message>
+        <source>The data sent with the download request</source>
+        <translation>البيانات المرسلة مع طلب التنزيل</translation>
     </message>
     <message>
         <source>OK</source>

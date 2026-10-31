@@ -1065,10 +1065,6 @@
         <translation>Largeur de la barre&#xa0;:</translation>
     </message>
     <message>
-        <source>Max seconds:</source>
-        <translation>Max secondes:</translation>
-    </message>
-    <message>
         <source>Graph type:</source>
         <translation>Type de graphique :</translation>
     </message>
@@ -1157,8 +1153,20 @@
         <translation>Géométrie de la fenêtre</translation>
     </message>
     <message>
+        <source>History length:</source>
+        <translation>Durée de l&apos;historique :</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>Combien de secondes de trafic le graphique affiche</translation>
+    </message>
+    <message>
         <source>Fixed speed:</source>
         <translation>Vitesse fixe :</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>Sommet constant de l&apos;échelle de vitesse au lieu de l&apos;échelle automatique</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1498,6 +1506,10 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
         <translation>Taille des icônes dans les listes :</translation>
     </message>
     <message>
+        <source>Hide the windows from screenshots and screen recordings</source>
+        <translation>Masquer les fenêtres des captures et enregistrements d&apos;écran</translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation>Activé</translation>
     </message>
@@ -1514,8 +1526,28 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
         <translation>Affichage automatique du menu</translation>
     </message>
     <message>
+        <source>Show the menu, when the window is activated</source>
+        <translation>Afficher le menu lorsque la fenêtre est activée</translation>
+    </message>
+    <message>
         <source>Show Splash screen on startup</source>
         <translation>Afficher l&apos;écran d&apos;accueil au démarrage</translation>
+    </message>
+    <message>
+        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>Les icônes des fenêtres suivent l&apos;état de l&apos;icône de la zone de notification (mode de filtrage, alertes)</translation>
+    </message>
+    <message>
+        <source>Auto-focus Alert Window</source>
+        <translation>Focus automatique sur la fenêtre d&apos;alerte</translation>
+    </message>
+    <message>
+        <source>Clear the alert marks, when the Programs window is closed</source>
+        <translation>Effacer les marques d&apos;alerte à la fermeture de la fenêtre Programmes</translation>
+    </message>
+    <message>
+        <source>Like turning off Auto-Show Alert Window for New Programs, but quick to switch back</source>
+        <translation>Comme désactiver l&apos;affichage automatique de la fenêtre d&apos;alerte pour les nouveaux programmes, mais rapide à réactiver</translation>
     </message>
     <message>
         <source>Show Icon</source>
@@ -1652,10 +1684,6 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
     <message>
         <source>Alert Window is Always on top</source>
         <translation>La fenêtre d&apos;alerte est toujours visible</translation>
-    </message>
-    <message>
-        <source>Alert Window is auto-active</source>
-        <translation>La fenêtre d&apos;alerte est auto-active</translation>
     </message>
     <message>
         <source>Operations from Tray Menu</source>
@@ -1865,8 +1893,72 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <translation>Filtre activé</translation>
     </message>
     <message>
+        <source>Block the traffic of programs in a disabled Group</source>
+        <translation>Bloquer le trafic des programmes d&apos;un groupe désactivé</translation>
+    </message>
+    <message>
+        <source>Filter Off duration:</source>
+        <translation>Durée du filtre désactivé :</translation>
+    </message>
+    <message>
+        <source>How long the filter stays disabled, then it is enabled again (Disabled: no limit)</source>
+        <translation>Durée pendant laquelle le filtre reste désactivé, puis il est réactivé (Désactivé : sans limite)</translation>
+    </message>
+    <message>
+        <source>Auto-learn duration:</source>
+        <translation>Durée de l&apos;auto-apprentissage :</translation>
+    </message>
+    <message>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
+        <translation>Durée du mode de filtrage Auto-apprentissage, puis il passe à « Bloquer, si non autorisé » (Désactivé : sans limite)</translation>
+    </message>
+    <message>
+        <source>Ask to Connect timeout:</source>
+        <translation>Délai de Demander à connecter :</translation>
+    </message>
+    <message>
+        <source>How long a connection waits for your decision, then it is blocked</source>
+        <translation>Durée d&apos;attente de votre décision par une connexion, puis elle est bloquée</translation>
+    </message>
+    <message>
+        <source>Keep the boot-time filter, so the traffic is blocked before the firewall starts and while it is stopped</source>
+        <translation>Conserver le filtre de démarrage pour que le trafic soit bloqué avant le démarrage du pare-feu et pendant son arrêt</translation>
+    </message>
+    <message>
+        <source>Don&apos;t answer the incoming connection attempts to the closed ports</source>
+        <translation>Ne pas répondre aux tentatives de connexion entrantes vers les ports fermés</translation>
+    </message>
+    <message>
+        <source>Don&apos;t allow to stop or pause the Service</source>
+        <translation>Ne pas autoriser l&apos;arrêt ni la mise en pause du service</translation>
+    </message>
+    <message>
+        <source>Reject the control commands from the command line</source>
+        <translation>Rejeter les commandes de contrôle de la ligne de commande</translation>
+    </message>
+    <message>
         <source>Password:</source>
         <translation>Mot de Passe:</translation>
+    </message>
+    <message>
+        <source>Add unknown programs which try to connect to the alerted ones</source>
+        <translation>Ajouter aux programmes en alerte les programmes inconnus qui tentent de se connecter</translation>
+    </message>
+    <message>
+        <source>Remove learnt programs on Auto-Learn Off</source>
+        <translation>Retirer les programmes appris lors de la désactivation de l&apos;auto-apprentissage</translation>
+    </message>
+    <message>
+        <source>Delete the alerted programs, when the Auto-Learn Filter Mode is left</source>
+        <translation>Supprimer les programmes en alerte en quittant le mode de filtrage Auto-apprentissage</translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the programs of the drives which are not mounted now</source>
+        <translation>Ne pas supprimer les programmes des lecteurs qui ne sont pas montés actuellement</translation>
+    </message>
+    <message>
+        <source>Write the driver&apos;s configuration changes to the System event log</source>
+        <translation>Écrire les modifications de configuration du pilote dans le journal d&apos;événements système</translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -1965,14 +2057,6 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <translation>Limiteur de vitesse activé</translation>
     </message>
     <message>
-        <source>Auto-learn seconds:</source>
-        <translation>Secondes d&apos;auto-apprentissage :</translation>
-    </message>
-    <message>
-        <source>Ask to Connect seconds:</source>
-        <translation>Demander à se connecter en secondes:</translation>
-    </message>
-    <message>
         <source>Disable command line management</source>
         <translation>Désactiver la gestion de la ligne de commande</translation>
     </message>
@@ -2007,14 +2091,6 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     <message>
         <source> second(s)</source>
         <translation> seconde(s)</translation>
-    </message>
-    <message>
-        <source>Filter Off seconds:</source>
-        <translation>Secondes de désactivation du filtre :</translation>
-    </message>
-    <message>
-        <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation>Retirer les programmes en alerte lors de la désactivation de l&apos;auto-apprentissage</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
@@ -2296,6 +2372,10 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     <message>
         <source>Kill child processes</source>
         <translation>Tuer les processus enfants</translation>
+    </message>
+    <message>
+        <source>Stop the program from starting new child processes (restart the program after changing this option)</source>
+        <translation>Empêcher le programme de lancer de nouveaux processus enfants (redémarrez le programme après avoir modifié cette option)</translation>
     </message>
     <message>
         <source>Parked</source>
@@ -2647,12 +2727,24 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
         <translation>Activé</translation>
     </message>
     <message>
+        <source>Show the Rule in the tray menu to switch it on and off</source>
+        <translation>Afficher la règle dans le menu de la zone de notification pour l&apos;activer et la désactiver</translation>
+    </message>
+    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>Demander à se connecter : mettre en pause la connexion jusqu&apos;à ce que l&apos;utilisateur&apos;s décide</translation>
     </message>
     <message>
         <source>Exclusive</source>
         <translation>Exclusif</translation>
+    </message>
+    <message>
+        <source>Allow Rule: its Preset Rules are checked only when its own zones and text match</source>
+        <translation>Règle d&apos;autorisation : ses règles prédéfinies ne sont vérifiées que si ses propres zones et son texte correspondent</translation>
+    </message>
+    <message>
+        <source>Test the zones only by the &quot;zones&quot; filter of the Rule&apos;s text, not as the Rule&apos;s own condition</source>
+        <translation>Tester les zones uniquement par le filtre « zones » du texte de la règle, et non comme condition propre de la règle</translation>
     </message>
     <message>
         <source>Add Filter</source>
@@ -2961,16 +3053,20 @@ Enregistrer les modifications ?</translation>
         <translation>Options</translation>
     </message>
     <message>
-        <source>Delay startup to retry&apos;s seconds</source>
-        <translation>Délai de démarrage pour réessayer&apos;s secondes</translation>
-    </message>
-    <message>
         <source>Maximum retries count:</source>
         <translation>Nombre maximum de tentatives:</translation>
     </message>
     <message>
-        <source>Delay seconds to retry:</source>
-        <translation>Délai de secondes pour réessayer:</translation>
+        <source>Delay startup by the retry delay</source>
+        <translation>Retarder le démarrage du délai de nouvelle tentative</translation>
+    </message>
+    <message>
+        <source>Run the task on startup after the delay to retry, not at once</source>
+        <translation>Exécuter la tâche au démarrage après le délai de nouvelle tentative, et non immédiatement</translation>
+    </message>
+    <message>
+        <source>Retry delay:</source>
+        <translation>Délai de nouvelle tentative :</translation>
     </message>
     <message>
         <source>Each 5 minutes</source>
@@ -3071,6 +3167,18 @@ Enregistrer les modifications ?</translation>
         <translation>Chercher</translation>
     </message>
     <message>
+        <source>Run the service in its own process, so Fort can see it separately from the other services</source>
+        <translation>Exécuter le service dans son propre processus pour que Fort le voie séparément des autres services</translation>
+    </message>
+    <message>
+        <source>Restore the original configuration of the service</source>
+        <translation>Restaurer la configuration d&apos;origine du service</translation>
+    </message>
+    <message>
+        <source>Restart the service to apply the changes</source>
+        <translation>Redémarrer le service pour appliquer les modifications</translation>
+    </message>
+    <message>
         <source>Refresh</source>
         <translation>Actualiser</translation>
     </message>
@@ -3130,12 +3238,24 @@ Enregistrer les modifications ?</translation>
         <translation>Latence&#xa0;:</translation>
     </message>
     <message>
+        <source>Optional delay of the packets</source>
+        <translation>Délai facultatif des paquets</translation>
+    </message>
+    <message>
         <source>Packet Loss:</source>
         <translation>Perte de paquets :</translation>
     </message>
     <message>
+        <source>Optional share of the packets to drop (simulated)</source>
+        <translation>Part facultative de paquets à abandonner (simulée)</translation>
+    </message>
+    <message>
         <source>Buffer Size:</source>
         <translation>Taille du tampon&#xa0;:</translation>
+    </message>
+    <message>
+        <source>Size of the packets&apos; queue; the overflowing packets are dropped (0: unlimited)</source>
+        <translation>Taille de la file des paquets ; les paquets en excès sont abandonnés (0 : illimitée)</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
@@ -3240,6 +3360,14 @@ Perte de paquets : %2</translation>
         <translation>Collecter le trafic, lorsque le filtre est désactivé</translation>
     </message>
     <message>
+        <source>Keep counting the traffic while the filter is off</source>
+        <translation>Continuer à compter le trafic lorsque le filtre est désactivé</translation>
+    </message>
+    <message>
+        <source>Count the packets which other drivers send again through the firewall</source>
+        <translation>Compter les paquets que d&apos;autres pilotes renvoient à travers le pare-feu</translation>
+    </message>
+    <message>
         <source>Month starts on:</source>
         <translation>Le mois commence par:</translation>
     </message>
@@ -3270,6 +3398,10 @@ Perte de paquets : %2</translation>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>Quota du mois:</translation>
+    </message>
+    <message>
+        <source>Collect only the connections of alerted programs or marked by the Alert action</source>
+        <translation>Collecter uniquement les connexions des programmes en alerte ou marquées par l&apos;action Alerte</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -3557,10 +3689,6 @@ Perte de paquets : %2</translation>
         <translation>Actualiser</translation>
     </message>
     <message>
-        <source>Remove Application</source>
-        <translation>Retirer l&apos;application</translation>
-    </message>
-    <message>
         <source>Reset Total</source>
         <translation>Réinitialisation totale</translation>
     </message>
@@ -3597,10 +3725,6 @@ Perte de paquets : %2</translation>
         <translation>Total</translation>
     </message>
     <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation>Voulez-vous vraiment retirer les statistiques de l&apos;application sélectionnée ?</translation>
-    </message>
-    <message>
         <source>Are you sure to reset total statistics?</source>
         <translation>Voulez-vous vraiment réinitialiser les statistiques globales ?</translation>
     </message>
@@ -3617,12 +3741,20 @@ Perte de paquets : %2</translation>
         <translation>Ajouter un programme</translation>
     </message>
     <message>
+        <source>Remove Program</source>
+        <translation>Retirer le programme</translation>
+    </message>
+    <message>
         <source>Find</source>
         <translation>Trouver</translation>
     </message>
     <message>
         <source>Search</source>
         <translation>Rechercher</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected program?</source>
+        <translation>Voulez-vous vraiment retirer les statistiques du programme sélectionné ?</translation>
     </message>
     <message>
         <source>Make this tab active when window opens?</source>
@@ -3787,12 +3919,20 @@ Perte de paquets : %2</translation>
         <translation>URL personnalisée</translation>
     </message>
     <message>
+        <source>Use own URL and Form Data instead of the Source&apos;s ones</source>
+        <translation>Utiliser sa propre URL et ses propres données de formulaire au lieu de ceux de la source</translation>
+    </message>
+    <message>
         <source>URL:</source>
         <translation>URL :</translation>
     </message>
     <message>
         <source>Form Data:</source>
         <translation>Données du formulaire:</translation>
+    </message>
+    <message>
+        <source>The data sent with the download request</source>
+        <translation>Les données envoyées avec la requête de téléchargement</translation>
     </message>
     <message>
         <source>OK</source>

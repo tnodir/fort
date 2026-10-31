@@ -1065,10 +1065,6 @@
         <translation>Chiều rộng thanh:</translation>
     </message>
     <message>
-        <source>Max seconds:</source>
-        <translation>Số giây tối đa:</translation>
-    </message>
-    <message>
         <source>Graph type:</source>
         <translation>Loại biểu đồ:</translation>
     </message>
@@ -1157,8 +1153,20 @@
         <translation>Hình học cửa sổ</translation>
     </message>
     <message>
+        <source>History length:</source>
+        <translation>Độ dài lịch sử:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>Số giây lưu lượng mà biểu đồ hiển thị</translation>
+    </message>
+    <message>
         <source>Fixed speed:</source>
         <translation>Tốc độ cố định:</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>Mức trên cố định của thang tốc độ thay cho tự động</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1498,6 +1506,10 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
         <translation>Kích thước biểu tượng trong danh sách:</translation>
     </message>
     <message>
+        <source>Hide the windows from screenshots and screen recordings</source>
+        <translation>Ẩn các cửa sổ khỏi ảnh chụp và bản ghi màn hình</translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation>Đã bật</translation>
     </message>
@@ -1514,8 +1526,28 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
         <translation>Tự động hiển thị menu</translation>
     </message>
     <message>
+        <source>Show the menu, when the window is activated</source>
+        <translation>Hiện menu khi cửa sổ được kích hoạt</translation>
+    </message>
+    <message>
         <source>Show Splash screen on startup</source>
         <translation>Hiển thị màn hình chờ khi khởi động</translation>
+    </message>
+    <message>
+        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>Biểu tượng của các cửa sổ theo trạng thái biểu tượng khay (chế độ lọc, cảnh báo)</translation>
+    </message>
+    <message>
+        <source>Auto-focus Alert Window</source>
+        <translation>Tự động focus cửa sổ cảnh báo</translation>
+    </message>
+    <message>
+        <source>Clear the alert marks, when the Programs window is closed</source>
+        <translation>Xóa các dấu cảnh báo khi đóng cửa sổ Chương trình</translation>
+    </message>
+    <message>
+        <source>Like turning off Auto-Show Alert Window for New Programs, but quick to switch back</source>
+        <translation>Giống như tắt tự động hiện cửa sổ cảnh báo cho chương trình mới, nhưng bật lại nhanh</translation>
     </message>
     <message>
         <source>Show Icon</source>
@@ -1652,10 +1684,6 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
     <message>
         <source>Alert Window is Always on top</source>
         <translation>Cửa sổ cảnh báo luôn ở trên cùng</translation>
-    </message>
-    <message>
-        <source>Alert Window is auto-active</source>
-        <translation>Cửa sổ cảnh báo tự động kích hoạt</translation>
     </message>
     <message>
         <source>Operations from Tray Menu</source>
@@ -1865,8 +1893,72 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
         <translation>Đã bật bộ lọc</translation>
     </message>
     <message>
+        <source>Block the traffic of programs in a disabled Group</source>
+        <translation>Chặn lưu lượng của các chương trình trong nhóm đã tắt</translation>
+    </message>
+    <message>
+        <source>Filter Off duration:</source>
+        <translation>Thời lượng tắt bộ lọc:</translation>
+    </message>
+    <message>
+        <source>How long the filter stays disabled, then it is enabled again (Disabled: no limit)</source>
+        <translation>Bộ lọc bị tắt trong bao lâu, sau đó được bật lại (Đã tắt: không giới hạn)</translation>
+    </message>
+    <message>
+        <source>Auto-learn duration:</source>
+        <translation>Thời lượng tự học:</translation>
+    </message>
+    <message>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
+        <translation>Chế độ lọc Tự học kéo dài bao lâu, sau đó chuyển sang &quot;Chặn, nếu không cho phép&quot; (Đã tắt: không giới hạn)</translation>
+    </message>
+    <message>
+        <source>Ask to Connect timeout:</source>
+        <translation>Thời gian chờ hỏi khi kết nối:</translation>
+    </message>
+    <message>
+        <source>How long a connection waits for your decision, then it is blocked</source>
+        <translation>Một kết nối chờ quyết định của bạn trong bao lâu, sau đó bị chặn</translation>
+    </message>
+    <message>
+        <source>Keep the boot-time filter, so the traffic is blocked before the firewall starts and while it is stopped</source>
+        <translation>Giữ bộ lọc lúc khởi động để lưu lượng bị chặn trước khi tường lửa khởi động và khi nó đã dừng</translation>
+    </message>
+    <message>
+        <source>Don&apos;t answer the incoming connection attempts to the closed ports</source>
+        <translation>Không phản hồi các nỗ lực kết nối đến các cổng đóng</translation>
+    </message>
+    <message>
+        <source>Don&apos;t allow to stop or pause the Service</source>
+        <translation>Không cho phép dừng hoặc tạm dừng dịch vụ</translation>
+    </message>
+    <message>
+        <source>Reject the control commands from the command line</source>
+        <translation>Từ chối các lệnh điều khiển từ dòng lệnh</translation>
+    </message>
+    <message>
         <source>Password:</source>
         <translation>Mật khẩu:</translation>
+    </message>
+    <message>
+        <source>Add unknown programs which try to connect to the alerted ones</source>
+        <translation>Thêm các chương trình không xác định cố kết nối vào danh sách bị cảnh báo</translation>
+    </message>
+    <message>
+        <source>Remove learnt programs on Auto-Learn Off</source>
+        <translation>Xóa các chương trình đã học khi tắt tự học</translation>
+    </message>
+    <message>
+        <source>Delete the alerted programs, when the Auto-Learn Filter Mode is left</source>
+        <translation>Xóa các chương trình bị cảnh báo khi thoát chế độ lọc Tự học</translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the programs of the drives which are not mounted now</source>
+        <translation>Không xóa các chương trình của ổ đĩa hiện không được gắn</translation>
+    </message>
+    <message>
+        <source>Write the driver&apos;s configuration changes to the System event log</source>
+        <translation>Ghi các thay đổi cấu hình của trình điều khiển vào nhật ký sự kiện hệ thống</translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -1965,14 +2057,6 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
         <translation>Đã bật bộ giới hạn tốc độ</translation>
     </message>
     <message>
-        <source>Auto-learn seconds:</source>
-        <translation>Số giây tự học:</translation>
-    </message>
-    <message>
-        <source>Ask to Connect seconds:</source>
-        <translation>Số giây hỏi khi kết nối:</translation>
-    </message>
-    <message>
         <source>Disable command line management</source>
         <translation>Vô hiệu hóa quản lý bằng dòng lệnh</translation>
     </message>
@@ -2007,14 +2091,6 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
     <message>
         <source> second(s)</source>
         <translation> giây</translation>
-    </message>
-    <message>
-        <source>Filter Off seconds:</source>
-        <translation>Số giây tắt bộ lọc:</translation>
-    </message>
-    <message>
-        <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation>Xóa các chương trình bị cảnh báo khi tắt tính năng tự học</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
@@ -2296,6 +2372,10 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
     <message>
         <source>Kill child processes</source>
         <translation>Kết thúc các tiến trình con</translation>
+    </message>
+    <message>
+        <source>Stop the program from starting new child processes (restart the program after changing this option)</source>
+        <translation>Ngăn chương trình khởi chạy các tiến trình con mới (hãy khởi động lại chương trình sau khi đổi tùy chọn này)</translation>
     </message>
     <message>
         <source>Parked</source>
@@ -2647,12 +2727,24 @@ Vui lòng kiểm tra chương trình khác có cùng đường dẫn.</translati
         <translation>Đã bật</translation>
     </message>
     <message>
+        <source>Show the Rule in the tray menu to switch it on and off</source>
+        <translation>Hiện quy tắc trong menu khay để bật và tắt nó</translation>
+    </message>
+    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>Hỏi khi kết nối: tạm dừng kết nối cho đến khi người dùng quyết định</translation>
     </message>
     <message>
         <source>Exclusive</source>
         <translation>Độc quyền</translation>
+    </message>
+    <message>
+        <source>Allow Rule: its Preset Rules are checked only when its own zones and text match</source>
+        <translation>Quy tắc cho phép: các quy tắc cấu hình mẫu của nó chỉ được kiểm tra khi vùng và văn bản của chính nó khớp</translation>
+    </message>
+    <message>
+        <source>Test the zones only by the &quot;zones&quot; filter of the Rule&apos;s text, not as the Rule&apos;s own condition</source>
+        <translation>Chỉ kiểm tra các vùng bằng bộ lọc &quot;zones&quot; trong văn bản của quy tắc, không phải như điều kiện riêng của quy tắc</translation>
     </message>
     <message>
         <source>Add Filter</source>
@@ -2961,16 +3053,20 @@ Lưu các thay đổi?</translation>
         <translation>Tùy chọn</translation>
     </message>
     <message>
-        <source>Delay startup to retry&apos;s seconds</source>
-        <translation>Trì hoãn khởi động đến số giây thử lại</translation>
-    </message>
-    <message>
         <source>Maximum retries count:</source>
         <translation>Số lần thử lại tối đa:</translation>
     </message>
     <message>
-        <source>Delay seconds to retry:</source>
-        <translation>Số giây trì hoãn để thử lại:</translation>
+        <source>Delay startup by the retry delay</source>
+        <translation>Trì hoãn khởi động theo độ trễ thử lại</translation>
+    </message>
+    <message>
+        <source>Run the task on startup after the delay to retry, not at once</source>
+        <translation>Chạy tác vụ khi khởi động sau độ trễ thử lại, không chạy ngay</translation>
+    </message>
+    <message>
+        <source>Retry delay:</source>
+        <translation>Độ trễ thử lại:</translation>
     </message>
     <message>
         <source>Each 5 minutes</source>
@@ -3071,6 +3167,18 @@ Lưu các thay đổi?</translation>
         <translation>Tìm</translation>
     </message>
     <message>
+        <source>Run the service in its own process, so Fort can see it separately from the other services</source>
+        <translation>Chạy dịch vụ trong tiến trình riêng để Fort thấy nó tách biệt với các dịch vụ khác</translation>
+    </message>
+    <message>
+        <source>Restore the original configuration of the service</source>
+        <translation>Khôi phục cấu hình gốc của dịch vụ</translation>
+    </message>
+    <message>
+        <source>Restart the service to apply the changes</source>
+        <translation>Khởi động lại dịch vụ để áp dụng các thay đổi</translation>
+    </message>
+    <message>
         <source>Refresh</source>
         <translation>Làm mới</translation>
     </message>
@@ -3130,12 +3238,24 @@ Lưu các thay đổi?</translation>
         <translation>Độ trễ:</translation>
     </message>
     <message>
+        <source>Optional delay of the packets</source>
+        <translation>Độ trễ tùy chọn của các gói tin</translation>
+    </message>
+    <message>
         <source>Packet Loss:</source>
         <translation>Mất gói tin:</translation>
     </message>
     <message>
+        <source>Optional share of the packets to drop (simulated)</source>
+        <translation>Tỷ lệ tùy chọn các gói tin bị loại bỏ (mô phỏng)</translation>
+    </message>
+    <message>
         <source>Buffer Size:</source>
         <translation>Kích thước bộ đệm:</translation>
+    </message>
+    <message>
+        <source>Size of the packets&apos; queue; the overflowing packets are dropped (0: unlimited)</source>
+        <translation>Kích thước hàng đợi gói tin; các gói tin tràn bị loại bỏ (0: không giới hạn)</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
@@ -3240,6 +3360,14 @@ Mất gói tin: %2</translation>
         <translation>Thu thập lưu lượng khi bộ lọc bị tắt</translation>
     </message>
     <message>
+        <source>Keep counting the traffic while the filter is off</source>
+        <translation>Tiếp tục đếm lưu lượng khi bộ lọc tắt</translation>
+    </message>
+    <message>
+        <source>Count the packets which other drivers send again through the firewall</source>
+        <translation>Đếm các gói tin mà trình điều khiển khác gửi lại qua tường lửa</translation>
+    </message>
+    <message>
         <source>Month starts on:</source>
         <translation>Tháng bắt đầu vào:</translation>
     </message>
@@ -3270,6 +3398,10 @@ Mất gói tin: %2</translation>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>Hạn mức trong tháng:</translation>
+    </message>
+    <message>
+        <source>Collect only the connections of alerted programs or marked by the Alert action</source>
+        <translation>Chỉ thu thập các kết nối của chương trình bị cảnh báo hoặc được đánh dấu bằng hành động Cảnh báo</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -3557,10 +3689,6 @@ Mất gói tin: %2</translation>
         <translation>Làm mới</translation>
     </message>
     <message>
-        <source>Remove Application</source>
-        <translation>Gỡ bỏ ứng dụng</translation>
-    </message>
-    <message>
         <source>Reset Total</source>
         <translation>Đặt lại tổng số</translation>
     </message>
@@ -3597,10 +3725,6 @@ Mất gói tin: %2</translation>
         <translation>Tổng số</translation>
     </message>
     <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation>Bạn có chắc chắn muốn gỡ bỏ thống kê cho ứng dụng đã chọn không?</translation>
-    </message>
-    <message>
         <source>Are you sure to reset total statistics?</source>
         <translation>Bạn có chắc chắn muốn đặt lại tổng số thống kê không?</translation>
     </message>
@@ -3617,12 +3741,20 @@ Mất gói tin: %2</translation>
         <translation>Thêm chương trình</translation>
     </message>
     <message>
+        <source>Remove Program</source>
+        <translation>Gỡ bỏ chương trình</translation>
+    </message>
+    <message>
         <source>Find</source>
         <translation>Tìm</translation>
     </message>
     <message>
         <source>Search</source>
         <translation>Tìm kiếm</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected program?</source>
+        <translation>Bạn có chắc chắn muốn gỡ bỏ thống kê cho chương trình đã chọn không?</translation>
     </message>
     <message>
         <source>Make this tab active when window opens?</source>
@@ -3787,12 +3919,20 @@ Mất gói tin: %2</translation>
         <translation>URL tùy chỉnh</translation>
     </message>
     <message>
+        <source>Use own URL and Form Data instead of the Source&apos;s ones</source>
+        <translation>Dùng URL và dữ liệu biểu mẫu riêng thay cho của nguồn</translation>
+    </message>
+    <message>
         <source>URL:</source>
         <translation>URL:</translation>
     </message>
     <message>
         <source>Form Data:</source>
         <translation>Dữ liệu biểu mẫu:</translation>
+    </message>
+    <message>
+        <source>The data sent with the download request</source>
+        <translation>Dữ liệu được gửi cùng yêu cầu tải xuống</translation>
     </message>
     <message>
         <source>OK</source>

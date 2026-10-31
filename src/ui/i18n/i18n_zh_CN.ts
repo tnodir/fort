@@ -1065,10 +1065,6 @@
         <translation>柱宽：</translation>
     </message>
     <message>
-        <source>Max seconds:</source>
-        <translation>最大秒数：</translation>
-    </message>
-    <message>
         <source>Graph type:</source>
         <translation>图表类型：</translation>
     </message>
@@ -1157,8 +1153,20 @@
         <translation>窗口几何</translation>
     </message>
     <message>
+        <source>History length:</source>
+        <translation>历史长度：</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>图表显示多少秒的流量</translation>
+    </message>
+    <message>
         <source>Fixed speed:</source>
         <translation>固定速度：</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>速度刻度的固定上限，而不是自动上限</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1498,6 +1506,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>列表中的图标大小：</translation>
     </message>
     <message>
+        <source>Hide the windows from screenshots and screen recordings</source>
+        <translation>在截图和屏幕录制中隐藏窗口</translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation>已启用</translation>
     </message>
@@ -1514,8 +1526,28 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>自动显示菜单</translation>
     </message>
     <message>
+        <source>Show the menu, when the window is activated</source>
+        <translation>窗口激活时显示菜单</translation>
+    </message>
+    <message>
         <source>Show Splash screen on startup</source>
         <translation>启动时显示欢迎界面</translation>
+    </message>
+    <message>
+        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>窗口图标跟随托盘图标的状态（过滤模式、提示）</translation>
+    </message>
+    <message>
+        <source>Auto-focus Alert Window</source>
+        <translation>自动聚焦提示窗口</translation>
+    </message>
+    <message>
+        <source>Clear the alert marks, when the Programs window is closed</source>
+        <translation>关闭应用程序窗口时清除提示标记</translation>
+    </message>
+    <message>
+        <source>Like turning off Auto-Show Alert Window for New Programs, but quick to switch back</source>
+        <translation>类似关闭新应用程序自动显示提示窗口，但可快速切换回来</translation>
     </message>
     <message>
         <source>Show Icon</source>
@@ -1652,10 +1684,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Alert Window is Always on top</source>
         <translation>提示窗口始终置顶</translation>
-    </message>
-    <message>
-        <source>Alert Window is auto-active</source>
-        <translation>提示窗口可自动激活</translation>
     </message>
     <message>
         <source>Operations from Tray Menu</source>
@@ -1865,8 +1893,72 @@ Make sure that you have a fresh backup.</source>
         <translation>过滤器已启用</translation>
     </message>
     <message>
+        <source>Block the traffic of programs in a disabled Group</source>
+        <translation>阻止已禁用群组中应用程序的流量</translation>
+    </message>
+    <message>
+        <source>Filter Off duration:</source>
+        <translation>过滤器关闭时长：</translation>
+    </message>
+    <message>
+        <source>How long the filter stays disabled, then it is enabled again (Disabled: no limit)</source>
+        <translation>过滤器保持禁用多久，之后重新启用（已禁用：无限制）</translation>
+    </message>
+    <message>
+        <source>Auto-learn duration:</source>
+        <translation>自动学习时长：</translation>
+    </message>
+    <message>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
+        <translation>自动学习过滤模式持续多久，之后切换为“如果不允许则阻止”（已禁用：无限制）</translation>
+    </message>
+    <message>
+        <source>Ask to Connect timeout:</source>
+        <translation>请求连接超时：</translation>
+    </message>
+    <message>
+        <source>How long a connection waits for your decision, then it is blocked</source>
+        <translation>连接等待您的决定多久，之后被阻止</translation>
+    </message>
+    <message>
+        <source>Keep the boot-time filter, so the traffic is blocked before the firewall starts and while it is stopped</source>
+        <translation>保留开机过滤器，使流量在防火墙启动前及其停止期间被阻止</translation>
+    </message>
+    <message>
+        <source>Don&apos;t answer the incoming connection attempts to the closed ports</source>
+        <translation>不响应对已关闭端口的传入连接尝试</translation>
+    </message>
+    <message>
+        <source>Don&apos;t allow to stop or pause the Service</source>
+        <translation>不允许停止或暂停服务</translation>
+    </message>
+    <message>
+        <source>Reject the control commands from the command line</source>
+        <translation>拒绝来自命令行的控制命令</translation>
+    </message>
+    <message>
         <source>Password:</source>
         <translation>密码：</translation>
+    </message>
+    <message>
+        <source>Add unknown programs which try to connect to the alerted ones</source>
+        <translation>将尝试连接的未知应用程序添加到已提示的应用程序中</translation>
+    </message>
+    <message>
+        <source>Remove learnt programs on Auto-Learn Off</source>
+        <translation>在自动学习关闭时删除已学习的应用程序</translation>
+    </message>
+    <message>
+        <source>Delete the alerted programs, when the Auto-Learn Filter Mode is left</source>
+        <translation>退出自动学习过滤模式时删除已提示的应用程序</translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the programs of the drives which are not mounted now</source>
+        <translation>不删除当前未挂载的驱动器上的应用程序</translation>
+    </message>
+    <message>
+        <source>Write the driver&apos;s configuration changes to the System event log</source>
+        <translation>将驱动程序的配置更改写入系统事件日志</translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -1965,14 +2057,6 @@ Make sure that you have a fresh backup.</source>
         <translation>限速器已启用</translation>
     </message>
     <message>
-        <source>Auto-learn seconds:</source>
-        <translation>自动学习秒数：</translation>
-    </message>
-    <message>
-        <source>Ask to Connect seconds:</source>
-        <translation>请求连接的秒数：</translation>
-    </message>
-    <message>
         <source>Disable command line management</source>
         <translation>禁用命令行管理</translation>
     </message>
@@ -2007,14 +2091,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source> second(s)</source>
         <translation> 秒</translation>
-    </message>
-    <message>
-        <source>Filter Off seconds:</source>
-        <translation>过滤器关闭秒数：</translation>
-    </message>
-    <message>
-        <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation>在自动学习关闭时删除提示程序</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
@@ -2296,6 +2372,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Kill child processes</source>
         <translation>终止子进程</translation>
+    </message>
+    <message>
+        <source>Stop the program from starting new child processes (restart the program after changing this option)</source>
+        <translation>阻止应用程序启动新的子进程（更改此选项后请重启应用程序）</translation>
     </message>
     <message>
         <source>Parked</source>
@@ -2647,12 +2727,24 @@ Please check other program with the same path.</source>
         <translation>已启用</translation>
     </message>
     <message>
+        <source>Show the Rule in the tray menu to switch it on and off</source>
+        <translation>在托盘菜单中显示规则，以便开启和关闭</translation>
+    </message>
+    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>请求连接：暂停连接，直到用户做出决定</translation>
     </message>
     <message>
         <source>Exclusive</source>
         <translation>独有的</translation>
+    </message>
+    <message>
+        <source>Allow Rule: its Preset Rules are checked only when its own zones and text match</source>
+        <translation>允许规则：仅当其自身的区域和文本匹配时，才检查其预置规则</translation>
+    </message>
+    <message>
+        <source>Test the zones only by the &quot;zones&quot; filter of the Rule&apos;s text, not as the Rule&apos;s own condition</source>
+        <translation>仅通过规则文本中的“zones”过滤器测试区域，而不将其作为规则自身的条件</translation>
     </message>
     <message>
         <source>Add Filter</source>
@@ -2961,16 +3053,20 @@ Save the changes?</source>
         <translation>选项</translation>
     </message>
     <message>
-        <source>Delay startup to retry&apos;s seconds</source>
-        <translation>根据重试的秒数延迟启动</translation>
-    </message>
-    <message>
         <source>Maximum retries count:</source>
         <translation>最大重试次数：</translation>
     </message>
     <message>
-        <source>Delay seconds to retry:</source>
-        <translation>重试的延迟时间（秒）：</translation>
+        <source>Delay startup by the retry delay</source>
+        <translation>按重试延迟时间延迟启动</translation>
+    </message>
+    <message>
+        <source>Run the task on startup after the delay to retry, not at once</source>
+        <translation>启动时在重试延迟后运行任务，而不是立即运行</translation>
+    </message>
+    <message>
+        <source>Retry delay:</source>
+        <translation>重试延迟：</translation>
     </message>
     <message>
         <source>Each 5 minutes</source>
@@ -3071,6 +3167,18 @@ Save the changes?</source>
         <translation>查找</translation>
     </message>
     <message>
+        <source>Run the service in its own process, so Fort can see it separately from the other services</source>
+        <translation>在独立进程中运行服务，使 Fort 能将其与其他服务分开查看</translation>
+    </message>
+    <message>
+        <source>Restore the original configuration of the service</source>
+        <translation>恢复服务的原始配置</translation>
+    </message>
+    <message>
+        <source>Restart the service to apply the changes</source>
+        <translation>重启服务以应用更改</translation>
+    </message>
+    <message>
         <source>Refresh</source>
         <translation>刷新</translation>
     </message>
@@ -3130,12 +3238,24 @@ Save the changes?</source>
         <translation>延迟：</translation>
     </message>
     <message>
+        <source>Optional delay of the packets</source>
+        <translation>数据包的可选延迟</translation>
+    </message>
+    <message>
         <source>Packet Loss:</source>
         <translation>数据包丢失：</translation>
     </message>
     <message>
+        <source>Optional share of the packets to drop (simulated)</source>
+        <translation>可选的数据包丢弃比例（模拟）</translation>
+    </message>
+    <message>
         <source>Buffer Size:</source>
         <translation>缓存大小：</translation>
+    </message>
+    <message>
+        <source>Size of the packets&apos; queue; the overflowing packets are dropped (0: unlimited)</source>
+        <translation>数据包队列的大小；溢出的数据包将被丢弃（0：无限制）</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
@@ -3240,6 +3360,14 @@ Packet loss: %2</source>
         <translation>当过滤器禁用时收集流量</translation>
     </message>
     <message>
+        <source>Keep counting the traffic while the filter is off</source>
+        <translation>过滤器关闭时继续统计流量</translation>
+    </message>
+    <message>
+        <source>Count the packets which other drivers send again through the firewall</source>
+        <translation>统计其他驱动程序通过防火墙重新发送的数据包</translation>
+    </message>
+    <message>
         <source>Month starts on:</source>
         <translation>月份开始于：</translation>
     </message>
@@ -3270,6 +3398,10 @@ Packet loss: %2</source>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>每月配额：</translation>
+    </message>
+    <message>
+        <source>Collect only the connections of alerted programs or marked by the Alert action</source>
+        <translation>仅收集已提示应用程序或被“提示”操作标记的连接</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -3557,10 +3689,6 @@ Packet loss: %2</source>
         <translation>刷新</translation>
     </message>
     <message>
-        <source>Remove Application</source>
-        <translation>删除应用程序</translation>
-    </message>
-    <message>
         <source>Reset Total</source>
         <translation>重置总数</translation>
     </message>
@@ -3597,10 +3725,6 @@ Packet loss: %2</source>
         <translation>总计</translation>
     </message>
     <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation>您确定要删除所选应用程序的统计信息吗？</translation>
-    </message>
-    <message>
         <source>Are you sure to reset total statistics?</source>
         <translation>您确定要重置总统计信息吗？</translation>
     </message>
@@ -3617,12 +3741,20 @@ Packet loss: %2</source>
         <translation>添加应用程序</translation>
     </message>
     <message>
+        <source>Remove Program</source>
+        <translation>删除应用程序</translation>
+    </message>
+    <message>
         <source>Find</source>
         <translation>查找</translation>
     </message>
     <message>
         <source>Search</source>
         <translation>搜索</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected program?</source>
+        <translation>您确定要删除所选应用程序的统计信息吗？</translation>
     </message>
     <message>
         <source>Make this tab active when window opens?</source>
@@ -3787,12 +3919,20 @@ Packet loss: %2</source>
         <translation>自定义 URL</translation>
     </message>
     <message>
+        <source>Use own URL and Form Data instead of the Source&apos;s ones</source>
+        <translation>使用自己的 URL 和表单数据，而不是源的</translation>
+    </message>
+    <message>
         <source>URL:</source>
         <translation>URL：</translation>
     </message>
     <message>
         <source>Form Data:</source>
         <translation>表单数据：</translation>
+    </message>
+    <message>
+        <source>The data sent with the download request</source>
+        <translation>随下载请求发送的数据</translation>
     </message>
     <message>
         <source>OK</source>

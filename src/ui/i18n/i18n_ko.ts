@@ -1065,10 +1065,6 @@
         <translation>막대 너비:</translation>
     </message>
     <message>
-        <source>Max seconds:</source>
-        <translation>최대 초:</translation>
-    </message>
-    <message>
         <source>Graph type:</source>
         <translation>그래프 유형:</translation>
     </message>
@@ -1157,8 +1153,20 @@
         <translation>창 기하 구조</translation>
     </message>
     <message>
+        <source>History length:</source>
+        <translation>기록 길이:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>그래프에 표시할 트래픽의 초 수</translation>
+    </message>
+    <message>
         <source>Fixed speed:</source>
         <translation>고정 속도:</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>자동 대신 고정된 속도 눈금의 상단</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1498,6 +1506,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>목록의 아이콘 크기:</translation>
     </message>
     <message>
+        <source>Hide the windows from screenshots and screen recordings</source>
+        <translation>창을 스크린샷과 화면 녹화에서 숨김</translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation>활성화</translation>
     </message>
@@ -1514,8 +1526,28 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>자동 표시 메뉴</translation>
     </message>
     <message>
+        <source>Show the menu, when the window is activated</source>
+        <translation>창이 활성화될 때 메뉴 표시</translation>
+    </message>
+    <message>
         <source>Show Splash screen on startup</source>
         <translation>시작 시 스플래시 화면 표시</translation>
+    </message>
+    <message>
+        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>창 아이콘이 트레이 아이콘의 상태(필터 모드, 경고)를 따름</translation>
+    </message>
+    <message>
+        <source>Auto-focus Alert Window</source>
+        <translation>경고 창 자동 포커스</translation>
+    </message>
+    <message>
+        <source>Clear the alert marks, when the Programs window is closed</source>
+        <translation>프로그램 창을 닫을 때 경고 표시 지우기</translation>
+    </message>
+    <message>
+        <source>Like turning off Auto-Show Alert Window for New Programs, but quick to switch back</source>
+        <translation>새 프로그램에 대한 경고 창 자동 표시를 끄는 것과 같지만 빠르게 다시 켤 수 있음</translation>
     </message>
     <message>
         <source>Show Icon</source>
@@ -1652,10 +1684,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Alert Window is Always on top</source>
         <translation>경고 창이 항상 맨 위에 있음</translation>
-    </message>
-    <message>
-        <source>Alert Window is auto-active</source>
-        <translation>알림 창이 자동으로 활성화됩니다</translation>
     </message>
     <message>
         <source>Operations from Tray Menu</source>
@@ -1865,8 +1893,72 @@ Make sure that you have a fresh backup.</source>
         <translation>필터링 활성화됨</translation>
     </message>
     <message>
+        <source>Block the traffic of programs in a disabled Group</source>
+        <translation>비활성화된 그룹에 속한 프로그램의 트래픽 차단</translation>
+    </message>
+    <message>
+        <source>Filter Off duration:</source>
+        <translation>필터 끄기 지속 시간:</translation>
+    </message>
+    <message>
+        <source>How long the filter stays disabled, then it is enabled again (Disabled: no limit)</source>
+        <translation>필터가 비활성화된 채로 유지되는 시간, 그 후 다시 활성화됨 (비활성화: 제한 없음)</translation>
+    </message>
+    <message>
+        <source>Auto-learn duration:</source>
+        <translation>자동 학습 지속 시간:</translation>
+    </message>
+    <message>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
+        <translation>자동 학습 필터 모드가 지속되는 시간, 그 후 &quot;차단, 허용하지 않을 경우&quot;로 전환됨 (비활성화: 제한 없음)</translation>
+    </message>
+    <message>
+        <source>Ask to Connect timeout:</source>
+        <translation>연결 요청 시간 제한:</translation>
+    </message>
+    <message>
+        <source>How long a connection waits for your decision, then it is blocked</source>
+        <translation>연결이 사용자의 결정을 기다리는 시간, 그 후 차단됨</translation>
+    </message>
+    <message>
+        <source>Keep the boot-time filter, so the traffic is blocked before the firewall starts and while it is stopped</source>
+        <translation>부팅 시 필터를 유지하여 방화벽이 시작되기 전과 중지된 동안 트래픽을 차단</translation>
+    </message>
+    <message>
+        <source>Don&apos;t answer the incoming connection attempts to the closed ports</source>
+        <translation>닫힌 포트에 대한 수신 연결 시도에 응답하지 않음</translation>
+    </message>
+    <message>
+        <source>Don&apos;t allow to stop or pause the Service</source>
+        <translation>서비스의 중지 또는 일시 중지를 허용하지 않음</translation>
+    </message>
+    <message>
+        <source>Reject the control commands from the command line</source>
+        <translation>명령줄의 제어 명령 거부</translation>
+    </message>
+    <message>
         <source>Password:</source>
         <translation>암호:</translation>
+    </message>
+    <message>
+        <source>Add unknown programs which try to connect to the alerted ones</source>
+        <translation>연결을 시도하는 알 수 없는 프로그램을 경고 대상에 추가</translation>
+    </message>
+    <message>
+        <source>Remove learnt programs on Auto-Learn Off</source>
+        <translation>자동 학습 꺼짐에서 학습된 프로그램 제거</translation>
+    </message>
+    <message>
+        <source>Delete the alerted programs, when the Auto-Learn Filter Mode is left</source>
+        <translation>자동 학습 필터 모드를 벗어날 때 경고된 프로그램 삭제</translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the programs of the drives which are not mounted now</source>
+        <translation>현재 마운트되지 않은 드라이브의 프로그램을 삭제하지 않음</translation>
+    </message>
+    <message>
+        <source>Write the driver&apos;s configuration changes to the System event log</source>
+        <translation>드라이버의 구성 변경 사항을 시스템 이벤트 로그에 기록</translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -1965,14 +2057,6 @@ Make sure that you have a fresh backup.</source>
         <translation>속도 제한 기능 포함</translation>
     </message>
     <message>
-        <source>Auto-learn seconds:</source>
-        <translation>자동 학습 초:</translation>
-    </message>
-    <message>
-        <source>Ask to Connect seconds:</source>
-        <translation>연결 요청까지 걸리는 시간 (초):</translation>
-    </message>
-    <message>
         <source>Disable command line management</source>
         <translation>명령줄 관리 사용 안 함</translation>
     </message>
@@ -2007,14 +2091,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source> second(s)</source>
         <translation> 초</translation>
-    </message>
-    <message>
-        <source>Filter Off seconds:</source>
-        <translation>필터 끄기 초:</translation>
-    </message>
-    <message>
-        <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation>자동 학습 꺼짐에서 알림 프로그램 제거</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
@@ -2296,6 +2372,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Kill child processes</source>
         <translation>하위 프로세스 종료</translation>
+    </message>
+    <message>
+        <source>Stop the program from starting new child processes (restart the program after changing this option)</source>
+        <translation>프로그램이 새 하위 프로세스를 시작하지 못하게 함 (이 옵션을 변경한 후 프로그램을 다시 시작하세요)</translation>
     </message>
     <message>
         <source>Parked</source>
@@ -2647,12 +2727,24 @@ Please check other program with the same path.</source>
         <translation>사용함</translation>
     </message>
     <message>
+        <source>Show the Rule in the tray menu to switch it on and off</source>
+        <translation>규칙을 켜고 끌 수 있도록 트레이 메뉴에 표시</translation>
+    </message>
+    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>연결 요청: 사용자의 결정이 있을 때까지 연결을 일시 중지합니다</translation>
     </message>
     <message>
         <source>Exclusive</source>
         <translation>독점</translation>
+    </message>
+    <message>
+        <source>Allow Rule: its Preset Rules are checked only when its own zones and text match</source>
+        <translation>허용 규칙: 자체 구역과 텍스트가 일치할 때만 사전 설정 규칙을 확인</translation>
+    </message>
+    <message>
+        <source>Test the zones only by the &quot;zones&quot; filter of the Rule&apos;s text, not as the Rule&apos;s own condition</source>
+        <translation>규칙 자체의 조건이 아니라 규칙 텍스트의 &quot;zones&quot; 필터로만 구역을 검사</translation>
     </message>
     <message>
         <source>Add Filter</source>
@@ -2961,16 +3053,20 @@ Save the changes?</source>
         <translation>옵션</translation>
     </message>
     <message>
-        <source>Delay startup to retry&apos;s seconds</source>
-        <translation>시작 지연 후 재시도 시간 (&apos;s)</translation>
-    </message>
-    <message>
         <source>Maximum retries count:</source>
         <translation>최대 재시도 횟수:</translation>
     </message>
     <message>
-        <source>Delay seconds to retry:</source>
-        <translation>재시도까지 몇 초 지연:</translation>
+        <source>Delay startup by the retry delay</source>
+        <translation>재시도 지연만큼 시작 지연</translation>
+    </message>
+    <message>
+        <source>Run the task on startup after the delay to retry, not at once</source>
+        <translation>시작 시 작업을 즉시가 아니라 재시도 지연 후에 실행</translation>
+    </message>
+    <message>
+        <source>Retry delay:</source>
+        <translation>재시도 지연:</translation>
     </message>
     <message>
         <source>Each 5 minutes</source>
@@ -3071,6 +3167,18 @@ Save the changes?</source>
         <translation>찾기</translation>
     </message>
     <message>
+        <source>Run the service in its own process, so Fort can see it separately from the other services</source>
+        <translation>서비스를 자체 프로세스에서 실행하여 Fort가 다른 서비스와 별도로 볼 수 있게 함</translation>
+    </message>
+    <message>
+        <source>Restore the original configuration of the service</source>
+        <translation>서비스의 원래 구성 복원</translation>
+    </message>
+    <message>
+        <source>Restart the service to apply the changes</source>
+        <translation>변경 사항을 적용하려면 서비스 다시 시작</translation>
+    </message>
+    <message>
         <source>Refresh</source>
         <translation>새로 고침</translation>
     </message>
@@ -3130,12 +3238,24 @@ Save the changes?</source>
         <translation>지연:</translation>
     </message>
     <message>
+        <source>Optional delay of the packets</source>
+        <translation>패킷의 선택적 지연</translation>
+    </message>
+    <message>
         <source>Packet Loss:</source>
         <translation>패킷 손실:</translation>
     </message>
     <message>
+        <source>Optional share of the packets to drop (simulated)</source>
+        <translation>삭제할 패킷의 선택적 비율 (시뮬레이션)</translation>
+    </message>
+    <message>
         <source>Buffer Size:</source>
         <translation>버퍼 크기:</translation>
+    </message>
+    <message>
+        <source>Size of the packets&apos; queue; the overflowing packets are dropped (0: unlimited)</source>
+        <translation>패킷 대기열의 크기. 넘치는 패킷은 삭제됨 (0: 제한 없음)</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
@@ -3240,6 +3360,14 @@ Packet loss: %2</source>
         <translation>필터링 비활성화 시 트래픽 집계</translation>
     </message>
     <message>
+        <source>Keep counting the traffic while the filter is off</source>
+        <translation>필터가 꺼져 있는 동안에도 트래픽 계속 집계</translation>
+    </message>
+    <message>
+        <source>Count the packets which other drivers send again through the firewall</source>
+        <translation>다른 드라이버가 방화벽을 통해 다시 보내는 패킷 집계</translation>
+    </message>
+    <message>
         <source>Month starts on:</source>
         <translation>달 시작일 :</translation>
     </message>
@@ -3270,6 +3398,10 @@ Packet loss: %2</source>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>월간 할당량:</translation>
+    </message>
+    <message>
+        <source>Collect only the connections of alerted programs or marked by the Alert action</source>
+        <translation>경고된 프로그램 또는 경고 동작으로 표시된 프로그램의 연결만 수집</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -3557,10 +3689,6 @@ Packet loss: %2</source>
         <translation>새로 고침</translation>
     </message>
     <message>
-        <source>Remove Application</source>
-        <translation>응용 프로그램 제거</translation>
-    </message>
-    <message>
         <source>Reset Total</source>
         <translation>총계 재설정</translation>
     </message>
@@ -3597,10 +3725,6 @@ Packet loss: %2</source>
         <translation>전체</translation>
     </message>
     <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation>선택한 응용 프로그램의 통계를 제거하시겠습니까?</translation>
-    </message>
-    <message>
         <source>Are you sure to reset total statistics?</source>
         <translation>전체 통계를 다시 초기화하시겠습니까?</translation>
     </message>
@@ -3617,12 +3741,20 @@ Packet loss: %2</source>
         <translation>프로그램 추가</translation>
     </message>
     <message>
+        <source>Remove Program</source>
+        <translation>프로그램 제거</translation>
+    </message>
+    <message>
         <source>Find</source>
         <translation>찾기</translation>
     </message>
     <message>
         <source>Search</source>
         <translation>검색</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected program?</source>
+        <translation>선택한 프로그램의 통계를 제거하시겠습니까?</translation>
     </message>
     <message>
         <source>Make this tab active when window opens?</source>
@@ -3787,12 +3919,20 @@ Packet loss: %2</source>
         <translation>URL 사용자 지정</translation>
     </message>
     <message>
+        <source>Use own URL and Form Data instead of the Source&apos;s ones</source>
+        <translation>소스의 URL 및 양식 데이터 대신 자체 URL 및 양식 데이터 사용</translation>
+    </message>
+    <message>
         <source>URL:</source>
         <translation>URL:</translation>
     </message>
     <message>
         <source>Form Data:</source>
         <translation>양식 데이터:</translation>
+    </message>
+    <message>
+        <source>The data sent with the download request</source>
+        <translation>다운로드 요청과 함께 전송되는 데이터</translation>
     </message>
     <message>
         <source>OK</source>

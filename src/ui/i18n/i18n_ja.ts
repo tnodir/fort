@@ -1065,10 +1065,6 @@
         <translation>バー幅 :</translation>
     </message>
     <message>
-        <source>Max seconds:</source>
-        <translation>最大秒数 :</translation>
-    </message>
-    <message>
         <source>Graph type:</source>
         <translation>グラフの種類 :</translation>
     </message>
@@ -1157,8 +1153,20 @@
         <translation>ウィンドウの形状</translation>
     </message>
     <message>
+        <source>History length:</source>
+        <translation>履歴の長さ :</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>グラフに表示するトラフィックの秒数</translation>
+    </message>
+    <message>
         <source>Fixed speed:</source>
         <translation>固定速度 :</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>自動の代わりに固定された速度目盛りの上限</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1498,6 +1506,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>リスト内のアイコンサイズ :</translation>
     </message>
     <message>
+        <source>Hide the windows from screenshots and screen recordings</source>
+        <translation>ウィンドウをスクリーンショットや画面録画から隠す</translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation>有効</translation>
     </message>
@@ -1514,8 +1526,28 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>自動表示メニュー</translation>
     </message>
     <message>
+        <source>Show the menu, when the window is activated</source>
+        <translation>ウィンドウがアクティブになったときにメニューを表示</translation>
+    </message>
+    <message>
         <source>Show Splash screen on startup</source>
         <translation>起動時にスプラッシュ画面を表示する</translation>
+    </message>
+    <message>
+        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>ウィンドウのアイコンはトレイ アイコンの状態 (フィルター モード、警告) に従う</translation>
+    </message>
+    <message>
+        <source>Auto-focus Alert Window</source>
+        <translation>警告ウィンドウを自動でフォーカス</translation>
+    </message>
+    <message>
+        <source>Clear the alert marks, when the Programs window is closed</source>
+        <translation>プログラム ウィンドウを閉じたときに警告マークを消去</translation>
+    </message>
+    <message>
+        <source>Like turning off Auto-Show Alert Window for New Programs, but quick to switch back</source>
+        <translation>新しいプログラムで警告ウィンドウを自動表示しない設定に似ていますが、すぐに戻せます</translation>
     </message>
     <message>
         <source>Show Icon</source>
@@ -1652,10 +1684,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Alert Window is Always on top</source>
         <translation>警告ウィンドウを常に最前面に表示</translation>
-    </message>
-    <message>
-        <source>Alert Window is auto-active</source>
-        <translation>警告ウィンドウを自動アクティブ</translation>
     </message>
     <message>
         <source>Operations from Tray Menu</source>
@@ -1865,8 +1893,72 @@ Make sure that you have a fresh backup.</source>
         <translation>フィルター有効</translation>
     </message>
     <message>
+        <source>Block the traffic of programs in a disabled Group</source>
+        <translation>無効なグループのプログラムのトラフィックをブロック</translation>
+    </message>
+    <message>
+        <source>Filter Off duration:</source>
+        <translation>フィルターオフの継続時間 :</translation>
+    </message>
+    <message>
+        <source>How long the filter stays disabled, then it is enabled again (Disabled: no limit)</source>
+        <translation>フィルターを無効にしておく時間。その後再び有効になります (無効: 無制限)</translation>
+    </message>
+    <message>
+        <source>Auto-learn duration:</source>
+        <translation>自動学習の継続時間 :</translation>
+    </message>
+    <message>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
+        <translation>自動学習のフィルター モードが続く時間。その後「許可されていない場合はブロックする」に切り替わります (無効: 無制限)</translation>
+    </message>
+    <message>
+        <source>Ask to Connect timeout:</source>
+        <translation>接続を確認するタイムアウト :</translation>
+    </message>
+    <message>
+        <source>How long a connection waits for your decision, then it is blocked</source>
+        <translation>接続があなたの判断を待つ時間。その後ブロックされます</translation>
+    </message>
+    <message>
+        <source>Keep the boot-time filter, so the traffic is blocked before the firewall starts and while it is stopped</source>
+        <translation>起動時のフィルターを維持し、ファイアウォールの起動前および停止中もトラフィックをブロック</translation>
+    </message>
+    <message>
+        <source>Don&apos;t answer the incoming connection attempts to the closed ports</source>
+        <translation>閉じたポートへの着信接続の試行に応答しない</translation>
+    </message>
+    <message>
+        <source>Don&apos;t allow to stop or pause the Service</source>
+        <translation>サービスの停止と一時停止を許可しない</translation>
+    </message>
+    <message>
+        <source>Reject the control commands from the command line</source>
+        <translation>コマンド ラインからの制御コマンドを拒否</translation>
+    </message>
+    <message>
         <source>Password:</source>
         <translation>パスワード :</translation>
+    </message>
+    <message>
+        <source>Add unknown programs which try to connect to the alerted ones</source>
+        <translation>接続を試みる不明なプログラムを警告対象に追加</translation>
+    </message>
+    <message>
+        <source>Remove learnt programs on Auto-Learn Off</source>
+        <translation>自動学習オフで学習したプログラムを削除</translation>
+    </message>
+    <message>
+        <source>Delete the alerted programs, when the Auto-Learn Filter Mode is left</source>
+        <translation>自動学習のフィルター モードを終了したときに警告されたプログラムを削除</translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the programs of the drives which are not mounted now</source>
+        <translation>現在マウントされていないドライブのプログラムを削除しない</translation>
+    </message>
+    <message>
+        <source>Write the driver&apos;s configuration changes to the System event log</source>
+        <translation>ドライバーの構成変更をシステム イベント ログに書き込む</translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -1965,14 +2057,6 @@ Make sure that you have a fresh backup.</source>
         <translation>速度制限を有効にする</translation>
     </message>
     <message>
-        <source>Auto-learn seconds:</source>
-        <translation>自動学習の秒数 :</translation>
-    </message>
-    <message>
-        <source>Ask to Connect seconds:</source>
-        <translation>接続を確認する秒数 :</translation>
-    </message>
-    <message>
         <source>Disable command line management</source>
         <translation>コマンドライン管理を無効にする</translation>
     </message>
@@ -2007,14 +2091,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source> second(s)</source>
         <translation> 秒</translation>
-    </message>
-    <message>
-        <source>Filter Off seconds:</source>
-        <translation>フィルターオフ秒 :</translation>
-    </message>
-    <message>
-        <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation>自動学習オフで警告されたプログラムを削除</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
@@ -2296,6 +2372,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Kill child processes</source>
         <translation>子プロセスの強制終了</translation>
+    </message>
+    <message>
+        <source>Stop the program from starting new child processes (restart the program after changing this option)</source>
+        <translation>プログラムが新しい子プロセスを開始しないようにする (このオプションを変更したらプログラムを再起動してください)</translation>
     </message>
     <message>
         <source>Parked</source>
@@ -2647,12 +2727,24 @@ Please check other program with the same path.</source>
         <translation>有効</translation>
     </message>
     <message>
+        <source>Show the Rule in the tray menu to switch it on and off</source>
+        <translation>トレイ メニューにルールを表示してオン/オフを切り替える</translation>
+    </message>
+    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>接続を確認する : ユーザーの決定まで接続を一時停止します</translation>
     </message>
     <message>
         <source>Exclusive</source>
         <translation>排他的</translation>
+    </message>
+    <message>
+        <source>Allow Rule: its Preset Rules are checked only when its own zones and text match</source>
+        <translation>許可ルール: プリセット ルールは、そのルール自身のゾーンとテキストが一致した場合のみ確認されます</translation>
+    </message>
+    <message>
+        <source>Test the zones only by the &quot;zones&quot; filter of the Rule&apos;s text, not as the Rule&apos;s own condition</source>
+        <translation>ルールのテキストの &quot;zones&quot; フィルターのみでゾーンを判定し、ルール自身の条件としては使用しない</translation>
     </message>
     <message>
         <source>Add Filter</source>
@@ -2961,16 +3053,20 @@ Save the changes?</source>
         <translation>オプション</translation>
     </message>
     <message>
-        <source>Delay startup to retry&apos;s seconds</source>
-        <translation>再試行の秒数まで起動を遅らせる</translation>
-    </message>
-    <message>
         <source>Maximum retries count:</source>
         <translation>最大再試行回数 :</translation>
     </message>
     <message>
-        <source>Delay seconds to retry:</source>
-        <translation>再試行までの遅延秒数 :</translation>
+        <source>Delay startup by the retry delay</source>
+        <translation>再試行の遅延時間だけ起動を遅らせる</translation>
+    </message>
+    <message>
+        <source>Run the task on startup after the delay to retry, not at once</source>
+        <translation>起動時のタスクをすぐにではなく、再試行の遅延後に実行</translation>
+    </message>
+    <message>
+        <source>Retry delay:</source>
+        <translation>再試行の遅延 :</translation>
     </message>
     <message>
         <source>Each 5 minutes</source>
@@ -3071,6 +3167,18 @@ Save the changes?</source>
         <translation>検索</translation>
     </message>
     <message>
+        <source>Run the service in its own process, so Fort can see it separately from the other services</source>
+        <translation>サービスを独自のプロセスで実行し、Fort が他のサービスと区別して認識できるようにする</translation>
+    </message>
+    <message>
+        <source>Restore the original configuration of the service</source>
+        <translation>サービスの元の構成を復元</translation>
+    </message>
+    <message>
+        <source>Restart the service to apply the changes</source>
+        <translation>変更を適用するためにサービスを再起動</translation>
+    </message>
+    <message>
         <source>Refresh</source>
         <translation>更新</translation>
     </message>
@@ -3130,12 +3238,24 @@ Save the changes?</source>
         <translation>遅延 :</translation>
     </message>
     <message>
+        <source>Optional delay of the packets</source>
+        <translation>パケットの遅延 (省略可)</translation>
+    </message>
+    <message>
         <source>Packet Loss:</source>
         <translation>パケット損失 :</translation>
     </message>
     <message>
+        <source>Optional share of the packets to drop (simulated)</source>
+        <translation>破棄するパケットの割合 (省略可、シミュレーション)</translation>
+    </message>
+    <message>
         <source>Buffer Size:</source>
         <translation>バッファサイズ :</translation>
+    </message>
+    <message>
+        <source>Size of the packets&apos; queue; the overflowing packets are dropped (0: unlimited)</source>
+        <translation>パケット キューのサイズ。あふれたパケットは破棄されます (0: 無制限)</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
@@ -3240,6 +3360,14 @@ Packet loss: %2</source>
         <translation>フィルターが無効の場合のトラフィックの収集</translation>
     </message>
     <message>
+        <source>Keep counting the traffic while the filter is off</source>
+        <translation>フィルターがオフの間もトラフィックのカウントを続ける</translation>
+    </message>
+    <message>
+        <source>Count the packets which other drivers send again through the firewall</source>
+        <translation>他のドライバーがファイアウォール経由で再送信したパケットをカウント</translation>
+    </message>
+    <message>
         <source>Month starts on:</source>
         <translation>月の開始日 :</translation>
     </message>
@@ -3270,6 +3398,10 @@ Packet loss: %2</source>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>一月の割り当て :</translation>
+    </message>
+    <message>
+        <source>Collect only the connections of alerted programs or marked by the Alert action</source>
+        <translation>警告されたプログラム、または警告アクションでマークされたプログラムの接続のみを収集</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -3557,10 +3689,6 @@ Packet loss: %2</source>
         <translation>更新</translation>
     </message>
     <message>
-        <source>Remove Application</source>
-        <translation>アプリケーションの削除</translation>
-    </message>
-    <message>
         <source>Reset Total</source>
         <translation>合計をリセット</translation>
     </message>
@@ -3597,10 +3725,6 @@ Packet loss: %2</source>
         <translation>合計</translation>
     </message>
     <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation>選択したアプリケーションの統計を削除しますか?</translation>
-    </message>
-    <message>
         <source>Are you sure to reset total statistics?</source>
         <translation>合計統計をリセットしますか?</translation>
     </message>
@@ -3617,12 +3741,20 @@ Packet loss: %2</source>
         <translation>プログラムの追加</translation>
     </message>
     <message>
+        <source>Remove Program</source>
+        <translation>プログラムの削除</translation>
+    </message>
+    <message>
         <source>Find</source>
         <translation>検索</translation>
     </message>
     <message>
         <source>Search</source>
         <translation>検索</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected program?</source>
+        <translation>選択したプログラムの統計を削除しますか?</translation>
     </message>
     <message>
         <source>Make this tab active when window opens?</source>
@@ -3787,12 +3919,20 @@ Packet loss: %2</source>
         <translation>カスタム URL</translation>
     </message>
     <message>
+        <source>Use own URL and Form Data instead of the Source&apos;s ones</source>
+        <translation>ソースの URL とフォーム データではなく、独自のものを使用</translation>
+    </message>
+    <message>
         <source>URL:</source>
         <translation>URL :</translation>
     </message>
     <message>
         <source>Form Data:</source>
         <translation>データ形式 :</translation>
+    </message>
+    <message>
+        <source>The data sent with the download request</source>
+        <translation>ダウンロード要求と共に送信されるデータ</translation>
     </message>
     <message>
         <source>OK</source>

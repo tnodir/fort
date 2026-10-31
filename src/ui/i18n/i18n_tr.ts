@@ -1065,10 +1065,6 @@
         <translation>Çubuk genişliği:</translation>
     </message>
     <message>
-        <source>Max seconds:</source>
-        <translation>Maksimum Saniyeler:</translation>
-    </message>
-    <message>
         <source>Graph type:</source>
         <translation>Grafik türü:</translation>
     </message>
@@ -1157,8 +1153,20 @@
         <translation>Pencere Geometrisi</translation>
     </message>
     <message>
+        <source>History length:</source>
+        <translation>Geçmiş Uzunluğu:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>Grafiğin trafiğin kaç saniyesini gösterdiği</translation>
+    </message>
+    <message>
         <source>Fixed speed:</source>
         <translation>Sabit Hız: </translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>Otomatik ölçek yerine hız ölçeğinin sabit üst sınırı</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1498,6 +1506,10 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
         <translation>Listelerdeki Simge Boyutu:</translation>
     </message>
     <message>
+        <source>Hide the windows from screenshots and screen recordings</source>
+        <translation>Pencereleri ekran görüntülerinden ve ekran kayıtlarından gizle</translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation>Etkin</translation>
     </message>
@@ -1514,8 +1526,28 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
         <translation>Menüyü Otomatik Göster</translation>
     </message>
     <message>
+        <source>Show the menu, when the window is activated</source>
+        <translation>Pencere etkinleştirildiğinde menüyü göster</translation>
+    </message>
+    <message>
         <source>Show Splash screen on startup</source>
         <translation>Başlangıçta Açılış Ekranını Göster</translation>
+    </message>
+    <message>
+        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>Pencerelerin simgeleri tepsi simgesinin durumunu izler (Filtreleme Modu, uyarılar)</translation>
+    </message>
+    <message>
+        <source>Auto-focus Alert Window</source>
+        <translation>Uyarı Penceresine Otomatik Odaklan</translation>
+    </message>
+    <message>
+        <source>Clear the alert marks, when the Programs window is closed</source>
+        <translation>Programlar penceresi kapatıldığında uyarı işaretlerini temizle</translation>
+    </message>
+    <message>
+        <source>Like turning off Auto-Show Alert Window for New Programs, but quick to switch back</source>
+        <translation>Yeni programlar için uyarı penceresinin otomatik gösterilmesini kapatmak gibi, ama hızlıca geri açılabilir</translation>
     </message>
     <message>
         <source>Show Icon</source>
@@ -1652,10 +1684,6 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
     <message>
         <source>Alert Window is Always on top</source>
         <translation>Uyarı Penceresi Her Zaman En Üstte</translation>
-    </message>
-    <message>
-        <source>Alert Window is auto-active</source>
-        <translation>Uyarı Penceresi Otomatik Olarak Aktif </translation>
     </message>
     <message>
         <source>Operations from Tray Menu</source>
@@ -1865,8 +1893,72 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Filtreleme Etkin</translation>
     </message>
     <message>
+        <source>Block the traffic of programs in a disabled Group</source>
+        <translation>Devre dışı bir Gruptaki programların trafiğini engelle</translation>
+    </message>
+    <message>
+        <source>Filter Off duration:</source>
+        <translation>Filtre Kapalı Süresi:</translation>
+    </message>
+    <message>
+        <source>How long the filter stays disabled, then it is enabled again (Disabled: no limit)</source>
+        <translation>Filtrenin ne kadar süre devre dışı kalacağı, sonra tekrar etkinleştirilir (Devre Dışı: sınırsız)</translation>
+    </message>
+    <message>
+        <source>Auto-learn duration:</source>
+        <translation>Otomatik Öğrenme Süresi:</translation>
+    </message>
+    <message>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
+        <translation>Otomatik Öğren Filtreleme Modunun ne kadar süreceği, sonra &quot;İzin Verilmediyse Engelle&quot; moduna geçer (Devre Dışı: sınırsız)</translation>
+    </message>
+    <message>
+        <source>Ask to Connect timeout:</source>
+        <translation>Bağlantı Kurmayı İste Zaman Aşımı:</translation>
+    </message>
+    <message>
+        <source>How long a connection waits for your decision, then it is blocked</source>
+        <translation>Bir bağlantının kararınızı ne kadar bekleyeceği, sonra engellenir</translation>
+    </message>
+    <message>
+        <source>Keep the boot-time filter, so the traffic is blocked before the firewall starts and while it is stopped</source>
+        <translation>Önyükleme filtresini koru; böylece trafik güvenlik duvarı başlamadan önce ve durdurulmuşken engellenir</translation>
+    </message>
+    <message>
+        <source>Don&apos;t answer the incoming connection attempts to the closed ports</source>
+        <translation>Kapalı portlara gelen bağlantı denemelerini yanıtlama</translation>
+    </message>
+    <message>
+        <source>Don&apos;t allow to stop or pause the Service</source>
+        <translation>Hizmeti durdurmaya veya duraklatmaya izin verme</translation>
+    </message>
+    <message>
+        <source>Reject the control commands from the command line</source>
+        <translation>Komut satırından gelen denetim komutlarını reddet</translation>
+    </message>
+    <message>
         <source>Password:</source>
         <translation>Parola:</translation>
+    </message>
+    <message>
+        <source>Add unknown programs which try to connect to the alerted ones</source>
+        <translation>Bağlanmaya çalışan bilinmeyen programları uyarı verilenlere ekle</translation>
+    </message>
+    <message>
+        <source>Remove learnt programs on Auto-Learn Off</source>
+        <translation>Otomatik Öğrenme Kapalıyken Öğrenilen Programları Kaldır</translation>
+    </message>
+    <message>
+        <source>Delete the alerted programs, when the Auto-Learn Filter Mode is left</source>
+        <translation>Otomatik Öğren Filtreleme Modundan çıkıldığında uyarı verilen programları sil</translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the programs of the drives which are not mounted now</source>
+        <translation>Şu anda bağlı olmayan sürücülerin programlarını silme</translation>
+    </message>
+    <message>
+        <source>Write the driver&apos;s configuration changes to the System event log</source>
+        <translation>Sürücünün yapılandırma değişikliklerini Sistem olay günlüğüne yaz</translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -1965,14 +2057,6 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Hız Sınırlayıcı Etkin</translation>
     </message>
     <message>
-        <source>Auto-learn seconds:</source>
-        <translation>Otomatik Öğrenme Saniyeleri:</translation>
-    </message>
-    <message>
-        <source>Ask to Connect seconds:</source>
-        <translation>Bağlantı Kurmayı İste saniyeleri:</translation>
-    </message>
-    <message>
         <source>Disable command line management</source>
         <translation>Komut Satırı Yönetimini Devre Dışı Bırak </translation>
     </message>
@@ -2007,14 +2091,6 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     <message>
         <source> second(s)</source>
         <translation> Saniye</translation>
-    </message>
-    <message>
-        <source>Filter Off seconds:</source>
-        <translation>Filtreleme Kapalı Kalma Saniyeleri:</translation>
-    </message>
-    <message>
-        <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation>Otomatik Öğrenme Kapalıyken Uyarı Verilen Programları Kaldır</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
@@ -2296,6 +2372,10 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     <message>
         <source>Kill child processes</source>
         <translation>Alt Süreçleri Sonlandır</translation>
+    </message>
+    <message>
+        <source>Stop the program from starting new child processes (restart the program after changing this option)</source>
+        <translation>Programın yeni alt süreçler başlatmasını engelle (bu seçeneği değiştirdikten sonra programı yeniden başlatın)</translation>
     </message>
     <message>
         <source>Parked</source>
@@ -2646,12 +2726,24 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <translation>Etkin</translation>
     </message>
     <message>
+        <source>Show the Rule in the tray menu to switch it on and off</source>
+        <translation>Kuralı açıp kapatmak için tepsi menüsünde göster</translation>
+    </message>
+    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>Bağlantı Kurmayı İste: kullanıcı karar verene kadar bağlantıyı duraklat</translation>
     </message>
     <message>
         <source>Exclusive</source>
         <translation>Ayrıcalıklı</translation>
+    </message>
+    <message>
+        <source>Allow Rule: its Preset Rules are checked only when its own zones and text match</source>
+        <translation>İzin Kuralı: Önceden Ayarlanmış Kuralları yalnızca kendi bölgeleri ve metni eşleştiğinde denetlenir</translation>
+    </message>
+    <message>
+        <source>Test the zones only by the &quot;zones&quot; filter of the Rule&apos;s text, not as the Rule&apos;s own condition</source>
+        <translation>Bölgeleri Kuralın kendi koşulu olarak değil, yalnızca Kural metnindeki &quot;zones&quot; filtresiyle sına</translation>
     </message>
     <message>
         <source>Add Filter</source>
@@ -2960,16 +3052,20 @@ Değişiklikler kaydedilsin mi?</translation>
         <translation>Ayarlar</translation>
     </message>
     <message>
-        <source>Delay startup to retry&apos;s seconds</source>
-        <translation>Tekrar Başlatmayı &apos; Saniye Geciktir </translation>
-    </message>
-    <message>
         <source>Maximum retries count:</source>
         <translation>Maksimum Yeniden Deneme Sayısı: </translation>
     </message>
     <message>
-        <source>Delay seconds to retry:</source>
-        <translation>Yeniden Denemek İçin Saniye Cinsinden Gecikme:</translation>
+        <source>Delay startup by the retry delay</source>
+        <translation>Başlatmayı Yeniden Deneme Gecikmesi Kadar Geciktir</translation>
+    </message>
+    <message>
+        <source>Run the task on startup after the delay to retry, not at once</source>
+        <translation>Görevi başlangıçta hemen değil, yeniden deneme gecikmesinden sonra çalıştır</translation>
+    </message>
+    <message>
+        <source>Retry delay:</source>
+        <translation>Yeniden Deneme Gecikmesi:</translation>
     </message>
     <message>
         <source>Each 5 minutes</source>
@@ -3070,6 +3166,18 @@ Değişiklikler kaydedilsin mi?</translation>
         <translation>Bul</translation>
     </message>
     <message>
+        <source>Run the service in its own process, so Fort can see it separately from the other services</source>
+        <translation>Hizmeti kendi sürecinde çalıştır; böylece Fort onu diğer hizmetlerden ayrı görebilir</translation>
+    </message>
+    <message>
+        <source>Restore the original configuration of the service</source>
+        <translation>Hizmetin özgün yapılandırmasını geri yükle</translation>
+    </message>
+    <message>
+        <source>Restart the service to apply the changes</source>
+        <translation>Değişiklikleri uygulamak için hizmeti yeniden başlat</translation>
+    </message>
+    <message>
         <source>Refresh</source>
         <translation>Yenile</translation>
     </message>
@@ -3129,12 +3237,24 @@ Değişiklikler kaydedilsin mi?</translation>
         <translation>Gecikme:</translation>
     </message>
     <message>
+        <source>Optional delay of the packets</source>
+        <translation>Paketlerin isteğe bağlı gecikmesi</translation>
+    </message>
+    <message>
         <source>Packet Loss:</source>
         <translation>Paket Kaybı:</translation>
     </message>
     <message>
+        <source>Optional share of the packets to drop (simulated)</source>
+        <translation>Düşürülecek paketlerin isteğe bağlı oranı (simüle edilir)</translation>
+    </message>
+    <message>
         <source>Buffer Size:</source>
         <translation>Arabellek Boyutu:</translation>
+    </message>
+    <message>
+        <source>Size of the packets&apos; queue; the overflowing packets are dropped (0: unlimited)</source>
+        <translation>Paket kuyruğunun boyutu; taşan paketler düşürülür (0: sınırsız)</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
@@ -3239,6 +3359,14 @@ Paket kaybı: %2</translation>
         <translation>Filtreleme Devre Dışı Bırakıldığında Trafiği Topla</translation>
     </message>
     <message>
+        <source>Keep counting the traffic while the filter is off</source>
+        <translation>Filtre kapalıyken trafiği saymaya devam et</translation>
+    </message>
+    <message>
+        <source>Count the packets which other drivers send again through the firewall</source>
+        <translation>Diğer sürücülerin güvenlik duvarından yeniden gönderdiği paketleri say</translation>
+    </message>
+    <message>
         <source>Month starts on:</source>
         <translation>Ayın Başlangıç Günü:</translation>
     </message>
@@ -3269,6 +3397,10 @@ Paket kaybı: %2</translation>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>&apos; Aylık Kota:</translation>
+    </message>
+    <message>
+        <source>Collect only the connections of alerted programs or marked by the Alert action</source>
+        <translation>Yalnızca uyarı verilen veya Uyarı eylemiyle işaretlenen programların bağlantılarını topla</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -3556,10 +3688,6 @@ Paket kaybı: %2</translation>
         <translation>Yenile</translation>
     </message>
     <message>
-        <source>Remove Application</source>
-        <translation>Uygulamayı Kaldır</translation>
-    </message>
-    <message>
         <source>Reset Total</source>
         <translation>Toplamı Sıfırla</translation>
     </message>
@@ -3596,10 +3724,6 @@ Paket kaybı: %2</translation>
         <translation>Toplam</translation>
     </message>
     <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation>Seçilen uygulama için istatistikleri kaldırmak istediğinden emin misin?</translation>
-    </message>
-    <message>
         <source>Are you sure to reset total statistics?</source>
         <translation>Toplam istatistikleri sıfırlamak istediğinden emin misin?</translation>
     </message>
@@ -3616,12 +3740,20 @@ Paket kaybı: %2</translation>
         <translation>Program Ekle</translation>
     </message>
     <message>
+        <source>Remove Program</source>
+        <translation>Programı Kaldır</translation>
+    </message>
+    <message>
         <source>Find</source>
         <translation>Bul</translation>
     </message>
     <message>
         <source>Search</source>
         <translation>Ara</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected program?</source>
+        <translation>Seçilen program için istatistikleri kaldırmak istediğinden emin misin?</translation>
     </message>
     <message>
         <source>Make this tab active when window opens?</source>
@@ -3786,12 +3918,20 @@ Paket kaybı: %2</translation>
         <translation>Özel URL</translation>
     </message>
     <message>
+        <source>Use own URL and Form Data instead of the Source&apos;s ones</source>
+        <translation>Kaynağınkiler yerine kendi URL&apos;ni ve Form Verilerini kullan</translation>
+    </message>
+    <message>
         <source>URL:</source>
         <translation>URL:</translation>
     </message>
     <message>
         <source>Form Data:</source>
         <translation>Form Verisi:</translation>
+    </message>
+    <message>
+        <source>The data sent with the download request</source>
+        <translation>İndirme isteğiyle gönderilen veriler</translation>
     </message>
     <message>
         <source>OK</source>

@@ -1065,10 +1065,6 @@
         <translation>Širina stolpca:</translation>
     </message>
     <message>
-        <source>Max seconds:</source>
-        <translation>Največ sekund:</translation>
-    </message>
-    <message>
         <source>Graph type:</source>
         <translation>Vrsta grafa:</translation>
     </message>
@@ -1157,8 +1153,20 @@
         <translation>Geometrija okna</translation>
     </message>
     <message>
+        <source>History length:</source>
+        <translation>Dolžina zgodovine:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>Koliko sekund prometa prikazuje graf</translation>
+    </message>
+    <message>
         <source>Fixed speed:</source>
         <translation>Fiksna hitrost:</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>Stalna zgornja meja lestvice hitrosti namesto samodejne</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1498,6 +1506,10 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
         <translation>Velikost ikon na seznamih:</translation>
     </message>
     <message>
+        <source>Hide the windows from screenshots and screen recordings</source>
+        <translation>Skrij okna na posnetkih in snemanjih zaslona</translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation>Omogočeno</translation>
     </message>
@@ -1514,8 +1526,28 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
         <translation>Meni &apos;Samodejno prikaži&apos;</translation>
     </message>
     <message>
+        <source>Show the menu, when the window is activated</source>
+        <translation>Pokaži meni, ko se okno aktivira</translation>
+    </message>
+    <message>
         <source>Show Splash screen on startup</source>
         <translation>Prikaži začetni zaslon ob zagonu</translation>
+    </message>
+    <message>
+        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>Ikone oken sledijo stanju ikone v pladnju (način filtra, opozorila)</translation>
+    </message>
+    <message>
+        <source>Auto-focus Alert Window</source>
+        <translation>Samodejno fokusiraj opozorilno okno</translation>
+    </message>
+    <message>
+        <source>Clear the alert marks, when the Programs window is closed</source>
+        <translation>Počisti oznake opozoril, ko se okno Programi zapre</translation>
+    </message>
+    <message>
+        <source>Like turning off Auto-Show Alert Window for New Programs, but quick to switch back</source>
+        <translation>Kot izklop samodejnega prikaza opozorilnega okna za nove programe, vendar ga je mogoče hitro spet vklopiti</translation>
     </message>
     <message>
         <source>Show Icon</source>
@@ -1652,10 +1684,6 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
     <message>
         <source>Alert Window is Always on top</source>
         <translation>Opozorilno okno je vedno na zaslonu</translation>
-    </message>
-    <message>
-        <source>Alert Window is auto-active</source>
-        <translation>Opozorilno okno je samodejno aktivno</translation>
     </message>
     <message>
         <source>Operations from Tray Menu</source>
@@ -1865,8 +1893,72 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Filter je omogočen</translation>
     </message>
     <message>
+        <source>Block the traffic of programs in a disabled Group</source>
+        <translation>Blokiraj promet programov v onemogočeni skupini</translation>
+    </message>
+    <message>
+        <source>Filter Off duration:</source>
+        <translation>Trajanje izklopa filtra:</translation>
+    </message>
+    <message>
+        <source>How long the filter stays disabled, then it is enabled again (Disabled: no limit)</source>
+        <translation>Kako dolgo filter ostane onemogočen, nato se spet omogoči (Onemogočeno: brez omejitve)</translation>
+    </message>
+    <message>
+        <source>Auto-learn duration:</source>
+        <translation>Trajanje samodejnega učenja:</translation>
+    </message>
+    <message>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
+        <translation>Kako dolgo traja način filtra Samodejno učenje, nato preklopi na »Blokiraj, če ni dovoljeno« (Onemogočeno: brez omejitve)</translation>
+    </message>
+    <message>
+        <source>Ask to Connect timeout:</source>
+        <translation>Časovna omejitev za Vprašaj za povezavo:</translation>
+    </message>
+    <message>
+        <source>How long a connection waits for your decision, then it is blocked</source>
+        <translation>Kako dolgo povezava čaka na vašo odločitev, nato je blokirana</translation>
+    </message>
+    <message>
+        <source>Keep the boot-time filter, so the traffic is blocked before the firewall starts and while it is stopped</source>
+        <translation>Ohrani filter ob zagonu, da je promet blokiran pred zagonom požarnega zidu in medtem ko je ustavljen</translation>
+    </message>
+    <message>
+        <source>Don&apos;t answer the incoming connection attempts to the closed ports</source>
+        <translation>Ne odgovarjaj na dohodne poskuse povezave na zaprta vrata</translation>
+    </message>
+    <message>
+        <source>Don&apos;t allow to stop or pause the Service</source>
+        <translation>Ne dovoli ustavitve ali premora storitve</translation>
+    </message>
+    <message>
+        <source>Reject the control commands from the command line</source>
+        <translation>Zavrni kontrolne ukaze iz ukazne vrstice</translation>
+    </message>
+    <message>
         <source>Password:</source>
         <translation>Geslo:</translation>
+    </message>
+    <message>
+        <source>Add unknown programs which try to connect to the alerted ones</source>
+        <translation>Dodaj neznane programe, ki se poskušajo povezati, med opozorjene</translation>
+    </message>
+    <message>
+        <source>Remove learnt programs on Auto-Learn Off</source>
+        <translation>Odstrani naučene programe ob izklopu samodejnega učenja</translation>
+    </message>
+    <message>
+        <source>Delete the alerted programs, when the Auto-Learn Filter Mode is left</source>
+        <translation>Izbriši opozorjene programe ob izhodu iz načina filtra Samodejno učenje</translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the programs of the drives which are not mounted now</source>
+        <translation>Ne briši programov z pogonov, ki trenutno niso priklopljeni</translation>
+    </message>
+    <message>
+        <source>Write the driver&apos;s configuration changes to the System event log</source>
+        <translation>Zapiši spremembe konfiguracije gonilnika v sistemski dnevnik dogodkov</translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -1965,14 +2057,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Omejevalnik hitrosti omogočen</translation>
     </message>
     <message>
-        <source>Auto-learn seconds:</source>
-        <translation>Sekunde samodejnega učenja:</translation>
-    </message>
-    <message>
-        <source>Ask to Connect seconds:</source>
-        <translation>Sekunde za Vprašaj za povezavo:</translation>
-    </message>
-    <message>
         <source>Disable command line management</source>
         <translation>Onemogoči upravljanje ukazne vrstice</translation>
     </message>
@@ -2007,14 +2091,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source> second(s)</source>
         <translation> sekundo(i)</translation>
-    </message>
-    <message>
-        <source>Filter Off seconds:</source>
-        <translation>Filtriraj sekunde:</translation>
-    </message>
-    <message>
-        <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation>Odstranite opozorjene programe pri izklopu samodejnega učenja</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
@@ -2296,6 +2372,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>Kill child processes</source>
         <translation>Uniči podrejene procese</translation>
+    </message>
+    <message>
+        <source>Stop the program from starting new child processes (restart the program after changing this option)</source>
+        <translation>Programu prepreči zagon novih podrejenih procesov (po spremembi te možnosti znova zaženite program)</translation>
     </message>
     <message>
         <source>Parked</source>
@@ -2647,12 +2727,24 @@ Preverite drug program z isto potjo.</translation>
         <translation>Omogočeno</translation>
     </message>
     <message>
+        <source>Show the Rule in the tray menu to switch it on and off</source>
+        <translation>Pokaži pravilo v meniju pladnja za njegov vklop in izklop</translation>
+    </message>
+    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>Vprašaj za povezavo: začasno ustavi povezavo do odločitve uporabnika</translation>
     </message>
     <message>
         <source>Exclusive</source>
         <translation>Izključno</translation>
+    </message>
+    <message>
+        <source>Allow Rule: its Preset Rules are checked only when its own zones and text match</source>
+        <translation>Pravilo dovoljenja: njegova pravila prednastavitve se preverijo samo, ko se ujemajo njegova lastna področja in besedilo</translation>
+    </message>
+    <message>
+        <source>Test the zones only by the &quot;zones&quot; filter of the Rule&apos;s text, not as the Rule&apos;s own condition</source>
+        <translation>Preizkusi področja samo s filtrom »zones« v besedilu pravila, ne kot lasten pogoj pravila</translation>
     </message>
     <message>
         <source>Add Filter</source>
@@ -2961,16 +3053,20 @@ Shraniti spremembe?</translation>
         <translation>Možnosti</translation>
     </message>
     <message>
-        <source>Delay startup to retry&apos;s seconds</source>
-        <translation>Zakasni zagon za ponovni poskus sekund</translation>
-    </message>
-    <message>
         <source>Maximum retries count:</source>
         <translation>Največje število ponovnih poskusov:</translation>
     </message>
     <message>
-        <source>Delay seconds to retry:</source>
-        <translation>Zakasnitev sekund za ponovni poskus:</translation>
+        <source>Delay startup by the retry delay</source>
+        <translation>Zakasni zagon za zakasnitev ponovnega poskusa</translation>
+    </message>
+    <message>
+        <source>Run the task on startup after the delay to retry, not at once</source>
+        <translation>Zaženi opravilo ob zagonu po zakasnitvi ponovnega poskusa, ne takoj</translation>
+    </message>
+    <message>
+        <source>Retry delay:</source>
+        <translation>Zakasnitev ponovnega poskusa:</translation>
     </message>
     <message>
         <source>Each 5 minutes</source>
@@ -3071,6 +3167,18 @@ Shraniti spremembe?</translation>
         <translation>Poišči</translation>
     </message>
     <message>
+        <source>Run the service in its own process, so Fort can see it separately from the other services</source>
+        <translation>Zaženi storitev v lastnem procesu, da jo Fort vidi ločeno od drugih storitev</translation>
+    </message>
+    <message>
+        <source>Restore the original configuration of the service</source>
+        <translation>Obnovi izvirno konfiguracijo storitve</translation>
+    </message>
+    <message>
+        <source>Restart the service to apply the changes</source>
+        <translation>Znova zaženi storitev za uveljavitev sprememb</translation>
+    </message>
+    <message>
         <source>Refresh</source>
         <translation>Osveži</translation>
     </message>
@@ -3130,12 +3238,24 @@ Shraniti spremembe?</translation>
         <translation>Zakasnitev:</translation>
     </message>
     <message>
+        <source>Optional delay of the packets</source>
+        <translation>Neobvezna zakasnitev paketov</translation>
+    </message>
+    <message>
         <source>Packet Loss:</source>
         <translation>Izguba paketa:</translation>
     </message>
     <message>
+        <source>Optional share of the packets to drop (simulated)</source>
+        <translation>Neobvezen delež paketov za zavrženje (simulirano)</translation>
+    </message>
+    <message>
         <source>Buffer Size:</source>
         <translation>Velikost medpomnilnika:</translation>
+    </message>
+    <message>
+        <source>Size of the packets&apos; queue; the overflowing packets are dropped (0: unlimited)</source>
+        <translation>Velikost čakalne vrste paketov; preseženi paketi so zavrženi (0: neomejeno)</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
@@ -3240,6 +3360,14 @@ Izguba paketov: %2</translation>
         <translation>Zberi promet, ko je filter onemogočen</translation>
     </message>
     <message>
+        <source>Keep counting the traffic while the filter is off</source>
+        <translation>Nadaljuj štetje prometa, ko je filter izklopljen</translation>
+    </message>
+    <message>
+        <source>Count the packets which other drivers send again through the firewall</source>
+        <translation>Štej pakete, ki jih drugi gonilniki znova pošljejo skozi požarni zid</translation>
+    </message>
+    <message>
         <source>Month starts on:</source>
         <translation>Mesec se začne na:</translation>
     </message>
@@ -3270,6 +3398,10 @@ Izguba paketov: %2</translation>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>Mesečna kvota:</translation>
+    </message>
+    <message>
+        <source>Collect only the connections of alerted programs or marked by the Alert action</source>
+        <translation>Zbiraj samo povezave opozorjenih programov ali označenih z dejanjem Opozorilo</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -3557,10 +3689,6 @@ Izguba paketov: %2</translation>
         <translation>Osveži</translation>
     </message>
     <message>
-        <source>Remove Application</source>
-        <translation>Odstrani aplikacijo</translation>
-    </message>
-    <message>
         <source>Reset Total</source>
         <translation>Ponastavi skupno</translation>
     </message>
@@ -3597,10 +3725,6 @@ Izguba paketov: %2</translation>
         <translation>Skupno</translation>
     </message>
     <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation>Ali ste prepričani, da želite odstraniti statistiko izbrane aplikacije?</translation>
-    </message>
-    <message>
         <source>Are you sure to reset total statistics?</source>
         <translation>Ali ste prepričani, da želite ponastaviti skupno statistiko?</translation>
     </message>
@@ -3617,12 +3741,20 @@ Izguba paketov: %2</translation>
         <translation>Dodaj program</translation>
     </message>
     <message>
+        <source>Remove Program</source>
+        <translation>Odstrani program</translation>
+    </message>
+    <message>
         <source>Find</source>
         <translation>Poišči</translation>
     </message>
     <message>
         <source>Search</source>
         <translation>Poišči</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected program?</source>
+        <translation>Ali ste prepričani, da želite odstraniti statistiko izbranega programa?</translation>
     </message>
     <message>
         <source>Make this tab active when window opens?</source>
@@ -3787,12 +3919,20 @@ Izguba paketov: %2</translation>
         <translation>URL po meri</translation>
     </message>
     <message>
+        <source>Use own URL and Form Data instead of the Source&apos;s ones</source>
+        <translation>Uporabi lasten URL in podatke obrazca namesto tistih iz vira</translation>
+    </message>
+    <message>
         <source>URL:</source>
         <translation>URL naslov:</translation>
     </message>
     <message>
         <source>Form Data:</source>
         <translation>Oblika podatkov:</translation>
+    </message>
+    <message>
+        <source>The data sent with the download request</source>
+        <translation>Podatki, poslani z zahtevo za prenos</translation>
     </message>
     <message>
         <source>OK</source>

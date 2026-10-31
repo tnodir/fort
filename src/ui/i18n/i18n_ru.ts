@@ -1065,10 +1065,6 @@
         <translation>Ширина столбца:</translation>
     </message>
     <message>
-        <source>Max seconds:</source>
-        <translation>Количество секунд:</translation>
-    </message>
-    <message>
         <source>Graph type:</source>
         <translation>Тип графика:</translation>
     </message>
@@ -1157,8 +1153,20 @@
         <translation>Геометрия окна</translation>
     </message>
     <message>
+        <source>History length:</source>
+        <translation>Длина истории:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>Сколько секунд трафика показывает график</translation>
+    </message>
+    <message>
         <source>Fixed speed:</source>
         <translation>Фиксированная скорость:</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>Постоянный верх шкалы скорости вместо автоматического</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1498,6 +1506,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>Размер значков в списках:</translation>
     </message>
     <message>
+        <source>Hide the windows from screenshots and screen recordings</source>
+        <translation>Скрывать окна со снимков и записей экрана</translation>
+    </message>
+    <message>
         <source>Enabled</source>
         <translation>Включено</translation>
     </message>
@@ -1514,8 +1526,28 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>Автопоказ Меню</translation>
     </message>
     <message>
+        <source>Show the menu, when the window is activated</source>
+        <translation>Показывать меню при активации окна</translation>
+    </message>
+    <message>
         <source>Show Splash screen on startup</source>
         <translation>Показ Заставки при старте</translation>
+    </message>
+    <message>
+        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>Значки окон следуют состоянию значка в трее (режим фильтра, оповещения)</translation>
+    </message>
+    <message>
+        <source>Auto-focus Alert Window</source>
+        <translation>Автофокус окна Оповещения</translation>
+    </message>
+    <message>
+        <source>Clear the alert marks, when the Programs window is closed</source>
+        <translation>Сбрасывать отметки оповещений при закрытии окна Программы</translation>
+    </message>
+    <message>
+        <source>Like turning off Auto-Show Alert Window for New Programs, but quick to switch back</source>
+        <translation>Как отключение автопоказа окна Оповещения для новых программ, но быстро включается обратно</translation>
     </message>
     <message>
         <source>Show Icon</source>
@@ -1652,10 +1684,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Alert Window is Always on top</source>
         <translation>Окно Оповещения всегда сверху</translation>
-    </message>
-    <message>
-        <source>Alert Window is auto-active</source>
-        <translation>Окно Оповещения активируется автоматически</translation>
     </message>
     <message>
         <source>Operations from Tray Menu</source>
@@ -1865,8 +1893,72 @@ Make sure that you have a fresh backup.</source>
         <translation>Фильтр включён</translation>
     </message>
     <message>
+        <source>Block the traffic of programs in a disabled Group</source>
+        <translation>Блокировать трафик программ из отключённой Группы</translation>
+    </message>
+    <message>
+        <source>Filter Off duration:</source>
+        <translation>Длительность отключения фильтра:</translation>
+    </message>
+    <message>
+        <source>How long the filter stays disabled, then it is enabled again (Disabled: no limit)</source>
+        <translation>Как долго фильтр остаётся отключённым, затем включается снова (Отключено: без ограничения)</translation>
+    </message>
+    <message>
+        <source>Auto-learn duration:</source>
+        <translation>Длительность автообучения:</translation>
+    </message>
+    <message>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
+        <translation>Как долго длится режим фильтра Автообучение, затем он переключается на &quot;Блокировать, если не разрешено&quot; (Отключено: без ограничения)</translation>
+    </message>
+    <message>
+        <source>Ask to Connect timeout:</source>
+        <translation>Тайм-аут запроса на соединение:</translation>
+    </message>
+    <message>
+        <source>How long a connection waits for your decision, then it is blocked</source>
+        <translation>Как долго соединение ждёт вашего решения, затем оно блокируется</translation>
+    </message>
+    <message>
+        <source>Keep the boot-time filter, so the traffic is blocked before the firewall starts and while it is stopped</source>
+        <translation>Сохранять фильтр времени загрузки: трафик блокируется до запуска брандмауэра и пока он остановлен</translation>
+    </message>
+    <message>
+        <source>Don&apos;t answer the incoming connection attempts to the closed ports</source>
+        <translation>Не отвечать на входящие попытки соединения с закрытыми портами</translation>
+    </message>
+    <message>
+        <source>Don&apos;t allow to stop or pause the Service</source>
+        <translation>Не разрешать останавливать и приостанавливать службу</translation>
+    </message>
+    <message>
+        <source>Reject the control commands from the command line</source>
+        <translation>Отклонять команды управления из командной строки</translation>
+    </message>
+    <message>
         <source>Password:</source>
         <translation>Пароль:</translation>
+    </message>
+    <message>
+        <source>Add unknown programs which try to connect to the alerted ones</source>
+        <translation>Добавлять в оповещённые неизвестные программы, пытающиеся соединиться</translation>
+    </message>
+    <message>
+        <source>Remove learnt programs on Auto-Learn Off</source>
+        <translation>Удалять изученные программы при выключении автообучения</translation>
+    </message>
+    <message>
+        <source>Delete the alerted programs, when the Auto-Learn Filter Mode is left</source>
+        <translation>Удалять оповещённые программы при выходе из режима фильтра Автообучение</translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the programs of the drives which are not mounted now</source>
+        <translation>Не удалять программы с дисков, которые сейчас не подключены</translation>
+    </message>
+    <message>
+        <source>Write the driver&apos;s configuration changes to the System event log</source>
+        <translation>Записывать изменения конфигурации драйвера в системный журнал событий</translation>
     </message>
     <message>
         <source>10 seconds</source>
@@ -1965,14 +2057,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Ограничение скорости включено</translation>
     </message>
     <message>
-        <source>Auto-learn seconds:</source>
-        <translation>Секунды автообучения:</translation>
-    </message>
-    <message>
-        <source>Ask to Connect seconds:</source>
-        <translation>Секунды запроса на соединение:</translation>
-    </message>
-    <message>
         <source>Disable command line management</source>
         <translation>Отключить управление командной строкой</translation>
     </message>
@@ -2007,14 +2091,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source> second(s)</source>
         <translation> секунд(ы)</translation>
-    </message>
-    <message>
-        <source>Filter Off seconds:</source>
-        <translation>Секунды выключенного фильтра:</translation>
-    </message>
-    <message>
-        <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation>Удалить оповещённые программы при отключении автообучения</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
@@ -2296,6 +2372,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Kill child processes</source>
         <translation>Завершать дочерние процессы</translation>
+    </message>
+    <message>
+        <source>Stop the program from starting new child processes (restart the program after changing this option)</source>
+        <translation>Не давать программе запускать новые дочерние процессы (перезапустите программу после изменения этой опции)</translation>
     </message>
     <message>
         <source>Parked</source>
@@ -2647,12 +2727,24 @@ Please check other program with the same path.</source>
         <translation>Включено</translation>
     </message>
     <message>
+        <source>Show the Rule in the tray menu to switch it on and off</source>
+        <translation>Показывать Правило в меню трея для его включения и выключения</translation>
+    </message>
+    <message>
         <source>Ask to Connect: pause the connection till the user&apos;s decision</source>
         <translation>Запрос на соединение: приостановить соединение до решения пользователя</translation>
     </message>
     <message>
         <source>Exclusive</source>
         <translation>Эксклюзивное</translation>
+    </message>
+    <message>
+        <source>Allow Rule: its Preset Rules are checked only when its own zones and text match</source>
+        <translation>Разрешающее правило: его Шаблонные правила проверяются, только если совпали его зоны и текст</translation>
+    </message>
+    <message>
+        <source>Test the zones only by the &quot;zones&quot; filter of the Rule&apos;s text, not as the Rule&apos;s own condition</source>
+        <translation>Проверять зоны только фильтром &quot;zones&quot; в тексте Правила, а не как собственное условие Правила</translation>
     </message>
     <message>
         <source>Add Filter</source>
@@ -2961,16 +3053,20 @@ Save the changes?</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <source>Delay startup to retry&apos;s seconds</source>
-        <translation>Задержка запуска на секунды повтора</translation>
-    </message>
-    <message>
         <source>Maximum retries count:</source>
         <translation>Максимальное количество повторных попыток:</translation>
     </message>
     <message>
-        <source>Delay seconds to retry:</source>
-        <translation>Задержка в секундах для повторной попытки:</translation>
+        <source>Delay startup by the retry delay</source>
+        <translation>Задерживать запуск на время повтора</translation>
+    </message>
+    <message>
+        <source>Run the task on startup after the delay to retry, not at once</source>
+        <translation>Запускать задачу при старте после задержки повтора, а не сразу</translation>
+    </message>
+    <message>
+        <source>Retry delay:</source>
+        <translation>Задержка повтора:</translation>
     </message>
     <message>
         <source>Each 5 minutes</source>
@@ -3071,6 +3167,18 @@ Save the changes?</source>
         <translation>Найти</translation>
     </message>
     <message>
+        <source>Run the service in its own process, so Fort can see it separately from the other services</source>
+        <translation>Запускать службу в отдельном процессе, чтобы Fort видел её отдельно от других служб</translation>
+    </message>
+    <message>
+        <source>Restore the original configuration of the service</source>
+        <translation>Восстановить исходную конфигурацию службы</translation>
+    </message>
+    <message>
+        <source>Restart the service to apply the changes</source>
+        <translation>Перезапустить службу для применения изменений</translation>
+    </message>
+    <message>
         <source>Refresh</source>
         <translation>Обновить</translation>
     </message>
@@ -3130,12 +3238,24 @@ Save the changes?</source>
         <translation>Задержка:</translation>
     </message>
     <message>
+        <source>Optional delay of the packets</source>
+        <translation>Необязательная задержка пакетов</translation>
+    </message>
+    <message>
         <source>Packet Loss:</source>
         <translation>Потеря пакетов:</translation>
     </message>
     <message>
+        <source>Optional share of the packets to drop (simulated)</source>
+        <translation>Необязательная доля пакетов, которые отбрасываются (имитация)</translation>
+    </message>
+    <message>
         <source>Buffer Size:</source>
         <translation>Размер буфера:</translation>
+    </message>
+    <message>
+        <source>Size of the packets&apos; queue; the overflowing packets are dropped (0: unlimited)</source>
+        <translation>Размер очереди пакетов; переполняющие её пакеты отбрасываются (0: без ограничения)</translation>
     </message>
     <message>
         <source>The Speed Limit is active only in this Time Period.</source>
@@ -3240,6 +3360,14 @@ Packet loss: %2</source>
         <translation>Собирать трафик, когда фильтр отключён</translation>
     </message>
     <message>
+        <source>Keep counting the traffic while the filter is off</source>
+        <translation>Продолжать подсчёт трафика, пока фильтр выключен</translation>
+    </message>
+    <message>
+        <source>Count the packets which other drivers send again through the firewall</source>
+        <translation>Считать пакеты, которые другие драйверы отправляют повторно через брандмауэр</translation>
+    </message>
+    <message>
         <source>Month starts on:</source>
         <translation>Месяц начинается с:</translation>
     </message>
@@ -3270,6 +3398,10 @@ Packet loss: %2</source>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>Квота на месяц:</translation>
+    </message>
+    <message>
+        <source>Collect only the connections of alerted programs or marked by the Alert action</source>
+        <translation>Собирать только соединения оповещённых программ или помеченных действием Оповещение</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -3557,10 +3689,6 @@ Packet loss: %2</source>
         <translation>Обновить</translation>
     </message>
     <message>
-        <source>Remove Application</source>
-        <translation>Удалить приложение</translation>
-    </message>
-    <message>
         <source>Reset Total</source>
         <translation>Сбросить общую</translation>
     </message>
@@ -3597,10 +3725,6 @@ Packet loss: %2</source>
         <translation>Общая</translation>
     </message>
     <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation>Удалить статистику для выбранного приложения?</translation>
-    </message>
-    <message>
         <source>Are you sure to reset total statistics?</source>
         <translation>Обнулить общую статистику?</translation>
     </message>
@@ -3617,12 +3741,20 @@ Packet loss: %2</source>
         <translation>Добавить программу</translation>
     </message>
     <message>
+        <source>Remove Program</source>
+        <translation>Удалить программу</translation>
+    </message>
+    <message>
         <source>Find</source>
         <translation>Найти</translation>
     </message>
     <message>
         <source>Search</source>
         <translation>Поиск</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected program?</source>
+        <translation>Удалить статистику для выбранной программы?</translation>
     </message>
     <message>
         <source>Make this tab active when window opens?</source>
@@ -3787,12 +3919,20 @@ Packet loss: %2</source>
         <translation>Другая ссылка</translation>
     </message>
     <message>
+        <source>Use own URL and Form Data instead of the Source&apos;s ones</source>
+        <translation>Использовать свою ссылку и данные формы вместо источника</translation>
+    </message>
+    <message>
         <source>URL:</source>
         <translation>Ссылка:</translation>
     </message>
     <message>
         <source>Form Data:</source>
         <translation>Данные формы:</translation>
+    </message>
+    <message>
+        <source>The data sent with the download request</source>
+        <translation>Данные, отправляемые с запросом загрузки</translation>
     </message>
     <message>
         <source>OK</source>
