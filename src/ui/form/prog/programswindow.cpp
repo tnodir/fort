@@ -289,6 +289,28 @@ void ProgramsWindow::setupEditMenu()
 {
     auto menu = ControlUtil::createMenu(this);
 
+    setupEditMenuStateActions(menu);
+    menu->addSeparator();
+
+    setupEditMenuProgramActions(menu);
+    menu->addSeparator();
+
+    setupEditMenuPathActions(menu);
+    menu->addSeparator();
+
+    setupEditMenuAlertActions(menu);
+    menu->addSeparator();
+
+    setupEditMenuMiscActions(menu);
+
+    setupEditMenuConnections();
+
+    m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
+    m_btEdit->setMenu(menu);
+}
+
+void ProgramsWindow::setupEditMenuStateActions(QMenu *menu)
+{
     m_timerMenu = menu->addMenu(IconCache::icon(":/icons/time.png"), QString());
     setupTimerMenuActions();
 
@@ -309,9 +331,10 @@ void ProgramsWindow::setupEditMenu()
 
     m_actKillApp = menu->addAction(IconCache::icon(":/icons/scull.png"), QString());
     m_actKillApp->setShortcut(QKeyCombination(Qt::CTRL | Qt::ALT, Qt::Key_K));
+}
 
-    menu->addSeparator();
-
+void ProgramsWindow::setupEditMenuProgramActions(QMenu *menu)
+{
     m_actAddApp = menu->addAction(IconCache::icon(":/icons/add.png"), QString());
     m_actAddApp->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
@@ -323,9 +346,10 @@ void ProgramsWindow::setupEditMenu()
 
     m_actRemoveApp = menu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveApp->setShortcut(Qt::Key_Delete);
+}
 
-    menu->addSeparator();
-
+void ProgramsWindow::setupEditMenuPathActions(QMenu *menu)
+{
     m_actAppCopyPath = menu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
     m_actAppCopyPath->setShortcut(QKeyCombination(Qt::CTRL | Qt::SHIFT, Qt::Key_C));
 
@@ -333,21 +357,26 @@ void ProgramsWindow::setupEditMenu()
     m_actAppOpenFolder->setShortcut(QKeyCombination(Qt::CTRL | Qt::SHIFT, Qt::Key_O));
 
     m_actAppConns = menu->addAction(IconCache::icon(":/icons/connect.png"), QString());
+}
 
-    menu->addSeparator();
-
+void ProgramsWindow::setupEditMenuAlertActions(QMenu *menu)
+{
     m_actReviewAlerts = menu->addAction(IconCache::icon(":/icons/error.png"), QString());
     m_actDeleteAlertedApps = menu->addAction(QString());
     m_actClearAlerts = menu->addAction(QString());
+}
 
-    menu->addSeparator();
-
+void ProgramsWindow::setupEditMenuMiscActions(QMenu *menu)
+{
     m_actPurgeApps = menu->addAction(IconCache::icon(":/icons/recycle.png"), QString());
     m_actPurgeApps->setShortcut(QKeyCombination(Qt::CTRL | Qt::ALT, Qt::Key_P));
 
     m_actFindApps = menu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
     m_actFindApps->setShortcut(QKeySequence::Find);
+}
 
+void ProgramsWindow::setupEditMenuConnections()
+{
     connect(m_actAllowApp, &QAction::triggered, this,
             [&] { updateSelectedApps(App::ActionAllow); });
     connect(m_actBlockApp, &QAction::triggered, this,
@@ -374,9 +403,6 @@ void ProgramsWindow::setupEditMenu()
                 tr("Are you sure to remove all non-existent programs?"));
     });
     connect(m_actFindApps, &QAction::triggered, this, [&] { m_editSearch->setFocus(); });
-
-    m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
-    m_btEdit->setMenu(menu);
 }
 
 void ProgramsWindow::setupTimerMenuActions()

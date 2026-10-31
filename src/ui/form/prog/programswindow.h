@@ -53,6 +53,12 @@ private:
     QLayout *setupHeader();
     QLayout *setupToolbarButtonsLayout();
     void setupEditMenu();
+    void setupEditMenuStateActions(QMenu *menu);
+    void setupEditMenuProgramActions(QMenu *menu);
+    void setupEditMenuPathActions(QMenu *menu);
+    void setupEditMenuAlertActions(QMenu *menu);
+    void setupEditMenuMiscActions(QMenu *menu);
+    void setupEditMenuConnections();
     void setupTimerMenuActions();
     void setupEditSearch();
     void setupFilter();
