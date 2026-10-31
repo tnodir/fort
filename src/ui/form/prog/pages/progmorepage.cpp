@@ -23,6 +23,8 @@ void ProgMorePage::onPageInitialize(const App &app)
 void ProgMorePage::onRetranslateUi()
 {
     m_cbKillChild->setText(tr("Kill child processes"));
+    m_cbKillChild->setToolTip(tr("Stop the program from starting new child processes "
+                                 "(restart the program after changing this option)"));
 
     m_cbParked->setText(tr("Parked"));
     m_cbParked->setToolTip(tr("Don't purge as obsolete"));

@@ -88,8 +88,13 @@ void SpeedLimitEditDialog::retranslateUi()
     m_labelSpeed->setText(tr("Speed:"));
     retranslateSpeedNames();
     m_labelLatency->setText(tr("Latency:"));
+    m_labelLatency->setToolTip(tr("Optional delay of the packets"));
     m_labelPacketLoss->setText(tr("Packet Loss:"));
+    m_labelPacketLoss->setToolTip(tr("Optional share of the packets to drop (simulated)"));
     m_labelBufferSize->setText(tr("Buffer Size:"));
+    m_labelBufferSize->setToolTip(
+            tr("Size of the packets' queue; the overflowing packets are dropped "
+               "(0: unlimited)"));
 
     m_periodSelector->retranslateUi();
     m_periodSelector->setToolTip(tr("The Speed Limit is active only in this Time Period."));

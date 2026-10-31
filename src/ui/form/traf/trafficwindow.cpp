@@ -114,7 +114,7 @@ void TrafficWindow::retranslateUi()
 
     m_btEdit->setText(tr("Edit"));
     m_actAddProgram->setText(tr("Add Program"));
-    m_actRemoveApp->setText(tr("Remove Application"));
+    m_actRemoveApp->setText(tr("Remove Program"));
     m_actResetTotal->setText(tr("Reset Total"));
     m_actClearAll->setText(tr("Clear All"));
     m_actFindApps->setText(tr("Find"));
@@ -252,7 +252,7 @@ void TrafficWindow::setupClearMenu()
                         ctrl()->deleteStatApp(appStatRow.appId);
                     }
                 },
-                tr("Are you sure to remove statistics for selected application?"));
+                tr("Are you sure to remove statistics for selected program?"));
     });
     connect(m_actResetTotal, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(

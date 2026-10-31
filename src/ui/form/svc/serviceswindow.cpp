@@ -89,8 +89,12 @@ void ServicesWindow::retranslateUi()
     m_actFind->setText(tr("Find"));
 
     m_btTrack->setText(tr("Make Trackable"));
+    m_btTrack->setToolTip(tr("Run the service in its own process, so Fort can see it "
+                             "separately from the other services"));
     m_btRevert->setText(tr("Revert Changes"));
+    m_btRevert->setToolTip(tr("Restore the original configuration of the service"));
     m_btRestart->setText(tr("Restart Service"));
+    m_btRestart->setToolTip(tr("Restart the service to apply the changes"));
     m_btRefresh->setText(tr("Refresh"));
 
     m_editSearch->setPlaceholderText(tr("Search") + " /");

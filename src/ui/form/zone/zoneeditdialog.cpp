@@ -78,8 +78,10 @@ void ZoneEditDialog::retranslateUi()
 
     m_cbEnabled->setText(tr("Enabled"));
     m_cbCustomUrl->setText(tr("Custom URL"));
+    m_cbCustomUrl->setToolTip(tr("Use own URL and Form Data instead of the Source's ones"));
     m_labelUrl->setText(tr("URL:"));
     m_labelFormData->setText(tr("Form Data:"));
+    m_labelFormData->setToolTip(tr("The data sent with the download request"));
 
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));

@@ -157,6 +157,7 @@ void RuleEditDialog::retranslateUi()
 
     m_cbEnabled->setText(tr("Enabled"));
     m_cbTrayMenu->setText(tr("Tray Menu"));
+    m_cbTrayMenu->setToolTip(tr("Show the Rule in the tray menu to switch it on and off"));
 
     m_rbAllow->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_ALLOW));
     m_rbBlock->setText(ActionRange::actionTypeText(FORT_RULE_FILTER_ACTION_BLOCK));
@@ -164,8 +165,12 @@ void RuleEditDialog::retranslateUi()
     m_rbAsk->setToolTip(tr("Ask to Connect: pause the connection till the user's decision"));
 
     m_cbExclusive->setText(tr("Exclusive"));
+    m_cbExclusive->setToolTip(tr("Allow Rule: its Preset Rules are checked only when its "
+                                 "own zones and text match"));
     m_btZones->retranslateUi();
     m_cbInlineZones->setText(tr("Inline Zones"));
+    m_cbInlineZones->setToolTip(tr("Test the zones only by the \"zones\" filter of the "
+                                   "Rule's text, not as the Rule's own condition"));
     m_btAddFilter->setToolTip(tr("Add Filter"));
 
     retranslateRulePlaceholderText();
