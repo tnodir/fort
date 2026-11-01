@@ -163,9 +163,7 @@ void AboutPage::refreshAutoUpdate()
     const bool isDownloading = manager->isDownloading();
     const bool isDownloadActive = (isDownloading || isDownloaded);
 
-    if (!isDownloading || isDownloaded) {
-        m_progressBar->setValue(isDownloaded ? m_progressBar->maximum() : m_progressBar->minimum());
-    }
+    refreshDownloadProgress(isDownloading, isDownloaded);
     m_progressBar->setVisible(hasUpdate && isDownloadActive);
 
     m_btDownload->setVisible(hasUpdate && !isDownloadActive);
@@ -174,4 +172,12 @@ void AboutPage::refreshAutoUpdate()
     m_btInstall->setToolTip(isDownloaded ? manager->installerPath() : QString());
 
     m_btCheckUpdate->setVisible(!isDownloading);
+}
+
+void AboutPage::refreshDownloadProgress(bool isDownloading, bool isDownloaded)
+{
+    if (isDownloading && !isDownloaded)
+        return;
+
+    m_progressBar->setValue(isDownloaded ? m_progressBar->maximum() : m_progressBar->minimum());
 }

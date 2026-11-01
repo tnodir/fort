@@ -25,6 +25,7 @@ private:
     void setupAutoUpdate();
 
     void refreshAutoUpdate();
+    void refreshDownloadProgress(bool isDownloading, bool isDownloaded);
 
 private:
     bool m_keepCurrentVersion = false;
