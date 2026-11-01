@@ -176,11 +176,7 @@ void QuotaManager::setupByConfIni()
 
     auto statManager = Fort::statManager();
 
-    qint64 inBytes, outBytes;
-
-    statManager->getTraffic(StatSql::sqlSelectTrafDay, trafDay, inBytes, outBytes);
-    setTrafBytes(AlertDay, inBytes);
-
-    statManager->getTraffic(StatSql::sqlSelectTrafMonth, trafMonth, inBytes, outBytes);
-    setTrafBytes(AlertMonth, inBytes);
+    setTrafBytes(AlertDay, statManager->getTraffic(StatSql::sqlSelectTrafDay, trafDay).inBytes);
+    setTrafBytes(
+            AlertMonth, statManager->getTraffic(StatSql::sqlSelectTrafMonth, trafMonth).inBytes);
 }

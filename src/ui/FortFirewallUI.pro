@@ -589,6 +589,7 @@ HEADERS += \
     stat/statconnworker.h \
     stat/statmanager.h \
     stat/statsql.h \
+    stat/trafbytes.h \
     task/taskdownloader.h \
     task/taskeditinfo.h \
     task/taskinfo.h \

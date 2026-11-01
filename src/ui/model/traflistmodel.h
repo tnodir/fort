@@ -1,6 +1,7 @@
 #ifndef TRAFLISTMODEL_H
 #define TRAFLISTMODEL_H
 
+#include <stat/trafbytes.h>
 #include <util/model/tableitemmodel.h>
 
 #include "traflistcolumn.h"
@@ -9,8 +10,7 @@
 struct TrafficRow : TableRow
 {
     qint32 trafTime = 0;
-    qint64 inBytes = 0;
-    qint64 outBytes = 0;
+    TrafBytes bytes;
 };
 
 class TrafListModel : public TableItemModel

@@ -157,9 +157,9 @@ QVariant AppStatModel::dataDisplay(const QModelIndex &index) const
     case AppStatColumn::Program:
         return dataDisplayName(index);
     case AppStatColumn::Download:
-        return m_unitType.formatTrafUnit(m_appStatRow.inBytes);
+        return m_unitType.formatTrafUnit(m_appStatRow.bytes.inBytes);
     case AppStatColumn::Upload:
-        return m_unitType.formatTrafUnit(m_appStatRow.outBytes);
+        return m_unitType.formatTrafUnit(m_appStatRow.bytes.outBytes);
     }
 
     return {};
@@ -228,8 +228,7 @@ bool AppStatModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
     m_appStatRow.confAppId = stmt.columnInt64(1);
     m_appStatRow.appPath = stmt.columnText(2);
     m_appStatRow.appName = stmt.columnText(3);
-    m_appStatRow.inBytes = stmt.columnInt64(4);
-    m_appStatRow.outBytes = stmt.columnInt64(5);
+    m_appStatRow.bytes = { stmt.columnInt64(4), stmt.columnInt64(5) };
 
     return true;
 }

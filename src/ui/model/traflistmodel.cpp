@@ -193,11 +193,11 @@ QVariant TrafListModel::dataDisplay(const QModelIndex &index) const
     case TrafListColumn::Date:
         return m_unitType.formatTrafTime(m_trafRow.trafTime);
     case TrafListColumn::Download:
-        return m_unitType.formatTrafUnit(m_trafRow.inBytes);
+        return m_unitType.formatTrafUnit(m_trafRow.bytes.inBytes);
     case TrafListColumn::Upload:
-        return m_unitType.formatTrafUnit(m_trafRow.outBytes);
+        return m_unitType.formatTrafUnit(m_trafRow.bytes.outBytes);
     case TrafListColumn::Sum:
-        return m_unitType.formatTrafUnit(m_trafRow.inBytes + m_trafRow.outBytes);
+        return m_unitType.formatTrafUnit(m_trafRow.bytes.inBytes + m_trafRow.bytes.outBytes);
     }
 
     return {};
@@ -247,8 +247,7 @@ bool TrafListModel::updateTableRow(const QVariantHash & /*vars*/, int row) const
 
     const char *sqlSelectTraffic = getSqlSelectTraffic(type(), m_appId);
 
-    statManager()->getTraffic(
-            sqlSelectTraffic, m_trafRow.trafTime, m_trafRow.inBytes, m_trafRow.outBytes, m_appId);
+    m_trafRow.bytes = statManager()->getTraffic(sqlSelectTraffic, m_trafRow.trafTime, m_appId);
 
     return true;
 }

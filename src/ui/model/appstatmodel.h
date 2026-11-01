@@ -3,6 +3,7 @@
 
 #include <sqlite/sqlite_types.h>
 
+#include <stat/trafbytes.h>
 #include <util/model/ftstablesqlmodel.h>
 
 #include "appstatcolumn.h"
@@ -14,8 +15,7 @@ struct AppStatRow : TableRow
 
     qint64 appId = 0;
 
-    qint64 inBytes = 0;
-    qint64 outBytes = 0;
+    TrafBytes bytes;
 
     QString appPath;
     QString appName;

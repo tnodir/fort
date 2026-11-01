@@ -11,6 +11,8 @@
 #include <util/classhelpers.h>
 #include <util/ioc/iocservice.h>
 
+#include "trafbytes.h"
+
 class LogEntryProcNew;
 class LogEntryStatTraf;
 
@@ -40,8 +42,7 @@ public:
 
     qint32 getTrafficTime(const char *sql, qint64 appId = 0);
 
-    void getTraffic(
-            const char *sql, qint32 trafTime, qint64 &inBytes, qint64 &outBytes, qint64 appId = 0);
+    TrafBytes getTraffic(const char *sql, qint32 trafTime, qint64 appId = 0);
 
     bool exportBackup(const QString &path);
     virtual bool exportMasterBackup(const QString &path);
@@ -62,6 +63,9 @@ public slots:
     virtual bool clearTraffic();
 
 private:
+    struct TrafStmts;
+    struct TrafLog;
+
     bool setupDb();
 
     void setupTrafDate();
@@ -91,15 +95,11 @@ private:
 
     void deleteOldTraffic(qint32 trafHour);
 
-    void logTrafBytes(const SqliteStmtList &insertStmtList, const SqliteStmtList &updateStmtList,
-            quint64 &sumInBytes, quint64 &sumOutBytes, quint32 pid, quint32 inBytes,
-            quint32 outBytes, qint64 unixTime, bool logStat);
+    void logTrafBytes(TrafLog &log, quint32 pid, const TrafBytes &bytes);
 
-    void updateTrafficList(const SqliteStmtList &insertStmtList,
-            const SqliteStmtList &updateStmtList, quint64 inBytes, quint64 outBytes,
-            qint64 appId = 0);
+    void updateTrafficList(const TrafStmts &stmts, const TrafBytes &bytes, qint64 appId = 0);
 
-    bool updateTraffic(SqliteStmt *stmt, quint64 inBytes, quint64 outBytes, qint64 appId = 0);
+    bool updateTraffic(SqliteStmt *stmt, const TrafBytes &bytes, qint64 appId = 0);
 
     SqliteStmt *getStmt(const char *sql);
     SqliteStmt *getTrafficStmt(const char *sql, qint32 trafTime);

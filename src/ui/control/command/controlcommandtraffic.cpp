@@ -22,11 +22,11 @@ bool getAppTraffic(ProcessCommandResult &r, const QVariantList &args)
     }
 
     // The total's time is any non-zero
-    qint64 inBytes = 0, outBytes = 0;
-    statManager->getTraffic(
-            StatSql::sqlSelectTrafAppTotal, /*trafTime=*/1, inBytes, outBytes, appId);
+    const TrafBytes bytes =
+            statManager->getTraffic(StatSql::sqlSelectTrafAppTotal, /*trafTime=*/1, appId);
 
-    r.errorMessage = ControlCommandUtil::fieldsToText({ { "in", inBytes }, { "out", outBytes } });
+    r.errorMessage = ControlCommandUtil::fieldsToText(
+            { { "in", bytes.inBytes }, { "out", bytes.outBytes } });
 
     return true;
 }

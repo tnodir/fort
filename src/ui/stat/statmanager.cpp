@@ -78,6 +78,22 @@ SqliteDb::MigrateOptions migrateOptions()
 
 }
 
+// The statements by the traffic periods: the n-th insert is for the n-th update
+struct StatManager::TrafStmts
+{
+    SqliteStmtList insert;
+    SqliteStmtList update;
+};
+
+// The state of logging a traffic entry's processes
+struct StatManager::TrafLog
+{
+    bool logStat = false;
+    qint64 unixTime = 0;
+    TrafBytes sum;
+    TrafStmts appStmts;
+};
+
 StatManager::StatManager(const QString &filePath, QObject *parent, quint32 openFlags) :
     QObject(parent), m_sqliteDb(new SqliteDb(filePath, openFlags))
 {
@@ -272,68 +288,68 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
     }
 
     // Sum traffic bytes
-    quint64 sumInBytes = 0;
-    quint64 sumOutBytes = 0;
+    TrafLog log = {
+        .logStat = logStat,
+        .unixTime = unixTime,
+        .appStmts = {
+                .insert = {
+                        getTrafficStmt(StatSql::sqlInsertTrafAppHour, m_trafHour),
+                        getTrafficStmt(StatSql::sqlInsertTrafAppDay, m_trafDay),
+                        getTrafficStmt(StatSql::sqlInsertTrafAppMonth, m_trafMonth),
+                        getTrafficStmt(StatSql::sqlInsertTrafAppTotal, m_trafHour),
+                },
+                .update = {
+                        getTrafficStmt(StatSql::sqlUpdateTrafAppHour, m_trafHour),
+                        getTrafficStmt(StatSql::sqlUpdateTrafAppDay, m_trafDay),
+                        getTrafficStmt(StatSql::sqlUpdateTrafAppMonth, m_trafMonth),
+                        getTrafficStmt(StatSql::sqlUpdateTrafAppTotal, -1),
+                },
+        },
+    };
 
     const quint16 procCount = entry.procCount();
-    {
-        const quint32 *procTrafBytes = entry.procTrafBytes();
+    const quint32 *procTrafBytes = entry.procTrafBytes();
 
-        const SqliteStmtList insertTrafAppStmts = {
-            getTrafficStmt(StatSql::sqlInsertTrafAppHour, m_trafHour),
-            getTrafficStmt(StatSql::sqlInsertTrafAppDay, m_trafDay),
-            getTrafficStmt(StatSql::sqlInsertTrafAppMonth, m_trafMonth),
-            getTrafficStmt(StatSql::sqlInsertTrafAppTotal, m_trafHour),
-        };
+    for (int i = 0; i < procCount; ++i) {
+        const quint32 pidFlag = *procTrafBytes++;
+        const quint32 inBytes = *procTrafBytes++;
+        const quint32 outBytes = *procTrafBytes++;
 
-        const SqliteStmtList updateTrafAppStmts = {
-            getTrafficStmt(StatSql::sqlUpdateTrafAppHour, m_trafHour),
-            getTrafficStmt(StatSql::sqlUpdateTrafAppDay, m_trafDay),
-            getTrafficStmt(StatSql::sqlUpdateTrafAppMonth, m_trafMonth),
-            getTrafficStmt(StatSql::sqlUpdateTrafAppTotal, -1),
-        };
+        const bool inactive = (pidFlag & 1) != 0;
+        const quint32 pid = pidFlag & ~quint32(1);
 
-        for (int i = 0; i < procCount; ++i) {
-            const quint32 pidFlag = *procTrafBytes++;
-            const quint32 inBytes = *procTrafBytes++;
-            const quint32 outBytes = *procTrafBytes++;
+        logTrafBytes(log, pid, { inBytes, outBytes });
 
-            const bool inactive = (pidFlag & 1) != 0;
-            const quint32 pid = pidFlag & ~quint32(1);
-
-            logTrafBytes(insertTrafAppStmts, updateTrafAppStmts, sumInBytes, sumOutBytes, pid,
-                    inBytes, outBytes, unixTime, logStat);
-
-            if (inactive) {
-                removeLoggedProcessId(pid);
-            }
+        if (inactive) {
+            removeLoggedProcessId(pid);
         }
     }
 
     if (logStat) {
-        const SqliteStmtList insertTrafStmts = {
-            getTrafficStmt(StatSql::sqlInsertTrafHour, m_trafHour),
-            getTrafficStmt(StatSql::sqlInsertTrafDay, m_trafDay),
-            getTrafficStmt(StatSql::sqlInsertTrafMonth, m_trafMonth),
-        };
-
-        const SqliteStmtList updateTrafStmts = {
-            getTrafficStmt(StatSql::sqlUpdateTrafHour, m_trafHour),
-            getTrafficStmt(StatSql::sqlUpdateTrafDay, m_trafDay),
-            getTrafficStmt(StatSql::sqlUpdateTrafMonth, m_trafMonth),
+        const TrafStmts totalStmts = {
+            .insert = {
+                getTrafficStmt(StatSql::sqlInsertTrafHour, m_trafHour),
+                getTrafficStmt(StatSql::sqlInsertTrafDay, m_trafDay),
+                getTrafficStmt(StatSql::sqlInsertTrafMonth, m_trafMonth),
+            },
+            .update = {
+                getTrafficStmt(StatSql::sqlUpdateTrafHour, m_trafHour),
+                getTrafficStmt(StatSql::sqlUpdateTrafDay, m_trafDay),
+                getTrafficStmt(StatSql::sqlUpdateTrafMonth, m_trafMonth),
+            },
         };
 
         // Update or insert total bytes
-        updateTrafficList(insertTrafStmts, updateTrafStmts, sumInBytes, sumOutBytes);
+        updateTrafficList(totalStmts, log.sum);
     }
 
     commitTransaction();
 
     // Check quotas
-    checkQuotas(sumInBytes);
+    checkQuotas(log.sum.inBytes);
 
     // Notify about sum traffic bytes
-    emit trafficAdded(unixTime, sumInBytes, sumOutBytes);
+    emit trafficAdded(unixTime, log.sum.inBytes, log.sum.outBytes);
 
     return true;
 }
@@ -469,9 +485,7 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
     DbUtil::doList(deleteTrafStmts);
 }
 
-void StatManager::logTrafBytes(const SqliteStmtList &insertStmtList,
-        const SqliteStmtList &updateStmtList, quint64 &sumInBytes, quint64 &sumOutBytes,
-        quint32 pid, quint32 inBytes, quint32 outBytes, qint64 unixTime, bool logStat)
+void StatManager::logTrafBytes(TrafLog &log, quint32 pid, const TrafBytes &bytes)
 {
     const QString appPath = getLoggedProcessIdPath(pid);
 
@@ -481,32 +495,31 @@ void StatManager::logTrafBytes(const SqliteStmtList &insertStmtList,
         return;
     }
 
-    if (inBytes == 0 && outBytes == 0)
+    if (bytes.inBytes == 0 && bytes.outBytes == 0)
         return;
 
-    const qint64 appId = getOrCreateCachedAppId(appPath, /*confAppId=*/0, unixTime);
+    const qint64 appId = getOrCreateCachedAppId(appPath, /*confAppId=*/0, log.unixTime);
     Q_ASSERT(appId != INVALID_APP_ID);
 
-    if (logStat) {
+    if (log.logStat) {
         // Update or insert app bytes
-        updateTrafficList(insertStmtList, updateStmtList, inBytes, outBytes, appId);
+        updateTrafficList(log.appStmts, bytes, appId);
     }
 
     // Update sum traffic bytes
-    sumInBytes += inBytes;
-    sumOutBytes += outBytes;
+    log.sum.inBytes += bytes.inBytes;
+    log.sum.outBytes += bytes.outBytes;
 }
 
-void StatManager::updateTrafficList(const SqliteStmtList &insertStmtList,
-        const SqliteStmtList &updateStmtList, quint64 inBytes, quint64 outBytes, qint64 appId)
+void StatManager::updateTrafficList(const TrafStmts &stmts, const TrafBytes &bytes, qint64 appId)
 {
     int i = 0;
-    for (SqliteStmt *stmtUpdate : updateStmtList) {
-        if (!updateTraffic(stmtUpdate, inBytes, outBytes, appId)) {
-            SqliteStmt *stmtInsert = insertStmtList.at(i);
-            if (!updateTraffic(stmtInsert, inBytes, outBytes, appId)) {
+    for (SqliteStmt *stmtUpdate : stmts.update) {
+        if (!updateTraffic(stmtUpdate, bytes, appId)) {
+            SqliteStmt *stmtInsert = stmts.insert.at(i);
+            if (!updateTraffic(stmtInsert, bytes, appId)) {
                 qCCritical(LC) << "Update traffic error:" << sqliteDb()->errorMessage()
-                               << "inBytes:" << inBytes << "outBytes:" << outBytes
+                               << "inBytes:" << bytes.inBytes << "outBytes:" << bytes.outBytes
                                << "appId:" << appId << "index:" << i;
             }
         }
@@ -514,10 +527,10 @@ void StatManager::updateTrafficList(const SqliteStmtList &insertStmtList,
     }
 }
 
-bool StatManager::updateTraffic(SqliteStmt *stmt, quint64 inBytes, quint64 outBytes, qint64 appId)
+bool StatManager::updateTraffic(SqliteStmt *stmt, const TrafBytes &bytes, qint64 appId)
 {
-    stmt->bindInt64(2, inBytes);
-    stmt->bindInt64(3, outBytes);
+    stmt->bindInt64(2, bytes.inBytes);
+    stmt->bindInt64(3, bytes.outBytes);
 
     if (appId != 0) {
         stmt->bindInt64(4, appId);
@@ -559,9 +572,10 @@ qint32 StatManager::getTrafficTime(const char *sql, qint64 appId)
     return trafTime;
 }
 
-void StatManager::getTraffic(
-        const char *sql, qint32 trafTime, qint64 &inBytes, qint64 &outBytes, qint64 appId)
+TrafBytes StatManager::getTraffic(const char *sql, qint32 trafTime, qint64 appId)
 {
+    TrafBytes bytes;
+
     SqliteStmt *stmt = getStmt(sql);
 
     stmt->bindInt(1, trafTime);
@@ -571,13 +585,13 @@ void StatManager::getTraffic(
     }
 
     if (stmt->step() == SqliteStmt::StepRow) {
-        inBytes = stmt->columnInt64(0);
-        outBytes = stmt->columnInt64(1);
-    } else {
-        inBytes = outBytes = 0;
+        bytes.inBytes = stmt->columnInt64(0);
+        bytes.outBytes = stmt->columnInt64(1);
     }
 
     stmt->reset();
+
+    return bytes;
 }
 
 bool StatManager::exportBackup(const QString &path)
