@@ -907,25 +907,30 @@ inline static NTSTATUS fort_shaper_packet_queue(
     return STATUS_SUCCESS;
 }
 
-FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper, PFORT_CALLOUT_ARG ca)
+inline static BOOL fort_shaper_packet_is_skipped(PCFORT_CALLOUT_ARG ca)
 {
     if (ca->netBufList == NULL)
-        return FALSE;
+        return TRUE;
 
     if (FWPS_IS_METADATA_FIELD_PRESENT(
                 ca->inMetaValues, FWPS_METADATA_FIELD_ALE_CLASSIFY_REQUIRED)) {
         /* Skip the packet that needs to be re-classified */
-        return FALSE;
+        return TRUE;
     }
 
     if (ca->inbound && fort_packet_is_ipsec_protected(ca)) {
         /* To be compatible with Vista's IpSec implementation, we must not
          * intercept not-yet-detunneled IpSec traffic.
          * Also the IpSec protected packets are re-injected with the rebuilt IP header only. */
-        return FALSE;
+        return TRUE;
     }
 
-    if (fort_device_flag(&fort_device()->conf, FORT_DEVICE_POWER_OFF) != 0)
+    return fort_device_flag(&fort_device()->conf, FORT_DEVICE_POWER_OFF) != 0;
+}
+
+FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper, PFORT_CALLOUT_ARG ca)
+{
+    if (fort_shaper_packet_is_skipped(ca))
         return FALSE;
 
     PFORT_FLOW flow = (PFORT_FLOW) ca->flowContext;
