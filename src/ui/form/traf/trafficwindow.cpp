@@ -316,6 +316,7 @@ void TrafficWindow::setupAppListView()
 
     m_appListView->setSortingEnabled(true);
     m_appListView->setModel(appStatModel());
+    m_appListView->keepSelectionByIds();
 
     m_appListView->setMenu(m_btEdit->menu());
 
