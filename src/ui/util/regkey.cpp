@@ -65,60 +65,74 @@ bool RegKey::removeValue(const QString &name)
     return !RegDeleteValue((HKEY) handle(), (LPCWSTR) name.utf16());
 }
 
-bool RegKey::setValue(const QString &name, const QVariant &value, bool expand)
+namespace {
+
+struct RegData
 {
-    QByteArray dataBuffer;
-    QString dataText;
-    union {
-        qint64 i64;
-        qint32 i32;
-    } dataNum;
-    const void *dataPtr;
+    DWORD type = REG_SZ;
+    QByteArray buffer;
+};
 
-    DWORD size;
-    DWORD type;
+template<typename T>
+void setNumberData(RegData &data, T number, DWORD type)
+{
+    data.type = type;
+    data.buffer = QByteArray((const char *) &number, sizeof(T));
+}
 
+bool fillNumberData(RegData &data, const QVariant &value)
+{
+    switch (value.userType()) {
+    case QMetaType::Bool:
+    case QMetaType::Int:
+    case QMetaType::UInt:
+        setNumberData<qint32>(data, value.toInt(), REG_DWORD);
+        return true;
+    case QMetaType::LongLong:
+    case QMetaType::ULongLong:
+        setNumberData<qint64>(data, value.toLongLong(), REG_QWORD);
+        return true;
+    default:
+        return false;
+    }
+}
+
+void fillTextData(RegData &data, const QVariant &value, bool expand)
+{
+    data.type = expand ? REG_EXPAND_SZ : REG_SZ;
+    StringUtil::addStringToBuffer(data.buffer, value.toString());
+}
+
+bool fillRegData(RegData &data, const QVariant &value, bool expand)
+{
     switch (value.userType()) {
     case QMetaType::UnknownType:
     case QMetaType::Void:
-    case QMetaType::Nullptr: {
-        dataPtr = nullptr;
-        size = 0;
-        type = REG_SZ;
-    } break;
-    case QMetaType::Bool:
-    case QMetaType::Int:
-    case QMetaType::UInt: {
-        dataNum.i32 = value.toInt();
-        dataPtr = &dataNum.i32;
-        size = sizeof(qint32);
-        type = REG_DWORD;
-    } break;
-    case QMetaType::LongLong:
-    case QMetaType::ULongLong: {
-        dataNum.i64 = value.toLongLong();
-        dataPtr = &dataNum.i64;
-        size = sizeof(qint64);
-        type = REG_QWORD;
-    } break;
-    case QMetaType::QStringList: {
-        if (!StringUtil::buildMultiString(dataBuffer, value.toStringList()))
-            return false;
-
-        dataPtr = dataBuffer.data();
-        size = dataBuffer.size();
-        type = REG_MULTI_SZ;
-    } break;
-    default: {
-        dataText = value.toString();
-        dataPtr = dataText.utf16();
-        size = DWORD(sizeof(wchar_t) * (dataText.size() + 1)); // + terminating null character
-        type = expand ? REG_EXPAND_SZ : REG_SZ;
-    } break;
+    case QMetaType::Nullptr:
+        return true;
+    case QMetaType::QStringList:
+        data.type = REG_MULTI_SZ;
+        return StringUtil::buildMultiString(data.buffer, value.toStringList());
+    default:
+        if (!fillNumberData(data, value)) {
+            fillTextData(data, value, expand);
+        }
+        return true;
     }
+}
 
-    return !RegSetValueEx(
-            (HKEY) handle(), (LPCWSTR) name.utf16(), 0, type, (const BYTE *) dataPtr, size);
+}
+
+bool RegKey::setValue(const QString &name, const QVariant &value, bool expand)
+{
+    RegData data;
+    if (!fillRegData(data, value, expand))
+        return false;
+
+    const BYTE *dataPtr = data.buffer.isEmpty() ? nullptr : (const BYTE *) data.buffer.constData();
+
+    return !RegSetValueEx((HKEY) handle(), (LPCWSTR) name.utf16(), 0, data.type, dataPtr,
+            DWORD(data.buffer.size()));
 }
 
 bool RegKey::setOrRemoveValue(const QString &name, const QVariant &value, bool expand)
