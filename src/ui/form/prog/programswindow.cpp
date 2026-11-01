@@ -892,6 +892,8 @@ void ProgramsWindow::openAppEditDialog(const OpenAppEditDialogArgs &a)
 
     WidgetWindow::showWidget(a.dialog);
 
+    a.dialog->shrinkToContentsLater();
+
     if (a.parentForm) {
         a.dialog->centerTo(a.parentForm);
     }

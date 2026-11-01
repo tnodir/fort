@@ -1,5 +1,7 @@
 #include "formwindow.h"
 
+#include <QLayout>
+
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -22,6 +24,25 @@ void FormWindow::setExcludeFromCapture(bool v)
     m_excludeFromCapture = v;
 
     excludeWindowFromCapture(this, excludeFromCapture());
+}
+
+void FormWindow::shrinkToContents()
+{
+    auto *formLayout = layout();
+    if (!formLayout)
+        return;
+
+    formLayout->invalidate();
+    formLayout->activate();
+
+    resize(width(), minimumSizeHint().height());
+}
+
+void FormWindow::shrinkToContentsLater()
+{
+    // A reused window keeps its height after its content shrinks: the layouts update the minimum
+    // size only after the window is shown
+    QMetaObject::invokeMethod(this, &FormWindow::shrinkToContents, Qt::QueuedConnection);
 }
 
 void FormWindow::setupFormWindow(IniUser &iniUser, const QString &iniGroup)

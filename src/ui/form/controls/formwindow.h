@@ -38,6 +38,9 @@ public:
 
     WidgetWindowStateWatcher *stateWatcher() const { return m_stateWatcher; }
 
+    void shrinkToContents();
+    void shrinkToContentsLater();
+
     virtual void saveWindowState(bool wasVisible) { Q_UNUSED(wasVisible); }
     virtual void restoreWindowState() { }
 
