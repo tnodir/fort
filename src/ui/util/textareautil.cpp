@@ -4,6 +4,18 @@
 
 #include "stringutil.h"
 
+namespace {
+
+bool isCursorAtEndOfText(const QTextCursor &c)
+{
+    if (c.hasSelection())
+        return false;
+
+    return c.atEnd() && !c.atStart();
+}
+
+}
+
 void TextAreaUtil::moveCursor(QPlainTextEdit *area, int pos, QTextCursor::MoveMode mode)
 {
     QTextCursor c = area->textCursor();
@@ -98,7 +110,7 @@ void TextAreaUtil::moveSelectedLines(QPlainTextEdit *srcArea, QPlainTextEdit *ds
     auto srcCursor = srcArea->textCursor();
 
     // Adjust to last line, when cursor at the end
-    if (!srcCursor.hasSelection() && srcCursor.atEnd() && !srcCursor.atStart()) {
+    if (isCursorAtEndOfText(srcCursor)) {
         srcCursor.setPosition(srcTextEnd - 1);
     }
 
