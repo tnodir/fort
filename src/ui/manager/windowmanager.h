@@ -111,7 +111,6 @@ public slots:
             const QString &appPath, qint64 appId = 0, FormWindow *parentForm = nullptr);
 
     bool showProgramAlertWindow(bool activate = true);
-    bool closeProgramAlertWindow() { return closeWindowByCode(WindowProgramAlert); }
 
     bool showServicesWindow() { return showWindowByCode(WindowServices); }
 

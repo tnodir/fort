@@ -68,6 +68,11 @@ ProgramAlertWindow::ProgramAlertWindow(QWidget *parent) : ProgramEditDialog(pare
     connect(confAppManager(), &ConfAppManager::appDeleted, this, &ProgramAlertWindow::onAppDeleted);
 }
 
+bool ProgramAlertWindow::hasAlertApp()
+{
+    return !alertApp({}).appPath.isEmpty();
+}
+
 bool ProgramAlertWindow::isAutoActive() const
 {
     return iniUser().progAlertWindowAutoActive();

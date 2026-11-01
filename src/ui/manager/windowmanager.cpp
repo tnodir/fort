@@ -455,18 +455,18 @@ void WindowManager::openProgramEditForm(
 
 bool WindowManager::showProgramAlertWindow(bool activate)
 {
+    // No alerts to review: don't flash the empty window
+    if (!progAlertWindow() && !ProgramAlertWindow::hasAlertApp()) {
+        return showProgramsWindow();
+    }
+
     if (!showWindowByCode(WindowProgramAlert, /*activate=*/false))
         return false;
 
     auto w = progAlertWindow();
 
-    if (w->isNew()) {
-        showProgramsWindow(); // reuse checked password
-        closeProgramAlertWindow();
-    } else {
-        if (activate || w->isAutoActive()) {
-            w->activateWindow();
-        }
+    if (activate || w->isAutoActive()) {
+        w->activateWindow();
     }
 
     return true;
