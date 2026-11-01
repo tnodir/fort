@@ -126,6 +126,7 @@ private:
     QRadioButton *m_rbAsk = nullptr;
     QRadioButton *m_rbKillProcess = nullptr;
     QButtonGroup *m_btgActions = nullptr;
+    QVBoxLayout *m_layout = nullptr;
 
     QCheckBox *m_cbSchedule = nullptr;
     QComboBox *m_comboScheduleAction = nullptr;

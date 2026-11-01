@@ -309,16 +309,16 @@ void ProgGeneralPage::setupUi()
     auto scheduleLayout = setupScheduleLayout();
 
     // Main Layout
-    auto layout = new QVBoxLayout();
-    layout->addLayout(formLayout);
-    layout->addLayout(applyChildGroupLayout);
-    layout->addWidget(ControlUtil::createSeparator());
-    layout->addLayout(actionsLayout);
-    layout->addWidget(ControlUtil::createSeparator());
-    layout->addStretch();
-    layout->addLayout(scheduleLayout);
+    m_layout = new QVBoxLayout();
+    m_layout->addLayout(formLayout);
+    m_layout->addLayout(applyChildGroupLayout);
+    m_layout->addWidget(ControlUtil::createSeparator());
+    m_layout->addLayout(actionsLayout);
+    m_layout->addWidget(ControlUtil::createSeparator());
+    m_layout->addStretch(1);
+    m_layout->addLayout(scheduleLayout);
 
-    this->setLayout(layout);
+    this->setLayout(m_layout);
 }
 
 QLayout *ProgGeneralPage::setupFormLayout()
@@ -358,6 +358,7 @@ QLayout *ProgGeneralPage::setupPathLayout()
     // Wildcard
     m_editWildcard = new PlainTextEdit();
     m_editWildcard->setVisible(false);
+    m_editWildcard->setMinimumHeight(150);
 
     // Select File
     m_btSelectFile = ControlUtil::createIconToolButton(":/icons/folder.png", [&] {
@@ -703,6 +704,9 @@ void ProgGeneralPage::updateWildcard()
     m_editPath->setVisible(!isWildcard);
 
     m_editWildcard->setVisible(isWildcard);
+
+    // The form takes (almost) all the free height against the spacer's stretch 1
+    m_layout->setStretch(0, isWildcard ? 100 : 0);
 
     updateAppIcon();
 }
