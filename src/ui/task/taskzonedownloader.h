@@ -81,6 +81,10 @@ private:
     void loadTextInline();
     void loadLocalFile();
 
+    bool storeChangedAddresses(const QByteArray &data);
+    bool isCacheOutdated(const QString &newChecksum) const;
+    bool hasCache() const;
+
 private:
     bool m_zoneEnabled : 1 = false;
     bool m_sort : 1 = false;

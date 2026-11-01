@@ -12,6 +12,13 @@
 
 namespace {
 const QLoggingCategory LC("task.zoneDownloader");
+
+QString binDataChecksum(const QByteArray &binData)
+{
+    const auto checksumData = QCryptographicHash::hash(binData, QCryptographicHash::Sha256);
+
+    return QString::fromLatin1(checksumData.toHex());
+}
 }
 
 TaskZoneDownloader::TaskZoneDownloader(QObject *parent) : TaskDownloader(parent) { }
@@ -38,23 +45,34 @@ void TaskZoneDownloader::setupDownloader()
 
 void TaskZoneDownloader::downloadFinished(const QByteArray &data, bool success)
 {
-    if (success) {
-        success = false;
+    finish(success && storeChangedAddresses(data));
+}
 
-        QString textChecksum;
-        const auto text = QString::fromLatin1(data);
-        const auto list = parseAddresses(text, textChecksum);
+bool TaskZoneDownloader::storeChangedAddresses(const QByteArray &data)
+{
+    QString newChecksum;
+    const auto text = QString::fromLatin1(data);
+    const auto list = parseAddresses(text, newChecksum);
 
-        if (!list.isEmpty()
-                && (this->textChecksum() != textChecksum
-                        || !FileUtil::fileExists(cacheFileBinPath()))) {
-            setTextChecksum(textChecksum);
-            success = storeAddresses(list);
-            setAddressCount(success ? list.size() : 0);
-        }
-    }
+    if (list.isEmpty() || !isCacheOutdated(newChecksum))
+        return false;
 
-    finish(success);
+    setTextChecksum(newChecksum);
+
+    const bool success = storeAddresses(list);
+    setAddressCount(success ? list.size() : 0);
+
+    return success;
+}
+
+bool TaskZoneDownloader::isCacheOutdated(const QString &newChecksum) const
+{
+    return textChecksum() != newChecksum || !hasCache();
+}
+
+bool TaskZoneDownloader::hasCache() const
+{
+    return FileUtil::fileExists(cacheFileBinPath());
 }
 
 void TaskZoneDownloader::loadTextInline()
@@ -71,7 +89,7 @@ void TaskZoneDownloader::loadLocalFile()
 
     const auto fileModTime = FileUtil::fileModTime(url());
 
-    if (sourceModTime() != fileModTime || !FileUtil::fileExists(cacheFileBinPath())) {
+    if (sourceModTime() != fileModTime || !hasCache()) {
         data = FileUtil::readFileData(url());
         setSourceModTime(fileModTime);
         success = true;
@@ -133,22 +151,19 @@ bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
 
     const auto binData = qCompress(m_zoneData);
 
-    const auto binChecksumData = QCryptographicHash::hash(binData, QCryptographicHash::Sha256);
-    setBinChecksum(QString::fromLatin1(binChecksumData.toHex()));
+    setBinChecksum(binDataChecksum(binData));
 
     return FileUtil::writeFileData(cacheFileBinPath(), binData);
 }
 
 bool TaskZoneDownloader::loadAddresses()
 {
-    if (!FileUtil::fileExists(cacheFileBinPath()))
+    if (!hasCache())
         return false;
 
     const auto binData = FileUtil::readFileData(cacheFileBinPath());
 
-    const auto binChecksumData = QCryptographicHash::hash(binData, QCryptographicHash::Sha256);
-
-    if (binChecksum() != QString::fromLatin1(binChecksumData.toHex())) {
+    if (binChecksum() != binDataChecksum(binData)) {
         FileUtil::removeFile(cacheFileBinPath());
         return false;
     }
