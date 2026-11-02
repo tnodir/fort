@@ -700,7 +700,7 @@ void TrayIcon::setupTrayMenuBottomActions()
 
 bool TrayIcon::isEditEnabled() const
 {
-    return !settings()->isPasswordRequired() && !windowManager()->isWindowOpen(WindowOptions);
+    return !settings()->isPasswordRequired();
 }
 
 void TrayIcon::updateTrayMenuFlags()
@@ -1142,9 +1142,6 @@ void TrayIcon::onWindowVisibilityChanged(WindowCode code, bool isVisible)
     case WindowPrograms:
     case WindowProgramAlert: {
         updateTrayIcon(/*alerted=*/false);
-    } break;
-    case WindowOptions: {
-        updateTrayMenuFlags();
     } break;
     case WindowGraph: {
         m_graphAction->setChecked(isVisible);
