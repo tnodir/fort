@@ -339,7 +339,7 @@ void ProgramsWindow::setupEditMenuProgramActions(QMenu *menu)
     m_actAddApp->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actAddWildcard = menu->addAction(IconCache::icon(":/icons/coding.png"), QString());
-    m_actAddWildcard->setShortcut(QKeyCombination(Qt::CTRL | Qt::SHIFT, Qt::Key_N));
+    m_actAddWildcard->setShortcut(QKeyCombination(Qt::CTRL | Qt::ALT, Qt::Key_N));
 
     m_actEditApp = menu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
     m_actEditApp->setShortcut(Qt::Key_Enter);
