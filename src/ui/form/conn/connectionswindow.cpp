@@ -292,19 +292,9 @@ QLayout *ConnectionsWindow::setupHeader()
 
 void ConnectionsWindow::setupHeaderConnections()
 {
-    connect(m_actAddFilter, &QAction::triggered, this, [&] {
-        const auto &connRow = currentConnRow();
-
-        if (!connRow.isNull()) {
-            addConnFilter(connRow);
-        }
-    });
-    connect(m_actAddProgram, &QAction::triggered, this, [&] {
-        const auto &connRow = currentConnRow();
-
-        if (!connRow.isNull()) {
-            windowManager()->openProgramEditForm(connRow.appPath, connRow.confAppId, this);
-        }
+    setupConnRowAction(m_actAddFilter, [&](const ConnRow &connRow) { addConnFilter(connRow); });
+    setupConnRowAction(m_actAddProgram, [&](const ConnRow &connRow) {
+        windowManager()->openProgramEditForm(connRow.appPath, connRow.confAppId, this);
     });
     connect(m_actCopyAsFilter, &QAction::triggered, this, [&] {
         const auto rows = m_connListView->selectedRows();
@@ -321,13 +311,8 @@ void ConnectionsWindow::setupHeaderConnections()
         OsUtil::openIpLocationUrl(textIp);
     });
 
-    connect(m_actFilterSim, &QAction::triggered, this, [&] {
-        const auto &connRow = currentConnRow();
-
-        if (!connRow.isNull()) {
-            showFilterSimWindow(connRow);
-        }
-    });
+    setupConnRowAction(
+            m_actFilterSim, [&](const ConnRow &connRow) { showFilterSimWindow(connRow); });
     connect(m_actRemoveConn, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
                 this, [&] { deleteConn(connListCurrentIndex()); },
@@ -340,6 +325,18 @@ void ConnectionsWindow::setupHeaderConnections()
     connect(m_actFind, &QAction::triggered, this, [&] {
         m_editSearch->setFocus();
         m_editSearch->selectAll();
+    });
+}
+
+void ConnectionsWindow::setupConnRowAction(
+        QAction *action, const std::function<void(const ConnRow &connRow)> &func)
+{
+    connect(action, &QAction::triggered, this, [this, func] {
+        const auto &connRow = currentConnRow();
+
+        if (!connRow.isNull()) {
+            func(connRow);
+        }
     });
 }
 

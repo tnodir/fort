@@ -3,6 +3,8 @@
 
 #include <QPersistentModelIndex>
 
+#include <functional>
+
 #include <form/controls/formwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QHBoxLayout)
@@ -68,6 +70,8 @@ private:
     void setupUi();
     QLayout *setupHeader();
     void setupHeaderConnections();
+    void setupConnRowAction(
+            QAction *action, const std::function<void(const ConnRow &connRow)> &func);
     void setupEditSearch();
     void setupListOptions();
     void setupAutoScroll();
