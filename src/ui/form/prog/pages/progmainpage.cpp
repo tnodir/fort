@@ -76,8 +76,7 @@ void ProgMainPage::onValidateFields(bool &ok)
 
 void ProgMainPage::onFillApp(App &app)
 {
-    for (int i = 0, n = m_tabWidget->count(); i < n; ++i) {
-        const auto page = pageAt(i);
+    for (const auto page : std::as_const(m_pages)) {
         page->fillApp(app);
     }
 }
