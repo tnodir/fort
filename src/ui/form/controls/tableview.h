@@ -72,8 +72,6 @@ private:
     int defaultRowsHeight() const;
 
 private:
-    bool m_restoring = false;
-
     int m_resetRow = -1;
     int m_rowsHeight = 0;
 

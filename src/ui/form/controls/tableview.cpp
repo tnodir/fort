@@ -138,33 +138,26 @@ void TableView::keepSelectionByIds()
     m_keptModel = qobject_cast<TableSqlModel *>(model());
     Q_ASSERT(m_keptModel);
 
-    connect(m_keptModel, &QAbstractItemModel::dataChanged, this, [this] { restoreSelection(); });
+    connect(m_keptModel, &QAbstractItemModel::dataChanged, this, &TableView::restoreSelection);
 }
 
 void TableView::rememberSelection()
 {
-    if (!m_keptModel || m_restoring)
+    if (!m_keptModel)
         return;
 
     const auto rows = selectedRows();
     m_keptIds = m_keptModel->idsByRows(rows);
-
-    // The current row is among the selected ones; 0 is no id (SQLite's ids start from 1)
-    const int index = rows.indexOf(currentRow());
-    m_keptCurrentId = (index >= 0 && index < m_keptIds.size()) ? m_keptIds.at(index) : 0;
+    m_keptCurrentId = m_keptIds.value(rows.indexOf(currentRow()));
 }
 
 void TableView::restoreSelection()
 {
-    // Taken first: the restored selection replaces the remembered one
-    const auto idList = m_keptIds;
-    const qint64 currentId = m_keptCurrentId;
-
     // Nothing was selected, or the same rows are still selected
-    if (idList.isEmpty() || m_keptModel->idsByRows(selectedRows()) == idList)
+    if (m_keptIds.isEmpty() || m_keptModel->idsByRows(selectedRows()) == m_keptIds)
         return;
 
-    const auto rows = m_keptModel->rowsByIds(idList);
+    const auto rows = m_keptModel->rowsByIds(m_keptIds);
 
     // The rows are gone: after a refresh the selection would stay on other rows
     // (of the previous order)
@@ -174,49 +167,39 @@ void TableView::restoreSelection()
         return;
     }
 
-    selectRowsByIds(rows, currentId);
+    selectRowsByIds(rows, m_keptCurrentId);
 }
 
 void TableView::selectRowsByIds(const QVector<TableSqlModel::IdRow> &idRows, qint64 currentId)
 {
-    QVector<qint64> idList;
     QItemSelection selection;
-    auto currentIt = idRows.cbegin(); // the first row, when the current id is gone
+    int curRow = idRows.first().row; // when the current id is gone
 
-    for (auto it = idRows.cbegin(); it != idRows.cend(); ++it) {
-        const auto index = model()->index(it->row, 0);
+    for (const auto &idRow : idRows) {
+        const auto index = model()->index(idRow.row, 0);
         selection.select(index, index);
-        idList.append(it->id);
 
-        if (it->id == currentId) {
-            currentIt = it;
+        if (idRow.id == currentId) {
+            curRow = idRow.row;
         }
     }
 
-    // The restored ids are known: don't read them again on the selection's signals
-    m_restoring = true;
-
     // Before the selection: else the view makes the first selected cell the current one,
     // which selects only it
-    selectionModel()->setCurrentIndex(
-            model()->index(currentIt->row, 0), QItemSelectionModel::NoUpdate);
+    selectionModel()->setCurrentIndex(model()->index(curRow, 0), QItemSelectionModel::NoUpdate);
 
     selectionModel()->select(
             selection, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 
-    m_restoring = false;
-
-    m_keptIds = idList;
-    m_keptCurrentId = currentIt->id;
+    // The selection's signals don't come when the same rows got other ids
+    rememberSelection();
 }
 
 void TableView::onModelReset()
 {
     selectResetRow();
 
-    if (m_keptModel) {
-        restoreSelection();
-    }
+    restoreSelection();
 
     emit currentIndexChanged(currentIndex());
 }
