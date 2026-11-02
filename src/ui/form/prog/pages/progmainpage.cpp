@@ -203,11 +203,6 @@ void ProgMainPage::updatePendingConnsVisible()
     m_btPendingConns->setVisible(visible);
 }
 
-ProgBasePage *ProgMainPage::currentPage() const
-{
-    return pageAt(m_tabWidget->currentIndex());
-}
-
 ProgBasePage *ProgMainPage::pageAt(int index) const
 {
     return m_pages.at(index);

@@ -105,8 +105,6 @@ private:
 private:
     App::Action m_quickActionType = App::ActionBlock;
 
-    quint16 m_currentRuleId = 0;
-
     QLabel *m_labelEditPath = nullptr;
     PlainTextEdit *m_editPath = nullptr;
     QToolButton *m_btSelectFile = nullptr;

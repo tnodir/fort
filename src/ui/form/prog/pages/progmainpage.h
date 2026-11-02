@@ -48,7 +48,6 @@ private:
 
     void updatePendingConnsVisible();
 
-    ProgBasePage *currentPage() const;
     ProgBasePage *pageAt(int index) const;
 
 private:
