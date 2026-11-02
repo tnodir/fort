@@ -1,17 +1,12 @@
 #include "progmainpage.h"
 
-#include <QMenu>
 #include <QPushButton>
 #include <QTabWidget>
 #include <QVBoxLayout>
 
-#include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/toolbutton.h>
-#include <form/prog/programscontroller.h>
-#include <form/tray/trayicon.h>
-#include <fortsettings.h>
-#include <manager/windowmanager.h>
+#include <form/prog/programeditcontroller.h>
 #include <model/appconnsearchmodel.h>
 
 #include "proggeneralpage.h"
