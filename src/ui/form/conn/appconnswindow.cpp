@@ -1,5 +1,6 @@
 #include "appconnswindow.h"
 
+#include <QAction>
 #include <QHBoxLayout>
 #include <QHeaderView>
 
