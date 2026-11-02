@@ -24,14 +24,11 @@ QKeyCombination getActionKey(QAction *action)
 
 HotKeyManager::HotKeyManager(QObject *parent) : QObject(parent) { }
 
-void HotKeyManager::initialize(bool enabled, bool global)
+void HotKeyManager::initialize(bool global)
 {
-    if (m_enabled == enabled && m_global == global) {
-        if (!checkShortcutsChanged())
-            return;
-    }
+    if (m_global == global && !checkShortcutsChanged())
+        return;
 
-    m_enabled = enabled;
     m_global = global;
 
     updateActions();
@@ -52,8 +49,6 @@ void HotKeyManager::tearDown()
 
 bool HotKeyManager::addAction(QAction *action)
 {
-    action->setShortcutVisibleInContextMenu(false);
-
     m_actions.append(action);
     m_keys.append(getActionKey(action));
 
@@ -76,12 +71,10 @@ void HotKeyManager::updateActions()
 
     int hotKeyId = 0;
     for (QAction *action : std::as_const(m_actions)) {
-        action->setShortcutVisibleInContextMenu(enabled());
-
         const auto key = getActionKey(action);
         m_keys[hotKeyId] = key;
 
-        if (enabled() && global()) {
+        if (global()) {
             nativeEventFilter->registerHotKey(hotKeyId, key);
         }
 

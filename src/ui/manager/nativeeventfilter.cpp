@@ -121,7 +121,7 @@ bool NativeEventFilter::registerHotKey(
 
     const quint32 nativeModifiers = nativeMod | autoRepeatModifier(/*autoRepeat=*/true);
 
-    if (!RegisterHotKey(nullptr, 0, nativeModifiers, nativeKey))
+    if (!RegisterHotKey(nullptr, hotKeyId, nativeModifiers, nativeKey))
         return false;
 
     setKeyId(hotKeyId, nativeMod, nativeKey);
@@ -161,13 +161,6 @@ void NativeEventFilter::setKeyId(int hotKeyId, quint32 nativeMod, quint32 native
     const quint32 nativeKeyMod = nativeMod | (nativeKey << 16);
 
     m_keyIdMap.insert(nativeKeyMod, hotKeyId);
-}
-
-bool NativeEventFilter::removeKeyId(int hotKeyId)
-{
-    const quint32 nativeKeyMod = m_keyIdMap.key(hotKeyId);
-
-    return m_keyIdMap.remove(nativeKeyMod);
 }
 
 int NativeEventFilter::getKeyId(quint32 nativeMod, quint32 nativeKey) const

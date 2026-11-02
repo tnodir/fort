@@ -34,7 +34,6 @@ signals:
 
 private:
     void setKeyId(int hotKeyId, quint32 nativeMod, quint32 nativeKey);
-    bool removeKeyId(int hotKeyId);
     int getKeyId(quint32 nativeMod, quint32 nativeKey) const;
 
     inline void processWmHotKey(void *message);

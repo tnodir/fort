@@ -965,13 +965,16 @@ void TrayIcon::switchTrayRuleFlag(bool checked)
 
 void TrayIcon::updateActionHotKeys()
 {
+    // An action's shortcut works in the app's windows without the registered hot key
+    const bool enabled = iniUser().hotKeyEnabled();
+
     int groupIndex = 0;
     int ruleIndex = 0;
     int index = 0;
     for (auto action : hotKeyManager()->actions()) {
         const auto &iniKey = m_actionIniKeys[index];
 
-        const QString shortcutText = iniUser().hotKeyValue(iniKey);
+        const QString shortcutText = enabled ? iniUser().hotKeyValue(iniKey) : QString();
         QKeySequence shortcut = QKeySequence::fromString(shortcutText);
 
         if (!shortcut.isEmpty() && iniKey == HotKey::appGroupModifier) {
@@ -1003,9 +1006,7 @@ void TrayIcon::addHotKey(QAction *action, const char *iniKey)
 
 void TrayIcon::updateHotKeys()
 {
-    const auto &iniUser = Fort::iniUser();
-
-    hotKeyManager()->initialize(iniUser.hotKeyEnabled(), iniUser.hotKeyGlobal());
+    hotKeyManager()->initialize(iniUser().hotKeyGlobal());
 }
 
 tray::ActionType TrayIcon::clickEventActionType(IniUser &iniUser, tray::ClickType clickType)
