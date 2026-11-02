@@ -72,9 +72,6 @@ void ProgMainPage::onFillApp(App &app)
 
 void ProgMainPage::onPageInitialize(const App &app)
 {
-    m_btSwitchWildcard->setChecked(isWildcard());
-    m_btSwitchWildcard->setEnabled(isSingleSelection());
-
     setNetworkTabEnabled(!app.blocked);
 
     const bool canFilterApp = AppConnSearchModel::canFilterApp(app);
@@ -94,7 +91,6 @@ void ProgMainPage::onRetranslateUi()
     m_btPendingConns->setToolTip(tr("Paused Connections"));
     m_btConnections->setToolTip(tr("Connections"));
 
-    m_btSwitchWildcard->setToolTip(tr("Switch Wildcard"));
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
 }
@@ -176,9 +172,6 @@ void ProgMainPage::setupTabBar()
 
 QLayout *ProgMainPage::setupButtonsLayout()
 {
-    // Switch Wildcard
-    setupSwitchWildcard();
-
     // OK
     m_btOk = ControlUtil::createButton(QString(), [&] { ctrl()->saveChanges(); });
     m_btOk->setDefault(true);
@@ -186,18 +179,9 @@ QLayout *ProgMainPage::setupButtonsLayout()
     // Cancel
     m_btCancel = ControlUtil::createButton(QString(), [&] { ctrl()->closeWindow(); });
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_btSwitchWildcard,
-            /*stretch*/ nullptr, m_btOk, m_btCancel });
+    auto layout = ControlUtil::createHLayoutByWidgets({ /*stretch*/ nullptr, m_btOk, m_btCancel });
 
     return layout;
-}
-
-void ProgMainPage::setupSwitchWildcard()
-{
-    m_btSwitchWildcard = ControlUtil::createIconToolButton(
-            ":/icons/coding.png", [&] { ctrl()->switchWildcard(); });
-
-    m_btSwitchWildcard->setCheckable(true);
 }
 
 void ProgMainPage::setNetworkTabEnabled(bool enabled)

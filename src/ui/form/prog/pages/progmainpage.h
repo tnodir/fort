@@ -41,7 +41,6 @@ private:
     void setupUi();
     void setupTabBar();
     QLayout *setupButtonsLayout();
-    void setupSwitchWildcard();
 
     void setNetworkTabEnabled(bool enabled);
 
@@ -58,8 +57,6 @@ private:
     QToolButton *m_btPendingConns = nullptr;
     QToolButton *m_btConnections = nullptr;
     QPushButton *m_btMenu = nullptr;
-
-    QToolButton *m_btSwitchWildcard = nullptr;
 
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;

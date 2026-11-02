@@ -40,6 +40,11 @@ namespace {
 
 const QSize appIconSize(32, 32);
 
+inline constexpr int pathMaxLength = 1024;
+inline constexpr int pathMinHeight = 48;
+inline constexpr int wildcardMinHeight = 150;
+inline constexpr int notesHeight = 40;
+
 const std::array appBlockInMinuteValues = { 15, 0, 1, 5, 10, 30, 60 * 1, 60 * 3, 60 * 6, 60 * 12,
     60 * 24, 60 * 24 * 7, 60 * 24 * 30 };
 
@@ -85,22 +90,13 @@ void ProgGeneralPage::initializePathNameNotesFields(bool isSingleSelection)
 
 void ProgGeneralPage::initializePathField(bool isSingleSelection)
 {
-    const bool isWildcard = this->isWildcard();
-
-    const bool isPathEditable = isSingleSelection && (isWildcard || isNew());
-
-    m_editPath->setReadOnly(!isPathEditable);
-    m_editPath->setClearButtonEnabled(isPathEditable);
-
-    const auto &appOriginPath = app().appOriginPath;
-
-    m_editPath->setText(isSingleSelection && !isWildcard ? appOriginPath : QString());
+    m_editPath->setText(isSingleSelection ? app().appOriginPath : QString());
     m_editPath->setEnabled(isSingleSelection);
 
-    m_editWildcard->setText(isSingleSelection && isWildcard ? appOriginPath : QString());
-    m_editWildcard->setEnabled(isSingleSelection);
-
     m_btSelectFile->setEnabled(isSingleSelection);
+
+    m_btSwitchWildcard->setChecked(isWildcard());
+    m_btSwitchWildcard->setEnabled(isSingleSelection);
 }
 
 void ProgGeneralPage::initializeNameField(bool isSingleSelection)
@@ -137,8 +133,6 @@ void ProgGeneralPage::initializeFocus()
 {
     if (!isNew()) {
         m_btgActions->checkedButton()->setFocus();
-    } else if (isWildcard()) {
-        m_editWildcard->setFocus();
     } else {
         m_editPath->setFocus();
     }
@@ -149,6 +143,7 @@ void ProgGeneralPage::onRetranslateUi()
     m_labelEditPath->setText(isWildcard() ? tr("Wildcard Paths:") : tr("File Path:"));
     retranslatePathPlaceholderText();
     m_btSelectFile->setToolTip(tr("Select File"));
+    m_btSwitchWildcard->setToolTip(tr("Switch Wildcard"));
 
     m_labelEditName->setText(tr("Name:"));
     m_btGetName->setToolTip(tr("Get Program Name"));
@@ -182,8 +177,10 @@ void ProgGeneralPage::onRetranslateUi()
 
 void ProgGeneralPage::retranslatePathPlaceholderText()
 {
-    if (!(isWildcard() && m_editWildcard->isEnabled()))
+    if (!(isWildcard() && isSingleSelection())) {
+        m_editPath->setPlaceholderText({});
         return;
+    }
 
     const auto placeholderText = tr("# Examples:")
             // Prefix wildcard
@@ -198,7 +195,7 @@ void ProgGeneralPage::retranslatePathPlaceholderText()
             + "\n%SystemRoot%\\System32\\telnet.exe"
               "\n%ProgramFiles%\\Internet Explorer\\iexplore.exe";
 
-    m_editWildcard->setPlaceholderText(placeholderText);
+    m_editPath->setPlaceholderText(placeholderText);
 }
 
 void ProgGeneralPage::retranslateComboApplyChild()
@@ -309,16 +306,17 @@ void ProgGeneralPage::setupUi()
     auto scheduleLayout = setupScheduleLayout();
 
     // Main Layout
-    m_layout = new QVBoxLayout();
-    m_layout->addLayout(formLayout);
-    m_layout->addLayout(applyChildGroupLayout);
-    m_layout->addWidget(ControlUtil::createSeparator());
-    m_layout->addLayout(actionsLayout);
-    m_layout->addWidget(ControlUtil::createSeparator());
-    m_layout->addStretch(1);
-    m_layout->addLayout(scheduleLayout);
+    auto layout = new QVBoxLayout();
+    // The form takes (almost) all the free height against the spacer's stretch 1
+    layout->addLayout(formLayout, 100);
+    layout->addLayout(applyChildGroupLayout);
+    layout->addWidget(ControlUtil::createSeparator());
+    layout->addLayout(actionsLayout);
+    layout->addWidget(ControlUtil::createSeparator());
+    layout->addStretch(1);
+    layout->addLayout(scheduleLayout);
 
-    this->setLayout(m_layout);
+    this->setLayout(layout);
 }
 
 QLayout *ProgGeneralPage::setupFormLayout()
@@ -352,18 +350,13 @@ QLayout *ProgGeneralPage::setupFormLayout()
 QLayout *ProgGeneralPage::setupPathLayout()
 {
     // Path
-    m_editPath = new LineEdit();
-    m_editPath->setMaxLength(1024);
-
-    // Wildcard
-    m_editWildcard = new PlainTextEdit();
-    m_editWildcard->setVisible(false);
-    m_editWildcard->setMinimumHeight(150);
+    m_editPath = new PlainTextEdit();
+    m_editPath->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
 
     // Select File
     m_btSelectFile = ControlUtil::createIconToolButton(":/icons/folder.png", [&] {
-        if (!isWildcard() && m_editPath->isReadOnly()) {
-            AppInfoUtil::openFolder(m_editPath->text());
+        if (!isPathEditable()) {
+            AppInfoUtil::openFolder(m_editPath->toPlainText());
             return;
         }
 
@@ -376,7 +369,7 @@ QLayout *ProgGeneralPage::setupPathLayout()
         const auto appPath = FileUtil::toNativeSeparators(filePath);
 
         if (isWildcard()) {
-            TextAreaUtil::appendText(m_editWildcard, appPath);
+            TextAreaUtil::appendText(m_editPath, appPath);
         } else {
             m_editPath->setText(appPath);
         }
@@ -385,10 +378,17 @@ QLayout *ProgGeneralPage::setupPathLayout()
     });
     m_btSelectFile->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_O));
 
+    // Switch Wildcard
+    m_btSwitchWildcard = ControlUtil::createIconToolButton(
+            ":/icons/coding.png", [&] { ctrl()->switchWildcard(); });
+    m_btSwitchWildcard->setCheckable(true);
+
+    auto buttonsLayout = ControlUtil::createVLayoutByWidgets(
+            { m_btSelectFile, m_btSwitchWildcard, /*stretch*/ nullptr });
+
     auto layout = new QHBoxLayout();
-    layout->addWidget(m_editPath, 0, Qt::AlignTop);
-    layout->addWidget(m_editWildcard);
-    layout->addWidget(m_btSelectFile, 0, Qt::AlignTop);
+    layout->addWidget(m_editPath);
+    layout->addLayout(buttonsLayout);
 
     return layout;
 }
@@ -409,7 +409,7 @@ QLayout *ProgGeneralPage::setupNameLayout()
 QLayout *ProgGeneralPage::setupNotesLayout()
 {
     m_editNotes = new PlainTextEdit();
-    m_editNotes->setFixedHeight(40);
+    m_editNotes->setFixedHeight(notesHeight);
 
     m_btSetIcon = ControlUtil::createIconToolButton(":/icons/application.png", [&] {
         const auto filePath =
@@ -699,14 +699,8 @@ QToolButton *ProgGeneralPage::createTimedButton(const QString &iniKey)
 
 void ProgGeneralPage::updateWildcard()
 {
-    const bool isWildcard = this->isWildcard();
-
-    m_editPath->setVisible(!isWildcard);
-
-    m_editWildcard->setVisible(isWildcard);
-
-    // The form takes (almost) all the free height against the spacer's stretch 1
-    m_layout->setStretch(0, isWildcard ? 100 : 0);
+    m_editPath->setReadOnly(!isPathEditable());
+    m_editPath->setMinimumHeight(isWildcard() ? wildcardMinHeight : pathMinHeight);
 
     updateAppIcon();
 }
@@ -780,7 +774,7 @@ void ProgGeneralPage::setTimedActionMinutes(QToolButton *bt, int minutes)
 
 void ProgGeneralPage::fillEditName()
 {
-    const QString appPath = getEditText();
+    const QString appPath = m_editPath->toPlainText();
     if (appPath.isEmpty())
         return;
 
@@ -795,19 +789,30 @@ void ProgGeneralPage::fillEditName()
     m_editName->setStartText(appName);
 }
 
-QString ProgGeneralPage::getEditText() const
+bool ProgGeneralPage::isPathEditable() const
 {
-    return isWildcard() ? m_editWildcard->toPlainText() : m_editPath->text();
+    // An existing program's path is read-only, unless it is a wildcard
+    return isSingleSelection() && (isWildcard() || isNew() || app().isWildcard);
+}
+
+bool ProgGeneralPage::isPathValid() const
+{
+    if (m_editPath->isEmpty())
+        return false;
+
+    if (isWildcard())
+        return true;
+
+    const auto path = m_editPath->toPlainText();
+
+    return path.size() <= pathMaxLength && !path.contains('\n');
 }
 
 void ProgGeneralPage::onWildcardSwitched()
 {
-    if (isWildcard()) {
-        m_editWildcard->setText(m_editPath->text());
-    } else if (!m_editPath->isReadOnly()) {
-        const auto line = StringUtil::firstLine(m_editWildcard->toPlainText());
-
-        m_editPath->setText(line);
+    if (!isWildcard()) {
+        m_editPath->setText(isPathEditable() ? StringUtil::firstLine(m_editPath->toPlainText())
+                                             : app().appOriginPath);
     }
 
     updateWildcard();
@@ -850,12 +855,8 @@ void ProgGeneralPage::saveScheduleAction(App::Action actionType, int minutes)
 bool ProgGeneralPage::validateFields() const
 {
     // Path
-    const bool isPathEmpty =
-            isWildcard() ? m_editWildcard->isEmpty() : m_editPath->text().isEmpty();
-    if (isPathEmpty) {
-        QWidget *c = isWildcard() ? static_cast<QWidget *>(m_editWildcard)
-                                  : static_cast<QWidget *>(m_editPath);
-        c->setFocus();
+    if (!isPathValid()) {
+        m_editPath->setFocus();
         return false;
     }
 
@@ -884,7 +885,7 @@ void ProgGeneralPage::fillApp(App &app) const
 
 void ProgGeneralPage::fillAppPath(App &app) const
 {
-    const QString appPath = getEditText();
+    const QString appPath = m_editPath->toPlainText();
 
     app.appOriginPath = appPath;
     app.appPath = FileUtil::normalizePath(StringUtil::firstLine(appPath));

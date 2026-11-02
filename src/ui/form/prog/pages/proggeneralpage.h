@@ -87,7 +87,8 @@ private:
 
     void fillEditName();
 
-    QString getEditText() const;
+    bool isPathEditable() const;
+    bool isPathValid() const;
 
     void onWildcardSwitched();
 
@@ -107,9 +108,9 @@ private:
     quint16 m_currentRuleId = 0;
 
     QLabel *m_labelEditPath = nullptr;
-    LineEdit *m_editPath = nullptr;
-    PlainTextEdit *m_editWildcard = nullptr;
+    PlainTextEdit *m_editPath = nullptr;
     QToolButton *m_btSelectFile = nullptr;
+    QToolButton *m_btSwitchWildcard = nullptr;
     QLabel *m_labelEditName = nullptr;
     LineEdit *m_editName = nullptr;
     QToolButton *m_btGetName = nullptr;
@@ -126,7 +127,6 @@ private:
     QRadioButton *m_rbAsk = nullptr;
     QRadioButton *m_rbKillProcess = nullptr;
     QButtonGroup *m_btgActions = nullptr;
-    QVBoxLayout *m_layout = nullptr;
 
     QCheckBox *m_cbSchedule = nullptr;
     QComboBox *m_comboScheduleAction = nullptr;
