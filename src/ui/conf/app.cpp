@@ -73,9 +73,14 @@ App::Action App::action() const
 
 void App::setAction(Action action)
 {
-    blocked = (action == ActionBlock || action == ActionKillProcess);
+    blocked = isActionBlocked(action);
     ask = (action == ActionAsk);
     killProcess = (action == ActionKillProcess);
+}
+
+bool App::isActionBlocked(Action action)
+{
+    return action == ActionBlock || action == ActionKillProcess;
 }
 
 QStringList App::actionIconPaths()

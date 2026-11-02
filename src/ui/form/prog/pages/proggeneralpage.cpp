@@ -517,10 +517,7 @@ void ProgGeneralPage::setupActionsGroup()
             return;
 
         // The asked Program's connections are filtered too
-        const bool allowed = (id == int(App::ActionAllow) || id == int(App::ActionAsk));
-
-        auto ctrl = this->ctrl();
-        emit ctrl->allowToggled(allowed);
+        emit ctrl()->allowToggled(!App::isActionBlocked(App::Action(id)));
     });
 }
 

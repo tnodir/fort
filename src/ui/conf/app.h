@@ -38,6 +38,8 @@ public:
     Action action() const;
     void setAction(Action action);
 
+    static bool isActionBlocked(Action action);
+
     // By the Action
     static QStringList actionIconPaths();
 
