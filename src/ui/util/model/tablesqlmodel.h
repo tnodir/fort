@@ -47,6 +47,7 @@ protected:
     virtual QString sqlCount() const;
 
     virtual QString sql() const;
+    QString sqlRows() const;
     virtual QString sqlBase() const = 0;
     virtual QString sqlEnd() const { return QString(); }
     virtual QString sqlWhere() const { return QString(); }

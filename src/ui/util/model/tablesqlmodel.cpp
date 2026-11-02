@@ -64,10 +64,8 @@ void TableSqlModel::walkIds(const std::function<bool(int row, qint64 id)> &visit
     QVariantHash vars;
     fillQueryVars(vars);
 
-    const auto sql = sqlBase() + sqlWhere() + sqlOrder() + sqlEnd() + ';';
-
     SqliteStmt stmt;
-    if (!DbQuery(sqliteDb()).sql(sql).vars(vars).prepare(stmt))
+    if (!DbQuery(sqliteDb()).sql(sqlRows() + ';').vars(vars).prepare(stmt))
         return;
 
     for (int row = 0; stmt.step() == SqliteStmt::StepRow; ++row) {
@@ -103,7 +101,12 @@ QString TableSqlModel::sqlCount() const
 
 QString TableSqlModel::sql() const
 {
-    return sqlBase() + sqlWhere() + sqlOrder() + sqlEnd() + sqlLimitOffset() + ';';
+    return sqlRows() + sqlLimitOffset() + ';';
+}
+
+QString TableSqlModel::sqlRows() const
+{
+    return sqlBase() + sqlWhere() + sqlOrder() + sqlEnd();
 }
 
 QString TableSqlModel::sqlOrder() const
