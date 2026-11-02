@@ -187,6 +187,7 @@ void FirewallConf::setupAddressGroups()
 void FirewallConf::copyFlags(const FirewallConf &o)
 {
     m_editedFlags = o.editedFlags();
+    m_editedFlagGroups = o.m_editedFlagGroups;
 
     m_bootFilter = o.bootFilter();
     m_stealthMode = o.stealthMode();

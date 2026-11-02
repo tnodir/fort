@@ -472,22 +472,6 @@ bool WindowManager::showProgramAlertWindow(bool activate)
     return true;
 }
 
-bool WindowManager::reloadOptionsWindow(const QString &reason)
-{
-    if (!optWindow())
-        return false;
-
-    // Unsaved changes are lost
-    closeOptionsWindow();
-
-    // Show after new conf initialization
-    QMetaObject::invokeMethod(this, &WindowManager::showOptionsWindow, Qt::QueuedConnection);
-
-    showTrayMessage(reason);
-
-    return true;
-}
-
 bool WindowManager::showOptionsWindowTab(int index)
 {
     if (!showOptionsWindow())

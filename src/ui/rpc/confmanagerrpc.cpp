@@ -7,7 +7,6 @@
 #include <control/controlworker.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
-#include <manager/windowmanager.h>
 #include <rpc/rpcmanager.h>
 #include <util/net/netutil.h>
 #include <util/variantutil.h>
@@ -97,11 +96,7 @@ bool ConfManagerRpc::saveConf(FirewallConf &conf, IniOptions &ini)
 {
     const QVariant confVar = conf.toVariant(ini, /*onlyEdited=*/true);
 
-    setSaving(true);
-    const bool ok = saveVariant(confVar);
-    setSaving(false);
-
-    if (!ok)
+    if (!saveVariant(confVar))
         return false;
 
     // Already applied by onConfChanged() & applySavedConf()
@@ -157,10 +152,6 @@ void ConfManagerRpc::onConfChanged(const QVariant &confVar)
         conf().fromVariant(ini(), confVar, /*onlyEdited=*/true);
 
         applySavedConf(conf());
-    }
-
-    if (!saving()) {
-        windowManager()->reloadOptionsWindow(tr("Settings changed by someone else"));
     }
 }
 

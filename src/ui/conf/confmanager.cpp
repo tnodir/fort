@@ -966,7 +966,7 @@ void ConfManager::applySavedConf(FirewallConf &newConf)
 
 bool ConfManager::saveFlags()
 {
-    conf().setFlagsEdited();
+    conf().setFlagsEdited(FirewallConf::AllFlagGroups);
 
     return save(conf(), ini());
 }

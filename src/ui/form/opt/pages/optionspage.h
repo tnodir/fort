@@ -12,9 +12,6 @@ class OptionsPage : public OptBasePage
 public:
     explicit OptionsPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
-    bool filterModeEdited() const { return m_filterModeEdited; }
-    void setFilterModeEdited(bool v) { m_filterModeEdited = v; }
-
     bool passwordEdited() const { return m_passwordEdited; }
     void setPasswordEdited(bool v) { m_passwordEdited = v; }
 
@@ -28,9 +25,6 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
-    void onAboutToSave_filterMode();
-    void onAboutToSave_password();
-
     void retranslateComboBlockTraffic();
     void retranslateComboFilterMode();
     void retranslateTimedOptions();
@@ -43,9 +37,7 @@ private:
 
     void setupTrafficBox();
     QLayout *setupBlockTrafficLayout();
-    void changeBlockTraffic(int index);
     QLayout *setupFilterModeLayout();
-    void changeFilterMode(int index);
     void setupFilterOffSeconds();
     void setupAutoLearnSeconds();
     void setupAskToConnectSeconds();
@@ -58,8 +50,11 @@ private:
     void setupUpdateBox();
     void setupLogsBox();
 
+    void changeBlockTraffic(int index);
+    void changeFilterMode(int index);
+    void updateTrafficFlags();
+
 private:
-    bool m_filterModeEdited : 1 = false;
     bool m_passwordEdited : 1 = false;
 
     QGroupBox *m_gbTraffic = nullptr;

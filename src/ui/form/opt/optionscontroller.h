@@ -38,7 +38,7 @@ signals:
 
 public slots:
     void setOptEdited();
-    void setFlagsEdited();
+    void setFlagsEdited(FirewallConf::FlagGroups groups = FirewallConf::NoFlagGroups);
     void setIniEdited();
     void setTaskEdited();
 

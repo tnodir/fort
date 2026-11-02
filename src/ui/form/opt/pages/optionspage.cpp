@@ -90,25 +90,6 @@ void OptionsPage::onResetToDefault()
 
 void OptionsPage::onAboutToSave()
 {
-    onAboutToSave_filterMode();
-    onAboutToSave_password();
-}
-
-void OptionsPage::onAboutToSave_filterMode()
-{
-    if (filterModeEdited())
-        return;
-
-    const auto oldFilterMode = Fort::conf().filterMode();
-
-    if (conf().filterMode() != oldFilterMode) {
-        // Reset to the new value, when auto-switched from Auto-learn
-        conf().setFilterMode(oldFilterMode);
-    }
-}
-
-void OptionsPage::onAboutToSave_password()
-{
     auto settings = Fort::settings();
     auto &ini = this->ini();
 
@@ -128,9 +109,6 @@ void OptionsPage::onAboutToSave_password()
 
 void OptionsPage::onEditResetted()
 {
-    // Filter Mode
-    setFilterModeEdited(false);
-
     // Password
     setPasswordEdited(false);
     retranslateEditPassword();
@@ -312,7 +290,7 @@ void OptionsPage::setupTrafficBox()
     // Filter Enabled
     m_cbFilterEnabled = ControlUtil::createCheckBox(conf().filterEnabled(), [&](bool checked) {
         conf().setFilterEnabled(checked);
-        ctrl()->setFlagsEdited();
+        ctrl()->setFlagsEdited(FirewallConf::FlagFilterEnabled);
     });
 
     // Block Traffic
@@ -352,6 +330,8 @@ void OptionsPage::setupTrafficBox()
 
     m_gbTraffic = new QGroupBox();
     m_gbTraffic->setLayout(layout);
+
+    connect(Fort::confManager(), &ConfManager::confChanged, this, &OptionsPage::updateTrafficFlags);
 }
 
 QLayout *OptionsPage::setupBlockTrafficLayout()
@@ -365,17 +345,6 @@ QLayout *OptionsPage::setupBlockTrafficLayout()
     return ControlUtil::createRowLayout(m_labelBlockTraffic, m_comboBlockTraffic);
 }
 
-void OptionsPage::changeBlockTraffic(int index)
-{
-    if (conf().blockTrafficIndex() == index)
-        return;
-
-    conf().setBlockTrafficIndex(index);
-    ctrl()->setFlagsEdited();
-
-    m_comboBlockTraffic->setCurrentIndex(index);
-}
-
 QLayout *OptionsPage::setupFilterModeLayout()
 {
     m_labelFilterMode = ControlUtil::createLabel();
@@ -385,18 +354,6 @@ QLayout *OptionsPage::setupFilterModeLayout()
     m_comboFilterMode->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelFilterMode, m_comboFilterMode);
-}
-
-void OptionsPage::changeFilterMode(int index)
-{
-    if (conf().filterMode() == index)
-        return;
-
-    conf().setFilterMode(FirewallConf::FilterMode(index));
-    ctrl()->setFlagsEdited();
-    setFilterModeEdited(true);
-
-    m_comboFilterMode->setCurrentIndex(index);
 }
 
 void OptionsPage::setupFilterOffSeconds()
@@ -646,4 +603,51 @@ void OptionsPage::setupLogsBox()
 
     m_gbLogs = new QGroupBox();
     m_gbLogs->setLayout(layout);
+}
+
+void OptionsPage::changeBlockTraffic(int index)
+{
+    if (conf().blockTrafficIndex() == index)
+        return;
+
+    conf().setBlockTrafficIndex(index);
+    ctrl()->setFlagsEdited(FirewallConf::FlagBlockTraffic);
+
+    m_comboBlockTraffic->setCurrentIndex(index);
+}
+
+void OptionsPage::changeFilterMode(int index)
+{
+    if (conf().filterMode() == index)
+        return;
+
+    conf().setFilterMode(FirewallConf::FilterMode(index));
+    ctrl()->setFlagsEdited(FirewallConf::FlagFilterMode);
+
+    m_comboFilterMode->setCurrentIndex(index);
+}
+
+void OptionsPage::updateTrafficFlags()
+{
+    const auto &savedConf = Fort::conf();
+
+    if (!conf().flagEdited(FirewallConf::FlagFilterEnabled)) {
+        conf().setFilterEnabled(savedConf.filterEnabled());
+
+        const QSignalBlocker blocker(m_cbFilterEnabled);
+
+        m_cbFilterEnabled->setChecked(conf().filterEnabled());
+    }
+
+    if (!conf().flagEdited(FirewallConf::FlagBlockTraffic)) {
+        conf().setBlockTrafficIndex(savedConf.blockTrafficIndex());
+
+        m_comboBlockTraffic->setCurrentIndex(conf().blockTrafficIndex());
+    }
+
+    if (!conf().flagEdited(FirewallConf::FlagFilterMode)) {
+        conf().setFilterMode(savedConf.filterMode());
+
+        m_comboFilterMode->setCurrentIndex(conf().filterMode());
+    }
 }

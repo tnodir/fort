@@ -25,6 +25,19 @@ public:
     Q_ENUM(EditedFlag)
     Q_DECLARE_FLAGS(EditedFlags, EditedFlag)
 
+    // The flags changing outside the Options window, saved from it only when edited.
+    // A group is saved whole: e.g. a Filter Mode's flags mixed with the saved ones make another
+    // mode
+    enum FlagGroup {
+        NoFlagGroups = 0,
+        FlagFilterEnabled = (1 << 0),
+        FlagBlockTraffic = (1 << 1),
+        FlagFilterMode = (1 << 2),
+        FlagActivePeriod = (1 << 3),
+        AllFlagGroups = (1 << 4) - 1,
+    };
+    Q_DECLARE_FLAGS(FlagGroups, FlagGroup)
+
     enum BlockTrafficType {
         BlockTrafficInvalid = -1,
         BlockTrafficNone = 0,
@@ -61,7 +74,12 @@ public:
     void setOptEdited() { m_editedFlags |= OptEdited; }
 
     bool flagsEdited() const { return (m_editedFlags & FlagsEdited) != 0; }
-    void setFlagsEdited() { m_editedFlags |= FlagsEdited; }
+    bool flagEdited(FlagGroup group) const { return (m_editedFlagGroups & group) != 0; }
+    void setFlagsEdited(FlagGroups groups)
+    {
+        m_editedFlags |= FlagsEdited;
+        m_editedFlagGroups |= groups;
+    }
 
     void setAutoLearnOff() { m_editedFlags |= AutoLearnOff; }
 
@@ -72,7 +90,11 @@ public:
     void setTaskEdited() { m_editedFlags |= TaskEdited; }
 
     bool anyEdited() const { return m_editedFlags != NoneEdited; }
-    void resetEdited(EditedFlags v = NoneEdited) { m_editedFlags = v; }
+    void resetEdited(EditedFlags v = NoneEdited)
+    {
+        m_editedFlags = v;
+        m_editedFlagGroups = v.testFlag(FlagsEdited) ? AllFlagGroups : NoFlagGroups;
+    }
 
     bool bootFilter() const { return m_bootFilter; }
     void setBootFilter(bool v) { m_bootFilter = v; }
@@ -199,6 +221,7 @@ private:
 
 private:
     uint m_editedFlags : 8 = AllEdited; // update all on load()!
+    uint m_editedFlagGroups : 4 = AllFlagGroups;
 
     uint m_bootFilter : 1 = false;
     uint m_stealthMode : 1 = false;
@@ -236,5 +259,6 @@ private:
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(FirewallConf::EditedFlags)
+Q_DECLARE_OPERATORS_FOR_FLAGS(FirewallConf::FlagGroups)
 
 #endif // FIREWALLCONF_H

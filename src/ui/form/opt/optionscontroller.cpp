@@ -54,10 +54,13 @@ void OptionsController::setOptEdited()
     }
 }
 
-void OptionsController::setFlagsEdited()
+void OptionsController::setFlagsEdited(FirewallConf::FlagGroups groups)
 {
-    if (!confToEdit().flagsEdited()) {
-        confToEdit().setFlagsEdited();
+    const bool wasEdited = confToEdit().flagsEdited();
+
+    confToEdit().setFlagsEdited(groups);
+
+    if (!wasEdited) {
         emitEdited(true);
     }
 }

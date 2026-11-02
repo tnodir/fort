@@ -118,8 +118,6 @@ public slots:
     bool showOptionsWindow() { return showWindowByCode(WindowOptions); }
     bool closeOptionsWindow() { return closeWindowByCode(WindowOptions); }
 
-    bool reloadOptionsWindow(const QString &reason);
-
     bool showOptionsWindowTab(int index);
 
     bool showRulesWindow() { return showWindowByCode(WindowRules); }
