@@ -15,6 +15,7 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
 #include <form/filtersim/filtersimwindow.h>
+#include <form/prog/programeditdialog.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/connsearchmodel.h>
@@ -149,11 +150,12 @@ void ConnectionsWindow::retranslateUi()
     this->unsetLocale();
 
     m_btEdit->setText(tr("Edit"));
+    m_actAddFilter->setText(tr("Add Filter"));
+    m_actAddProgram->setText(tr("Add Program"));
     m_actCopyAsFilter->setText(tr("Copy as Filter"));
     m_actCopy->setText(tr("Copy"));
     m_actLookupIp->setText(tr("Lookup IP"));
 
-    m_actAddProgram->setText(tr("Add Program"));
     m_actFilterSim->setText(tr("Filter Simulator"));
     m_actRemoveConn->setText(tr("Remove"));
     m_actClearAll->setText(tr("Clear All"));
@@ -212,6 +214,14 @@ QLayout *ConnectionsWindow::setupHeader()
     // Edit Menu
     auto menu = ControlUtil::createMenu(this);
 
+    m_actAddFilter = menu->addAction(IconCache::icon(":/icons/filter_add.png"), QString());
+    m_actAddFilter->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_N);
+
+    m_actAddProgram = menu->addAction(IconCache::icon(":/icons/application.png"), QString());
+    m_actAddProgram->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
+
+    menu->addSeparator();
+
     m_actCopyAsFilter = menu->addAction(IconCache::icon(":/icons/script.png"), QString());
     m_actCopyAsFilter->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_C);
 
@@ -220,9 +230,6 @@ QLayout *ConnectionsWindow::setupHeader()
 
     m_actLookupIp = menu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
     m_actLookupIp->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_L);
-
-    m_actAddProgram = menu->addAction(IconCache::icon(":/icons/application.png"), QString());
-    m_actAddProgram->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actFilterSim = menu->addAction(IconCache::icon(":/icons/filter.png"), QString());
 
@@ -285,6 +292,20 @@ QLayout *ConnectionsWindow::setupHeader()
 
 void ConnectionsWindow::setupHeaderConnections()
 {
+    connect(m_actAddFilter, &QAction::triggered, this, [&] {
+        const auto &connRow = currentConnRow();
+
+        if (!connRow.isNull()) {
+            addConnFilter(connRow);
+        }
+    });
+    connect(m_actAddProgram, &QAction::triggered, this, [&] {
+        const auto &connRow = currentConnRow();
+
+        if (!connRow.isNull()) {
+            windowManager()->openProgramEditForm(connRow.appPath, connRow.confAppId, this);
+        }
+    });
     connect(m_actCopyAsFilter, &QAction::triggered, this, [&] {
         const auto rows = m_connListView->selectedRows();
         const auto text = connListModel()->rowsAsFilter(rows);
@@ -300,13 +321,6 @@ void ConnectionsWindow::setupHeaderConnections()
         OsUtil::openIpLocationUrl(textIp);
     });
 
-    connect(m_actAddProgram, &QAction::triggered, this, [&] {
-        const auto &connRow = currentConnRow();
-
-        if (!connRow.isNull()) {
-            windowManager()->openProgramEditForm(connRow.appPath, connRow.confAppId, this);
-        }
-    });
     connect(m_actFilterSim, &QAction::triggered, this, [&] {
         const auto &connRow = currentConnRow();
 
@@ -466,10 +480,11 @@ void ConnectionsWindow::setupTableConnsChanged()
         const int connIndex = connListCurrentIndex();
         const bool connSelected = (connIndex >= 0);
 
+        m_actAddFilter->setEnabled(connSelected);
+        m_actAddProgram->setEnabled(connSelected);
         m_actCopyAsFilter->setEnabled(connSelected);
         m_actCopy->setEnabled(connSelected);
         m_actLookupIp->setEnabled(connSelected);
-        m_actAddProgram->setEnabled(connSelected);
         m_actFilterSim->setEnabled(connSelected);
 
         /* Removing till the row would remove the filtered out connections too */
@@ -480,6 +495,16 @@ void ConnectionsWindow::setupTableConnsChanged()
     refreshTableConnsChanged();
 
     connect(m_connListView, &TableView::currentIndexChanged, this, refreshTableConnsChanged);
+}
+
+void ConnectionsWindow::addConnFilter(const ConnRow &connRow)
+{
+    // The model's row cache may change while the form is shown
+    const Conn conn = connRow;
+
+    auto form = windowManager()->openProgramEditForm(conn.appPath, connRow.confAppId, this);
+
+    form->addConnFilter(conn);
 }
 
 void ConnectionsWindow::showTableConnHeaderMenu(const QPoint &pos)

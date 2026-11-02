@@ -29,13 +29,13 @@ signals:
     void addFilterRequested(const Conn &conn);
 
 protected:
+    void addConnFilter(const ConnRow &connRow) override;
+
     AppConnsWindow(const App &app, QWidget *parent, Qt::WindowFlags f);
     AppConnsWindow(
             AppConnSearchModel *connListModel, const App &app, QWidget *parent, Qt::WindowFlags f);
 
     void hideAppName();
-
-    QAction *addFilterAction() const { return m_actAddFilter; }
 
     /* The alert's window isn't held by the Window Manager */
     void setupAlertWindow();
@@ -49,10 +49,6 @@ protected slots:
     void retranslateWindowTitle() override;
 
 private:
-    void setupController();
-
-    void retranslateUi();
-
     void setupUi();
     void setupEditAppName();
     void setupAddFilter();
@@ -62,7 +58,6 @@ private:
 private:
     LineEdit *m_editAppName = nullptr;
     QWidget *m_appNameSeparator = nullptr;
-    QAction *m_actAddFilter = nullptr;
 };
 
 #endif // APPCONNSWINDOW_H

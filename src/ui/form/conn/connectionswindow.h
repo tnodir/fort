@@ -38,6 +38,7 @@ protected:
 
     QHBoxLayout *headerLayout() const { return m_headerLayout; }
     TableView *connListView() const { return m_connListView; }
+    QAction *addFilterAction() const { return m_actAddFilter; }
 
     void initialize();
 
@@ -53,6 +54,8 @@ protected:
 
     int connListCurrentIndex() const;
     const ConnRow &currentConnRow() const;
+
+    virtual void addConnFilter(const ConnRow &connRow);
 
 protected slots:
     virtual void retranslateWindowTitle();
@@ -98,10 +101,11 @@ private:
 
     QHBoxLayout *m_headerLayout = nullptr;
     QPushButton *m_btEdit = nullptr;
+    QAction *m_actAddFilter = nullptr;
+    QAction *m_actAddProgram = nullptr;
     QAction *m_actCopyAsFilter = nullptr;
     QAction *m_actCopy = nullptr;
     QAction *m_actLookupIp = nullptr;
-    QAction *m_actAddProgram = nullptr;
     QAction *m_actFilterSim = nullptr;
     QAction *m_actRemoveConn = nullptr;
     QAction *m_actClearAll = nullptr;

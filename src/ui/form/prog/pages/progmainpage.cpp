@@ -49,6 +49,16 @@ void ProgMainPage::setConnsWindowChecked(bool checked)
     m_btConnections->setChecked(checked);
 }
 
+void ProgMainPage::addConnFilter(const Conn &conn)
+{
+    // The blocked program's Network Filters tab is disabled
+    if (m_tabWidget->isTabEnabled(1)) {
+        selectTab(1);
+    }
+
+    m_networkPage->openConnFilterForm(conn);
+}
+
 void ProgMainPage::onValidateFields(bool &ok)
 {
     for (int i = 0, n = m_tabWidget->count(); i < n; ++i) {
@@ -122,14 +132,14 @@ void ProgMainPage::setupUi()
 void ProgMainPage::setupTabBar()
 {
     auto generalPage = new ProgGeneralPage(ctrl());
-    auto networkPage = new ProgNetworkPage(ctrl());
+    m_networkPage = new ProgNetworkPage(ctrl());
     auto morePage = new ProgMorePage(ctrl());
 
-    m_pages = { generalPage, networkPage, morePage };
+    m_pages = { generalPage, m_networkPage, morePage };
 
     m_tabWidget = new QTabWidget();
     m_tabWidget->addTab(generalPage, QString());
-    m_tabWidget->addTab(networkPage, QString());
+    m_tabWidget->addTab(m_networkPage, QString());
     m_tabWidget->addTab(morePage, QString());
 
     // Paused Connections button: with their count
@@ -164,10 +174,6 @@ void ProgMainPage::setupTabBar()
 
     connect(m_tabWidget, &QTabWidget::currentChanged, this,
             [&](int tabIndex) { pageAt(tabIndex)->onPageActivated(); });
-
-    // Add a Connection's filter on the Network Filters tab
-    connect(this, &ProgMainPage::addConnFilterRequested, networkPage,
-            &ProgNetworkPage::openConnFilterForm);
 }
 
 QLayout *ProgMainPage::setupButtonsLayout()

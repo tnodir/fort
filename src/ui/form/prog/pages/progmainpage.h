@@ -7,6 +7,7 @@ QT_FORWARD_DECLARE_CLASS(QTabWidget)
 
 class App;
 class Conn;
+class ProgNetworkPage;
 
 class ProgMainPage : public ProgBasePage
 {
@@ -22,10 +23,11 @@ public:
 
     void setConnsWindowChecked(bool checked);
 
+    void addConnFilter(const Conn &conn);
+
 signals:
     void pendingConnsWindowToggled(bool checked);
     void connsWindowToggled(bool checked);
-    void addConnFilterRequested(const Conn &conn);
 
 protected slots:
     void onValidateFields(bool &ok);
@@ -53,6 +55,7 @@ private:
     int m_pendingConnsCount = 0;
 
     QTabWidget *m_tabWidget = nullptr;
+    ProgNetworkPage *m_networkPage = nullptr;
 
     QToolButton *m_btPendingConns = nullptr;
     QToolButton *m_btConnections = nullptr;

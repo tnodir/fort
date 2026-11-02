@@ -2,7 +2,6 @@
 
 #include <QHBoxLayout>
 #include <QHeaderView>
-#include <QMenu>
 
 #include <conf/app.h>
 #include <form/controls/controlutil.h>
@@ -11,9 +10,6 @@
 #include <fortglobal.h>
 #include <model/appconnsearchmodel.h>
 #include <user/iniuser.h>
-#include <util/iconcache.h>
-
-#include "connectionscontroller.h"
 
 using namespace Fort;
 
@@ -45,7 +41,6 @@ AppConnsWindow::AppConnsWindow(
     ConnectionsWindow(connListModel, parent, f)
 {
     setupUi();
-    setupController();
 
     updateApp(app);
 }
@@ -64,7 +59,7 @@ void AppConnsWindow::setApp(const App &app)
 
 void AppConnsWindow::setAddFilterVisible(bool visible)
 {
-    m_actAddFilter->setVisible(visible);
+    addFilterAction()->setVisible(visible);
 }
 
 void AppConnsWindow::restoreWindowState()
@@ -83,16 +78,6 @@ void AppConnsWindow::restoreWindowState()
 void AppConnsWindow::retranslateWindowTitle()
 {
     this->setWindowTitle(tr("Program Connections"));
-}
-
-void AppConnsWindow::setupController()
-{
-    connect(ctrl(), &ConnectionsController::retranslateUi, this, &AppConnsWindow::retranslateUi);
-}
-
-void AppConnsWindow::retranslateUi()
-{
-    m_actAddFilter->setText(tr("Add Filter"));
 }
 
 void AppConnsWindow::setupUi()
@@ -126,30 +111,19 @@ void AppConnsWindow::setupEditAppName()
 
 void AppConnsWindow::setupAddFilter()
 {
-    auto menu = connListView()->menu();
-    const auto firstAction = menu->actions().value(0);
-
-    m_actAddFilter = new QAction(IconCache::icon(":/icons/filter_add.png"), QString(), menu);
-    m_actAddFilter->setVisible(false); // by setAddFilterVisible()
-
-    menu->insertAction(firstAction, m_actAddFilter);
-    menu->insertSeparator(firstAction);
-
-    connect(m_actAddFilter, &QAction::triggered, this,
-            [&] { emit addFilterRequested(currentConnRow()); });
+    addFilterAction()->setVisible(false); // by setAddFilterVisible()
 
     // Also by the double click, when it's visible
     connect(connListView(), &TableView::doubleClicked, this, [&] {
-        if (m_actAddFilter->isVisible()) {
-            m_actAddFilter->trigger();
+        if (addFilterAction()->isVisible()) {
+            addFilterAction()->trigger();
         }
     });
+}
 
-    const auto refreshAddFilter = [&] { m_actAddFilter->setEnabled(connListCurrentIndex() >= 0); };
-
-    refreshAddFilter();
-
-    connect(connListView(), &TableView::currentIndexChanged, this, refreshAddFilter);
+void AppConnsWindow::addConnFilter(const ConnRow &connRow)
+{
+    emit addFilterRequested(connRow);
 }
 
 void AppConnsWindow::updateApp(const App &app)

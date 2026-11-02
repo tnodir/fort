@@ -10,6 +10,7 @@
 class App;
 class AppConnsWindow;
 class AppPendingConnsWindow;
+class Conn;
 class ProgramEditController;
 class ProgMainPage;
 
@@ -25,6 +26,8 @@ public:
     void initialize(const App &app, const QVector<qint64> &appIdList = {});
 
     bool isNew() const;
+
+    void addConnFilter(const Conn &conn);
 
 protected:
     virtual void closeOnSave() { close(); }

@@ -22,6 +22,7 @@ class IniUser;
 class MainWindow;
 class OptionsWindow;
 class ProgramAlertWindow;
+class ProgramEditDialog;
 class ProgramsWindow;
 class RulesWindow;
 class ServicesWindow;
@@ -107,7 +108,7 @@ public slots:
     bool closeProgramsWindow() { return closeWindowByCode(WindowPrograms); }
 
     virtual bool showProgramEditForm(const QString &appPath);
-    void openProgramEditForm(
+    ProgramEditDialog *openProgramEditForm(
             const QString &appPath, qint64 appId = 0, FormWindow *parentForm = nullptr);
 
     bool showProgramAlertWindow(bool activate = true);

@@ -81,6 +81,11 @@ bool ProgramEditDialog::isNew() const
     return ctrl()->isNew();
 }
 
+void ProgramEditDialog::addConnFilter(const Conn &conn)
+{
+    m_mainPage->addConnFilter(conn);
+}
+
 void ProgramEditDialog::setupController()
 {
     connect(this, &WidgetWindow::defaultKeyPressed, ctrl(), &ProgramEditController::saveChanges);
@@ -189,8 +194,7 @@ void ProgramEditDialog::setupConnsWindow(
     ControlUtil::deleteOnClose(window);
 
     connect(window, &AppConnsWindow::aboutToClose, m_mainPage, onAboutToClose);
-    connect(window, &AppConnsWindow::addFilterRequested, m_mainPage,
-            &ProgMainPage::addConnFilterRequested);
+    connect(window, &AppConnsWindow::addFilterRequested, m_mainPage, &ProgMainPage::addConnFilter);
 }
 
 void ProgramEditDialog::showConnsWindow(AppConnsWindow *window, bool visible)

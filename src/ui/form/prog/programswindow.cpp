@@ -770,7 +770,8 @@ bool ProgramsWindow::editProgramByPath(const QString &appPath)
     return true;
 }
 
-void ProgramsWindow::openProgramByPath(const QString &appPath, qint64 appId, FormWindow *parentForm)
+ProgramEditDialog *ProgramsWindow::openProgramByPath(
+        const QString &appPath, qint64 appId, FormWindow *parentForm)
 {
     ProgramEditDialog *formAppEdit = nullptr;
 
@@ -794,6 +795,8 @@ void ProgramsWindow::openProgramByPath(const QString &appPath, qint64 appId, For
     openAppEditDialog(a);
 
     ControlUtil::deleteOnClose(formAppEdit);
+
+    return formAppEdit;
 }
 
 void ProgramsWindow::dragEnterEvent(QDragEnterEvent *event)
