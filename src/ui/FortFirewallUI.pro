@@ -23,6 +23,7 @@ SOURCES += \
     conf/confgroupmanager.cpp \
     conf/confmanager.cpp \
     conf/confmanagerbase.cpp \
+    conf/confmigration.cpp \
     conf/confrulemanager.cpp \
     conf/confspeedlimitmanager.cpp \
     conf/conftimeperiodmanager.cpp \
@@ -351,6 +352,7 @@ HEADERS += \
     conf/confgroupmanager.h \
     conf/confmanager.h \
     conf/confmanagerbase.h \
+    conf/confmigration.h \
     conf/confrulemanager.h \
     conf/confspeedlimitmanager.h \
     conf/conftimeperiodmanager.h \

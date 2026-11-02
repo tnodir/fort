@@ -110,7 +110,7 @@ IPC is `QLocalServer`/`QLocalSocket` (`src/ui/control/`): `ControlManager` liste
 
 The IP Addresses tab's two `AddressGroup`s (`FirewallConf::addressGroups()`, the LAN and Internet lists, `AddressesArea`), a Program's Network Filters (`app.filters_text`, `FilterEditDialog`, `FilterLine`, `FilterLineText`, the Terminating Rule's line) and the Time Periods (`period_id`, `ConfTimePeriodManager`, `SETPERIODS`): read `docs/agents/conf-model.md` before changing them.
 
-Programs belong to `Group`s (`conf/group.h`, max 32: enabled, exclusive, an optional Time Period and an optional Rule) by the `app.groups_mask` bit mask, and reference one-direction `SpeedLimit`s (`conf/speedlimit.h`, max 32) by `app.in_limit_id` / `app.out_limit_id`. They replace the old App. Groups, which `ConfManager`'s DB migration converts.
+Programs belong to `Group`s (`conf/group.h`, max 32: enabled, exclusive, an optional Time Period and an optional Rule) by the `app.groups_mask` bit mask, and reference one-direction `SpeedLimit`s (`conf/speedlimit.h`, max 32) by `app.in_limit_id` / `app.out_limit_id`. They replace the old App. Groups, which the conf DB's migration (`ConfMigration`) converts.
 
 Ask to Connect pends a blocked connection till the user's decision (`fortpkt_pending.c`, `PendingConnManager`, the Paused Connections and Alert Program windows, `BLOCKPENDING`/`REAUTHPENDING`/`ALLOWPENDING`/`ALLOWPROC`, Allow Process): read `docs/agents/ask-to-connect.md` before changing it.
 
