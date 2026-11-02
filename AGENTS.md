@@ -114,6 +114,8 @@ Programs belong to `Group`s (`conf/group.h`, max 32: enabled, exclusive, an opti
 
 Ask to Connect pends a blocked connection till the user's decision (`fortpkt_pending.c`, `PendingConnManager`, the Paused Connections and Alert Program windows, `BLOCKPENDING`/`REAUTHPENDING`/`ALLOWPENDING`/`ALLOWPROC`, Allow Process): read `docs/agents/ask-to-connect.md` before changing it.
 
+A new conf starts in the Auto-Learn Filter Mode, which `ConfManager` switches to Ask to Connect after `autoLearnSeconds`.
+
 The Global Before/After Apps rules are sent to the driver as two synthetic rules (`ConfRuleManager::walkRules()`) with the ids after the max rule id (up to `FORT_CONF_RULE_ID_MAX`): don't reuse the deleted rules' free ids for them.
 
 A Program's or Group's Rule is an App Rule or a Preset Rule (`RulesWindow` selects by a mask of `Rule::ruleTypeBit()`; the driver doesn't know the rule types). The default Preset Rules (`ui/conf/rule/presets.json`, `PresetRulesManager`, `rule.preset_code`, the file's `version` and `since`): read `docs/agents/preset-rules.md` before changing them.

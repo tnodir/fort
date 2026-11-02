@@ -241,7 +241,7 @@ void ConfManager::switchFilterOff()
 
 void ConfManager::switchAutoLearn()
 {
-    conf().setFilterMode(FirewallConf::ModeBlockAll);
+    conf().setFilterMode(FirewallConf::ModeAskToConnect);
 
     saveFlags();
 }

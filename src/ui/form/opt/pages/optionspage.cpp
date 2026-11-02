@@ -140,8 +140,8 @@ void OptionsPage::onRetranslateUi()
                "limit)"));
     m_lscAutoLearnSeconds->label()->setText(tr("Auto-learn duration:"));
     m_lscAutoLearnSeconds->setToolTip(
-            tr("How long the Auto-Learn Filter Mode lasts, then it switches to \"Block, if not "
-               "allowed\" (Disabled: no limit)"));
+            tr("How long the Auto-Learn Filter Mode lasts, then it switches to \"Ask to Connect\" "
+               "(Disabled: no limit)"));
     m_lscAskToConnectSeconds->label()->setText(tr("Ask to Connect timeout:"));
     m_lscAskToConnectSeconds->setToolTip(
             tr("How long a connection waits for your decision, then it is blocked"));
