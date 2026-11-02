@@ -75,10 +75,6 @@ FirewallConf::FilterMode FirewallConf::filterMode() const
 
 void FirewallConf::setFilterMode(FirewallConf::FilterMode mode)
 {
-    if (mode != ModeAutoLearn && m_allowAllNew) {
-        setAutoLearnOff();
-    }
-
     m_allowAllNew = false;
     m_askToConnect = false;
     m_appBlockAll = false;

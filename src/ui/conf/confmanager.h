@@ -94,6 +94,8 @@ private:
     void switchFilterOff();
     void switchAutoLearn();
 
+    void updateAutoLearnOff();
+
     bool setupDb();
 
     void setupDefault(FirewallConf &conf) const;
@@ -111,6 +113,8 @@ private:
     bool saveTask(TaskInfo *taskInfo);
 
 private:
+    bool m_savedAutoLearn : 1 = false;
+
     SqliteDbPtr m_sqliteDb;
 
     QString m_errorMessage;

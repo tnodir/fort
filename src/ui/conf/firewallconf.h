@@ -63,7 +63,6 @@ public:
     bool flagsEdited() const { return (m_editedFlags & FlagsEdited) != 0; }
     void setFlagsEdited() { m_editedFlags |= FlagsEdited; }
 
-    bool autoLearnOff() const { return (m_editedFlags & AutoLearnOff) != 0; }
     void setAutoLearnOff() { m_editedFlags |= AutoLearnOff; }
 
     bool iniEdited() const { return (m_editedFlags & IniEdited) != 0; }

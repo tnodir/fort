@@ -771,8 +771,7 @@ void ConfManager::applyFilterOffSeconds()
 
 void ConfManager::applyAutoLearnSeconds()
 {
-    const bool isAutoLearn = (conf().filterMode() == FirewallConf::ModeAutoLearn);
-    const int autoLearnMsec = isAutoLearn ? ini().autoLearnSeconds() * 1000 : 0;
+    const int autoLearnMsec = conf().allowAllNew() ? ini().autoLearnSeconds() * 1000 : 0;
 
     const bool isTimerActive =
             (m_autoLearnTimer.isActive() && m_autoLearnTimer.interval() == autoLearnMsec);
@@ -807,6 +806,17 @@ void ConfManager::switchAutoLearn()
     conf().setFilterMode(FirewallConf::ModeBlockAll);
 
     saveFlags();
+}
+
+void ConfManager::updateAutoLearnOff()
+{
+    const bool isAutoLearn = conf().allowAllNew();
+
+    if (m_savedAutoLearn && !isAutoLearn) {
+        conf().setAutoLearnOff();
+    }
+
+    m_savedAutoLearn = isAutoLearn;
 }
 
 bool ConfManager::setupDb()
@@ -877,6 +887,8 @@ void ConfManager::load()
         return;
     }
 
+    m_savedAutoLearn = false; // a loaded mode doesn't leave Auto-Learn
+
     applySavedConf(conf());
 }
 
@@ -937,6 +949,8 @@ void ConfManager::applySavedConf(FirewallConf &newConf)
             conf().copy(newConf);
         }
     }
+
+    updateAutoLearnOff();
 
     applyFilterOffSeconds();
     applyAutoLearnSeconds();
