@@ -113,6 +113,8 @@ void ProgMainPage::setupController()
 
     connect(ctrl(), &ProgramEditController::allowToggled, this,
             &ProgMainPage::setNetworkTabEnabled);
+
+    connect(m_networkPage, &ProgNetworkPage::filterSaved, this, &ProgMainPage::onFilterSaved);
 }
 
 void ProgMainPage::setupUi()
@@ -132,14 +134,14 @@ void ProgMainPage::setupUi()
 
 void ProgMainPage::setupTabBar()
 {
-    auto generalPage = new ProgGeneralPage(ctrl());
+    m_generalPage = new ProgGeneralPage(ctrl());
     m_networkPage = new ProgNetworkPage(ctrl());
     auto morePage = new ProgMorePage(ctrl());
 
-    m_pages = { generalPage, m_networkPage, morePage };
+    m_pages = { m_generalPage, m_networkPage, morePage };
 
     m_tabWidget = new QTabWidget();
-    m_tabWidget->addTab(generalPage, QString());
+    m_tabWidget->addTab(m_generalPage, QString());
     m_tabWidget->addTab(m_networkPage, QString());
     m_tabWidget->addTab(morePage, QString());
 
@@ -200,6 +202,18 @@ bool ProgMainPage::isNetworkTabEnabled() const
 void ProgMainPage::setNetworkTabEnabled(bool enabled)
 {
     m_tabWidget->setTabEnabled(networkTabIndex, enabled);
+}
+
+void ProgMainPage::onFilterSaved()
+{
+    if (isNetworkTabEnabled())
+        return;
+
+    // The driver doesn't check a blocked program's filters
+    m_generalPage->selectAction(App::ActionAllow);
+    m_networkPage->setTerminatingBlock();
+
+    selectTab(networkTabIndex);
 }
 
 void ProgMainPage::updatePendingConnsVisible()

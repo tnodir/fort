@@ -57,6 +57,11 @@ ProgGeneralPage::ProgGeneralPage(ProgramEditController *ctrl, QWidget *parent) :
     setupController();
 }
 
+void ProgGeneralPage::selectAction(App::Action action)
+{
+    m_btgActions->button(int(action))->setChecked(true);
+}
+
 void ProgGeneralPage::onPageInitialize(const App &app)
 {
     initializePathNameNotesFields(isSingleSelection());
@@ -66,7 +71,7 @@ void ProgGeneralPage::onPageInitialize(const App &app)
     updateApplyChild();
     m_btGroups->setGroups(app.groups);
 
-    m_btgActions->button(int(app.action()))->setChecked(true);
+    selectAction(app.action());
 
     const bool hasScheduleTime = !app.scheduleTime.isNull();
     const ScheduleType scheduleType = hasScheduleTime ? ScheduleTimeAt : ScheduleTimeIn;
@@ -595,7 +600,7 @@ void ProgGeneralPage::setupComboScheduleType()
 void ProgGeneralPage::setupQuickAction()
 {
     m_btQuickAction = ControlUtil::createButton({}, [&] {
-        selectQuickAction();
+        selectAction(m_quickActionType);
 
         ctrl()->saveChanges();
     });
@@ -653,7 +658,7 @@ void ProgGeneralPage::setupTimedAction()
     connect(m_btTimedAction, &QToolButton::clicked, this, [&] {
         const auto currentActionType = App::Action(m_btgActions->checkedId());
 
-        selectQuickAction();
+        selectAction(m_quickActionType);
 
         const int minutes = timedActionMinutes(m_btTimedAction);
 
@@ -742,12 +747,6 @@ void ProgGeneralPage::updateQuickAction()
     m_btQuickAction->setText(rb->text());
 
     m_btTimedAction->setIcon(rb->icon());
-}
-
-void ProgGeneralPage::selectQuickAction()
-{
-    auto rb = m_btgActions->button(int(m_quickActionType));
-    rb->setChecked(true);
 }
 
 void ProgGeneralPage::selectTimedMenuAction(int index)

@@ -22,6 +22,11 @@ public:
     // Adds the connection's filter
     void openConnFilterForm(const Conn &conn);
 
+    void setTerminatingBlock();
+
+signals:
+    void filterSaved();
+
 public slots:
     void fillApp(App &app) const override;
 

@@ -17,6 +17,8 @@ class ProgGeneralPage : public ProgBasePage
 public:
     explicit ProgGeneralPage(ProgramEditController *ctrl = nullptr, QWidget *parent = nullptr);
 
+    void selectAction(App::Action action);
+
 public slots:
     bool validateFields() const override;
     void fillApp(App &app) const override;
@@ -79,7 +81,6 @@ private:
     void updateAppIcon();
     void updateQuickAction();
 
-    void selectQuickAction();
     void selectTimedMenuAction(int index);
 
     int timedActionMinutes(QToolButton *bt);

@@ -7,6 +7,7 @@ QT_FORWARD_DECLARE_CLASS(QTabWidget)
 
 class App;
 class Conn;
+class ProgGeneralPage;
 class ProgNetworkPage;
 
 class ProgMainPage : public ProgBasePage
@@ -47,6 +48,8 @@ private:
     bool isNetworkTabEnabled() const;
     void setNetworkTabEnabled(bool enabled);
 
+    void onFilterSaved();
+
     void updatePendingConnsVisible();
 
     ProgBasePage *pageAt(int index) const;
@@ -55,6 +58,7 @@ private:
     int m_pendingConnsCount = 0;
 
     QTabWidget *m_tabWidget = nullptr;
+    ProgGeneralPage *m_generalPage = nullptr;
     ProgNetworkPage *m_networkPage = nullptr;
 
     QToolButton *m_btPendingConns = nullptr;

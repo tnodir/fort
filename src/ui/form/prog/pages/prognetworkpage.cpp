@@ -365,6 +365,12 @@ void ProgNetworkPage::openConnFilterForm(const Conn &conn)
     openFilterEditForm(FilterLineText(conn));
 }
 
+void ProgNetworkPage::setTerminatingBlock()
+{
+    m_terminatingRuleSelector->setTerminate(true);
+    m_terminatingRuleSelector->setTerminateActionTypeId(FORT_RULE_FILTER_ACTION_BLOCK);
+}
+
 void ProgNetworkPage::editCurrentFilter()
 {
     const int row = filterListCurrentIndex();
@@ -394,4 +400,6 @@ void ProgNetworkPage::saveFilter(const QString &filterText, int row)
     }
 
     m_filterListView->setCurrentIndex(m_filterListModel->index(row));
+
+    emit filterSaved();
 }
