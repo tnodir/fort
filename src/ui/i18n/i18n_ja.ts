@@ -84,10 +84,6 @@
         <source>Program Connections</source>
         <translation>プログラムの接続</translation>
     </message>
-    <message>
-        <source>Add Filter</source>
-        <translation>フィルターを追加</translation>
-    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -299,13 +295,6 @@
     </message>
 </context>
 <context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>設定が他のユーザーによって変更されました</translation>
-    </message>
-</context>
-<context>
     <name>ConnListModel</name>
     <message>
         <source>In</source>
@@ -497,6 +486,10 @@
     <message>
         <source>Add Program</source>
         <translation>プログラムの追加</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>フィルターを追加</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
@@ -1909,8 +1902,8 @@ Make sure that you have a fresh backup.</source>
         <translation>自動学習の継続時間 :</translation>
     </message>
     <message>
-        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
-        <translation>自動学習のフィルター モードが続く時間。その後「許可されていない場合はブロックする」に切り替わります (無効: 無制限)</translation>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Ask to Connect&quot; (Disabled: no limit)</source>
+        <translation>自動学習のフィルター モードが続く時間。その後「接続を確認する」に切り替わります (無効: 無制限)</translation>
     </message>
     <message>
         <source>Ask to Connect timeout:</source>
@@ -2184,6 +2177,10 @@ Make sure that you have a fresh backup.</source>
         <translation>ファイルの選択</translation>
     </message>
     <message>
+        <source>Switch Wildcard</source>
+        <translation>ワイルドカードの切り替え</translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation>名前 :</translation>
     </message>
@@ -2349,10 +2346,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Paused Connections</source>
         <translation>一時停止中の接続</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>ワイルドカードの切り替え</translation>
     </message>
     <message>
         <source>Connections</source>

@@ -84,10 +84,6 @@
         <source>Program Connections</source>
         <translation>应用程序连接</translation>
     </message>
-    <message>
-        <source>Add Filter</source>
-        <translation>添加过滤器</translation>
-    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -299,13 +295,6 @@
     </message>
 </context>
 <context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>设置已被其他人更改</translation>
-    </message>
-</context>
-<context>
     <name>ConnListModel</name>
     <message>
         <source>In</source>
@@ -497,6 +486,10 @@
     <message>
         <source>Add Program</source>
         <translation>添加应用程序</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>添加过滤器</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
@@ -1909,8 +1902,8 @@ Make sure that you have a fresh backup.</source>
         <translation>自动学习时长：</translation>
     </message>
     <message>
-        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
-        <translation>自动学习过滤模式持续多久，之后切换为“如果不允许则阻止”（已禁用：无限制）</translation>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Ask to Connect&quot; (Disabled: no limit)</source>
+        <translation>自动学习过滤模式持续多久，之后切换为“请求连接”（已禁用：无限制）</translation>
     </message>
     <message>
         <source>Ask to Connect timeout:</source>
@@ -2184,6 +2177,10 @@ Make sure that you have a fresh backup.</source>
         <translation>选择文件</translation>
     </message>
     <message>
+        <source>Switch Wildcard</source>
+        <translation>切换通配符</translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation>名称：</translation>
     </message>
@@ -2349,10 +2346,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Paused Connections</source>
         <translation>已暂停的连接</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>切换通配符</translation>
     </message>
     <message>
         <source>Connections</source>

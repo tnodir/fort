@@ -84,10 +84,6 @@
         <source>Program Connections</source>
         <translation>Conexiones del programa</translation>
     </message>
-    <message>
-        <source>Add Filter</source>
-        <translation>Añadir filtro</translation>
-    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -299,13 +295,6 @@
     </message>
 </context>
 <context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>Configuración cambiada por otra persona</translation>
-    </message>
-</context>
-<context>
     <name>ConnListModel</name>
     <message>
         <source>In</source>
@@ -497,6 +486,10 @@
     <message>
         <source>Add Program</source>
         <translation>Añadir programa</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>Añadir filtro</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
@@ -1909,8 +1902,8 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
         <translation>Duración del autoaprendizaje:</translation>
     </message>
     <message>
-        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
-        <translation>Cuánto dura el modo de filtrado Autoaprendizaje; después cambia a &quot;Bloquear, si no está permitido&quot; (Desactivado: sin límite)</translation>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Ask to Connect&quot; (Disabled: no limit)</source>
+        <translation>Cuánto dura el modo de filtrado Autoaprendizaje; después cambia a &quot;Solicitar conexión&quot; (Desactivado: sin límite)</translation>
     </message>
     <message>
         <source>Ask to Connect timeout:</source>
@@ -2184,6 +2177,10 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
         <translation>Seleccionar archivo</translation>
     </message>
     <message>
+        <source>Switch Wildcard</source>
+        <translation>Cambiar comodín</translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation>Nombre:</translation>
     </message>
@@ -2349,10 +2346,6 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     <message>
         <source>Paused Connections</source>
         <translation>Conexiones en pausa</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>Cambiar comodín</translation>
     </message>
     <message>
         <source>Connections</source>

@@ -84,10 +84,6 @@
         <source>Program Connections</source>
         <translation>Conexões do Programa</translation>
     </message>
-    <message>
-        <source>Add Filter</source>
-        <translation>Adicionar Filtro</translation>
-    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -299,13 +295,6 @@
     </message>
 </context>
 <context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>Configurações alteradas por outra pessoa</translation>
-    </message>
-</context>
-<context>
     <name>ConnListModel</name>
     <message>
         <source>In</source>
@@ -497,6 +486,10 @@
     <message>
         <source>Add Program</source>
         <translation>Adicionar Programa</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>Adicionar Filtro</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
@@ -1908,8 +1901,8 @@ Certifique-se de que possui um backup recente.</translation>
         <translation>Duração do autoaprendizado:</translation>
     </message>
     <message>
-        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
-        <translation>Quanto dura o modo de filtro Aprender automaticamente; depois ele muda para &quot;Bloquear, se não permitido&quot; (Desativado: sem limite)</translation>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Ask to Connect&quot; (Disabled: no limit)</source>
+        <translation>Quanto dura o modo de filtro Aprender automaticamente; depois ele muda para &quot;Pedir para conectar&quot; (Desativado: sem limite)</translation>
     </message>
     <message>
         <source>Ask to Connect timeout:</source>
@@ -2183,6 +2176,10 @@ Certifique-se de que possui um backup recente.</translation>
         <translation>Selecionar Arquivo</translation>
     </message>
     <message>
+        <source>Switch Wildcard</source>
+        <translation>Alternar uso de caractere curinga</translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation>nome:</translation>
     </message>
@@ -2348,10 +2345,6 @@ Certifique-se de que possui um backup recente.</translation>
     <message>
         <source>Paused Connections</source>
         <translation>Conexões em Pausa</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>Alternar uso de caractere curinga</translation>
     </message>
     <message>
         <source>Connections</source>

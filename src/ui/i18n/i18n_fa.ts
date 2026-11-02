@@ -84,10 +84,6 @@
         <source>Program Connections</source>
         <translation>اتصال‌های برنامه</translation>
     </message>
-    <message>
-        <source>Add Filter</source>
-        <translation>افزودن فیلتر</translation>
-    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -299,13 +295,6 @@
     </message>
 </context>
 <context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>تنظیمات توسط شخص دیگری تغییر کرد</translation>
-    </message>
-</context>
-<context>
     <name>ConnListModel</name>
     <message>
         <source>In</source>
@@ -497,6 +486,10 @@
     <message>
         <source>Add Program</source>
         <translation>افزودن برنامه</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>افزودن فیلتر</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
@@ -1909,8 +1902,8 @@ Make sure that you have a fresh backup.</source>
         <translation>مدت یادگیری خودکار:</translation>
     </message>
     <message>
-        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
-        <translation>مدتی که حالت فیلتر یادگیری خودکار ادامه دارد و سپس به «مسدود، اگر مجاز نباشد» تغییر می‌کند (غیرفعال: بدون محدودیت)</translation>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Ask to Connect&quot; (Disabled: no limit)</source>
+        <translation>مدتی که حالت فیلتر یادگیری خودکار ادامه دارد و سپس به «پرسش برای اتصال» تغییر می‌کند (غیرفعال: بدون محدودیت)</translation>
     </message>
     <message>
         <source>Ask to Connect timeout:</source>
@@ -2184,6 +2177,10 @@ Make sure that you have a fresh backup.</source>
         <translation>انتخاب فایل</translation>
     </message>
     <message>
+        <source>Switch Wildcard</source>
+        <translation>تغییر الگوی عام</translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation>نام:</translation>
     </message>
@@ -2349,10 +2346,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Paused Connections</source>
         <translation>اتصال‌های متوقف‌شده</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>تغییر الگوی عام</translation>
     </message>
     <message>
         <source>Connections</source>

@@ -84,10 +84,6 @@
         <source>Program Connections</source>
         <translation>Povezave programa</translation>
     </message>
-    <message>
-        <source>Add Filter</source>
-        <translation>Dodaj filter</translation>
-    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -299,13 +295,6 @@
     </message>
 </context>
 <context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>Nastavitve je spremenil nekdo drug</translation>
-    </message>
-</context>
-<context>
     <name>ConnListModel</name>
     <message>
         <source>In</source>
@@ -497,6 +486,10 @@
     <message>
         <source>Add Program</source>
         <translation>Dodaj program</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>Dodaj filter</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
@@ -1909,8 +1902,8 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Trajanje samodejnega učenja:</translation>
     </message>
     <message>
-        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
-        <translation>Kako dolgo traja način filtra Samodejno učenje, nato preklopi na »Blokiraj, če ni dovoljeno« (Onemogočeno: brez omejitve)</translation>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Ask to Connect&quot; (Disabled: no limit)</source>
+        <translation>Kako dolgo traja način filtra Samodejno učenje, nato preklopi na »Vprašaj za povezavo« (Onemogočeno: brez omejitve)</translation>
     </message>
     <message>
         <source>Ask to Connect timeout:</source>
@@ -2184,6 +2177,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Izberi datoteko</translation>
     </message>
     <message>
+        <source>Switch Wildcard</source>
+        <translation>Preklopi način nadomestnih znakov</translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation>Ime:</translation>
     </message>
@@ -2349,10 +2346,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>Paused Connections</source>
         <translation>Začasno ustavljene povezave</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>Preklopi način nadomestnih znakov</translation>
     </message>
     <message>
         <source>Connections</source>

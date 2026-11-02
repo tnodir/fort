@@ -84,10 +84,6 @@
         <source>Program Connections</source>
         <translation>Połączenia programu</translation>
     </message>
-    <message>
-        <source>Add Filter</source>
-        <translation>Dodaj filtr</translation>
-    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -299,13 +295,6 @@
     </message>
 </context>
 <context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>Ustawienia zmienione przez kogoś innego</translation>
-    </message>
-</context>
-<context>
     <name>ConnListModel</name>
     <message>
         <source>In</source>
@@ -497,6 +486,10 @@
     <message>
         <source>Add Program</source>
         <translation>Dodaj program</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>Dodaj filtr</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
@@ -1909,8 +1902,8 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <translation>Czas automatycznego uczenia:</translation>
     </message>
     <message>
-        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
-        <translation>Jak długo trwa tryb filtrowania Automatyczne uczenie się, potem przełącza się na „Blokuj, jeśli nie jest dozwolone” (Wyłączone: bez limitu)</translation>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Ask to Connect&quot; (Disabled: no limit)</source>
+        <translation>Jak długo trwa tryb filtrowania Automatyczne uczenie się, potem przełącza się na „Poproś o połączenie” (Wyłączone: bez limitu)</translation>
     </message>
     <message>
         <source>Ask to Connect timeout:</source>
@@ -2184,6 +2177,10 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <translation>Wybierz plik</translation>
     </message>
     <message>
+        <source>Switch Wildcard</source>
+        <translation>Przełącz symbol wieloznaczny(Wildcard)</translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation>Nazwa:</translation>
     </message>
@@ -2349,10 +2346,6 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
     <message>
         <source>Paused Connections</source>
         <translation>Wstrzymane połączenia</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>Przełącz symbol wieloznaczny(Wildcard)</translation>
     </message>
     <message>
         <source>Connections</source>

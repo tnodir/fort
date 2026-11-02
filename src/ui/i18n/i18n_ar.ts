@@ -84,10 +84,6 @@
         <source>Program Connections</source>
         <translation>اتصالات البرنامج</translation>
     </message>
-    <message>
-        <source>Add Filter</source>
-        <translation>إضافة مرشّح</translation>
-    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -299,13 +295,6 @@
     </message>
 </context>
 <context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>تم تغيير الإعدادات بواسطة شخص آخر</translation>
-    </message>
-</context>
-<context>
     <name>ConnListModel</name>
     <message>
         <source>In</source>
@@ -497,6 +486,10 @@
     <message>
         <source>Add Program</source>
         <translation>إضافة برنامج</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>إضافة مرشّح</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
@@ -1909,8 +1902,8 @@ Make sure that you have a fresh backup.</source>
         <translation>مدة التعلم التلقائي:</translation>
     </message>
     <message>
-        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
-        <translation>المدة التي يستمر فيها نمط المرشّح تعلم تلقائي، ثم يتحول إلى &quot;حظر، إن لم يكن مسموح&quot; (معطل: بلا حد)</translation>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Ask to Connect&quot; (Disabled: no limit)</source>
+        <translation>المدة التي يستمر فيها نمط المرشّح تعلم تلقائي، ثم يتحول إلى &quot;نبهني عند محاولة الاتصال&quot; (معطل: بلا حد)</translation>
     </message>
     <message>
         <source>Ask to Connect timeout:</source>
@@ -2184,6 +2177,10 @@ Make sure that you have a fresh backup.</source>
         <translation>اختيار ملف برنامج</translation>
     </message>
     <message>
+        <source>Switch Wildcard</source>
+        <translation>تبديل حرف الاستبدال (Wildcard)</translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation>الاسم:</translation>
     </message>
@@ -2349,10 +2346,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Paused Connections</source>
         <translation>الاتصالات المتوقفة مؤقتًا</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>تبديل حرف الاستبدال (Wildcard)</translation>
     </message>
     <message>
         <source>Connections</source>

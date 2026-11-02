@@ -84,10 +84,6 @@
         <source>Program Connections</source>
         <translation>프로그램 연계</translation>
     </message>
-    <message>
-        <source>Add Filter</source>
-        <translation>필터 추가</translation>
-    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -299,13 +295,6 @@
     </message>
 </context>
 <context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>다른 사람이 설정을 변경함</translation>
-    </message>
-</context>
-<context>
     <name>ConnListModel</name>
     <message>
         <source>In</source>
@@ -497,6 +486,10 @@
     <message>
         <source>Add Program</source>
         <translation>프로그램 추가</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>필터 추가</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
@@ -1909,8 +1902,8 @@ Make sure that you have a fresh backup.</source>
         <translation>자동 학습 지속 시간:</translation>
     </message>
     <message>
-        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
-        <translation>자동 학습 필터 모드가 지속되는 시간, 그 후 &quot;차단, 허용하지 않을 경우&quot;로 전환됨 (비활성화: 제한 없음)</translation>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Ask to Connect&quot; (Disabled: no limit)</source>
+        <translation>자동 학습 필터 모드가 지속되는 시간, 그 후 &quot;연결 요청&quot;으로 전환됨 (비활성화: 제한 없음)</translation>
     </message>
     <message>
         <source>Ask to Connect timeout:</source>
@@ -2184,6 +2177,10 @@ Make sure that you have a fresh backup.</source>
         <translation>파일 선택</translation>
     </message>
     <message>
+        <source>Switch Wildcard</source>
+        <translation>와일드카드 전환</translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation>이름:</translation>
     </message>
@@ -2349,10 +2346,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Paused Connections</source>
         <translation>일시 중지된 연결</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>와일드카드 전환</translation>
     </message>
     <message>
         <source>Connections</source>

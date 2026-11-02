@@ -84,10 +84,6 @@
         <source>Program Connections</source>
         <translation>Kết nối chương trình</translation>
     </message>
-    <message>
-        <source>Add Filter</source>
-        <translation>Thêm bộ lọc</translation>
-    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -299,13 +295,6 @@
     </message>
 </context>
 <context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>Cài đặt đã bị thay đổi bởi người khác</translation>
-    </message>
-</context>
-<context>
     <name>ConnListModel</name>
     <message>
         <source>In</source>
@@ -497,6 +486,10 @@
     <message>
         <source>Add Program</source>
         <translation>Thêm chương trình</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>Thêm bộ lọc</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
@@ -1909,8 +1902,8 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
         <translation>Thời lượng tự học:</translation>
     </message>
     <message>
-        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
-        <translation>Chế độ lọc Tự học kéo dài bao lâu, sau đó chuyển sang &quot;Chặn, nếu không cho phép&quot; (Đã tắt: không giới hạn)</translation>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Ask to Connect&quot; (Disabled: no limit)</source>
+        <translation>Chế độ lọc Tự học kéo dài bao lâu, sau đó chuyển sang &quot;Hỏi khi kết nối&quot; (Đã tắt: không giới hạn)</translation>
     </message>
     <message>
         <source>Ask to Connect timeout:</source>
@@ -2184,6 +2177,10 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
         <translation>Chọn tệp</translation>
     </message>
     <message>
+        <source>Switch Wildcard</source>
+        <translation>Bật/Tắt ký tự đại diện</translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation>Tên:</translation>
     </message>
@@ -2349,10 +2346,6 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
     <message>
         <source>Paused Connections</source>
         <translation>Các kết nối đang tạm dừng</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>Bật/Tắt ký tự đại diện</translation>
     </message>
     <message>
         <source>Connections</source>

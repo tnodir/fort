@@ -84,10 +84,6 @@
         <source>Program Connections</source>
         <translation>Programmverbindungen</translation>
     </message>
-    <message>
-        <source>Add Filter</source>
-        <translation>Filter hinzufügen</translation>
-    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -299,13 +295,6 @@
     </message>
 </context>
 <context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>Einstellungen von jemand anderem geändert</translation>
-    </message>
-</context>
-<context>
     <name>ConnListModel</name>
     <message>
         <source>In</source>
@@ -497,6 +486,10 @@
     <message>
         <source>Add Program</source>
         <translation>Programm hinzufügen</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>Filter hinzufügen</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
@@ -1909,8 +1902,8 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <translation>Dauer des automatischen Lernens:</translation>
     </message>
     <message>
-        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
-        <translation>Wie lange der Filter-Modus „Automatisches lernen“ dauert, danach wechselt er zu „Blockieren, falls nicht erlaubt“ (Deaktiviert: unbegrenzt)</translation>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Ask to Connect&quot; (Disabled: no limit)</source>
+        <translation>Wie lange der Filter-Modus „Automatisches lernen“ dauert, danach wechselt er zu „Nach Verbindung fragen“ (Deaktiviert: unbegrenzt)</translation>
     </message>
     <message>
         <source>Ask to Connect timeout:</source>
@@ -2184,6 +2177,10 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <translation>Datei auswählen</translation>
     </message>
     <message>
+        <source>Switch Wildcard</source>
+        <translation>Platzhalter wechseln</translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation>Name:</translation>
     </message>
@@ -2349,10 +2346,6 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     <message>
         <source>Paused Connections</source>
         <translation>Angehaltene Verbindungen</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>Platzhalter wechseln</translation>
     </message>
     <message>
         <source>Connections</source>

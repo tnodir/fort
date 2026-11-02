@@ -84,10 +84,6 @@
         <source>Program Connections</source>
         <translation>Соединения программы</translation>
     </message>
-    <message>
-        <source>Add Filter</source>
-        <translation>Добавить фильтр</translation>
-    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -299,13 +295,6 @@
     </message>
 </context>
 <context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>Настройки изменены кем-то другим</translation>
-    </message>
-</context>
-<context>
     <name>ConnListModel</name>
     <message>
         <source>In</source>
@@ -497,6 +486,10 @@
     <message>
         <source>Add Program</source>
         <translation>Добавить программу</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>Добавить фильтр</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
@@ -1909,8 +1902,8 @@ Make sure that you have a fresh backup.</source>
         <translation>Длительность автообучения:</translation>
     </message>
     <message>
-        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
-        <translation>Как долго длится режим фильтра Автообучение, затем он переключается на &quot;Блокировать, если не разрешено&quot; (Отключено: без ограничения)</translation>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Ask to Connect&quot; (Disabled: no limit)</source>
+        <translation>Как долго длится режим фильтра Автообучение, затем он переключается на &quot;Запрос на соединение&quot; (Отключено: без ограничения)</translation>
     </message>
     <message>
         <source>Ask to Connect timeout:</source>
@@ -2184,6 +2177,10 @@ Make sure that you have a fresh backup.</source>
         <translation>Выбрать файл</translation>
     </message>
     <message>
+        <source>Switch Wildcard</source>
+        <translation>Переключить режим маски</translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation>Наименование:</translation>
     </message>
@@ -2349,10 +2346,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Paused Connections</source>
         <translation>Приостановленные соединения</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>Переключить режим маски</translation>
     </message>
     <message>
         <source>Connections</source>

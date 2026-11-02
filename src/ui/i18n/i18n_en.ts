@@ -84,10 +84,6 @@
         <source>Program Connections</source>
         <translation></translation>
     </message>
-    <message>
-        <source>Add Filter</source>
-        <translation></translation>
-    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -299,13 +295,6 @@
     </message>
 </context>
 <context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
     <name>ConnListModel</name>
     <message>
         <source>In</source>
@@ -496,6 +485,10 @@
     </message>
     <message>
         <source>Add Program</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
         <translation></translation>
     </message>
     <message>
@@ -1906,7 +1899,7 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Ask to Connect&quot; (Disabled: no limit)</source>
         <translation></translation>
     </message>
     <message>
@@ -2181,6 +2174,10 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
+        <source>Switch Wildcard</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation></translation>
     </message>
@@ -2345,10 +2342,6 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Paused Connections</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
         <translation></translation>
     </message>
     <message>

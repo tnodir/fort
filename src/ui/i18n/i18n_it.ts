@@ -84,10 +84,6 @@
         <source>Program Connections</source>
         <translation>Connessioni programma</translation>
     </message>
-    <message>
-        <source>Add Filter</source>
-        <translation>Aggiungi filtro</translation>
-    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -299,13 +295,6 @@
     </message>
 </context>
 <context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>Impostazioni modificate da qualcun altro</translation>
-    </message>
-</context>
-<context>
     <name>ConnListModel</name>
     <message>
         <source>In</source>
@@ -497,6 +486,10 @@
     <message>
         <source>Add Program</source>
         <translation>Aggiungi programma</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>Aggiungi filtro</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
@@ -1909,8 +1902,8 @@ Assicurati di avere un nuovo backup.</translation>
         <translation>Durata dell&apos;auto-apprendimento:</translation>
     </message>
     <message>
-        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
-        <translation>Quanto dura la modalità filtro Auto-apprendimento, poi passa a &quot;Blocca se non consentito&quot; (Disabilitato: nessun limite)</translation>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Ask to Connect&quot; (Disabled: no limit)</source>
+        <translation>Quanto dura la modalità filtro Auto-apprendimento, poi passa a &quot;Chiedi di connetterti&quot; (Disabilitato: nessun limite)</translation>
     </message>
     <message>
         <source>Ask to Connect timeout:</source>
@@ -2184,6 +2177,10 @@ Assicurati di avere un nuovo backup.</translation>
         <translation>Seleziona file</translation>
     </message>
     <message>
+        <source>Switch Wildcard</source>
+        <translation>Cambia Wildcard</translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation>Nome:</translation>
     </message>
@@ -2349,10 +2346,6 @@ Assicurati di avere un nuovo backup.</translation>
     <message>
         <source>Paused Connections</source>
         <translation>Connessioni in pausa</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>Cambia Wildcard</translation>
     </message>
     <message>
         <source>Connections</source>

@@ -84,10 +84,6 @@
         <source>Program Connections</source>
         <translation>Conexiunile programului</translation>
     </message>
-    <message>
-        <source>Add Filter</source>
-        <translation>Adaugă filtru</translation>
-    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -299,13 +295,6 @@
     </message>
 </context>
 <context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>Setările au fost modificate de altcineva</translation>
-    </message>
-</context>
-<context>
     <name>ConnListModel</name>
     <message>
         <source>In</source>
@@ -497,6 +486,10 @@
     <message>
         <source>Add Program</source>
         <translation>Adaugă program</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>Adaugă filtru</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
@@ -1909,8 +1902,8 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
         <translation>Durata învățării automate:</translation>
     </message>
     <message>
-        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
-        <translation>Cât durează modul de filtrare Învățare automată, apoi trece la „Blochează, dacă nu este permis” (Dezactivat: fără limită)</translation>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Ask to Connect&quot; (Disabled: no limit)</source>
+        <translation>Cât durează modul de filtrare Învățare automată, apoi trece la „Întreabă la conectare” (Dezactivat: fără limită)</translation>
     </message>
     <message>
         <source>Ask to Connect timeout:</source>
@@ -2184,6 +2177,10 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
         <translation>Selectează fișierul</translation>
     </message>
     <message>
+        <source>Switch Wildcard</source>
+        <translation>Comută șablonul</translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation>Nume:</translation>
     </message>
@@ -2349,10 +2346,6 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
     <message>
         <source>Paused Connections</source>
         <translation>Conexiuni suspendate</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>Comută șablonul</translation>
     </message>
     <message>
         <source>Connections</source>

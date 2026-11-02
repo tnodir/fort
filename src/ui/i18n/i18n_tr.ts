@@ -84,10 +84,6 @@
         <source>Program Connections</source>
         <translation>Program Bağlantıları</translation>
     </message>
-    <message>
-        <source>Add Filter</source>
-        <translation>Filtre Ekle</translation>
-    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -299,13 +295,6 @@
     </message>
 </context>
 <context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>Ayarlar Başkası Tarafından Değiştirildi </translation>
-    </message>
-</context>
-<context>
     <name>ConnListModel</name>
     <message>
         <source>In</source>
@@ -497,6 +486,10 @@
     <message>
         <source>Add Program</source>
         <translation>Program Ekle</translation>
+    </message>
+    <message>
+        <source>Add Filter</source>
+        <translation>Filtre Ekle</translation>
     </message>
     <message>
         <source>Filter Simulator</source>
@@ -1909,8 +1902,8 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Otomatik Öğrenme Süresi:</translation>
     </message>
     <message>
-        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Block, if not allowed&quot; (Disabled: no limit)</source>
-        <translation>Otomatik Öğren Filtreleme Modunun ne kadar süreceği, sonra &quot;İzin Verilmediyse Engelle&quot; moduna geçer (Devre Dışı: sınırsız)</translation>
+        <source>How long the Auto-Learn Filter Mode lasts, then it switches to &quot;Ask to Connect&quot; (Disabled: no limit)</source>
+        <translation>Otomatik Öğren Filtreleme Modunun ne kadar süreceği, sonra &quot;Bağlantı Kurmayı İste&quot; moduna geçer (Devre Dışı: sınırsız)</translation>
     </message>
     <message>
         <source>Ask to Connect timeout:</source>
@@ -2184,6 +2177,10 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Dosya Seç</translation>
     </message>
     <message>
+        <source>Switch Wildcard</source>
+        <translation>Joker Değiştir</translation>
+    </message>
+    <message>
         <source>Name:</source>
         <translation>Ad:</translation>
     </message>
@@ -2349,10 +2346,6 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     <message>
         <source>Paused Connections</source>
         <translation>Duraklatılan Bağlantılar</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>Joker Değiştir</translation>
     </message>
     <message>
         <source>Connections</source>
