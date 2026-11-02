@@ -200,12 +200,17 @@ public:
     void copyFlags(const FirewallConf &o);
     void copy(const FirewallConf &o);
 
+    void takeUneditedFlags(const FirewallConf &savedConf);
+
     QVariant toVariant(const IniOptions &ini, bool onlyEdited = false) const;
     void fromVariant(IniOptions &ini, const QVariant &v, bool onlyEdited = false);
 
     // The flags' map by their names
     QVariant flagsToVariant() const;
     void flagsFromVariant(const QVariant &v);
+
+    // The flags' map without the groups not edited
+    QVariant flagsToSaveToVariant() const;
 
     static QVariant editedFlagsToVariant(uint editedFlags);
     static uint editedFlagsFromVariant(const QVariant &v);
@@ -215,6 +220,8 @@ public slots:
 
 private:
     void setupAddressGroups();
+
+    void mergeFlags(const FirewallConf &o, const QVariant &v);
 
     QVariant addressesToVariant() const;
     void addressesFromVariant(const QVariant &v);

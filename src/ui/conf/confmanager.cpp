@@ -907,6 +907,10 @@ bool ConfManager::save(FirewallConf &newConf, IniOptions &ini)
     if (!newConf.anyEdited())
         return true;
 
+    if (&conf() != &newConf) {
+        newConf.takeUneditedFlags(conf());
+    }
+
     if (!(validateConf(newConf) && saveConf(newConf, ini)))
         return false;
 

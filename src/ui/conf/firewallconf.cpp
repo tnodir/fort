@@ -7,6 +7,25 @@
 
 namespace {
 
+struct FlagGroupKey
+{
+    FirewallConf::FlagGroup group;
+    const char *key;
+};
+
+inline constexpr FlagGroupKey flagGroupKeys[] = {
+    { FirewallConf::FlagFilterEnabled, "filterEnabled" },
+    { FirewallConf::FlagBlockTraffic, "blockTraffic" },
+    { FirewallConf::FlagBlockTraffic, "blockLanTraffic" },
+    { FirewallConf::FlagBlockTraffic, "blockInetTraffic" },
+    { FirewallConf::FlagFilterMode, "allowAllNew" },
+    { FirewallConf::FlagFilterMode, "askToConnect" },
+    { FirewallConf::FlagFilterMode, "appBlockAll" },
+    { FirewallConf::FlagFilterMode, "appAllowAll" },
+    { FirewallConf::FlagActivePeriod, "activePeriodEnabled" },
+    { FirewallConf::FlagActivePeriod, "activePeriodId" },
+};
+
 int addressListGroupIndex(FirewallConf::AddressList list)
 {
     return list / 2;
@@ -231,6 +250,19 @@ void FirewallConf::copy(const FirewallConf &o)
     copyFlags(o);
 }
 
+void FirewallConf::takeUneditedFlags(const FirewallConf &savedConf)
+{
+    mergeFlags(savedConf, flagsToSaveToVariant());
+}
+
+void FirewallConf::mergeFlags(const FirewallConf &o, const QVariant &v)
+{
+    QVariantMap flags = o.flagsToVariant().toMap();
+    flags.insert(v.toMap());
+
+    flagsFromVariant(flags);
+}
+
 QVariant FirewallConf::flagsToVariant() const
 {
     QVariantMap map;
@@ -303,6 +335,22 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_activePeriodId = map["activePeriodId"].toUInt();
 }
 
+QVariant FirewallConf::flagsToSaveToVariant() const
+{
+    if (!flagsEdited())
+        return {};
+
+    QVariantMap flags = flagsToVariant().toMap();
+
+    for (const auto &item : flagGroupKeys) {
+        if (!flagEdited(item.group)) {
+            flags.remove(item.key);
+        }
+    }
+
+    return flags;
+}
+
 QVariant FirewallConf::addressesToVariant() const
 {
     QVariantList addresses;
@@ -337,7 +385,7 @@ QVariant FirewallConf::toVariant(const IniOptions &ini, bool onlyEdited) const
     }
 
     if ((flags & FlagsEdited) != 0) {
-        map["flags"] = flagsToVariant();
+        map["flags"] = onlyEdited ? flagsToSaveToVariant() : flagsToVariant();
     }
 
     if ((flags & (IniEdited | TaskEdited)) != 0) {
@@ -362,7 +410,7 @@ void FirewallConf::fromVariant(IniOptions &ini, const QVariant &v, bool onlyEdit
     }
 
     if (flagsEdited()) {
-        flagsFromVariant(map["flags"]);
+        mergeFlags(*this, map["flags"]);
     }
 
     if (iniEdited() || taskEdited()) {

@@ -1383,6 +1383,126 @@ TEST_F(ConfUtilTest, addressListError)
     ASSERT_TRUE(confBuf.errorMessage().startsWith("Allow Addresses: Error at line 2:"));
 }
 
+TEST_F(ConfUtilTest, flagsToSave)
+{
+    FirewallConf conf;
+    conf.resetEdited();
+    ASSERT_TRUE(conf.flagsToSaveToVariant().toMap().isEmpty());
+
+    const auto allKeys = conf.flagsToVariant().toMap().keys();
+
+    const QStringList groupsKeys = { "activePeriodEnabled", "activePeriodId", "allowAllNew",
+        "appAllowAll", "appBlockAll", "askToConnect", "blockInetTraffic", "blockLanTraffic",
+        "blockTraffic", "filterEnabled" };
+
+    QStringList otherKeys = allKeys;
+    for (const auto &key : groupsKeys) {
+        ASSERT_TRUE(otherKeys.removeOne(key));
+    }
+
+    // Another flag edited
+    conf.setFlagsEdited(FirewallConf::NoFlagGroups);
+    ASSERT_TRUE(conf.flagsEdited());
+    ASSERT_FALSE(conf.flagEdited(FirewallConf::FlagFilterMode));
+    ASSERT_EQ(conf.flagsToSaveToVariant().toMap().keys(), otherKeys);
+
+    // A group edited
+    conf.setFlagsEdited(FirewallConf::FlagFilterEnabled);
+    ASSERT_TRUE(conf.flagEdited(FirewallConf::FlagFilterEnabled));
+    ASSERT_FALSE(conf.flagEdited(FirewallConf::FlagFilterMode));
+    ASSERT_TRUE(conf.flagsToSaveToVariant().toMap().contains("filterEnabled"));
+    ASSERT_FALSE(conf.flagsToSaveToVariant().toMap().contains("allowAllNew"));
+
+    // All of them
+    conf.setFlagsEdited(FirewallConf::AllFlagGroups);
+    ASSERT_EQ(conf.flagsToSaveToVariant().toMap().keys(), allKeys);
+
+    conf.resetEdited(FirewallConf::FlagsEdited);
+    ASSERT_EQ(conf.flagsToSaveToVariant().toMap().keys(), allKeys);
+
+    conf.resetEdited(FirewallConf::OptEdited);
+    ASSERT_FALSE(conf.flagEdited(FirewallConf::FlagFilterMode));
+}
+
+namespace {
+
+// The window's copy: stale flags, the Filter Mode edited to Allow
+void setupEditedFlagsConf(FirewallConf &conf)
+{
+    conf.setFilterMode(FirewallConf::ModeBlockAll);
+    conf.setFilterEnabled(false);
+    conf.setActivePeriodId(1);
+    conf.setStealthMode(false);
+    conf.resetEdited();
+
+    conf.setFilterMode(FirewallConf::ModeAllowAll);
+    conf.setFlagsEdited(FirewallConf::FlagFilterMode);
+}
+
+// The conf saved elsewhere meanwhile
+void setupSavedFlagsConf(FirewallConf &conf)
+{
+    conf.setFilterMode(FirewallConf::ModeAutoLearn);
+    conf.setFilterEnabled(true);
+    conf.setActivePeriodId(2);
+    conf.setStealthMode(true);
+    conf.resetEdited();
+}
+
+}
+
+TEST_F(ConfUtilTest, takeUneditedFlags)
+{
+    FirewallConf savedConf;
+    setupSavedFlagsConf(savedConf);
+
+    FirewallConf conf;
+    setupEditedFlagsConf(conf);
+
+    conf.takeUneditedFlags(savedConf);
+
+    ASSERT_EQ(conf.filterMode(), FirewallConf::ModeAllowAll);
+    ASSERT_TRUE(conf.filterEnabled());
+    ASSERT_EQ(conf.activePeriodId(), 2);
+    ASSERT_FALSE(conf.stealthMode()); // not a group: the edited conf's value
+
+    ASSERT_TRUE(conf.flagEdited(FirewallConf::FlagFilterMode));
+    ASSERT_FALSE(conf.flagEdited(FirewallConf::FlagFilterEnabled));
+
+    // No flags edited: all are the saved ones
+    FirewallConf optConf;
+    setupEditedFlagsConf(optConf);
+    optConf.resetEdited(FirewallConf::OptEdited);
+
+    optConf.takeUneditedFlags(savedConf);
+
+    ASSERT_EQ(optConf.filterMode(), FirewallConf::ModeAutoLearn);
+    ASSERT_TRUE(optConf.stealthMode());
+}
+
+TEST_F(ConfUtilTest, editedFlagsFromVariant)
+{
+    FirewallConf conf;
+    setupEditedFlagsConf(conf);
+
+    FirewallConf savedConf;
+    setupSavedFlagsConf(savedConf);
+
+    IniOptions ini;
+    const QVariant confVar = conf.toVariant(ini, /*onlyEdited=*/true);
+
+    savedConf.fromVariant(ini, confVar, /*onlyEdited=*/true);
+
+    ASSERT_EQ(savedConf.filterMode(), FirewallConf::ModeAllowAll);
+    ASSERT_TRUE(savedConf.filterEnabled());
+    ASSERT_EQ(savedConf.activePeriodId(), 2);
+    ASSERT_FALSE(savedConf.stealthMode());
+    ASSERT_TRUE(savedConf.flagsEdited());
+
+    // All the flags are sent to the clients
+    ASSERT_TRUE(savedConf.flagEdited(FirewallConf::FlagFilterEnabled));
+}
+
 TEST_F(ConfUtilTest, appFiltersText)
 {
     const QString filtersText = "IP(1.1.1.1):Act(Block)\n"

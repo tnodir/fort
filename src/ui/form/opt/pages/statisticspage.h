@@ -17,6 +17,8 @@ public slots:
     void onResetToDefault() override;
 
 protected slots:
+    void onAboutToSave() override;
+
     void onRetranslateUi() override;
 
 private:

@@ -8,7 +8,6 @@
 #include <QSpinBox>
 #include <QVBoxLayout>
 
-#include <conf/conftimeperiodmanager.h>
 #include <conf/firewallconf.h>
 #include <conf/inioptions.h>
 #include <form/controls/controlutil.h>
@@ -69,6 +68,12 @@ void StatisticsPage::onResetToDefault()
     m_cbLogAlertedConn->setChecked(false);
     m_cbClearConnOnExit->setChecked(true);
     m_lscConnKeepCount->spinBox()->setValue(DEFAULT_LOG_CONN_KEEP_COUNT);
+}
+
+void StatisticsPage::onAboutToSave()
+{
+    // The selector shows "No Period" after the Time Period's deletion
+    conf().setActivePeriodId(m_activePeriodSelector->periodId());
 }
 
 void StatisticsPage::onRetranslateUi()
@@ -262,25 +267,11 @@ void StatisticsPage::setupActivePeriod()
     connect(m_activePeriodSelector->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
         if (conf().activePeriodEnabled() != checked) {
             conf().setActivePeriodEnabled(checked);
-            ctrl()->setFlagsEdited();
+            ctrl()->setFlagsEdited(FirewallConf::FlagActivePeriod);
         }
     });
-    connect(m_activePeriodSelector->comboBox(), &QComboBox::activated, this, [&] {
-        const quint8 periodId = m_activePeriodSelector->periodId();
-
-        if (conf().activePeriodId() != periodId) {
-            conf().setActivePeriodId(periodId);
-            ctrl()->setFlagsEdited();
-        }
-    });
-
-    connect(confTimePeriodManager(), &ConfTimePeriodManager::timePeriodRemoved, this,
-            [&](quint8 periodId) {
-                // The deleted Time Period is already cleared in the saved conf
-                if (conf().activePeriodId() == periodId) {
-                    conf().setActivePeriodId(0);
-                }
-            });
+    connect(m_activePeriodSelector->comboBox(), &QComboBox::activated, this,
+            [&] { ctrl()->setFlagsEdited(FirewallConf::FlagActivePeriod); });
 }
 
 void StatisticsPage::setupMonthStart()
