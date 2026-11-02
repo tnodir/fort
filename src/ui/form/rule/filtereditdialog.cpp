@@ -612,6 +612,9 @@ void FilterEditDialog::pasteText()
         return;
 
     setFilterLine(text);
+
+    // The text by the fields: with the kept action
+    updateTextByFields();
 }
 
 void FilterEditDialog::setFilterLine(const FilterLineText &lineText)
@@ -642,6 +645,10 @@ void FilterEditDialog::setActionFilter(const RuleFilter *filter)
 {
     const quint8 actionTypeId =
             ActionRange::actionTypeIdByName(FilterLine::values(filter).value(0));
+
+    // A Program's filter has no "By Rule" action: keep the current one
+    if (actionTypeId == 0 && !isRuleFilter())
+        return;
 
     QAbstractButton *button = m_buttonGroupAction->button(actionTypeId);
     if (button) {
