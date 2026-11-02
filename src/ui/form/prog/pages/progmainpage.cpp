@@ -13,6 +13,14 @@
 #include "progmorepage.h"
 #include "prognetworkpage.h"
 
+namespace {
+
+inline constexpr int generalTabIndex = 0;
+inline constexpr int networkTabIndex = 1;
+inline constexpr int moreTabIndex = 2;
+
+}
+
 ProgMainPage::ProgMainPage(ProgramEditController *ctrl, QWidget *parent) :
     ProgBasePage(ctrl, parent)
 {
@@ -46,9 +54,8 @@ void ProgMainPage::setConnsWindowChecked(bool checked)
 
 void ProgMainPage::addConnFilter(const Conn &conn)
 {
-    // The blocked program's Network Filters tab is disabled
-    if (m_tabWidget->isTabEnabled(1)) {
-        selectTab(1);
+    if (isNetworkTabEnabled()) {
+        selectTab(networkTabIndex);
     }
 
     m_networkPage->openConnFilterForm(conn);
@@ -84,14 +91,14 @@ void ProgMainPage::onPageInitialize(const App &app)
     m_btPendingConns->setEnabled(canFilterApp);
     m_btConnections->setEnabled(canFilterApp);
 
-    selectTab(0);
+    selectTab(generalTabIndex);
 }
 
 void ProgMainPage::onRetranslateUi()
 {
-    m_tabWidget->setTabText(0, tr("General"));
-    m_tabWidget->setTabText(1, tr("Network Filters"));
-    m_tabWidget->setTabText(2, tr("More"));
+    m_tabWidget->setTabText(generalTabIndex, tr("General"));
+    m_tabWidget->setTabText(networkTabIndex, tr("Network Filters"));
+    m_tabWidget->setTabText(moreTabIndex, tr("More"));
 
     m_btPendingConns->setToolTip(tr("Paused Connections"));
     m_btConnections->setToolTip(tr("Connections"));
@@ -185,9 +192,15 @@ QLayout *ProgMainPage::setupButtonsLayout()
     return layout;
 }
 
+bool ProgMainPage::isNetworkTabEnabled() const
+{
+    // Enabled unless the action is Block or Kill Process
+    return m_tabWidget->isTabEnabled(networkTabIndex);
+}
+
 void ProgMainPage::setNetworkTabEnabled(bool enabled)
 {
-    m_tabWidget->setTabEnabled(1, enabled);
+    m_tabWidget->setTabEnabled(networkTabIndex, enabled);
 }
 
 void ProgMainPage::updatePendingConnsVisible()

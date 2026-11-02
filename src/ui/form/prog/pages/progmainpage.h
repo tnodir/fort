@@ -44,6 +44,7 @@ private:
     void setupTabBar();
     QLayout *setupButtonsLayout();
 
+    bool isNetworkTabEnabled() const;
     void setNetworkTabEnabled(bool enabled);
 
     void updatePendingConnsVisible();
