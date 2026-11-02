@@ -28,7 +28,7 @@ signals:
     void closeOnSave();
     void closeDialog();
 
-    void allowToggled(bool checked);
+    void allowToggled(bool allowed);
 
     void isWildcardSwitched();
 
