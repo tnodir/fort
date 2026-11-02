@@ -37,9 +37,22 @@ public:
     }
     void setFilterOffSeconds(int v) { setValue("conf/filterOffSeconds", v); }
 
+    // The Auto-Learn of a new conf, till the mode is left: only it has the default duration
+    int initialAutoLearnSeconds() const
+    {
+        return valueInt("conf/initialAutoLearnSeconds", DEFAULT_AUTO_LEARN_SECONDS);
+    }
+    void setInitialAutoLearnSeconds(int v) { setValue("conf/initialAutoLearnSeconds", v); }
+    void saveInitialAutoLearnSeconds(int v);
+
+    // Read without a default: the first read's default would be cached
     int autoLearnSeconds() const
     {
-        return valueInt("conf/autoLearnSeconds", DEFAULT_AUTO_LEARN_SECONDS);
+        const QVariant seconds = value("conf/autoLearnSeconds");
+        if (!seconds.isNull()) {
+            return seconds.toInt();
+        }
+        return initialAutoLearnSeconds();
     }
     void setAutoLearnSeconds(int v) { setValue("conf/autoLearnSeconds", v); }
 

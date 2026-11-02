@@ -65,7 +65,7 @@ void OptionsPage::onResetToDefault()
     m_cbGroupBlocked->setChecked(true);
     m_cbSpeedLimiterEnabled->setChecked(true);
     m_lscFilterOffSeconds->spinBox()->setValue(DEFAULT_FILTER_OFF_SECONDS);
-    m_lscAutoLearnSeconds->spinBox()->setValue(DEFAULT_AUTO_LEARN_SECONDS);
+    m_lscAutoLearnSeconds->spinBox()->setValue(ini().initialAutoLearnSeconds());
     m_lscAskToConnectSeconds->spinBox()->setValue(DEFAULT_ASK_TO_CONNECT_SECONDS);
 
     m_cbBootFilter->setChecked(false);
@@ -650,4 +650,7 @@ void OptionsPage::updateTrafficFlags()
 
         m_comboFilterMode->setCurrentIndex(conf().filterMode());
     }
+
+    // The default duration ends with the initial Auto-Learn
+    m_lscAutoLearnSeconds->spinBox()->setValue(ini().autoLearnSeconds());
 }

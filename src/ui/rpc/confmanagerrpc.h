@@ -41,6 +41,7 @@ protected:
     void setupTimers() override { }
 
     void applyAutoLearnSeconds() override { }
+    void clearInitialAutoLearn() override { }
 
     void setupDefaultPresetRules(bool /*isNewConf*/) override { }
 };

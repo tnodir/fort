@@ -1,7 +1,9 @@
 #pragma once
 
 #include <QRegularExpression>
+#include <QSettings>
 #include <QSignalSpy>
+#include <QTemporaryDir>
 
 #include <googletest.h>
 
@@ -14,6 +16,7 @@
 #include <conf/rule.h>
 #include <conf/speedlimit.h>
 #include <driver/drivercommon.h>
+#include <fortsettings.h>
 #include <log/logentryconn.h>
 #include <manager/envmanager.h>
 #include <util/conf/confappswalker.h>
@@ -1478,6 +1481,72 @@ TEST_F(ConfUtilTest, takeUneditedFlags)
 
     ASSERT_EQ(optConf.filterMode(), FirewallConf::ModeAutoLearn);
     ASSERT_TRUE(optConf.stealthMode());
+}
+
+namespace {
+
+class IniFileSettings : public FortSettings
+{
+public:
+    explicit IniFileSettings(const QString &filePath) { setupIni(filePath); }
+};
+
+}
+
+TEST_F(ConfUtilTest, autoLearnSeconds)
+{
+    QTemporaryDir tempDir;
+    const QString filePath = tempDir.filePath("test.ini");
+
+    IniFileSettings settings(filePath);
+    IniOptions ini(&settings);
+
+    // The initial one: the default duration
+    ASSERT_EQ(ini.initialAutoLearnSeconds(), DEFAULT_AUTO_LEARN_SECONDS);
+    ASSERT_EQ(ini.autoLearnSeconds(), DEFAULT_AUTO_LEARN_SECONDS);
+
+    // Left
+    ini.saveInitialAutoLearnSeconds(0);
+    ASSERT_EQ(ini.initialAutoLearnSeconds(), 0);
+    ASSERT_EQ(ini.autoLearnSeconds(), 0);
+
+    // Set by the user: of any Auto-Learn
+    ini.setAutoLearnSeconds(120);
+    ini.saveAndClear();
+    ASSERT_EQ(ini.autoLearnSeconds(), 120);
+
+    // Disabled by the user, the initial one too
+    ini.setInitialAutoLearnSeconds(DEFAULT_AUTO_LEARN_SECONDS);
+    ini.setAutoLearnSeconds(0);
+    ini.saveAndClear();
+    ASSERT_EQ(ini.autoLearnSeconds(), 0);
+
+    // Read from the file
+    IniFileSettings fileSettings(filePath);
+    IniOptions fileIni(&fileSettings);
+    ASSERT_EQ(fileIni.initialAutoLearnSeconds(), DEFAULT_AUTO_LEARN_SECONDS);
+    ASSERT_EQ(fileIni.autoLearnSeconds(), 0);
+}
+
+TEST_F(ConfUtilTest, autoLearnSecondsOldIni)
+{
+    QTemporaryDir tempDir;
+    const QString filePath = tempDir.filePath("test.ini");
+
+    // Not a new conf: no limit
+    QSettings(filePath, QSettings::IniFormat).setValue("base/version", 0x032008);
+
+    IniFileSettings settings(filePath);
+    IniOptions ini(&settings);
+    ASSERT_EQ(ini.initialAutoLearnSeconds(), 0);
+    ASSERT_EQ(ini.autoLearnSeconds(), 0);
+
+    // Kept when the ini gets the current version
+    ini.saveAndClear();
+
+    const QSettings fileIni(filePath, QSettings::IniFormat);
+    ASSERT_NE(fileIni.value("base/version").toInt(), 0x032008);
+    ASSERT_TRUE(fileIni.contains("conf/initialAutoLearnSeconds"));
 }
 
 TEST_F(ConfUtilTest, editedFlagsFromVariant)

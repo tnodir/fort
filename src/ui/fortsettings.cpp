@@ -612,6 +612,11 @@ void FortSettings::migrateIniOnLoad()
         setCacheValue("confFlags/logAlertedConn", ini()->value("confFlags/logAlertedBlockedIp"));
     }
 
+    // COMPAT: v3.20.9: Not a new conf: no initial Auto-Learn
+    if (version < 0x032009) {
+        setCacheValue("conf/initialAutoLearnSeconds", 0);
+    }
+
     // COMPAT: Keep the values for the conf DB's migration
     keepConfDbMigrationValues(version);
 }
@@ -694,6 +699,11 @@ void FortSettings::migrateIniOnWrite()
         ini()->setValue("confFlags/logApp", cacheValue("confFlags/logApp"));
         ini()->setValue("confFlags/logBlockedConn", cacheValue("confFlags/logBlockedConn"));
         ini()->setValue("confFlags/logAlertedConn", cacheValue("confFlags/logAlertedConn"));
+    }
+
+    // COMPAT: v3.20.9
+    if (version < 0x032009) {
+        ini()->setValue("conf/initialAutoLearnSeconds", 0);
     }
 
     // COMPAT: Remove the values of the conf DB's migration

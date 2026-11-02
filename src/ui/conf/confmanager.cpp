@@ -223,6 +223,11 @@ void ConfManager::applyAutoLearnSeconds()
     }
 }
 
+void ConfManager::clearInitialAutoLearn()
+{
+    ini().saveInitialAutoLearnSeconds(0);
+}
+
 void ConfManager::setupTimers()
 {
     m_filterOffTimer.setSingleShot(true);
@@ -252,6 +257,7 @@ void ConfManager::updateAutoLearnOff()
 
     if (m_savedAutoLearn && !isAutoLearn) {
         conf().setAutoLearnOff();
+        clearInitialAutoLearn();
     }
 
     m_savedAutoLearn = isAutoLearn;

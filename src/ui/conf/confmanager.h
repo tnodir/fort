@@ -85,6 +85,7 @@ protected:
 
     virtual void applyFilterOffSeconds();
     virtual void applyAutoLearnSeconds();
+    virtual void clearInitialAutoLearn();
 
     virtual void setupDefaultPresetRules(bool isNewConf);
 
