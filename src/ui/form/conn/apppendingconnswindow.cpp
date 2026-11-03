@@ -93,6 +93,9 @@ void AppPendingConnsWindow::setupUi()
     // After the hidden program's name
     hideAppName();
 
+    // The pending connections are listed regardless of the log flags
+    hideLogConnIcons();
+
     auto layout = headerLayout();
     layout->insertWidget(2, m_btAllow);
     layout->insertWidget(3, m_btAllowProcess);

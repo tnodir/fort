@@ -49,6 +49,13 @@ protected:
     void restoreIniWindowState(const QString &iniGroup, const QSize &defaultSize);
 
     void hideEditing();
+    void hideLogConnIcons();
+
+    /* Whether the shown connections are collected by the conf's flags */
+    virtual bool logAllowedConn() const;
+    virtual bool logBlockedConn() const;
+
+    void updateLogConnIcons();
 
     /* Scroll to the new rows or keep the visible ones in place. The model's signals to the window
      * are disconnected: a variant connects its own ones after it */
@@ -76,6 +83,7 @@ private:
     void setupListOptions();
     void setupAutoScroll();
     void setupShowHostNames();
+    void setupLogConnIcons();
     void setupTableConnList();
     void setupTableConnListHeader();
     void setupAppInfoRow();
@@ -119,6 +127,10 @@ private:
     QPushButton *m_btListOptions = nullptr;
     QCheckBox *m_cbAutoScroll = nullptr;
     QCheckBox *m_cbShowHostNames = nullptr;
+    QWidget *m_logConnIcons = nullptr;
+    QLabel *m_iconLogAllowedConn = nullptr;
+    QLabel *m_iconLogBlockedConn = nullptr;
+    QLabel *m_iconLogAlertedConn = nullptr;
     QToolButton *m_btOptions = nullptr;
     QToolButton *m_btStatistics = nullptr;
     QPushButton *m_btMenu = nullptr;

@@ -53,9 +53,14 @@ AppConnSearchModel *AppConnsWindow::appConnListModel() const
 
 void AppConnsWindow::setApp(const App &app)
 {
-    updateApp(app);
+    const bool isFilterChanged = updateApp(app);
 
-    connListModel()->updateSearchLater();
+    updateLogConnIcons();
+
+    // The program's edits keep the listed connections
+    if (isFilterChanged) {
+        connListModel()->updateSearchLater();
+    }
 }
 
 void AppConnsWindow::setAddFilterVisible(bool visible)
@@ -127,13 +132,18 @@ void AppConnsWindow::addConnFilter(const ConnRow &connRow)
     emit addFilterRequested(connRow);
 }
 
-void AppConnsWindow::updateApp(const App &app)
+bool AppConnsWindow::updateApp(const App &app)
 {
-    appConnListModel()->setApp(app);
+    const bool isFilterChanged = appConnListModel()->setApp(app);
 
     m_editAppName->setStartText(appNameOrPath(app));
 
+    m_appLogAllowedConn = app.logAllowedConn;
+    m_appLogBlockedConn = app.logBlockedConn;
+
     updateProgramColumnHidden();
+
+    return isFilterChanged;
 }
 
 void AppConnsWindow::hideAppName()
@@ -170,4 +180,14 @@ void AppConnsWindow::updateProgramColumnHidden()
     // A wildcard program's connections have different paths
     const bool isAppPath = !appConnListModel()->appPath().isEmpty();
     header->setSectionHidden(int(ConnListColumn::Program), /*hide=*/isAppPath);
+}
+
+bool AppConnsWindow::logAllowedConn() const
+{
+    return ConnectionsWindow::logAllowedConn() && m_appLogAllowedConn;
+}
+
+bool AppConnsWindow::logBlockedConn() const
+{
+    return ConnectionsWindow::logBlockedConn() && m_appLogBlockedConn;
 }

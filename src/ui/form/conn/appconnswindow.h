@@ -45,6 +45,9 @@ protected:
 
     void updateProgramColumnHidden();
 
+    bool logAllowedConn() const override;
+    bool logBlockedConn() const override;
+
 protected slots:
     void retranslateWindowTitle() override;
 
@@ -53,9 +56,12 @@ private:
     void setupEditAppName();
     void setupAddFilter();
 
-    void updateApp(const App &app);
+    bool updateApp(const App &app);
 
 private:
+    bool m_appLogAllowedConn : 1 = true;
+    bool m_appLogBlockedConn : 1 = true;
+
     LineEdit *m_editAppName = nullptr;
     QWidget *m_appNameSeparator = nullptr;
 };

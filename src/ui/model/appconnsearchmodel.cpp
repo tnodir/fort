@@ -8,10 +8,17 @@
 
 AppConnSearchModel::AppConnSearchModel(QObject *parent) : ConnSearchModel(parent) { }
 
-void AppConnSearchModel::setApp(const App &app)
+bool AppConnSearchModel::setApp(const App &app)
 {
+    const QString appPath = app.connFilterPath();
+
+    if (m_confAppId == app.appId && m_appPath == appPath)
+        return false;
+
     m_confAppId = app.appId;
-    m_appPath = app.connFilterPath();
+    m_appPath = appPath;
+
+    return true;
 }
 
 bool AppConnSearchModel::canFilterApp(const App &app)

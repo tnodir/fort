@@ -858,6 +858,15 @@ void ProgramsWindow::openAppConnsWindow()
 
     connect(windowManager(), &WindowManager::aboutToCloseAllWindows, connsWindow, &QWidget::close);
 
+    // The program's edits; the deleted one's connections stay
+    const qint64 appId = appRow.appId;
+    connect(confAppManager(), &ConfAppManager::appUpdated, connsWindow, [=] {
+        const App app = confAppManager()->appById(appId);
+        if (app.isValid()) {
+            connsWindow->setApp(app);
+        }
+    });
+
     WidgetWindow::showWidget(connsWindow);
 }
 

@@ -15,7 +15,8 @@ public:
     qint64 confAppId() const { return m_confAppId; }
     const QString &appPath() const { return m_appPath; }
 
-    void setApp(const App &app);
+    /* Returns whether the filter by the program is changed */
+    bool setApp(const App &app);
 
     /* The program has an id or a path */
     static bool canFilterApp(const App &app);

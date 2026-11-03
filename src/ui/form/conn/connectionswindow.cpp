@@ -2,6 +2,7 @@
 
 #include <QCheckBox>
 #include <QHeaderView>
+#include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
 #include <QPushButton>
@@ -11,6 +12,7 @@
 #include <appinfo/appinfocache.h>
 #include <conf/confmanager.h>
 #include <conf/filtersimconn.h>
+#include <conf/firewallconf.h>
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
@@ -22,6 +24,7 @@
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
+#include <util/net/actionrange.h>
 #include <util/osutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
@@ -30,6 +33,8 @@
 using namespace Fort;
 
 namespace {
+
+inline constexpr auto iconSize = QSize(16, 16);
 
 void showFilterSimWindow(const ConnRow &connRow)
 {
@@ -52,6 +57,13 @@ void showFilterSimWindow(const ConnRow &connRow)
     conn.remote_ip = connRow.remoteIp;
 
     windowManager->filterSimWindow()->initialize(simConn);
+}
+
+// The disabled icon is grayed
+void updateLogConnIcon(QLabel *icon, bool enabled, const QString &onText, const QString &offText)
+{
+    icon->setEnabled(enabled);
+    icon->setToolTip(enabled ? onText : offText);
 }
 
 }
@@ -135,6 +147,31 @@ void ConnectionsWindow::hideEditing()
     disconnect(m_connListView, &TableView::doubleClicked, m_actAddProgram, &QAction::trigger);
 }
 
+void ConnectionsWindow::hideLogConnIcons()
+{
+    m_logConnIcons->hide();
+}
+
+bool ConnectionsWindow::logAllowedConn() const
+{
+    return conf().logAllowedConn();
+}
+
+bool ConnectionsWindow::logBlockedConn() const
+{
+    return conf().logBlockedConn();
+}
+
+void ConnectionsWindow::updateLogConnIcons()
+{
+    updateLogConnIcon(m_iconLogAllowedConn, logAllowedConn(),
+            tr("Allowed connections are collected"), tr("Allowed connections are not collected"));
+    updateLogConnIcon(m_iconLogBlockedConn, logBlockedConn(),
+            tr("Blocked connections are collected"), tr("Blocked connections are not collected"));
+
+    m_iconLogAlertedConn->setVisible(conf().logAlertedConn());
+}
+
 void ConnectionsWindow::retranslateWindowTitle()
 {
     this->setWindowTitle(tr("Connections"));
@@ -143,6 +180,8 @@ void ConnectionsWindow::retranslateWindowTitle()
 void ConnectionsWindow::setupController()
 {
     connect(ctrl(), &ConnectionsController::retranslateUi, this, &ConnectionsWindow::retranslateUi);
+
+    connect(confManager(), &ConfManager::confChanged, this, &ConnectionsWindow::updateLogConnIcons);
 }
 
 void ConnectionsWindow::retranslateUi()
@@ -168,6 +207,11 @@ void ConnectionsWindow::retranslateUi()
     m_btListOptions->setText(tr("Options"));
     m_cbAutoScroll->setText(tr("Auto scroll"));
     m_cbShowHostNames->setText(tr("Show host names"));
+
+    updateLogConnIcons();
+    m_iconLogAlertedConn->setToolTip(
+            tr("Only the connections of alerted programs or marked by the Alert action are "
+               "collected"));
 
     connListModel()->refresh();
 
@@ -257,6 +301,9 @@ QLayout *ConnectionsWindow::setupHeader()
     // List Options
     setupListOptions();
 
+    // Collected Connections
+    setupLogConnIcons();
+
     // Options button
     m_btOptions = ControlUtil::createOptionsButton(3);
 
@@ -281,6 +328,7 @@ QLayout *ConnectionsWindow::setupHeader()
     layout->addStretch();
     layout->addWidget(m_btListOptions);
     layout->addWidget(listOptionsSeparator);
+    layout->addWidget(m_logConnIcons);
     layout->addWidget(m_btOptions);
     layout->addWidget(m_btStatistics);
     layout->addWidget(m_btMenu);
@@ -367,9 +415,6 @@ void ConnectionsWindow::setupListOptions()
 void ConnectionsWindow::setupAutoScroll()
 {
     m_cbAutoScroll = ControlUtil::createCheckBox(iniUser().connAutoScroll(), [&](bool checked) {
-        if (iniUser().connAutoScroll() == checked)
-            return;
-
         iniUser().setConnAutoScroll(checked);
         confManager()->saveIniUser();
 
@@ -381,14 +426,25 @@ void ConnectionsWindow::setupShowHostNames()
 {
     m_cbShowHostNames =
             ControlUtil::createCheckBox(iniUser().connShowHostNames(), [&](bool checked) {
-                if (iniUser().connShowHostNames() == checked)
-                    return;
-
                 iniUser().setConnShowHostNames(checked);
                 confManager()->saveIniUser();
 
                 updateShowHostNames();
             });
+}
+
+void ConnectionsWindow::setupLogConnIcons()
+{
+    m_iconLogAllowedConn = ControlUtil::createIconLabel(
+            ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ALLOW), iconSize);
+    m_iconLogBlockedConn = ControlUtil::createIconLabel(
+            ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_BLOCK), iconSize);
+    m_iconLogAlertedConn = ControlUtil::createIconLabel(":/icons/error.png", iconSize);
+
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_iconLogAllowedConn, m_iconLogBlockedConn, m_iconLogAlertedConn }, /*margin=*/0);
+
+    m_logConnIcons = ControlUtil::wrapToWidget(layout);
 }
 
 void ConnectionsWindow::setupTableConnList()
