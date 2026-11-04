@@ -204,7 +204,7 @@ void ConnectionsWindow::retranslateUi()
 
     m_editSearch->setPlaceholderText(tr("Search") + " /");
 
-    m_btListOptions->setText(tr("Options"));
+    m_btListOptions->setToolTip(tr("List Options"));
     m_cbAutoScroll->setText(tr("Auto scroll"));
     m_cbShowHostNames->setText(tr("Show host names"));
 
@@ -407,7 +407,7 @@ void ConnectionsWindow::setupListOptions()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btListOptions = ControlUtil::createButton(":/icons/widgets.png");
+    m_btListOptions = ControlUtil::createButton(":/icons/table_gear.png");
     m_btListOptions->setMenu(menu);
 }
 
