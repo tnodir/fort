@@ -18,7 +18,7 @@
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 
-#include "deletependingconnjob.h"
+#include "deleteconnidsjob.h"
 #include "deletetimedoutconnsjob.h"
 #include "logpendingconnjob.h"
 #include "statsql.h"
@@ -266,7 +266,7 @@ void PendingConnManager::reauthAppConns(const App &app)
 void PendingConnManager::removeConns(const QVector<qint64> &connIds)
 {
     // The decided connections are no longer pending
-    enqueueJob(WorkerJobPtr(new DeletePendingConnJob(connIds)));
+    enqueueJob(WorkerJobPtr(new DeleteConnIdsJob(connIds)));
 }
 
 void PendingConnManager::removeProcessConns(quint32 processId)

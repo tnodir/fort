@@ -1,18 +1,18 @@
-#ifndef DELETEPENDINGCONNJOB_H
-#define DELETEPENDINGCONNJOB_H
+#ifndef DELETECONNIDSJOB_H
+#define DELETECONNIDSJOB_H
 
 #include <QVector>
 
 #include "statconnbasejob.h"
 
-class DeletePendingConnJob : public StatConnBaseJob
+class DeleteConnIdsJob : public StatConnBaseJob
 {
 public:
-    explicit DeletePendingConnJob(const QVector<qint64> &connIds);
+    explicit DeleteConnIdsJob(const QVector<qint64> &connIds);
 
     const QVector<qint64> &connIds() const { return m_connIds; }
 
-    StatConnJobType jobType() const override { return JobTypeDeletePendingConn; }
+    StatConnJobType jobType() const override { return JobTypeDeleteConnIds; }
 
 protected:
     bool processMerge(const StatConnBaseJob &statJob) override;
@@ -23,4 +23,4 @@ private:
     QVector<qint64> m_connIds;
 };
 
-#endif // DELETEPENDINGCONNJOB_H
+#endif // DELETECONNIDSJOB_H

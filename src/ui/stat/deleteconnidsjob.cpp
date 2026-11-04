@@ -1,22 +1,22 @@
-#include "deletependingconnjob.h"
+#include "deleteconnidsjob.h"
 
 #include <sqlite/dbutil.h>
 
 #include "statconnmanager.h"
 #include "statsql.h"
 
-DeletePendingConnJob::DeletePendingConnJob(const QVector<qint64> &connIds) : m_connIds(connIds) { }
+DeleteConnIdsJob::DeleteConnIdsJob(const QVector<qint64> &connIds) : m_connIds(connIds) { }
 
-bool DeletePendingConnJob::processMerge(const StatConnBaseJob &statJob)
+bool DeleteConnIdsJob::processMerge(const StatConnBaseJob &statJob)
 {
-    const auto &job = static_cast<const DeletePendingConnJob &>(statJob);
+    const auto &job = static_cast<const DeleteConnIdsJob &>(statJob);
 
     m_connIds.append(job.connIds());
 
     return true;
 }
 
-void DeletePendingConnJob::processJob()
+void DeleteConnIdsJob::processJob()
 {
     beginWriteTransaction();
 
@@ -31,7 +31,7 @@ void DeletePendingConnJob::processJob()
     setResultCount(m_connIds.size());
 }
 
-void DeletePendingConnJob::emitFinished()
+void DeleteConnIdsJob::emitFinished()
 {
     emit manager()->deleteConnFinished(m_connIds.constLast());
 }

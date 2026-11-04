@@ -13,7 +13,7 @@ public:
     enum StatConnJobType : qint8 {
         JobTypeLogConn,
         JobTypeDeleteConn,
-        JobTypeDeletePendingConn,
+        JobTypeDeleteConnIds,
         JobTypeDeleteTimedOutConns,
     };
 

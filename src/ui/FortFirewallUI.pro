@@ -242,8 +242,8 @@ SOURCES += \
     rpc/statmanagerrpc.cpp \
     rpc/taskmanagerrpc.cpp \
     rpc/windowmanagerfake.cpp \
+    stat/deleteconnidsjob.cpp \
     stat/deleteconnjob.cpp \
-    stat/deletependingconnjob.cpp \
     stat/deletetimedoutconnsjob.cpp \
     stat/logconnjob.cpp \
     stat/logpendingconnjob.cpp \
@@ -579,8 +579,8 @@ HEADERS += \
     rpc/statmanagerrpc.h \
     rpc/taskmanagerrpc.h \
     rpc/windowmanagerfake.h \
+    stat/deleteconnidsjob.h \
     stat/deleteconnjob.h \
-    stat/deletependingconnjob.h \
     stat/deletetimedoutconnsjob.h \
     stat/logconnjob.h \
     stat/logpendingconnjob.h \
