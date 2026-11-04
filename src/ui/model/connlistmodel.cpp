@@ -1,6 +1,5 @@
 #include "connlistmodel.h"
 
-#include <QFont>
 #include <QIcon>
 #include <QLoggingCategory>
 
@@ -248,6 +247,10 @@ QVariant ConnListModel::data(const QModelIndex &index, int role) const
     // Icon
     case Qt::DecorationRole:
         return dataDecoration(index);
+
+    // Font
+    case Qt::FontRole:
+        return dataFont(index);
     }
 
     return {};
@@ -323,6 +326,20 @@ QVariant ConnListModel::dataDecorationAction(const ConnRow &connRow) const
 
     return connRow.alerted ? GuiUtil::overlayIcon(iconPath, ":/icons/error.png")
                            : IconCache::icon(iconPath);
+}
+
+QVariant ConnListModel::dataFont(const QModelIndex &index) const
+{
+    if (ConnListColumn(index.column()) != ConnListColumn::Program)
+        return {};
+
+    const auto &connRow = connRowAt(index.row());
+
+    if (!appInfoCache()->appFileExists(connRow.appPath)) {
+        return GuiUtil::fontStrikeOut();
+    }
+
+    return {};
 }
 
 const ConnRow &ConnListModel::connRowAt(int row) const

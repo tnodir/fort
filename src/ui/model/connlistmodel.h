@@ -98,6 +98,7 @@ private:
     QVariant dataDisplay(const QModelIndex &index, int role) const;
     QVariant dataDecoration(const QModelIndex &index) const;
     QVariant dataDecorationAction(const ConnRow &connRow) const;
+    QVariant dataFont(const QModelIndex &index) const;
 
     void updateConnRows(qint64 oldIdMin, qint64 oldIdMax, qint64 idMin, qint64 idMax);
     void removeConnRows(qint64 idMin, int count);
