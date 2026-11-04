@@ -106,7 +106,6 @@ void AppPendingConnsWindow::setupUi()
 
     // The selected row stays in view, when the new rows are added
     hideAutoScroll();
-    setAutoScroll(false);
 
     setupConnsChanged();
 }

@@ -162,12 +162,13 @@ void AppConnsWindow::setupAlertWindow()
     connect(this, &WidgetWindow::aboutToClose, this, [&] { saveWindowState(/*wasVisible=*/true); });
 }
 
-void AppConnsWindow::restoreAlertWindowState(const QString &iniGroup)
+void AppConnsWindow::restoreAlertWindowState()
 {
     // Next to the alert window, if there is no saved geometry
     AppConnsWindow::restoreWindowState();
 
-    restoreIniWindowState(iniGroup, size());
+    restoreIniWindowGeometry(size());
+    restoreIniConnListHeader();
 
     // By the program's path
     updateProgramColumnHidden();

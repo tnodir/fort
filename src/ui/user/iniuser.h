@@ -219,6 +219,18 @@ public:
         setValue(group + "/connListHeader", v);
     }
 
+    bool windowAutoScroll(const QString &group) const { return valueBool(group + "/autoScroll"); }
+    void setWindowAutoScroll(const QString &group, bool on) { setValue(group + "/autoScroll", on); }
+
+    bool windowShowHostNames(const QString &group) const
+    {
+        return valueBool(group + "/showHostNames");
+    }
+    void setWindowShowHostNames(const QString &group, bool on)
+    {
+        setValue(group + "/showHostNames", on);
+    }
+
     bool progAlertWindowAutoShow() const { return valueBool("progAlertWindow/autoShow", true); }
     void setProgAlertWindowAutoShow(bool on) { setValue("progAlertWindow/autoShow", on); }
 
@@ -658,12 +670,6 @@ public:
     void setStatAppListHeader(const QByteArray &v) { setValue("statWindow/appListHeader", v); }
 
     static QString connWindowGroup() { return "connWindow"; }
-
-    bool connAutoScroll() const { return valueBool("connWindow/autoScroll"); }
-    void setConnAutoScroll(bool on) { setValue("connWindow/autoScroll", on); }
-
-    bool connShowHostNames() const { return valueBool("connWindow/showHostNames"); }
-    void setConnShowHostNames(bool on) { setValue("connWindow/showHostNames", on); }
 
 public:
     void saveDefaultIni();

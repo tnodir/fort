@@ -10,8 +10,10 @@ class AppAlertConnsWindow : public AppConnsWindow
 public:
     explicit AppAlertConnsWindow(const App &app, QWidget *parent = nullptr);
 
-    void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
+
+protected:
+    QString iniGroup() const override;
 };
 
 #endif // APPALERTCONNSWINDOW_H

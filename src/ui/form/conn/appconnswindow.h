@@ -41,7 +41,7 @@ protected:
     void setupAlertWindow();
 
     /* The alert's window keeps its state in the ini group */
-    void restoreAlertWindowState(const QString &iniGroup);
+    void restoreAlertWindowState();
 
     void updateProgramColumnHidden();
 

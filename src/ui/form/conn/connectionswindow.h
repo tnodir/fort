@@ -44,9 +44,11 @@ protected:
 
     void initialize();
 
-    /* The window's state in the ini group */
-    void saveIniWindowState(const QString &iniGroup);
-    void restoreIniWindowState(const QString &iniGroup, const QSize &defaultSize);
+    /* The window's ini group: its state and List Options */
+    virtual QString iniGroup() const;
+
+    void restoreIniWindowGeometry(const QSize &defaultSize);
+    void restoreIniConnListHeader();
 
     void hideEditing();
     void hideAutoScroll();
@@ -57,10 +59,6 @@ protected:
     virtual bool logBlockedConn() const;
 
     void updateLogConnIcons();
-
-    /* Scroll to the new rows or keep the visible ones in place. The model's signals to the window
-     * are disconnected: a variant connects its own ones after it */
-    void setAutoScroll(bool autoScroll);
 
     int connListCurrentIndex() const;
     const ConnRow &currentConnRow() const;
@@ -99,6 +97,7 @@ private:
     void saveTopRow();
     void restoreTopRow();
 
+    void restoreIniListOptions();
     void updateAutoScroll();
     void setupAutoScrollConnections();
     void setupKeepScrollConnections();
@@ -142,6 +141,8 @@ private:
     AppInfoRow *m_appInfoRow = nullptr;
 
     QPersistentModelIndex m_topRowIndex;
+
+    QList<QMetaObject::Connection> m_scrollConnections;
 
     QList<QWidget *> m_editWidgets; // the Edit and Clear All buttons
 };

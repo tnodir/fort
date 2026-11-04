@@ -8,12 +8,12 @@ AppAlertPendingConnsWindow::AppAlertPendingConnsWindow(const App &app, QWidget *
     setupAlertWindow();
 }
 
-void AppAlertPendingConnsWindow::saveWindowState(bool /*wasVisible*/)
-{
-    saveIniWindowState(IniUser::progAlertPendingConnWindowGroup());
-}
-
 void AppAlertPendingConnsWindow::restoreWindowState()
 {
-    restoreAlertWindowState(IniUser::progAlertPendingConnWindowGroup());
+    restoreAlertWindowState();
+}
+
+QString AppAlertPendingConnsWindow::iniGroup() const
+{
+    return IniUser::progAlertPendingConnWindowGroup();
 }

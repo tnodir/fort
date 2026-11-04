@@ -10,8 +10,10 @@ class AppAlertPendingConnsWindow : public AppPendingConnsWindow
 public:
     explicit AppAlertPendingConnsWindow(const App &app, QWidget *parent = nullptr);
 
-    void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
+
+protected:
+    QString iniGroup() const override;
 };
 
 #endif // APPALERTPENDINGCONNSWINDOW_H

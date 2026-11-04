@@ -6,6 +6,7 @@
 #include <QLineEdit>
 #include <QMenu>
 #include <QPushButton>
+#include <QSignalBlocker>
 #include <QToolButton>
 #include <QVBoxLayout>
 
@@ -84,53 +85,62 @@ ConnectionsWindow::ConnectionsWindow(
 
     setupUi();
 
-    updateAutoScroll();
-    updateShowHostNames();
-
     setupController();
 }
 
 void ConnectionsWindow::saveWindowState(bool /*wasVisible*/)
 {
-    saveIniWindowState(IniUser::connWindowGroup());
+    auto &iniUser = Fort::iniUser();
+    const auto group = iniGroup();
+
+    iniUser.setWindowGeometry(group, stateWatcher()->geometry());
+    iniUser.setWindowMaximized(group, stateWatcher()->maximized());
+
+    auto header = m_connListView->horizontalHeader();
+    iniUser.setWindowConnListHeader(group, header->saveState());
+    iniUser.setWindowConnListHeaderVersion(group, connListHeaderVersion);
+
+    confManager()->saveIniUser();
 }
 
 void ConnectionsWindow::restoreWindowState()
 {
-    restoreIniWindowState(IniUser::connWindowGroup(), QSize(1024, 768));
+    restoreIniWindowGeometry(QSize(1024, 768));
+    restoreIniConnListHeader();
 }
 
 void ConnectionsWindow::initialize()
 {
+    // By the variant's ini group
+    restoreIniListOptions();
+
     connListModel()->initialize();
 
     emit ctrl()->retranslateUi();
 }
 
-void ConnectionsWindow::saveIniWindowState(const QString &iniGroup)
+QString ConnectionsWindow::iniGroup() const
 {
-    auto &iniUser = Fort::iniUser();
-
-    iniUser.setWindowGeometry(iniGroup, stateWatcher()->geometry());
-    iniUser.setWindowMaximized(iniGroup, stateWatcher()->maximized());
-
-    auto header = m_connListView->horizontalHeader();
-    iniUser.setWindowConnListHeader(iniGroup, header->saveState());
-    iniUser.setWindowConnListHeaderVersion(iniGroup, connListHeaderVersion);
-
-    confManager()->saveIniUser();
+    return IniUser::connWindowGroup();
 }
 
-void ConnectionsWindow::restoreIniWindowState(const QString &iniGroup, const QSize &defaultSize)
+void ConnectionsWindow::restoreIniWindowGeometry(const QSize &defaultSize)
 {
     const auto &iniUser = Fort::iniUser();
+    const auto group = iniGroup();
 
     stateWatcher()->restore(
-            this, defaultSize, iniUser.windowGeometry(iniGroup), iniUser.windowMaximized(iniGroup));
+            this, defaultSize, iniUser.windowGeometry(group), iniUser.windowMaximized(group));
+}
 
-    if (iniUser.windowConnListHeaderVersion(iniGroup) == connListHeaderVersion) {
+void ConnectionsWindow::restoreIniConnListHeader()
+{
+    const auto &iniUser = Fort::iniUser();
+    const auto group = iniGroup();
+
+    if (iniUser.windowConnListHeaderVersion(group) == connListHeaderVersion) {
         auto header = m_connListView->horizontalHeader();
-        header->restoreState(iniUser.windowConnListHeader(iniGroup));
+        header->restoreState(iniUser.windowConnListHeader(group));
     }
 }
 
@@ -417,8 +427,8 @@ void ConnectionsWindow::setupListOptions()
 
 void ConnectionsWindow::setupAutoScroll()
 {
-    m_cbAutoScroll = ControlUtil::createCheckBox(iniUser().connAutoScroll(), [&](bool checked) {
-        iniUser().setConnAutoScroll(checked);
+    m_cbAutoScroll = ControlUtil::createCheckBox(/*checked=*/false, [&](bool checked) {
+        iniUser().setWindowAutoScroll(iniGroup(), checked);
         confManager()->saveIniUser();
 
         updateAutoScroll();
@@ -427,13 +437,12 @@ void ConnectionsWindow::setupAutoScroll()
 
 void ConnectionsWindow::setupShowHostNames()
 {
-    m_cbShowHostNames =
-            ControlUtil::createCheckBox(iniUser().connShowHostNames(), [&](bool checked) {
-                iniUser().setConnShowHostNames(checked);
-                confManager()->saveIniUser();
+    m_cbShowHostNames = ControlUtil::createCheckBox(/*checked=*/false, [&](bool checked) {
+        iniUser().setWindowShowHostNames(iniGroup(), checked);
+        confManager()->saveIniUser();
 
-                updateShowHostNames();
-            });
+        updateShowHostNames();
+    });
 }
 
 void ConnectionsWindow::setupLogConnIcons()
@@ -659,16 +668,30 @@ void ConnectionsWindow::restoreTopRow()
     m_connListView->setScrollOffset(m_topRowIndex.row(), m_topRowOffset);
 }
 
-void ConnectionsWindow::updateAutoScroll()
+void ConnectionsWindow::restoreIniListOptions()
 {
-    setAutoScroll(iniUser().connAutoScroll());
+    const auto &iniUser = Fort::iniUser();
+    const auto group = iniGroup();
+
+    {
+        const QSignalBlocker autoScrollBlocker(m_cbAutoScroll);
+        const QSignalBlocker showHostNamesBlocker(m_cbShowHostNames);
+
+        m_cbAutoScroll->setChecked(iniUser.windowAutoScroll(group));
+        m_cbShowHostNames->setChecked(iniUser.windowShowHostNames(group));
+    }
+
+    updateAutoScroll();
+    updateShowHostNames();
 }
 
-void ConnectionsWindow::setAutoScroll(bool autoScroll)
+void ConnectionsWindow::updateAutoScroll()
 {
-    connListModel()->disconnect(this);
+    for (const auto &c : std::as_const(m_scrollConnections)) {
+        disconnect(c);
+    }
 
-    if (autoScroll) {
+    if (m_cbAutoScroll->isChecked()) {
         setupAutoScrollConnections();
     } else {
         setupKeepScrollConnections();
@@ -677,10 +700,12 @@ void ConnectionsWindow::setAutoScroll(bool autoScroll)
 
 void ConnectionsWindow::setupAutoScrollConnections()
 {
-    connect(connListModel(), &QAbstractItemModel::rowsInserted, this,
-            &ConnectionsWindow::doAutoScroll);
-    connect(connListModel(), &QAbstractItemModel::modelReset, this,
-            &ConnectionsWindow::doAutoScroll);
+    m_scrollConnections = {
+        connect(connListModel(), &QAbstractItemModel::rowsInserted, this,
+                &ConnectionsWindow::doAutoScroll),
+        connect(connListModel(), &QAbstractItemModel::modelReset, this,
+                &ConnectionsWindow::doAutoScroll),
+    };
 
     doAutoScroll();
 }
@@ -688,19 +713,21 @@ void ConnectionsWindow::setupAutoScrollConnections()
 void ConnectionsWindow::setupKeepScrollConnections()
 {
     /* Keep the visible rows in place, when rows are inserted or removed above them */
-    connect(connListModel(), &QAbstractItemModel::rowsAboutToBeInserted, this,
-            &ConnectionsWindow::saveTopRow);
-    connect(connListModel(), &QAbstractItemModel::rowsInserted, this,
-            &ConnectionsWindow::restoreTopRow);
-    connect(connListModel(), &QAbstractItemModel::rowsAboutToBeRemoved, this,
-            &ConnectionsWindow::saveTopRow);
-    connect(connListModel(), &QAbstractItemModel::rowsRemoved, this,
-            &ConnectionsWindow::restoreTopRow);
+    m_scrollConnections = {
+        connect(connListModel(), &QAbstractItemModel::rowsAboutToBeInserted, this,
+                &ConnectionsWindow::saveTopRow),
+        connect(connListModel(), &QAbstractItemModel::rowsInserted, this,
+                &ConnectionsWindow::restoreTopRow),
+        connect(connListModel(), &QAbstractItemModel::rowsAboutToBeRemoved, this,
+                &ConnectionsWindow::saveTopRow),
+        connect(connListModel(), &QAbstractItemModel::rowsRemoved, this,
+                &ConnectionsWindow::restoreTopRow),
+    };
 }
 
 void ConnectionsWindow::updateShowHostNames()
 {
-    connListModel()->setResolveAddress(iniUser().connShowHostNames());
+    connListModel()->setResolveAddress(m_cbShowHostNames->isChecked());
     connListModel()->refresh();
 }
 
