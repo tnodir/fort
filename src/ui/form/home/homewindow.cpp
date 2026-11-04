@@ -65,7 +65,7 @@ void HomeWindow::restoreWindowState()
     auto &iniUser = Fort::iniUser();
 
     stateWatcher()->restore(
-            this, QSize(600, 700), iniUser.homeWindowGeometry(), iniUser.homeWindowMaximized());
+            this, QSize(600, 500), iniUser.homeWindowGeometry(), iniUser.homeWindowMaximized());
 
     emit ctrl()->afterRestoreWindowState(iniUser);
 }
