@@ -11,6 +11,7 @@
 #include <fortglobal.h>
 #include <model/appconnsearchmodel.h>
 #include <user/iniuser.h>
+#include <util/window/widgetwindowstatewatcher.h>
 
 using namespace Fort;
 
@@ -27,9 +28,7 @@ QString appNameOrPath(const App &app)
 AppConnsWindow::AppConnsWindow(const App &app, QWidget *parent) :
     AppConnsWindow(app, parent, Qt::Window)
 {
-    initialize();
-
-    setupFormWindow(iniUser(), IniUser::connWindowGroup());
+    setupWindow();
 }
 
 AppConnsWindow::AppConnsWindow(const App &app, QWidget *parent, Qt::WindowFlags f) :
@@ -70,15 +69,31 @@ void AppConnsWindow::setAddFilterVisible(bool visible)
 
 void AppConnsWindow::restoreWindowState()
 {
-    /* The Program Connections window doesn't keep its state */
+    const auto &iniUser = Fort::iniUser();
+    const auto group = iniGroup();
+
+    // The saved size only: next to the owner or at the default position, not over each other
     auto owner = parentWidget();
-    if (!owner) {
-        resize(1024, 768);
-        return;
+    const QSize defaultSize = owner ? QSize(800, minimumHeight()) : QSize(1024, 768);
+    const QSize size = iniUser.windowGeometry(group).size();
+
+    resize(size.isEmpty() ? defaultSize : size);
+
+    if (owner) {
+        moveNextTo(owner);
     }
 
-    resize(800, minimumHeight());
-    moveNextTo(owner);
+    const bool maximized = iniUser.windowMaximized(group);
+    stateWatcher()->reset(geometry(), maximized);
+
+    if (maximized) {
+        setWindowState(Qt::WindowMaximized);
+    }
+
+    restoreIniConnListHeader();
+
+    // By the program's path
+    updateProgramColumnHidden();
 }
 
 void AppConnsWindow::retranslateWindowTitle()
@@ -127,6 +142,11 @@ void AppConnsWindow::setupAddFilter()
     });
 }
 
+QString AppConnsWindow::iniGroup() const
+{
+    return IniUser::progConnWindowGroup();
+}
+
 void AppConnsWindow::addConnFilter(const ConnRow &connRow)
 {
     emit addFilterRequested(connRow);
@@ -152,7 +172,7 @@ void AppConnsWindow::hideAppName()
     m_appNameSeparator->hide();
 }
 
-void AppConnsWindow::setupAlertWindow()
+void AppConnsWindow::setupWindow()
 {
     initialize();
 
@@ -168,10 +188,6 @@ void AppConnsWindow::restoreAlertWindowState()
     AppConnsWindow::restoreWindowState();
 
     restoreIniWindowGeometry(size());
-    restoreIniConnListHeader();
-
-    // By the program's path
-    updateProgramColumnHidden();
 }
 
 void AppConnsWindow::updateProgramColumnHidden()

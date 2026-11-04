@@ -29,6 +29,8 @@ signals:
     void addFilterRequested(const Conn &conn);
 
 protected:
+    QString iniGroup() const override;
+
     void addConnFilter(const ConnRow &connRow) override;
 
     AppConnsWindow(const App &app, QWidget *parent, Qt::WindowFlags f);
@@ -37,10 +39,10 @@ protected:
 
     void hideAppName();
 
-    /* The alert's window isn't held by the Window Manager */
-    void setupAlertWindow();
+    /* The window isn't held by the Window Manager: it saves its state on close */
+    void setupWindow();
 
-    /* The alert's window keeps its state in the ini group */
+    /* The alert's window keeps its position too */
     void restoreAlertWindowState();
 
     void updateProgramColumnHidden();

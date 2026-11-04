@@ -25,6 +25,8 @@ protected:
 
     AppPendingConnSearchModel *pendingConnListModel() const;
 
+    QString iniGroup() const override;
+
 protected slots:
     void retranslateWindowTitle() override;
 

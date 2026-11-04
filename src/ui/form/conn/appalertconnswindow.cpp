@@ -5,7 +5,7 @@
 AppAlertConnsWindow::AppAlertConnsWindow(const App &app, QWidget *parent) :
     AppConnsWindow(app, parent, Qt::Window)
 {
-    setupAlertWindow();
+    setupWindow();
 }
 
 void AppAlertConnsWindow::restoreWindowState()

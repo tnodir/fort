@@ -188,6 +188,8 @@ public:
     bool progAlertWindowMaximized() const { return valueBool("progAlertWindow/maximized"); }
     void setProgAlertWindowMaximized(bool on) { setValue("progAlertWindow/maximized", on); }
 
+    static QString progConnWindowGroup() { return "progConnWindow"; }
+    static QString progPendingConnWindowGroup() { return "progPendingConnWindow"; }
     static QString progAlertConnWindowGroup() { return "progAlertConnWindow"; }
     static QString progAlertPendingConnWindowGroup() { return "progAlertPendingConnWindow"; }
 

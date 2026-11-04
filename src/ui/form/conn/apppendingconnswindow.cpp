@@ -32,9 +32,7 @@ void setIconButtonText(QAbstractButton *bt, const QString &text)
 AppPendingConnsWindow::AppPendingConnsWindow(const App &app, QWidget *parent) :
     AppPendingConnsWindow(app, parent, Qt::Window)
 {
-    initialize();
-
-    setupFormWindow(iniUser(), IniUser::connWindowGroup());
+    setupWindow();
 }
 
 AppPendingConnsWindow::AppPendingConnsWindow(const App &app, QWidget *parent, Qt::WindowFlags f) :
@@ -47,6 +45,11 @@ AppPendingConnsWindow::AppPendingConnsWindow(const App &app, QWidget *parent, Qt
 AppPendingConnSearchModel *AppPendingConnsWindow::pendingConnListModel() const
 {
     return static_cast<AppPendingConnSearchModel *>(connListModel());
+}
+
+QString AppPendingConnsWindow::iniGroup() const
+{
+    return IniUser::progPendingConnWindowGroup();
 }
 
 void AppPendingConnsWindow::retranslateWindowTitle()
