@@ -128,8 +128,10 @@ enum Command : qint8 {
     Rpc_StatManager_appTrafTotalsResetted,
 
     Rpc_StatConnManager_deleteConn,
+    Rpc_StatConnManager_deleteConns,
     Rpc_StatConnManager_connChanged,
     Rpc_StatConnManager_connCleared,
+    Rpc_StatConnManager_connIdsShifted,
 
     Rpc_PendingConnManager_decideConn,
     Rpc_PendingConnManager_allowProcess,

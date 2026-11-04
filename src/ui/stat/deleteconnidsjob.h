@@ -19,6 +19,8 @@ protected:
     void processJob() override;
     void emitFinished() override;
 
+    virtual void deleteConns();
+
 private:
     QVector<qint64> m_connIds;
 };

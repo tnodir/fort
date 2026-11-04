@@ -20,9 +20,7 @@ void DeleteConnIdsJob::processJob()
 {
     beginWriteTransaction();
 
-    for (const qint64 connId : std::as_const(m_connIds)) {
-        DbUtil::doList({ getIdStmt(StatSql::sqlDeleteConnById, connId) });
-    }
+    deleteConns();
 
     DbUtil::doList({ getStmt(StatSql::sqlDeleteConnApps) });
 
@@ -34,4 +32,11 @@ void DeleteConnIdsJob::processJob()
 void DeleteConnIdsJob::emitFinished()
 {
     emit manager()->deleteConnFinished(m_connIds.constLast());
+}
+
+void DeleteConnIdsJob::deleteConns()
+{
+    for (const qint64 connId : std::as_const(m_connIds)) {
+        DbUtil::doList({ getIdStmt(StatSql::sqlDeleteConnById, connId) });
+    }
 }

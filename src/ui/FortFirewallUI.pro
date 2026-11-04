@@ -249,6 +249,7 @@ SOURCES += \
     stat/logpendingconnjob.cpp \
     stat/pendingconnmanager.cpp \
     stat/quotamanager.cpp \
+    stat/shiftconnidsjob.cpp \
     stat/statconnbasejob.cpp \
     stat/statconnmanager.cpp \
     stat/statconnworker.cpp \
@@ -586,6 +587,7 @@ HEADERS += \
     stat/logpendingconnjob.h \
     stat/pendingconnmanager.h \
     stat/quotamanager.h \
+    stat/shiftconnidsjob.h \
     stat/statconnbasejob.h \
     stat/statconnmanager.h \
     stat/statconnworker.h \

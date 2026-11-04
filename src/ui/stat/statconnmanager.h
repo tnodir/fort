@@ -2,6 +2,7 @@
 #define STATCONNMANAGER_H
 
 #include <QObject>
+#include <QVector>
 
 #include <sqlite/sqlite_types.h>
 #include <sqlite/sqliteutilbase.h>
@@ -11,6 +12,7 @@
 #include <util/triggertimer.h>
 #include <util/worker/workermanager.h>
 
+class DeleteConnIdsJob;
 class IniOptions;
 class LogConnJob;
 class LogEntryConn;
@@ -33,12 +35,14 @@ public:
     virtual bool logConn(const LogEntryConn &entry, bool urgent = false);
 
     virtual void deleteConn(qint64 connIdTo = 0);
+    virtual void deleteConns(const QVector<qint64> &connIds);
 
     static void getConnIdRange(SqliteDb *db, qint64 &rowIdMin, qint64 &rowIdMax);
 
 signals:
     void connChanged();
     void connCleared();
+    void connIdsShifted(); // the later connections' ids, after deleting by ids
 
     void logConnFinished(int count, qint64 newConnId);
     void deleteConnFinished(qint64 connIdTo);
@@ -58,6 +62,9 @@ protected:
 
     virtual bool canLogConn(const LogEntryConn &entry) const;
     virtual LogConnJob *createLogConnJob(const LogEntryConn &entry) const;
+
+    /* Shifts the later connections' ids down: ConnListModel lists the contiguous ids */
+    virtual DeleteConnIdsJob *createDeleteConnIdsJob(const QVector<qint64> &connIds) const;
 
     virtual const char *migrationsSqlDir() const;
 

@@ -125,8 +125,10 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(Rpc_StatManager_appTrafTotalsResetted),
 
     CASE_STRING(Rpc_StatConnManager_deleteConn),
+    CASE_STRING(Rpc_StatConnManager_deleteConns),
     CASE_STRING(Rpc_StatConnManager_connChanged),
     CASE_STRING(Rpc_StatConnManager_connCleared),
+    CASE_STRING(Rpc_StatConnManager_connIdsShifted),
 
     CASE_STRING(Rpc_PendingConnManager_decideConn),
     CASE_STRING(Rpc_PendingConnManager_allowProcess),
@@ -296,8 +298,10 @@ static const RpcManager g_commandManagers[] = {
     Rpc_StatManager, // Rpc_StatManager_appTrafTotalsResetted,
 
     Rpc_StatConnManager, // Rpc_StatConnManager_deleteConn,
+    Rpc_StatConnManager, // Rpc_StatConnManager_deleteConns,
     Rpc_StatConnManager, // Rpc_StatConnManager_connChanged,
     Rpc_StatConnManager, // Rpc_StatConnManager_connCleared,
+    Rpc_StatConnManager, // Rpc_StatConnManager_connIdsShifted,
 
     Rpc_PendingConnManager, // Rpc_PendingConnManager_decideConn,
     Rpc_PendingConnManager, // Rpc_PendingConnManager_allowProcess,
@@ -442,8 +446,10 @@ static const qint8 g_commandValidations[] = {
     0, // Rpc_StatManager_appTrafTotalsResetted,
 
     true, // Rpc_StatConnManager_deleteConn,
+    true, // Rpc_StatConnManager_deleteConns,
     0, // Rpc_StatConnManager_connChanged,
     0, // Rpc_StatConnManager_connCleared,
+    0, // Rpc_StatConnManager_connIdsShifted,
 
     true, // Rpc_PendingConnManager_decideConn,
     true, // Rpc_PendingConnManager_allowProcess,

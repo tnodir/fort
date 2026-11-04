@@ -123,7 +123,7 @@ bool PendingConnManager::decideConn(qint64 connId, ConnDecision decision)
     if (!updateDriverFlows({ flowId }, decisionIoctl(decision)))
         return false;
 
-    removeConns({ connId });
+    deleteConns({ connId });
 
     return true;
 }
@@ -140,7 +140,7 @@ bool PendingConnManager::allowProcess(quint32 processId, quint32 seconds)
     if (!updateDriver(confBuf.buffer(), DriverCommon::ioctlAllowProc()))
         return false;
 
-    removeProcessConns(processId);
+    deleteProcessConns(processId);
 
     return true;
 }
@@ -205,6 +205,11 @@ LogConnJob *PendingConnManager::createLogConnJob(const LogEntryConn &entry) cons
     return new LogPendingConnJob(entry);
 }
 
+DeleteConnIdsJob *PendingConnManager::createDeleteConnIdsJob(const QVector<qint64> &connIds) const
+{
+    return new DeleteConnIdsJob(connIds);
+}
+
 const char *PendingConnManager::migrationsSqlDir() const
 {
     return ":/stat/migrations/conn_pending";
@@ -260,16 +265,10 @@ void PendingConnManager::reauthAppConns(const App &app)
     if (!updateDriverFlows(flowIds, DriverCommon::ioctlReauthPending()))
         return;
 
-    removeConns(connIds);
+    deleteConns(connIds);
 }
 
-void PendingConnManager::removeConns(const QVector<qint64> &connIds)
-{
-    // The decided connections are no longer pending
-    enqueueJob(WorkerJobPtr(new DeleteConnIdsJob(connIds)));
-}
-
-void PendingConnManager::removeProcessConns(quint32 processId)
+void PendingConnManager::deleteProcessConns(quint32 processId)
 {
     SqliteStmt stmt;
     if (!DbQuery(roSqliteDb())
@@ -284,9 +283,7 @@ void PendingConnManager::removeProcessConns(quint32 processId)
         connIds.append(stmt.columnInt64(0));
     }
 
-    if (!connIds.isEmpty()) {
-        removeConns(connIds);
-    }
+    deleteConns(connIds);
 }
 
 void PendingConnManager::deleteTimedOutConns()

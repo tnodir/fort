@@ -223,6 +223,11 @@ const char *const StatSql::sqlSelectAppConnIds = "WITH a AS ("
                                                  "  ORDER BY conn_id DESC"
                                                  "  LIMIT ?3 OFFSET ?4;";
 
+const char *const StatSql::sqlSelectConnIdsAfter =
+        "SELECT conn_id FROM conn WHERE conn_id > ?1 ORDER BY conn_id;";
+
+const char *const StatSql::sqlUpdateConnId = "UPDATE conn SET conn_id = ?1 WHERE conn_id = ?2;";
+
 const char *const StatSql::sqlDeleteConn = "DELETE FROM conn WHERE conn_id <= ?1;";
 
 const char *const StatSql::sqlDeleteConnApps =

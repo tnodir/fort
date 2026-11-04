@@ -14,6 +14,7 @@
 
 #include "deleteconnjob.h"
 #include "logconnjob.h"
+#include "shiftconnidsjob.h"
 #include "statconnworker.h"
 #include "statsql.h"
 
@@ -100,6 +101,14 @@ void StatConnManager::deleteConn(qint64 connIdTo)
     enqueueJob(WorkerJobPtr(new DeleteConnJob(connIdTo)));
 }
 
+void StatConnManager::deleteConns(const QVector<qint64> &connIds)
+{
+    if (connIds.isEmpty())
+        return;
+
+    enqueueJob(WorkerJobPtr(createDeleteConnIdsJob(connIds)));
+}
+
 void StatConnManager::getConnIdRange(SqliteDb *db, qint64 &connIdMin, qint64 &connIdMax)
 {
     const auto vars = DbQuery(db).sql(StatSql::sqlSelectMinMaxConnId).execute(2).toList();
@@ -172,6 +181,11 @@ bool StatConnManager::canLogConn(const LogEntryConn &entry) const
 LogConnJob *StatConnManager::createLogConnJob(const LogEntryConn &entry) const
 {
     return new LogConnJob(entry);
+}
+
+DeleteConnIdsJob *StatConnManager::createDeleteConnIdsJob(const QVector<qint64> &connIds) const
+{
+    return new ShiftConnIdsJob(connIds);
 }
 
 const char *StatConnManager::migrationsSqlDir() const

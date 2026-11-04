@@ -14,6 +14,7 @@ public:
         JobTypeLogConn,
         JobTypeDeleteConn,
         JobTypeDeleteConnIds,
+        JobTypeShiftConnIds,
         JobTypeDeleteTimedOutConns,
     };
 

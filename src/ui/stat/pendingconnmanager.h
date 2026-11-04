@@ -62,6 +62,10 @@ protected:
     bool canLogConn(const LogEntryConn & /*entry*/) const override { return true; }
     LogConnJob *createLogConnJob(const LogEntryConn &entry) const override;
 
+    /* The decided connections are no longer pending: the others keep their ids, the Alert
+     * Program window and the pending commands refer to them */
+    DeleteConnIdsJob *createDeleteConnIdsJob(const QVector<qint64> &connIds) const override;
+
     const char *migrationsSqlDir() const override;
 
     void checkClearConnOnStartup() override;
@@ -72,8 +76,7 @@ private:
     void reauthApps(const QVector<qint64> &appIdList);
     void reauthAppConns(const App &app);
 
-    void removeConns(const QVector<qint64> &connIds);
-    void removeProcessConns(quint32 processId);
+    void deleteProcessConns(quint32 processId);
 
     void deleteTimedOutConns();
     void blockTimedOutConns(const QVector<quint64> &flowIds);
