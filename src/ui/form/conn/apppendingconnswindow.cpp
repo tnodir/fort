@@ -105,6 +105,7 @@ void AppPendingConnsWindow::setupUi()
     layout->insertWidget(7, ControlUtil::createVSeparator());
 
     // The selected row stays in view, when the new rows are added
+    hideAutoScroll();
     setAutoScroll(false);
 
     setupConnsChanged();

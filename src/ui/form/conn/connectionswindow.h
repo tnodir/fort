@@ -49,6 +49,7 @@ protected:
     void restoreIniWindowState(const QString &iniGroup, const QSize &defaultSize);
 
     void hideEditing();
+    void hideAutoScroll();
     void hideLogConnIcons();
 
     /* Whether the shown connections are collected by the conf's flags */
@@ -142,7 +143,7 @@ private:
 
     QPersistentModelIndex m_topRowIndex;
 
-    QList<QWidget *> m_editWidgets; // the Edit, Clear All and List Options buttons
+    QList<QWidget *> m_editWidgets; // the Edit and Clear All buttons
 };
 
 #endif // CONNECTIONSWINDOW_H

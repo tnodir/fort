@@ -147,6 +147,11 @@ void ConnectionsWindow::hideEditing()
     disconnect(m_connListView, &TableView::doubleClicked, m_actAddProgram, &QAction::trigger);
 }
 
+void ConnectionsWindow::hideAutoScroll()
+{
+    m_cbAutoScroll->hide();
+}
+
 void ConnectionsWindow::hideLogConnIcons()
 {
     m_logConnIcons->hide();
@@ -317,8 +322,7 @@ QLayout *ConnectionsWindow::setupHeader()
     const auto clearAllSeparator = ControlUtil::createVSeparator();
     const auto listOptionsSeparator = ControlUtil::createVSeparator();
 
-    m_editWidgets = { m_btEdit, editSeparator, m_btClearAll, clearAllSeparator, m_btListOptions,
-        listOptionsSeparator };
+    m_editWidgets = { m_btEdit, editSeparator, m_btClearAll, clearAllSeparator };
 
     layout->addWidget(m_btEdit);
     layout->addWidget(editSeparator);
