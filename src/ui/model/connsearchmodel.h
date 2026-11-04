@@ -27,6 +27,9 @@ public:
     /* The not matched rows too */
     void loadConnRows(qint64 connIdFrom, QVector<ConnRow> &connRows, int count = searchConnsMax);
 
+    /* The matched rows' ids */
+    QVector<qint64> connIds() const;
+
 public slots:
     void updateSearchLater();
 

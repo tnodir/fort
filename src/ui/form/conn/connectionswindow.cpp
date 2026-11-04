@@ -367,8 +367,7 @@ void ConnectionsWindow::setupHeaderConnections()
                 tr("Are you sure to remove connections till this row?"));
     });
     connect(m_actClearAll, &QAction::triggered, this, [&] {
-        windowManager()->showConfirmBox(
-                this, [&] { ctrl()->deleteConn(); }, tr("Are you sure to remove all connections?"));
+        windowManager()->showConfirmBox(this, [&] { clearConns(); }, clearConnsConfirmText());
     });
     connect(m_actFind, &QAction::triggered, this, [&] {
         m_editSearch->setFocus();
@@ -708,6 +707,26 @@ void ConnectionsWindow::deleteConn(int row)
         return;
 
     ctrl()->deleteConn(connRow.connId);
+}
+
+QString ConnectionsWindow::clearConnsConfirmText() const
+{
+    if (!connListModel()->isFiltering()) {
+        return tr("Are you sure to remove all connections?");
+    }
+
+    return tr("Are you sure to remove the found connections?") + '\n'
+            + tr("Only the last connections are searched: older ones may be found after that.");
+}
+
+void ConnectionsWindow::clearConns()
+{
+    /* The found connections only */
+    if (connListModel()->isFiltering()) {
+        ctrl()->deleteConns(connListModel()->connIds());
+    } else {
+        ctrl()->deleteConn();
+    }
 }
 
 int ConnectionsWindow::connListCurrentIndex() const

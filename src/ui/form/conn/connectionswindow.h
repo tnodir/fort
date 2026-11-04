@@ -105,6 +105,9 @@ private:
 
     void deleteConn(int row);
 
+    QString clearConnsConfirmText() const;
+    void clearConns();
+
 private:
     int m_topRowOffset = 0;
 

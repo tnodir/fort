@@ -11,3 +11,8 @@ void ConnectionsController::deleteConn(qint64 connIdTo)
 {
     statConnManager()->deleteConn(connIdTo);
 }
+
+void ConnectionsController::deleteConns(const QVector<qint64> &connIds)
+{
+    statConnManager()->deleteConns(connIds);
+}

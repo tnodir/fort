@@ -270,3 +270,15 @@ void ConnSearchModel::loadConnRows(qint64 connIdFrom, QVector<ConnRow> &connRows
         connRows.append(connRow);
     }
 }
+
+QVector<qint64> ConnSearchModel::connIds() const
+{
+    QVector<qint64> connIds;
+    connIds.reserve(m_connRows.size());
+
+    for (const auto &connRow : m_connRows) {
+        connIds.append(connRow.connId);
+    }
+
+    return connIds;
+}

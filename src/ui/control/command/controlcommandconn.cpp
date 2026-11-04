@@ -81,7 +81,9 @@ bool listConns(ProcessCommandResult &r, const QVariantList &args)
 bool ControlCommandConn::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const
 {
     if (p.args.value(0).toString() != "list") {
-        r.errorMessage = "Usage: conn list [<app-path>] [after=<conn-id>] [limit=<count>]";
+        r.errorMessage = "Usage: conn list [<app-path>] [after=<conn-id>] [limit=<count>];"
+                         " the ids start anew after clearing all connections,"
+                         " the later ones are shifted down after removing the found ones";
         return false;
     }
 
