@@ -56,6 +56,7 @@ public:
 protected slots:
     virtual void updateConnIdRange();
     virtual void clearConnRows();
+    virtual void reloadConnRows();
 
 protected:
     bool updateTableRow(const QVariantHash &vars, int row) const override;

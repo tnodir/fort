@@ -113,6 +113,20 @@ void ConnSearchModel::clearConnRows()
     m_lastConnId = 0;
 }
 
+void ConnSearchModel::reloadConnRows()
+{
+    m_connRows.clear();
+    m_lastConnId = 0;
+
+    if (!isSearching()) {
+        ConnListModel::reloadConnRows();
+        return;
+    }
+
+    reset();
+    updateConnIdRange();
+}
+
 bool ConnSearchModel::updateTableRow(const QVariantHash &vars, int row) const
 {
     if (!isSearching())
@@ -139,19 +153,7 @@ void ConnSearchModel::updateSearch()
 {
     applyTextFilter();
 
-    m_connRows.clear();
-    m_lastConnId = 0;
-
-    if (isSearching()) {
-        reset();
-        updateConnIdRange();
-        return;
-    }
-
-    qint64 idMin = 0, idMax = 0;
-    fillConnIdRange(idMin, idMax);
-
-    resetConnRows(idMin, idMax);
+    reloadConnRows();
 }
 
 qint64 ConnSearchModel::lastConnsIdMin(qint64 idMax, int count) const

@@ -33,6 +33,7 @@ public slots:
 protected slots:
     void updateConnIdRange() override;
     void clearConnRows() override;
+    void reloadConnRows() override;
 
     virtual void updateSearch();
 
