@@ -490,7 +490,7 @@ void ConnectionsWindow::setupTableConnListHeader()
     header->resizeSection(int(ConnListColumn::Direction), 30);
     header->resizeSection(int(ConnListColumn::Action), 30);
     header->resizeSection(int(ConnListColumn::Reason), 30);
-    header->resizeSection(int(ConnListColumn::Time), 120);
+    header->resizeSection(int(ConnListColumn::Time), 140);
 
     // Hidden columns
     header->setSectionHidden(int(ConnListColumn::LocalIp), /*hide=*/true);

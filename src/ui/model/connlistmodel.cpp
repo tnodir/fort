@@ -16,6 +16,7 @@
 #include <manager/translationmanager.h>
 #include <stat/statconnmanager.h>
 #include <util/conf/filterlinetext.h>
+#include <util/dateutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/net/actionrange.h>
@@ -165,7 +166,7 @@ QVariant dataDisplayReason(const ConnRow &connRow, int role)
 
 QVariant dataDisplayTime(const ConnRow &connRow, int /*role*/)
 {
-    return connRow.connTime;
+    return DateUtil::formatTime(connRow.connTime.toSecsSinceEpoch());
 }
 
 using dataDisplay_func = QVariant (*)(const ConnRow &connRow, int role);
