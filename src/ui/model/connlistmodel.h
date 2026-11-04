@@ -51,7 +51,7 @@ public:
     static QString directionIconPath(bool inbound);
     static QString actionText(bool blocked, bool dropped = false);
 
-    static QString columnName(const ConnListColumn column);
+    static QString columnName(const ConnListColumn column, int role = Qt::DisplayRole);
 
 protected slots:
     virtual void updateConnIdRange();

@@ -156,7 +156,7 @@ QVariant ServiceListModel::headerDataDisplay(int section) const
     case 1:
         return tr("Display Name");
     case 2:
-        return tr("Process ID");
+        return "PID";
     }
     return {};
 }

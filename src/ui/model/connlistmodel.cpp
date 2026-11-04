@@ -259,7 +259,7 @@ QVariant ConnListModel::headerDataDisplay(int section, int role) const
             return {};
     }
 
-    return ConnListModel::columnName(ConnListColumn(section));
+    return ConnListModel::columnName(ConnListColumn(section), role);
 }
 
 QVariant ConnListModel::headerDataDecoration(int section) const
@@ -644,8 +644,9 @@ QString ConnListModel::actionText(bool blocked, bool dropped)
     return dropped ? tr("Dropped") : tr("Blocked");
 }
 
-QString ConnListModel::columnName(const ConnListColumn column)
+QString ConnListModel::columnName(const ConnListColumn column, int role)
 {
+    static QStringList g_columnTooltips;
     static QStringList g_columnNames;
     static int g_language = -1;
 
@@ -653,9 +654,14 @@ QString ConnListModel::columnName(const ConnListColumn column)
     if (g_language != language) {
         g_language = language;
 
+        g_columnTooltips = {
+            QString(),
+            tr("Process ID"),
+        };
+
         g_columnNames = {
             tr("Program"),
-            tr("Process ID"),
+            "PID",
             tr("Protocol"),
             tr("Local Host Name"),
             tr("Local IP"),
@@ -670,5 +676,13 @@ QString ConnListModel::columnName(const ConnListColumn column)
         };
     }
 
-    return g_columnNames.value(int(column));
+    const int col = int(column);
+
+    if (role == Qt::ToolTipRole) {
+        const QString text = g_columnTooltips.value(col);
+        if (!text.isEmpty())
+            return text;
+    }
+
+    return g_columnNames.value(col);
 }
