@@ -1,35 +1,23 @@
 #include "appstatmodel.h"
 
-#include <QFont>
 #include <QIcon>
 
 #include <sqlite/dbquery.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
-#include <appinfo/appinfo.h>
 #include <appinfo/appinfocache.h>
 #include <fortglobal.h>
 #include <fortmanager.h>
 #include <manager/translationmanager.h>
 #include <stat/statmanager.h>
 #include <util/fileutil.h>
+#include <util/guiutil.h>
 #include <util/iconcache.h>
 
 #include "traflistmodel.h"
 
 using namespace Fort;
-
-namespace {
-
-bool appFileExists(const QString &appPath)
-{
-    const AppInfo appInfo = appInfoCache()->appInfo(appPath);
-
-    return appInfo.fileExists;
-}
-
-}
 
 AppStatModel::AppStatModel(QObject *parent) : FtsTableSqlModel(parent) { }
 
@@ -200,10 +188,8 @@ QVariant AppStatModel::dataFont(const QModelIndex &index) const
 
     updateRowCache(index.row());
 
-    if (!appFileExists(m_appStatRow.appPath)) {
-        QFont font;
-        font.setStrikeOut(true);
-        return font;
+    if (!appInfoCache()->appFileExists(m_appStatRow.appPath)) {
+        return GuiUtil::fontStrikeOut();
     }
 
     return {};

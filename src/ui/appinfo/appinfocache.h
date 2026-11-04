@@ -23,6 +23,8 @@ public:
 
     QIcon appIcon(const QString &appPath, const QString &nullIconPath = QString());
 
+    bool appFileExists(const QString &appPath);
+
     AppInfo appInfo(const QString &appPath);
 
 signals:

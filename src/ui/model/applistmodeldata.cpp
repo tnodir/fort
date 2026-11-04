@@ -1,7 +1,5 @@
 #include "applistmodeldata.h"
 
-#include <QFont>
-
 #include <appinfo/appinfocache.h>
 #include <conf/app.h>
 #include <conf/confappmanager.h>
@@ -12,6 +10,7 @@
 #include <fortglobal.h>
 #include <util/bitutil.h>
 #include <util/dateutil.h>
+#include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/net/actionrange.h>
 #include <util/stringutil.h>
@@ -229,9 +228,7 @@ QColor AppListModelData::appActionColor() const
 
 bool AppListModelData::appFileExists() const
 {
-    const AppInfo appInfo = appInfoCache()->appInfo(app().appPath);
-
-    return appInfo.fileExists;
+    return appInfoCache()->appFileExists(app().appPath);
 }
 
 QIcon AppListModelData::appIcon() const
@@ -319,9 +316,7 @@ QVariant AppListModelData::dataFont() const
     switch (AppListColumn(column())) {
     case AppListColumn::Name:
         if (!appFileExists()) {
-            QFont font;
-            font.setStrikeOut(true);
-            return font;
+            return GuiUtil::fontStrikeOut();
         }
     }
 

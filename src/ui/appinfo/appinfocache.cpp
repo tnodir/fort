@@ -58,6 +58,13 @@ QIcon AppInfoCache::appIcon(const QString &appPath, const QString &nullIconPath)
     return icon;
 }
 
+bool AppInfoCache::appFileExists(const QString &appPath)
+{
+    const auto info = appInfo(appPath);
+
+    return info.fileExists;
+}
+
 AppInfo AppInfoCache::appInfo(const QString &appPath)
 {
     if (appPath.isEmpty())
