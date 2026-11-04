@@ -358,6 +358,10 @@ QLayout *ProgGeneralPage::setupPathLayout()
     m_editPath = new PlainTextEdit();
     m_editPath->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
 
+    // Before it is laid out: a later change isn't seen by a new window's layouts till it is shown,
+    // which then enlarges the window to the field's default minimum height
+    m_editPath->setMinimumHeight(pathMinHeight);
+
     // Select File
     m_btSelectFile = ControlUtil::createIconToolButton(":/icons/folder.png", [&] {
         if (!isPathEditable()) {
