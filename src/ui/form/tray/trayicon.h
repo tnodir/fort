@@ -8,7 +8,6 @@
 #include "trayicon_types.h"
 
 QT_FORWARD_DECLARE_CLASS(QAction)
-QT_FORWARD_DECLARE_CLASS(QActionGroup)
 QT_FORWARD_DECLARE_CLASS(QTimer)
 
 class IniUser;
@@ -68,8 +67,6 @@ protected slots:
     void onShowWindowAction();
 
     void switchTrayFlag(bool checked);
-    void switchBlockTraffic(QAction *action);
-    void switchFilterMode(QAction *action);
 
     void switchTrayGroupFlag(bool checked);
     void switchTrayRuleFlag(bool checked);
@@ -86,11 +83,9 @@ private:
     void setupTrayMenuTopActions();
     void setupTrayMenuOptions();
     void setupTrayMenuStatistics();
-    void setupTrayMenuBlockTraffic();
-    void setupTrayMenuFilterMode();
     void setupTrayMenuBottomActions();
 
-    QActionGroup *addRadioActions(QMenu *menu, const QList<const char *> &iniKeys);
+    QMenu *addSelectMenu(const QList<const char *> &iniKeys, const QStringList &iconPaths);
     QList<QAction *> addFlagActions(int count, const char *member, const char *modifierIniKey);
 
     bool isEditEnabled() const;
@@ -99,7 +94,7 @@ private:
     void updateGroupFlagActions();
     void updateRuleActions();
 
-    void selectTrayFlag(QAction *action, int currentIndex);
+    void selectTrayFlag(QMenu *menu, QAction *action);
     void confirmSaveTrayFlags(const QString &question);
 
     void sendAlertMessage();
@@ -167,10 +162,8 @@ private:
     QAction *m_snoozeAlertsAction = nullptr;
     QAction *m_blockTrafficMenuAction = nullptr;
     QMenu *m_blockTrafficMenu = nullptr;
-    QActionGroup *m_blockTrafficActions = nullptr;
     QAction *m_filterModeMenuAction = nullptr;
     QMenu *m_filterModeMenu = nullptr;
-    QActionGroup *m_filterModeActions = nullptr;
     QAction *m_quitAction = nullptr;
     QAction *m_trayMenuAction = nullptr;
     QList<QAction *> m_groupFlagActions;
