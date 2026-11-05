@@ -17,6 +17,7 @@ public slots:
 
 private:
     void setupUi();
+    void retranslateUi();
 
 private:
     int m_tabIndex = 0;

@@ -190,6 +190,7 @@ void IfacePage::onRetranslateUi()
 
     m_cbAppNotifyMessage->setText(tr("Use System Notifications for New Programs"));
     m_cbAppAlertAutoShow->setText(tr("Auto-Show Alert Window for New Programs"));
+    m_btAlertModes->setToolTip(tr("Alert Modes"));
     setAlertModeText(m_cbAppAlertAutoLearn, FirewallConf::ModeAutoLearn);
     setAlertModeText(m_cbAppAlertBlockAll, FirewallConf::ModeBlockAll);
     setAlertModeText(m_cbAppAlertAllowAll, FirewallConf::ModeAllowAll);

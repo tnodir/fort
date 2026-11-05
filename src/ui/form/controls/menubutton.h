@@ -12,6 +12,7 @@ public:
 
 private:
     void setupUi();
+    void retranslateUi();
 
 protected:
     void mousePressEvent(QMouseEvent *e) override;

@@ -15,6 +15,7 @@ public slots:
 
 private:
     void setupUi();
+    void retranslateUi();
 };
 
 #endif // STATISTICSBUTTON_H

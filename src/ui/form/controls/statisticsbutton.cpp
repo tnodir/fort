@@ -4,6 +4,7 @@
 
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
+#include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
 #include <util/iconcache.h>
 
@@ -27,4 +28,13 @@ void StatisticsButton::setupUi()
 
     setPopupMode(QToolButton::MenuButtonPopup);
     setMenu(windowManager()->trayIcon()->statisticsMenu());
+
+    connect(translationManager(), &TranslationManager::languageChanged, this,
+            &StatisticsButton::retranslateUi);
+    retranslateUi();
+}
+
+void StatisticsButton::retranslateUi()
+{
+    setToolTip(tr("Statistics"));
 }

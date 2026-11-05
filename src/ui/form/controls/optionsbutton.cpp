@@ -4,6 +4,7 @@
 
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
+#include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
 #include <util/iconcache.h>
 
@@ -37,4 +38,13 @@ void OptionsButton::setupUi()
 
     setPopupMode(QToolButton::MenuButtonPopup);
     setMenu(trayIcon()->optionsMenu());
+
+    connect(translationManager(), &TranslationManager::languageChanged, this,
+            &OptionsButton::retranslateUi);
+    retranslateUi();
+}
+
+void OptionsButton::retranslateUi()
+{
+    setToolTip(tr("Options"));
 }

@@ -6,6 +6,7 @@
 
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
+#include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
 #include <util/iconcache.h>
 
@@ -30,6 +31,15 @@ void MenuButton::setupUi()
     setIcon(IconCache::icon(":/icons/large_tiles.png"));
 
     setMenu(trayIcon()->menu());
+
+    connect(translationManager(), &TranslationManager::languageChanged, this,
+            &MenuButton::retranslateUi);
+    retranslateUi();
+}
+
+void MenuButton::retranslateUi()
+{
+    setToolTip(tr("Menu"));
 }
 
 void MenuButton::mousePressEvent(QMouseEvent *e)
