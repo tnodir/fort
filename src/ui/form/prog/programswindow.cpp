@@ -26,7 +26,6 @@
 #include <manager/windowmanager.h>
 #include <model/applistmodel.h>
 #include <user/iniuser.h>
-#include <util/conf/confutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/net/actionrange.h>
@@ -513,11 +512,10 @@ void ProgramsWindow::setupFilterCheckBoxes()
 void ProgramsWindow::setupFilterGroups()
 {
     m_btFilterGroups = new GroupsSelector();
-    m_btFilterGroups->setMaxGroupCount(ConfUtil::groupMaxCount());
     m_btFilterGroups->setFlat(true);
 
-    connect(m_btFilterGroups, &GroupsSelector::groupsChanged, this,
-            [&] { appListModel()->setFilterGroups(m_btFilterGroups->groups()); });
+    connect(m_btFilterGroups, &GroupsSelector::maskChanged, this,
+            [&] { appListModel()->setFilterGroups(m_btFilterGroups->mask()); });
 }
 
 void ProgramsWindow::setupFilterClear()
@@ -531,7 +529,7 @@ void ProgramsWindow::setupFilterClear()
         m_cbFilterAsk->setCheckState(Qt::PartiallyChecked);
         m_cbFilterKillProcess->setCheckState(Qt::PartiallyChecked);
         m_cbFilterObsolete->setCheckState(Qt::PartiallyChecked);
-        m_btFilterGroups->setGroups(0);
+        m_btFilterGroups->setMask(0);
     });
 }
 

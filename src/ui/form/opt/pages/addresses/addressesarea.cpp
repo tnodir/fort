@@ -15,7 +15,7 @@ AddressesArea::AddressesArea(
 
 void AddressesArea::setZones(quint32 zones)
 {
-    m_btSelectZones->setZones(zones);
+    m_btSelectZones->setMask(zones);
 }
 
 void AddressesArea::setText(const QString &text)
@@ -60,8 +60,8 @@ QLayout *AddressesArea::setupHeaderLayout(const QString &iconPath)
     // Select Zones
     m_btSelectZones = new ZonesSelector();
 
-    connect(m_btSelectZones, &ZonesSelector::zonesChanged, this,
-            [&] { emit zonesEdited(m_btSelectZones->zones()); });
+    connect(m_btSelectZones, &ZonesSelector::maskChanged, this,
+            [&] { emit zonesEdited(m_btSelectZones->mask()); });
 
     // Layout
     auto layout = ControlUtil::createHLayoutByWidgets(

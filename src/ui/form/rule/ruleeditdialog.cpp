@@ -82,8 +82,8 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
 
     m_cbExclusive->setChecked(ruleRow.exclusive);
 
-    m_btZones->setZones(ruleRow.zones.accept_mask);
-    m_btZones->setUncheckedZones(ruleRow.zones.reject_mask);
+    m_btZones->setMask(ruleRow.zones.accept_mask);
+    m_btZones->setUncheckedMask(ruleRow.zones.reject_mask);
     updateZonesLayout();
 
     m_cbInlineZones->setChecked(ruleRow.inlineZones);
@@ -676,8 +676,8 @@ void RuleEditDialog::fillRule(Rule &rule) const
     rule.logAllowedConn = m_cbLogAllowedConn->isChecked();
     rule.logBlockedConn = m_cbLogBlockedConn->isChecked();
 
-    rule.zones.accept_mask = m_btZones->zones();
-    rule.zones.reject_mask = m_btZones->uncheckedZones();
+    rule.zones.accept_mask = m_btZones->mask();
+    rule.zones.reject_mask = m_btZones->uncheckedMask();
 
     rule.inlineZones = m_cbInlineZones->isChecked();
 

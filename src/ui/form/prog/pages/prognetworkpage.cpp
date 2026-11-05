@@ -56,8 +56,8 @@ void ProgNetworkPage::onPageInitialize(const App &app)
     m_cbBlockInbound->setChecked(app.blockInbound);
     m_cbBlockOutbound->setChecked(app.blockOutbound);
     m_cbLanOnly->setChecked(app.lanOnly);
-    m_btZones->setZones(app.zones.accept_mask);
-    m_btZones->setUncheckedZones(app.zones.reject_mask);
+    m_btZones->setMask(app.zones.accept_mask);
+    m_btZones->setUncheckedMask(app.zones.reject_mask);
 
     initializeRuleField(isSingleSelection());
     initializeSpeedLimitFields();
@@ -325,8 +325,8 @@ void ProgNetworkPage::fillApp(App &app) const
     app.blockOutbound = m_cbBlockOutbound->isChecked();
     app.lanOnly = m_cbLanOnly->isChecked();
 
-    app.zones.accept_mask = m_btZones->zones();
-    app.zones.reject_mask = m_btZones->uncheckedZones();
+    app.zones.accept_mask = m_btZones->mask();
+    app.zones.reject_mask = m_btZones->uncheckedMask();
 
     app.ruleId = m_ruleSelector->ruleId();
 

@@ -25,7 +25,6 @@
 #include <form/prog/programeditcontroller.h>
 #include <fortglobal.h>
 #include <user/iniuser.h>
-#include <util/conf/confutil.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/iconcache.h>
@@ -69,7 +68,7 @@ void ProgGeneralPage::onPageInitialize(const App &app)
     updateWildcard();
 
     updateApplyChild();
-    m_btGroups->setGroups(app.groups);
+    m_btGroups->setMask(app.groups);
 
     selectAction(app.action());
 
@@ -452,7 +451,6 @@ QLayout *ProgGeneralPage::setupApplyChildGroupLayout()
 
     // Groups
     m_btGroups = new GroupsSelector();
-    m_btGroups->setMaxGroupCount(ConfUtil::groupMaxCount());
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { m_cbApplyChild, m_comboApplyChild, ControlUtil::createVSeparator(), m_btGroups,
@@ -873,7 +871,7 @@ void ProgGeneralPage::fillApp(App &app) const
 {
     app.isWildcard = isWildcard();
     app.setAction(App::Action(m_btgActions->checkedId()));
-    app.groups = m_btGroups->groups();
+    app.groups = m_btGroups->mask();
     app.appName = m_editName->text();
     app.notes = m_editNotes->toPlainText();
     app.iconPath = m_iconPath;
