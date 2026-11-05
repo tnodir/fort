@@ -431,21 +431,6 @@ void TrayIcon::updateTrayMenu(bool onlyFlags)
     updateHotKeys();
 }
 
-void TrayIcon::switchTrayMenu(bool /*checked*/)
-{
-    showTrayMenu(QCursor::pos());
-}
-
-void TrayIcon::switchBlockTrafficMenu(bool /*checked*/)
-{
-    m_blockTrafficMenu->popup(QCursor::pos());
-}
-
-void TrayIcon::switchFilterModeMenu(bool /*checked*/)
-{
-    m_filterModeMenu->popup(QCursor::pos());
-}
-
 void TrayIcon::setupController()
 {
     connect(windowManager(), &WindowManager::windowVisibilityChanged, this,
@@ -559,18 +544,12 @@ void TrayIcon::setupTrayMenuTopActions()
                     /*checkable=*/true });
     addHotKey(m_snoozeAlertsAction, HotKey::snoozeAlerts);
 
-    m_blockTrafficMenuAction = addAction(m_menu,
-            { QString(), this, SLOT(switchBlockTrafficMenu(bool)),
-                    tray::ActionShowBlockTrafficMenu });
-    m_blockTrafficMenuAction->setVisible(false);
-
     m_blockTrafficMenu = addSelectMenu(blockTrafficIniKeys, FirewallConf::blockTrafficIconPaths());
-
-    m_filterModeMenuAction = addAction(m_menu,
-            { QString(), this, SLOT(switchFilterModeMenu(bool)), tray::ActionShowFilterModeMenu });
-    m_filterModeMenuAction->setVisible(false);
+    m_blockTrafficMenuAction =
+            addMenuPopupAction(m_blockTrafficMenu, tray::ActionShowBlockTrafficMenu);
 
     m_filterModeMenu = addSelectMenu(filterModeIniKeys, FirewallConf::filterModeIconPaths());
+    m_filterModeMenuAction = addMenuPopupAction(m_filterModeMenu, tray::ActionShowFilterModeMenu);
 }
 
 void TrayIcon::setupTrayMenuOptions()
@@ -650,6 +629,17 @@ QMenu *TrayIcon::addSelectMenu(const QList<const char *> &iniKeys, const QString
     return menu;
 }
 
+QAction *TrayIcon::addMenuPopupAction(QMenu *menu, tray::ActionType actionType)
+{
+    QAction *a = addAction(
+            m_menu, { /*iconPath=*/ {}, /*receiver=*/nullptr, /*member=*/nullptr, actionType });
+    a->setVisible(false);
+
+    connect(a, &QAction::triggered, menu, [menu] { menu->popup(QCursor::pos()); });
+
+    return a;
+}
+
 QList<QAction *> TrayIcon::addFlagActions(int count, const char *member, const char *modifierIniKey)
 {
     QList<QAction *> actions;
@@ -674,9 +664,7 @@ void TrayIcon::setupTrayMenuBottomActions()
             addAction(m_menu, { ":/icons/standby.png", windowManager(), SIGNAL(requestQuit()) });
     addHotKey(m_quitAction, HotKey::quit);
 
-    m_trayMenuAction = addAction(
-            m_menu, { QString(), this, SLOT(switchTrayMenu(bool)), tray::ActionShowTrayMenu });
-    m_trayMenuAction->setVisible(false);
+    m_trayMenuAction = addMenuPopupAction(m_menu, tray::ActionShowTrayMenu);
 }
 
 bool TrayIcon::isEditEnabled() const

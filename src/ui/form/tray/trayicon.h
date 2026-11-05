@@ -49,10 +49,6 @@ public slots:
     void processMouseClick(Qt::MouseButton button, Qt::KeyboardModifiers modifiers);
 
 protected slots:
-    void switchTrayMenu(bool checked);
-    void switchBlockTrafficMenu(bool checked);
-    void switchFilterModeMenu(bool checked);
-
     void onTrayActivated(QSystemTrayIcon::ActivationReason reason);
 
     void onTrayMessageClicked();
@@ -86,6 +82,7 @@ private:
     void setupTrayMenuBottomActions();
 
     QMenu *addSelectMenu(const QList<const char *> &iniKeys, const QStringList &iconPaths);
+    QAction *addMenuPopupAction(QMenu *menu, tray::ActionType actionType);
     QList<QAction *> addFlagActions(int count, const char *member, const char *modifierIniKey);
 
     bool isEditEnabled() const;
