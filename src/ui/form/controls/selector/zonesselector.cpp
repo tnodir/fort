@@ -1,6 +1,7 @@
 #include "zonesselector.h"
 
 #include <conf/confzonemanager.h>
+#include <form/controls/pushbutton.h>
 #include <fortglobal.h>
 #include <model/zonelistmodel.h>
 #include <util/conf/confutil.h>
@@ -8,7 +9,7 @@
 using namespace Fort;
 
 ZonesSelector::ZonesSelector(QWidget *parent) :
-    MaskSelector(Fort::zoneListModel(), ":/icons/ip_class.png", parent)
+    MaskSelector(Fort::zoneListModel(), WindowZones, ":/icons/ip_class.png", parent)
 {
     setMaxCount(ConfUtil::zoneMaxCount());
 
@@ -19,7 +20,7 @@ void ZonesSelector::retranslateUi()
 {
     MaskSelector::retranslateUi();
 
-    this->setToolTip(tr("Select Zones"));
+    menuButton()->setToolTip(tr("Select Zones"));
 }
 
 QString ZonesSelector::titleText() const

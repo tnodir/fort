@@ -3,12 +3,17 @@
 #include <QAbstractItemModel>
 #include <QCheckBox>
 #include <QMenu>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <form/controls/controlutil.h>
+#include <form/controls/pushbutton.h>
+#include <fortglobal.h>
+#include <manager/windowmanager.h>
 #include <util/bitutil.h>
-#include <util/iconcache.h>
 #include <util/stringutil.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -26,12 +31,18 @@ constexpr void setIdMask(quint32 &mask, int id, bool on)
 
 }
 
-MaskSelector::MaskSelector(
-        QAbstractItemModel *listModel, const QString &iconPath, QWidget *parent) :
-    PushButton(parent), m_listModel(listModel)
+MaskSelector::MaskSelector(QAbstractItemModel *listModel, WindowCode listWindowCode,
+        const QString &iconPath, QWidget *parent) :
+    QWidget(parent), m_listModel(listModel)
 {
-    setupUi(iconPath);
+    setupUi(listWindowCode, iconPath);
     setupListModel();
+}
+
+void MaskSelector::hideListWindowButton()
+{
+    m_btMenu->setIcon(m_btListWindow->icon());
+    m_btListWindow->hide();
 }
 
 void MaskSelector::setMask(quint32 mask)
@@ -57,6 +68,8 @@ void MaskSelector::setUncheckedMask(quint32 uncheckedMask)
 void MaskSelector::retranslateUi()
 {
     retranslateMaskText();
+
+    m_btListWindow->setToolTip(titleText());
 }
 
 void MaskSelector::retranslateMaskText()
@@ -73,7 +86,7 @@ void MaskSelector::retranslateMaskText()
         countText += '^' + QString::number(uncheckedCount);
     }
 
-    this->setText(StringUtil::textWithDetails(titleText(), countText));
+    m_btMenu->setText(StringUtil::textWithDetails(titleText(), countText));
 }
 
 bool MaskSelector::removeCheckedId(int id)
@@ -86,16 +99,26 @@ bool MaskSelector::removeCheckedId(int id)
     return true;
 }
 
-void MaskSelector::setupUi(const QString &iconPath)
+void MaskSelector::setupUi(WindowCode listWindowCode, const QString &iconPath)
 {
-    setIcon(IconCache::icon(iconPath));
+    // Menu
+    m_btMenu = new PushButton();
 
     m_listLayout = new QVBoxLayout();
 
-    m_menu = ControlUtil::createMenuByLayout(m_listLayout, this);
-    this->setMenu(m_menu);
+    m_menu = ControlUtil::createMenuByLayout(m_listLayout, m_btMenu);
+    m_btMenu->setMenu(m_menu);
 
     connect(m_menu, &QMenu::aboutToShow, this, &MaskSelector::updateMenu);
+
+    // List Window
+    m_btListWindow = ControlUtil::createIconToolButton(
+            iconPath, [listWindowCode] { windowManager()->showWindowByCode(listWindowCode); });
+
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_btMenu, m_btListWindow }, /*margin=*/0);
+    layout->setSpacing(0);
+
+    this->setLayout(layout);
 }
 
 void MaskSelector::setupListModel()
@@ -166,7 +189,7 @@ void MaskSelector::updateMenuEnabled()
 {
     const bool isItemExist = (m_listModel->rowCount() != 0);
 
-    this->setMenu(isItemExist ? m_menu : nullptr);
+    m_btMenu->setEnabled(isItemExist);
 }
 
 void MaskSelector::onCheckBoxClicked()

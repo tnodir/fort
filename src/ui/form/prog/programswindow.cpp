@@ -19,6 +19,7 @@
 #include <form/conn/appconnswindow.h>
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/pushbutton.h>
 #include <form/controls/selector/groupsselector.h>
 #include <form/controls/tableview.h>
 #include <fortglobal.h>
@@ -169,7 +170,7 @@ void ProgramsWindow::retranslateUi()
     m_cbFilterKillProcess->setText(tr("Kill Process"));
     m_cbFilterObsolete->setText(tr("Obsolete"));
     m_btFilterGroups->retranslateUi();
-    m_btFilterGroups->setToolTip(tr("Filter by Groups"));
+    m_btFilterGroups->menuButton()->setToolTip(tr("Filter by Groups"));
 
     appListModel()->refresh();
 
@@ -512,7 +513,8 @@ void ProgramsWindow::setupFilterCheckBoxes()
 void ProgramsWindow::setupFilterGroups()
 {
     m_btFilterGroups = new GroupsSelector();
-    m_btFilterGroups->setFlat(true);
+    m_btFilterGroups->menuButton()->setFlat(true);
+    m_btFilterGroups->hideListWindowButton();
 
     connect(m_btFilterGroups, &GroupsSelector::maskChanged, this,
             [&] { appListModel()->setFilterGroups(m_btFilterGroups->mask()); });

@@ -1,10 +1,16 @@
 #ifndef MASKSELECTOR_H
 #define MASKSELECTOR_H
 
-#include <form/controls/pushbutton.h>
+#include <QWidget>
+
+#include <form/form_types.h>
 
 QT_FORWARD_DECLARE_CLASS(QAbstractItemModel)
 QT_FORWARD_DECLARE_CLASS(QBoxLayout)
+QT_FORWARD_DECLARE_CLASS(QMenu)
+QT_FORWARD_DECLARE_CLASS(QToolButton)
+
+class PushButton;
 
 struct MaskSelectorItem
 {
@@ -12,11 +18,15 @@ struct MaskSelectorItem
     QString text;
 };
 
-class MaskSelector : public PushButton
+class MaskSelector : public QWidget
 {
     Q_OBJECT
 
 public:
+    PushButton *menuButton() const { return m_btMenu; }
+
+    void hideListWindowButton();
+
     bool isTristate() const { return m_isTristate; }
     void setIsTristate(bool isTristate) { m_isTristate = isTristate; }
 
@@ -32,8 +42,8 @@ signals:
     void maskChanged();
 
 protected:
-    explicit MaskSelector(
-            QAbstractItemModel *listModel, const QString &iconPath, QWidget *parent = nullptr);
+    explicit MaskSelector(QAbstractItemModel *listModel, WindowCode listWindowCode,
+            const QString &iconPath, QWidget *parent = nullptr);
 
     void setMaxCount(int maxCount) { m_maxCount = maxCount; }
 
@@ -45,7 +55,7 @@ protected:
     bool removeCheckedId(int id);
 
 private:
-    void setupUi(const QString &iconPath);
+    void setupUi(WindowCode listWindowCode, const QString &iconPath);
     void setupListModel();
 
     void resetMenu();
@@ -68,6 +78,8 @@ private:
 
     QBoxLayout *m_listLayout = nullptr;
     QMenu *m_menu = nullptr;
+    PushButton *m_btMenu = nullptr;
+    QToolButton *m_btListWindow = nullptr;
 };
 
 #endif // MASKSELECTOR_H

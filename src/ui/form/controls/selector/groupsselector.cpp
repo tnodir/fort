@@ -1,6 +1,7 @@
 #include "groupsselector.h"
 
 #include <conf/confgroupmanager.h>
+#include <form/controls/pushbutton.h>
 #include <fortglobal.h>
 #include <model/grouplistmodel.h>
 #include <util/conf/confutil.h>
@@ -8,7 +9,7 @@
 using namespace Fort;
 
 GroupsSelector::GroupsSelector(QWidget *parent) :
-    MaskSelector(Fort::groupListModel(), ":/icons/application_double.png", parent)
+    MaskSelector(Fort::groupListModel(), WindowGroups, ":/icons/application_double.png", parent)
 {
     setMaxCount(ConfUtil::groupMaxCount());
 
@@ -19,9 +20,10 @@ void GroupsSelector::retranslateUi()
 {
     MaskSelector::retranslateUi();
 
-    this->setToolTip(tr("Select Groups.\n"
-                        "A program is enabled only if ANY of its exclusive groups is enabled,"
-                        " or, without exclusive groups, ANY of its groups is enabled."));
+    menuButton()->setToolTip(
+            tr("Select Groups.\n"
+               "A program is enabled only if ANY of its exclusive groups is enabled,"
+               " or, without exclusive groups, ANY of its groups is enabled."));
 }
 
 QString GroupsSelector::titleText() const
