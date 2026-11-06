@@ -15,9 +15,6 @@ public:
 protected:
     QString titleText() const override;
     MaskSelectorItem itemAt(int row) const override;
-
-private:
-    void setupZoneRemoved();
 };
 
 #endif // ZONESSELECTOR_H

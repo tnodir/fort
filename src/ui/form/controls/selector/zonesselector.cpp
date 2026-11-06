@@ -13,7 +13,8 @@ ZonesSelector::ZonesSelector(QWidget *parent) :
 {
     setMaxCount(ConfUtil::zoneMaxCount());
 
-    setupZoneRemoved();
+    connect(Fort::confZoneManager(), &ConfZoneManager::zoneRemoved, this,
+            &ZonesSelector::onIdRemoved);
 }
 
 void ZonesSelector::retranslateUi()
@@ -33,12 +34,4 @@ MaskSelectorItem ZonesSelector::itemAt(int row) const
     const auto &zoneRow = Fort::zoneListModel()->zoneRowAt(row);
 
     return { zoneRow.zoneId, zoneRow.zoneName };
-}
-
-void ZonesSelector::setupZoneRemoved()
-{
-    connect(Fort::confZoneManager(), &ConfZoneManager::zoneRemoved, this, [&](int zoneId) {
-        removeCheckedId(zoneId);
-        retranslateMaskText();
-    });
 }

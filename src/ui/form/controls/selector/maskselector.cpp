@@ -89,14 +89,17 @@ void MaskSelector::retranslateMaskText()
     m_btMenu->setText(StringUtil::textWithDetails(titleText(), countText));
 }
 
-bool MaskSelector::removeCheckedId(int id)
+void MaskSelector::onIdRemoved(int id)
 {
-    if ((m_mask & getIdMask(id)) == 0)
-        return false;
+    if (((m_mask | m_uncheckedMask) & getIdMask(id)) == 0)
+        return;
 
     setIdMask(m_mask, id, false);
+    setIdMask(m_uncheckedMask, id, false);
 
-    return true;
+    emit maskChanged();
+
+    retranslateMaskText();
 }
 
 void MaskSelector::setupUi(WindowCode listWindowCode, const QString &iconPath)

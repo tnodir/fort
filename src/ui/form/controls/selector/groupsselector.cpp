@@ -13,7 +13,8 @@ GroupsSelector::GroupsSelector(QWidget *parent) :
 {
     setMaxCount(ConfUtil::groupMaxCount());
 
-    setupGroupRemoved();
+    connect(Fort::confGroupManager(), &ConfGroupManager::groupRemoved, this,
+            &GroupsSelector::onIdRemoved);
 }
 
 void GroupsSelector::retranslateUi()
@@ -39,16 +40,4 @@ MaskSelectorItem GroupsSelector::itemAt(int row) const
             groupRow.exclusive ? groupRow.groupName + ' ' + tr("(exclusive)") : groupRow.groupName;
 
     return { groupRow.groupId, groupText };
-}
-
-void GroupsSelector::setupGroupRemoved()
-{
-    connect(Fort::confGroupManager(), &ConfGroupManager::groupRemoved, this, [&](quint8 groupId) {
-        if (!removeCheckedId(groupId))
-            return;
-
-        emit maskChanged();
-
-        retranslateMaskText();
-    });
 }

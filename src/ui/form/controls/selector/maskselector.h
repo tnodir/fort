@@ -50,11 +50,11 @@ protected:
     virtual QString titleText() const = 0;
     virtual MaskSelectorItem itemAt(int row) const = 0;
 
-    void retranslateMaskText();
-
-    bool removeCheckedId(int id);
+    void onIdRemoved(int id);
 
 private:
+    void retranslateMaskText();
+
     void setupUi(WindowCode listWindowCode, const QString &iconPath);
     void setupListModel();
 
