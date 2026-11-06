@@ -159,6 +159,7 @@ SOURCES += \
     form/rule/filtereditdialog.cpp \
     form/rule/ruleeditdialog.cpp \
     form/rule/rulescontroller.cpp \
+    form/rule/rulesetarea.cpp \
     form/rule/ruleswindow.cpp \
     form/speedlimit/speedlimiteditdialog.cpp \
     form/speedlimit/speedlimitscontroller.cpp \
@@ -492,6 +493,7 @@ HEADERS += \
     form/rule/filtereditdialog.h \
     form/rule/ruleeditdialog.h \
     form/rule/rulescontroller.h \
+    form/rule/rulesetarea.h \
     form/rule/ruleswindow.h \
     form/speedlimit/speedlimiteditdialog.h \
     form/speedlimit/speedlimitscontroller.h \

@@ -18,7 +18,7 @@ public:
 
     const RuleSetList &ruleSet() const { return m_ruleSet; }
 
-    void initialize(const RuleRow &ruleRow, const QStringList &ruleSetNames);
+    void initialize(const Rule &rule, const QStringList &ruleSetNames);
 
 signals:
     void rowCountChanged();

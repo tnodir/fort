@@ -14,9 +14,9 @@ QT_FORWARD_DECLARE_CLASS(QTabWidget)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class LineEdit;
-class ListView;
 class PlainTextEdit;
 class Rule;
+class RuleSetArea;
 class RuleSetModel;
 class RulesController;
 class TerminatingRuleSelector;
@@ -31,7 +31,7 @@ public:
     explicit RuleEditDialog(RulesController *ctrl, QWidget *parent = nullptr);
 
     RulesController *ctrl() const { return m_ctrl; }
-    RuleSetModel *ruleSetModel() const { return m_ruleSetModel; }
+    RuleSetModel *ruleSetModel() const;
 
     bool isEmpty() const { return m_ruleRow.ruleId == 0; }
 
@@ -61,15 +61,10 @@ private:
     QLayout *setupEnabledLayout();
     QLayout *setupActionsLayout();
     QLayout *setupZonesLayout();
-    QLayout *setupRuleSetHeaderLayout();
-    void setupRuleSetView();
-    void setupRuleSetViewChanged();
     QLayout *setupLogLayout();
     QLayout *setupButtons();
 
     void updateZonesLayout();
-
-    int ruleSetCurrentIndex() const;
 
     void confirmSave();
     void saveAndClose(Rule &rule);
@@ -89,12 +84,8 @@ private:
 
     void openFilterEditForm();
 
-    void selectPresetRuleDialog();
-    void editCurrentPresetRuleDialog();
-
 private:
     RulesController *m_ctrl = nullptr;
-    RuleSetModel *m_ruleSetModel = nullptr;
 
     QTabWidget *m_tabWidget = nullptr;
     QLabel *m_labelEditName = nullptr;
@@ -115,12 +106,7 @@ private:
     PlainTextEdit *m_editRuleText = nullptr;
     TerminatingRuleSelector *m_terminatingRuleSelector = nullptr;
     TimePeriodSelector *m_periodSelector = nullptr;
-    QToolButton *m_btAddPresetRule = nullptr;
-    QToolButton *m_btRemovePresetRule = nullptr;
-    QToolButton *m_btEditPresetRule = nullptr;
-    QToolButton *m_btUpPresetRule = nullptr;
-    QToolButton *m_btDownPresetRule = nullptr;
-    ListView *m_ruleSetView = nullptr;
+    RuleSetArea *m_ruleSetArea = nullptr;
     QCheckBox *m_cbLogAllowedConn = nullptr;
     QCheckBox *m_cbLogBlockedConn = nullptr;
     QPushButton *m_btOk = nullptr;

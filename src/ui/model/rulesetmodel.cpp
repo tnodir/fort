@@ -27,13 +27,13 @@ void RuleSetModel::setEdited(bool v)
     }
 }
 
-void RuleSetModel::initialize(const RuleRow &ruleRow, const QStringList &ruleSetNames)
+void RuleSetModel::initialize(const Rule &rule, const QStringList &ruleSetNames)
 {
     setEdited(false);
 
-    m_ruleType = ruleRow.ruleType;
-    m_ruleId = ruleRow.ruleId;
-    m_ruleSet = ruleRow.ruleSet;
+    m_ruleType = rule.ruleType;
+    m_ruleId = rule.ruleId;
+    m_ruleSet = rule.ruleSet;
 
     setList(ruleSetNames);
 }

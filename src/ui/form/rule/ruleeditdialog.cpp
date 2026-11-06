@@ -15,7 +15,6 @@
 #include <conf/presetrulesmanager.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
-#include <form/controls/listview.h>
 #include <form/controls/plaintextedit.h>
 #include <form/controls/selector/terminatingruleselector.h>
 #include <form/controls/selector/timeperiodselector.h>
@@ -33,7 +32,7 @@
 
 #include "filtereditdialog.h"
 #include "rulescontroller.h"
-#include "ruleswindow.h"
+#include "rulesetarea.h"
 
 using namespace Fort;
 
@@ -44,10 +43,15 @@ const QSize appIconSize(32, 32);
 }
 
 RuleEditDialog::RuleEditDialog(RulesController *ctrl, QWidget *parent) :
-    QDialog(parent), m_ctrl(ctrl), m_ruleSetModel(new RuleSetModel(this))
+    QDialog(parent), m_ctrl(ctrl)
 {
     setupUi();
     setupController();
+}
+
+RuleSetModel *RuleEditDialog::ruleSetModel() const
+{
+    return m_ruleSetArea->ruleSetModel();
 }
 
 void RuleEditDialog::initialize(const RuleRow &ruleRow)
@@ -123,7 +127,7 @@ void RuleEditDialog::initializeRuleSet(quint16 ruleId)
 
     m_ruleRow.ruleSet = rule.ruleSet;
 
-    ruleSetModel()->initialize(m_ruleRow, ruleSetNames);
+    m_ruleSetArea->initialize(m_ruleRow, ruleSetNames);
 }
 
 void RuleEditDialog::initializeFocus()
@@ -178,11 +182,7 @@ void RuleEditDialog::retranslateUi()
     m_periodSelector->retranslateUi();
     m_periodSelector->setToolTip(tr("The Rule is active only in this Time Period."));
 
-    m_btAddPresetRule->setText(tr("Add Preset Rule"));
-    m_btRemovePresetRule->setText(tr("Remove"));
-    m_btEditPresetRule->setText(tr("Edit"));
-    m_btUpPresetRule->setToolTip(tr("Move Up"));
-    m_btDownPresetRule->setToolTip(tr("Move Down"));
+    m_ruleSetArea->retranslateUi();
 
     m_cbLogAllowedConn->setText(tr("Collect allowed connections"));
     m_cbLogBlockedConn->setText(tr("Collect blocked connections"));
@@ -310,18 +310,11 @@ QWidget *RuleEditDialog::setupGeneralTab()
 
 QWidget *RuleEditDialog::setupPresetsTab()
 {
-    // RuleSet Header
-    auto ruleSetHeaderLayout = setupRuleSetHeaderLayout();
-
-    // RuleSet View
-    setupRuleSetView();
-
-    // Actions on rule set view's current changed
-    setupRuleSetViewChanged();
+    // Rule Set
+    m_ruleSetArea = new RuleSetArea(Rule::ruleTypeBit(Rule::PresetRule));
 
     auto layout = new QVBoxLayout();
-    layout->addLayout(ruleSetHeaderLayout);
-    layout->addWidget(m_ruleSetView);
+    layout->addWidget(m_ruleSetArea);
 
     return ControlUtil::wrapToWidget(layout);
 }
@@ -435,54 +428,6 @@ QLayout *RuleEditDialog::setupZonesLayout()
     return layout;
 }
 
-QLayout *RuleEditDialog::setupRuleSetHeaderLayout()
-{
-    m_btAddPresetRule =
-            ControlUtil::createFlatToolButton(":/icons/add.png", [&] { selectPresetRuleDialog(); });
-    m_btRemovePresetRule = ControlUtil::createFlatToolButton(
-            ":/icons/delete.png", [&] { ruleSetModel()->remove(ruleSetCurrentIndex()); });
-    m_btEditPresetRule = ControlUtil::createFlatToolButton(
-            ":/icons/pencil.png", [&] { editCurrentPresetRuleDialog(); });
-    m_btUpPresetRule = ControlUtil::createIconToolButton(
-            ":/icons/bullet_arrow_up.png", [&] { ruleSetModel()->moveUp(ruleSetCurrentIndex()); });
-    m_btDownPresetRule = ControlUtil::createIconToolButton(":/icons/bullet_arrow_down.png",
-            [&] { ruleSetModel()->moveDown(ruleSetCurrentIndex()); });
-
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_btAddPresetRule, m_btRemovePresetRule,
-            m_btEditPresetRule, ControlUtil::createVSeparator(), m_btUpPresetRule,
-            m_btDownPresetRule, /*stretch*/ nullptr });
-
-    return layout;
-}
-
-void RuleEditDialog::setupRuleSetView()
-{
-    m_ruleSetView = new ListView();
-    m_ruleSetView->setFlow(QListView::TopToBottom);
-    m_ruleSetView->setViewMode(QListView::ListMode);
-    m_ruleSetView->setUniformItemSizes(true);
-    m_ruleSetView->setAlternatingRowColors(true);
-
-    m_ruleSetView->setModel(ruleSetModel());
-
-    connect(m_ruleSetView, &ListView::doubleClicked, m_btEditPresetRule, &QToolButton::click);
-}
-
-void RuleEditDialog::setupRuleSetViewChanged()
-{
-    const auto refreshRuleSetViewChanged = [&] {
-        const bool ruleSelected = (ruleSetCurrentIndex() >= 0);
-        m_btRemovePresetRule->setEnabled(ruleSelected);
-        m_btEditPresetRule->setEnabled(ruleSelected);
-        m_btUpPresetRule->setEnabled(ruleSelected);
-        m_btDownPresetRule->setEnabled(ruleSelected);
-    };
-
-    refreshRuleSetViewChanged();
-
-    connect(m_ruleSetView, &ListView::currentIndexChanged, this, refreshRuleSetViewChanged);
-}
-
 QLayout *RuleEditDialog::setupLogLayout()
 {
     m_cbLogAllowedConn = new QCheckBox();
@@ -515,11 +460,6 @@ void RuleEditDialog::updateZonesLayout()
     const bool enabled = m_rbAllow->isChecked();
 
     m_cbExclusive->setEnabled(enabled);
-}
-
-int RuleEditDialog::ruleSetCurrentIndex() const
-{
-    return m_ruleSetView->currentRow();
 }
 
 void RuleEditDialog::confirmSave()
@@ -690,18 +630,4 @@ void RuleEditDialog::openFilterEditForm()
     w->initialize();
 
     DialogUtil::showDialog(w);
-}
-
-void RuleEditDialog::selectPresetRuleDialog()
-{
-    auto rulesDialog = RulesWindow::showRulesDialog(Rule::ruleTypeBit(Rule::PresetRule), this);
-
-    connect(rulesDialog, &RulesWindow::ruleSelected, ruleSetModel(), &RuleSetModel::addRule);
-}
-
-void RuleEditDialog::editCurrentPresetRuleDialog()
-{
-    const int ruleId = ruleSetModel()->ruleSet().value(ruleSetCurrentIndex());
-
-    RulesWindow::showRuleEditDialog(ruleId, this);
 }
