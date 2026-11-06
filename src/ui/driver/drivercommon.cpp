@@ -62,15 +62,14 @@ BOOL connZonesConnFiltered(
     return fort_conf_zones_conn_filtered(zones, conn, opt, /*fast_check=*/TRUE);
 }
 
-BOOL connRulesConnFiltered(void *ctx, PFORT_CONF_META_CONN conn, UINT16 rule_id)
+BOOL connAppRuleConnFiltered(void *ctx, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
     const ConnFilterConf *cf = connFilterConf(ctx);
-    if (cf->drvRules == nullptr)
-        return false;
 
-    const FORT_CONF_RULES_RT rules_rt = connFilterRulesRt(*cf);
+    const FORT_CONF_RULES_RT rules_rt =
+            (cf->drvRules != nullptr) ? connFilterRulesRt(*cf) : FORT_CONF_RULES_RT {};
 
-    return fort_conf_rules_rt_conn_filtered(&rules_rt, conn, rule_id);
+    return fort_conf_app_rule_conn_filtered(&rules_rt, conn, rule);
 }
 
 UINT16 connRulesGlobConnFiltered(void *ctx, PFORT_CONF_META_CONN conn, BOOL is_post)
@@ -97,7 +96,7 @@ UINT16 connGroupsRulesConnFiltered(void *ctx, PFORT_CONF_META_CONN conn, UINT32 
 inline constexpr FORT_CONF_CONN_FILTER_FUNCS connFilterFuncs = {
     .zones_ip_included = &connZonesIpIncluded,
     .zones_conn_filtered = &connZonesConnFiltered,
-    .rules_conn_filtered = &connRulesConnFiltered,
+    .app_rule_conn_filtered = &connAppRuleConnFiltered,
     .rules_glob_conn_filtered = &connRulesGlobConnFiltered,
     .groups_mask_blocked = &connGroupsMaskBlocked,
     .groups_rules_conn_filtered = &connGroupsRulesConnFiltered,

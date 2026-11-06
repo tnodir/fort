@@ -878,10 +878,11 @@ TEST_F(ConnFilterTest, appFilters)
     ASSERT_TRUE(connAllowed("C:\\Prefix\\app.exe", conn));
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM);
 
-    // The Program's Rule is checked before its filters
+    // The Program's filters are checked before its Rules
     conn = connFilterConn("1.1.1.1");
-    ASSERT_TRUE(connAllowed("C:\\App\\rule.exe", conn));
-    ASSERT_EQ(conn.reason, FORT_CONN_REASON_RULE);
+    ASSERT_FALSE(connAllowed("C:\\App\\rule.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM_FILTER);
+    ASSERT_EQ(conn.rule_id, 0);
 }
 
 TEST_F(ConnFilterTest, appZones)

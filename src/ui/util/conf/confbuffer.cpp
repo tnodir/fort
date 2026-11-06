@@ -72,6 +72,12 @@ FORT_CONF_RULE confRuleFlags(const Rule &rule)
     return confRule;
 }
 
+// The Program's rule without Network Filters and Rules
+bool isAppRuleEmpty(const Rule &rule)
+{
+    return rule.ruleText.isEmpty() && !rule.terminate && rule.ruleSet.isEmpty();
+}
+
 }
 
 ConfBuffer::ConfBuffer(const QByteArray &buffer, QObject *parent) :
@@ -429,7 +435,6 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
         },
         .zones = app.zones,
         .speed_limits = app.activeSpeedLimits(),
-        .rule_id = app.ruleId,
         .groups = app.groups,
         .app_id = quint32(app.appId),
     };
@@ -441,17 +446,23 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
 
 bool ConfBuffer::parseAppRule(const App &app, QByteArray &ruleData)
 {
-    if (app.filtersText.isEmpty())
-        return true; // no Network Filters
-
     Rule rule;
-    ConfUtil::parseAppFiltersText(app.filtersText, rule);
+    if (!app.filtersText.isEmpty()) {
+        ConfUtil::parseAppFiltersText(app.filtersText, rule);
+    }
 
-    if (rule.ruleText.isEmpty() && !rule.terminate)
-        return true; // no Network Filters
+    if (app.ruleId != 0) {
+        rule.ruleSet = { app.ruleId };
+    }
+
+    if (isAppRuleEmpty(rule))
+        return true; // no Network Filters and Rules
+
+    const auto ruleSet = QByteArray::fromRawData((const char *) rule.ruleSet.constData(),
+            FORT_CONF_RULES_SET_INDEXES_SIZE(rule.ruleSet.size()));
 
     ConfBuffer ruleBuf;
-    if (!ruleBuf.writeRuleData(rule)) {
+    if (!ruleBuf.writeRuleData(rule, ruleSet)) {
         setErrorMessage(ruleBuf.errorMessage());
         return false;
     }

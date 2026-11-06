@@ -97,8 +97,8 @@ static BOOL fort_conf_app_entry_rule_valid(PCFORT_APP_ENTRY app_entry)
     if (!fort_conf_rule_data_valid(rule, rule_size, &size) || size != rule_size)
         return FALSE;
 
-    /* The Program's rule has no zones and set */
-    return !rule->has_zones && rule->set_count == 0;
+    /* The Program's rule has no zones */
+    return !rule->has_zones;
 }
 
 FORT_API BOOL fort_conf_app_entry_valid(PCFORT_APP_ENTRY app_entry, UINT32 len)

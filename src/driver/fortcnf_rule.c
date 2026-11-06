@@ -64,18 +64,22 @@ FORT_API FORT_CONF_RULES_RT fort_devconf_rules_rt_make(
     return fort_conf_rules_rt_make(rules, device_conf->zones, device_conf->active_periods_mask);
 }
 
-FORT_API BOOL fort_devconf_rules_conn_filtered(
-        PFORT_DEVICE_CONF device_conf, PFORT_CONF_META_CONN conn, UINT16 rule_id)
+FORT_API BOOL fort_devconf_app_rule_conn_filtered(
+        PFORT_DEVICE_CONF device_conf, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
-    BOOL res = FALSE;
+    FORT_CONF_RULES_RT rules_rt = { 0 };
+
+    /* The rule without a set doesn't look up the Rules: don't lock */
+    if (rule->set_count == 0) {
+        return fort_conf_app_rule_conn_filtered(&rules_rt, conn, rule);
+    }
 
     KIRQL oldIrql = ExAcquireSpinLockShared(&device_conf->lock);
-    PFORT_CONF_RULES rules = device_conf->rules;
+    PCFORT_CONF_RULES rules = device_conf->rules;
     if (rules != NULL) {
-        const FORT_CONF_RULES_RT rules_rt = fort_devconf_rules_rt_make(device_conf, rules);
-
-        res = fort_conf_rules_rt_conn_filtered(&rules_rt, conn, rule_id);
+        rules_rt = fort_devconf_rules_rt_make(device_conf, rules);
     }
+    const BOOL res = fort_conf_app_rule_conn_filtered(&rules_rt, conn, rule);
     ExReleaseSpinLockShared(&device_conf->lock, oldIrql);
 
     return res;

@@ -403,10 +403,10 @@ static BOOL fort_callout_ale_zones_conn_filtered(
     return fort_devconf_zones_conn_filtered(ctx, conn, opt);
 }
 
-static BOOL fort_callout_ale_rules_conn_filtered(
-        void *ctx, PFORT_CONF_META_CONN conn, UINT16 rule_id)
+static BOOL fort_callout_ale_app_rule_conn_filtered(
+        void *ctx, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
-    return fort_devconf_rules_conn_filtered(ctx, conn, rule_id);
+    return fort_devconf_app_rule_conn_filtered(ctx, conn, rule);
 }
 
 static UINT16 fort_callout_ale_rules_glob_conn_filtered(
@@ -429,7 +429,7 @@ static UINT16 fort_callout_ale_groups_rules_conn_filtered(
 static const FORT_CONF_CONN_FILTER_FUNCS fort_callout_ale_filter_funcs = {
     .zones_ip_included = &fort_callout_ale_zones_ip_included,
     .zones_conn_filtered = &fort_callout_ale_zones_conn_filtered,
-    .rules_conn_filtered = &fort_callout_ale_rules_conn_filtered,
+    .app_rule_conn_filtered = &fort_callout_ale_app_rule_conn_filtered,
     .rules_glob_conn_filtered = &fort_callout_ale_rules_glob_conn_filtered,
     .groups_mask_blocked = &fort_callout_ale_groups_mask_blocked,
     .groups_rules_conn_filtered = &fort_callout_ale_groups_rules_conn_filtered,

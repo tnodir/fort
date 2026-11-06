@@ -20,8 +20,8 @@ FORT_API void fort_conf_periods_set(PFORT_DEVICE_CONF device_conf, PCFORT_CONF_P
 FORT_API FORT_CONF_RULES_RT fort_devconf_rules_rt_make(
         PFORT_DEVICE_CONF device_conf, PCFORT_CONF_RULES rules);
 
-FORT_API BOOL fort_devconf_rules_conn_filtered(
-        PFORT_DEVICE_CONF device_conf, PFORT_CONF_META_CONN conn, UINT16 rule_id);
+FORT_API BOOL fort_devconf_app_rule_conn_filtered(
+        PFORT_DEVICE_CONF device_conf, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule);
 
 FORT_API UINT16 fort_devconf_rules_glob_conn_filtered(
         PFORT_DEVICE_CONF device_conf, PFORT_CONF_META_CONN conn, BOOL is_post);

@@ -1085,12 +1085,11 @@ FORT_API BOOL fort_conf_rules_rt_conn_filtered(
     return fort_conf_rules_rt_conn_filtered_depth(rules_rt, conn, rule_id, /*depth=*/0);
 }
 
-FORT_API BOOL fort_conf_app_rule_conn_filtered(PCFORT_CONF_RULE rule, PFORT_CONF_META_CONN conn)
+FORT_API BOOL fort_conf_app_rule_conn_filtered(
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
-    /* The Program's rule has no zones and set to look up */
-    const FORT_CONF_RULES_RT rules_rt = { 0 };
-
-    return fort_conf_rules_rt_rule_conn_filtered(&rules_rt, conn, rule, /*depth=*/0);
+    /* The Program's rule has no zones and Time Period: the Rules are of its set */
+    return fort_conf_rules_rt_rule_conn_filtered(rules_rt, conn, rule, /*depth=*/0);
 }
 
 FORT_API UINT16 fort_conf_rules_glob_conn_filtered(

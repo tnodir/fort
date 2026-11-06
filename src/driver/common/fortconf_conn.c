@@ -75,18 +75,6 @@ inline static BOOL fort_conf_conn_rule_id_filtered(
     return TRUE;
 }
 
-inline static BOOL fort_conf_conn_rule_filtered(
-        PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn, UINT16 rule_id)
-{
-    if (rule_id == 0)
-        return FALSE;
-
-    if (!filter->funcs->rules_conn_filtered(filter->ctx, conn, rule_id))
-        return FALSE;
-
-    return fort_conf_conn_rule_id_filtered(conn, rule_id, FORT_CONN_REASON_RULE);
-}
-
 inline static BOOL fort_conf_conn_glob_rule_filtered(
         PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn, BOOL is_post, UCHAR reason)
 {
@@ -95,16 +83,18 @@ inline static BOOL fort_conf_conn_glob_rule_filtered(
     return fort_conf_conn_rule_id_filtered(conn, rule_id, reason);
 }
 
-inline static BOOL fort_conf_conn_app_rule_filtered(PFORT_CONF_META_CONN conn)
+inline static BOOL fort_conf_conn_app_rule_filtered(
+        PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn)
 {
     PCFORT_CONF_RULE rule = conn->app.rule;
     if (rule == NULL)
         return FALSE;
 
-    if (!fort_conf_app_rule_conn_filtered(rule, conn))
+    if (!filter->funcs->app_rule_conn_filtered(filter->ctx, conn, rule))
         return FALSE;
 
-    conn->reason = FORT_CONN_REASON_PROGRAM_FILTER;
+    /* A Rule of the rule's set keeps its id */
+    conn->reason = (conn->rule_id != 0) ? FORT_CONN_REASON_RULE : FORT_CONN_REASON_PROGRAM_FILTER;
     return TRUE;
 }
 
@@ -176,10 +166,8 @@ static BOOL fort_conf_conn_app_filtered(
     if (fort_conf_conn_groups_rule_filtered(filter, conn, app_data.groups))
         return TRUE; /* filtered by the Groups' Rules */
 
-    if (fort_conf_conn_rule_filtered(filter, conn, app_data.rule_id))
-        return TRUE; /* filtered by the Program's Rule */
-
-    return fort_conf_conn_app_rule_filtered(conn);
+    /* The Program's Network Filters, then its Rules */
+    return fort_conf_conn_app_rule_filtered(filter, conn);
 }
 
 FORT_API BOOL fort_conf_app_asked(const FORT_CONF_FLAGS conf_flags, const FORT_APP_DATA app_data)

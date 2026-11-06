@@ -394,8 +394,6 @@ typedef struct fort_app_data
 
     FORT_SPEED_LIMIT_IDS speed_limits;
 
-    UINT16 rule_id;
-
     UINT32 groups; /* Group ids bit mask, 0 - no Group */
 
     UINT32 app_id;
@@ -407,8 +405,8 @@ typedef struct fort_app_entry
 {
     FORT_APP_DATA app_data;
 
-    /* The Program's Network Filters: the rule without zones, set and Time Period, after the path,
-     * 0 - none */
+    /* The Program's rule: its Network Filters and Rules (the rule's set), without zones and
+     * Time Period, after the path, 0 - none */
     UINT32 rule_size;
 
     UINT16 path_len;
@@ -436,7 +434,7 @@ typedef struct fort_conf_app_find_result
 {
     FORT_APP_DATA data;
 
-    PCFORT_CONF_RULE rule; /* the Program's Network Filters, NULL - none */
+    PCFORT_CONF_RULE rule; /* the Program's Network Filters and Rules, NULL - none */
 } FORT_CONF_APP_FIND_RESULT, *PFORT_CONF_APP_FIND_RESULT;
 
 #define FORT_PATH_BUFFER_DATA_MIN      (128 + 32)
@@ -729,7 +727,8 @@ FORT_API BOOL fort_conf_rules_rt_conn_filtered(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id);
 
 /* Checks the Program's Network Filters' rule */
-FORT_API BOOL fort_conf_app_rule_conn_filtered(PCFORT_CONF_RULE rule, PFORT_CONF_META_CONN conn);
+FORT_API BOOL fort_conf_app_rule_conn_filtered(
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule);
 
 #define fort_conf_rules_glob_rule_id(glob, is_post)                                                \
     ((is_post) ? (glob).post_rule_id : (glob).pre_rule_id)
