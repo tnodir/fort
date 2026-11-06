@@ -735,7 +735,7 @@ void TrayIcon::sendAlertMessage()
         return;
 
     if (iniUser.progNotifyMessage()) {
-        showTrayMessage(tr("New program detected!"), tray::MessageAlert);
+        showTrayMessage(tr("New program(s) request network access"), tray::MessageAlert);
     }
 
     if (iniUser.progAlertSound()) {
