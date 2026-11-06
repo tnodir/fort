@@ -2398,6 +2398,10 @@ Make sure that you have a fresh backup.</source>
         <source>Cancel</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Rules</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ProgMorePage</name>
@@ -2805,10 +2809,6 @@ Please check other program with the same path.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Add Preset Rule</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>General</source>
         <translation></translation>
     </message>
@@ -2821,18 +2821,6 @@ Please check other program with the same path.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Move Up</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Move Down</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
@@ -2840,10 +2828,6 @@ Save the changes?</source>
     </message>
     <message>
         <source>Global rules count exceeded!</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Edit</source>
         <translation></translation>
     </message>
     <message>
@@ -2910,6 +2894,33 @@ Save the changes?</source>
     </message>
     <message>
         <source>Select Rule</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>RuleSetArea</name>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Add Rule</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Move Down</source>
         <translation></translation>
     </message>
 </context>

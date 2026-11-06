@@ -2401,6 +2401,10 @@ Make sure that you have a fresh backup.</source>
         <source>Cancel</source>
         <translation>انصراف</translation>
     </message>
+    <message>
+        <source>Rules</source>
+        <translation>قوانین</translation>
+    </message>
 </context>
 <context>
     <name>ProgMorePage</name>
@@ -2814,10 +2818,6 @@ Please check other program with the same path.</source>
         <translation># آدرس IP و پورت:</translation>
     </message>
     <message>
-        <source>Add Preset Rule</source>
-        <translation>افزودن قانون از پیش تعیین‌شده</translation>
-    </message>
-    <message>
         <source>General</source>
         <translation>عمومی</translation>
     </message>
@@ -2830,18 +2830,6 @@ Please check other program with the same path.</source>
         <translation>بیشتر</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>حذف</translation>
-    </message>
-    <message>
-        <source>Move Up</source>
-        <translation>انتقال به بالا</translation>
-    </message>
-    <message>
-        <source>Move Down</source>
-        <translation>انتقال به پایین</translation>
-    </message>
-    <message>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
@@ -2852,10 +2840,6 @@ Save the changes?</source>
     <message>
         <source>Global rules count exceeded!</source>
         <translation>تعداد قوانین سراسری از حد مجاز بیشتر شد!</translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation>ویرایش</translation>
     </message>
     <message>
         <source>Tray Menu</source>
@@ -2922,6 +2906,33 @@ Save the changes?</source>
     <message>
         <source>Select Rule</source>
         <translation>انتخاب قانون</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSetArea</name>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation>افزودن قانون از پیش تعیین‌شده</translation>
+    </message>
+    <message>
+        <source>Add Rule</source>
+        <translation>افزودن قانون</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>حذف</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>ویرایش</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>انتقال به بالا</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>انتقال به پایین</translation>
     </message>
 </context>
 <context>

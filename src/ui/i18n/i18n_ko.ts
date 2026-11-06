@@ -2401,6 +2401,10 @@ Make sure that you have a fresh backup.</source>
         <source>Cancel</source>
         <translation>취소</translation>
     </message>
+    <message>
+        <source>Rules</source>
+        <translation>규칙</translation>
+    </message>
 </context>
 <context>
     <name>ProgMorePage</name>
@@ -2814,10 +2818,6 @@ Please check other program with the same path.</source>
         <translation># IP 주소 및 포트</translation>
     </message>
     <message>
-        <source>Add Preset Rule</source>
-        <translation>사전 설정 규칙 추가</translation>
-    </message>
-    <message>
         <source>General</source>
         <translation>일반</translation>
     </message>
@@ -2830,18 +2830,6 @@ Please check other program with the same path.</source>
         <translation>더 보기</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>제거</translation>
-    </message>
-    <message>
-        <source>Move Up</source>
-        <translation>위로 이동</translation>
-    </message>
-    <message>
-        <source>Move Down</source>
-        <translation>아래로 이동</translation>
-    </message>
-    <message>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
@@ -2852,10 +2840,6 @@ Save the changes?</source>
     <message>
         <source>Global rules count exceeded!</source>
         <translation>전역 규칙 수가 초과되었습니다!</translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation>편집</translation>
     </message>
     <message>
         <source>Tray Menu</source>
@@ -2922,6 +2906,33 @@ Save the changes?</source>
     <message>
         <source>Select Rule</source>
         <translation>규칙 선택</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSetArea</name>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation>사전 설정 규칙 추가</translation>
+    </message>
+    <message>
+        <source>Add Rule</source>
+        <translation>규칙 추가</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>제거</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>편집</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>위로 이동</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>아래로 이동</translation>
     </message>
 </context>
 <context>

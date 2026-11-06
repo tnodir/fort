@@ -2401,6 +2401,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <source>Cancel</source>
         <translation>Prekliči</translation>
     </message>
+    <message>
+        <source>Rules</source>
+        <translation>Pravila</translation>
+    </message>
 </context>
 <context>
     <name>ProgMorePage</name>
@@ -2814,10 +2818,6 @@ Preverite drug program z isto potjo.</translation>
         <translation># Naslov-IP in vrata:</translation>
     </message>
     <message>
-        <source>Add Preset Rule</source>
-        <translation>Dodajte prednastavljeno pravilo</translation>
-    </message>
-    <message>
         <source>General</source>
         <translation>Splošno</translation>
     </message>
@@ -2830,18 +2830,6 @@ Preverite drug program z isto potjo.</translation>
         <translation>Več</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>Odstrani</translation>
-    </message>
-    <message>
-        <source>Move Up</source>
-        <translation>Premakni gor</translation>
-    </message>
-    <message>
-        <source>Move Down</source>
-        <translation>Premik navzdol</translation>
-    </message>
-    <message>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
@@ -2852,10 +2840,6 @@ Shraniti spremembe?</translation>
     <message>
         <source>Global rules count exceeded!</source>
         <translation>Število globalnih pravil je preseženo!</translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation>Uredi</translation>
     </message>
     <message>
         <source>Tray Menu</source>
@@ -2922,6 +2906,33 @@ Shraniti spremembe?</translation>
     <message>
         <source>Select Rule</source>
         <translation>Izberite Pravilo</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSetArea</name>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation>Dodajte prednastavljeno pravilo</translation>
+    </message>
+    <message>
+        <source>Add Rule</source>
+        <translation>Dodajte pravilo</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Odstrani</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Uredi</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>Premakni gor</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>Premik navzdol</translation>
     </message>
 </context>
 <context>

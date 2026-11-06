@@ -2401,6 +2401,10 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
+    <message>
+        <source>Rules</source>
+        <translation>Règles</translation>
+    </message>
 </context>
 <context>
     <name>ProgMorePage</name>
@@ -2814,10 +2818,6 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
         <translation># Adresse IP et port :</translation>
     </message>
     <message>
-        <source>Add Preset Rule</source>
-        <translation>Ajouter une règle prédéfinie</translation>
-    </message>
-    <message>
         <source>General</source>
         <translation>Général</translation>
     </message>
@@ -2830,18 +2830,6 @@ Veuillez vérifier un autre programme avec le même chemin.</translation>
         <translation>Plus</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>Retirer</translation>
-    </message>
-    <message>
-        <source>Move Up</source>
-        <translation>Monter</translation>
-    </message>
-    <message>
-        <source>Move Down</source>
-        <translation>Descendre</translation>
-    </message>
-    <message>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
@@ -2852,10 +2840,6 @@ Enregistrer les modifications ?</translation>
     <message>
         <source>Global rules count exceeded!</source>
         <translation>Nombre de règles globales dépassé!</translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation>Éditer</translation>
     </message>
     <message>
         <source>Tray Menu</source>
@@ -2922,6 +2906,33 @@ Enregistrer les modifications ?</translation>
     <message>
         <source>Select Rule</source>
         <translation>Sélectionner une règle</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSetArea</name>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation>Ajouter une règle prédéfinie</translation>
+    </message>
+    <message>
+        <source>Add Rule</source>
+        <translation>Ajouter une règle</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Retirer</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Éditer</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>Monter</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>Descendre</translation>
     </message>
 </context>
 <context>

@@ -2401,6 +2401,10 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <source>Cancel</source>
         <translation>İptal Et</translation>
     </message>
+    <message>
+        <source>Rules</source>
+        <translation>Kurallar</translation>
+    </message>
 </context>
 <context>
     <name>ProgMorePage</name>
@@ -2813,10 +2817,6 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <translation># IP adresi ve Port:</translation>
     </message>
     <message>
-        <source>Add Preset Rule</source>
-        <translation>Önceden Ayarlanmış Kural Ekle</translation>
-    </message>
-    <message>
         <source>General</source>
         <translation>Genel</translation>
     </message>
@@ -2829,18 +2829,6 @@ Lütfen aynı yolu kullanan başka bir programı dene.</translation>
         <translation>Diğer</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>Kaldır</translation>
-    </message>
-    <message>
-        <source>Move Up</source>
-        <translation>Yukarıya Taşı</translation>
-    </message>
-    <message>
-        <source>Move Down</source>
-        <translation>Aşağıya Taşı</translation>
-    </message>
-    <message>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
@@ -2851,10 +2839,6 @@ Değişiklikler kaydedilsin mi?</translation>
     <message>
         <source>Global rules count exceeded!</source>
         <translation>Global Kuralların Sayısı Aşıldı! </translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation>Düzenle</translation>
     </message>
     <message>
         <source>Tray Menu</source>
@@ -2921,6 +2905,33 @@ Değişiklikler kaydedilsin mi?</translation>
     <message>
         <source>Select Rule</source>
         <translation>Kural Seç</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSetArea</name>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation>Önceden Ayarlanmış Kural Ekle</translation>
+    </message>
+    <message>
+        <source>Add Rule</source>
+        <translation>Kural Ekle</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Kaldır</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Düzenle</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>Yukarıya Taşı</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>Aşağıya Taşı</translation>
     </message>
 </context>
 <context>

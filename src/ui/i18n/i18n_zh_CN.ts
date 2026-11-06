@@ -2401,6 +2401,10 @@ Make sure that you have a fresh backup.</source>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
+    <message>
+        <source>Rules</source>
+        <translation>规则</translation>
+    </message>
 </context>
 <context>
     <name>ProgMorePage</name>
@@ -2814,10 +2818,6 @@ Please check other program with the same path.</source>
         <translation># IP 地址和端口：</translation>
     </message>
     <message>
-        <source>Add Preset Rule</source>
-        <translation>添加预设规则</translation>
-    </message>
-    <message>
         <source>General</source>
         <translation>通用</translation>
     </message>
@@ -2830,18 +2830,6 @@ Please check other program with the same path.</source>
         <translation>更多</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>删除</translation>
-    </message>
-    <message>
-        <source>Move Up</source>
-        <translation>上移</translation>
-    </message>
-    <message>
-        <source>Move Down</source>
-        <translation>下移</translation>
-    </message>
-    <message>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
@@ -2852,10 +2840,6 @@ Save the changes?</source>
     <message>
         <source>Global rules count exceeded!</source>
         <translation>全局规则数量已超限！</translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation>编辑</translation>
     </message>
     <message>
         <source>Tray Menu</source>
@@ -2922,6 +2906,33 @@ Save the changes?</source>
     <message>
         <source>Select Rule</source>
         <translation>选择规则</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSetArea</name>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation>添加预设规则</translation>
+    </message>
+    <message>
+        <source>Add Rule</source>
+        <translation>添加规则</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>编辑</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>上移</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>下移</translation>
     </message>
 </context>
 <context>

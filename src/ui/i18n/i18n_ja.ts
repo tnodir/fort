@@ -2401,6 +2401,10 @@ Make sure that you have a fresh backup.</source>
         <source>Cancel</source>
         <translation>キャンセル</translation>
     </message>
+    <message>
+        <source>Rules</source>
+        <translation>ルール</translation>
+    </message>
 </context>
 <context>
     <name>ProgMorePage</name>
@@ -2814,10 +2818,6 @@ Please check other program with the same path.</source>
         <translation># IP アドレスとポート :</translation>
     </message>
     <message>
-        <source>Add Preset Rule</source>
-        <translation>プリセット ルールの追加</translation>
-    </message>
-    <message>
         <source>General</source>
         <translation>全般</translation>
     </message>
@@ -2830,18 +2830,6 @@ Please check other program with the same path.</source>
         <translation>その他</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>削除</translation>
-    </message>
-    <message>
-        <source>Move Up</source>
-        <translation>上へ移動</translation>
-    </message>
-    <message>
-        <source>Move Down</source>
-        <translation>下へ移動</translation>
-    </message>
-    <message>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
@@ -2852,10 +2840,6 @@ Save the changes?</source>
     <message>
         <source>Global rules count exceeded!</source>
         <translation>グローバルルールの数を超えました!</translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation>編集</translation>
     </message>
     <message>
         <source>Tray Menu</source>
@@ -2922,6 +2906,33 @@ Save the changes?</source>
     <message>
         <source>Select Rule</source>
         <translation>ルールの選択</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSetArea</name>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation>プリセット ルールの追加</translation>
+    </message>
+    <message>
+        <source>Add Rule</source>
+        <translation>ルールの追加</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>削除</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>編集</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>上へ移動</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>下へ移動</translation>
     </message>
 </context>
 <context>

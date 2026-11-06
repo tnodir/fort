@@ -2401,6 +2401,10 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <source>Cancel</source>
         <translation>Anuluj</translation>
     </message>
+    <message>
+        <source>Rules</source>
+        <translation>Reguły</translation>
+    </message>
 </context>
 <context>
     <name>ProgMorePage</name>
@@ -2814,10 +2818,6 @@ Sprawdź inny program o tej samej ścieżce.</translation>
         <translation># adresów IP i portów:</translation>
     </message>
     <message>
-        <source>Add Preset Rule</source>
-        <translation>Dodaj istniejącą regułę</translation>
-    </message>
-    <message>
         <source>General</source>
         <translation>Ogólne</translation>
     </message>
@@ -2830,18 +2830,6 @@ Sprawdź inny program o tej samej ścieżce.</translation>
         <translation>Więcej</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>Usuń</translation>
-    </message>
-    <message>
-        <source>Move Up</source>
-        <translation>Przesuń wyżej</translation>
-    </message>
-    <message>
-        <source>Move Down</source>
-        <translation>Przesuń niżej</translation>
-    </message>
-    <message>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
@@ -2852,10 +2840,6 @@ Zapisać zmiany?</translation>
     <message>
         <source>Global rules count exceeded!</source>
         <translation>Przekroczona liczba reguł globalnych</translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation>Edycja</translation>
     </message>
     <message>
         <source>Tray Menu</source>
@@ -2922,6 +2906,33 @@ Zapisać zmiany?</translation>
     <message>
         <source>Select Rule</source>
         <translation>Wybierz regułę</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSetArea</name>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation>Dodaj istniejącą regułę</translation>
+    </message>
+    <message>
+        <source>Add Rule</source>
+        <translation>Dodaj regułę</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Usuń</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Edytuj</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>Przesuń wyżej</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>Przesuń niżej</translation>
     </message>
 </context>
 <context>

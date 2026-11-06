@@ -2401,6 +2401,10 @@ Make sure that you have a fresh backup.</source>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
+    <message>
+        <source>Rules</source>
+        <translation>Правила</translation>
+    </message>
 </context>
 <context>
     <name>ProgMorePage</name>
@@ -2814,10 +2818,6 @@ Please check other program with the same path.</source>
         <translation># IP-адрес и порт:</translation>
     </message>
     <message>
-        <source>Add Preset Rule</source>
-        <translation>Добавить шаблонное правило</translation>
-    </message>
-    <message>
         <source>General</source>
         <translation>Общий</translation>
     </message>
@@ -2830,18 +2830,6 @@ Please check other program with the same path.</source>
         <translation>Дополнительно</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>Удалить</translation>
-    </message>
-    <message>
-        <source>Move Up</source>
-        <translation>Передвинуть вверх</translation>
-    </message>
-    <message>
-        <source>Move Down</source>
-        <translation>Передвинуть вниз</translation>
-    </message>
-    <message>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
@@ -2852,10 +2840,6 @@ Save the changes?</source>
     <message>
         <source>Global rules count exceeded!</source>
         <translation>Превышено количество глобальных правил!</translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation>Изменить</translation>
     </message>
     <message>
         <source>Tray Menu</source>
@@ -2922,6 +2906,33 @@ Save the changes?</source>
     <message>
         <source>Select Rule</source>
         <translation>Выбрать правило</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSetArea</name>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation>Добавить шаблонное правило</translation>
+    </message>
+    <message>
+        <source>Add Rule</source>
+        <translation>Добавить правило</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Изменить</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>Передвинуть вверх</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>Передвинуть вниз</translation>
     </message>
 </context>
 <context>

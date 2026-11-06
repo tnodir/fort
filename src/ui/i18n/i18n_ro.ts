@@ -2401,6 +2401,10 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
         <source>Cancel</source>
         <translation>Anulează</translation>
     </message>
+    <message>
+        <source>Rules</source>
+        <translation>Reguli</translation>
+    </message>
 </context>
 <context>
     <name>ProgMorePage</name>
@@ -2814,10 +2818,6 @@ Verificați dacă există alt program cu aceeași cale.</translation>
         <translation># Adresă IP și port:</translation>
     </message>
     <message>
-        <source>Add Preset Rule</source>
-        <translation>Adaugă regulă presetată</translation>
-    </message>
-    <message>
         <source>General</source>
         <translation>General</translation>
     </message>
@@ -2830,18 +2830,6 @@ Verificați dacă există alt program cu aceeași cale.</translation>
         <translation>Mai mult</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>Elimină</translation>
-    </message>
-    <message>
-        <source>Move Up</source>
-        <translation>Mută în sus</translation>
-    </message>
-    <message>
-        <source>Move Down</source>
-        <translation>Mută în jos</translation>
-    </message>
-    <message>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
@@ -2852,10 +2840,6 @@ Salvați modificările?</translation>
     <message>
         <source>Global rules count exceeded!</source>
         <translation>Numărul de reguli globale a fost depășit!</translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation>Editează</translation>
     </message>
     <message>
         <source>Tray Menu</source>
@@ -2922,6 +2906,33 @@ Salvați modificările?</translation>
     <message>
         <source>Select Rule</source>
         <translation>Selectați regula</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSetArea</name>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation>Adaugă regulă presetată</translation>
+    </message>
+    <message>
+        <source>Add Rule</source>
+        <translation>Adaugă regulă</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Elimină</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Editează</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>Mută în sus</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>Mută în jos</translation>
     </message>
 </context>
 <context>

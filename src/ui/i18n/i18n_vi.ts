@@ -2401,6 +2401,10 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
         <source>Cancel</source>
         <translation>Hủy</translation>
     </message>
+    <message>
+        <source>Rules</source>
+        <translation>Quy tắc</translation>
+    </message>
 </context>
 <context>
     <name>ProgMorePage</name>
@@ -2814,10 +2818,6 @@ Vui lòng kiểm tra chương trình khác có cùng đường dẫn.</translati
         <translation># Địa chỉ IP và cổng:</translation>
     </message>
     <message>
-        <source>Add Preset Rule</source>
-        <translation>Thêm quy tắc cấu hình mẫu (Preset)</translation>
-    </message>
-    <message>
         <source>General</source>
         <translation>Chung</translation>
     </message>
@@ -2830,18 +2830,6 @@ Vui lòng kiểm tra chương trình khác có cùng đường dẫn.</translati
         <translation>Thêm</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>Gỡ bỏ</translation>
-    </message>
-    <message>
-        <source>Move Up</source>
-        <translation>Di chuyển lên</translation>
-    </message>
-    <message>
-        <source>Move Down</source>
-        <translation>Di chuyển xuống</translation>
-    </message>
-    <message>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
@@ -2852,10 +2840,6 @@ Lưu các thay đổi?</translation>
     <message>
         <source>Global rules count exceeded!</source>
         <translation>Đã vượt quá số lượng quy tắc chung!</translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation>Chỉnh sửa</translation>
     </message>
     <message>
         <source>Tray Menu</source>
@@ -2922,6 +2906,33 @@ Lưu các thay đổi?</translation>
     <message>
         <source>Select Rule</source>
         <translation>Chọn quy tắc</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSetArea</name>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation>Thêm quy tắc cấu hình mẫu (Preset)</translation>
+    </message>
+    <message>
+        <source>Add Rule</source>
+        <translation>Thêm quy tắc</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Gỡ bỏ</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Chỉnh sửa</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>Di chuyển lên</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>Di chuyển xuống</translation>
     </message>
 </context>
 <context>

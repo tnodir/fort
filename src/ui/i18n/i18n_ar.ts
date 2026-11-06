@@ -2401,6 +2401,10 @@ Make sure that you have a fresh backup.</source>
         <source>Cancel</source>
         <translation>إلغاء</translation>
     </message>
+    <message>
+        <source>Rules</source>
+        <translation>القواعد</translation>
+    </message>
 </context>
 <context>
     <name>ProgMorePage</name>
@@ -2814,10 +2818,6 @@ Please check other program with the same path.</source>
         <translation># عنوان الـ IP ورقم المنفذ:</translation>
     </message>
     <message>
-        <source>Add Preset Rule</source>
-        <translation>إضافة قاعدة معدة مسبقًا</translation>
-    </message>
-    <message>
         <source>General</source>
         <translation>عام</translation>
     </message>
@@ -2830,18 +2830,6 @@ Please check other program with the same path.</source>
         <translation>المزيد</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>حذف</translation>
-    </message>
-    <message>
-        <source>Move Up</source>
-        <translation>تحريك لأعلى</translation>
-    </message>
-    <message>
-        <source>Move Down</source>
-        <translation>تحريك لأسفل</translation>
-    </message>
-    <message>
         <source>The default Preset Rule is updated by the program&apos;s new versions: your changes will be lost, except the Enabled and Tray Menu flags. Duplicate it to keep them.
 
 Save the changes?</source>
@@ -2852,10 +2840,6 @@ Save the changes?</source>
     <message>
         <source>Global rules count exceeded!</source>
         <translation>عدد القواعد العامة تجاوز الحد الأقصى!</translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation>تعديل</translation>
     </message>
     <message>
         <source>Tray Menu</source>
@@ -2922,6 +2906,33 @@ Save the changes?</source>
     <message>
         <source>Select Rule</source>
         <translation>تحديد القواعد</translation>
+    </message>
+</context>
+<context>
+    <name>RuleSetArea</name>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation>إضافة قاعدة معدة مسبقًا</translation>
+    </message>
+    <message>
+        <source>Add Rule</source>
+        <translation>إضافة قاعدة</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>حذف</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>تعديل</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>تحريك لأعلى</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>تحريك لأسفل</translation>
     </message>
 </context>
 <context>
