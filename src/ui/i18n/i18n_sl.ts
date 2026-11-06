@@ -317,10 +317,6 @@
         <translation>Blokiran internetni naslov</translation>
     </message>
     <message>
-        <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation>Omejitev &quot;Vprašaj za povezavo&quot;</translation>
-    </message>
-    <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
         <translation>Začasno ustavljeno z &quot;Vprašaj za povezavo&quot;</translation>
     </message>
@@ -357,6 +353,18 @@
         <translation>ID procesa</translation>
     </message>
     <message>
+        <source>Existing connection</source>
+        <translation>Obstoječa povezava</translation>
+    </message>
+    <message>
+        <source>Disabled Group</source>
+        <translation>Onemogočena skupina</translation>
+    </message>
+    <message>
+        <source>Block Internet</source>
+        <translation>Blokiraj internet</translation>
+    </message>
+    <message>
         <source>Direction</source>
         <translation>Smer</translation>
     </message>
@@ -369,24 +377,8 @@
         <translation>Razlog</translation>
     </message>
     <message>
-        <source>Old connection</source>
-        <translation>Stara povezava</translation>
-    </message>
-    <message>
-        <source>Program&apos;s action</source>
-        <translation>Dejanje programa</translation>
-    </message>
-    <message>
-        <source>App. Group</source>
-        <translation>Aplikacija skupina</translation>
-    </message>
-    <message>
         <source>Filter Mode</source>
         <translation>Način filtra</translation>
-    </message>
-    <message>
-        <source>LAN only</source>
-        <translation>Samo LAN</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -403,6 +395,10 @@
     <message>
         <source>Global Rule after App Rules</source>
         <translation>Globalno pravilo za pravili aplikacije</translation>
+    </message>
+    <message>
+        <source>&quot;Ask to Connect&quot; limit reached</source>
+        <translation>Dosežena omejitev &quot;Vprašaj za povezavo&quot;</translation>
     </message>
     <message>
         <source>Block Inbound</source>
@@ -488,6 +484,22 @@
         <translation>Dodaj program</translation>
     </message>
     <message>
+        <source>Allowed connections are collected</source>
+        <translation>Dovoljene povezave se zbirajo</translation>
+    </message>
+    <message>
+        <source>Allowed connections are not collected</source>
+        <translation>Dovoljene povezave se ne zbirajo</translation>
+    </message>
+    <message>
+        <source>Blocked connections are collected</source>
+        <translation>Blokirane povezave se zbirajo</translation>
+    </message>
+    <message>
+        <source>Blocked connections are not collected</source>
+        <translation>Blokirane povezave se ne zbirajo</translation>
+    </message>
+    <message>
         <source>Add Filter</source>
         <translation>Dodaj filter</translation>
     </message>
@@ -512,12 +524,20 @@
         <translation>Poišči</translation>
     </message>
     <message>
+        <source>List Options</source>
+        <translation>Možnosti seznama</translation>
+    </message>
+    <message>
         <source>Auto scroll</source>
         <translation>Samodejni pomik</translation>
     </message>
     <message>
         <source>Show host names</source>
         <translation>Prikaži imena gostiteljev</translation>
+    </message>
+    <message>
+        <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
+        <translation>Zbirajo se samo povezave opozorjenih programov ali označene z dejanjem Opozorilo</translation>
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
@@ -528,8 +548,12 @@
         <translation>Ali ste prepričani, da želite odstraniti vse povezave?</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Možnosti</translation>
+        <source>Are you sure to remove the found connections?</source>
+        <translation>Ali ste prepričani, da želite odstraniti najdene povezave?</translation>
+    </message>
+    <message>
+        <source>Only the last connections are searched: older ones may be found after that.</source>
+        <translation>Iščejo se samo zadnje povezave: starejše bodo morda najdene pozneje.</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -870,6 +894,10 @@
 <context>
     <name>FirewallConf</name>
     <message>
+        <source>Block All Traffic (incl. Localhost)</source>
+        <translation>Blokiraj ves promet (vklj. localhost)</translation>
+    </message>
+    <message>
         <source>Auto-Learn</source>
         <translation>Samodejno učenje</translation>
     </message>
@@ -904,10 +932,6 @@
     <message>
         <source>Ask to Connect</source>
         <translation>Vprašaj za povezavo</translation>
-    </message>
-    <message>
-        <source>Block All Traffic</source>
-        <translation>Blokiraj ves promet</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
@@ -1527,10 +1551,6 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
         <translation>Prikaži začetni zaslon ob zagonu</translation>
     </message>
     <message>
-        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
-        <translation>Ikone oken sledijo stanju ikone v pladnju (način filtra, opozorila)</translation>
-    </message>
-    <message>
         <source>Auto-focus Alert Window</source>
         <translation>Samodejno fokusiraj opozorilno okno</translation>
     </message>
@@ -1667,12 +1687,24 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
         <translation>Programi</translation>
     </message>
     <message>
+        <source>Show the current state in the windows&apos; icons</source>
+        <translation>Pokaži trenutno stanje v ikonah oken</translation>
+    </message>
+    <message>
+        <source>Fort&apos;s windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>Ikone oken programa Fort sledijo stanju ikone v pladnju (način filtra, opozorila)</translation>
+    </message>
+    <message>
         <source>Use System Notifications for New Programs</source>
         <translation>Uporabi sistemska obvestila za nove programe</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>Samodejno prikaži opozorilno okno za nove programe</translation>
+    </message>
+    <message>
+        <source>Alert Modes</source>
+        <translation>Načini opozoril</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
@@ -1693,10 +1725,6 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
     <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>Samodejno počisti opozorila ob zaprtju okna</translation>
-    </message>
-    <message>
-        <source>Show window icons as in tray icon</source>
-        <translation>Pokaži okenske ikone kot ikono v pladnju</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
@@ -1766,6 +1794,13 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
     </message>
 </context>
 <context>
+    <name>MenuButton</name>
+    <message>
+        <source>Menu</source>
+        <translation>Meni</translation>
+    </message>
+</context>
+<context>
     <name>OptMainPage</name>
     <message>
         <source>Options</source>
@@ -1830,6 +1865,13 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
     <message>
         <source>Import new programs</source>
         <translation>Uvozite nove programe</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsButton</name>
+    <message>
+        <source>Options</source>
+        <translation>Možnosti</translation>
     </message>
 </context>
 <context>
@@ -2816,10 +2858,6 @@ Shraniti spremembe?</translation>
         <translation>Uredi</translation>
     </message>
     <message>
-        <source>Help</source>
-        <translation>Pomoč</translation>
-    </message>
-    <message>
         <source>Tray Menu</source>
         <translation>Meni pladnja</translation>
     </message>
@@ -3117,10 +3155,6 @@ Shraniti spremembe?</translation>
         <translation>Prikazno ime</translation>
     </message>
     <message>
-        <source>Process ID</source>
-        <translation>ID procesa</translation>
-    </message>
-    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>Spremembe je ponastavil sistem. Storitev znova nastavite kot sledljivo.</translation>
     </message>
@@ -3340,6 +3374,13 @@ Izguba paketov: %2</translation>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
         <translation>Ali ste prepričani, da želite odstraniti izbrano omejitev hitrosti?</translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsButton</name>
+    <message>
+        <source>Statistics</source>
+        <translation>Statistika</translation>
     </message>
 </context>
 <context>
@@ -3726,6 +3767,10 @@ Izguba paketov: %2</translation>
         <translation>Ali ste prepričani, da želite počistiti vso statistiko?</translation>
     </message>
     <message>
+        <source>Make Active When Window Opens</source>
+        <translation>Aktiviraj ob odprtju okna</translation>
+    </message>
+    <message>
         <source>Edit</source>
         <translation>Uredi</translation>
     </message>
@@ -3748,10 +3793,6 @@ Izguba paketov: %2</translation>
     <message>
         <source>Are you sure to remove statistics for selected program?</source>
         <translation>Ali ste prepričani, da želite odstraniti statistiko izbranega programa?</translation>
-    </message>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>Naj bo ta zavihek aktiven, ko se odpre okno?</translation>
     </message>
     <message>
         <source>Traffic</source>
@@ -3812,6 +3853,10 @@ Izguba paketov: %2</translation>
         <translation>Statistika</translation>
     </message>
     <message>
+        <source>New program(s) request network access</source>
+        <translation>Novi programi zahtevajo dostop do omrežja</translation>
+    </message>
+    <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation>Ali ste prepričani, da želite preklopiti &quot;%1&quot;?</translation>
     </message>
@@ -3826,10 +3871,6 @@ Izguba paketov: %2</translation>
     <message>
         <source>My Fort</source>
         <translation>Moja trdnjava</translation>
-    </message>
-    <message>
-        <source>New program detected!</source>
-        <translation>Zaznan je nov program!</translation>
     </message>
     <message>
         <source>Rules</source>

@@ -317,10 +317,6 @@
         <translation>Adresă de internet blocată</translation>
     </message>
     <message>
-        <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation>Limita „Întreabă la conectare”</translation>
-    </message>
-    <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
         <translation>Suspendată de „Întreabă la conectare”</translation>
     </message>
@@ -357,6 +353,18 @@
         <translation>ID proces</translation>
     </message>
     <message>
+        <source>Existing connection</source>
+        <translation>Conexiune existentă</translation>
+    </message>
+    <message>
+        <source>Disabled Group</source>
+        <translation>Grup dezactivat</translation>
+    </message>
+    <message>
+        <source>Block Internet</source>
+        <translation>Blochează internetul</translation>
+    </message>
+    <message>
         <source>Direction</source>
         <translation>Direcție</translation>
     </message>
@@ -369,24 +377,8 @@
         <translation>Motiv</translation>
     </message>
     <message>
-        <source>Old connection</source>
-        <translation>Conexiune veche</translation>
-    </message>
-    <message>
-        <source>Program&apos;s action</source>
-        <translation>Acțiunea programului</translation>
-    </message>
-    <message>
-        <source>App. Group</source>
-        <translation>Grup de aplicații</translation>
-    </message>
-    <message>
         <source>Filter Mode</source>
         <translation>Mod de filtrare</translation>
-    </message>
-    <message>
-        <source>LAN only</source>
-        <translation>Doar LAN</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -403,6 +395,10 @@
     <message>
         <source>Global Rule after App Rules</source>
         <translation>Regulă globală după regulile aplicațiilor</translation>
+    </message>
+    <message>
+        <source>&quot;Ask to Connect&quot; limit reached</source>
+        <translation>S-a atins limita „Întreabă la conectare”</translation>
     </message>
     <message>
         <source>Block Inbound</source>
@@ -488,6 +484,22 @@
         <translation>Adaugă program</translation>
     </message>
     <message>
+        <source>Allowed connections are collected</source>
+        <translation>Conexiunile permise sunt colectate</translation>
+    </message>
+    <message>
+        <source>Allowed connections are not collected</source>
+        <translation>Conexiunile permise nu sunt colectate</translation>
+    </message>
+    <message>
+        <source>Blocked connections are collected</source>
+        <translation>Conexiunile blocate sunt colectate</translation>
+    </message>
+    <message>
+        <source>Blocked connections are not collected</source>
+        <translation>Conexiunile blocate nu sunt colectate</translation>
+    </message>
+    <message>
         <source>Add Filter</source>
         <translation>Adaugă filtru</translation>
     </message>
@@ -512,12 +524,20 @@
         <translation>Căutare</translation>
     </message>
     <message>
+        <source>List Options</source>
+        <translation>Opțiuni listă</translation>
+    </message>
+    <message>
         <source>Auto scroll</source>
         <translation>Derulare automată</translation>
     </message>
     <message>
         <source>Show host names</source>
         <translation>Afișează numele gazdelor</translation>
+    </message>
+    <message>
+        <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
+        <translation>Sunt colectate doar conexiunile programelor alertate sau marcate de acțiunea Alertă</translation>
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
@@ -528,8 +548,12 @@
         <translation>Sigur doriți să eliminați toate conexiunile?</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Opțiuni</translation>
+        <source>Are you sure to remove the found connections?</source>
+        <translation>Sigur doriți să eliminați conexiunile găsite?</translation>
+    </message>
+    <message>
+        <source>Only the last connections are searched: older ones may be found after that.</source>
+        <translation>Sunt căutate doar ultimele conexiuni: cele mai vechi pot fi găsite după aceea.</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -870,6 +894,10 @@
 <context>
     <name>FirewallConf</name>
     <message>
+        <source>Block All Traffic (incl. Localhost)</source>
+        <translation>Blochează tot traficul (incl. localhost)</translation>
+    </message>
+    <message>
         <source>Auto-Learn</source>
         <translation>Învățare automată</translation>
     </message>
@@ -904,10 +932,6 @@
     <message>
         <source>Ask to Connect</source>
         <translation>Întreabă la conectare</translation>
-    </message>
-    <message>
-        <source>Block All Traffic</source>
-        <translation>Blochează tot traficul</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
@@ -1527,10 +1551,6 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
         <translation>Afișează ecranul de pornire la lansare</translation>
     </message>
     <message>
-        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
-        <translation>Pictogramele ferestrelor urmează starea pictogramei din bara de sistem (mod de filtrare, alerte)</translation>
-    </message>
-    <message>
         <source>Auto-focus Alert Window</source>
         <translation>Focalizare automată pe fereastra de alertă</translation>
     </message>
@@ -1667,12 +1687,24 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
         <translation>Programe</translation>
     </message>
     <message>
+        <source>Show the current state in the windows&apos; icons</source>
+        <translation>Afișează starea curentă în pictogramele ferestrelor</translation>
+    </message>
+    <message>
+        <source>Fort&apos;s windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>Pictogramele ferestrelor Fort urmează starea pictogramei din bara de sistem (mod de filtrare, alerte)</translation>
+    </message>
+    <message>
         <source>Use System Notifications for New Programs</source>
         <translation>Folosește notificările sistemului pentru programele noi</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>Afișează automat fereastra de alertă pentru programele noi</translation>
+    </message>
+    <message>
+        <source>Alert Modes</source>
+        <translation>Moduri de alertă</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
@@ -1693,10 +1725,6 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
     <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>Șterge automat alertele la închiderea ferestrei</translation>
-    </message>
-    <message>
-        <source>Show window icons as in tray icon</source>
-        <translation>Afișează pictogramele ferestrelor ca pictograma din bara de sistem</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
@@ -1766,6 +1794,13 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
     </message>
 </context>
 <context>
+    <name>MenuButton</name>
+    <message>
+        <source>Menu</source>
+        <translation>Meniu</translation>
+    </message>
+</context>
+<context>
     <name>OptMainPage</name>
     <message>
         <source>Options</source>
@@ -1830,6 +1865,13 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
     <message>
         <source>Import new programs</source>
         <translation>Importă programele noi</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsButton</name>
+    <message>
+        <source>Options</source>
+        <translation>Opțiuni</translation>
     </message>
 </context>
 <context>
@@ -2816,10 +2858,6 @@ Salvați modificările?</translation>
         <translation>Editează</translation>
     </message>
     <message>
-        <source>Help</source>
-        <translation>Ajutor</translation>
-    </message>
-    <message>
         <source>Tray Menu</source>
         <translation>Meniul barei de sistem</translation>
     </message>
@@ -3117,10 +3155,6 @@ Salvați modificările?</translation>
         <translation>Nume afișat</translation>
     </message>
     <message>
-        <source>Process ID</source>
-        <translation>ID proces</translation>
-    </message>
-    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>Modificările au fost resetate de sistem. Faceți serviciul urmăribil din nou.</translation>
     </message>
@@ -3340,6 +3374,13 @@ Pierdere de pachete: %2</translation>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
         <translation>Sigur doriți să eliminați limita de viteză selectată?</translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsButton</name>
+    <message>
+        <source>Statistics</source>
+        <translation>Statistici</translation>
     </message>
 </context>
 <context>
@@ -3726,6 +3767,10 @@ Pierdere de pachete: %2</translation>
         <translation>Sigur doriți să ștergeți toate statisticile?</translation>
     </message>
     <message>
+        <source>Make Active When Window Opens</source>
+        <translation>Activează la deschiderea ferestrei</translation>
+    </message>
+    <message>
         <source>Edit</source>
         <translation>Editează</translation>
     </message>
@@ -3748,10 +3793,6 @@ Pierdere de pachete: %2</translation>
     <message>
         <source>Are you sure to remove statistics for selected program?</source>
         <translation>Sigur doriți să eliminați statisticile programului selectat?</translation>
-    </message>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>Faceți această filă activă la deschiderea ferestrei?</translation>
     </message>
     <message>
         <source>Traffic</source>
@@ -3812,6 +3853,10 @@ Pierdere de pachete: %2</translation>
         <translation>Statistici</translation>
     </message>
     <message>
+        <source>New program(s) request network access</source>
+        <translation>Programe noi solicită acces la rețea</translation>
+    </message>
+    <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation>Sigur doriți să comutați „%1”?</translation>
     </message>
@@ -3826,10 +3871,6 @@ Pierdere de pachete: %2</translation>
     <message>
         <source>My Fort</source>
         <translation>Fortul meu</translation>
-    </message>
-    <message>
-        <source>New program detected!</source>
-        <translation>Program nou detectat!</translation>
     </message>
     <message>
         <source>Rules</source>

@@ -317,10 +317,6 @@
         <translation>已阻止的互联网地址</translation>
     </message>
     <message>
-        <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation>“请求连接”的限制</translation>
-    </message>
-    <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
         <translation>被“请求连接”暂停</translation>
     </message>
@@ -357,6 +353,18 @@
         <translation>进程 ID</translation>
     </message>
     <message>
+        <source>Existing connection</source>
+        <translation>已存在的连接</translation>
+    </message>
+    <message>
+        <source>Disabled Group</source>
+        <translation>已禁用的群组</translation>
+    </message>
+    <message>
+        <source>Block Internet</source>
+        <translation>阻止互联网</translation>
+    </message>
+    <message>
         <source>Direction</source>
         <translation>排序顺序</translation>
     </message>
@@ -369,24 +377,8 @@
         <translation>原因</translation>
     </message>
     <message>
-        <source>Old connection</source>
-        <translation>旧连接</translation>
-    </message>
-    <message>
-        <source>Program&apos;s action</source>
-        <translation>应用程序&apos;s 操作</translation>
-    </message>
-    <message>
-        <source>App. Group</source>
-        <translation>应用程序组</translation>
-    </message>
-    <message>
         <source>Filter Mode</source>
         <translation>过滤模式</translation>
-    </message>
-    <message>
-        <source>LAN only</source>
-        <translation>仅限局域网</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -403,6 +395,10 @@
     <message>
         <source>Global Rule after App Rules</source>
         <translation>应用程序规则之后的全局规则</translation>
+    </message>
+    <message>
+        <source>&quot;Ask to Connect&quot; limit reached</source>
+        <translation>已达到“请求连接”的限制</translation>
     </message>
     <message>
         <source>Block Inbound</source>
@@ -488,6 +484,22 @@
         <translation>添加应用程序</translation>
     </message>
     <message>
+        <source>Allowed connections are collected</source>
+        <translation>正在收集已允许的连接</translation>
+    </message>
+    <message>
+        <source>Allowed connections are not collected</source>
+        <translation>未收集已允许的连接</translation>
+    </message>
+    <message>
+        <source>Blocked connections are collected</source>
+        <translation>正在收集被阻止的连接</translation>
+    </message>
+    <message>
+        <source>Blocked connections are not collected</source>
+        <translation>未收集被阻止的连接</translation>
+    </message>
+    <message>
         <source>Add Filter</source>
         <translation>添加过滤器</translation>
     </message>
@@ -512,12 +524,20 @@
         <translation>搜索</translation>
     </message>
     <message>
+        <source>List Options</source>
+        <translation>列表选项</translation>
+    </message>
+    <message>
         <source>Auto scroll</source>
         <translation>自动滚动</translation>
     </message>
     <message>
         <source>Show host names</source>
         <translation>显示主机名</translation>
+    </message>
+    <message>
+        <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
+        <translation>仅收集已提示应用程序或被“提示”操作标记的连接</translation>
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
@@ -528,8 +548,12 @@
         <translation>您确定要删除所有连接吗？</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>选项</translation>
+        <source>Are you sure to remove the found connections?</source>
+        <translation>您确定要删除找到的连接吗？</translation>
+    </message>
+    <message>
+        <source>Only the last connections are searched: older ones may be found after that.</source>
+        <translation>仅搜索最近的连接：之后可能会找到更早的连接。</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -870,6 +894,10 @@
 <context>
     <name>FirewallConf</name>
     <message>
+        <source>Block All Traffic (incl. Localhost)</source>
+        <translation>阻止所有流量（包括本地主机）</translation>
+    </message>
+    <message>
         <source>Auto-Learn</source>
         <translation>自动学习</translation>
     </message>
@@ -904,10 +932,6 @@
     <message>
         <source>Ask to Connect</source>
         <translation>请求连接</translation>
-    </message>
-    <message>
-        <source>Block All Traffic</source>
-        <translation>阻止所有流量</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
@@ -1527,10 +1551,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>启动时显示欢迎界面</translation>
     </message>
     <message>
-        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
-        <translation>窗口图标跟随托盘图标的状态（过滤模式、提示）</translation>
-    </message>
-    <message>
         <source>Auto-focus Alert Window</source>
         <translation>自动聚焦提示窗口</translation>
     </message>
@@ -1667,12 +1687,24 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>应用程序</translation>
     </message>
     <message>
+        <source>Show the current state in the windows&apos; icons</source>
+        <translation>在窗口图标中显示当前状态</translation>
+    </message>
+    <message>
+        <source>Fort&apos;s windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>Fort 的窗口图标跟随托盘图标的状态（过滤模式、提示）</translation>
+    </message>
+    <message>
         <source>Use System Notifications for New Programs</source>
         <translation>为新应用程序使用系统通知</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>为新应用程序自动显示提示窗口</translation>
+    </message>
+    <message>
+        <source>Alert Modes</source>
+        <translation>提示模式</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
@@ -1693,10 +1725,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>关闭窗口时自动清除提示</translation>
-    </message>
-    <message>
-        <source>Show window icons as in tray icon</source>
-        <translation>在托盘图标中显示窗口图标</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
@@ -1766,6 +1794,13 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>MenuButton</name>
+    <message>
+        <source>Menu</source>
+        <translation>菜单</translation>
+    </message>
+</context>
+<context>
     <name>OptMainPage</name>
     <message>
         <source>Options</source>
@@ -1830,6 +1865,13 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Import new programs</source>
         <translation>导入新应用程序</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsButton</name>
+    <message>
+        <source>Options</source>
+        <translation>选项</translation>
     </message>
 </context>
 <context>
@@ -2816,10 +2858,6 @@ Save the changes?</source>
         <translation>编辑</translation>
     </message>
     <message>
-        <source>Help</source>
-        <translation>帮助</translation>
-    </message>
-    <message>
         <source>Tray Menu</source>
         <translation>托盘菜单</translation>
     </message>
@@ -3117,10 +3155,6 @@ Save the changes?</source>
         <translation>显示名称</translation>
     </message>
     <message>
-        <source>Process ID</source>
-        <translation>进程 ID</translation>
-    </message>
-    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>更改已被系统重置。请重新设置服务为可跟踪。</translation>
     </message>
@@ -3340,6 +3374,13 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
         <translation>您确定要删除所选的速度限制吗？</translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsButton</name>
+    <message>
+        <source>Statistics</source>
+        <translation>统计数据</translation>
     </message>
 </context>
 <context>
@@ -3726,6 +3767,10 @@ Packet loss: %2</source>
         <translation>您确定要清除所有统计信息吗？</translation>
     </message>
     <message>
+        <source>Make Active When Window Opens</source>
+        <translation>窗口打开时设为活动</translation>
+    </message>
+    <message>
         <source>Edit</source>
         <translation>编辑</translation>
     </message>
@@ -3748,10 +3793,6 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to remove statistics for selected program?</source>
         <translation>您确定要删除所选应用程序的统计信息吗？</translation>
-    </message>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>当窗口打开时启用此标签吗？</translation>
     </message>
     <message>
         <source>Traffic</source>
@@ -3812,6 +3853,10 @@ Packet loss: %2</source>
         <translation>统计数据</translation>
     </message>
     <message>
+        <source>New program(s) request network access</source>
+        <translation>新应用程序请求网络访问</translation>
+    </message>
+    <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation>您确定要切换“%1”吗？</translation>
     </message>
@@ -3826,10 +3871,6 @@ Packet loss: %2</source>
     <message>
         <source>My Fort</source>
         <translation>我的堡垒</translation>
-    </message>
-    <message>
-        <source>New program detected!</source>
-        <translation>检测到新的应用程序！</translation>
     </message>
     <message>
         <source>Rules</source>

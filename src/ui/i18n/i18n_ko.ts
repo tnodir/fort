@@ -317,10 +317,6 @@
         <translation>차단된 인터넷 주소</translation>
     </message>
     <message>
-        <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation>&quot;연결 요청&quot;의 제한 사항</translation>
-    </message>
-    <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
         <translation>&quot;연결 요청&quot;으로 일시 중지됨</translation>
     </message>
@@ -357,6 +353,18 @@
         <translation>프로세스 ID</translation>
     </message>
     <message>
+        <source>Existing connection</source>
+        <translation>기존 연결</translation>
+    </message>
+    <message>
+        <source>Disabled Group</source>
+        <translation>비활성화된 그룹</translation>
+    </message>
+    <message>
+        <source>Block Internet</source>
+        <translation>인터넷 차단</translation>
+    </message>
+    <message>
         <source>Direction</source>
         <translation>방향</translation>
     </message>
@@ -369,24 +377,8 @@
         <translation>이유</translation>
     </message>
     <message>
-        <source>Old connection</source>
-        <translation>기존 연결</translation>
-    </message>
-    <message>
-        <source>Program&apos;s action</source>
-        <translation>프로그램 작업</translation>
-    </message>
-    <message>
-        <source>App. Group</source>
-        <translation>앱. 그룹</translation>
-    </message>
-    <message>
         <source>Filter Mode</source>
         <translation>필터 모드</translation>
-    </message>
-    <message>
-        <source>LAN only</source>
-        <translation>LAN만</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -403,6 +395,10 @@
     <message>
         <source>Global Rule after App Rules</source>
         <translation>앱 규칙 이후의 전역 규칙</translation>
+    </message>
+    <message>
+        <source>&quot;Ask to Connect&quot; limit reached</source>
+        <translation>&quot;연결 요청&quot; 제한에 도달함</translation>
     </message>
     <message>
         <source>Block Inbound</source>
@@ -488,6 +484,22 @@
         <translation>프로그램 추가</translation>
     </message>
     <message>
+        <source>Allowed connections are collected</source>
+        <translation>허용된 연결이 수집됨</translation>
+    </message>
+    <message>
+        <source>Allowed connections are not collected</source>
+        <translation>허용된 연결이 수집되지 않음</translation>
+    </message>
+    <message>
+        <source>Blocked connections are collected</source>
+        <translation>차단된 연결이 수집됨</translation>
+    </message>
+    <message>
+        <source>Blocked connections are not collected</source>
+        <translation>차단된 연결이 수집되지 않음</translation>
+    </message>
+    <message>
         <source>Add Filter</source>
         <translation>필터 추가</translation>
     </message>
@@ -512,12 +524,20 @@
         <translation>검색</translation>
     </message>
     <message>
+        <source>List Options</source>
+        <translation>목록 옵션</translation>
+    </message>
+    <message>
         <source>Auto scroll</source>
         <translation>자동 스크롤</translation>
     </message>
     <message>
         <source>Show host names</source>
         <translation>호스트 이름 표시</translation>
+    </message>
+    <message>
+        <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
+        <translation>경고된 프로그램 또는 경고 동작으로 표시된 연결만 수집됨</translation>
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
@@ -528,8 +548,12 @@
         <translation>모든 연결을 정말로 삭제하시겠습니까?</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>옵션</translation>
+        <source>Are you sure to remove the found connections?</source>
+        <translation>찾은 연결을 정말로 삭제하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Only the last connections are searched: older ones may be found after that.</source>
+        <translation>최근 연결만 검색됩니다: 이전 연결은 그 후에 찾을 수 있습니다.</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -870,6 +894,10 @@
 <context>
     <name>FirewallConf</name>
     <message>
+        <source>Block All Traffic (incl. Localhost)</source>
+        <translation>모든 트래픽 차단 (로컬 호스트 포함)</translation>
+    </message>
+    <message>
         <source>Auto-Learn</source>
         <translation>자동 학습</translation>
     </message>
@@ -904,10 +932,6 @@
     <message>
         <source>Ask to Connect</source>
         <translation>연결 요청</translation>
-    </message>
-    <message>
-        <source>Block All Traffic</source>
-        <translation>모든 트래픽 차단</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
@@ -1527,10 +1551,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>시작 시 스플래시 화면 표시</translation>
     </message>
     <message>
-        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
-        <translation>창 아이콘이 트레이 아이콘의 상태(필터 모드, 경고)를 따름</translation>
-    </message>
-    <message>
         <source>Auto-focus Alert Window</source>
         <translation>경고 창 자동 포커스</translation>
     </message>
@@ -1667,12 +1687,24 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>프로그램</translation>
     </message>
     <message>
+        <source>Show the current state in the windows&apos; icons</source>
+        <translation>창 아이콘에 현재 상태 표시</translation>
+    </message>
+    <message>
+        <source>Fort&apos;s windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>Fort 창 아이콘이 트레이 아이콘의 상태(필터 모드, 경고)를 따름</translation>
+    </message>
+    <message>
         <source>Use System Notifications for New Programs</source>
         <translation>새 프로그램에 대한 시스템 알림 사용</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>새 프로그램 자동 표시 알림 창</translation>
+    </message>
+    <message>
+        <source>Alert Modes</source>
+        <translation>경고 모드</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
@@ -1693,10 +1725,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>창을 닫을 때 알림 자동 지우기</translation>
-    </message>
-    <message>
-        <source>Show window icons as in tray icon</source>
-        <translation>트레이 아이콘에 창 아이콘 표시</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
@@ -1766,6 +1794,13 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>MenuButton</name>
+    <message>
+        <source>Menu</source>
+        <translation>메뉴</translation>
+    </message>
+</context>
+<context>
     <name>OptMainPage</name>
     <message>
         <source>Options</source>
@@ -1830,6 +1865,13 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Import new programs</source>
         <translation>새 프로그램 가져오기</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsButton</name>
+    <message>
+        <source>Options</source>
+        <translation>옵션</translation>
     </message>
 </context>
 <context>
@@ -2816,10 +2858,6 @@ Save the changes?</source>
         <translation>편집</translation>
     </message>
     <message>
-        <source>Help</source>
-        <translation>도움말</translation>
-    </message>
-    <message>
         <source>Tray Menu</source>
         <translation>트레이 메뉴</translation>
     </message>
@@ -3117,10 +3155,6 @@ Save the changes?</source>
         <translation>표시 이름</translation>
     </message>
     <message>
-        <source>Process ID</source>
-        <translation>프로세스 ID</translation>
-    </message>
-    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>변경 사항은 시스템에 의해 초기화되었습니다. 서비스를 다시 추적 가능하게 만드세요.</translation>
     </message>
@@ -3340,6 +3374,13 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
         <translation>선택한 속도 제한을 제거하시겠습니까?</translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsButton</name>
+    <message>
+        <source>Statistics</source>
+        <translation>통계</translation>
     </message>
 </context>
 <context>
@@ -3726,6 +3767,10 @@ Packet loss: %2</source>
         <translation>모든 통계를 모두 지우시겠습니까?</translation>
     </message>
     <message>
+        <source>Make Active When Window Opens</source>
+        <translation>창이 열릴 때 활성화</translation>
+    </message>
+    <message>
         <source>Edit</source>
         <translation>편집</translation>
     </message>
@@ -3748,10 +3793,6 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to remove statistics for selected program?</source>
         <translation>선택한 프로그램의 통계를 제거하시겠습니까?</translation>
-    </message>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>창이 열릴 때 이 탭을 활성화하시겠습니까?</translation>
     </message>
     <message>
         <source>Traffic</source>
@@ -3812,6 +3853,10 @@ Packet loss: %2</source>
         <translation>통계</translation>
     </message>
     <message>
+        <source>New program(s) request network access</source>
+        <translation>새 프로그램이 네트워크 액세스를 요청합니다</translation>
+    </message>
+    <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation>&quot;%1&quot;을(를) 전환하시겠습니까?</translation>
     </message>
@@ -3826,10 +3871,6 @@ Packet loss: %2</source>
     <message>
         <source>My Fort</source>
         <translation>내 Fort</translation>
-    </message>
-    <message>
-        <source>New program detected!</source>
-        <translation>새로운 프로그램이 감지되었습니다!</translation>
     </message>
     <message>
         <source>Rules</source>

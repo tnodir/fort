@@ -317,10 +317,6 @@
         <translation>آدرس اینترنتی مسدود</translation>
     </message>
     <message>
-        <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation>محدودیت «پرسش برای اتصال»</translation>
-    </message>
-    <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
         <translation>متوقف‌شده توسط «پرسش برای اتصال»</translation>
     </message>
@@ -357,6 +353,18 @@
         <translation>شناسه فرایند</translation>
     </message>
     <message>
+        <source>Existing connection</source>
+        <translation>اتصال موجود</translation>
+    </message>
+    <message>
+        <source>Disabled Group</source>
+        <translation>گروه غیرفعال</translation>
+    </message>
+    <message>
+        <source>Block Internet</source>
+        <translation>مسدود کردن اینترنت</translation>
+    </message>
+    <message>
         <source>Direction</source>
         <translation>جهت</translation>
     </message>
@@ -369,24 +377,8 @@
         <translation>دلیل</translation>
     </message>
     <message>
-        <source>Old connection</source>
-        <translation>اتصال قدیمی</translation>
-    </message>
-    <message>
-        <source>Program&apos;s action</source>
-        <translation>اقدام برنامه</translation>
-    </message>
-    <message>
-        <source>App. Group</source>
-        <translation>گروه برنامه</translation>
-    </message>
-    <message>
         <source>Filter Mode</source>
         <translation>حالت فیلتر</translation>
-    </message>
-    <message>
-        <source>LAN only</source>
-        <translation>فقط شبکه محلی</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -403,6 +395,10 @@
     <message>
         <source>Global Rule after App Rules</source>
         <translation>قانون سراسری پس از قوانین برنامه</translation>
+    </message>
+    <message>
+        <source>&quot;Ask to Connect&quot; limit reached</source>
+        <translation>به محدودیت «پرسش برای اتصال» رسیده است</translation>
     </message>
     <message>
         <source>Block Inbound</source>
@@ -488,6 +484,22 @@
         <translation>افزودن برنامه</translation>
     </message>
     <message>
+        <source>Allowed connections are collected</source>
+        <translation>اتصال‌های مجاز ثبت می‌شوند</translation>
+    </message>
+    <message>
+        <source>Allowed connections are not collected</source>
+        <translation>اتصال‌های مجاز ثبت نمی‌شوند</translation>
+    </message>
+    <message>
+        <source>Blocked connections are collected</source>
+        <translation>اتصال‌های مسدود ثبت می‌شوند</translation>
+    </message>
+    <message>
+        <source>Blocked connections are not collected</source>
+        <translation>اتصال‌های مسدود ثبت نمی‌شوند</translation>
+    </message>
+    <message>
         <source>Add Filter</source>
         <translation>افزودن فیلتر</translation>
     </message>
@@ -512,12 +524,20 @@
         <translation>جستجو</translation>
     </message>
     <message>
+        <source>List Options</source>
+        <translation>گزینه‌های فهرست</translation>
+    </message>
+    <message>
         <source>Auto scroll</source>
         <translation>پیمایش خودکار</translation>
     </message>
     <message>
         <source>Show host names</source>
         <translation>نمایش نام میزبان‌ها</translation>
+    </message>
+    <message>
+        <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
+        <translation>فقط اتصال‌های برنامه‌های دارای هشدار یا علامت‌گذاری‌شده با عمل هشدار جمع‌آوری می‌شوند</translation>
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
@@ -528,8 +548,12 @@
         <translation>آیا از حذف همه اتصال‌ها اطمینان دارید؟</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>گزینه‌ها</translation>
+        <source>Are you sure to remove the found connections?</source>
+        <translation>آیا از حذف اتصال‌های یافت‌شده اطمینان دارید؟</translation>
+    </message>
+    <message>
+        <source>Only the last connections are searched: older ones may be found after that.</source>
+        <translation>فقط آخرین اتصال‌ها جستجو می‌شوند: اتصال‌های قدیمی‌تر ممکن است پس از آن یافت شوند.</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -870,6 +894,10 @@
 <context>
     <name>FirewallConf</name>
     <message>
+        <source>Block All Traffic (incl. Localhost)</source>
+        <translation>مسدود کردن همه ترافیک (شامل میزبان محلی)</translation>
+    </message>
+    <message>
         <source>Auto-Learn</source>
         <translation>یادگیری خودکار</translation>
     </message>
@@ -904,10 +932,6 @@
     <message>
         <source>Ask to Connect</source>
         <translation>پرسش برای اتصال</translation>
-    </message>
-    <message>
-        <source>Block All Traffic</source>
-        <translation>مسدود کردن همه ترافیک</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
@@ -1527,10 +1551,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>نمایش صفحه آغازین هنگام راه‌اندازی</translation>
     </message>
     <message>
-        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
-        <translation>آیکون پنجره‌ها از وضعیت آیکون سینی پیروی می‌کند (حالت فیلتر، هشدارها)</translation>
-    </message>
-    <message>
         <source>Auto-focus Alert Window</source>
         <translation>تمرکز خودکار روی پنجره هشدار</translation>
     </message>
@@ -1667,12 +1687,24 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>برنامه‌ها</translation>
     </message>
     <message>
+        <source>Show the current state in the windows&apos; icons</source>
+        <translation>نمایش وضعیت فعلی در آیکون پنجره‌ها</translation>
+    </message>
+    <message>
+        <source>Fort&apos;s windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>آیکون پنجره‌های Fort از وضعیت آیکون سینی پیروی می‌کند (حالت فیلتر، هشدارها)</translation>
+    </message>
+    <message>
         <source>Use System Notifications for New Programs</source>
         <translation>استفاده از اعلان‌های سیستم برای برنامه‌های جدید</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>نمایش خودکار پنجره هشدار برای برنامه‌های جدید</translation>
+    </message>
+    <message>
+        <source>Alert Modes</source>
+        <translation>حالت‌های هشدار</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
@@ -1693,10 +1725,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>پاک کردن خودکار هشدارها هنگام بستن پنجره</translation>
-    </message>
-    <message>
-        <source>Show window icons as in tray icon</source>
-        <translation>نمایش آیکون‌های پنجره مانند آیکون سینی</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
@@ -1766,6 +1794,13 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>MenuButton</name>
+    <message>
+        <source>Menu</source>
+        <translation>منو</translation>
+    </message>
+</context>
+<context>
     <name>OptMainPage</name>
     <message>
         <source>Options</source>
@@ -1830,6 +1865,13 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Import new programs</source>
         <translation>وارد کردن برنامه‌های جدید</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsButton</name>
+    <message>
+        <source>Options</source>
+        <translation>گزینه‌ها</translation>
     </message>
 </context>
 <context>
@@ -2816,10 +2858,6 @@ Save the changes?</source>
         <translation>ویرایش</translation>
     </message>
     <message>
-        <source>Help</source>
-        <translation>راهنما</translation>
-    </message>
-    <message>
         <source>Tray Menu</source>
         <translation>منوی سینی</translation>
     </message>
@@ -3117,10 +3155,6 @@ Save the changes?</source>
         <translation>نام نمایشی</translation>
     </message>
     <message>
-        <source>Process ID</source>
-        <translation>شناسه فرایند</translation>
-    </message>
-    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>تغییرات توسط سیستم بازنشانی شدند. سرویس را دوباره قابل ردیابی کنید.</translation>
     </message>
@@ -3340,6 +3374,13 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
         <translation>آیا از حذف محدودیت سرعت انتخاب‌شده اطمینان دارید؟</translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsButton</name>
+    <message>
+        <source>Statistics</source>
+        <translation>آمار</translation>
     </message>
 </context>
 <context>
@@ -3726,6 +3767,10 @@ Packet loss: %2</source>
         <translation>آیا از پاک کردن همه آمار اطمینان دارید؟</translation>
     </message>
     <message>
+        <source>Make Active When Window Opens</source>
+        <translation>فعال شدن هنگام باز شدن پنجره</translation>
+    </message>
+    <message>
         <source>Edit</source>
         <translation>ویرایش</translation>
     </message>
@@ -3748,10 +3793,6 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to remove statistics for selected program?</source>
         <translation>آیا از حذف آمار برنامه انتخاب‌شده اطمینان دارید؟</translation>
-    </message>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>این زبانه هنگام باز شدن پنجره فعال شود؟</translation>
     </message>
     <message>
         <source>Traffic</source>
@@ -3812,6 +3853,10 @@ Packet loss: %2</source>
         <translation>آمار</translation>
     </message>
     <message>
+        <source>New program(s) request network access</source>
+        <translation>برنامه‌های جدید درخواست دسترسی به شبکه دارند</translation>
+    </message>
+    <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation>آیا از تغییر وضعیت «%1» اطمینان دارید؟</translation>
     </message>
@@ -3826,10 +3871,6 @@ Packet loss: %2</source>
     <message>
         <source>My Fort</source>
         <translation>Fort من</translation>
-    </message>
-    <message>
-        <source>New program detected!</source>
-        <translation>برنامه جدید شناسایی شد!</translation>
     </message>
     <message>
         <source>Rules</source>

@@ -317,10 +317,6 @@
         <translation>Địa chỉ Internet bị chặn</translation>
     </message>
     <message>
-        <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation>Giới hạn của &quot;Hỏi khi kết nối&quot;</translation>
-    </message>
-    <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
         <translation>Đã tạm dừng bởi &quot;Hỏi khi kết nối&quot;</translation>
     </message>
@@ -357,6 +353,18 @@
         <translation>ID tiến trình</translation>
     </message>
     <message>
+        <source>Existing connection</source>
+        <translation>Kết nối hiện có</translation>
+    </message>
+    <message>
+        <source>Disabled Group</source>
+        <translation>Nhóm bị tắt</translation>
+    </message>
+    <message>
+        <source>Block Internet</source>
+        <translation>Chặn Internet</translation>
+    </message>
+    <message>
         <source>Direction</source>
         <translation>Hướng</translation>
     </message>
@@ -369,24 +377,8 @@
         <translation>Lý do</translation>
     </message>
     <message>
-        <source>Old connection</source>
-        <translation>Kết nối cũ</translation>
-    </message>
-    <message>
-        <source>Program&apos;s action</source>
-        <translation>Hành động của chương trình</translation>
-    </message>
-    <message>
-        <source>App. Group</source>
-        <translation>Nhóm ứng dụng</translation>
-    </message>
-    <message>
         <source>Filter Mode</source>
         <translation>Chế độ lọc</translation>
-    </message>
-    <message>
-        <source>LAN only</source>
-        <translation>Chỉ mạng LAN</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -403,6 +395,10 @@
     <message>
         <source>Global Rule after App Rules</source>
         <translation>Quy tắc chung sau quy tắc ứng dụng</translation>
+    </message>
+    <message>
+        <source>&quot;Ask to Connect&quot; limit reached</source>
+        <translation>Đã đạt giới hạn của &quot;Hỏi khi kết nối&quot;</translation>
     </message>
     <message>
         <source>Block Inbound</source>
@@ -488,6 +484,22 @@
         <translation>Thêm chương trình</translation>
     </message>
     <message>
+        <source>Allowed connections are collected</source>
+        <translation>Các kết nối được cho phép đang được thu thập</translation>
+    </message>
+    <message>
+        <source>Allowed connections are not collected</source>
+        <translation>Các kết nối được cho phép không được thu thập</translation>
+    </message>
+    <message>
+        <source>Blocked connections are collected</source>
+        <translation>Các kết nối bị chặn đang được thu thập</translation>
+    </message>
+    <message>
+        <source>Blocked connections are not collected</source>
+        <translation>Các kết nối bị chặn không được thu thập</translation>
+    </message>
+    <message>
         <source>Add Filter</source>
         <translation>Thêm bộ lọc</translation>
     </message>
@@ -512,12 +524,20 @@
         <translation>Tìm kiếm</translation>
     </message>
     <message>
+        <source>List Options</source>
+        <translation>Tùy chọn danh sách</translation>
+    </message>
+    <message>
         <source>Auto scroll</source>
         <translation>Tự động cuộn</translation>
     </message>
     <message>
         <source>Show host names</source>
         <translation>Hiển thị tên máy</translation>
+    </message>
+    <message>
+        <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
+        <translation>Chỉ các kết nối của chương trình bị cảnh báo hoặc được đánh dấu bằng hành động Cảnh báo được thu thập</translation>
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
@@ -528,8 +548,12 @@
         <translation>Bạn có chắc chắn muốn xóa tất cả các kết nối không?</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Tùy chọn</translation>
+        <source>Are you sure to remove the found connections?</source>
+        <translation>Bạn có chắc chắn muốn xóa các kết nối đã tìm thấy không?</translation>
+    </message>
+    <message>
+        <source>Only the last connections are searched: older ones may be found after that.</source>
+        <translation>Chỉ các kết nối gần nhất được tìm kiếm: các kết nối cũ hơn có thể được tìm thấy sau đó.</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -870,6 +894,10 @@
 <context>
     <name>FirewallConf</name>
     <message>
+        <source>Block All Traffic (incl. Localhost)</source>
+        <translation>Chặn tất cả lưu lượng (bao gồm Localhost)</translation>
+    </message>
+    <message>
         <source>Auto-Learn</source>
         <translation>Tự học</translation>
     </message>
@@ -904,10 +932,6 @@
     <message>
         <source>Ask to Connect</source>
         <translation>Hỏi khi kết nối</translation>
-    </message>
-    <message>
-        <source>Block All Traffic</source>
-        <translation>Chặn tất cả lưu lượng</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
@@ -1527,10 +1551,6 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
         <translation>Hiển thị màn hình chờ khi khởi động</translation>
     </message>
     <message>
-        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
-        <translation>Biểu tượng của các cửa sổ theo trạng thái biểu tượng khay (chế độ lọc, cảnh báo)</translation>
-    </message>
-    <message>
         <source>Auto-focus Alert Window</source>
         <translation>Tự động focus cửa sổ cảnh báo</translation>
     </message>
@@ -1667,12 +1687,24 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
         <translation>Chương trình</translation>
     </message>
     <message>
+        <source>Show the current state in the windows&apos; icons</source>
+        <translation>Hiển thị trạng thái hiện tại trên biểu tượng của các cửa sổ</translation>
+    </message>
+    <message>
+        <source>Fort&apos;s windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>Biểu tượng của các cửa sổ Fort theo trạng thái biểu tượng khay (chế độ lọc, cảnh báo)</translation>
+    </message>
+    <message>
         <source>Use System Notifications for New Programs</source>
         <translation>Sử dụng thông báo hệ thống cho chương trình mới</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>Tự động hiển thị cửa sổ cảnh báo cho chương trình mới</translation>
+    </message>
+    <message>
+        <source>Alert Modes</source>
+        <translation>Chế độ cảnh báo</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
@@ -1693,10 +1725,6 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
     <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>Tự động xóa cảnh báo khi đóng cửa sổ</translation>
-    </message>
-    <message>
-        <source>Show window icons as in tray icon</source>
-        <translation>Hiển thị biểu tượng cửa sổ giống như biểu tượng trên khay</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
@@ -1766,6 +1794,13 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
     </message>
 </context>
 <context>
+    <name>MenuButton</name>
+    <message>
+        <source>Menu</source>
+        <translation>Menu</translation>
+    </message>
+</context>
+<context>
     <name>OptMainPage</name>
     <message>
         <source>Options</source>
@@ -1830,6 +1865,13 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
     <message>
         <source>Import new programs</source>
         <translation>Nhập các chương trình mới</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsButton</name>
+    <message>
+        <source>Options</source>
+        <translation>Tùy chọn</translation>
     </message>
 </context>
 <context>
@@ -2816,10 +2858,6 @@ Lưu các thay đổi?</translation>
         <translation>Chỉnh sửa</translation>
     </message>
     <message>
-        <source>Help</source>
-        <translation>Trợ giúp</translation>
-    </message>
-    <message>
         <source>Tray Menu</source>
         <translation>Menu khay hệ thống</translation>
     </message>
@@ -3117,10 +3155,6 @@ Lưu các thay đổi?</translation>
         <translation>Tên hiển thị</translation>
     </message>
     <message>
-        <source>Process ID</source>
-        <translation>ID tiến trình (PID)</translation>
-    </message>
-    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>Các thay đổi đã bị hệ thống đặt lại. Hãy làm cho dịch vụ có thể theo dõi lại được.</translation>
     </message>
@@ -3340,6 +3374,13 @@ Mất gói tin: %2</translation>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
         <translation>Bạn có chắc chắn muốn gỡ bỏ giới hạn tốc độ đã chọn không?</translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsButton</name>
+    <message>
+        <source>Statistics</source>
+        <translation>Thống kê</translation>
     </message>
 </context>
 <context>
@@ -3726,6 +3767,10 @@ Mất gói tin: %2</translation>
         <translation>Bạn có chắc chắn muốn xóa tất cả thống kê không?</translation>
     </message>
     <message>
+        <source>Make Active When Window Opens</source>
+        <translation>Kích hoạt khi cửa sổ mở</translation>
+    </message>
+    <message>
         <source>Edit</source>
         <translation>Chỉnh sửa</translation>
     </message>
@@ -3748,10 +3793,6 @@ Mất gói tin: %2</translation>
     <message>
         <source>Are you sure to remove statistics for selected program?</source>
         <translation>Bạn có chắc chắn muốn gỡ bỏ thống kê cho chương trình đã chọn không?</translation>
-    </message>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>Làm cho tab này hoạt động khi cửa sổ mở?</translation>
     </message>
     <message>
         <source>Traffic</source>
@@ -3812,6 +3853,10 @@ Mất gói tin: %2</translation>
         <translation>Thống kê</translation>
     </message>
     <message>
+        <source>New program(s) request network access</source>
+        <translation>Chương trình mới yêu cầu truy cập mạng</translation>
+    </message>
+    <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation>Bạn có chắc chắn muốn chuyển đổi &quot;%1&quot; không?</translation>
     </message>
@@ -3826,10 +3871,6 @@ Mất gói tin: %2</translation>
     <message>
         <source>My Fort</source>
         <translation>Fort của tôi</translation>
-    </message>
-    <message>
-        <source>New program detected!</source>
-        <translation>Đã phát hiện chương trình mới!</translation>
     </message>
     <message>
         <source>Rules</source>

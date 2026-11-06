@@ -317,10 +317,6 @@
         <translation>Blockierte Internetadresse</translation>
     </message>
     <message>
-        <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation>Limit von &quot;Nach Verbindung fragen&quot;</translation>
-    </message>
-    <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
         <translation>Angehalten durch &quot;Nach Verbindung fragen&quot;</translation>
     </message>
@@ -357,6 +353,18 @@
         <translation>Prozess-ID</translation>
     </message>
     <message>
+        <source>Existing connection</source>
+        <translation>Bestehende Verbindung</translation>
+    </message>
+    <message>
+        <source>Disabled Group</source>
+        <translation>Deaktivierte Gruppe</translation>
+    </message>
+    <message>
+        <source>Block Internet</source>
+        <translation>Internet blockieren</translation>
+    </message>
+    <message>
         <source>Direction</source>
         <translation>Richtung</translation>
     </message>
@@ -369,24 +377,8 @@
         <translation>Grund</translation>
     </message>
     <message>
-        <source>Old connection</source>
-        <translation>Alte Verbindung</translation>
-    </message>
-    <message>
-        <source>Program&apos;s action</source>
-        <translation>Programm-Aktion</translation>
-    </message>
-    <message>
-        <source>App. Group</source>
-        <translation>App-Gruppe</translation>
-    </message>
-    <message>
         <source>Filter Mode</source>
         <translation>Filter-Modus</translation>
-    </message>
-    <message>
-        <source>LAN only</source>
-        <translation>Nur LAN</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -403,6 +395,10 @@
     <message>
         <source>Global Rule after App Rules</source>
         <translation>Globale Regel nach App-Regeln</translation>
+    </message>
+    <message>
+        <source>&quot;Ask to Connect&quot; limit reached</source>
+        <translation>Limit von &quot;Nach Verbindung fragen&quot; erreicht</translation>
     </message>
     <message>
         <source>Block Inbound</source>
@@ -488,6 +484,22 @@
         <translation>Programm hinzufügen</translation>
     </message>
     <message>
+        <source>Allowed connections are collected</source>
+        <translation>Erlaubte Verbindungen werden gesammelt</translation>
+    </message>
+    <message>
+        <source>Allowed connections are not collected</source>
+        <translation>Erlaubte Verbindungen werden nicht gesammelt</translation>
+    </message>
+    <message>
+        <source>Blocked connections are collected</source>
+        <translation>Blockierte Verbindungen werden gesammelt</translation>
+    </message>
+    <message>
+        <source>Blocked connections are not collected</source>
+        <translation>Blockierte Verbindungen werden nicht gesammelt</translation>
+    </message>
+    <message>
         <source>Add Filter</source>
         <translation>Filter hinzufügen</translation>
     </message>
@@ -512,12 +524,20 @@
         <translation>Suche</translation>
     </message>
     <message>
+        <source>List Options</source>
+        <translation>Listenoptionen</translation>
+    </message>
+    <message>
         <source>Auto scroll</source>
         <translation>Auto Scroll</translation>
     </message>
     <message>
         <source>Show host names</source>
         <translation>Hostnamen anzeigen</translation>
+    </message>
+    <message>
+        <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
+        <translation>Nur Verbindungen alarmierter Programme oder durch die Aktion „Alarm“ markierte werden gesammelt</translation>
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
@@ -528,8 +548,12 @@
         <translation>Sind Sie sicher, alle Verbindungen zu entfernen?</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Optionen</translation>
+        <source>Are you sure to remove the found connections?</source>
+        <translation>Sind Sie sicher, die gefundenen Verbindungen zu entfernen?</translation>
+    </message>
+    <message>
+        <source>Only the last connections are searched: older ones may be found after that.</source>
+        <translation>Nur die letzten Verbindungen werden durchsucht: ältere können danach gefunden werden.</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -870,6 +894,10 @@
 <context>
     <name>FirewallConf</name>
     <message>
+        <source>Block All Traffic (incl. Localhost)</source>
+        <translation>Gesamten Datenverkehr blockieren (inkl. Localhost)</translation>
+    </message>
+    <message>
         <source>Auto-Learn</source>
         <translation>Automatisches lernen</translation>
     </message>
@@ -904,10 +932,6 @@
     <message>
         <source>Ask to Connect</source>
         <translation>Nach Verbindung fragen</translation>
-    </message>
-    <message>
-        <source>Block All Traffic</source>
-        <translation>Gesamten Datenverkehr blockieren</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
@@ -1527,10 +1551,6 @@ Ein Programm ist nur aktiviert, wenn IRGENDEINE seiner exklusiven Gruppen aktivi
         <translation>Begrüßungsbildschirm beim Start anzeigen</translation>
     </message>
     <message>
-        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
-        <translation>Die Symbole der Fenster folgen dem Zustand des Tray-Symbols (Filter-Modus, Alarme)</translation>
-    </message>
-    <message>
         <source>Auto-focus Alert Window</source>
         <translation>Alarmfenster automatisch fokussieren</translation>
     </message>
@@ -1667,12 +1687,24 @@ Ein Programm ist nur aktiviert, wenn IRGENDEINE seiner exklusiven Gruppen aktivi
         <translation>Programme</translation>
     </message>
     <message>
+        <source>Show the current state in the windows&apos; icons</source>
+        <translation>Den aktuellen Zustand in den Fenstersymbolen anzeigen</translation>
+    </message>
+    <message>
+        <source>Fort&apos;s windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>Die Symbole der Fenster von Fort folgen dem Zustand des Tray-Symbols (Filter-Modus, Alarme)</translation>
+    </message>
+    <message>
         <source>Use System Notifications for New Programs</source>
         <translation>Systembenachrichtigungen für neue Programme verwenden</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>Alarmfenster für neue Programme automatisch anzeigen</translation>
+    </message>
+    <message>
+        <source>Alert Modes</source>
+        <translation>Alarmmodi</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
@@ -1693,10 +1725,6 @@ Ein Programm ist nur aktiviert, wenn IRGENDEINE seiner exklusiven Gruppen aktivi
     <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>Warnungen beim Schließen des Fensters automatisch löschen</translation>
-    </message>
-    <message>
-        <source>Show window icons as in tray icon</source>
-        <translation>Fenstersymbole genauso wie als Traysymbol anzeigen</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
@@ -1766,6 +1794,13 @@ Ein Programm ist nur aktiviert, wenn IRGENDEINE seiner exklusiven Gruppen aktivi
     </message>
 </context>
 <context>
+    <name>MenuButton</name>
+    <message>
+        <source>Menu</source>
+        <translation>Menü</translation>
+    </message>
+</context>
+<context>
     <name>OptMainPage</name>
     <message>
         <source>Options</source>
@@ -1830,6 +1865,13 @@ Ein Programm ist nur aktiviert, wenn IRGENDEINE seiner exklusiven Gruppen aktivi
     <message>
         <source>Import new programs</source>
         <translation>Neue Programme importieren</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsButton</name>
+    <message>
+        <source>Options</source>
+        <translation>Optionen</translation>
     </message>
 </context>
 <context>
@@ -2816,10 +2858,6 @@ Save the changes?</source>
         <translation>Bearbeiten</translation>
     </message>
     <message>
-        <source>Help</source>
-        <translation>Hilfe</translation>
-    </message>
-    <message>
         <source>Tray Menu</source>
         <translation>Tray-Menü</translation>
     </message>
@@ -3117,10 +3155,6 @@ Save the changes?</source>
         <translation>Anzeigename</translation>
     </message>
     <message>
-        <source>Process ID</source>
-        <translation>Prozess-ID</translation>
-    </message>
-    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>Die Änderungen wurden vom System zurückgesetzt. Machen Sie den Dienst wieder verfolgbar.</translation>
     </message>
@@ -3340,6 +3374,13 @@ Paketverlust: %2</translation>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
         <translation>Sind Sie sicher, dass die ausgewählte Geschwindigkeitsbegrenzung entfernt werden soll?</translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsButton</name>
+    <message>
+        <source>Statistics</source>
+        <translation>Statistiken</translation>
     </message>
 </context>
 <context>
@@ -3726,6 +3767,10 @@ Paketverlust: %2</translation>
         <translation>Sind Sie sicher, alle Statistiken zu löschen?</translation>
     </message>
     <message>
+        <source>Make Active When Window Opens</source>
+        <translation>Beim Öffnen des Fensters aktiv machen</translation>
+    </message>
+    <message>
         <source>Edit</source>
         <translation>Bearbeiten</translation>
     </message>
@@ -3748,10 +3793,6 @@ Paketverlust: %2</translation>
     <message>
         <source>Are you sure to remove statistics for selected program?</source>
         <translation>Sind Sie sicher, die Statistiken für das ausgewählte Programm zu entfernen?</translation>
-    </message>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>Diesen Tab beim Öffnen des Fensters aktiv machen?</translation>
     </message>
     <message>
         <source>Traffic</source>
@@ -3812,6 +3853,10 @@ Paketverlust: %2</translation>
         <translation>Statistiken</translation>
     </message>
     <message>
+        <source>New program(s) request network access</source>
+        <translation>Neue Programme fordern Netzwerkzugriff an</translation>
+    </message>
+    <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation>Möchten Sie wirklich die &quot;%1&quot; wechseln?</translation>
     </message>
@@ -3826,10 +3871,6 @@ Paketverlust: %2</translation>
     <message>
         <source>My Fort</source>
         <translation>Mein Fort</translation>
-    </message>
-    <message>
-        <source>New program detected!</source>
-        <translation>Neues Programm erkannt!</translation>
     </message>
     <message>
         <source>Rules</source>

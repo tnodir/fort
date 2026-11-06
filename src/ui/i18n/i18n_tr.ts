@@ -317,10 +317,6 @@
         <translation>Engellenen İnternet adresi</translation>
     </message>
     <message>
-        <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation>&quot;Bağlantı Kurmayı İste&quot; sınırı</translation>
-    </message>
-    <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
         <translation>&quot;Bağlantı Kurmayı İste&quot; ile duraklatıldı</translation>
     </message>
@@ -357,6 +353,18 @@
         <translation>İşlem ID</translation>
     </message>
     <message>
+        <source>Existing connection</source>
+        <translation>Mevcut bağlantı</translation>
+    </message>
+    <message>
+        <source>Disabled Group</source>
+        <translation>Devre Dışı Grup</translation>
+    </message>
+    <message>
+        <source>Block Internet</source>
+        <translation>İnterneti Engelle</translation>
+    </message>
+    <message>
         <source>Direction</source>
         <translation>Yön</translation>
     </message>
@@ -369,24 +377,8 @@
         <translation>Neden</translation>
     </message>
     <message>
-        <source>Old connection</source>
-        <translation>Eski Bağlantı </translation>
-    </message>
-    <message>
-        <source>Program&apos;s action</source>
-        <translation>Program &apos; Eylemi</translation>
-    </message>
-    <message>
-        <source>App. Group</source>
-        <translation>Uygulama Grubu</translation>
-    </message>
-    <message>
         <source>Filter Mode</source>
         <translation>Filtreleme Modu </translation>
-    </message>
-    <message>
-        <source>LAN only</source>
-        <translation>Sadece LAN</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -403,6 +395,10 @@
     <message>
         <source>Global Rule after App Rules</source>
         <translation>Uygulama Kurallarından Sonra Global Kural </translation>
+    </message>
+    <message>
+        <source>&quot;Ask to Connect&quot; limit reached</source>
+        <translation>&quot;Bağlantı Kurmayı İste&quot; sınırına ulaşıldı</translation>
     </message>
     <message>
         <source>Block Inbound</source>
@@ -488,6 +484,22 @@
         <translation>Program Ekle</translation>
     </message>
     <message>
+        <source>Allowed connections are collected</source>
+        <translation>İzin verilen bağlantılar toplanıyor</translation>
+    </message>
+    <message>
+        <source>Allowed connections are not collected</source>
+        <translation>İzin verilen bağlantılar toplanmıyor</translation>
+    </message>
+    <message>
+        <source>Blocked connections are collected</source>
+        <translation>Engellenen bağlantılar toplanıyor</translation>
+    </message>
+    <message>
+        <source>Blocked connections are not collected</source>
+        <translation>Engellenen bağlantılar toplanmıyor</translation>
+    </message>
+    <message>
         <source>Add Filter</source>
         <translation>Filtre Ekle</translation>
     </message>
@@ -512,12 +524,20 @@
         <translation>Ara</translation>
     </message>
     <message>
+        <source>List Options</source>
+        <translation>Liste Ayarları</translation>
+    </message>
+    <message>
         <source>Auto scroll</source>
         <translation>Otomatik Kaydır </translation>
     </message>
     <message>
         <source>Show host names</source>
         <translation>Sunucu Adlarını Göster </translation>
+    </message>
+    <message>
+        <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
+        <translation>Yalnızca uyarı verilen veya Uyarı eylemiyle işaretlenen programların bağlantıları toplanıyor</translation>
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
@@ -528,8 +548,12 @@
         <translation>Tüm bağlantıları kaldırmak istediğinden emin misin?</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Ayarlar</translation>
+        <source>Are you sure to remove the found connections?</source>
+        <translation>Bulunan bağlantıları kaldırmak istediğinden emin misin?</translation>
+    </message>
+    <message>
+        <source>Only the last connections are searched: older ones may be found after that.</source>
+        <translation>Yalnızca son bağlantılar aranır: daha eskileri bundan sonra bulunabilir.</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -870,6 +894,10 @@
 <context>
     <name>FirewallConf</name>
     <message>
+        <source>Block All Traffic (incl. Localhost)</source>
+        <translation>Tüm Trafiği Engelle (Localhost Dahil)</translation>
+    </message>
+    <message>
         <source>Auto-Learn</source>
         <translation>Otomatik Öğren</translation>
     </message>
@@ -904,10 +932,6 @@
     <message>
         <source>Ask to Connect</source>
         <translation>Bağlantı Kurmayı İste</translation>
-    </message>
-    <message>
-        <source>Block All Traffic</source>
-        <translation>Tüm Trafiği Engelle </translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
@@ -1527,10 +1551,6 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
         <translation>Başlangıçta Açılış Ekranını Göster</translation>
     </message>
     <message>
-        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
-        <translation>Pencerelerin simgeleri tepsi simgesinin durumunu izler (Filtreleme Modu, uyarılar)</translation>
-    </message>
-    <message>
         <source>Auto-focus Alert Window</source>
         <translation>Uyarı Penceresine Otomatik Odaklan</translation>
     </message>
@@ -1667,12 +1687,24 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
         <translation>Programlar</translation>
     </message>
     <message>
+        <source>Show the current state in the windows&apos; icons</source>
+        <translation>Mevcut Durumu Pencere Simgelerinde Göster</translation>
+    </message>
+    <message>
+        <source>Fort&apos;s windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>Fort pencerelerinin simgeleri tepsi simgesinin durumunu izler (Filtreleme Modu, uyarılar)</translation>
+    </message>
+    <message>
         <source>Use System Notifications for New Programs</source>
         <translation>Yeni Programlar İçin Sistem Bildirimlerini Kullan</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>Yeni Programlar İçin Otomatik Bildirim Penceresi Göster</translation>
+    </message>
+    <message>
+        <source>Alert Modes</source>
+        <translation>Uyarı Modları</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
@@ -1693,10 +1725,6 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
     <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>Pencere Kapatıldığında Uyarıları Otomatik Olarak Temizle</translation>
-    </message>
-    <message>
-        <source>Show window icons as in tray icon</source>
-        <translation>Pencere Simgelerini Tepsi Simgesi Gibi Göster</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
@@ -1766,6 +1794,13 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
     </message>
 </context>
 <context>
+    <name>MenuButton</name>
+    <message>
+        <source>Menu</source>
+        <translation>Menü</translation>
+    </message>
+</context>
+<context>
     <name>OptMainPage</name>
     <message>
         <source>Options</source>
@@ -1830,6 +1865,13 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
     <message>
         <source>Import new programs</source>
         <translation>Yeni Programları İçe Aktar </translation>
+    </message>
+</context>
+<context>
+    <name>OptionsButton</name>
+    <message>
+        <source>Options</source>
+        <translation>Ayarlar</translation>
     </message>
 </context>
 <context>
@@ -2815,10 +2857,6 @@ Değişiklikler kaydedilsin mi?</translation>
         <translation>Düzenle</translation>
     </message>
     <message>
-        <source>Help</source>
-        <translation>Yardım</translation>
-    </message>
-    <message>
         <source>Tray Menu</source>
         <translation>Tepsi Menüsü</translation>
     </message>
@@ -3116,10 +3154,6 @@ Değişiklikler kaydedilsin mi?</translation>
         <translation>Görünen Ad</translation>
     </message>
     <message>
-        <source>Process ID</source>
-        <translation>İşlem ID</translation>
-    </message>
-    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>Değişiklikler sistem tarafından sıfırlandı. Hizmeti yeniden izlenebilir yapın.</translation>
     </message>
@@ -3339,6 +3373,13 @@ Paket kaybı: %2</translation>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
         <translation>Seçili hız sınırını kaldırmak istediğinden emin misin?</translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsButton</name>
+    <message>
+        <source>Statistics</source>
+        <translation>İstatistikler</translation>
     </message>
 </context>
 <context>
@@ -3725,6 +3766,10 @@ Paket kaybı: %2</translation>
         <translation>Tüm istatistikleri silmek istediğinden emin misin?</translation>
     </message>
     <message>
+        <source>Make Active When Window Opens</source>
+        <translation>Pencere Açıldığında Etkinleştir</translation>
+    </message>
+    <message>
         <source>Edit</source>
         <translation>Düzenle</translation>
     </message>
@@ -3747,10 +3792,6 @@ Paket kaybı: %2</translation>
     <message>
         <source>Are you sure to remove statistics for selected program?</source>
         <translation>Seçilen program için istatistikleri kaldırmak istediğinden emin misin?</translation>
-    </message>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>Pencere Açıldığında Bu Sekme Seçilsin Mi?</translation>
     </message>
     <message>
         <source>Traffic</source>
@@ -3811,6 +3852,10 @@ Paket kaybı: %2</translation>
         <translation>İstatistikler</translation>
     </message>
     <message>
+        <source>New program(s) request network access</source>
+        <translation>Yeni programlar ağ erişimi istiyor</translation>
+    </message>
+    <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation>Değiştirmek istediğinden emin misin?: &quot;%1&quot;</translation>
     </message>
@@ -3825,10 +3870,6 @@ Paket kaybı: %2</translation>
     <message>
         <source>My Fort</source>
         <translation>Fort</translation>
-    </message>
-    <message>
-        <source>New program detected!</source>
-        <translation>Yeni Program Tespit Edildi!</translation>
     </message>
     <message>
         <source>Rules</source>

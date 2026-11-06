@@ -317,10 +317,6 @@
         <translation>عنوان إنترنت محظور</translation>
     </message>
     <message>
-        <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation>حد &quot;نبهني عند محاولة الاتصال&quot;</translation>
-    </message>
-    <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
         <translation>متوقف مؤقتًا بواسطة &quot;نبهني عند محاولة الاتصال&quot;</translation>
     </message>
@@ -357,6 +353,18 @@
         <translation>معرّف العملية</translation>
     </message>
     <message>
+        <source>Existing connection</source>
+        <translation>اتصال قائم</translation>
+    </message>
+    <message>
+        <source>Disabled Group</source>
+        <translation>مجموعة معطلة</translation>
+    </message>
+    <message>
+        <source>Block Internet</source>
+        <translation>حظر الإنترنت</translation>
+    </message>
+    <message>
         <source>Direction</source>
         <translation>الاتجاه</translation>
     </message>
@@ -369,24 +377,8 @@
         <translation>السبب</translation>
     </message>
     <message>
-        <source>Old connection</source>
-        <translation>اتصال قديم</translation>
-    </message>
-    <message>
-        <source>Program&apos;s action</source>
-        <translation>إجراء البرنامج</translation>
-    </message>
-    <message>
-        <source>App. Group</source>
-        <translation>تطبيق مجموعة</translation>
-    </message>
-    <message>
         <source>Filter Mode</source>
         <translation>نمط المرشّح</translation>
-    </message>
-    <message>
-        <source>LAN only</source>
-        <translation>فقط LAN</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -403,6 +395,10 @@
     <message>
         <source>Global Rule after App Rules</source>
         <translation>قاعدة عالمية بعد قواعد التطبيق</translation>
+    </message>
+    <message>
+        <source>&quot;Ask to Connect&quot; limit reached</source>
+        <translation>تم بلوغ حد &quot;نبهني عند محاولة الاتصال&quot;</translation>
     </message>
     <message>
         <source>Block Inbound</source>
@@ -488,6 +484,22 @@
         <translation>إضافة برنامج</translation>
     </message>
     <message>
+        <source>Allowed connections are collected</source>
+        <translation>يتم جمع الاتصالات المسموح بها</translation>
+    </message>
+    <message>
+        <source>Allowed connections are not collected</source>
+        <translation>لا يتم جمع الاتصالات المسموح بها</translation>
+    </message>
+    <message>
+        <source>Blocked connections are collected</source>
+        <translation>يتم جمع الاتصالات المحظورة</translation>
+    </message>
+    <message>
+        <source>Blocked connections are not collected</source>
+        <translation>لا يتم جمع الاتصالات المحظورة</translation>
+    </message>
+    <message>
         <source>Add Filter</source>
         <translation>إضافة مرشّح</translation>
     </message>
@@ -512,12 +524,20 @@
         <translation>البحث</translation>
     </message>
     <message>
+        <source>List Options</source>
+        <translation>خيارات القائمة</translation>
+    </message>
+    <message>
         <source>Auto scroll</source>
         <translation>تمرير تلقائي</translation>
     </message>
     <message>
         <source>Show host names</source>
         <translation>عرض اسم المضيف</translation>
+    </message>
+    <message>
+        <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
+        <translation>يتم جمع اتصالات البرامج المنبَّه عنها أو المعلَّمة بإجراء التنبيه فقط</translation>
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
@@ -528,8 +548,12 @@
         <translation>هل تريد حذف جميع عمليات الاتصال؟</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>الخيارات</translation>
+        <source>Are you sure to remove the found connections?</source>
+        <translation>هل تريد حذف الاتصالات التي تم العثور عليها؟</translation>
+    </message>
+    <message>
+        <source>Only the last connections are searched: older ones may be found after that.</source>
+        <translation>يتم البحث في آخر الاتصالات فقط: قد يتم العثور على الأقدم بعد ذلك.</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -870,6 +894,10 @@
 <context>
     <name>FirewallConf</name>
     <message>
+        <source>Block All Traffic (incl. Localhost)</source>
+        <translation>منع كافة حركة المرور (بما في ذلك المضيف المحلي)</translation>
+    </message>
+    <message>
         <source>Auto-Learn</source>
         <translation>تعلم تلقائي</translation>
     </message>
@@ -904,10 +932,6 @@
     <message>
         <source>Ask to Connect</source>
         <translation>نبهني عند محاولة الاتصال</translation>
-    </message>
-    <message>
-        <source>Block All Traffic</source>
-        <translation>منع كافة حركة المرور</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
@@ -1527,10 +1551,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>عرض شعار البرنامج عند التشغيل</translation>
     </message>
     <message>
-        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
-        <translation>تتبع أيقونات النوافذ حالة أيقونة علبة النظام (نمط المرشّح، التنبيهات)</translation>
-    </message>
-    <message>
         <source>Auto-focus Alert Window</source>
         <translation>تركيز تلقائي على نافذة التنبيه</translation>
     </message>
@@ -1667,12 +1687,24 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>البرامج</translation>
     </message>
     <message>
+        <source>Show the current state in the windows&apos; icons</source>
+        <translation>عرض الحالة الحالية في أيقونات النوافذ</translation>
+    </message>
+    <message>
+        <source>Fort&apos;s windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>تتبع أيقونات نوافذ Fort حالة أيقونة علبة النظام (نمط المرشّح، التنبيهات)</translation>
+    </message>
+    <message>
         <source>Use System Notifications for New Programs</source>
         <translation>إرسال الإشعارات إلى النظام عند محاولة برنامج الاتصال بالشبكة</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>عرض نافذة تحذير عند محاولة برنامج جديد الاتصال بالشبكة</translation>
+    </message>
+    <message>
+        <source>Alert Modes</source>
+        <translation>أنماط التنبيه</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
@@ -1693,10 +1725,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>تنظيف تلقائي للتنبيهات عند إغلاق النافذة</translation>
-    </message>
-    <message>
-        <source>Show window icons as in tray icon</source>
-        <translation>عرض أيقونات النوافذ كأيقونة الدُرج</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
@@ -1766,6 +1794,13 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>MenuButton</name>
+    <message>
+        <source>Menu</source>
+        <translation>القائمة</translation>
+    </message>
+</context>
+<context>
     <name>OptMainPage</name>
     <message>
         <source>Options</source>
@@ -1830,6 +1865,13 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Import new programs</source>
         <translation>استورد برامج جديدة</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsButton</name>
+    <message>
+        <source>Options</source>
+        <translation>الخيارات</translation>
     </message>
 </context>
 <context>
@@ -2816,10 +2858,6 @@ Save the changes?</source>
         <translation>تعديل</translation>
     </message>
     <message>
-        <source>Help</source>
-        <translation>مساعدة</translation>
-    </message>
-    <message>
         <source>Tray Menu</source>
         <translation>قائمة الدُرج</translation>
     </message>
@@ -3117,10 +3155,6 @@ Save the changes?</source>
         <translation>الاسم الظاهر</translation>
     </message>
     <message>
-        <source>Process ID</source>
-        <translation>معرّف العملية</translation>
-    </message>
-    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>تمت إعادة ضبط التغييرات بواسطة النظام. اجعل الخدمة قابلة للتتبع مرة أخرى.</translation>
     </message>
@@ -3340,6 +3374,13 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
         <translation>هل تريد حذف حد السرعة المحدد؟</translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsButton</name>
+    <message>
+        <source>Statistics</source>
+        <translation>الإحصائيات</translation>
     </message>
 </context>
 <context>
@@ -3726,6 +3767,10 @@ Packet loss: %2</source>
         <translation>هل تريد مسح جميع الإحصائيات؟</translation>
     </message>
     <message>
+        <source>Make Active When Window Opens</source>
+        <translation>التنشيط عند فتح النافذة</translation>
+    </message>
+    <message>
         <source>Edit</source>
         <translation>تعديل</translation>
     </message>
@@ -3748,10 +3793,6 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to remove statistics for selected program?</source>
         <translation>هل تريد حذف الإحصائيات للبرنامج المحدد؟</translation>
-    </message>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>جعل هذا التبويب نشطًا عند فتح النافذة؟</translation>
     </message>
     <message>
         <source>Traffic</source>
@@ -3812,6 +3853,10 @@ Packet loss: %2</source>
         <translation>الإحصائيات</translation>
     </message>
     <message>
+        <source>New program(s) request network access</source>
+        <translation>برامج جديدة تطلب الوصول إلى الشبكة</translation>
+    </message>
+    <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation>هل تريد تبديل &quot;%1&quot;؟</translation>
     </message>
@@ -3826,10 +3871,6 @@ Packet loss: %2</source>
     <message>
         <source>My Fort</source>
         <translation>Fort الخاص بي</translation>
-    </message>
-    <message>
-        <source>New program detected!</source>
-        <translation>تم اكتشاف برنامج يحاول الاتصال!</translation>
     </message>
     <message>
         <source>Rules</source>

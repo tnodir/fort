@@ -317,10 +317,6 @@
         <translation>Заблокированный интернет-адрес</translation>
     </message>
     <message>
-        <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation>Лимит функции &quot;Запрос на соединение&quot;</translation>
-    </message>
-    <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
         <translation>Приостановлено функцией &quot;Запрос на соединение&quot;</translation>
     </message>
@@ -357,6 +353,18 @@
         <translation>ИД процесса</translation>
     </message>
     <message>
+        <source>Existing connection</source>
+        <translation>Существующее соединение</translation>
+    </message>
+    <message>
+        <source>Disabled Group</source>
+        <translation>Отключённая группа</translation>
+    </message>
+    <message>
+        <source>Block Internet</source>
+        <translation>Блокировка интернета</translation>
+    </message>
+    <message>
         <source>Direction</source>
         <translation>Направление</translation>
     </message>
@@ -369,24 +377,8 @@
         <translation>Причина</translation>
     </message>
     <message>
-        <source>Old connection</source>
-        <translation>Старое соединение</translation>
-    </message>
-    <message>
-        <source>Program&apos;s action</source>
-        <translation>Действие программы</translation>
-    </message>
-    <message>
-        <source>App. Group</source>
-        <translation>Группа приложений</translation>
-    </message>
-    <message>
         <source>Filter Mode</source>
         <translation>Режим фильтра</translation>
-    </message>
-    <message>
-        <source>LAN only</source>
-        <translation>Только локальная сеть</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -403,6 +395,10 @@
     <message>
         <source>Global Rule after App Rules</source>
         <translation>Глобальное правило после правил приложений</translation>
+    </message>
+    <message>
+        <source>&quot;Ask to Connect&quot; limit reached</source>
+        <translation>Достигнут лимит функции &quot;Запрос на соединение&quot;</translation>
     </message>
     <message>
         <source>Block Inbound</source>
@@ -488,6 +484,22 @@
         <translation>Добавить программу</translation>
     </message>
     <message>
+        <source>Allowed connections are collected</source>
+        <translation>Разрешённые соединения собираются</translation>
+    </message>
+    <message>
+        <source>Allowed connections are not collected</source>
+        <translation>Разрешённые соединения не собираются</translation>
+    </message>
+    <message>
+        <source>Blocked connections are collected</source>
+        <translation>Заблокированные соединения собираются</translation>
+    </message>
+    <message>
+        <source>Blocked connections are not collected</source>
+        <translation>Заблокированные соединения не собираются</translation>
+    </message>
+    <message>
         <source>Add Filter</source>
         <translation>Добавить фильтр</translation>
     </message>
@@ -512,12 +524,20 @@
         <translation>Поиск</translation>
     </message>
     <message>
+        <source>List Options</source>
+        <translation>Опции списка</translation>
+    </message>
+    <message>
         <source>Auto scroll</source>
         <translation>Автопрокрутка</translation>
     </message>
     <message>
         <source>Show host names</source>
         <translation>Показать имена хостов</translation>
+    </message>
+    <message>
+        <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
+        <translation>Собираются только соединения оповещённых программ или помеченные действием Оповещение</translation>
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
@@ -528,8 +548,12 @@
         <translation>Удалить все соединения?</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Опции</translation>
+        <source>Are you sure to remove the found connections?</source>
+        <translation>Удалить найденные соединения?</translation>
+    </message>
+    <message>
+        <source>Only the last connections are searched: older ones may be found after that.</source>
+        <translation>Поиск идёт только среди последних соединений: более старые могут найтись после этого.</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -870,6 +894,10 @@
 <context>
     <name>FirewallConf</name>
     <message>
+        <source>Block All Traffic (incl. Localhost)</source>
+        <translation>Блокировать весь трафик (включая локальный хост)</translation>
+    </message>
+    <message>
         <source>Auto-Learn</source>
         <translation>Автообучение</translation>
     </message>
@@ -904,10 +932,6 @@
     <message>
         <source>Ask to Connect</source>
         <translation>Запрос на соединение</translation>
-    </message>
-    <message>
-        <source>Block All Traffic</source>
-        <translation>Блокировать весь трафик</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
@@ -1527,10 +1551,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>Показ Заставки при старте</translation>
     </message>
     <message>
-        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
-        <translation>Значки окон следуют состоянию значка в трее (режим фильтра, оповещения)</translation>
-    </message>
-    <message>
         <source>Auto-focus Alert Window</source>
         <translation>Автофокус окна Оповещения</translation>
     </message>
@@ -1667,12 +1687,24 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>Программы</translation>
     </message>
     <message>
+        <source>Show the current state in the windows&apos; icons</source>
+        <translation>Показывать текущее состояние в значках окон</translation>
+    </message>
+    <message>
+        <source>Fort&apos;s windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>Значки окон Fort следуют состоянию значка в трее (режим фильтра, оповещения)</translation>
+    </message>
+    <message>
         <source>Use System Notifications for New Programs</source>
         <translation>Использовать системные уведомления о новых программах</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>Автопоказ Окна Оповещения для новых программ</translation>
+    </message>
+    <message>
+        <source>Alert Modes</source>
+        <translation>Режимы оповещения</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
@@ -1693,10 +1725,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>Автоочистка оповещений при закрытии окна</translation>
-    </message>
-    <message>
-        <source>Show window icons as in tray icon</source>
-        <translation>Показывать значки окон как у значка в трее</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
@@ -1766,6 +1794,13 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>MenuButton</name>
+    <message>
+        <source>Menu</source>
+        <translation>Меню</translation>
+    </message>
+</context>
+<context>
     <name>OptMainPage</name>
     <message>
         <source>Options</source>
@@ -1830,6 +1865,13 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Import new programs</source>
         <translation>Импорт новых программ</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsButton</name>
+    <message>
+        <source>Options</source>
+        <translation>Опции</translation>
     </message>
 </context>
 <context>
@@ -2816,10 +2858,6 @@ Save the changes?</source>
         <translation>Изменить</translation>
     </message>
     <message>
-        <source>Help</source>
-        <translation>Справка</translation>
-    </message>
-    <message>
         <source>Tray Menu</source>
         <translation>Меню в трее</translation>
     </message>
@@ -3117,10 +3155,6 @@ Save the changes?</source>
         <translation>Отображаемое имя</translation>
     </message>
     <message>
-        <source>Process ID</source>
-        <translation>ИД процесса</translation>
-    </message>
-    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>Изменения были сброшены системой. Сделайте службу отслеживаемой снова.</translation>
     </message>
@@ -3340,6 +3374,13 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
         <translation>Удалить выбранное ограничение скорости?</translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsButton</name>
+    <message>
+        <source>Statistics</source>
+        <translation>Статистика</translation>
     </message>
 </context>
 <context>
@@ -3726,6 +3767,10 @@ Packet loss: %2</source>
         <translation>Очистить всю статистику?</translation>
     </message>
     <message>
+        <source>Make Active When Window Opens</source>
+        <translation>Делать активной при открытии окна</translation>
+    </message>
+    <message>
         <source>Edit</source>
         <translation>Изменить</translation>
     </message>
@@ -3748,10 +3793,6 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to remove statistics for selected program?</source>
         <translation>Удалить статистику для выбранной программы?</translation>
-    </message>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>Сделать эту вкладку активной при открытии окна?</translation>
     </message>
     <message>
         <source>Traffic</source>
@@ -3812,6 +3853,10 @@ Packet loss: %2</source>
         <translation>Статистика</translation>
     </message>
     <message>
+        <source>New program(s) request network access</source>
+        <translation>Новые программы запрашивают доступ к сети</translation>
+    </message>
+    <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation>Переключить &quot;%1&quot;?</translation>
     </message>
@@ -3826,10 +3871,6 @@ Packet loss: %2</source>
     <message>
         <source>My Fort</source>
         <translation>Мой Форт</translation>
-    </message>
-    <message>
-        <source>New program detected!</source>
-        <translation>Обнаружена новая программа!</translation>
     </message>
     <message>
         <source>Rules</source>

@@ -317,10 +317,6 @@
         <translation>ブロックされたインターネットアドレス</translation>
     </message>
     <message>
-        <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation>「接続を確認する」の制限</translation>
-    </message>
-    <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
         <translation>「接続を確認する」により一時停止</translation>
     </message>
@@ -357,6 +353,18 @@
         <translation>プロセス ID</translation>
     </message>
     <message>
+        <source>Existing connection</source>
+        <translation>既存の接続</translation>
+    </message>
+    <message>
+        <source>Disabled Group</source>
+        <translation>無効なグループ</translation>
+    </message>
+    <message>
+        <source>Block Internet</source>
+        <translation>インターネットをブロック</translation>
+    </message>
+    <message>
         <source>Direction</source>
         <translation>方向</translation>
     </message>
@@ -369,24 +377,8 @@
         <translation>理由</translation>
     </message>
     <message>
-        <source>Old connection</source>
-        <translation>古い接続</translation>
-    </message>
-    <message>
-        <source>Program&apos;s action</source>
-        <translation>プログラムの操作</translation>
-    </message>
-    <message>
-        <source>App. Group</source>
-        <translation>アプリ グループ</translation>
-    </message>
-    <message>
         <source>Filter Mode</source>
         <translation>フィルター モード</translation>
-    </message>
-    <message>
-        <source>LAN only</source>
-        <translation>LAN のみ</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -403,6 +395,10 @@
     <message>
         <source>Global Rule after App Rules</source>
         <translation>アプリケーションルールの後のグローバルルール</translation>
+    </message>
+    <message>
+        <source>&quot;Ask to Connect&quot; limit reached</source>
+        <translation>「接続を確認する」の制限に達しました</translation>
     </message>
     <message>
         <source>Block Inbound</source>
@@ -488,6 +484,22 @@
         <translation>プログラムの追加</translation>
     </message>
     <message>
+        <source>Allowed connections are collected</source>
+        <translation>許可された接続を収集しています</translation>
+    </message>
+    <message>
+        <source>Allowed connections are not collected</source>
+        <translation>許可された接続を収集していません</translation>
+    </message>
+    <message>
+        <source>Blocked connections are collected</source>
+        <translation>ブロックされた接続を収集しています</translation>
+    </message>
+    <message>
+        <source>Blocked connections are not collected</source>
+        <translation>ブロックされた接続を収集していません</translation>
+    </message>
+    <message>
         <source>Add Filter</source>
         <translation>フィルターを追加</translation>
     </message>
@@ -512,12 +524,20 @@
         <translation>検索</translation>
     </message>
     <message>
+        <source>List Options</source>
+        <translation>リストのオプション</translation>
+    </message>
+    <message>
         <source>Auto scroll</source>
         <translation>自動スクロール</translation>
     </message>
     <message>
         <source>Show host names</source>
         <translation>ホスト名を表示</translation>
+    </message>
+    <message>
+        <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
+        <translation>警告されたプログラム、または警告アクションでマークされた接続のみを収集しています</translation>
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
@@ -528,8 +548,12 @@
         <translation>すべての接続を削除しますか?</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>オプション</translation>
+        <source>Are you sure to remove the found connections?</source>
+        <translation>見つかった接続を削除しますか?</translation>
+    </message>
+    <message>
+        <source>Only the last connections are searched: older ones may be found after that.</source>
+        <translation>最新の接続のみが検索されます: 古い接続はその後に見つかる場合があります。</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -870,6 +894,10 @@
 <context>
     <name>FirewallConf</name>
     <message>
+        <source>Block All Traffic (incl. Localhost)</source>
+        <translation>すべてのトラフィックをブロック (Localhost を含む)</translation>
+    </message>
+    <message>
         <source>Auto-Learn</source>
         <translation>自動学習</translation>
     </message>
@@ -904,10 +932,6 @@
     <message>
         <source>Ask to Connect</source>
         <translation>接続を確認する</translation>
-    </message>
-    <message>
-        <source>Block All Traffic</source>
-        <translation>すべてのトラフィックをブロック</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
@@ -1527,10 +1551,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>起動時にスプラッシュ画面を表示する</translation>
     </message>
     <message>
-        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
-        <translation>ウィンドウのアイコンはトレイ アイコンの状態 (フィルター モード、警告) に従う</translation>
-    </message>
-    <message>
         <source>Auto-focus Alert Window</source>
         <translation>警告ウィンドウを自動でフォーカス</translation>
     </message>
@@ -1667,12 +1687,24 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>プログラム</translation>
     </message>
     <message>
+        <source>Show the current state in the windows&apos; icons</source>
+        <translation>ウィンドウのアイコンに現在の状態を表示する</translation>
+    </message>
+    <message>
+        <source>Fort&apos;s windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation>Fort のウィンドウのアイコンはトレイ アイコンの状態 (フィルター モード、警告) に従う</translation>
+    </message>
+    <message>
         <source>Use System Notifications for New Programs</source>
         <translation>新しいプログラムにシステム通知を使用する</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>新しいプログラムの警告ウィンドウを自動表示</translation>
+    </message>
+    <message>
+        <source>Alert Modes</source>
+        <translation>警告モード</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
@@ -1693,10 +1725,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>ウィンドウを閉じたときに警告を自動消去する</translation>
-    </message>
-    <message>
-        <source>Show window icons as in tray icon</source>
-        <translation>ウィンドウアイコンをトレイアイコンのように表示する</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
@@ -1766,6 +1794,13 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>MenuButton</name>
+    <message>
+        <source>Menu</source>
+        <translation>メニュー</translation>
+    </message>
+</context>
+<context>
     <name>OptMainPage</name>
     <message>
         <source>Options</source>
@@ -1830,6 +1865,13 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Import new programs</source>
         <translation>新しいプログラムをインポート</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsButton</name>
+    <message>
+        <source>Options</source>
+        <translation>オプション</translation>
     </message>
 </context>
 <context>
@@ -2816,10 +2858,6 @@ Save the changes?</source>
         <translation>編集</translation>
     </message>
     <message>
-        <source>Help</source>
-        <translation>ヘルプ</translation>
-    </message>
-    <message>
         <source>Tray Menu</source>
         <translation>トレイメニュー</translation>
     </message>
@@ -3117,10 +3155,6 @@ Save the changes?</source>
         <translation>表示名</translation>
     </message>
     <message>
-        <source>Process ID</source>
-        <translation>プロセス ID</translation>
-    </message>
-    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>変更はシステムによってリセットされました。サービスを再度追跡可能にしてください。</translation>
     </message>
@@ -3340,6 +3374,13 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
         <translation>選択した速度制限を削除してもよろしいですか?</translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsButton</name>
+    <message>
+        <source>Statistics</source>
+        <translation>統計</translation>
     </message>
 </context>
 <context>
@@ -3726,6 +3767,10 @@ Packet loss: %2</source>
         <translation>すべての統計を消去しますか?</translation>
     </message>
     <message>
+        <source>Make Active When Window Opens</source>
+        <translation>ウィンドウを開いた時にアクティブにする</translation>
+    </message>
+    <message>
         <source>Edit</source>
         <translation>編集</translation>
     </message>
@@ -3748,10 +3793,6 @@ Packet loss: %2</source>
     <message>
         <source>Are you sure to remove statistics for selected program?</source>
         <translation>選択したプログラムの統計を削除しますか?</translation>
-    </message>
-    <message>
-        <source>Make this tab active when window opens?</source>
-        <translation>ウィンドウを開いた時にこのタブをアクティブにしますか？</translation>
     </message>
     <message>
         <source>Traffic</source>
@@ -3812,6 +3853,10 @@ Packet loss: %2</source>
         <translation>統計</translation>
     </message>
     <message>
+        <source>New program(s) request network access</source>
+        <translation>新しいプログラムがネットワーク アクセスを要求しています</translation>
+    </message>
+    <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation>「%1」を切り替えますか?</translation>
     </message>
@@ -3826,10 +3871,6 @@ Packet loss: %2</source>
     <message>
         <source>My Fort</source>
         <translation>My Fort</translation>
-    </message>
-    <message>
-        <source>New program detected!</source>
-        <translation>新しいプログラムが検出されました!</translation>
     </message>
     <message>
         <source>Rules</source>

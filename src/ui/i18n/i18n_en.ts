@@ -317,10 +317,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Limit of &quot;Ask to Connect&quot;</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Paused by &quot;Ask to Connect&quot;</source>
         <translation></translation>
     </message>
@@ -357,6 +353,18 @@
         <translation></translation>
     </message>
     <message>
+        <source>Existing connection</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Disabled Group</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block Internet</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Direction</source>
         <translation></translation>
     </message>
@@ -369,23 +377,7 @@
         <translation></translation>
     </message>
     <message>
-        <source>Old connection</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Program&apos;s action</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>App. Group</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Filter Mode</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>LAN only</source>
         <translation></translation>
     </message>
     <message>
@@ -402,6 +394,10 @@
     </message>
     <message>
         <source>Global Rule after App Rules</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&quot;Ask to Connect&quot; limit reached</source>
         <translation></translation>
     </message>
     <message>
@@ -488,6 +484,22 @@
         <translation></translation>
     </message>
     <message>
+        <source>Allowed connections are collected</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Allowed connections are not collected</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Blocked connections are collected</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Blocked connections are not collected</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Add Filter</source>
         <translation></translation>
     </message>
@@ -512,11 +524,19 @@
         <translation></translation>
     </message>
     <message>
+        <source>List Options</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Auto scroll</source>
         <translation></translation>
     </message>
     <message>
         <source>Show host names</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
         <translation></translation>
     </message>
     <message>
@@ -528,7 +548,11 @@
         <translation></translation>
     </message>
     <message>
-        <source>Options</source>
+        <source>Are you sure to remove the found connections?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Only the last connections are searched: older ones may be found after that.</source>
         <translation></translation>
     </message>
     <message>
@@ -870,6 +894,10 @@
 <context>
     <name>FirewallConf</name>
     <message>
+        <source>Block All Traffic (incl. Localhost)</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Auto-Learn</source>
         <translation></translation>
     </message>
@@ -903,10 +931,6 @@
     </message>
     <message>
         <source>Ask to Connect</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Block All Traffic</source>
         <translation></translation>
     </message>
     <message>
@@ -1526,10 +1550,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation></translation>
     </message>
     <message>
-        <source>The windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Auto-focus Alert Window</source>
         <translation></translation>
     </message>
@@ -1666,11 +1686,23 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation></translation>
     </message>
     <message>
+        <source>Show the current state in the windows&apos; icons</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Fort&apos;s windows&apos; icons follow the tray icon&apos;s state (Filter Mode, alerts)</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Use System Notifications for New Programs</source>
         <translation></translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alert Modes</source>
         <translation></translation>
     </message>
     <message>
@@ -1691,10 +1723,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Auto-Clear alerts on window close</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Show window icons as in tray icon</source>
         <translation></translation>
     </message>
     <message>
@@ -1765,6 +1793,13 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>MenuButton</name>
+    <message>
+        <source>Menu</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>OptMainPage</name>
     <message>
         <source>Options</source>
@@ -1828,6 +1863,13 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Import new programs</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>OptionsButton</name>
+    <message>
+        <source>Options</source>
         <translation></translation>
     </message>
 </context>
@@ -2805,10 +2847,6 @@ Save the changes?</source>
         <translation></translation>
     </message>
     <message>
-        <source>Help</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Tray Menu</source>
         <translation></translation>
     </message>
@@ -3106,10 +3144,6 @@ Save the changes?</source>
         <translation></translation>
     </message>
     <message>
-        <source>Process ID</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation></translation>
     </message>
@@ -3327,6 +3361,13 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Are you sure to remove selected speed limit?</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsButton</name>
+    <message>
+        <source>Statistics</source>
         <translation></translation>
     </message>
 </context>
@@ -3714,6 +3755,10 @@ Packet loss: %2</source>
         <translation></translation>
     </message>
     <message>
+        <source>Make Active When Window Opens</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Edit</source>
         <translation></translation>
     </message>
@@ -3735,10 +3780,6 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Are you sure to remove statistics for selected program?</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Make this tab active when window opens?</source>
         <translation></translation>
     </message>
     <message>
@@ -3800,6 +3841,10 @@ Packet loss: %2</source>
         <translation></translation>
     </message>
     <message>
+        <source>New program(s) request network access</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation></translation>
     </message>
@@ -3813,10 +3858,6 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>My Fort</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>New program detected!</source>
         <translation></translation>
     </message>
     <message>
