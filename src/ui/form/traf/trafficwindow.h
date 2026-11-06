@@ -73,7 +73,9 @@ private:
 
     int tableTrafCurrentIndex() const;
 
-    void saveTrafTabIndex(int tabIndex);
+    int savedTrafTabIndex() const;
+
+    void showTabBarMenu(const QPoint &pos);
 
 private:
     TrafficController *m_ctrl = nullptr;

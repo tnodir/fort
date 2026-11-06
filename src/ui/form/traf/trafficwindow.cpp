@@ -2,7 +2,6 @@
 
 #include <QAction>
 #include <QComboBox>
-#include <QGuiApplication>
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
@@ -92,11 +91,7 @@ void TrafficWindow::restoreWindowState()
     }
 
     // Traf Table
-    {
-        const int tabIndex = qBound(0, iniUser.statTrafTabIndex(), m_tabBar->count() - 1);
-
-        m_tabBar->setCurrentIndex(tabIndex);
-    }
+    m_tabBar->setCurrentIndex(savedTrafTabIndex());
 
     m_splitter->restoreState(iniUser.statWindowTrafSplit());
 }
@@ -347,7 +342,8 @@ void TrafficWindow::setupTabBar()
         m_tabBar->addTab(QString());
     }
 
-    connect(m_tabBar, &QTabBar::tabBarDoubleClicked, this, &TrafficWindow::saveTrafTabIndex);
+    m_tabBar->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(m_tabBar, &QTabBar::customContextMenuRequested, this, &TrafficWindow::showTabBarMenu);
 }
 
 void TrafficWindow::setupTableTraf()
@@ -526,12 +522,28 @@ int TrafficWindow::tableTrafCurrentIndex() const
     return m_tableTraf->currentRow();
 }
 
-void TrafficWindow::saveTrafTabIndex(int tabIndex)
+int TrafficWindow::savedTrafTabIndex() const
 {
-    if (QGuiApplication::keyboardModifiers() != Qt::ControlModifier)
+    return qBound(0, Fort::iniUser().statTrafTabIndex(), m_tabBar->count() - 1);
+}
+
+void TrafficWindow::showTabBarMenu(const QPoint &pos)
+{
+    const int tabIndex = m_tabBar->tabAt(pos);
+    if (tabIndex < 0)
         return;
 
-    windowManager()->showConfirmBox(
-            this, [=, this] { iniUser().setValue(IniUser::statTrafTabIndexKey(), tabIndex); },
-            tr("Make this tab active when window opens?"));
+    auto menu = ControlUtil::createMenu();
+    ControlUtil::deleteOnClose(menu);
+
+    auto a = new QAction(tr("Make Active When Window Opens"), menu);
+    a->setCheckable(true);
+    a->setChecked(tabIndex == savedTrafTabIndex());
+
+    connect(a, &QAction::triggered, this,
+            [tabIndex] { Fort::iniUser().setStatTrafTabIndex(tabIndex); });
+
+    menu->addAction(a);
+
+    menu->popup(m_tabBar->mapToGlobal(pos));
 }
