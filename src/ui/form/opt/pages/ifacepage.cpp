@@ -184,9 +184,9 @@ void IfacePage::onRetranslateUi()
     m_cbHomeAutoShowMenu->setText(tr("Auto-Show Menu"));
     m_cbHomeAutoShowMenu->setToolTip(tr("Show the menu, when the window is activated"));
     m_cbSplashVisible->setText(tr("Show Splash screen on startup"));
-    m_cbUpdateWindowIcons->setText(tr("Show window icons as in tray icon"));
+    m_cbUpdateWindowIcons->setText(tr("Show the current state in the windows' icons"));
     m_cbUpdateWindowIcons->setToolTip(
-            tr("The windows' icons follow the tray icon's state (Filter Mode, alerts)"));
+            tr("Fort's windows' icons follow the tray icon's state (Filter Mode, alerts)"));
 
     m_cbAppNotifyMessage->setText(tr("Use System Notifications for New Programs"));
     m_cbAppAlertAutoShow->setText(tr("Auto-Show Alert Window for New Programs"));
