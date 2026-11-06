@@ -1,6 +1,5 @@
 #include "ruleeditdialog.h"
 
-#include <QAction>
 #include <QCheckBox>
 #include <QComboBox>
 #include <QFormLayout>
@@ -29,7 +28,6 @@
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/net/actionrange.h>
-#include <util/osutil.h>
 #include <util/stringutil.h>
 #include <util/textareautil.h>
 
@@ -174,7 +172,6 @@ void RuleEditDialog::retranslateUi()
     m_btAddFilter->setToolTip(tr("Add Filter"));
 
     retranslateRulePlaceholderText();
-    m_actRuleHelp->setText(tr("Help"));
 
     m_terminatingRuleSelector->retranslateUi();
 
@@ -236,6 +233,9 @@ void RuleEditDialog::setupUi()
     // Icon
     this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/script.png"));
 
+    // Help
+    ControlUtil::setupHelpShortcut(this, "edit-rule-dialog");
+
     // Size Grip
     this->setSizeGripEnabled(true);
 
@@ -285,7 +285,7 @@ QWidget *RuleEditDialog::setupGeneralTab()
     auto zonesLayout = setupZonesLayout();
 
     // Rule Text
-    setupEditRuleText();
+    m_editRuleText = new PlainTextEdit();
 
     // Terminating Rule
     m_terminatingRuleSelector = new TerminatingRuleSelector();
@@ -433,20 +433,6 @@ QLayout *RuleEditDialog::setupZonesLayout()
                     m_btZones, m_cbInlineZones, /*stretch*/ nullptr, m_btAddFilter });
 
     return layout;
-}
-
-void RuleEditDialog::setupEditRuleText()
-{
-    // Help Action
-    m_actRuleHelp = new QAction(IconCache::icon(":/icons/help.png"), QString(), this);
-
-    connect(m_actRuleHelp, &QAction::triggered, this,
-            [&] { OsUtil::openUrl(QUrl("https://github.com/tnodir/fort/wiki/Rules")); });
-
-    // Edit Rule Text
-    m_editRuleText = new PlainTextEdit();
-
-    m_editRuleText->addContextAction(m_actRuleHelp);
 }
 
 QLayout *RuleEditDialog::setupRuleSetHeaderLayout()

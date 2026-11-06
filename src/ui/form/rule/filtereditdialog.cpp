@@ -256,6 +256,9 @@ void FilterEditDialog::setupUi()
     // Icon
     this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/filter.png"));
 
+    // Help
+    ControlUtil::setupHelpShortcut(this, "filter-dialog");
+
     // Size Grip
     this->setSizeGripEnabled(true);
 

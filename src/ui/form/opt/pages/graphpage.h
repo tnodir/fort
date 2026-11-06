@@ -14,6 +14,8 @@ class GraphPage : public OptBasePage
 public:
     explicit GraphPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
+    QString helpSection() const override { return "traffic-graph-tab"; }
+
 public slots:
     void onResetToDefault() override;
 

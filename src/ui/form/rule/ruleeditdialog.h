@@ -61,7 +61,6 @@ private:
     QLayout *setupEnabledLayout();
     QLayout *setupActionsLayout();
     QLayout *setupZonesLayout();
-    void setupEditRuleText();
     QLayout *setupRuleSetHeaderLayout();
     void setupRuleSetView();
     void setupRuleSetViewChanged();
@@ -113,7 +112,6 @@ private:
     ZonesSelector *m_btZones = nullptr;
     QCheckBox *m_cbInlineZones = nullptr;
     QToolButton *m_btAddFilter = nullptr;
-    QAction *m_actRuleHelp = nullptr;
     PlainTextEdit *m_editRuleText = nullptr;
     TerminatingRuleSelector *m_terminatingRuleSelector = nullptr;
     TimePeriodSelector *m_periodSelector = nullptr;

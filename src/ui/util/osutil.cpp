@@ -15,6 +15,8 @@
 #include <mmsystem.h>
 #include <shellapi.h>
 
+#include <fort_version.h>
+
 #include "fileutil.h"
 #include "processinfo.h"
 
@@ -60,6 +62,11 @@ bool OsUtil::openUrlOrFolder(const QString &path)
 bool OsUtil::openIpLocationUrl(const QString &ip)
 {
     return openUrl("https://www.iplocation.net/ip-lookup?query=" + ip);
+}
+
+bool OsUtil::openUserGuide(const QString &section)
+{
+    return openUrl(APP_WIKI_URL "/Fort-Firewall-User-Guide#" + section);
 }
 
 void *OsUtil::createMutex(const char *name, bool &isSingleInstance)

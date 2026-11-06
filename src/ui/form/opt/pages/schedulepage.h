@@ -20,6 +20,8 @@ class SchedulePage : public OptBasePage
 public:
     explicit SchedulePage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
+    QString helpSection() const override { return "schedule-tab"; }
+
     TaskListModel *taskListModel() const { return m_taskListModel; }
 
 public slots:

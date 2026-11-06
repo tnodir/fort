@@ -19,6 +19,8 @@ class ProgNetworkPage : public ProgBasePage
 public:
     explicit ProgNetworkPage(ProgramEditController *ctrl = nullptr, QWidget *parent = nullptr);
 
+    QString helpSection() const override { return "network-filters-tab"; }
+
     // Adds the connection's filter
     void openConnFilterForm(const Conn &conn);
 

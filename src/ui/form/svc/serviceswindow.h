@@ -21,6 +21,7 @@ public:
 
     WindowCode windowCode() const override { return WindowServices; }
     QString windowOverlayIconPath() const override { return ":/icons/windows-48.png"; }
+    QString helpSection() const override { return "windows-services"; }
 
     ServicesController *ctrl() const { return m_ctrl; }
     ServiceListModel *serviceListModel() const;

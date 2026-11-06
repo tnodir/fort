@@ -26,6 +26,7 @@ public:
 
     WindowCode windowCode() const override { return WindowConnections; }
     QString windowOverlayIconPath() const override { return ":/icons/connect.png"; }
+    QString helpSection() const override { return "connections"; }
 
     ConnectionsController *ctrl() const { return m_ctrl; }
     ConnSearchModel *connListModel() const { return m_connListModel; }

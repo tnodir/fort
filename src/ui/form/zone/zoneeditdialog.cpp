@@ -120,6 +120,9 @@ void ZoneEditDialog::setupUi()
     // Icon
     this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/ip_class.png"));
 
+    // Help
+    ControlUtil::setupHelpShortcut(this, "zones");
+
     // Size Grip
     this->setSizeGripEnabled(true);
 

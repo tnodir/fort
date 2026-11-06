@@ -12,6 +12,8 @@ class OptionsPage : public OptBasePage
 public:
     explicit OptionsPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
+    QString helpSection() const override { return "options-tab"; }
+
     bool passwordEdited() const { return m_passwordEdited; }
     void setPasswordEdited(bool v) { m_passwordEdited = v; }
 

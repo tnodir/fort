@@ -21,6 +21,7 @@ public:
 
     WindowCode windowCode() const override { return WindowFilterSim; }
     QString windowOverlayIconPath() const override { return ":/icons/filter.png"; }
+    QString helpSection() const override { return "filter-simulator"; }
 
     FilterSimController *ctrl() const { return m_ctrl; }
 

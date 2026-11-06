@@ -78,6 +78,9 @@ void PasswordDialog::setupUi()
     // Icon
     this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/key.png"));
 
+    // Help
+    ControlUtil::setupHelpShortcut(this, "password");
+
     // Size Grip
     this->setSizeGripEnabled(true);
 }

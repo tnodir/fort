@@ -17,6 +17,8 @@ class ProgMainPage : public ProgBasePage
 public:
     explicit ProgMainPage(ProgramEditController *ctrl, QWidget *parent = nullptr);
 
+    QString helpSection() const override;
+
     void selectTab(int index);
 
     void setPendingConnsWindowChecked(bool checked);
@@ -52,6 +54,7 @@ private:
 
     void updatePendingConnsVisible();
 
+    ProgBasePage *currentPage() const;
     ProgBasePage *pageAt(int index) const;
 
 private:

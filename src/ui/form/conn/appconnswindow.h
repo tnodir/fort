@@ -18,6 +18,7 @@ public:
     AppConnSearchModel *appConnListModel() const;
 
     WindowCode windowCode() const override { return WindowNone; }
+    QString helpSection() const override { return "program-connections-window"; }
 
     void setApp(const App &app);
 

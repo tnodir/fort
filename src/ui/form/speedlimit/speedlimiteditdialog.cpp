@@ -139,6 +139,9 @@ void SpeedLimitEditDialog::setupUi()
     // Icon
     this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/speedometer.png"));
 
+    // Help
+    ControlUtil::setupHelpShortcut(this, "speed-limits");
+
     // Size Grip
     this->setSizeGripEnabled(true);
 

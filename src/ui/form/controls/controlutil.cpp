@@ -8,12 +8,14 @@
 #include <QPropertyAnimation>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QShortcut>
 #include <QStandardItemModel>
 #include <QStyle>
 #include <QToolButton>
 #include <QWidgetAction>
 
 #include <util/iconcache.h>
+#include <util/osutil.h>
 
 #include "combobox.h"
 #include "focusablemenu.h"
@@ -573,6 +575,19 @@ QToolButton *ControlUtil::createStatisticsButton()
 void ControlUtil::deleteOnClose(QWidget *w)
 {
     w->setAttribute(Qt::WA_DeleteOnClose);
+}
+
+void ControlUtil::setupHelpShortcut(QWidget *w, const QString &helpSection)
+{
+    setupHelpShortcut(w, [=] { return helpSection; });
+}
+
+void ControlUtil::setupHelpShortcut(QWidget *w, const std::function<QString()> &getHelpSection)
+{
+    auto shortcut = new QShortcut(QKeySequence::HelpContents, w);
+
+    QObject::connect(
+            shortcut, &QShortcut::activated, w, [=] { OsUtil::openUserGuide(getHelpSection()); });
 }
 
 void ControlUtil::setVisibleAnimated(QWidget *w, bool visible)

@@ -10,6 +10,8 @@ class ProgMorePage : public ProgBasePage
 public:
     explicit ProgMorePage(ProgramEditController *ctrl = nullptr, QWidget *parent = nullptr);
 
+    QString helpSection() const override { return "more-tab"; }
+
 public slots:
     void fillApp(App &app) const override;
 

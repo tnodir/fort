@@ -14,6 +14,8 @@ class AddressesPage : public OptBasePage
 public:
     explicit AddressesPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
+    QString helpSection() const override { return "ip-addresses-tab"; }
+
 public slots:
     void onResetToDefault() override;
 

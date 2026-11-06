@@ -26,6 +26,8 @@ public:
 
     static bool openIpLocationUrl(const QString &ip);
 
+    static bool openUserGuide(const QString &section);
+
     static void *createMutex(const char *name, bool &isSingleInstance);
     static void closeMutex(void *mutexHandle);
 

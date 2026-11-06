@@ -2,6 +2,7 @@
 
 #include <QLayout>
 
+#include <form/controls/controlutil.h>
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -14,6 +15,7 @@ using namespace Fort;
 FormWindow::FormWindow(QWidget *parent, Qt::WindowFlags f) :
     WidgetWindow(parent, f), m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
+    ControlUtil::setupHelpShortcut(this, [this] { return helpSection(); });
 }
 
 void FormWindow::setExcludeFromCapture(bool v)

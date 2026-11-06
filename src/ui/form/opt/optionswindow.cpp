@@ -26,6 +26,11 @@ OptionsWindow::OptionsWindow(QWidget *parent) :
     connect(this, &OptionsWindow::aboutToDelete, this, &OptionsWindow::cancelChanges);
 }
 
+QString OptionsWindow::helpSection() const
+{
+    return m_mainPage->helpSection();
+}
+
 void OptionsWindow::selectTab(int index)
 {
     m_mainPage->selectTab(index);

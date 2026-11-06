@@ -14,6 +14,7 @@ public:
     explicit HomeWindow(QWidget *parent = nullptr);
 
     WindowCode windowCode() const override { return WindowHome; }
+    QString helpSection() const override { return "my-fort-window"; }
 
     HomeController *ctrl() const { return m_ctrl; }
 

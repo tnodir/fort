@@ -21,6 +21,8 @@ class ProgramEditDialog : public FormWindow
 public:
     explicit ProgramEditDialog(QWidget *parent = nullptr, Qt::WindowFlags f = {});
 
+    QString helpSection() const override;
+
     ProgramEditController *ctrl() const { return m_ctrl; }
 
     void initialize(const App &app, const QVector<qint64> &appIdList = {});

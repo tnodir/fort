@@ -28,6 +28,11 @@ ProgMainPage::ProgMainPage(ProgramEditController *ctrl, QWidget *parent) :
     setupController();
 }
 
+QString ProgMainPage::helpSection() const
+{
+    return currentPage()->helpSection();
+}
+
 void ProgMainPage::selectTab(int index)
 {
     m_tabWidget->setCurrentIndex(index);
@@ -222,6 +227,11 @@ void ProgMainPage::updatePendingConnsVisible()
     const bool visible = (m_pendingConnsCount > 0 || m_btPendingConns->isChecked());
 
     m_btPendingConns->setVisible(visible);
+}
+
+ProgBasePage *ProgMainPage::currentPage() const
+{
+    return pageAt(m_tabWidget->currentIndex());
 }
 
 ProgBasePage *ProgMainPage::pageAt(int index) const

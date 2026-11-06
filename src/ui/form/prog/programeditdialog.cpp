@@ -66,6 +66,11 @@ ProgramEditDialog::ProgramEditDialog(QWidget *parent, Qt::WindowFlags f) :
     setupController();
 }
 
+QString ProgramEditDialog::helpSection() const
+{
+    return m_mainPage->helpSection();
+}
+
 void ProgramEditDialog::initialize(const App &app, const QVector<qint64> &appIdList)
 {
     ctrl()->initialize(app, appIdList);

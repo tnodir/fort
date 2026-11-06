@@ -12,6 +12,8 @@ class OptMainPage : public OptBasePage
 public:
     explicit OptMainPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
+    QString helpSection() const override;
+
     void selectTab(int index);
 
 protected slots:

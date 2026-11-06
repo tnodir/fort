@@ -17,6 +17,8 @@ class ProgGeneralPage : public ProgBasePage
 public:
     explicit ProgGeneralPage(ProgramEditController *ctrl = nullptr, QWidget *parent = nullptr);
 
+    QString helpSection() const override { return "general-tab"; }
+
     void selectAction(App::Action action);
 
 public slots:

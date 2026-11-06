@@ -30,6 +30,7 @@ public:
 
     virtual WindowCode windowCode() const { return WindowNone; }
     virtual QString windowOverlayIconPath() const { return {}; }
+    virtual QString helpSection() const { return {}; }
 
     virtual bool deleteOnClose() const { return true; }
 

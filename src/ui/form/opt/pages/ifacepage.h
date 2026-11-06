@@ -15,6 +15,8 @@ class IfacePage : public OptBasePage
 public:
     explicit IfacePage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
+    QString helpSection() const override { return "interface-tab"; }
+
     bool languageEdited() const { return m_languageEdited; }
     void setLanguageEdited(bool v) { m_languageEdited = v; }
 

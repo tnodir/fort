@@ -40,6 +40,8 @@ public:
     bool isNew() const;
     bool isSingleSelection() const;
 
+    virtual QString helpSection() const { return {}; }
+
 public slots:
     virtual void onPageActivated() { }
 

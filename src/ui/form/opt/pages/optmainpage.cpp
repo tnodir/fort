@@ -28,6 +28,11 @@ OptMainPage::OptMainPage(OptionsController *ctrl, QWidget *parent) : OptBasePage
     setupUi();
 }
 
+QString OptMainPage::helpSection() const
+{
+    return currentPage()->helpSection();
+}
+
 void OptMainPage::selectTab(int index)
 {
     m_tabWidget->setCurrentIndex(index);

@@ -102,6 +102,9 @@ void TimePeriodEditDialog::setupUi()
     // Icon
     this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/clock.png"));
 
+    // Help
+    ControlUtil::setupHelpShortcut(this, "time-periods");
+
     // Size Grip
     this->setSizeGripEnabled(true);
 

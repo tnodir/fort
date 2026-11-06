@@ -16,6 +16,7 @@ public:
     explicit GraphWindow(QWidget *parent = nullptr);
 
     WindowCode windowCode() const override { return WindowGraph; }
+    QString helpSection() const override { return "traffic-graph"; }
     bool deleteOnClose() const override;
 
     void saveWindowState(bool wasVisible) override;

@@ -20,6 +20,8 @@ class AppPendingConnsWindow : public AppConnsWindow
 public:
     explicit AppPendingConnsWindow(const App &app, QWidget *parent = nullptr);
 
+    QString helpSection() const override { return "ask-to-connect"; }
+
 protected:
     AppPendingConnsWindow(const App &app, QWidget *parent, Qt::WindowFlags f);
 

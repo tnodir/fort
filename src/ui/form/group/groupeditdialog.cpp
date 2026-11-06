@@ -99,6 +99,9 @@ void GroupEditDialog::setupUi()
     // Icon
     this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/application_double.png"));
 
+    // Help
+    ControlUtil::setupHelpShortcut(this, "groups");
+
     // Size Grip
     this->setSizeGripEnabled(true);
 

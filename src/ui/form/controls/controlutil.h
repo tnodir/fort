@@ -145,6 +145,10 @@ public:
 
     static void deleteOnClose(QWidget *w);
 
+    // F1 opens the User Guide's section
+    static void setupHelpShortcut(QWidget *w, const QString &helpSection);
+    static void setupHelpShortcut(QWidget *w, const std::function<QString()> &getHelpSection);
+
     // Fades in/out as the line edits' Clear button
     static void setVisibleAnimated(QWidget *w, bool visible);
 };

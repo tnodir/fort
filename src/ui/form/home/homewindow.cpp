@@ -231,7 +231,7 @@ QLayout *HomeWindow::setupDialogButtons()
     m_btLogs = createFlatToolButton(":/icons/folder.png", settings()->logsPath());
     m_btServiceLogs = createFlatToolButton(":/icons/folder.png", settings()->profileLogsPath());
     m_btReleases = createFlatToolButton(":/icons/github.png", APP_UPDATES_URL);
-    m_btHelp = createFlatToolButton(":/icons/help.png", "https://github.com/tnodir/fort/wiki");
+    m_btHelp = createFlatToolButton(":/icons/help.png", APP_WIKI_URL);
 
     m_btServiceLogs->setVisible(
             settings()->hasService() && settings()->profileLogsPath() != settings()->logsPath());

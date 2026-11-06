@@ -26,6 +26,7 @@ public:
 
     WindowCode windowCode() const override { return WindowPrograms; }
     QString windowOverlayIconPath() const override { return ":/icons/application.png"; }
+    QString helpSection() const override { return "programs-window"; }
 
     ProgramsController *ctrl() const { return m_ctrl; }
     AppListModel *appListModel() const;

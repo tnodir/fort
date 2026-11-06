@@ -13,6 +13,8 @@ class StatisticsPage : public OptBasePage
 public:
     explicit StatisticsPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
+    QString helpSection() const override { return "statistics-tab"; }
+
 public slots:
     void onResetToDefault() override;
 

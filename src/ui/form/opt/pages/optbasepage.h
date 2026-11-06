@@ -35,6 +35,8 @@ public:
     IniOptions &ini() const;
     IniUser &iniUser() const;
 
+    virtual QString helpSection() const { return {}; }
+
 public slots:
     virtual void onPageActivated() { }
     virtual void onResetToDefault() { }
