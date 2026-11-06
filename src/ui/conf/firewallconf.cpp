@@ -121,7 +121,7 @@ QStringList FirewallConf::blockTrafficNames()
 {
     // Sync with BlockTrafficType
     return { tr("No Block"), tr("Block Internet Traffic"), tr("Block LAN Traffic"),
-        tr("Block Internet and LAN Traffic"), tr("Block All Traffic") };
+        tr("Block Internet and LAN Traffic"), tr("Block All Traffic (incl. Localhost)") };
 }
 
 QStringList FirewallConf::blockTrafficIconPaths()
