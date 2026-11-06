@@ -18,6 +18,7 @@ public slots:
     void setText(const QString &text);
 
 protected:
+    void changeEvent(QEvent *e) override;
     void contextMenuEvent(QContextMenuEvent *e) override;
 
 private:

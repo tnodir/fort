@@ -23,6 +23,16 @@ void PlainTextEdit::setText(const QString &text)
     setPlainText(text);
 }
 
+void PlainTextEdit::changeEvent(QEvent *e)
+{
+    QPlainTextEdit::changeEvent(e);
+
+    // Read-only allows the mouse selection only: add the keyboard navigation with the caret
+    if (e->type() == QEvent::ReadOnlyChange && isReadOnly()) {
+        setTextInteractionFlags(textInteractionFlags() | Qt::TextSelectableByKeyboard);
+    }
+}
+
 void PlainTextEdit::contextMenuEvent(QContextMenuEvent *e)
 {
     if (m_contextActions.isEmpty()) {
