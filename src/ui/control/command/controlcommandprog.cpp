@@ -4,6 +4,7 @@
 
 #include <conf/app.h>
 #include <conf/confappmanager.h>
+#include <conf/confrulemanager.h>
 #include <conf/rule.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -27,13 +28,15 @@ enum ProgAction : qint8 {
     ProgActionSet,
     ProgActionSetFilters,
     ProgActionGetFilters,
+    ProgActionSetRules,
+    ProgActionGetRules,
 };
 
 QStringList progActionNames()
 {
     // Sync with enum ProgAction
     return { "allow", "block", "kill", "ask", "add", "del", "get", "set", "set-filters",
-        "get-filters" };
+        "get-filters", "set-rules", "get-rules" };
 }
 
 // Sync with enum ProgAction
@@ -212,6 +215,95 @@ bool getAppFilters(ProcessCommandResult &r, const App &app)
     return true;
 }
 
+bool addAppRuleByName(ProcessCommandResult &r, RuleSetList &ruleSet, const QString &ruleName)
+{
+    if (ruleSet.size() >= ConfUtil::ruleSetMaxCount()) {
+        r.errorMessage = "Too many Rules";
+        return false;
+    }
+
+    Rule rule;
+    if (!ControlCommandUtil::findRuleByName(ruleName, rule, r.errorMessage))
+        return false;
+
+    if ((Rule::ruleTypeBit(rule.ruleType) & Rule::assignedRuleTypes()) == 0) {
+        r.errorMessage = "Not an App or Preset Rule: " + ruleName;
+        return false;
+    }
+
+    if (ruleSet.contains(rule.ruleId)) {
+        r.errorMessage = "Duplicate Rule: " + ruleName;
+        return false;
+    }
+
+    ruleSet.append(rule.ruleId);
+
+    return true;
+}
+
+// The Rules' names, one per line
+bool setAppRules(ProcessCommandResult &r, App &app, const QString &rulesText)
+{
+    RuleSetList ruleSet;
+
+    for (const QString &line : rulesText.split('\n', Qt::SkipEmptyParts)) {
+        const QString ruleName = line.trimmed();
+        if (ruleName.isEmpty())
+            continue;
+
+        if (!addAppRuleByName(r, ruleSet, ruleName))
+            return false;
+    }
+
+    app.ruleSet = ruleSet;
+
+    return confAppManager()->updateApp(app);
+}
+
+bool getAppRules(ProcessCommandResult &r, const App &app)
+{
+    // The client writes the text to the file
+    r.errorMessage = confRuleManager()->ruleNamesByIds(app.ruleSet).join('\n');
+
+    return true;
+}
+
+using AppActionFunc = bool (*)(ProcessCommandResult &r, App &app, const QVariantList &args);
+
+// Sync with enum ProgAction, from ProgActionDel
+inline constexpr AppActionFunc appActionFuncs[] = {
+    // Delete
+    [](ProcessCommandResult & /*r*/, App &app, const QVariantList & /*args*/) {
+        return confAppManager()->deleteApps({ app.appId });
+    },
+    // Get
+    [](ProcessCommandResult &r, App &app, const QVariantList & /*args*/) {
+        return getAppFields(r, app);
+    },
+    // Set
+    [](ProcessCommandResult &r, App &app, const QVariantList &args) {
+        return setAppFields(r, app, args);
+    },
+    // Set Filters
+    [](ProcessCommandResult &r, App &app, const QVariantList &args) {
+        return setAppFilters(r, app, args.value(2).toString());
+    },
+    // Get Filters
+    [](ProcessCommandResult &r, App &app, const QVariantList & /*args*/) {
+        return getAppFilters(r, app);
+    },
+    // Set Rules
+    [](ProcessCommandResult &r, App &app, const QVariantList &args) {
+        return setAppRules(r, app, args.value(2).toString());
+    },
+    // Get Rules
+    [](ProcessCommandResult &r, App &app, const QVariantList & /*args*/) {
+        return getAppRules(r, app);
+    },
+};
+
+static_assert(std::size(appActionFuncs) == ProgActionGetRules - ProgActionDel + 1);
+
 bool processCommandAppAction(
         ProcessCommandResult &r, const QVariantList &args, ProgAction progAction, bool report)
 {
@@ -224,22 +316,7 @@ bool processCommandAppAction(
         return reportCommandProgAction(r, app);
     }
 
-    switch (progAction) {
-    case ProgActionDel: {
-        return confAppManager()->deleteApps({ app.appId });
-    }
-    case ProgActionGet: {
-        return getAppFields(r, app);
-    }
-    case ProgActionSet: {
-        return setAppFields(r, app, args);
-    }
-    case ProgActionSetFilters: {
-        return setAppFilters(r, app, args.value(2).toString());
-    }
-    default: // Get Filters
-        return getAppFilters(r, app);
-    }
+    return appActionFuncs[progAction - ProgActionDel](r, app, args);
 }
 
 bool processCommandProgAction(
@@ -272,7 +349,8 @@ bool ControlCommandProg::processCommand(const ProcessCommandArgs &p, ProcessComm
     if (!isValidAction || p.args.size() < progActionArgsCount(progAction)) {
         r.errorMessage = "Usage: prog allow|block|kill|ask|add|del|report|get <app-path>"
                          " | prog set <app-path> <key>=<value>..."
-                         " | prog set-filters|get-filters <app-path> <file-path>";
+                         " | prog set-filters|get-filters|set-rules|get-rules <app-path>"
+                         " <file-path>";
         return false;
     }
 
@@ -298,8 +376,10 @@ ControlCommandBase::ClientFileArg ControlCommandProg::clientFileArg(const QVaria
 {
     switch (clientProgAction(args)) {
     case ProgActionSetFilters:
+    case ProgActionSetRules:
         return ClientFileRead;
     case ProgActionGetFilters:
+    case ProgActionGetRules:
         return ClientFileWrite;
     default:
         return ClientFileNone;
