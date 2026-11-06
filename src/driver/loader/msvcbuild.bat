@@ -16,7 +16,7 @@
 @set ARCH=%3
 @if "%ARCH%"=="" @set ARCH=x86
 
-@set OutDir=..\..\..\build-driver-loader-%CONFIG%\%PLAT%
+@set OutDir=..\..\..\build\build-driver-loader-%CONFIG%\%PLAT%
 @set IntDir=%OutDir%-obj
 
 MSBuild fortdl.vcxproj /p:OutDir=%OutDir%\;IntDir=%IntDir%\;Platform=%PLAT%;Config=%CONFIG%;Arch=%ARCH%

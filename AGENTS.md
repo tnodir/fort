@@ -6,7 +6,7 @@ This file provides guidance to AI coding agents when working with code in this r
 
 Fort Firewall — a Windows firewall consisting of a Qt 6 (C++20, widgets) user-mode application and its own WFP kernel driver (`fortfw.sys`, C). Windows 7 and later; targets are `win7` (x86/x64), `win10` (x64) and `win10-arm64`.
 
-Sources live under `src/`. Build trees (`build-*/`), binaries and `*.qm` files are git-ignored.
+Sources live under `src/`. Build trees (`build/build-*/`), binaries and `*.qm` files are git-ignored.
 
 The details of single areas are in `docs/agents/*.md`, each named below where its area is: read one before working on its area. Put a new area's details (more than a paragraph) there too, with a pointer here: this file is read on every request.
 
@@ -16,16 +16,16 @@ Everything is qmake + MSVC; builds are out-of-source, one directory per target. 
 
 ```bat
 :: Configure once per build dir
-cd build-win10
-<qt-static>\bin\qmake.exe -o Makefile ..\src\FortFirewall.pro -spec win32-msvc ^
+cd build\build-win10
+<qt-static>\bin\qmake.exe -o Makefile ..\..\src\FortFirewall.pro -spec win32-msvc ^
     "CONFIG-=qml_debug" "CONFIG+=driver_payload" "CONFIG+=tests"
 :: Build
 jom      :: or nmake
 ```
 
-- Qt is a **custom static build** (`<qt-static>` is the `-prefix` of the scripts below) — see `deploy/qt-build.bat` (win10 x64), `deploy/qt-build-win7.bat`, `deploy/qt-build-arm64.bat`. Many Qt features are disabled (`-no-feature-sql`, `-no-feature-printsupport`, no OpenGL/dbus/icu…), so do not use Qt SQL, QPrinter, QDial, QUndoStack, QMimeDatabase, QDockWidget, etc. Only `qtbase` is built: no Qt Quick/QML (scene graph), Charts or other modules — draw with QPainter or Graphics View (`QGraphicsView`/`QGraphicsScene`, enabled). It is configured `-release` only, and the release builds (as well as the `msvcbuild-*.bat` driver builds) define `NDEBUG`, so `assert()` isn't compiled at all and a typo inside one goes unnoticed. For a debug build (asserts on) use a regular Qt install (`QT_HOME`, which has the debug libs) in a separate build dir: `%QT_HOME%\bin\qmake.exe -o Makefile ..\src\FortFirewall.pro -spec win32-msvc "CONFIG+=debug" "CONFIG-=release" "CONFIG+=tests"` + `jom`; run its binaries with `%QT_HOME%\bin` in `PATH`.
+- Qt is a **custom static build** (`<qt-static>` is the `-prefix` of the scripts below) — see `deploy/qt-build.bat` (win10 x64), `deploy/qt-build-win7.bat`, `deploy/qt-build-arm64.bat`. Many Qt features are disabled (`-no-feature-sql`, `-no-feature-printsupport`, no OpenGL/dbus/icu…), so do not use Qt SQL, QPrinter, QDial, QUndoStack, QMimeDatabase, QDockWidget, etc. Only `qtbase` is built: no Qt Quick/QML (scene graph), Charts or other modules — draw with QPainter or Graphics View (`QGraphicsView`/`QGraphicsScene`, enabled). It is configured `-release` only, and the release builds (as well as the `msvcbuild-*.bat` driver builds) define `NDEBUG`, so `assert()` isn't compiled at all and a typo inside one goes unnoticed. For a debug build (asserts on) use a regular Qt install (`QT_HOME`, which has the debug libs) in a separate build dir: `%QT_HOME%\bin\qmake.exe -o Makefile ..\..\src\FortFirewall.pro -spec win32-msvc "CONFIG+=debug" "CONFIG-=release" "CONFIG+=tests"` + `jom`; run its binaries with `%QT_HOME%\bin` in `PATH`.
 - `CONFIG+=tests` adds the `driver` (user-mode driver test app) and `tests` subprojects; `CONFIG+=driver_payload` adds `driver_payload`. Without them only `ui` + `ui_bin` are built.
-- `scripts\make\` builds all the targets from a plain console, setting up the compilers' environments themselves: `ui\make-all.bat` (`build-win7`, `build-win10`, `build-win10-arm64`; one by `ui\build-<target>.bat [make args]`), `driver\make-all.bat` (the drivers by the EWDKs), `driver-loader\make-all.bat` (the loaders of the built drivers), `deploy\make-all.bat` (the installers in `deploy\out` and their GnuPG signatures `*.exe.sig`; one by `deploy\build-<target>.bat`); they stop at the first error. The machine's paths (EWDKs, VS `vcvars*.bat`, static Qts, jom, the payloads' key, Inno Setup, `gpg.exe`, the signing key and its passphrase's file) are set in `config.bat`.
+- `scripts\make\` builds all the targets from a plain console, setting up the compilers' environments themselves: `ui\make-all.bat` (`build\build-win7`, `build\build-win10`, `build\build-win10-arm64`; one by `ui\build-<target>.bat [make args]`), `driver\make-all.bat` (the drivers by the EWDKs), `driver-loader\make-all.bat` (the loaders of the built drivers), `deploy\make-all.bat` (the installers in `deploy\out` and their GnuPG signatures `*.exe.sig`; one by `deploy\build-<target>.bat`); they stop at the first error. The machine's paths (EWDKs, VS `vcvars*.bat`, static Qts, jom, the payloads' key, Inno Setup, `gpg.exe`, the signing key and its passphrase's file) are set in `config.bat`.
 - Subproject layout: `ui/` builds the static lib `FortFirewallUILib`, `ui_bin/` links it into `FortFirewall.exe`, tests link the same lib. **New .cpp/.h files must be added explicitly to `SOURCES`/`HEADERS` in `src/ui/FortFirewallUI.pro`.**
 - Never run two builds of the same build dir in parallel (a shell `jom` and Qt Creator's build of it, or two shell ones): they fight over the same files.
 
@@ -34,7 +34,7 @@ jom      :: or nmake
 Built with MSBuild + WDK, not qmake:
 
 ```bat
-src\driver\msvcbuild-win10-64.bat        :: -> build-driver-win10\x64\fortfw.sys
+src\driver\msvcbuild-win10-64.bat        :: -> build\build-driver-win10\x64\fortfw.sys
 src\driver\msvcbuild-win7-32.bat         :: msvcbuild.bat <PLAT> <CONFIG> <ARCH>
 src\driver\loader\msvcbuild-win10-64.bat :: driver loader (fortfwdl.sys payload wrapper)
 ```
@@ -52,8 +52,8 @@ The driver's errors in the System event log (`TRACE()`, `forttrace.c`, the event
 GoogleTest/GoogleMock; requires the `GOOGLETEST_DIR` env var pointing at a googletest checkout, otherwise the test subprojects are skipped silently.
 
 ```bat
-build-win10\tests\UtilTest\UtilTest.exe
-build-win10\tests\UtilTest\UtilTest.exe --gtest_filter=ConfUtilTest.*   :: single test/suite
+build\build-win10\tests\UtilTest\UtilTest.exe
+build\build-win10\tests\UtilTest\UtilTest.exe --gtest_filter=ConfUtilTest.*   :: single test/suite
 ```
 
 Suites: `UtilTest` (bitutil, confutil, connfilter, dateutil, fileutil, filterline, formatutil, ioccontainer, netutil, ruletextparser, stringutil, timeperiod, wildmatch), `StatTest`, `LogBufferTest`, `LogReaderTest`. `LogReaderTest` needs the loaded kernel driver: run it only manually from a console, never as part of an automated test run. Each `tst_*.h` is included from the suite's `tst_main.cpp` and must also be listed in the suite's `.pro`. Run a test executable with its build folder as the current directory: `UtilTest` writes files (`zones/`) relative to it.
@@ -76,7 +76,7 @@ scripts\i18n\release_ts.bat        :: lrelease -> *.qm (merges i18n/qt/qtbase_*.
 
 deploy\setup-deployment-win10.bat  :: stage files per deploy/deployment.json into deploy/build
 deploy\create-installer.bat        :: Inno Setup 7 (deploy/FortFirewall.iss)
-scripts\make\driver-loader\make-all.bat      :: clear certs, wrap build-driver-*\*\fortfw.sys into the loaders
+scripts\make\driver-loader\make-all.bat      :: clear certs, wrap build\build-driver-*\*\fortfw.sys into the loaders
 scripts\make\deploy\make-all.bat             :: stage + installer + gpg *.exe.sig for win7, win10, win10-arm64
 ```
 

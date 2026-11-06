@@ -1,4 +1,4 @@
-@rem Build build-win10\ui_bin\FortFirewall.exe (x64; with DriverPayload and tests) with VS 2026 and the static Qt of win10
+@rem Build build\build-win10\ui_bin\FortFirewall.exe (x64; with DriverPayload and tests) with VS 2026 and the static Qt of win10
 @rem Usage: build-win10.bat [make args], e.g. "build-win10.bat clean"
 
 @setlocal

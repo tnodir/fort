@@ -1,6 +1,6 @@
 @rem Make the loader of a built driver: make-loader.bat <PLAT> <ARCH>
-@rem e.g. make-loader.bat win10 x64 -> build-driver-win10\x64\fortfw.sys
-@rem (build-driver-loader-win10\x64\fortfw.sys with the payload of build-driver-win10\x64\fortfw.sys)
+@rem e.g. make-loader.bat win10 x64 -> build\build-driver-win10\x64\fortfw.sys
+@rem (build\build-driver-loader-win10\x64\fortfw.sys with the payload of build\build-driver-win10\x64\fortfw.sys)
 
 @setlocal
 
@@ -9,10 +9,10 @@
 
 @call "%~dp0..\config.bat"
 
-@set "DP_PATH=%FORT_ROOT%\build-win10\driver_payload\DriverPayload.exe"
+@set "DP_PATH=%FORT_ROOT%\build\build-win10\driver_payload\DriverPayload.exe"
 
-@set "DRV_DIR=%FORT_ROOT%\build-driver-%PLAT%\%ARCH%"
-@set "LOADER_DIR=%FORT_ROOT%\build-driver-loader-%PLAT%\%ARCH%"
+@set "DRV_DIR=%FORT_ROOT%\build\build-driver-%PLAT%\%ARCH%"
+@set "LOADER_DIR=%FORT_ROOT%\build\build-driver-loader-%PLAT%\%ARCH%"
 
 @set SYS_NAME=fortfw.sys
 @set DL_SYS_NAME=fortfwdl.sys

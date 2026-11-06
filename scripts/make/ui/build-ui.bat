@@ -1,10 +1,10 @@
-@rem Build build-<BUILD_NAME>: re-run qmake and make
+@rem Build build\build-<BUILD_NAME>: re-run qmake and make
 @rem The caller calls config.bat, sets up the compiler's environment and BUILD_NAME, QMAKE, QMAKE_ARGS
 @rem Usage: build-ui.bat [make args]
 
 @setlocal
 
-@set "BUILD_DIR=%FORT_ROOT%\build-%BUILD_NAME%"
+@set "BUILD_DIR=%FORT_ROOT%\build\build-%BUILD_NAME%"
 
 @if not exist "%BUILD_DIR%" mkdir "%BUILD_DIR%"
 @cd /d "%BUILD_DIR%"

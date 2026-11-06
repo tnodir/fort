@@ -3,7 +3,7 @@
 @for %%I in ("%~dp0..\..") do @set "FORT_ROOT=%%~fI"
 
 @rem The secret key of the driver payloads (DriverPayload.exe --secret)
-@set "FORT_RSA_KEY=%FORT_ROOT%\build-tmp\fort.rsa"
+@set "FORT_RSA_KEY=%FORT_ROOT%\build\build-tmp\fort.rsa"
 
 @rem EWDKs: Old (WDK 10.0.20348, VS 2019) for win7, New (the latest) for win10
 @set "EWDK_OLD=E:\EWDK\Old"
@@ -30,4 +30,4 @@
 @rem GnuPG for the installers' signatures: the key of deploy\keys and its passphrase's file
 @set "GPG_PATH=C:\Program Files\GnuPG\bin\gpg.exe"
 @set "GPG_KEY=BDD3C1AF7A4DC449DFCE7C9115DC0F6DC45C857C"
-@set "GPG_PHRASE=%FORT_ROOT%\build-tmp\fort.phrase"
+@set "GPG_PHRASE=%FORT_ROOT%\build\build-tmp\fort.phrase"

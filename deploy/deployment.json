@@ -2,7 +2,7 @@
 	"files": {
 		"${TARGET}": {
 			"fort": [
-				"${BUILD}-${CONFIG}/ui_bin/FortFirewall.exe",
+				"${BUILD}/build-${CONFIG}/ui_bin/FortFirewall.exe",
 				"${ROOT}/src/ui/i18n | *.qm |"
 			]
 		},
@@ -13,22 +13,22 @@
 		},
 		"${TARGET}/driver/x86 | win7": {
 			"sys": [
-				"${BUILD}-driver-${CONFIG}/Win32/fortfw.sys"
+				"${BUILD}/build-driver-${CONFIG}/Win32/fortfw.sys"
 			]
 		},
 		"${TARGET}/driver/x86_64_old | win7 win10": {
 			"sys": [
-				"${BUILD}-driver-win7/x64/fortfw.sys"
+				"${BUILD}/build-driver-win7/x64/fortfw.sys"
 			]
 		},
 		"${TARGET}/driver/x86_64 | win7 win10": {
 			"sys": [
-				"${BUILD}-driver-win10/x64/fortfw.sys"
+				"${BUILD}/build-driver-win10/x64/fortfw.sys"
 			]
 		},
 		"${TARGET}/driver/ARM64 | win10-arm64": {
 			"sys": [
-				"${BUILD}-driver-win10/ARM64/fortfw.sys"
+				"${BUILD}/build-driver-win10/ARM64/fortfw.sys"
 			]
 		}
 	}

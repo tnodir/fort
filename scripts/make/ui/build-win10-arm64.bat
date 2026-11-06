@@ -1,4 +1,4 @@
-@rem Build build-win10-arm64\ui_bin\FortFirewall.exe (ARM64) with VS 2026 (x64 host) and the static Qt of arm64
+@rem Build build\build-win10-arm64\ui_bin\FortFirewall.exe (ARM64) with VS 2026 (x64 host) and the static Qt of arm64
 @rem (its host tools are of the win10 one)
 @rem Usage: build-win10-arm64.bat [make args], e.g. "build-win10-arm64.bat clean"
 
