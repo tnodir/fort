@@ -451,9 +451,7 @@ bool ConfBuffer::parseAppRule(const App &app, QByteArray &ruleData)
         ConfUtil::parseAppFiltersText(app.filtersText, rule);
     }
 
-    if (app.ruleId != 0) {
-        rule.ruleSet = { app.ruleId };
-    }
+    rule.ruleSet = app.ruleSet;
 
     if (isAppRuleEmpty(rule))
         return true; // no Network Filters and Rules

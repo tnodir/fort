@@ -86,8 +86,9 @@ QString appBackupColumnNames(SqliteDb *sqliteDb, const QString &schemaName)
     "    t.out_limit_id,"                                                                          \
     "    t.accept_zones,"                                                                          \
     "    t.reject_zones,"                                                                          \
-    "    t.rule_id,"                                                                               \
     "    t.filters_text,"                                                                          \
+    "    (SELECT group_concat(r.rule_id ORDER BY r.order_index)"                                   \
+    "      FROM app_rule r WHERE r.app_id = t.app_id) AS rule_ids,"                                \
     "    t.end_action,"                                                                            \
     "    t.end_time,"                                                                              \
     "    (alert.app_id IS NOT NULL) as alerted"
@@ -124,11 +125,11 @@ const char *const sqlUpsertApp = "INSERT INTO app(origin_path, path,"
                                  "    log_allowed_conn, log_blocked_conn, blocked, ask,"
                                  "    kill_process, groups_mask, in_limit_enabled,"
                                  "    out_limit_enabled, in_limit_id, out_limit_id,"
-                                 "    accept_zones, reject_zones, rule_id, filters_text,"
+                                 "    accept_zones, reject_zones, filters_text,"
                                  "    end_action, end_time, creat_time)"
                                  "  VALUES(?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13,"
                                  "    ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25,"
-                                 "    ?26, ?27, ?28, ?29, ?30, ?31, ?32, ?33)"
+                                 "    ?26, ?27, ?28, ?29, ?30, ?31, ?32)"
                                  "  ON CONFLICT(path) DO UPDATE"
                                  "  SET origin_path = ?2, icon_path = ?4,"
                                  "    name = ?5, notes = ?6, is_wildcard = ?7,"
@@ -141,8 +142,8 @@ const char *const sqlUpsertApp = "INSERT INTO app(origin_path, path,"
                                  "    in_limit_enabled = ?23, out_limit_enabled = ?24,"
                                  "    in_limit_id = ?25, out_limit_id = ?26,"
                                  "    accept_zones = ?27, reject_zones = ?28,"
-                                 "    rule_id = ?29, filters_text = ?30,"
-                                 "    end_action = ?31, end_time = ?32"
+                                 "    filters_text = ?29,"
+                                 "    end_action = ?30, end_time = ?31"
                                  "  RETURNING app_id;";
 
 const char *const sqlUpdateApp = "UPDATE app"
@@ -157,14 +158,19 @@ const char *const sqlUpdateApp = "UPDATE app"
                                  "    in_limit_enabled = ?23, out_limit_enabled = ?24,"
                                  "    in_limit_id = ?25, out_limit_id = ?26,"
                                  "    accept_zones = ?27, reject_zones = ?28,"
-                                 "    rule_id = ?29, filters_text = ?30,"
-                                 "    end_action = ?31, end_time = ?32"
+                                 "    filters_text = ?29,"
+                                 "    end_action = ?30, end_time = ?31"
                                  "  WHERE app_id = ?1"
                                  "  RETURNING app_id;";
 
 const char *const sqlUpdateAppName = "UPDATE app SET name = ?2 WHERE app_id = ?1;";
 
 const char *const sqlDeleteApp = "DELETE FROM app WHERE app_id = ?1 RETURNING is_wildcard, path;";
+
+const char *const sqlInsertAppRule = "INSERT INTO app_rule(app_id, rule_id, order_index)"
+                                     "  VALUES(?1, ?2, ?3);";
+
+const char *const sqlDeleteAppRules = "DELETE FROM app_rule WHERE app_id = ?1;";
 
 const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id) VALUES(?1);";
 
@@ -313,7 +319,6 @@ void ConfAppManager::beginAddOrUpdateApp(App &app, bool onlyUpdate, bool &ok)
         DbVar::nullable(app.speedLimits.out_limit_id),
         app.zones.accept_mask,
         app.zones.reject_mask,
-        DbVar::nullable(app.ruleId),
         DbVar::nullable(app.filtersText),
         app.scheduleAction,
         DbVar::nullable(app.scheduleTime),
@@ -431,6 +436,9 @@ bool ConfAppManager::addOrUpdateApp(App &app, bool onlyUpdate)
         const char *sql = (app.alerted && !onlyUpdate) ? sqlInsertAppAlert : sqlDeleteAppAlert;
 
         DbQuery(sqliteDb()).sql(sql).vars({ app.appId }).executeOk();
+
+        // Rules
+        saveRuleSetIds(sqlDeleteAppRules, sqlInsertAppRule, app.appId, app.ruleSet);
     }
 
     endTransaction(ok);
@@ -529,6 +537,10 @@ bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
 
     if (ok) {
         DbQuery(sqliteDb(), &ok).sql(sqlDeleteAppAlert).vars(vars).executeOk();
+    }
+
+    if (ok) {
+        DbQuery(sqliteDb(), &ok).sql(sqlDeleteAppRules).vars(vars).executeOk();
     }
 
     endTransaction(ok);
@@ -925,8 +937,8 @@ void ConfAppManager::fillApp(App &app, const SqliteStmt &stmt)
     app.speedLimits.out_limit_id = stmt.columnUInt(25);
     app.zones.accept_mask = stmt.columnUInt(26);
     app.zones.reject_mask = stmt.columnUInt(27);
-    app.ruleId = stmt.columnUInt(28);
-    app.filtersText = stmt.columnText(29);
+    app.filtersText = stmt.columnText(28);
+    app.ruleSet = ConfUtil::parseRuleSetIds(stmt.columnText(29));
     app.scheduleAction = stmt.columnInt(30);
     app.scheduleTime = stmt.columnDateTime(31);
     app.alerted = stmt.columnBool(32);

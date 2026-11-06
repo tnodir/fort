@@ -268,8 +268,8 @@ bool AppListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
     m_appRow.speedLimits.out_limit_id = stmt.columnUInt(25);
     m_appRow.zones.accept_mask = stmt.columnUInt(26);
     m_appRow.zones.reject_mask = stmt.columnUInt(27);
-    m_appRow.ruleId = stmt.columnUInt(28);
-    m_appRow.filtersText = stmt.columnText(29);
+    m_appRow.filtersText = stmt.columnText(28);
+    m_appRow.ruleSet = ConfUtil::parseRuleSetIds(stmt.columnText(29));
     m_appRow.scheduleAction = stmt.columnInt(30);
     m_appRow.scheduleTime = stmt.columnDateTime(31);
     m_appRow.creatTime = stmt.columnDateTime(32);
@@ -309,15 +309,17 @@ QString AppListModel::sqlBase() const
            "    t.out_limit_id,"
            "    t.accept_zones,"
            "    t.reject_zones,"
-           "    t.rule_id,"
            "    t.filters_text,"
+           "    (SELECT group_concat(ar.rule_id ORDER BY ar.order_index)"
+           "      FROM app_rule ar WHERE ar.app_id = t.app_id) AS rule_ids,"
            "    t.end_action,"
            "    t.end_time,"
            "    t.creat_time,"
            "    (a.app_id IS NOT NULL) as alerted"
            "  FROM app t"
            "    LEFT JOIN app_alert a ON a.app_id = t.app_id"
-           "    LEFT JOIN rule r ON r.rule_id = t.rule_id";
+           "    LEFT JOIN rule r ON r.rule_id = (SELECT ar.rule_id FROM app_rule ar"
+           "      WHERE ar.app_id = t.app_id ORDER BY ar.order_index LIMIT 1)";
 }
 
 QString AppListModel::sqlWhere() const

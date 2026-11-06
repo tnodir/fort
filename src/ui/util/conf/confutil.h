@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class Rule;
+#include <conf/rule.h>
 
 class ConfUtil
 {
@@ -29,6 +29,9 @@ public:
     // Its Rule has the filters' lines as the text and the Terminating Rule's flags.
     static void parseAppFiltersText(const QString &filtersText, Rule &rule);
     static QString appFiltersText(const Rule &rule);
+
+    // The Rules' ids by the SQL's group_concat(), e.g. "1,2,3"
+    static RuleSetList parseRuleSetIds(const QString &idsText);
 };
 
 #endif // CONFUTIL_H

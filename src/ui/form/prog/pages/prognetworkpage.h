@@ -7,9 +7,7 @@
 
 class Conn;
 class ListView;
-class RuleSelector;
 class StringListModel;
-class TerminatingRuleSelector;
 class ZonesSelector;
 
 class ProgNetworkPage : public ProgBasePage
@@ -24,8 +22,6 @@ public:
     // Adds the connection's filter
     void openConnFilterForm(const Conn &conn);
 
-    void setTerminatingBlock();
-
 signals:
     void filterSaved();
 
@@ -38,7 +34,6 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
-    void initializeRuleField(bool isSingleSelection);
     void initializeSpeedLimitFields();
     void initializeFilters(bool isSingleSelection);
 
@@ -46,7 +41,7 @@ private:
     void retranslateFilters();
 
     void setupUi();
-    QLayout *setupZonesRuleLayout();
+    QLayout *setupZonesLayout();
     QLayout *setupSpeedLimitsLayout();
     void setupSpeedLimitsChanged();
     QLayout *setupFiltersHeaderLayout();
@@ -70,7 +65,6 @@ private:
     QCheckBox *m_cbBlockOutbound = nullptr;
     QCheckBox *m_cbLanOnly = nullptr;
     ZonesSelector *m_btZones = nullptr;
-    RuleSelector *m_ruleSelector = nullptr;
     QCheckBox *m_cbSpeedLimitIn = nullptr;
     QComboBox *m_comboSpeedLimitIn = nullptr;
     QCheckBox *m_cbSpeedLimitOut = nullptr;
@@ -81,7 +75,6 @@ private:
     QToolButton *m_btUpFilter = nullptr;
     QToolButton *m_btDownFilter = nullptr;
     ListView *m_filterListView = nullptr;
-    TerminatingRuleSelector *m_terminatingRuleSelector = nullptr;
 };
 
 #endif // PROGNETWORKPAGE_H

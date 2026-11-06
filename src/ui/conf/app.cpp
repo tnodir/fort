@@ -52,7 +52,7 @@ bool App::isTextsEqual(const App &o) const
 bool App::isOptionsEqual(const App &o) const
 {
     return isFlagsEqual(o) && isZonesEqual(o) && isSpeedLimitsEqual(o) && groups == o.groups
-            && ruleId == o.ruleId && isTextsEqual(o) && isPathsEqual(o) && isScheduleEqual(o);
+            && isTextsEqual(o) && ruleSet == o.ruleSet && isPathsEqual(o) && isScheduleEqual(o);
 }
 
 bool App::isNameEqual(const App &o) const
@@ -114,6 +114,11 @@ bool App::hasSpeedLimit() const
     const FORT_SPEED_LIMIT_IDS limits = activeSpeedLimits();
 
     return limits.in_limit_id != 0 || limits.out_limit_id != 0;
+}
+
+bool App::hasRule() const
+{
+    return !ruleSet.isEmpty();
 }
 
 FORT_SPEED_LIMIT_IDS App::activeSpeedLimits() const

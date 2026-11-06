@@ -151,6 +151,7 @@ SOURCES += \
     form/prog/pages/progmainpage.cpp \
     form/prog/pages/progmorepage.cpp \
     form/prog/pages/prognetworkpage.cpp \
+    form/prog/pages/progrulespage.cpp \
     form/prog/programalertwindow.cpp \
     form/prog/programeditcontroller.cpp \
     form/prog/programeditdialog.cpp \
@@ -485,6 +486,7 @@ HEADERS += \
     form/prog/pages/progmainpage.h \
     form/prog/pages/progmorepage.h \
     form/prog/pages/prognetworkpage.h \
+    form/prog/pages/progrulespage.h \
     form/prog/programalertwindow.h \
     form/prog/programeditcontroller.h \
     form/prog/programeditdialog.h \

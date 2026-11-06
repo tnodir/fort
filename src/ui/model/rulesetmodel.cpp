@@ -16,7 +16,10 @@ const QLoggingCategory LC("model.ruleSet");
 
 }
 
-RuleSetModel::RuleSetModel(QObject *parent) : StringListModel(parent) { }
+RuleSetModel::RuleSetModel(QObject *parent) : StringListModel(parent)
+{
+    connect(confRuleManager(), &ConfRuleManager::ruleRemoved, this, &RuleSetModel::onRuleRemoved);
+}
 
 void RuleSetModel::setEdited(bool v)
 {
@@ -86,4 +89,13 @@ void RuleSetModel::move(int fromRow, int toRow)
     StringListModel::move(fromRow, toRow);
 
     setEdited(true);
+}
+
+void RuleSetModel::onRuleRemoved(quint16 ruleId)
+{
+    const int row = m_ruleSet.indexOf(ruleId);
+    if (row < 0)
+        return;
+
+    remove(row); // the deleted Rule's id can be reused
 }

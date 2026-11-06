@@ -8,16 +8,19 @@
 #include <form/controls/toolbutton.h>
 #include <form/prog/programeditcontroller.h>
 #include <model/appconnsearchmodel.h>
+#include <util/stringutil.h>
 
 #include "proggeneralpage.h"
 #include "progmorepage.h"
 #include "prognetworkpage.h"
+#include "progrulespage.h"
 
 namespace {
 
 inline constexpr int generalTabIndex = 0;
 inline constexpr int networkTabIndex = 1;
-inline constexpr int moreTabIndex = 2;
+inline constexpr int rulesTabIndex = 2;
+inline constexpr int moreTabIndex = 3;
 
 }
 
@@ -88,7 +91,7 @@ void ProgMainPage::onFillApp(App &app)
 
 void ProgMainPage::onPageInitialize(const App &app)
 {
-    setNetworkTabEnabled(!app.blocked);
+    setFilterTabsEnabled(!app.blocked);
 
     const bool canFilterApp = AppConnSearchModel::canFilterApp(app);
 
@@ -102,6 +105,7 @@ void ProgMainPage::onRetranslateUi()
 {
     m_tabWidget->setTabText(generalTabIndex, tr("General"));
     m_tabWidget->setTabText(networkTabIndex, tr("Network Filters"));
+    retranslateRulesTabText();
     m_tabWidget->setTabText(moreTabIndex, tr("More"));
 
     m_btPendingConns->setToolTip(tr("Paused Connections"));
@@ -111,15 +115,23 @@ void ProgMainPage::onRetranslateUi()
     m_btCancel->setText(tr("Cancel"));
 }
 
+void ProgMainPage::retranslateRulesTabText()
+{
+    m_tabWidget->setTabText(
+            rulesTabIndex, StringUtil::textWithCount(tr("Rules"), m_rulesPage->rulesCount()));
+}
+
 void ProgMainPage::setupController()
 {
     connect(ctrl(), &ProgramEditController::validateFields, this, &ProgMainPage::onValidateFields);
     connect(ctrl(), &ProgramEditController::fillApp, this, &ProgMainPage::onFillApp);
 
     connect(ctrl(), &ProgramEditController::allowToggled, this,
-            &ProgMainPage::setNetworkTabEnabled);
+            &ProgMainPage::setFilterTabsEnabled);
 
     connect(m_networkPage, &ProgNetworkPage::filterSaved, this, &ProgMainPage::onFilterSaved);
+    connect(m_rulesPage, &ProgRulesPage::rulesCountChanged, this,
+            &ProgMainPage::retranslateRulesTabText);
 }
 
 void ProgMainPage::setupUi()
@@ -141,13 +153,15 @@ void ProgMainPage::setupTabBar()
 {
     m_generalPage = new ProgGeneralPage(ctrl());
     m_networkPage = new ProgNetworkPage(ctrl());
+    m_rulesPage = new ProgRulesPage(ctrl());
     auto morePage = new ProgMorePage(ctrl());
 
-    m_pages = { m_generalPage, m_networkPage, morePage };
+    m_pages = { m_generalPage, m_networkPage, m_rulesPage, morePage };
 
     m_tabWidget = new QTabWidget();
     m_tabWidget->addTab(m_generalPage, QString());
     m_tabWidget->addTab(m_networkPage, QString());
+    m_tabWidget->addTab(m_rulesPage, QString());
     m_tabWidget->addTab(morePage, QString());
 
     // Paused Connections button: with their count
@@ -204,9 +218,10 @@ bool ProgMainPage::isNetworkTabEnabled() const
     return m_tabWidget->isTabEnabled(networkTabIndex);
 }
 
-void ProgMainPage::setNetworkTabEnabled(bool enabled)
+void ProgMainPage::setFilterTabsEnabled(bool enabled)
 {
     m_tabWidget->setTabEnabled(networkTabIndex, enabled);
+    m_tabWidget->setTabEnabled(rulesTabIndex, enabled);
 }
 
 void ProgMainPage::onFilterSaved()
@@ -216,7 +231,7 @@ void ProgMainPage::onFilterSaved()
 
     // The driver doesn't check a blocked program's filters
     m_generalPage->selectAction(App::ActionAllow);
-    m_networkPage->setTerminatingBlock();
+    m_rulesPage->setTerminatingBlock();
 
     selectTab(networkTabIndex);
 }

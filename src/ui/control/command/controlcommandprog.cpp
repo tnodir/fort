@@ -4,7 +4,6 @@
 
 #include <conf/app.h>
 #include <conf/confappmanager.h>
-#include <conf/confrulemanager.h>
 #include <conf/rule.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -122,7 +121,6 @@ QVariantMap appFields(const App &app)
         { "outLimitEnabled", app.outLimitEnabled },
         { "inLimit", QVariant::fromValue(app.speedLimits.in_limit_id) },
         { "outLimit", QVariant::fromValue(app.speedLimits.out_limit_id) },
-        { "rule", confRuleManager()->ruleNameById(app.ruleId) },
         { "groups", ControlCommandUtil::maskIds(app.groups) },
         { "acceptZones", ControlCommandUtil::maskIds(app.zones.accept_mask) },
         { "rejectZones", ControlCommandUtil::maskIds(app.zones.reject_mask) },
@@ -177,9 +175,7 @@ bool setAppFields(ProcessCommandResult &r, App &app, const QVariantList &args)
     if (!ControlCommandUtil::parseFieldArgs(args, 2, fields, r.errorMessage))
         return false;
 
-    if (!(fillAppAction(r, app, fields)
-                && ControlCommandUtil::findRuleIdByName(
-                        fields["rule"].toString(), app.ruleId, r.errorMessage)))
+    if (!fillAppAction(r, app, fields))
         return false;
 
     fillAppFlags(app, fields);

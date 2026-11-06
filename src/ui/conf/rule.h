@@ -23,6 +23,12 @@ public:
 
     static constexpr quint8 ruleTypeBit(RuleType ruleType) { return quint8(1 << ruleType); }
 
+    // The types of a Program's or Group's Rules
+    static constexpr quint8 assignedRuleTypes()
+    {
+        return ruleTypeBit(AppRule) | ruleTypeBit(PresetRule);
+    }
+
     bool isContentEqual(const Rule &o) const;
     bool isNameEqual(const Rule &o) const;
     bool isOptionsEqual(const Rule &o) const;

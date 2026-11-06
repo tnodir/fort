@@ -11,13 +11,6 @@
 
 using namespace Fort;
 
-namespace {
-
-inline constexpr quint8 selectRuleTypes =
-        Rule::ruleTypeBit(Rule::AppRule) | Rule::ruleTypeBit(Rule::PresetRule);
-
-}
-
 RuleSelector::RuleSelector(QWidget *parent) : QWidget(parent)
 {
     setupUi();
@@ -93,7 +86,7 @@ void RuleSelector::setupController()
 
 void RuleSelector::selectRuleDialog()
 {
-    auto rulesDialog = RulesWindow::showRulesDialog(selectRuleTypes, this);
+    auto rulesDialog = RulesWindow::showRulesDialog(Rule::assignedRuleTypes(), this);
 
     connect(rulesDialog, &RulesWindow::ruleSelected, this,
             [&](const RuleRow &ruleRow) { setRuleId(ruleRow.ruleId); });

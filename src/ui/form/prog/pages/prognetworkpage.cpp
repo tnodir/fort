@@ -11,8 +11,6 @@
 #include <conf/rule.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/listview.h>
-#include <form/controls/selector/ruleselector.h>
-#include <form/controls/selector/terminatingruleselector.h>
 #include <form/controls/selector/zonesselector.h>
 #include <form/dialog/dialogutil.h>
 #include <form/rule/filtereditdialog.h>
@@ -59,7 +57,6 @@ void ProgNetworkPage::onPageInitialize(const App &app)
     m_btZones->setMask(app.zones.accept_mask);
     m_btZones->setUncheckedMask(app.zones.reject_mask);
 
-    initializeRuleField(isSingleSelection());
     initializeSpeedLimitFields();
     initializeFilters(isSingleSelection());
 }
@@ -75,21 +72,12 @@ void ProgNetworkPage::onRetranslateUi()
     m_cbLanOnly->setToolTip(tr("Block Internet Traffic"));
     m_btZones->retranslateUi();
 
-    m_ruleSelector->retranslateUi();
-
     m_cbSpeedLimitIn->setText(tr("Download:"));
     m_cbSpeedLimitOut->setText(tr("Upload:"));
 
     retranslateSpeedLimitFields();
 
     retranslateFilters();
-}
-
-void ProgNetworkPage::initializeRuleField(bool isSingleSelection)
-{
-    m_ruleSelector->setShowRuleName(isSingleSelection);
-    m_ruleSelector->setRuleId(app().ruleId);
-    m_ruleSelector->setEnabled(isSingleSelection);
 }
 
 void ProgNetworkPage::initializeSpeedLimitFields()
@@ -110,11 +98,9 @@ void ProgNetworkPage::initializeFilters(bool isSingleSelection)
     ConfUtil::parseAppFiltersText(app().filtersText, rule);
 
     m_filterListModel->setList(rule.ruleText.split('\n', Qt::SkipEmptyParts));
-    m_terminatingRuleSelector->initialize(rule);
 
     m_btAddFilter->setEnabled(isSingleSelection);
     m_filterListView->setEnabled(isSingleSelection);
-    m_terminatingRuleSelector->setEnabled(isSingleSelection);
 }
 
 void ProgNetworkPage::retranslateSpeedLimitFields()
@@ -132,8 +118,6 @@ void ProgNetworkPage::retranslateFilters()
     m_btEditFilter->setText(tr("Edit"));
     m_btUpFilter->setToolTip(tr("Move Up"));
     m_btDownFilter->setToolTip(tr("Move Down"));
-
-    m_terminatingRuleSelector->retranslateUi();
 }
 
 void ProgNetworkPage::setupUi()
@@ -141,8 +125,8 @@ void ProgNetworkPage::setupUi()
     // Speed Limits
     auto speedLimitsLayout = setupSpeedLimitsLayout();
 
-    // Zones/Rule
-    auto zonesRuleLayout = setupZonesRuleLayout();
+    // Zones
+    auto zonesLayout = setupZonesLayout();
 
     // Filters Header
     auto filtersHeaderLayout = setupFiltersHeaderLayout();
@@ -153,23 +137,19 @@ void ProgNetworkPage::setupUi()
     // Actions on filter list view's current changed
     setupFilterListViewChanged();
 
-    // Terminating Rule
-    m_terminatingRuleSelector = new TerminatingRuleSelector();
-
     // Main Layout
     auto layout = new QVBoxLayout();
     layout->addLayout(speedLimitsLayout);
     layout->addWidget(ControlUtil::createSeparator());
-    layout->addLayout(zonesRuleLayout);
+    layout->addLayout(zonesLayout);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(filtersHeaderLayout);
     layout->addWidget(m_filterListView, 1);
-    layout->addWidget(m_terminatingRuleSelector);
 
     this->setLayout(layout);
 }
 
-QLayout *ProgNetworkPage::setupZonesRuleLayout()
+QLayout *ProgNetworkPage::setupZonesLayout()
 {
     // Block
     m_labelBlock = ControlUtil::createLabel();
@@ -187,10 +167,6 @@ QLayout *ProgNetworkPage::setupZonesRuleLayout()
     m_btZones = new ZonesSelector();
     m_btZones->setIsTristate(true);
 
-    // Rule
-    m_ruleSelector = new RuleSelector();
-    m_ruleSelector->setMaximumWidth(300);
-
     auto layout = new QHBoxLayout();
     layout->addWidget(m_labelBlock);
     layout->addWidget(m_cbBlockInbound);
@@ -199,7 +175,6 @@ QLayout *ProgNetworkPage::setupZonesRuleLayout()
     layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btZones);
     layout->addStretch();
-    layout->addWidget(m_ruleSelector, 1);
 
     return layout;
 }
@@ -328,17 +303,16 @@ void ProgNetworkPage::fillApp(App &app) const
     app.zones.accept_mask = m_btZones->mask();
     app.zones.reject_mask = m_btZones->uncheckedMask();
 
-    app.ruleId = m_ruleSelector->ruleId();
-
     app.inLimitEnabled = m_cbSpeedLimitIn->isChecked();
     app.outLimitEnabled = m_cbSpeedLimitOut->isChecked();
 
     app.speedLimits.in_limit_id = m_comboSpeedLimitIn->currentData().toUInt();
     app.speedLimits.out_limit_id = m_comboSpeedLimitOut->currentData().toUInt();
 
+    // The filters' lines of the Network Filters' text
     Rule rule;
+    ConfUtil::parseAppFiltersText(app.filtersText, rule);
     rule.ruleText = m_filterListModel->list().join('\n');
-    m_terminatingRuleSelector->fillRule(rule);
 
     app.filtersText = ConfUtil::appFiltersText(rule);
 }
@@ -363,12 +337,6 @@ void ProgNetworkPage::openFilterEditForm(const FilterLineText &lineText, int row
 void ProgNetworkPage::openConnFilterForm(const Conn &conn)
 {
     openFilterEditForm(FilterLineText(conn));
-}
-
-void ProgNetworkPage::setTerminatingBlock()
-{
-    m_terminatingRuleSelector->setTerminate(true);
-    m_terminatingRuleSelector->setTerminateActionTypeId(FORT_RULE_FILTER_ACTION_BLOCK);
 }
 
 void ProgNetworkPage::editCurrentFilter()

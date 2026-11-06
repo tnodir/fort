@@ -117,9 +117,7 @@ const char *const sqlSelectRuleIds = "SELECT rule_id FROM rule"
 
 const char *const sqlDeleteRule = "DELETE FROM rule WHERE rule_id = ?1;";
 
-const char *const sqlDeleteAppRule = "UPDATE app"
-                                     "  SET rule_id = NULL"
-                                     "  WHERE rule_id = ?1;";
+const char *const sqlDeleteAppRule = "DELETE FROM app_rule WHERE rule_id = ?1;";
 
 const char *const sqlDeleteGroupRule = "UPDATE app_group"
                                        "  SET rule_id = NULL"
@@ -226,6 +224,18 @@ QString ConfRuleManager::ruleNameById(quint16 ruleId)
     return name;
 }
 
+QStringList ConfRuleManager::ruleNamesByIds(const RuleSetList &ruleSet)
+{
+    QStringList names;
+    names.reserve(ruleSet.size());
+
+    for (const quint16 ruleId : ruleSet) {
+        names.append(ruleNameById(ruleId));
+    }
+
+    return names;
+}
+
 QVector<Rule> ConfRuleManager::getTrayMenuRules() const
 {
     QVector<Rule> ruleList;
@@ -292,22 +302,7 @@ void ConfRuleManager::saveRuleSet(Rule &rule)
     if (!rule.ruleSetEdited)
         return;
 
-    DbQuery(sqliteDb()).sql(sqlDeleteRuleSet).vars({ rule.ruleId }).executeOk();
-
-    SqliteStmt stmt;
-    if (!DbQuery(sqliteDb()).sql(sqlInsertRuleSet).prepare(stmt))
-        return;
-
-    stmt.bindInt(1, rule.ruleId);
-
-    int orderIndex = 0;
-    for (const quint16 subRuleId : rule.ruleSet) {
-        stmt.bindInt(2, subRuleId);
-        stmt.bindInt(3, ++orderIndex);
-
-        stmt.step();
-        stmt.reset();
-    }
+    saveRuleSetIds(sqlDeleteRuleSet, sqlInsertRuleSet, rule.ruleId, rule.ruleSet);
 }
 
 int ConfRuleManager::rulesCountByType(Rule::RuleType ruleType)
@@ -465,7 +460,7 @@ bool ConfRuleManager::deleteRule(quint16 ruleId)
     if (ok) {
         const QVariantList vars = { ruleId };
 
-        // Delete the App Rule from Programs
+        // Delete the Rule from Programs
         DbQuery(sqliteDb()).sql(sqlDeleteAppRule).vars(vars).executeOk();
 
         appRulesCount = sqliteDb()->changes();

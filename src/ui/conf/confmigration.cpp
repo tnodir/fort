@@ -23,7 +23,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-inline constexpr int DATABASE_USER_VERSION = 70;
+inline constexpr int DATABASE_USER_VERSION = 71;
 
 using AppsMap = QHash<qint64, QString>;
 using AppIdsArray = QVector<qint64>;
@@ -517,6 +517,19 @@ void migrateTimePeriods(SqliteDb *db, int version)
     }
 }
 
+// The Program's Rule is the first one of its Rules
+bool migrateAppRules(SqliteDb *db)
+{
+    const QString sql = "INSERT INTO app_rule(app_id, rule_id, order_index)"
+                        "  SELECT t.app_id, t.rule_id, 1 FROM "
+            + oldEntityName("app")
+            + " t"
+              "    JOIN app a ON a.app_id = t.app_id" // the migrated ones
+              "    WHERE t.rule_id IS NOT NULL;";
+
+    return DbQuery(db).sql(sql).executeOk();
+}
+
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
     Q_UNUSED(ctx);
@@ -552,6 +565,11 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     // COMPAT: Remove "2001::/32" from addr group's exclude: the Teredo's routable prefix
     if (version < 69) {
         migrateAddrGroupExcludeTexts(db, "2001::/32");
+    }
+
+    // COMPAT: The Program's Rule is in its Rules
+    if (version < 71) {
+        migrateAppRules(db);
     }
 
     return true;

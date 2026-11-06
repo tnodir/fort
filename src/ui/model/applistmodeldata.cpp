@@ -87,10 +87,10 @@ QVariant dataDisplayRule(const App &app, int role)
     if (role != Qt::ToolTipRole)
         return {};
 
-    if (app.ruleId == 0)
+    if (!app.hasRule())
         return {};
 
-    return confRuleManager()->ruleNameById(app.ruleId);
+    return confRuleManager()->ruleNamesByIds(app.ruleSet).join('\n');
 }
 
 QVariant dataDisplayScheduled(const App &app, int role)
@@ -252,7 +252,7 @@ QIcon AppListModelData::appZonesIcon() const
 
 QIcon AppListModelData::appRuleIcon() const
 {
-    return (app().ruleId != 0) ? IconCache::icon(":/icons/script.png") : QIcon();
+    return app().hasRule() ? IconCache::icon(":/icons/script.png") : QIcon();
 }
 
 QIcon AppListModelData::appGroupsIcon() const

@@ -167,3 +167,15 @@ QString ConfUtil::appFiltersText(const Rule &rule)
 
     return lines.join('\n');
 }
+
+RuleSetList ConfUtil::parseRuleSetIds(const QString &idsText)
+{
+    RuleSetList ruleSet;
+
+    for (const auto &idText :
+            StringUtil::splitView(idsText, QLatin1Char(','), /*skipEmptyParts=*/true)) {
+        ruleSet.append(idText.toUShort());
+    }
+
+    return ruleSet;
+}

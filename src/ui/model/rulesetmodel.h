@@ -33,6 +33,9 @@ public slots:
     inline void moveDown(int row) { move(row, row + 1); }
 
 private:
+    void onRuleRemoved(quint16 ruleId);
+
+private:
     bool m_edited = false;
 
     Rule::RuleType m_ruleType = Rule::AppRule;

@@ -493,7 +493,7 @@ TEST_F(ConnFilterTest, askAction)
                              "Act(Ask)";
 
     App ruleApp = wildcardApp("C:\\App\\rule.exe");
-    ruleApp.ruleId = 1;
+    ruleApp.ruleSet = { 1 };
 
     m_apps << askApp << filtersApp << ruleApp;
     writeConf();
@@ -697,7 +697,7 @@ TEST_F(ConnFilterTest, groups)
 TEST_F(ConnFilterTest, appRule)
 {
     App ruleApp = wildcardApp("C:\\App\\rule.exe");
-    ruleApp.ruleId = 2;
+    ruleApp.ruleSet = { 2 };
 
     m_apps << ruleApp;
     writeConf();
@@ -722,7 +722,7 @@ TEST_F(ConnFilterTest, appRule)
 TEST_F(ConnFilterTest, terminatingRule)
 {
     App ruleApp = wildcardApp("C:\\App\\rule.exe");
-    ruleApp.ruleId = 1;
+    ruleApp.ruleSet = { 1 };
 
     m_apps << ruleApp;
     writeConf();
@@ -753,10 +753,10 @@ TEST_F(ConnFilterTest, terminatingRule)
 TEST_F(ConnFilterTest, rulePeriods)
 {
     App ruleApp = wildcardApp("C:\\App\\rule.exe");
-    ruleApp.ruleId = 1;
+    ruleApp.ruleSet = { 1 };
 
     App noPeriodApp = wildcardApp("C:\\App\\no-period.exe");
-    noPeriodApp.ruleId = 2;
+    noPeriodApp.ruleSet = { 2 };
 
     m_apps << ruleApp << noPeriodApp;
 
@@ -844,7 +844,7 @@ TEST_F(ConnFilterTest, appFilters)
     prefixApp.filtersText = "IP(1.1.1.1):Act(Block)";
 
     App ruleApp = wildcardApp("C:\\App\\rule.exe");
-    ruleApp.ruleId = 1;
+    ruleApp.ruleSet = { 1 };
     ruleApp.filtersText = "IP(1.1.1.1):Act(Block)";
 
     m_apps << filtersApp << prefixApp << ruleApp;
@@ -881,6 +881,46 @@ TEST_F(ConnFilterTest, appFilters)
     // The Program's filters are checked before its Rules
     conn = connFilterConn("1.1.1.1");
     ASSERT_FALSE(connAllowed("C:\\App\\rule.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM_FILTER);
+    ASSERT_EQ(conn.rule_id, 0);
+}
+
+TEST_F(ConnFilterTest, appRules)
+{
+    App rulesApp = wildcardApp("C:\\App\\rules.exe");
+    rulesApp.ruleSet = { 2, 1 };
+    rulesApp.filtersText = "IP(3.3.3.3):Act(Allow)\n"
+                           "# Terminating\n"
+                           "Act(Block)";
+
+    m_apps << rulesApp;
+    writeConf();
+
+    writeRules(TestRuleList({
+            { .ruleId = 1, .ruleText = "1.1.1.1\n4.4.4.4" },
+            { .blocked = true, .ruleId = 2, .ruleText = "1.1.1.1\n3.3.3.3" },
+    }));
+
+    // The Rules in their order
+    FORT_CONF_META_CONN conn = connFilterConn("1.1.1.1");
+    ASSERT_FALSE(connAllowed("C:\\App\\rules.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_RULE);
+    ASSERT_EQ(conn.rule_id, 2);
+
+    conn = connFilterConn("4.4.4.4");
+    ASSERT_TRUE(connAllowed("C:\\App\\rules.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_RULE);
+    ASSERT_EQ(conn.rule_id, 1);
+
+    // The filters before the Rules
+    conn = connFilterConn("3.3.3.3");
+    ASSERT_TRUE(connAllowed("C:\\App\\rules.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM_FILTER);
+    ASSERT_EQ(conn.rule_id, 0);
+
+    // The Terminating Rule after the Rules
+    conn = connFilterConn("8.8.8.8");
+    ASSERT_FALSE(connAllowed("C:\\App\\rules.exe", conn));
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM_FILTER);
     ASSERT_EQ(conn.rule_id, 0);
 }

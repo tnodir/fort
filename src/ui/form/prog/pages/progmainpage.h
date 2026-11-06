@@ -9,6 +9,7 @@ class App;
 class Conn;
 class ProgGeneralPage;
 class ProgNetworkPage;
+class ProgRulesPage;
 
 class ProgMainPage : public ProgBasePage
 {
@@ -41,6 +42,8 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
+    void retranslateRulesTabText();
+
     void setupController();
 
     void setupUi();
@@ -48,7 +51,7 @@ private:
     QLayout *setupButtonsLayout();
 
     bool isNetworkTabEnabled() const;
-    void setNetworkTabEnabled(bool enabled);
+    void setFilterTabsEnabled(bool enabled);
 
     void onFilterSaved();
 
@@ -63,6 +66,7 @@ private:
     QTabWidget *m_tabWidget = nullptr;
     ProgGeneralPage *m_generalPage = nullptr;
     ProgNetworkPage *m_networkPage = nullptr;
+    ProgRulesPage *m_rulesPage = nullptr;
 
     QToolButton *m_btPendingConns = nullptr;
     QToolButton *m_btConnections = nullptr;

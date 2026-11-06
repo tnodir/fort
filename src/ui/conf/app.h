@@ -7,6 +7,8 @@
 
 #include <common/common_types.h>
 
+#include <conf/rule.h>
+
 class App
 {
 public:
@@ -47,6 +49,7 @@ public:
     bool hasGroup() const;
     bool hasZone() const;
     bool hasSpeedLimit() const;
+    bool hasRule() const;
 
     FORT_SPEED_LIMIT_IDS activeSpeedLimits() const;
 
@@ -74,8 +77,6 @@ public:
 
     FORT_SPEED_LIMIT_IDS speedLimits = {};
 
-    quint16 ruleId = 0;
-
     quint32 groups = 0;
 
     qint64 appId = 0;
@@ -88,6 +89,8 @@ public:
     QString appName;
     QString notes;
     QString filtersText;
+
+    RuleSetList ruleSet;
 
     QDateTime scheduleTime;
     QDateTime creatTime;

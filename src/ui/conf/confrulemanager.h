@@ -22,6 +22,7 @@ public:
     void setUp() override;
 
     QString ruleNameById(quint16 ruleId);
+    QStringList ruleNamesByIds(const RuleSetList &ruleSet);
 
     QVector<Rule> getTrayMenuRules() const;
     QVector<Rule> getRulesByName(const QString &ruleName) const;

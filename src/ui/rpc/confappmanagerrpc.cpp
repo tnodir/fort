@@ -203,13 +203,16 @@ bool ConfAppManagerRpc::updateDriverConf(bool onlyFlags)
 
 QVariantList ConfAppManagerRpc::appToVarList(const App &app)
 {
+    QVariantList ruleSetList;
+    VariantUtil::vectorToList(app.ruleSet, ruleSetList);
+
     return { app.isWildcard, app.applyParent, app.applyChild, app.applySpecChild, app.killChild,
         app.blockInbound, app.blockOutbound, app.lanOnly, app.parked, app.logStat,
         app.logAllowedConn, app.logBlockedConn, app.blocked, app.ask, app.killProcess,
         app.inLimitEnabled, app.outLimitEnabled, app.groups, app.speedLimits.in_limit_id,
-        app.speedLimits.out_limit_id, app.zones.accept_mask, app.zones.reject_mask, app.ruleId,
-        app.appId, app.appOriginPath, app.appPath, app.iconPath, app.appName, app.notes,
-        app.scheduleAction, app.scheduleTime, app.filtersText };
+        app.speedLimits.out_limit_id, app.zones.accept_mask, app.zones.reject_mask, app.appId,
+        app.appOriginPath, app.appPath, app.iconPath, app.appName, app.notes, app.scheduleAction,
+        app.scheduleTime, app.filtersText, ruleSetList };
 }
 
 App ConfAppManagerRpc::varListToApp(const QVariantList &v)
@@ -237,16 +240,16 @@ App ConfAppManagerRpc::varListToApp(const QVariantList &v)
     app.speedLimits.out_limit_id = v.value(19).toUInt();
     app.zones.accept_mask = v.value(20).toUInt();
     app.zones.reject_mask = v.value(21).toUInt();
-    app.ruleId = v.value(22).toUInt();
-    app.appId = v.value(23).toLongLong();
-    app.appOriginPath = v.value(24).toString();
-    app.appPath = v.value(25).toString();
-    app.iconPath = v.value(26).toString();
-    app.appName = v.value(27).toString();
-    app.notes = v.value(28).toString();
-    app.scheduleAction = v.value(29).toInt();
-    app.scheduleTime = v.value(30).toDateTime();
-    app.filtersText = v.value(31).toString();
+    app.appId = v.value(22).toLongLong();
+    app.appOriginPath = v.value(23).toString();
+    app.appPath = v.value(24).toString();
+    app.iconPath = v.value(25).toString();
+    app.appName = v.value(26).toString();
+    app.notes = v.value(27).toString();
+    app.scheduleAction = v.value(28).toInt();
+    app.scheduleTime = v.value(29).toDateTime();
+    app.filtersText = v.value(30).toString();
+    VariantUtil::listToVector(v.value(31).toList(), app.ruleSet);
     return app;
 }
 
