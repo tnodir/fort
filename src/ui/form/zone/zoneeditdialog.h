@@ -10,9 +10,11 @@ QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QFrame)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
+QT_FORWARD_DECLARE_CLASS(QTabWidget)
 
 class LineEdit;
 class PlainTextEdit;
+class UsagesView;
 class Zone;
 class ZoneSourceWrapper;
 class ZonesController;
@@ -40,12 +42,16 @@ private:
     void retranslateComboSources();
 
     void initializeBySource(const ZoneSourceWrapper &zoneSource);
+    void initializeUsages();
     void initializeFocus();
 
     void setupController();
 
     void setupUi();
     QLayout *setupMainLayout();
+    void setupTabBar();
+    QWidget *setupGeneralTab();
+    QWidget *setupUsagesTab();
     QLayout *setupNameLayout();
     void setupComboSources();
     void setupUrlFrame();
@@ -63,6 +69,7 @@ private:
 private:
     ZonesController *m_ctrl = nullptr;
 
+    QTabWidget *m_tabWidget = nullptr;
     QLabel *m_labelName = nullptr;
     LineEdit *m_editName = nullptr;
     QLabel *m_labelSource = nullptr;
@@ -76,6 +83,7 @@ private:
     LineEdit *m_editFormData = nullptr;
     QFrame *m_frameText = nullptr;
     PlainTextEdit *m_editText = nullptr;
+    UsagesView *m_usagesView = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 

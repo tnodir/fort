@@ -57,6 +57,31 @@ const char *const sqlDeleteRuleZone =
         "    reject_zones = reject_zones & ~?1"
         "  WHERE (accept_zones & ?1) <> 0 || (reject_zones & ?1) <> 0;";
 
+// The address lists' ids: FirewallConf::addressList()
+const char *const sqlSelectZoneUsages =
+        "WITH addr_list(list_id, include_zones, exclude_zones) AS ("
+        "  SELECT (ROW_NUMBER() OVER (ORDER BY addr_group_id) - 1) * 2,"
+        "      include_zones, exclude_zones"
+        "    FROM address_group"
+        ")"
+        "SELECT * FROM ("
+        "  SELECT ?2 AS category, t.list_id AS id, '' AS name"
+        "    FROM addr_list t"
+        "    WHERE (t.include_zones & ?1) <> 0"
+        "  UNION ALL"
+        "  SELECT ?2, t.list_id + 1, ''"
+        "    FROM addr_list t"
+        "    WHERE (t.exclude_zones & ?1) <> 0"
+        "  UNION ALL"
+        "  SELECT ?3, t.app_id, t.name"
+        "    FROM app t"
+        "    WHERE ((t.accept_zones | t.reject_zones) & ?1) <> 0"
+        "  UNION ALL"
+        "  SELECT ?4 + t.rule_type, t.rule_id, t.name"
+        "    FROM rule t"
+        "    WHERE ((t.accept_zones | t.reject_zones) & ?1) <> 0"
+        ") ORDER BY category, lower(name), id;";
+
 const char *const sqlUpdateZoneName = "UPDATE zone SET name = ?2 WHERE zone_id = ?1;";
 
 const char *const sqlUpdateZoneEnabled = "UPDATE zone SET enabled = ?2 WHERE zone_id = ?1;";
@@ -135,6 +160,13 @@ QStringList ConfZoneManager::zoneNamesByMask(quint32 zonesMask)
     return list;
 }
 
+ConfUsages ConfZoneManager::zoneUsages(quint8 zoneId) const
+{
+    return loadUsages(sqlSelectZoneUsages,
+            { Zone::zoneBit(zoneId), ConfUsages::CategoryAddressLists, ConfUsages::CategoryApps,
+                    ConfUsages::CategoryRules });
+}
+
 bool ConfZoneManager::addOrUpdateZone(Zone &zone)
 {
     bool ok = true;
@@ -188,8 +220,7 @@ bool ConfZoneManager::deleteZone(quint8 zoneId)
     beginWriteTransaction();
 
     if (DbQuery(sqliteDb(), &ok).sql(sqlDeleteZone).vars({ zoneId }).executeOk()) {
-        const quint32 zoneBit = (quint32(1) << (zoneId - 1));
-        const QVariantList vars = { zoneBit };
+        const QVariantList vars = { Zone::zoneBit(zoneId) };
 
         // Delete the Zone from Address Groups
         DbQuery(sqliteDb(), &ok).sql(sqlDeleteAddressGroupZone).vars(vars).executeOk();

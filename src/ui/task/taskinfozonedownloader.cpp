@@ -4,6 +4,7 @@
 #include <QLoggingCategory>
 
 #include <conf/confzonemanager.h>
+#include <conf/zone.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
 #include <model/zonelistmodel.h>
@@ -226,12 +227,12 @@ void TaskInfoZoneDownloader::emitZonesUpdated()
 
 void TaskInfoZoneDownloader::insertZoneId(quint32 &zonesMask, int zoneId)
 {
-    zonesMask |= (quint32(1) << (zoneId - 1));
+    zonesMask |= Zone::zoneBit(zoneId);
 }
 
 bool TaskInfoZoneDownloader::containsZoneId(quint32 zonesMask, int zoneId)
 {
-    return (zonesMask & (quint32(1) << (zoneId - 1))) != 0;
+    return (zonesMask & Zone::zoneBit(zoneId)) != 0;
 }
 
 void TaskInfoZoneDownloader::loadZones()

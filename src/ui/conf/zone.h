@@ -7,6 +7,8 @@
 class Zone
 {
 public:
+    static constexpr quint32 zoneBit(int zoneId) { return quint32(1) << (zoneId - 1); }
+
     bool isNameEqual(const Zone &o) const;
     bool isOptionsEqual(const Zone &o) const;
 

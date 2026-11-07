@@ -24,6 +24,8 @@ public:
     QString zoneNameById(quint8 zoneId);
     QStringList zoneNamesByMask(quint32 zonesMask);
 
+    ConfUsages zoneUsages(quint8 zoneId) const;
+
     virtual bool addOrUpdateZone(Zone &zone);
     virtual bool deleteZone(quint8 zoneId);
     virtual bool updateZoneName(quint8 zoneId, const QString &zoneName);

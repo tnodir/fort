@@ -6,11 +6,14 @@
 #include <QFrame>
 #include <QLabel>
 #include <QPushButton>
+#include <QTabWidget>
 #include <QVBoxLayout>
 
+#include <conf/confzonemanager.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
+#include <form/usage/usagesview.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/zonelistmodel.h>
@@ -48,6 +51,10 @@ void ZoneEditDialog::initialize(const Zone &zone)
 
     initializeBySource(zoneSource);
 
+    initializeUsages();
+
+    m_tabWidget->setCurrentIndex(0);
+
     initializeFocus();
 }
 
@@ -63,6 +70,12 @@ void ZoneEditDialog::initializeBySource(const ZoneSourceWrapper &zoneSource)
     m_frameText->setVisible(isTextInline);
 }
 
+void ZoneEditDialog::initializeUsages()
+{
+    m_usagesView->clearUsages();
+    m_tabWidget->setTabEnabled(1, !isEmpty());
+}
+
 void ZoneEditDialog::initializeFocus()
 {
     m_editName->setFocus();
@@ -71,6 +84,9 @@ void ZoneEditDialog::initializeFocus()
 void ZoneEditDialog::retranslateUi()
 {
     this->unsetLocale();
+
+    m_tabWidget->setTabText(0, tr("General"));
+    m_tabWidget->setTabText(1, tr("Usages"));
 
     m_labelName->setText(tr("Name:"));
     m_labelSource->setText(tr("Source:"));
@@ -82,6 +98,8 @@ void ZoneEditDialog::retranslateUi()
     m_labelUrl->setText(tr("URL:"));
     m_labelFormData->setText(tr("Form Data:"));
     m_labelFormData->setToolTip(tr("The data sent with the download request"));
+
+    m_usagesView->retranslateUi();
 
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
@@ -132,6 +150,31 @@ void ZoneEditDialog::setupUi()
 
 QLayout *ZoneEditDialog::setupMainLayout()
 {
+    // Tab Bar
+    setupTabBar();
+
+    // OK/Cancel
+    auto buttonsLayout = setupButtons();
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_tabWidget);
+    layout->addLayout(buttonsLayout);
+
+    return layout;
+}
+
+void ZoneEditDialog::setupTabBar()
+{
+    auto generalTab = setupGeneralTab();
+    auto usagesTab = setupUsagesTab();
+
+    m_tabWidget = new QTabWidget();
+    m_tabWidget->addTab(generalTab, QString());
+    m_tabWidget->addTab(usagesTab, QString());
+}
+
+QWidget *ZoneEditDialog::setupGeneralTab()
+{
     // Name & Sources
     auto nameLayout = setupNameLayout();
 
@@ -141,18 +184,27 @@ QLayout *ZoneEditDialog::setupMainLayout()
     // Text Inline
     setupTextFrame();
 
-    // OK/Cancel
-    auto buttonsLayout = setupButtons();
-
     auto layout = new QVBoxLayout();
     layout->addLayout(nameLayout);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addWidget(m_frameUrl, 1);
     layout->addWidget(m_frameText);
-    layout->addWidget(ControlUtil::createHSeparator());
-    layout->addLayout(buttonsLayout);
 
-    return layout;
+    return ControlUtil::wrapToWidget(layout);
+}
+
+QWidget *ZoneEditDialog::setupUsagesTab()
+{
+    // Usages
+    m_usagesView = new UsagesView();
+
+    connect(m_usagesView, &UsagesView::usagesRequested, this,
+            [&] { m_usagesView->setUsages(confZoneManager()->zoneUsages(m_zone.zoneId)); });
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_usagesView);
+
+    return ControlUtil::wrapToWidget(layout);
 }
 
 QLayout *ZoneEditDialog::setupNameLayout()
