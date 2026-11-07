@@ -50,6 +50,16 @@ ServiceListModel *ServicesWindow::serviceListModel() const
     return ctrl()->serviceListModel();
 }
 
+void ServicesWindow::selectService(const QString &serviceName)
+{
+    m_editSearch->clear();
+
+    const int row = serviceListModel()->serviceIndex(serviceName);
+    if (row >= 0) {
+        m_serviceListView->selectCell(row);
+    }
+}
+
 void ServicesWindow::saveWindowState(bool /*wasVisible*/)
 {
     auto &iniUser = Fort::iniUser();

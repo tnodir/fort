@@ -472,6 +472,16 @@ bool WindowManager::showProgramAlertWindow(bool activate)
     return true;
 }
 
+bool WindowManager::showServicesWindowService(const QString &serviceName)
+{
+    if (!showServicesWindow())
+        return false;
+
+    servicesWindow()->selectService(serviceName);
+
+    return true;
+}
+
 bool WindowManager::showOptionsWindowTab(int index)
 {
     if (!showOptionsWindow())

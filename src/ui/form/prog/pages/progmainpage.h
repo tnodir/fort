@@ -56,6 +56,9 @@ private:
     void onFilterSaved();
 
     void updatePendingConnsVisible();
+    void updateServiceVisible();
+
+    QString svcHostServiceName() const;
 
     ProgBasePage *currentPage() const;
     ProgBasePage *pageAt(int index) const;
@@ -72,6 +75,7 @@ private:
     QToolButton *m_btConnections = nullptr;
     QPushButton *m_btMenu = nullptr;
 
+    QToolButton *m_btService = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 

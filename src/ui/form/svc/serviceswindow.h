@@ -26,6 +26,8 @@ public:
     ServicesController *ctrl() const { return m_ctrl; }
     ServiceListModel *serviceListModel() const;
 
+    void selectService(const QString &serviceName);
+
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
 

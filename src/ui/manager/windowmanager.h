@@ -115,6 +115,8 @@ public slots:
 
     bool showServicesWindow() { return showWindowByCode(WindowServices); }
 
+    bool showServicesWindowService(const QString &serviceName);
+
     bool showOptionsWindow() { return showWindowByCode(WindowOptions); }
     bool closeOptionsWindow() { return closeWindowByCode(WindowOptions); }
 

@@ -7,13 +7,18 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/toolbutton.h>
 #include <form/prog/programeditcontroller.h>
+#include <fortglobal.h>
+#include <manager/windowmanager.h>
 #include <model/appconnsearchmodel.h>
+#include <util/fileutil.h>
 #include <util/stringutil.h>
 
 #include "proggeneralpage.h"
 #include "progmorepage.h"
 #include "prognetworkpage.h"
 #include "progrulespage.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -98,6 +103,8 @@ void ProgMainPage::onPageInitialize(const App &app)
     m_btPendingConns->setEnabled(canFilterApp);
     m_btConnections->setEnabled(canFilterApp);
 
+    updateServiceVisible();
+
     selectTab(generalTabIndex);
 }
 
@@ -111,6 +118,7 @@ void ProgMainPage::onRetranslateUi()
     m_btPendingConns->setToolTip(tr("Paused Connections"));
     m_btConnections->setToolTip(tr("Connections"));
 
+    m_btService->setText(tr("Service"));
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
 }
@@ -128,6 +136,8 @@ void ProgMainPage::setupController()
 
     connect(ctrl(), &ProgramEditController::allowToggled, this,
             &ProgMainPage::setFilterTabsEnabled);
+    connect(ctrl(), &ProgramEditController::isWildcardSwitched, this,
+            &ProgMainPage::updateServiceVisible);
 
     connect(m_networkPage, &ProgNetworkPage::filterSaved, this, &ProgMainPage::onFilterSaved);
     connect(m_rulesPage, &ProgRulesPage::rulesCountChanged, this,
@@ -200,6 +210,10 @@ void ProgMainPage::setupTabBar()
 
 QLayout *ProgMainPage::setupButtonsLayout()
 {
+    // Service
+    m_btService = ControlUtil::createFlatToolButton(":/icons/windows-48.png",
+            [&] { windowManager()->showServicesWindowService(svcHostServiceName()); });
+
     // OK
     m_btOk = ControlUtil::createButton(QString(), [&] { ctrl()->saveChanges(); });
     m_btOk->setDefault(true);
@@ -207,7 +221,8 @@ QLayout *ProgMainPage::setupButtonsLayout()
     // Cancel
     m_btCancel = ControlUtil::createButton(QString(), [&] { ctrl()->closeWindow(); });
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ /*stretch*/ nullptr, m_btOk, m_btCancel });
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_btService, /*stretch*/ nullptr, m_btOk, m_btCancel });
 
     return layout;
 }
@@ -242,6 +257,25 @@ void ProgMainPage::updatePendingConnsVisible()
     const bool visible = (m_pendingConnsCount > 0 || m_btPendingConns->isChecked());
 
     m_btPendingConns->setVisible(visible);
+}
+
+void ProgMainPage::updateServiceVisible()
+{
+    m_btService->setVisible(!svcHostServiceName().isEmpty());
+}
+
+QString ProgMainPage::svcHostServiceName() const
+{
+    if (!isSingleSelection() || isNew())
+        return {};
+
+    if (isWildcard() || app().isWildcard)
+        return {};
+
+    QString serviceName;
+    FileUtil::isSvcHostService(app().appOriginPath, serviceName);
+
+    return serviceName;
 }
 
 ProgBasePage *ProgMainPage::currentPage() const

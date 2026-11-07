@@ -260,3 +260,14 @@ const ServiceInfo &ServiceListModel::serviceInfoAt(int index) const
     }
     return services()[index];
 }
+
+int ServiceListModel::serviceIndex(const QString &serviceName) const
+{
+    const auto &list = services();
+
+    const auto it = std::find_if(list.constBegin(), list.constEnd(), [&](const ServiceInfo &info) {
+        return info.serviceName.compare(serviceName, Qt::CaseInsensitive) == 0;
+    });
+
+    return (it != list.constEnd()) ? int(it - list.constBegin()) : -1;
+}

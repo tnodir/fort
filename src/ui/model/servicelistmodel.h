@@ -32,6 +32,7 @@ public:
 
     const QVector<ServiceInfo> &services() const { return m_services; }
     const ServiceInfo &serviceInfoAt(int index) const;
+    int serviceIndex(const QString &serviceName) const;
 
 protected:
     Qt::ItemFlags flagIsEnabled(const QModelIndex &index) const override;
