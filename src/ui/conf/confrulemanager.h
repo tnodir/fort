@@ -30,6 +30,8 @@ public:
     void loadRuleSet(Rule &rule, QStringList *ruleSetNames = nullptr) const;
     void saveRuleSet(Rule &rule);
 
+    ConfUsages ruleUsages(quint16 ruleId) const;
+
     int rulesCountByType(Rule::RuleType ruleType);
 
     // The Global rules of the type are of the max count: no new one

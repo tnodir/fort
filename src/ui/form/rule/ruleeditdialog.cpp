@@ -20,6 +20,7 @@
 #include <form/controls/selector/timeperiodselector.h>
 #include <form/controls/selector/zonesselector.h>
 #include <form/dialog/dialogutil.h>
+#include <form/usage/usagesview.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/rulesetmodel.h>
@@ -98,6 +99,8 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
     m_cbLogAllowedConn->setChecked(ruleRow.logAllowedConn);
     m_cbLogBlockedConn->setChecked(ruleRow.logBlockedConn);
 
+    initializeUsages();
+
     m_tabWidget->setCurrentIndex(0);
 
     initializeFocus();
@@ -130,6 +133,15 @@ void RuleEditDialog::initializeRuleSet(quint16 ruleId)
     m_ruleSetArea->initialize(m_ruleRow, ruleSetNames);
 }
 
+void RuleEditDialog::initializeUsages()
+{
+    const bool hasUsages =
+            !isEmpty() && (Rule::ruleTypeBit(m_ruleRow.ruleType) & Rule::assignedRuleTypes()) != 0;
+
+    m_usagesView->clearUsages();
+    m_tabWidget->setTabEnabled(3, hasUsages);
+}
+
 void RuleEditDialog::initializeFocus()
 {
     if (isEmpty()) {
@@ -151,6 +163,7 @@ void RuleEditDialog::retranslateUi()
     m_tabWidget->setTabText(0, tr("General"));
     retranslatePresetsTabText();
     m_tabWidget->setTabText(2, tr("More"));
+    m_tabWidget->setTabText(3, tr("Usages"));
 
     m_labelEditName->setText(tr("Name:"));
     m_editNotes->setPlaceholderText(tr("Notes"));
@@ -186,6 +199,8 @@ void RuleEditDialog::retranslateUi()
 
     m_cbLogAllowedConn->setText(tr("Collect allowed connections"));
     m_cbLogBlockedConn->setText(tr("Collect blocked connections"));
+
+    m_usagesView->retranslateUi();
 
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
@@ -263,11 +278,13 @@ void RuleEditDialog::setupTabBar()
     auto generalTab = setupGeneralTab();
     auto presetsTab = setupPresetsTab();
     auto moreTab = setupMoreTab();
+    auto usagesTab = setupUsagesTab();
 
     m_tabWidget = new QTabWidget();
     m_tabWidget->addTab(generalTab, QString());
     m_tabWidget->addTab(presetsTab, QString());
     m_tabWidget->addTab(moreTab, QString());
+    m_tabWidget->addTab(usagesTab, QString());
 
     connect(ruleSetModel(), &RuleSetModel::rowCountChanged, this,
             &RuleEditDialog::retranslatePresetsTabText);
@@ -327,6 +344,20 @@ QWidget *RuleEditDialog::setupMoreTab()
     auto layout = new QVBoxLayout();
     layout->addLayout(logLayout);
     layout->addStretch();
+
+    return ControlUtil::wrapToWidget(layout);
+}
+
+QWidget *RuleEditDialog::setupUsagesTab()
+{
+    // Usages
+    m_usagesView = new UsagesView();
+
+    connect(m_usagesView, &UsagesView::usagesRequested, this,
+            [&] { m_usagesView->setUsages(confRuleManager()->ruleUsages(m_ruleRow.ruleId)); });
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_usagesView);
 
     return ControlUtil::wrapToWidget(layout);
 }

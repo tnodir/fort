@@ -175,6 +175,7 @@ SOURCES += \
     form/traf/trafficwindow.cpp \
     form/tray/traycontroller.cpp \
     form/tray/trayicon.cpp \
+    form/usage/usagesview.cpp \
     form/zone/zoneeditdialog.cpp \
     form/zone/zonescontroller.cpp \
     form/zone/zoneswindow.cpp \
@@ -222,6 +223,7 @@ SOURCES += \
     model/timeperiodlistmodel.cpp \
     model/traflistmodel.cpp \
     model/trafunittype.cpp \
+    model/usagesmodel.cpp \
     model/zonelistmodel.cpp \
     model/zonesourcewrapper.cpp \
     model/zonetypewrapper.cpp \
@@ -360,6 +362,7 @@ HEADERS += \
     conf/confrulemanager.h \
     conf/confspeedlimitmanager.h \
     conf/conftimeperiodmanager.h \
+    conf/confusages.h \
     conf/confzonemanager.h \
     conf/filtersimconn.h \
     conf/firewallconf.h \
@@ -511,6 +514,7 @@ HEADERS += \
     form/tray/traycontroller.h \
     form/tray/trayicon.h \
     form/tray/trayicon_types.h \
+    form/usage/usagesview.h \
     form/zone/zoneeditdialog.h \
     form/zone/zonescontroller.h \
     form/zone/zoneswindow.h \
@@ -562,6 +566,7 @@ HEADERS += \
     model/traflistcolumn.h \
     model/traflistmodel.h \
     model/trafunittype.h \
+    model/usagesmodel.h \
     model/zonelistmodel.h \
     model/zonesourcewrapper.h \
     model/zonetypewrapper.h \

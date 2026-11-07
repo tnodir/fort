@@ -140,6 +140,22 @@ const char *const sqlSelectRuleSetIds = "SELECT sub_rule_id FROM rule_set"
                                         "  WHERE rule_id = ?1"
                                         "  ORDER BY order_index;";
 
+const char *const sqlSelectRuleUsages = "SELECT * FROM ("
+                                        "  SELECT ?2 AS category, a.app_id AS id, a.name AS name"
+                                        "    FROM app_rule t"
+                                        "    JOIN app a ON a.app_id = t.app_id"
+                                        "    WHERE t.rule_id = ?1"
+                                        "  UNION ALL"
+                                        "  SELECT ?3, t.group_id, t.name"
+                                        "    FROM app_group t"
+                                        "    WHERE t.rule_id = ?1"
+                                        "  UNION ALL"
+                                        "  SELECT ?4 + r.rule_type, r.rule_id, r.name"
+                                        "    FROM rule_set t"
+                                        "    JOIN rule r ON r.rule_id = t.rule_id"
+                                        "    WHERE t.sub_rule_id = ?1"
+                                        ") ORDER BY category, lower(name), id;";
+
 const char *const sqlSelectRulesCountByType = "SELECT COUNT(*) FROM rule t"
                                               "  WHERE t.rule_type = ?1;";
 
@@ -295,6 +311,13 @@ void ConfRuleManager::loadRuleSet(Rule &rule, QStringList *ruleSetNames) const
             ruleSetNames->append(stmt.columnText(1));
         }
     }
+}
+
+ConfUsages ConfRuleManager::ruleUsages(quint16 ruleId) const
+{
+    return loadUsages(sqlSelectRuleUsages,
+            { ruleId, ConfUsages::CategoryApps, ConfUsages::CategoryGroups,
+                    ConfUsages::CategoryRules });
 }
 
 void ConfRuleManager::saveRuleSet(Rule &rule)

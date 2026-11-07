@@ -21,6 +21,7 @@ class RuleSetModel;
 class RulesController;
 class TerminatingRuleSelector;
 class TimePeriodSelector;
+class UsagesView;
 class ZonesSelector;
 
 class RuleEditDialog : public QDialog
@@ -42,6 +43,7 @@ public:
 
 private:
     void initializeRuleSet(quint16 ruleId);
+    void initializeUsages();
     void initializeFocus();
 
     void setupController();
@@ -57,6 +59,7 @@ private:
     QWidget *setupGeneralTab();
     QWidget *setupPresetsTab();
     QWidget *setupMoreTab();
+    QWidget *setupUsagesTab();
     QLayout *setupFormLayout();
     QLayout *setupEnabledLayout();
     QLayout *setupActionsLayout();
@@ -109,6 +112,7 @@ private:
     RuleSetArea *m_ruleSetArea = nullptr;
     QCheckBox *m_cbLogAllowedConn = nullptr;
     QCheckBox *m_cbLogBlockedConn = nullptr;
+    UsagesView *m_usagesView = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 

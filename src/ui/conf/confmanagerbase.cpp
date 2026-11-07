@@ -34,3 +34,20 @@ void ConfManagerBase::saveRuleSetIds(
         stmt.reset();
     }
 }
+
+ConfUsages ConfManagerBase::loadUsages(const char *sql, const QVariantList &vars) const
+{
+    ConfUsages usages;
+
+    SqliteStmt stmt;
+    if (!DbQuery(sqliteDb()).sql(sql).vars(vars).prepare(stmt))
+        return usages;
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        const auto category = ConfUsages::Category(stmt.columnInt(0));
+
+        usages.lists[category].append({ .id = stmt.columnInt64(1), .name = stmt.columnText(2) });
+    }
+
+    return usages;
+}
