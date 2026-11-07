@@ -1,5 +1,12 @@
 Fort Firewall ChangeLog
 
+v3.20.9, 2026-11-07:
+- UI: Edit Program: Add the Rules tab: a list of Rules instead of the single Rule.
+- UI: Edit Program: Set the icon from a .exe file; Link a Service to the Services window.
+- UI: Fix bugs and improve the usability, reported on the forum (#799).
+- UI: Add Farsi and Romanian languages.
+- Driver: The Program's Rules are checked after its Network Filters.
+
 v3.20.8, 2026-10-24:
 - UI: Rules: Add the default Preset Rules (#258).
 - UI: Rules: Add the Duplicate action; Show the Terminating Rule's action.
