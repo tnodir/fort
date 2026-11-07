@@ -2367,8 +2367,8 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
         <translation>Icono del programa</translation>
     </message>
     <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>Iconos (*.ico; *.png)</translation>
+        <source>Icons (*.ico; *.png; *.exe)</source>
+        <translation>Iconos (*.ico; *.png; *.exe)</translation>
     </message>
 </context>
 <context>

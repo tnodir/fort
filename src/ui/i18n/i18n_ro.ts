@@ -2367,8 +2367,8 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
         <translation>Pictogramă pentru program</translation>
     </message>
     <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>Pictograme (*.ico; *.png)</translation>
+        <source>Icons (*.ico; *.png; *.exe)</source>
+        <translation>Pictograme (*.ico; *.png; *.exe)</translation>
     </message>
 </context>
 <context>

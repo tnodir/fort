@@ -2367,8 +2367,8 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <translation>Symbol für Programm</translation>
     </message>
     <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>Symbole (*.ico; *.png)</translation>
+        <source>Icons (*.ico; *.png; *.exe)</source>
+        <translation>Symbole (*.ico; *.png; *.exe)</translation>
     </message>
 </context>
 <context>

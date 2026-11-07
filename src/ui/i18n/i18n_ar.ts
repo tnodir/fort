@@ -2367,8 +2367,8 @@ Make sure that you have a fresh backup.</source>
         <translation>أيقونة البرنامج</translation>
     </message>
     <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>الأيقونات (*.ico; *.png)</translation>
+        <source>Icons (*.ico; *.png; *.exe)</source>
+        <translation>الأيقونات (*.ico; *.png; *.exe)</translation>
     </message>
 </context>
 <context>

@@ -2367,8 +2367,8 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <translation>Ikona programu</translation>
     </message>
     <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>Icony (*.ico; *.png)</translation>
+        <source>Icons (*.ico; *.png; *.exe)</source>
+        <translation>Icony (*.ico; *.png; *.exe)</translation>
     </message>
 </context>
 <context>

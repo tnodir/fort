@@ -2367,8 +2367,8 @@ Make sure that you have a fresh backup.</source>
         <translation>程序图标</translation>
     </message>
     <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>图标文件 (*.ico; *.png)</translation>
+        <source>Icons (*.ico; *.png; *.exe)</source>
+        <translation>图标文件 (*.ico; *.png; *.exe)</translation>
     </message>
 </context>
 <context>

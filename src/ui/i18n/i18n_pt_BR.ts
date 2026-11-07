@@ -2366,8 +2366,8 @@ Certifique-se de que possui um backup recente.</translation>
         <translation>Ícone do programa</translation>
     </message>
     <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>Ícones (*.ico; *.png)</translation>
+        <source>Icons (*.ico; *.png; *.exe)</source>
+        <translation>Ícones (*.ico; *.png; *.exe)</translation>
     </message>
 </context>
 <context>

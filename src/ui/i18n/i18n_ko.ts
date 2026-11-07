@@ -2367,8 +2367,8 @@ Make sure that you have a fresh backup.</source>
         <translation>프로그램 아이콘</translation>
     </message>
     <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>아이콘 (*.ico; *.png)</translation>
+        <source>Icons (*.ico; *.png; *.exe)</source>
+        <translation>아이콘 (*.ico; *.png; *.exe)</translation>
     </message>
 </context>
 <context>

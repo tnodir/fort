@@ -2367,8 +2367,8 @@ Make sure that you have a fresh backup.</source>
         <translation>Значок для программы</translation>
     </message>
     <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>Значки (*.ico; *.png)</translation>
+        <source>Icons (*.ico; *.png; *.exe)</source>
+        <translation>Значки (*.ico; *.png; *.exe)</translation>
     </message>
 </context>
 <context>

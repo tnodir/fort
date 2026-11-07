@@ -2367,8 +2367,8 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Program Simgesi </translation>
     </message>
     <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>Simgeler (*.ico; *.png)</translation>
+        <source>Icons (*.ico; *.png; *.exe)</source>
+        <translation>Simgeler (*.ico; *.png; *.exe)</translation>
     </message>
 </context>
 <context>

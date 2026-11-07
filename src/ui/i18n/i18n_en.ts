@@ -2364,7 +2364,7 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Icons (*.ico; *.png)</source>
+        <source>Icons (*.ico; *.png; *.exe)</source>
         <translation></translation>
     </message>
 </context>

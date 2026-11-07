@@ -2367,8 +2367,8 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
         <translation>Biểu tượng cho chương trình</translation>
     </message>
     <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>Biểu tượng (*.ico; *.png)</translation>
+        <source>Icons (*.ico; *.png; *.exe)</source>
+        <translation>Biểu tượng (*.ico; *.png; *.exe)</translation>
     </message>
 </context>
 <context>

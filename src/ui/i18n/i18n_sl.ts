@@ -2367,8 +2367,8 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Ikona za program</translation>
     </message>
     <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>Ikone (*.ico; *.png)</translation>
+        <source>Icons (*.ico; *.png; *.exe)</source>
+        <translation>Ikone (*.ico; *.png; *.exe)</translation>
     </message>
 </context>
 <context>

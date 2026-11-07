@@ -2367,8 +2367,8 @@ Make sure that you have a fresh backup.</source>
         <translation>プログラムのアイコン</translation>
     </message>
     <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>アイコン (*.ico; *.png)</translation>
+        <source>Icons (*.ico; *.png; *.exe)</source>
+        <translation>アイコン (*.ico; *.png; *.exe)</translation>
     </message>
 </context>
 <context>

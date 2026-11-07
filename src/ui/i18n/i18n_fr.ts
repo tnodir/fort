@@ -2367,8 +2367,8 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <translation>Icône du programme</translation>
     </message>
     <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>Icônes (*.ico; *.png)</translation>
+        <source>Icons (*.ico; *.png; *.exe)</source>
+        <translation>Icônes (*.ico; *.png; *.exe)</translation>
     </message>
 </context>
 <context>
