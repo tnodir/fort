@@ -4,6 +4,7 @@
 #include <QImage>
 
 #include <fortglobal.h>
+#include <util/fileutil.h>
 #include <util/iconcache.h>
 
 #include "appinfomanager.h"
@@ -56,6 +57,15 @@ QIcon AppInfoCache::appIcon(const QString &appPath, const QString &nullIconPath)
     IconCache::insert(appPath, icon);
 
     return icon;
+}
+
+QIcon AppInfoCache::fileIcon(const QString &filePath)
+{
+    if (filePath.endsWith(".exe", Qt::CaseInsensitive)) {
+        return appIcon(FileUtil::normalizePath(filePath));
+    }
+
+    return IconCache::icon(filePath);
 }
 
 bool AppInfoCache::appFileExists(const QString &appPath)

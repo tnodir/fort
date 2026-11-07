@@ -235,7 +235,7 @@ QIcon AppListModelData::appIcon() const
 {
     const auto iconPath = app().iconPath;
     if (!iconPath.isEmpty()) {
-        return IconCache::icon(iconPath);
+        return appInfoCache()->fileIcon(iconPath);
     }
 
     if (app().isWildcard) {

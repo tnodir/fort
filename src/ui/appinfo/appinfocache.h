@@ -22,6 +22,7 @@ public:
     virtual QString appName(const QString &appPath);
 
     QIcon appIcon(const QString &appPath, const QString &nullIconPath = QString());
+    QIcon fileIcon(const QString &filePath);
 
     bool appFileExists(const QString &appPath);
 

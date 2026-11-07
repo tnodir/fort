@@ -291,6 +291,8 @@ void ProgGeneralPage::setupController()
 {
     connect(ctrl(), &ProgramEditController::isWildcardSwitched, this,
             &ProgGeneralPage::onWildcardSwitched);
+
+    connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &ProgGeneralPage::updateAppIcon);
 }
 
 void ProgGeneralPage::setupUi()
@@ -420,8 +422,8 @@ QLayout *ProgGeneralPage::setupNotesLayout()
     m_editNotes->setFixedHeight(notesHeight);
 
     m_btSetIcon = ControlUtil::createIconToolButton(":/icons/application.png", [&] {
-        const auto filePath =
-                DialogUtil::getOpenFileName(tr("Icon for program"), tr("Icons (*.ico; *.png)"));
+        const auto filePath = DialogUtil::getOpenFileName(
+                tr("Icon for program"), tr("Icons (*.ico; *.png; *.exe)"));
 
         if (filePath.isEmpty())
             return;
@@ -728,7 +730,7 @@ void ProgGeneralPage::updateAppIcon()
     QPixmap pixmap;
 
     if (!m_iconPath.isEmpty()) {
-        pixmap = IconCache::pixmap(m_iconPath, appIconSize);
+        pixmap = appInfoCache()->fileIcon(m_iconPath).pixmap(appIconSize);
     } else {
         const bool isSingleSelection = m_labelEditNotes->isEnabled();
 
