@@ -192,6 +192,9 @@ public:
     quint32 addressListZones(AddressList list) const;
     void setAddressListZones(AddressList list, quint32 zones);
 
+    // Not edited: the removed Zones are cleared in the DB already
+    void removeAddressListsZones(quint32 zonesMask);
+
     QString addressListText(AddressList list) const;
     void setAddressListText(AddressList list, const QString &text);
 

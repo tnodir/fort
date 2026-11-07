@@ -34,6 +34,12 @@ void AddressGroup::setExcludeZones(quint32 v)
     }
 }
 
+void AddressGroup::removeZones(quint32 zonesMask)
+{
+    m_includeZones &= ~zonesMask;
+    m_excludeZones &= ~zonesMask;
+}
+
 void AddressGroup::setIncludeText(const QString &includeText)
 {
     if (m_includeText != includeText) {

@@ -122,6 +122,11 @@ void ConfZoneManager::setUp()
 
     // The imported DB may reuse the ids
     connect(confManager, &ConfManager::imported, this, &ConfZoneManager::clearZoneNamesCache);
+
+    // deleteZone() clears the Zone in the DB: clear it in the loaded conf too (a client's by RPC)
+    connect(this, &ConfZoneManager::zoneRemoved, confManager, [=](quint8 zoneId) {
+        confManager->conf().removeAddressListsZones(Zone::zoneBit(zoneId));
+    });
 }
 
 QString ConfZoneManager::zoneNameById(quint8 zoneId)

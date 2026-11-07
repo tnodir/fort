@@ -173,6 +173,13 @@ void FirewallConf::setAddressListZones(AddressList list, quint32 zones)
     }
 }
 
+void FirewallConf::removeAddressListsZones(quint32 zonesMask)
+{
+    for (AddressGroup *addressGroup : addressGroups()) {
+        addressGroup->removeZones(zonesMask);
+    }
+}
+
 QString FirewallConf::addressListText(AddressList list) const
 {
     const AddressGroup *addressGroup = m_addressGroups.at(addressListGroupIndex(list));

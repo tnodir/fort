@@ -29,6 +29,9 @@ public:
     quint32 excludeZones() const { return m_excludeZones; }
     void setExcludeZones(quint32 v);
 
+    // Not edited: the removed Zones are cleared in the DB already
+    void removeZones(quint32 zonesMask);
+
     QString includeText() const { return m_includeText; }
     void setIncludeText(const QString &includeText);
 
