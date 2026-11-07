@@ -431,8 +431,8 @@ QLayout *ProgGeneralPage::setupNotesLayout()
         setIconPath(filePath);
     });
 
-    m_btDeleteIcon =
-            ControlUtil::createIconToolButton(":/icons/delete.png", [&] { setIconPath({}); });
+    m_btDeleteIcon = ControlUtil::createIconToolButton(
+            ":/icons/application_delete.png", [&] { setIconPath({}); });
 
     auto layout = ControlUtil::createHLayout();
     layout->addWidget(m_editNotes);
