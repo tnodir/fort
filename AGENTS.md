@@ -80,6 +80,8 @@ scripts\make\driver-loader\make-all.bat      :: clear certs, wrap build\build-dr
 scripts\make\deploy\make-all.bat             :: stage + installer + gpg *.exe.sig for win7, win10, win10-arm64
 ```
 
+The terms' translations are in the wiki's glossary (the repository `https://github.com/tnodir/fort.wiki`, its local path is in `CLAUDE.local.md`; `i18n/Glossary.md` with the terms' meaning and rules, `i18n/Glossary-<lang>.md` per language): translate a `.ts` by its terms and style. Don't change a glossary's term silently: propose the change, then update the language's page and all the term's strings of the `.ts` together.
+
 The installer (Inno Setup 7, `deploy/FortFirewall.iss`, `create-installer.bat`: the architectures, the file names' suffixes, the 64-bit install mode, the auto-update's parameters, `SuppressibleMsgBox()`, the `.isl` files' code pages): read `docs/agents/installer.md` before changing it.
 
 ## Architecture
