@@ -19,6 +19,7 @@
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
+#include <form/opt/pages/optmainpage.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/appstatmodel.h>
@@ -198,7 +199,7 @@ QLayout *TrafficWindow::setupHeader()
     setupTrafUnits();
 
     // Options button
-    m_btOptions = ControlUtil::createOptionsButton(3);
+    m_btOptions = ControlUtil::createOptionsButton(OptMainPage::TabStatistics);
 
     // Statistics button
     m_btStatistics = ControlUtil::createStatisticsButton();

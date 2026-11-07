@@ -57,7 +57,7 @@ QString windowNamesText()
 
 QStringList optionsTabNames()
 {
-    // Sync with OptMainPage's tabs
+    // Sync with enum OptMainPage::TabIndex
     return { "options", "interface", "addresses", "statistics", "graph", "schedule" };
 }
 

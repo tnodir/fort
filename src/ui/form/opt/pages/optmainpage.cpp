@@ -40,12 +40,12 @@ void OptMainPage::selectTab(int index)
 
 void OptMainPage::onRetranslateUi()
 {
-    m_tabWidget->setTabText(0, tr("Options"));
-    m_tabWidget->setTabText(1, tr("Interface"));
-    m_tabWidget->setTabText(2, tr("IP Addresses"));
-    m_tabWidget->setTabText(3, tr("Statistics"));
-    m_tabWidget->setTabText(4, tr("Traffic Graph"));
-    m_tabWidget->setTabText(5, tr("Schedule"));
+    m_tabWidget->setTabText(TabOptions, tr("Options"));
+    m_tabWidget->setTabText(TabIface, tr("Interface"));
+    m_tabWidget->setTabText(TabAddresses, tr("IP Addresses"));
+    m_tabWidget->setTabText(TabStatistics, tr("Statistics"));
+    m_tabWidget->setTabText(TabGraph, tr("Traffic Graph"));
+    m_tabWidget->setTabText(TabSchedule, tr("Schedule"));
 
     m_btBackup->setText(tr("Backup"));
     m_actExport->setText(tr("Export"));

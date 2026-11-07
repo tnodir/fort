@@ -10,6 +10,15 @@ class OptMainPage : public OptBasePage
     Q_OBJECT
 
 public:
+    enum TabIndex : qint8 {
+        TabOptions = 0,
+        TabIface,
+        TabAddresses,
+        TabStatistics,
+        TabGraph,
+        TabSchedule,
+    };
+
     explicit OptMainPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
     QString helpSection() const override;

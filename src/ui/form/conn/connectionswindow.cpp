@@ -18,6 +18,7 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
 #include <form/filtersim/filtersimwindow.h>
+#include <form/opt/pages/optmainpage.h>
 #include <form/prog/programeditdialog.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -320,7 +321,7 @@ QLayout *ConnectionsWindow::setupHeader()
     setupLogConnIcons();
 
     // Options button
-    m_btOptions = ControlUtil::createOptionsButton(3);
+    m_btOptions = ControlUtil::createOptionsButton(OptMainPage::TabStatistics);
 
     // Statistics button
     m_btStatistics = ControlUtil::createStatisticsButton();
