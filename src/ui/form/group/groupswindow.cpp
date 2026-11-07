@@ -6,6 +6,7 @@
 #include <QToolButton>
 #include <QVBoxLayout>
 
+#include <conf/confgroupmanager.h>
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
@@ -63,6 +64,27 @@ void GroupsWindow::restoreWindowState()
         auto header = m_groupListView->horizontalHeader();
         header->restoreState(iniUser.groupsHeader());
     }
+}
+
+GroupEditDialog *GroupsWindow::showGroupEditDialog(int groupId, QWidget *parent)
+{
+    auto ctrl = new GroupsController();
+
+    auto w = new GroupEditDialog(ctrl, parent);
+    ControlUtil::deleteOnClose(w);
+
+    ctrl->setParent(w);
+
+    // Initialize the Group edit dialog
+    {
+        Group group;
+        confGroupManager()->loadGroupById(group, groupId);
+        w->initialize(group);
+    }
+
+    DialogUtil::showDialog(w);
+
+    return w;
 }
 
 void GroupsWindow::setupController()

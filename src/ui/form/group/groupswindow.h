@@ -25,6 +25,8 @@ public:
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
 
+    static GroupEditDialog *showGroupEditDialog(int groupId, QWidget *parent);
+
 private:
     void setupController();
 
