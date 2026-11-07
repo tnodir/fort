@@ -221,6 +221,7 @@ void FortManager::initialize()
     setupConfRuleManager();
     setupConfGroupManager();
     setupConfSpeedLimitManager();
+    setupConfZoneManager();
     setupQuotaManager();
     setupTaskManager();
     setupServiceInfoManager();
@@ -584,6 +585,19 @@ void FortManager::setupConfSpeedLimitManager()
     // The deleted Speed Limit's id can be reused: clear it from the driver's apps
     connect(confSpeedLimitManager(), &ConfSpeedLimitManager::speedLimitRemoved, this,
             [&] { updateDriverConf(); });
+}
+
+void FortManager::setupConfZoneManager()
+{
+    // The deleted Zone's id can be reused: clear it from the driver's address lists, apps and
+    // rules (ConfZoneManager's earlier connection clears the address lists in the conf)
+    connect(confZoneManager(), &ConfZoneManager::zoneRemoved, this, [&] {
+        if (!confAppManager()->canUpdateDriverConf())
+            return;
+
+        updateDriverConf();
+        confRuleManager()->updateDriverRules();
+    });
 }
 
 void FortManager::setupQuotaManager()
