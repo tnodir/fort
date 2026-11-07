@@ -33,6 +33,11 @@ QString svcHostPrefix()
     return QStringLiteral(R"(\svchost\)");
 }
 
+QString svcHostServicePath(const QString &serviceName)
+{
+    return svcHostPrefix() + serviceName;
+}
+
 bool isSvcHostService(const QString &path, QString &serviceName)
 {
     if (!path.startsWith(svcHostPrefix(), Qt::CaseInsensitive))

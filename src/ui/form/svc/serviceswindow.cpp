@@ -20,6 +20,7 @@
 #include <manager/windowmanager.h>
 #include <model/servicelistmodel.h>
 #include <user/iniuser.h>
+#include <util/fileutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/window/widgetwindowstatewatcher.h>
@@ -182,7 +183,7 @@ QLayout *ServicesWindow::setupHeader()
     });
     connect(m_actAddProgram, &QAction::triggered, this, [&] {
         if (const auto serviceInfo = currentServiceInfo()) {
-            const QString appPath = QStringLiteral(R"(\SvcHost\)") + serviceInfo->serviceName;
+            const QString appPath = FileUtil::svcHostServicePath(serviceInfo->serviceName);
 
             windowManager()->openProgramEditForm(appPath, /*appId=*/0, this);
         }
