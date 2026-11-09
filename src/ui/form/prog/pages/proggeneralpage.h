@@ -90,6 +90,8 @@ private:
 
     void fillEditName();
 
+    QString appFilePath() const;
+
     bool isPathEditable() const;
     bool isPathValid() const;
 

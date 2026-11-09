@@ -538,8 +538,8 @@ QLayout *IfacePage::setupStyleSheetLayout()
     m_editStyleSheet->setClearButtonEnabled(true);
 
     m_btStyleSheet = ControlUtil::createIconToolButton(":/icons/folder.png", [&] {
-        const auto filePath = DialogUtil::getOpenFileName(
-                m_labelStyleSheet->text(), tr("Style Sheets (*.qss);;All files (*.*)"));
+        const auto filePath = DialogUtil::getOpenFileName(m_labelStyleSheet->text(),
+                m_editStyleSheet->text(), tr("Style Sheets (*.qss);;All files (*.*)"));
 
         if (filePath.isEmpty())
             return;

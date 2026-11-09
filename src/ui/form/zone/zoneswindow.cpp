@@ -17,6 +17,7 @@
 #include <task/taskmanager.h>
 #include <user/iniuser.h>
 #include <util/conf/confutil.h>
+#include <util/fileutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/window/widgetwindowstatewatcher.h>
@@ -167,8 +168,8 @@ QLayout *ZonesWindow::setupHeader()
 void ZonesWindow::setupSaveAsText()
 {
     m_btSaveAsText = ControlUtil::createFlatToolButton(":/icons/save_as.png", [&] {
-        const auto filePath = DialogUtil::getSaveFileName(
-                m_btSaveAsText->text(), tr("Text files (*.txt);;All files (*.*)"));
+        const auto filePath = DialogUtil::getSaveFileName(m_btSaveAsText->text(),
+                FileUtil::documentsLocation(), tr("Text files (*.txt);;All files (*.*)"));
         if (filePath.isEmpty())
             return;
 

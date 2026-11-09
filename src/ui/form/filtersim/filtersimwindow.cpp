@@ -343,8 +343,8 @@ QLayout *FilterSimWindow::setupAppPathLayout()
 
     // Select File
     m_btSelectFile = ControlUtil::createIconToolButton(":/icons/folder.png", [&] {
-        const auto filePath = DialogUtil::getOpenFileName(
-                m_labelAppPath->text(), tr("Programs (*.exe);;All files (*.*)"));
+        const auto filePath = DialogUtil::getOpenFileName(m_labelAppPath->text(),
+                m_editAppPath->text(), tr("Programs (*.exe);;All files (*.*)"));
 
         if (!filePath.isEmpty()) {
             m_editAppPath->setText(FileUtil::toNativeSeparators(filePath));

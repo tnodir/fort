@@ -82,6 +82,7 @@ QString nativeAppBinLocation();
 QString appBinLocation();
 QString appConfigLocation();
 QString applicationsLocation();
+QString documentsLocation();
 QString tempLocation();
 
 QStringList getFileNames(QDir &dir, const QString &fileNamePrefix, const QString &fileNameSuffix);

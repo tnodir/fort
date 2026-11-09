@@ -370,8 +370,8 @@ QLayout *ProgGeneralPage::setupPathLayout()
             return;
         }
 
-        const auto filePath = DialogUtil::getOpenFileName(
-                m_labelEditPath->text(), tr("Programs (*.exe);;All files (*.*)"));
+        const auto filePath = DialogUtil::getOpenFileName(m_labelEditPath->text(),
+                appFilePath(), tr("Programs (*.exe);;All files (*.*)"));
 
         if (filePath.isEmpty())
             return;
@@ -423,7 +423,7 @@ QLayout *ProgGeneralPage::setupNotesLayout()
 
     m_btSetIcon = ControlUtil::createIconToolButton(":/icons/application.png", [&] {
         const auto filePath = DialogUtil::getOpenFileName(
-                tr("Icon for program"), tr("Icons (*.ico; *.png; *.exe)"));
+                tr("Icon for program"), appFilePath(), tr("Icons (*.ico; *.png; *.exe)"));
 
         if (filePath.isEmpty())
             return;
@@ -787,6 +787,11 @@ void ProgGeneralPage::fillEditName()
     }
 
     m_editName->setStartText(appName);
+}
+
+QString ProgGeneralPage::appFilePath() const
+{
+    return isWildcard() ? QString() : m_editPath->toPlainText();
 }
 
 bool ProgGeneralPage::isPathEditable() const

@@ -467,6 +467,11 @@ QString applicationsLocation()
     return QStandardPaths::writableLocation(QStandardPaths::ApplicationsLocation);
 }
 
+QString documentsLocation()
+{
+    return QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+}
+
 QString tempLocation()
 {
     return QStandardPaths::writableLocation(QStandardPaths::TempLocation);

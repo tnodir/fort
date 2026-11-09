@@ -10,6 +10,7 @@
 #include <manager/windowmanager.h>
 #include <stat/statmanager.h>
 #include <user/usersettings.h>
+#include <util/fileutil.h>
 
 using namespace Fort;
 
@@ -31,6 +32,11 @@ void showErrorMessageDetails(const QString &errorMessage, const QString &details
     }
 
     showErrorMessage(text);
+}
+
+QString selectBackupDir(const QString &title)
+{
+    return DialogUtil::getExistingDir(title, FileUtil::documentsLocation());
 }
 
 }
@@ -156,7 +162,7 @@ void OptionsController::resetConfToEdit()
 
 void OptionsController::exportBackup()
 {
-    const auto path = DialogUtil::getExistingDir(tr("Export Backup"));
+    const auto path = selectBackupDir(tr("Export Backup"));
     if (path.isEmpty())
         return;
 
@@ -172,7 +178,7 @@ void OptionsController::exportBackup()
 
 void OptionsController::importBackup(bool onlyNewApps)
 {
-    const auto path = DialogUtil::getExistingDir(tr("Import Backup"));
+    const auto path = selectBackupDir(tr("Import Backup"));
     if (path.isEmpty())
         return;
 

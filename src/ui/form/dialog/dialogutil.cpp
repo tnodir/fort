@@ -7,27 +7,28 @@
 #include <form/controls/controlutil.h>
 #include <util/window/widgetwindow.h>
 
-QString DialogUtil::getOpenFileName(const QString &title, const QString &filter)
+QString DialogUtil::getOpenFileName(const QString &title, const QString &dir, const QString &filter)
 {
     return QFileDialog::getOpenFileName(
-            nullptr, title, QString(), filter, nullptr, QFileDialog::ReadOnly);
+            nullptr, title, dir, filter, nullptr, QFileDialog::ReadOnly);
 }
 
-QStringList DialogUtil::getOpenFileNames(const QString &title, const QString &filter)
+QStringList DialogUtil::getOpenFileNames(
+        const QString &title, const QString &dir, const QString &filter)
 {
     return QFileDialog::getOpenFileNames(
-            nullptr, title, QString(), filter, nullptr, QFileDialog::ReadOnly);
+            nullptr, title, dir, filter, nullptr, QFileDialog::ReadOnly);
 }
 
-QString DialogUtil::getSaveFileName(const QString &title, const QString &filter)
+QString DialogUtil::getSaveFileName(const QString &title, const QString &dir, const QString &filter)
 {
     return QFileDialog::getSaveFileName(
-            nullptr, title, QString(), filter, nullptr, QFileDialog::ReadOnly);
+            nullptr, title, dir, filter, nullptr, QFileDialog::ReadOnly);
 }
 
-QString DialogUtil::getExistingDir(const QString &title)
+QString DialogUtil::getExistingDir(const QString &title, const QString &dir)
 {
-    return QFileDialog::getExistingDirectory(nullptr, title);
+    return QFileDialog::getExistingDirectory(nullptr, title, dir);
 }
 
 QColor DialogUtil::getColor(const QColor &initial, const QString &title)
