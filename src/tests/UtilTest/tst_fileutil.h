@@ -54,6 +54,13 @@ TEST_F(FileUtilTest, systemPath)
     ASSERT_EQ(FileUtil::pathToKernelPath("System", /*lower=*/true), FileUtil::systemApp());
 }
 
+TEST_F(FileUtilTest, validFileName)
+{
+    ASSERT_EQ(FileUtil::validFileName(R"(a\b/c:d*e?f"g<h>i|j)"), "a_b_c_d_e_f_g_h_i_j");
+    ASSERT_EQ(FileUtil::validFileName("a\tb\nc"), "a_b_c");
+    ASSERT_EQ(FileUtil::validFileName("Zone 1. Ads (list)"), "Zone 1. Ads (list)");
+}
+
 TEST_F(FileUtilTest, realPath)
 {
     ASSERT_EQ(FileUtil::realPath(FileUtil::systemApp()), FileUtil::systemApp());
