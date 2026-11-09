@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
+#include <QRegularExpression>
 #include <QStandardPaths>
 #include <QTimeZone>
 
@@ -211,6 +212,13 @@ void pathDriveToUpper(QString &path)
 QString fileName(const QString &path)
 {
     return QFileInfo(path).fileName();
+}
+
+QString validFileName(const QString &name)
+{
+    static const QRegularExpression invalidChars(R"([\\/:*?"<>|\x00-\x1f])");
+
+    return QString(name).replace(invalidChars, "_");
 }
 
 QString absolutePath(const QString &path)

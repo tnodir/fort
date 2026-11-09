@@ -31,6 +31,12 @@ namespace {
 
 inline constexpr int ZONES_HEADER_VERSION = 3;
 
+QString zoneTextFilePath(const QString &zoneName)
+{
+    return FileUtil::pathSlash(FileUtil::documentsLocation()) + FileUtil::validFileName(zoneName)
+            + ".txt";
+}
+
 }
 
 ZonesWindow::ZonesWindow(QWidget *parent) : FormWindow(parent), m_ctrl(new ZonesController(this))
@@ -167,18 +173,8 @@ QLayout *ZonesWindow::setupHeader()
 
 void ZonesWindow::setupSaveAsText()
 {
-    m_btSaveAsText = ControlUtil::createFlatToolButton(":/icons/save_as.png", [&] {
-        const auto filePath = DialogUtil::getSaveFileName(m_btSaveAsText->text(),
-                FileUtil::documentsLocation(), tr("Text files (*.txt);;All files (*.*)"));
-        if (filePath.isEmpty())
-            return;
-
-        const int zoneIndex = zoneListCurrentIndex();
-        if (zoneIndex >= 0
-                && !taskManager()->taskInfoZoneDownloader()->saveZoneAsText(filePath, zoneIndex)) {
-            windowManager()->showErrorBox(tr("Cannot save Zone addresses as text file"));
-        }
-    });
+    m_btSaveAsText =
+            ControlUtil::createFlatToolButton(":/icons/save_as.png", [&] { saveZoneAsText(); });
 }
 
 void ZonesWindow::setupTaskRun()
@@ -285,6 +281,23 @@ void ZonesWindow::deleteZone(int row)
 void ZonesWindow::deleteSelectedZone()
 {
     deleteZone(zoneListCurrentIndex());
+}
+
+void ZonesWindow::saveZoneAsText()
+{
+    const int zoneIndex = zoneListCurrentIndex();
+    const auto &zoneRow = zoneListModel()->zoneRowAt(zoneIndex);
+    if (zoneRow.isNull())
+        return;
+
+    const auto filePath = DialogUtil::getSaveFileName(m_btSaveAsText->text(),
+            zoneTextFilePath(zoneRow.zoneName), tr("Text files (*.txt);;All files (*.*)"));
+    if (filePath.isEmpty())
+        return;
+
+    if (!taskManager()->taskInfoZoneDownloader()->saveZoneAsText(filePath, zoneIndex)) {
+        windowManager()->showErrorBox(tr("Cannot save Zone addresses as text file"));
+    }
 }
 
 void ZonesWindow::downloadZones()

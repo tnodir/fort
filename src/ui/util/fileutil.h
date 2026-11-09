@@ -38,6 +38,7 @@ QString kernelPathToPath(const QString &kernelPath);
 QString pathToKernelPath(const QString &path, bool lower = true);
 
 QString fileName(const QString &path);
+QString validFileName(const QString &name);
 
 QString absolutePath(const QString &path);
 QString pathSlash(const QString &path);
