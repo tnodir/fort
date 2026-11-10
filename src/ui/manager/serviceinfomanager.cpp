@@ -91,9 +91,6 @@ bool checkIsSvcHostService(const RegKey &svcReg)
     if (!imagePath.contains(R"(\system32\svchost.exe)", Qt::CaseInsensitive))
         return false;
 
-    if (!svcReg.contains("ServiceSidType"))
-        return false;
-
     return hasServiceDll(svcReg);
 }
 
