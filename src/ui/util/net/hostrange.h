@@ -1,6 +1,8 @@
 #ifndef HOSTRANGE_H
 #define HOSTRANGE_H
 
+#include <QByteArray>
+#include <QByteArrayView>
 #include <QObject>
 #include <QSet>
 
@@ -36,6 +38,23 @@ public:
 
     // Lower case, without the root's trailing dot
     static QString normalizedName(QStringView name);
+
+    // The normalized name in Latin-1: the names are ASCII
+    static QByteArray normalizedKey(QStringView name);
+
+    // Walks the keys listing the normalized name: the name itself, then the parent domains of
+    // its "*." wildcards
+    template<typename NameFunc, typename ParentFunc>
+    static void walkName(const QByteArray &key, NameFunc &&onName, ParentFunc &&onParent)
+    {
+        onName(QByteArrayView(key));
+
+        for (int pos = key.indexOf('.'); pos >= 0; pos = key.indexOf('.', pos + 1)) {
+            const int parentPos = pos + 1;
+
+            onParent(QByteArrayView(key.constData() + parentPos, key.size() - parentPos));
+        }
+    }
 
 private:
     enum ParseError {

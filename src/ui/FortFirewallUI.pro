@@ -305,6 +305,7 @@ SOURCES += \
     util/net/actionrange.cpp \
     util/net/arearange.cpp \
     util/net/dirrange.cpp \
+    util/net/hostmatcher.cpp \
     util/net/hostpattern.cpp \
     util/net/hostrange.cpp \
     util/net/iprange.cpp \
@@ -660,6 +661,7 @@ HEADERS += \
     util/net/actionrange.h \
     util/net/arearange.h \
     util/net/dirrange.h \
+    util/net/hostmatcher.h \
     util/net/hostpattern.h \
     util/net/hostrange.h \
     util/net/iprange.h \
