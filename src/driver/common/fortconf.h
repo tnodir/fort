@@ -167,6 +167,7 @@ enum FORT_RULE_FILTER_TYPE {
     FORT_RULE_FILTER_TYPE_IP_VERSION,
     FORT_RULE_FILTER_TYPE_DIRECTION,
     FORT_RULE_FILTER_TYPE_ZONES,
+    FORT_RULE_FILTER_TYPE_HOST,
     FORT_RULE_FILTER_TYPE_AREA,
     FORT_RULE_FILTER_TYPE_PROFILE,
     FORT_RULE_FILTER_TYPE_ACTION,
@@ -218,13 +219,20 @@ typedef struct fort_conf_rule_filter
     UINT32 is_not : 1;
     UINT32 equal_values : 1;
     UINT32 is_empty : 1;
-    UINT32 type : 4;
-    UINT32 size : 25;
+    UINT32 type : 5;
+    UINT32 size : 24;
 } FORT_CONF_RULE_FILTER, *PFORT_CONF_RULE_FILTER;
 
 typedef const FORT_CONF_RULE_FILTER *PCFORT_CONF_RULE_FILTER;
 
-#define FORT_CONF_RULE_FILTER_SIZE_MAX ((1u << 25) - 1)
+#define FORT_CONF_RULE_FILTER_SIZE_MAX ((1u << 24) - 1)
+
+typedef struct fort_conf_rule_filter_host
+{
+    UINT32 host_id; /* the host() filter's names, whose IPs ADDHOSTIPS adds; 0 - none */
+} FORT_CONF_RULE_FILTER_HOST, *PFORT_CONF_RULE_FILTER_HOST;
+
+typedef const FORT_CONF_RULE_FILTER_HOST *PCFORT_CONF_RULE_FILTER_HOST;
 
 typedef struct fort_conf_rule
 {
@@ -478,6 +486,10 @@ typedef struct fort_conf_conn_actions
     UCHAR zone_id;
 } FORT_CONF_CONN_ACTIONS;
 
+/* Is the connection's remote IP added to the host() filter */
+typedef BOOL fort_conf_host_ip_included_func(
+        const struct fort_conf_meta_conn *conn, UINT32 host_id);
+
 typedef struct fort_conf_meta_conn
 {
     UINT16 app_data_filled : 1;
@@ -528,6 +540,8 @@ typedef struct fort_conf_meta_conn
     FORT_PATH_BUFFER path_buf;
 
     PVOID ps_name; /* referenced process's name */
+
+    fort_conf_host_ip_included_func *host_ip_included; /* NULL - no host() filters' IPs */
 } FORT_CONF_META_CONN, *PFORT_CONF_META_CONN;
 
 typedef const FORT_CONF_META_CONN *PCFORT_CONF_META_CONN;
