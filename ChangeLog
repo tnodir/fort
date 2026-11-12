@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.21.0:
+
+Attention: Fort Firewall's Service connections are allowed by default: check the "Filter Fort Firewall's Service" flag in Options: IP Addresses to filter them as before!
+
 v3.20.9, 2026-11-07:
 - UI: Edit Program: Add the Rules tab: a list of Rules instead of the single Rule.
 - UI: Edit Program: Set the icon from a .exe file; Link a Service to the Services window.
