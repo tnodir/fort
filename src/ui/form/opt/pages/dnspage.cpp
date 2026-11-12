@@ -5,12 +5,14 @@
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QLineEdit>
 #include <QVBoxLayout>
+
+#include <dns/dnsutil.h>
 
 #include <conf/inioptions.h>
 #include <dns/dnsprovider.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/plaintextedit.h>
 #include <form/opt/optionscontroller.h>
 
 DnsPage::DnsPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
@@ -37,8 +39,8 @@ void DnsPage::onRetranslateUi()
     m_comboServers->setPlaceholderText(tr("Custom"));
     m_editServers->setPlaceholderText(adaptersServersText());
     m_editServers->setToolTip(
-            tr("Comma-separated addresses, e.g. \"1.1.1.1, 9.9.9.9\", or DNS over HTTPS URLs "
-               "with the server's address, e.g. \"https://dns.example/dns-query?ip=192.0.2.1\""));
+            tr("A server per line: addresses, e.g. \"1.1.1.1\", or DNS over HTTPS URLs with the "
+               "server's address, e.g. \"https://dns.example/dns-query?ip=192.0.2.1\""));
 }
 
 void DnsPage::setupUi()
@@ -93,28 +95,37 @@ QLayout *DnsPage::setupServersLayout()
 
 void DnsPage::setupComboServers()
 {
-    m_comboServers = ControlUtil::createComboBox({},
-            [&](int index) { m_editServers->setText(m_comboServers->itemData(index).toString()); });
+    m_comboServers = ControlUtil::createComboBox({}, [&](int index) {
+        m_editServers->setPlainText(m_comboServers->itemData(index).toStringList().join('\n'));
+    });
 
-    m_comboServers->addItem(QString(), QString());
+    m_comboServers->addItem(QString(), QStringList());
 
     for (const DnsProvider &provider : DnsProvider::readList()) {
         m_comboServers->addItem(provider.title, provider.servers);
     }
-
-    m_comboServers->setCurrentIndex(m_comboServers->findData(ini().dnsServers()));
 }
 
 void DnsPage::setupEditServers()
 {
-    m_editServers = ControlUtil::createLineEdit(ini().dnsServers(), [&](const QString &text) {
-        ini().setDnsServers(text);
+    const QStringList iniServers = ini().dnsServers();
+
+    m_editServers = new PlainTextEdit();
+    m_editServers->setLineWrapMode(QPlainTextEdit::NoWrap);
+    m_editServers->setMinimumWidth(400);
+    m_editServers->setFixedHeight(80); // 4 lines
+    m_editServers->setText(iniServers.join('\n'));
+
+    m_comboServers->setCurrentIndex(m_comboServers->findData(iniServers));
+
+    connect(m_editServers, &QPlainTextEdit::textChanged, this, [&] {
+        const QStringList servers = DnsUtil::splitServers(m_editServers->toPlainText());
+
+        ini().setDnsServers(servers);
         ctrl()->setIniEdited();
 
-        m_comboServers->setCurrentIndex(m_comboServers->findData(text));
+        m_comboServers->setCurrentIndex(m_comboServers->findData(servers));
     });
-    m_editServers->setClearButtonEnabled(true);
-    m_editServers->setMinimumWidth(400);
 }
 
 QString DnsPage::adaptersServersText()

@@ -3,6 +3,8 @@
 
 #include "optbasepage.h"
 
+class PlainTextEdit;
+
 class DnsPage : public OptBasePage
 {
     Q_OBJECT
@@ -33,7 +35,7 @@ private:
     QCheckBox *m_cbFilterEnabled = nullptr;
     QLabel *m_labelServers = nullptr;
     QComboBox *m_comboServers = nullptr;
-    QLineEdit *m_editServers = nullptr;
+    PlainTextEdit *m_editServers = nullptr;
 };
 
 #endif // DNSPAGE_H

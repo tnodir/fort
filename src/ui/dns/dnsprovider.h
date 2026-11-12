@@ -2,7 +2,7 @@
 #define DNSPROVIDER_H
 
 #include <QList>
-#include <QString>
+#include <QStringList>
 
 // A DNS provider's upstream servers to choose in the options
 struct DnsProvider
@@ -11,7 +11,7 @@ struct DnsProvider
     static QList<DnsProvider> readList();
 
     QString title;
-    QString servers; // comma-separated
+    QStringList servers;
 };
 
 #endif // DNSPROVIDER_H

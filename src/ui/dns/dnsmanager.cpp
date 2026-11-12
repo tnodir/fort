@@ -116,7 +116,7 @@ void DnsManager::setupByConfIni()
     }
 }
 
-void DnsManager::start(const QString &servers)
+void DnsManager::start(const QStringList &servers)
 {
     if (isStarted() && m_servers == servers)
         return;
@@ -152,7 +152,7 @@ void DnsManager::stop()
     unloadHosts();
 }
 
-bool DnsManager::openResolver(const QString &servers)
+bool DnsManager::openResolver(const QStringList &servers)
 {
     auto resolver = DnsResolver::create(servers);
 

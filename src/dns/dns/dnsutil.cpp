@@ -1,5 +1,7 @@
 #include "dnsutil.h"
 
+#include <QRegularExpression>
+
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
@@ -70,6 +72,13 @@ QByteArray DnsUtil::writeRecord(const ares_dns_record *record)
     ares_free_string(buf);
 
     return data;
+}
+
+QStringList DnsUtil::splitServers(const QString &text)
+{
+    static const QRegularExpression separatorsRe("[,\\s]+");
+
+    return text.split(separatorsRe, Qt::SkipEmptyParts);
 }
 
 bool DnsUtil::flushResolverCache()

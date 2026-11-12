@@ -135,9 +135,9 @@ public:
     bool dnsFilterEnabled() const { return valueBool("dns/filterEnabled"); }
     void setDnsFilterEnabled(bool v) { setValue("dns/filterEnabled", v); }
 
-    // Comma-separated, empty for the adapters' DNS servers
-    QString dnsServers() const { return valueText("dns/servers"); }
-    void setDnsServers(const QString &v) { setValue("dns/servers", v); }
+    // Empty for the adapters' DNS servers
+    QStringList dnsServers() const { return valueList("dns/servers"); }
+    void setDnsServers(const QStringList &v) { setValue("dns/servers", v); }
 };
 
 #endif // INIOPTIONS_H

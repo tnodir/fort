@@ -2,6 +2,7 @@
 #define DNSUTIL_H
 
 #include <QByteArray>
+#include <QStringList>
 
 #include <memory>
 
@@ -25,6 +26,9 @@ public:
     static DnsRecordPtr duplicateRecord(const ares_dns_record *record, quint16 id);
 
     static QByteArray writeRecord(const ares_dns_record *record);
+
+    // The upstream servers of a text: separated by commas, spaces or new lines
+    static QStringList splitServers(const QString &text);
 
     // Clears the Dnscache's answers
     static bool flushResolverCache();

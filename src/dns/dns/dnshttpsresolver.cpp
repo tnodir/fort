@@ -54,7 +54,7 @@ void DnsHttpsResolver::setServers(const QList<DnsHttpsServer> &servers)
     m_failedTimers = QList<QDeadlineTimer>(servers.size());
 }
 
-bool DnsHttpsResolver::open(const QString &servers)
+bool DnsHttpsResolver::open(const QStringList &servers)
 {
     setServers(DnsHttpsServer::parseServers(servers));
 

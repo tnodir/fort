@@ -21,8 +21,8 @@ public:
 
     bool isOpened() const { return m_channel != nullptr; }
 
-    // The comma-separated addresses, empty for the adapters' DNS servers
-    bool open(const QString &servers) override;
+    // The servers' addresses, empty for the adapters' DNS servers
+    bool open(const QStringList &servers) override;
     void close();
 
     bool isOwnQuery(const DnsQuery &query) const override;
@@ -31,7 +31,7 @@ public:
 
 private:
     bool initChannel();
-    bool setServers(const QString &servers);
+    bool setServers(const QStringList &servers);
 
     void removePendingQuery(const DnsResolveContext *context);
 

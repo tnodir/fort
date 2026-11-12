@@ -33,7 +33,7 @@ DnsPlainResolver::~DnsPlainResolver()
     ares_library_cleanup();
 }
 
-bool DnsPlainResolver::open(const QString &servers)
+bool DnsPlainResolver::open(const QStringList &servers)
 {
     close();
 
@@ -98,12 +98,12 @@ bool DnsPlainResolver::initChannel()
     return true;
 }
 
-bool DnsPlainResolver::setServers(const QString &servers)
+bool DnsPlainResolver::setServers(const QStringList &servers)
 {
     if (servers.isEmpty())
         return true;
 
-    const int status = ares_set_servers_csv(m_channel, servers.toLatin1().constData());
+    const int status = ares_set_servers_csv(m_channel, servers.join(',').toLatin1().constData());
     if (status != ARES_SUCCESS) {
         qCWarning(LC) << "Servers error:" << servers << ares_strerror(status);
         return false;

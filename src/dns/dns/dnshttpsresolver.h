@@ -24,7 +24,7 @@ public:
     void setServers(const QList<DnsHttpsServer> &servers);
 
     // The comma-separated URLs
-    bool open(const QString &servers) override;
+    bool open(const QStringList &servers) override;
 
     void resolve(const DnsRequest &request) override;
 

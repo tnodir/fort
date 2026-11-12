@@ -5,7 +5,7 @@
 
 DnsResolver::DnsResolver(QObject *parent) : QObject(parent) { }
 
-std::unique_ptr<DnsResolver> DnsResolver::create(const QString &servers)
+std::unique_ptr<DnsResolver> DnsResolver::create(const QStringList &servers)
 {
     if (DnsHttpsServer::isHttpsServers(servers)) {
         return std::make_unique<DnsHttpsResolver>();
