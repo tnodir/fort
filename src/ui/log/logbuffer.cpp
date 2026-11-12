@@ -114,7 +114,14 @@ void LogBuffer::writeEntryApp(const LogEntryApp *logEntry)
 
     char *output = appendEntry(DriverCommon::logAppSize(pathLen));
 
-    DriverCommon::logAppHeaderWrite(output, logEntry->blocked(), logEntry->pid(), pathLen);
+    const DriverCommon::LogAppHeader header = {
+        .blocked = logEntry->blocked(),
+        .alerted = logEntry->alerted(),
+        .pathLen = pathLen,
+        .pid = logEntry->pid(),
+    };
+
+    DriverCommon::logAppHeaderWrite(output, header);
     writePath(output + DriverCommon::logAppHeaderSize(), path);
 }
 
@@ -125,6 +132,7 @@ void LogBuffer::readEntryApp(LogEntryApp *logEntry)
     const auto header = DriverCommon::logAppHeaderRead(input);
 
     logEntry->setBlocked(header.blocked);
+    logEntry->setAlerted(header.alerted);
     logEntry->setPid(header.pid);
     logEntry->setKernelPath(readPath(input + DriverCommon::logAppHeaderSize(), header.pathLen));
 

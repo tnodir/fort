@@ -264,11 +264,25 @@ inline static BOOL fort_conf_conn_asked_by_app(PCFORT_CONF_META_CONN conn)
     return conn->reason == FORT_CONN_REASON_FILTER_MODE || conn->reason == FORT_CONN_REASON_PROGRAM;
 }
 
+inline static BOOL fort_conf_conn_fort_service_allowed(
+        PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn)
+{
+    if (!conn->is_fort_service || filter->conf_flags.filter_fort_service)
+        return FALSE;
+
+    conn->act.blocked = FALSE;
+    conn->reason = FORT_CONN_REASON_FORT_SERVICE;
+    return TRUE; /* allow Fort Firewall's Service */
+}
+
 FORT_API BOOL fort_conf_conn_app_allowed(
         PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn, const FORT_APP_DATA app_data)
 {
     if (!conn->act.blocked)
         return TRUE; /* collect traffic, when Filter Disabled or the address is allowed */
+
+    if (fort_conf_conn_fort_service_allowed(filter, conn))
+        return TRUE;
 
     const BOOL app_found = fort_conf_conn_app_found(filter, app_data);
 

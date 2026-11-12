@@ -109,6 +109,7 @@ FORT_CONF_META_CONN connFilterInput(PCFORT_CONF_META_CONN conn)
         .isIPv6 = conn->isIPv6,
         .profile_id = conn->profile_id,
         .is_loopback = conn->is_loopback,
+        .is_fort_service = conn->is_fort_service,
         .ip_proto = conn->ip_proto,
         .local_port = conn->local_port,
         .remote_port = conn->remote_port,
@@ -368,19 +369,24 @@ quint8 logType(const char *input)
     return fort_log_type(input);
 }
 
-void logAppHeaderWrite(char *output, bool blocked, quint32 pid, quint16 pathLen)
+void logAppHeaderWrite(char *output, const LogAppHeader &header)
 {
-    fort_log_app_header_write(output, blocked, pid, pathLen);
+    FORT_APP_FLAGS appFlags = {};
+    appFlags.blocked = header.blocked;
+    appFlags.alerted = header.alerted;
+
+    fort_log_app_header_write(output, appFlags, header.pid, header.pathLen);
 }
 
 LogAppHeader logAppHeaderRead(const char *input)
 {
     LogAppHeader header;
-    BOOL blocked;
+    FORT_APP_FLAGS appFlags = {};
 
-    fort_log_app_header_read(input, &blocked, &header.pid, &header.pathLen);
+    fort_log_app_header_read(input, &appFlags, &header.pid, &header.pathLen);
 
-    header.blocked = blocked;
+    header.blocked = appFlags.blocked;
+    header.alerted = appFlags.alerted;
 
     return header;
 }

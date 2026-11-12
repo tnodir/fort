@@ -13,6 +13,7 @@
 #define FORT_LOG_FLAG_TYPE_MASK_OFF 20
 #define FORT_LOG_FLAG_OPT_BLOCKED   0x10000000
 #define FORT_LOG_FLAG_OPT_DROPPED   0x20000000
+#define FORT_LOG_FLAG_OPT_ALERTED   0x40000000
 #define FORT_LOG_FLAG_OPT_MASK      0xF0000000
 #define FORT_LOG_FLAG_EX_MASK       (FORT_LOG_FLAG_TYPE_MASK | FORT_LOG_FLAG_OPT_MASK)
 
@@ -63,11 +64,14 @@
 extern "C" {
 #endif
 
-FORT_API void fort_log_app_header_write(char *p, BOOL blocked, UINT32 pid, UINT16 path_len);
+FORT_API void fort_log_app_header_write(
+        char *p, const FORT_APP_FLAGS app_flags, UINT32 pid, UINT16 path_len);
 
-FORT_API void fort_log_app_write(char *p, BOOL blocked, UINT32 pid, PCFORT_APP_PATH path);
+FORT_API void fort_log_app_write(
+        char *p, const FORT_APP_FLAGS app_flags, UINT32 pid, PCFORT_APP_PATH path);
 
-FORT_API void fort_log_app_header_read(const char *p, BOOL *blocked, UINT32 *pid, UINT16 *path_len);
+FORT_API void fort_log_app_header_read(
+        const char *p, PFORT_APP_FLAGS app_flags, UINT32 *pid, UINT16 *path_len);
 
 FORT_API void fort_log_conn_header_write(
         char *p, PCFORT_CONF_META_CONN conn, UINT16 path_len, UINT16 inherit_path_len);

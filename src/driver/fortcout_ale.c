@@ -121,6 +121,10 @@ inline static void fort_callout_ale_fill_meta_conn_proc(
     conn->process_id = FWPS_IS_METADATA_FIELD_PRESENT(inMetaValues, FWPS_METADATA_FIELD_PROCESS_ID)
             ? (UINT32) inMetaValues->processId
             : 0;
+
+    const UINT32 client_process_id = fort_device()->client_process_id;
+
+    conn->is_fort_service = (client_process_id != 0 && conn->process_id == client_process_id);
 }
 
 static void fort_callout_ale_fill_meta_conn(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn)
@@ -206,14 +210,18 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
     if (conn->ignore || !fort_callout_ale_log_app_path_check(conf_flags, app_data))
         return;
 
+    /* Fort Firewall's Service is logged allowed, without an alert */
+    const BOOL fort_service_allowed = (conn->reason == FORT_CONN_REASON_FORT_SERVICE);
+
     app_data.flags.log_stat = TRUE;
     app_data.flags.log_allowed_conn = TRUE;
     app_data.flags.log_blocked_conn = TRUE;
-    app_data.flags.blocked = !(conf_flags.allow_all_new || conf_flags.app_allow_all);
+    app_data.flags.blocked =
+            !fort_service_allowed && !(conf_flags.allow_all_new || conf_flags.app_allow_all);
 
     app_data.flags.is_new = TRUE;
     app_data.flags.found = TRUE;
-    app_data.flags.alerted = TRUE;
+    app_data.flags.alerted = !fort_service_allowed;
 
     const FORT_APP_ENTRY app_entry = {
         .app_data = app_data,

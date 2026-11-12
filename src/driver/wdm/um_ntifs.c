@@ -43,6 +43,12 @@ NTSTATUS IoQueryFileDosDeviceName(
     return STATUS_SUCCESS;
 }
 
+ULONG IoGetRequestorProcessId(PIRP irp)
+{
+    UNUSED(irp);
+    return GetCurrentProcessId();
+}
+
 void KeStackAttachProcess(PRKPROCESS process, PRKAPC_STATE apcState)
 {
     UNUSED(process);
