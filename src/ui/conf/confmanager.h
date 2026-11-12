@@ -4,13 +4,17 @@
 #include <QObject>
 #include <QTimer>
 
+#include <functional>
+
 #include <sqlite/sqliteutilbase.h>
 
 #include <conf/firewallconf.h>
 #include <util/classhelpers.h>
+#include <util/conf/hostrefs.h>
 #include <util/ioc/iocservice.h>
 #include <util/service/serviceinfo.h>
 
+class ConfBuffer;
 class IniUser;
 class ServiceInfoManager;
 class Settings;
@@ -32,6 +36,12 @@ public:
     const FirewallConf &conf() const { return m_conf; }
 
     QString errorMessage() const { return m_errorMessage; }
+
+    // The host() filters' ids of the driver's Rules and Programs
+    const HostRefs &hostRefs() const { return m_hostRefs; }
+
+    // Writes the driver's conf buffer with the host() filters' ids
+    bool writeConfBuffer(ConfBuffer &confBuf, const std::function<bool()> &write);
 
     void setUp() override;
 
@@ -79,6 +89,7 @@ signals:
     void confChanged(bool onlyFlags, uint editedFlags);
     void iniChanged();
     void iniUserChanged(bool onlyFlags);
+    void hostRefsChanged();
 
 protected:
     virtual void setupTimers();
@@ -96,6 +107,8 @@ private:
     void switchAutoLearn();
 
     void updateAutoLearnOff();
+
+    void checkHostRefsChanged();
 
     bool setupDb();
 
@@ -121,6 +134,8 @@ private:
     QString m_errorMessage;
 
     FirewallConf m_conf;
+
+    HostRefs m_hostRefs;
 
     QTimer m_filterOffTimer;
     QTimer m_autoLearnTimer;

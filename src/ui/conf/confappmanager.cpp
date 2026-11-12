@@ -878,8 +878,10 @@ bool ConfAppManager::updateDriverConf(bool onlyFlags)
     const auto &conf = Fort::conf();
 
     const bool ok = onlyFlags ? (confBuf.writeFlags(conf), true)
-                              : confBuf.writeConf(conf, this, envManager(),
-                                        confTimePeriodManager()->activePeriodsMask());
+                              : Fort::confManager()->writeConfBuffer(confBuf, [&] {
+                                    return confBuf.writeConf(conf, this, envManager(),
+                                            confTimePeriodManager()->activePeriodsMask());
+                                });
 
     if (!ok) {
         qCWarning(LC) << "Driver config error:" << confBuf.errorMessage();
@@ -956,7 +958,10 @@ bool ConfAppManager::updateDriverUpdateApp(const App &app, bool remove)
 {
     ConfBuffer confBuf;
 
-    if (!confBuf.writeAppEntry(app)) {
+    const bool ok = Fort::confManager()->writeConfBuffer(
+            confBuf, [&] { return confBuf.writeAppEntry(app); });
+
+    if (!ok) {
         qCWarning(LC) << "Driver config error:" << confBuf.errorMessage();
         return false;
     }

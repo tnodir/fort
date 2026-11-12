@@ -711,7 +711,7 @@ void ConfRuleManager::updateDriverRules()
 {
     ConfBuffer confBuf;
 
-    confBuf.writeRules(*this);
+    Fort::confManager()->writeConfBuffer(confBuf, [&] { return confBuf.writeRules(*this); });
 
     driverWriteRules(confBuf);
 }
