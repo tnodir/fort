@@ -10,6 +10,7 @@
 #include <appinfo/appinfocache.h>
 #include <conf/firewallconf.h>
 #include <control/controlmanager.h>
+#include <dns/dnsmanager.h>
 #include <driver/drivercommon.h>
 #include <form/dialog/dialogutil.h>
 #include <form/dialog/passworddialog.h>
@@ -150,6 +151,7 @@ inline void setupServices(IocContainer *ioc, const FortSettings *settings)
 
         // For Service only
         ioc->setService(new ServiceManager());
+        ioc->setService(new DnsManager());
     } else {
         ioc->setService(new WindowManager());
 

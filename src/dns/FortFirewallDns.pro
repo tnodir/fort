@@ -10,13 +10,18 @@ TEMPLATE = lib
 
 SOURCES += \
     dns/dnsanswer.cpp \
+    dns/dnslistener.cpp \
     dns/dnsquery.cpp \
+    dns/dnsresolver.cpp \
     dns/dnsutil.cpp
 
 HEADERS += \
     dns/dnsaddresses.h \
     dns/dnsanswer.h \
+    dns/dnslistener.h \
     dns/dnsquery.h \
+    dns/dnsrequest.h \
+    dns/dnsresolver.h \
     dns/dnsutil.h
 
 # 3rd party integrations

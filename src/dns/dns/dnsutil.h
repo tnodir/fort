@@ -15,6 +15,9 @@ public:
     // The index of the OPT record in the Additional section, or -1
     static int optIndex(const ares_dns_record *record);
 
+    // The messages of the single question, as parsed by c-ares: the same name, type and class
+    static bool isSameQuestion(const ares_dns_record *record, const ares_dns_record *other);
+
     // Null for a wrong message, e.g. without a single question
     static DnsRecordPtr parseRecord(const QByteArray &data);
 

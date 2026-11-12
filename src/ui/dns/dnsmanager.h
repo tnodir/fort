@@ -1,0 +1,66 @@
+#ifndef DNSMANAGER_H
+#define DNSMANAGER_H
+
+#include <QObject>
+
+#include <dns/dnslistener.h>
+#include <dns/dnsresolver.h>
+#include <util/classhelpers.h>
+#include <util/ioc/iocservice.h>
+#include <util/net/hostmatcher.h>
+#include <util/triggertimer.h>
+
+// The DNS forwarder of the service: resolves only the names of the Hosts Zones, adding their
+// addresses to the Zones in the driver before answering
+class DnsManager : public QObject, public IocService
+{
+    Q_OBJECT
+
+public:
+    explicit DnsManager(QObject *parent = nullptr);
+    CLASS_DELETE_COPY_MOVE(DnsManager)
+
+    bool isStarted() const { return m_resolver.isOpened(); }
+
+    void setUp() override;
+    void tearDown() override;
+
+private:
+    void setupConfManager();
+    void setupZones();
+
+    void setupByConfIni();
+
+    void start(const QString &servers);
+    void stop();
+
+    void loadHosts();
+    void unloadHosts();
+
+    void loadZones();
+
+    // The Hosts Zones listing the name
+    HostMatch matchHost(QStringView name) const;
+
+    void processQuery(const DnsClient &client, const QByteArray &data);
+    void processAnswer(const DnsRequest &request, const DnsAnswer &answer);
+
+    quint8 checkQuery(const DnsRequest &request) const;
+    bool isLoopQuery(const DnsRequest &request) const;
+
+    bool writeHostIps(const HostMatch &match, const DnsAddresses &addresses);
+
+    void sendRcode(const DnsRequest &request, quint8 rcode);
+
+private:
+    QString m_servers;
+
+    HostMatcher m_zonesMatcher;
+
+    DnsListener m_listener;
+    DnsResolver m_resolver;
+
+    TriggerTimer m_zonesTimer;
+};
+
+#endif // DNSMANAGER_H

@@ -1,5 +1,9 @@
 #pragma once
 
+#include <QEventLoop>
+#include <QNetworkDatagram>
+#include <QUdpSocket>
+
 #include <memory>
 
 #include <ares.h>
@@ -8,6 +12,7 @@
 
 #include <dns/dnsanswer.h>
 #include <dns/dnsquery.h>
+#include <dns/dnsresolver.h>
 #include <dns/dnsutil.h>
 #include <util/net/netformatutil.h>
 
@@ -308,4 +313,59 @@ TEST_F(DnsTest, hintsAnswer)
                     NetFormatUtil::textToIp4("5.6.7.8"), NetFormatUtil::textToIp4("9.9.9.9") }));
     ASSERT_EQ(addresses.ip6Array().size(), 1);
     ASSERT_EQ(NetFormatUtil::ip6ToText(addresses.ip6Array().at(0)), "2001:db8::1");
+}
+
+TEST_F(DnsTest, resolverOwnQuery)
+{
+    // The upstream server
+    QUdpSocket server;
+    ASSERT_TRUE(server.bind(QHostAddress::LocalHost, 0));
+
+    DnsResolver resolver;
+    ASSERT_TRUE(resolver.open(QString("127.0.0.1:%1").arg(server.localPort())));
+
+    DnsRequest request;
+    ASSERT_TRUE(request.query.parse(writeQuery(0x1111, "loop.example", /*withOpt=*/false)));
+
+    QEventLoop loop;
+    DnsAnswer resolvedAnswer;
+    QObject::connect(&resolver, &DnsResolver::resolved, &loop,
+            [&](const DnsRequest & /*request*/, const DnsAnswer &answer) {
+                resolvedAnswer = answer;
+                loop.quit();
+            });
+
+    resolver.resolve(request);
+
+    ASSERT_TRUE(server.waitForReadyRead());
+
+    const QNetworkDatagram datagram = server.receiveDatagram();
+
+    // The resolver's query is its own one while it waits for the answer
+    DnsQuery ownQuery;
+    ASSERT_TRUE(ownQuery.parse(datagram.data()));
+    ASSERT_EQ(ownQuery.name(), "loop.example");
+    ASSERT_TRUE(resolver.isOwnQuery(ownQuery));
+
+    // The client's query of another type with the same id
+    const DnsRecordPtr otherRecord = DnsUtil::duplicateRecord(ownQuery.record(), ownQuery.id());
+    ares_dns_record_query_set_type(otherRecord.get(), 0, ARES_REC_TYPE_AAAA);
+
+    DnsQuery otherQuery;
+    ASSERT_TRUE(otherQuery.parse(DnsUtil::writeRecord(otherRecord.get())));
+    ASSERT_FALSE(resolver.isOwnQuery(otherQuery));
+
+    DnsAnswer serverAnswer;
+    serverAnswer.setRcode(ownQuery, ARES_RCODE_NXDOMAIN);
+    server.writeDatagram(serverAnswer.response(), datagram.senderAddress(), datagram.senderPort());
+
+    loop.exec();
+
+    ASSERT_FALSE(resolver.isOwnQuery(ownQuery));
+
+    // The client's id in the answer
+    const DnsRecordPtr record = DnsUtil::parseRecord(resolvedAnswer.response());
+    ASSERT_NE(record, nullptr);
+    ASSERT_EQ(ares_dns_record_get_id(record.get()), 0x1111);
+    ASSERT_EQ(ares_dns_record_get_rcode(record.get()), ARES_RCODE_NXDOMAIN);
 }
