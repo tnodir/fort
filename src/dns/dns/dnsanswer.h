@@ -20,6 +20,10 @@ public:
     // The upstream server's answer to the query
     void setRecord(const DnsQuery &query, const ares_dns_record *record, int sizeMax);
 
+    // The upstream server's answer to the query, as received: false for a wrong message or
+    // another question's answer
+    bool setData(const DnsQuery &query, const QByteArray &data, int sizeMax);
+
     // The own answer to the query, without records
     void setRcode(const DnsQuery &query, quint8 rcode, quint16 flags = 0);
 

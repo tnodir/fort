@@ -2,6 +2,8 @@
 
 #include <QEventLoop>
 #include <QNetworkDatagram>
+#include <QTcpServer>
+#include <QTcpSocket>
 #include <QUdpSocket>
 
 #include <memory>
@@ -12,6 +14,7 @@
 
 #include <dns/dnsanswer.h>
 #include <dns/dnsclientanswer.h>
+#include <dns/dnshttpsresolver.h>
 #include <dns/dnsplainresolver.h>
 #include <dns/dnsquery.h>
 #include <dns/dnsutil.h>
@@ -103,6 +106,94 @@ DnsRecordPtr createUpstreamAnswer()
 
     return record;
 }
+
+struct HttpRequest
+{
+    QByteArray header; // in lower case
+    QByteArray body;
+};
+
+// An HTTP/1.1 server answering the DNS queries with an address
+class HttpServer
+{
+public:
+    explicit HttpServer(int status = 200) : status(status)
+    {
+        m_server.listen(QHostAddress::LocalHost);
+
+        QObject::connect(
+                &m_server, &QTcpServer::newConnection, &m_server, [&] { acceptConnections(); });
+    }
+
+    DnsHttpsServer dnsServer() const
+    {
+        return DnsHttpsServer(
+                QUrl(QString("http://127.0.0.1:%1/dns-query").arg(m_server.serverPort())));
+    }
+
+public:
+    int status = 0;
+    QList<HttpRequest> requests;
+
+private:
+    void acceptConnections()
+    {
+        while (QTcpSocket *socket = m_server.nextPendingConnection()) {
+            QObject::connect(
+                    socket, &QTcpSocket::readyRead, socket, [=, this] { readRequest(socket); });
+        }
+    }
+
+    void readRequest(QTcpSocket *socket)
+    {
+        const QByteArray data = socket->peek(socket->bytesAvailable());
+
+        const qsizetype headerSize = data.indexOf("\r\n\r\n") + 4;
+        if (headerSize < 4)
+            return;
+
+        const QByteArray header = data.left(headerSize).toLower();
+        const QByteArray lengthKey = "content-length:";
+        const qsizetype lengthPos = header.indexOf(lengthKey);
+        const qsizetype bodySize =
+                (lengthPos < 0) ? 0 : atoi(header.constData() + lengthPos + lengthKey.size());
+
+        if (data.size() < headerSize + bodySize)
+            return;
+
+        socket->readAll();
+
+        const HttpRequest request = { header, data.mid(headerSize, bodySize) };
+        requests.append(request);
+
+        writeResponse(socket, (status == 200) ? createAnswer(request.body) : QByteArray());
+    }
+
+    void writeResponse(QTcpSocket *socket, const QByteArray &body)
+    {
+        socket->write("HTTP/1.1 " + QByteArray::number(status) + " Status\r\n"
+                + "Content-Type: application/dns-message\r\n"
+                + "Content-Length: " + QByteArray::number(body.size()) + "\r\n\r\n" + body);
+    }
+
+    static QByteArray createAnswer(const QByteArray &queryData)
+    {
+        DnsQuery query;
+        if (!query.parse(queryData))
+            return {};
+
+        const QByteArray name = query.name().toLatin1();
+
+        const DnsRecordPtr record = createRecord(
+                query.id(), ARES_FLAG_QR | ARES_FLAG_RD | ARES_FLAG_RA, name.constData());
+        addAddressRr(record.get(), name.constData(), "1.2.3.4", 60);
+
+        return DnsUtil::writeRecord(record.get());
+    }
+
+private:
+    QTcpServer m_server;
+};
 
 }
 
@@ -242,6 +333,38 @@ TEST_F(DnsTest, recordAnswer)
     }
 }
 
+TEST_F(DnsTest, dataAnswer)
+{
+    DnsQuery query;
+    ASSERT_TRUE(query.parse(writeQuery(0x7777, "www.example.com", /*withOpt=*/false)));
+
+    const auto setAnswerData = [&](const char *name, ares_dns_rec_type_t type,
+                                       ares_dns_class_t qclass, quint16 flags) {
+        ares_dns_record_t *record = nullptr;
+        ares_dns_record_create(&record, 0, flags, ARES_OPCODE_QUERY, ARES_RCODE_NOERROR);
+        const DnsRecordPtr recordPtr(record, &ares_dns_record_destroy);
+
+        ares_dns_record_query_add(record, name, type, qclass);
+        addAddressRr(record, name, "1.2.3.4", 60);
+
+        DnsAnswer answer;
+        return answer.setData(query, DnsUtil::writeRecord(record), query.udpSizeMax());
+    };
+
+    constexpr quint16 answerFlags = ARES_FLAG_QR | ARES_FLAG_RD | ARES_FLAG_RA;
+
+    ASSERT_TRUE(setAnswerData("www.example.com", ARES_REC_TYPE_A, ARES_CLASS_IN, answerFlags));
+    ASSERT_TRUE(setAnswerData("WWW.Example.COM", ARES_REC_TYPE_A, ARES_CLASS_IN, answerFlags));
+
+    // Not a response
+    ASSERT_FALSE(setAnswerData("www.example.com", ARES_REC_TYPE_A, ARES_CLASS_IN, ARES_FLAG_RD));
+
+    // Another question's answer
+    ASSERT_FALSE(setAnswerData("www.example.net", ARES_REC_TYPE_A, ARES_CLASS_IN, answerFlags));
+    ASSERT_FALSE(setAnswerData("www.example.com", ARES_REC_TYPE_AAAA, ARES_CLASS_IN, answerFlags));
+    ASSERT_FALSE(setAnswerData("www.example.com", ARES_REC_TYPE_A, ARES_CLASS_CHAOS, answerFlags));
+}
+
 TEST_F(DnsTest, hintsAnswer)
 {
     const auto createHttpsRecord = [](quint16 flags) {
@@ -369,6 +492,118 @@ TEST_F(DnsTest, resolverOwnQuery)
     ASSERT_NE(record, nullptr);
     ASSERT_EQ(ares_dns_record_get_id(record.get()), 0x1111);
     ASSERT_EQ(ares_dns_record_get_rcode(record.get()), ARES_RCODE_NXDOMAIN);
+}
+
+TEST_F(DnsTest, httpsServers)
+{
+    DnsHttpsServer server;
+
+    // By the address
+    ASSERT_TRUE(server.parse("https://1.1.1.1/dns-query"));
+    ASSERT_EQ(server.url(), QUrl("https://1.1.1.1/dns-query"));
+    ASSERT_TRUE(server.verifyName().isEmpty());
+
+    // By the name with the address
+    ASSERT_TRUE(server.parse("https://dns.example/dns-query?ip=192.0.2.1"));
+    ASSERT_EQ(server.url(), QUrl("https://192.0.2.1/dns-query"));
+    ASSERT_EQ(server.verifyName(), "dns.example");
+
+    ASSERT_TRUE(server.parse(" HTTPS://Dns.Example:8443/query?a=1&ip=2001:db8::1 "));
+    ASSERT_EQ(server.url(), QUrl("https://[2001:db8::1]:8443/query?a=1"));
+    ASSERT_EQ(server.verifyName(), "dns.example");
+
+    // Without the address
+    ASSERT_FALSE(server.parse("https://dns.example/dns-query"));
+    ASSERT_FALSE(server.parse("https://dns.example/dns-query?ip=dns2.example"));
+    // Two addresses
+    ASSERT_FALSE(server.parse("https://1.1.1.1/dns-query?ip=1.0.0.1"));
+    // Not HTTPS
+    ASSERT_FALSE(server.parse("http://1.1.1.1/dns-query"));
+    ASSERT_FALSE(server.parse("1.1.1.1"));
+
+    // The servers
+    ASSERT_TRUE(DnsHttpsServer::isHttpsServers(" https://1.1.1.1/dns-query, 9.9.9.9"));
+    ASSERT_FALSE(DnsHttpsServer::isHttpsServers("1.1.1.1, 9.9.9.9"));
+    ASSERT_FALSE(DnsHttpsServer::isHttpsServers(""));
+
+    const auto servers = DnsHttpsServer::parseServers(
+            "https://1.1.1.1/dns-query, https://dns.example/dns-query?ip=192.0.2.1,");
+    ASSERT_EQ(servers.size(), 2);
+    ASSERT_EQ(servers.at(0).url(), QUrl("https://1.1.1.1/dns-query"));
+    ASSERT_EQ(servers.at(1).verifyName(), "dns.example");
+
+    ASSERT_TRUE(DnsHttpsServer::parseServers("https://1.1.1.1/dns-query, 9.9.9.9").isEmpty());
+}
+
+TEST_F(DnsTest, httpsResolver)
+{
+    HttpServer failedServer(500);
+    HttpServer server;
+
+    DnsHttpsResolver resolver;
+    resolver.setServers({ failedServer.dnsServer(), server.dnsServer() });
+
+    DnsRequest request;
+    ASSERT_TRUE(request.query.parse(writeQuery(0x2222, "www.example.com", /*withOpt=*/false)));
+
+    QEventLoop loop;
+    DnsAnswer resolvedAnswer;
+    QObject::connect(&resolver, &DnsHttpsResolver::resolved, &loop,
+            [&](const DnsRequest & /*request*/, const DnsAnswer &answer) {
+                resolvedAnswer = answer;
+                loop.quit();
+            });
+
+    resolver.resolve(request);
+    loop.exec();
+
+    // The next server is asked after the failed one
+    ASSERT_EQ(failedServer.requests.size(), 1);
+    ASSERT_EQ(server.requests.size(), 1);
+
+    // The query is posted without the id
+    {
+        const HttpRequest &httpRequest = server.requests.constFirst();
+        ASSERT_TRUE(httpRequest.header.startsWith("post /dns-query http/1.1\r\n"));
+        ASSERT_TRUE(httpRequest.header.contains("content-type: application/dns-message\r\n"));
+        ASSERT_TRUE(httpRequest.header.contains("accept: application/dns-message\r\n"));
+
+        DnsQuery query;
+        ASSERT_TRUE(query.parse(httpRequest.body));
+        ASSERT_EQ(query.id(), 0);
+        ASSERT_EQ(query.name(), "www.example.com");
+    }
+
+    // The client's id in the answer
+    {
+        const DnsRecordPtr record = DnsUtil::parseRecord(resolvedAnswer.response());
+        ASSERT_NE(record, nullptr);
+        ASSERT_EQ(ares_dns_record_get_id(record.get()), 0x2222);
+
+        ASSERT_EQ(resolvedAnswer.addresses().ip4Array(),
+                QVector<quint32>({ NetFormatUtil::textToIp4("1.2.3.4") }));
+    }
+
+    // The failed server is asked after the other ones
+    resolver.resolve(request);
+    loop.exec();
+
+    ASSERT_EQ(failedServer.requests.size(), 1);
+    ASSERT_EQ(server.requests.size(), 2);
+
+    // All servers failed
+    server.status = 500;
+
+    resolver.resolve(request);
+    loop.exec();
+
+    ASSERT_EQ(server.requests.size(), 3);
+    ASSERT_EQ(failedServer.requests.size(), 2);
+
+    const DnsRecordPtr record = DnsUtil::parseRecord(resolvedAnswer.response());
+    ASSERT_NE(record, nullptr);
+    ASSERT_EQ(ares_dns_record_get_id(record.get()), 0x2222);
+    ASSERT_EQ(ares_dns_record_get_rcode(record.get()), ARES_RCODE_SERVFAIL);
 }
 
 TEST_F(DnsTest, clientAnswerQueryResults)
