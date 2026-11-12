@@ -35,9 +35,12 @@ private:
     void readDatagrams(QUdpSocket *socket);
 
     void acceptConnections(QTcpServer *server);
+    void setupTcpConnection(QTcpSocket *socket);
     void readTcpQueries(QTcpSocket *socket);
 
 private:
+    int m_tcpConnCount = 0;
+
     QList<QUdpSocket *> m_udpSockets;
     QList<QTcpServer *> m_tcpServers;
 };

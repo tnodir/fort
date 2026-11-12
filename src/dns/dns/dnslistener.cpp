@@ -4,6 +4,7 @@
 #include <QNetworkDatagram>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QTimer>
 #include <QUdpSocket>
 #include <QtEndian>
 
@@ -12,6 +13,9 @@ namespace {
 const QLoggingCategory LC("dns.listener");
 
 inline constexpr quint16 dnsPort = 53;
+
+inline constexpr int tcpConnectionsMax = 64;
+inline constexpr int tcpIdleTimeout = 10000; // milliseconds
 
 // A TCP message is prefixed by its size
 bool readTcpQuery(QTcpSocket *socket, QByteArray &data)
@@ -142,9 +146,39 @@ void DnsListener::readDatagrams(QUdpSocket *socket)
 void DnsListener::acceptConnections(QTcpServer *server)
 {
     while (QTcpSocket *socket = server->nextPendingConnection()) {
-        connect(socket, &QTcpSocket::readyRead, this, [=, this] { readTcpQueries(socket); });
-        connect(socket, &QTcpSocket::disconnected, socket, &QObject::deleteLater);
+        if (m_tcpConnCount >= tcpConnectionsMax) {
+            qCDebug(LC) << "TCP connections limit";
+            socket->abort();
+            socket->deleteLater();
+            continue;
+        }
+
+        setupTcpConnection(socket);
     }
+}
+
+void DnsListener::setupTcpConnection(QTcpSocket *socket)
+{
+    ++m_tcpConnCount;
+
+    connect(socket, &QObject::destroyed, this, [this] { --m_tcpConnCount; });
+
+    // Closes the connection idle for the timeout
+    auto idleTimer = new QTimer(socket);
+    idleTimer->setSingleShot(true);
+    idleTimer->setInterval(tcpIdleTimeout);
+    idleTimer->start();
+
+    const auto restartIdleTimer = [=] { idleTimer->start(); };
+
+    connect(idleTimer, &QTimer::timeout, socket, &QObject::deleteLater);
+    connect(socket, &QTcpSocket::bytesWritten, idleTimer, restartIdleTimer);
+
+    connect(socket, &QTcpSocket::readyRead, this, [=, this] {
+        restartIdleTimer();
+        readTcpQueries(socket);
+    });
+    connect(socket, &QTcpSocket::disconnected, socket, &QObject::deleteLater);
 }
 
 void DnsListener::readTcpQueries(QTcpSocket *socket)
