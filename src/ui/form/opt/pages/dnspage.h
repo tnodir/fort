@@ -22,12 +22,17 @@ private:
     void setupUi();
     void setupForwarderBox();
     QLayout *setupServersLayout();
+    void setupComboServers();
+    void setupEditServers();
+
+    static QString adaptersServersText();
 
 private:
     QGroupBox *m_gbForwarder = nullptr;
 
     QCheckBox *m_cbFilterEnabled = nullptr;
     QLabel *m_labelServers = nullptr;
+    QComboBox *m_comboServers = nullptr;
     QLineEdit *m_editServers = nullptr;
 };
 

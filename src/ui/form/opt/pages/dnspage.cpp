@@ -1,6 +1,7 @@
 #include "dnspage.h"
 
 #include <QCheckBox>
+#include <QComboBox>
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -8,6 +9,7 @@
 #include <QVBoxLayout>
 
 #include <conf/inioptions.h>
+#include <dns/dnsprovider.h>
 #include <form/controls/controlutil.h>
 #include <form/opt/optionscontroller.h>
 
@@ -31,8 +33,12 @@ void DnsPage::onRetranslateUi()
             tr("Resolve only the host names of the enabled Hosts Zones and of the host() filters, "
                "the other names are not found (only with the Service)"));
     m_labelServers->setText(tr("Upstream DNS servers:"));
-    m_editServers->setPlaceholderText(tr("Adapters' DNS servers"));
-    m_editServers->setToolTip(tr("Comma-separated, e.g. \"1.1.1.1, 9.9.9.9\""));
+    m_comboServers->setItemText(0, adaptersServersText());
+    m_comboServers->setPlaceholderText(tr("Custom"));
+    m_editServers->setPlaceholderText(adaptersServersText());
+    m_editServers->setToolTip(
+            tr("Comma-separated addresses, e.g. \"1.1.1.1, 9.9.9.9\", or DNS over HTTPS URLs "
+               "with the server's address, e.g. \"https://dns.example/dns-query?ip=192.0.2.1\""));
 }
 
 void DnsPage::setupUi()
@@ -75,12 +81,43 @@ QLayout *DnsPage::setupServersLayout()
 {
     m_labelServers = ControlUtil::createLabel();
 
+    setupComboServers();
+    setupEditServers();
+
+    auto layout = new QVBoxLayout();
+    layout->addLayout(ControlUtil::createRowLayout(m_labelServers, m_comboServers));
+    layout->addWidget(m_editServers);
+
+    return layout;
+}
+
+void DnsPage::setupComboServers()
+{
+    m_comboServers = ControlUtil::createComboBox({},
+            [&](int index) { m_editServers->setText(m_comboServers->itemData(index).toString()); });
+
+    m_comboServers->addItem(QString(), QString());
+
+    for (const DnsProvider &provider : DnsProvider::readList()) {
+        m_comboServers->addItem(provider.title, provider.servers);
+    }
+
+    m_comboServers->setCurrentIndex(m_comboServers->findData(ini().dnsServers()));
+}
+
+void DnsPage::setupEditServers()
+{
     m_editServers = ControlUtil::createLineEdit(ini().dnsServers(), [&](const QString &text) {
         ini().setDnsServers(text);
         ctrl()->setIniEdited();
+
+        m_comboServers->setCurrentIndex(m_comboServers->findData(text));
     });
     m_editServers->setClearButtonEnabled(true);
-    m_editServers->setFixedWidth(200);
+    m_editServers->setMinimumWidth(400);
+}
 
-    return ControlUtil::createRowLayout(m_labelServers, m_editServers);
+QString DnsPage::adaptersServersText()
+{
+    return tr("Adapters' DNS servers");
 }

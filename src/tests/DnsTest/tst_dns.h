@@ -16,6 +16,7 @@
 #include <dns/dnsclientanswer.h>
 #include <dns/dnshttpsresolver.h>
 #include <dns/dnsplainresolver.h>
+#include <dns/dnsprovider.h>
 #include <dns/dnsquery.h>
 #include <dns/dnsutil.h>
 #include <util/net/netformatutil.h>
@@ -604,6 +605,46 @@ TEST_F(DnsTest, httpsResolver)
     ASSERT_NE(record, nullptr);
     ASSERT_EQ(ares_dns_record_get_id(record.get()), 0x2222);
     ASSERT_EQ(ares_dns_record_get_rcode(record.get()), ARES_RCODE_SERVFAIL);
+}
+
+// Asks each server of the DNS providers: run it manually, with the network
+TEST_F(DnsTest, DISABLED_providersServers)
+{
+    Q_INIT_RESOURCE(dns_provider);
+
+    const auto providers = DnsProvider::readList();
+    ASSERT_FALSE(providers.isEmpty());
+
+    DnsRequest request;
+    ASSERT_TRUE(request.query.parse(writeQuery(0x3333, "example.com", /*withOpt=*/false)));
+
+    for (const DnsProvider &provider : providers) {
+        const auto servers = DnsHttpsServer::parseServers(provider.servers);
+        ASSERT_FALSE(servers.isEmpty()) << qPrintable(provider.title);
+
+        for (const DnsHttpsServer &server : servers) {
+            SCOPED_TRACE(qPrintable(provider.title + ": " + server.url().toString()));
+
+            DnsHttpsResolver resolver;
+            resolver.setServers({ server });
+
+            QEventLoop loop;
+            DnsAnswer resolvedAnswer;
+            QObject::connect(&resolver, &DnsHttpsResolver::resolved, &loop,
+                    [&](const DnsRequest & /*request*/, const DnsAnswer &answer) {
+                        resolvedAnswer = answer;
+                        loop.quit();
+                    });
+
+            resolver.resolve(request);
+            loop.exec();
+
+            const DnsRecordPtr record = DnsUtil::parseRecord(resolvedAnswer.response());
+            ASSERT_NE(record, nullptr);
+            ASSERT_EQ(ares_dns_record_get_rcode(record.get()), ARES_RCODE_NOERROR);
+            ASSERT_FALSE(resolvedAnswer.addresses().isEmpty());
+        }
+    }
 }
 
 TEST_F(DnsTest, clientAnswerQueryResults)
