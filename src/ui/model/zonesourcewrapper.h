@@ -16,6 +16,8 @@ public:
         SourceWinSpyBlock,
         SourceFireHol_Level1,
         SourceTasix,
+        SourceOisdBig,
+        SourceStevenBlackHosts,
     };
 
     explicit ZoneSourceWrapper(const QVariant &var = {});

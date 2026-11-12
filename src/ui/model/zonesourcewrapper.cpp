@@ -63,6 +63,8 @@ int ZoneSourceWrapper::idByCode(const QString &code)
         { "winspyblock", SourceWinSpyBlock },
         { "firehol_level1", SourceFireHol_Level1 },
         { "tasix", SourceTasix },
+        { "oisd_big", SourceOisdBig },
+        { "stevenblack_hosts", SourceStevenBlackHosts },
     };
 
     return map.value(code, SourceText);
