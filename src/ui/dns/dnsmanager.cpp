@@ -78,6 +78,11 @@ void DnsManager::tearDown()
     stop();
 }
 
+DnsServersTest *DnsManager::createServersTest(const QStringList &servers, QObject *parent)
+{
+    return new DnsServersTest(servers, parent);
+}
+
 void DnsManager::setupConfManager()
 {
     auto confManager = Fort::dependency<ConfManager>();

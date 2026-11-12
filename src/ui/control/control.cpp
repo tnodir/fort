@@ -108,6 +108,9 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(Rpc_ConfTimePeriodManager_timePeriodRemoved),
     CASE_STRING(Rpc_ConfTimePeriodManager_timePeriodUpdated),
 
+    CASE_STRING(Rpc_DnsManager_testServers),
+    CASE_STRING(Rpc_DnsManager_serverTested),
+
     CASE_STRING(Rpc_DriverManager_updateState),
     CASE_STRING(Rpc_DriverManager_readSpeedLimitStatus),
 
@@ -164,6 +167,7 @@ static const QHash<RpcManager, const char *> g_managerNames = {
     CASE_STRING(Rpc_ConfGroupManager),
     CASE_STRING(Rpc_ConfSpeedLimitManager),
     CASE_STRING(Rpc_ConfTimePeriodManager),
+    CASE_STRING(Rpc_DnsManager),
     CASE_STRING(Rpc_DriverManager),
     CASE_STRING(Rpc_QuotaManager),
     CASE_STRING(Rpc_StatManager),
@@ -280,6 +284,9 @@ static const RpcManager g_commandManagers[] = {
     Rpc_ConfTimePeriodManager, // Rpc_ConfTimePeriodManager_timePeriodAdded,
     Rpc_ConfTimePeriodManager, // Rpc_ConfTimePeriodManager_timePeriodRemoved,
     Rpc_ConfTimePeriodManager, // Rpc_ConfTimePeriodManager_timePeriodUpdated,
+
+    Rpc_DnsManager, // Rpc_DnsManager_testServers,
+    Rpc_DnsManager, // Rpc_DnsManager_serverTested,
 
     Rpc_DriverManager, // Rpc_DriverManager_updateState,
     Rpc_DriverManager, // Rpc_DriverManager_readSpeedLimitStatus,
@@ -428,6 +435,9 @@ static const qint8 g_commandValidations[] = {
     0, // Rpc_ConfTimePeriodManager_timePeriodAdded,
     0, // Rpc_ConfTimePeriodManager_timePeriodRemoved,
     0, // Rpc_ConfTimePeriodManager_timePeriodUpdated,
+
+    true, // Rpc_DnsManager_testServers,
+    0, // Rpc_DnsManager_serverTested,
 
     0, // Rpc_DriverManager_updateState,
     0, // Rpc_DriverManager_readSpeedLimitStatus,

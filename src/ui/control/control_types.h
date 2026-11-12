@@ -111,6 +111,9 @@ enum Command : qint8 {
     Rpc_ConfTimePeriodManager_timePeriodRemoved,
     Rpc_ConfTimePeriodManager_timePeriodUpdated,
 
+    Rpc_DnsManager_testServers,
+    Rpc_DnsManager_serverTested,
+
     Rpc_DriverManager_updateState,
     Rpc_DriverManager_readSpeedLimitStatus,
 
@@ -168,6 +171,7 @@ enum RpcManager : qint8 {
     Rpc_ConfGroupManager,
     Rpc_ConfSpeedLimitManager,
     Rpc_ConfTimePeriodManager,
+    Rpc_DnsManager,
     Rpc_DriverManager,
     Rpc_QuotaManager,
     Rpc_StatManager,

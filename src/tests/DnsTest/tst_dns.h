@@ -619,6 +619,45 @@ TEST_F(DnsTest, httpsResolver)
     ASSERT_FALSE(resolvedAnswer.error().isEmpty());
 }
 
+namespace {
+
+// Asks no server, as a client's test whose service doesn't send the results
+class DnsServersTestNoResults : public DnsServersTest
+{
+public:
+    using DnsServersTest::DnsServersTest;
+
+    void start() override { startTimeout(); }
+};
+
+}
+
+TEST_F(DnsTest, serversTestNoResults)
+{
+    DnsServersTestNoResults test({ "1.1.1.1", "8.8.8.8" });
+    test.setTimeout(100);
+
+    int finishedCount = 0;
+    QEventLoop loop;
+    QObject::connect(&test, &DnsServersTest::finished, &loop, [&] {
+        ++finishedCount;
+        loop.quit();
+    });
+
+    test.start();
+    ASSERT_FALSE(test.isFinished());
+
+    loop.exec();
+
+    ASSERT_EQ(test.results().at(0).status, DnsServerResult::StatusTimeout);
+    ASSERT_EQ(test.results().at(1).status, DnsServerResult::StatusTimeout);
+
+    // The late result keeps the Timeout
+    test.setResult(0, { .status = DnsServerResult::StatusAnswered });
+    ASSERT_EQ(test.results().at(0).status, DnsServerResult::StatusTimeout);
+    ASSERT_EQ(finishedCount, 1);
+}
+
 TEST_F(DnsTest, serversTest)
 {
     // The upstream server answering NXDOMAIN
