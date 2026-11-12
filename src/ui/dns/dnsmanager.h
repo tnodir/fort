@@ -44,6 +44,7 @@ private:
 
     void loadZones();
     void loadHostRefs();
+    void removeZone(quint8 zoneId);
 
     // The Hosts Zones and host() filters listing the name
     HostMatch matchHost(QStringView name) const;

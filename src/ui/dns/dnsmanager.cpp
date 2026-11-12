@@ -93,8 +93,8 @@ void DnsManager::setupZones()
 
     connect(confZoneManager, &ConfZoneManager::zoneUpdated, &m_zonesTimer,
             &TriggerTimer::startTrigger);
-    connect(confZoneManager, &ConfZoneManager::zoneRemoved, &m_zonesTimer,
-            &TriggerTimer::startTrigger);
+    // The removed Zone's id can be reused: its names aren't resolved at once
+    connect(confZoneManager, &ConfZoneManager::zoneRemoved, this, &DnsManager::removeZone);
     connect(taskManager, &TaskManager::zonesUpdated, &m_zonesTimer, &TriggerTimer::startTrigger);
 
     // The removed host() filters' names aren't resolved at once
@@ -174,6 +174,11 @@ void DnsManager::loadHostRefs()
         return;
 
     m_hostFiltersMatcher = confManager()->hostRefs().hostMatcher();
+}
+
+void DnsManager::removeZone(quint8 zoneId)
+{
+    m_zonesMatcher.removeZone(zoneId);
 }
 
 HostMatch DnsManager::matchHost(QStringView name) const

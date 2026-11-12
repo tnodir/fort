@@ -7,6 +7,8 @@
 
 class FirewallConf;
 
+struct ZonesData;
+
 class FortManager : public QObject
 {
     Q_OBJECT
@@ -75,6 +77,7 @@ private:
     void loadConf();
 
     bool setupDriverConf();
+    void updateDriverZones(const ZonesData &zones);
     void updateDriverConf(bool onlyFlags = false);
 
     void updateLogManager(bool active);

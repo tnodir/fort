@@ -20,6 +20,27 @@ QByteArray rawKey(QByteArrayView name)
     return QByteArray::fromRawData(name.constData(), name.size());
 }
 
+bool removeZoneBit(QHash<QByteArray, HostMatch> &matches, quint32 zoneBit)
+{
+    bool removed = false;
+
+    for (auto it = matches.begin(); it != matches.end();) {
+        HostMatch &match = it.value();
+
+        if ((match.zonesMask & zoneBit) == 0) {
+            ++it;
+            continue;
+        }
+
+        removed = true;
+        match.zonesMask &= ~zoneBit;
+
+        it = match.isEmpty() ? matches.erase(it) : std::next(it);
+    }
+
+    return removed;
+}
+
 }
 
 void HostMatch::add(const HostMatch &other)
@@ -46,6 +67,17 @@ void HostMatcher::addZone(int zoneId, const HostRange &hostRange)
 void HostMatcher::addHostFilter(quint32 hostId, const HostRange &hostRange)
 {
     addMatch(hostRange, { .hostIds = { hostId } });
+}
+
+bool HostMatcher::removeZone(int zoneId)
+{
+    const quint32 zoneBit = Zone::zoneBit(zoneId);
+
+    const bool namesRemoved = removeZoneBit(m_names, zoneBit);
+    const bool wildcardNamesRemoved = removeZoneBit(m_wildcardNames, zoneBit);
+    const bool patternNamesRemoved = removeZoneBit(m_patternNames, zoneBit);
+
+    return namesRemoved || wildcardNamesRemoved || patternNamesRemoved;
 }
 
 HostMatch HostMatcher::match(QStringView name) const

@@ -564,6 +564,32 @@ TEST_F(NetUtilTest, hostMatcherHostFilters)
     }
 }
 
+TEST_F(NetUtilTest, hostMatcherRemoveZone)
+{
+    HostRange hostRange;
+
+    HostMatcher zone1Matcher;
+    ASSERT_TRUE(hostRange.fromText("example.com\n*.example.org"));
+    zone1Matcher.addZone(1, hostRange);
+
+    HostMatcher hostMatcher = zone1Matcher;
+
+    ASSERT_TRUE(hostRange.fromText("example.com\n*.example.net\nads*.example.net"));
+    hostMatcher.addZone(2, hostRange);
+    ASSERT_EQ(hostMatcher.match(u"ads1.example.net").zonesMask, 0b10);
+
+    ASSERT_FALSE(hostMatcher.removeZone(3));
+
+    // The names of the removed Zone only are removed
+    ASSERT_TRUE(hostMatcher.removeZone(2));
+    ASSERT_EQ(hostMatcher.match(u"example.com").zonesMask, 0b01);
+    ASSERT_TRUE(hostMatcher.match(u"www.example.net").isEmpty());
+    ASSERT_TRUE(hostMatcher.match(u"ads1.example.net").isEmpty());
+
+    ASSERT_TRUE(hostMatcher.removeZone(1));
+    ASSERT_TRUE(hostMatcher.isEmpty());
+}
+
 TEST_F(NetUtilTest, taskTasix)
 {
     const QByteArray buf = FileUtil::readFileData(":/data/tasix-mrlg.html");
