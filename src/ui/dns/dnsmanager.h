@@ -59,6 +59,7 @@ private:
     void loadZones();
     bool syncZones();
     void loadHostRefs();
+    bool updateHostRefs();
     void removeZone(quint8 zoneId);
 
     void flushResolverCache();
@@ -79,6 +80,10 @@ private:
 
 private:
     bool m_loopLogged = false;
+
+    // The host() filters' last id and the Hosts Zones referenced, as loaded
+    quint32 m_lastHostId = 0;
+    quint32 m_refZonesMask = 0;
 
     std::unique_ptr<DnsResolver> m_resolver;
 

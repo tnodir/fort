@@ -115,8 +115,6 @@ void DnsManager::setupZones()
     connect(confZoneManager, &ConfZoneManager::zoneRemoved, this, &DnsManager::removeZone);
     connect(taskManager, &TaskManager::zonesUpdated, &m_zonesTimer, &TriggerTimer::startTrigger);
 
-    // The removed host() filters' names don't add their IPs at once, the newly referenced Zones'
-    // names are resolved anew
     connect(confManager, &ConfManager::hostRefsChanged, this, &DnsManager::loadHostRefs);
 }
 
@@ -210,7 +208,7 @@ void DnsManager::loadHosts()
         syncZones();
     }
 
-    m_hostFiltersMatcher = confManager()->hostRefs().hostMatcher();
+    updateHostRefs();
 
     flushResolverCache();
 }
@@ -239,9 +237,32 @@ void DnsManager::loadHostRefs()
     if (!isStarted())
         return;
 
-    m_hostFiltersMatcher = confManager()->hostRefs().hostMatcher();
+    // The removed references' names don't add their IPs at once, the new ones' names are resolved
+    // anew
+    if (updateHostRefs()) {
+        flushResolverCache();
+    }
+}
 
-    flushResolverCache();
+// Returns whether a host() filter or an enabled Hosts Zone was referenced anew
+bool DnsManager::updateHostRefs()
+{
+    const auto &hostRefs = confManager()->hostRefs();
+
+    m_hostFiltersMatcher = hostRefs.hostMatcher();
+
+    const quint32 lastHostId = hostRefs.lastHostId();
+    const quint32 refZonesMask = hostRefs.zonesMask();
+
+    // A Zone's enabling is flushed by loadZones()
+    const quint32 addedZonesMask = refZonesMask & ~m_refZonesMask & m_hostZonesDb.enabledMask();
+
+    const bool added = (lastHostId != m_lastHostId) || addedZonesMask != 0;
+
+    m_lastHostId = lastHostId;
+    m_refZonesMask = refZonesMask;
+
+    return added;
 }
 
 void DnsManager::removeZone(quint8 zoneId)
