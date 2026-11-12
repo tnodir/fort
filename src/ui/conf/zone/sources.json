@@ -11,6 +11,17 @@
         "url": ""
     },
     {
+        "code": "host_text",
+        "title": "Hosts from Inline Text",
+        "zoneType": "host"
+    },
+    {
+        "code": "host_file",
+        "title": "Hosts from Local File",
+        "zoneType": "host",
+        "url": ""
+    },
+    {
         "code": "winspyblock",
         "title": "WindowsSpyBlocker",
         "zoneType": "gen",

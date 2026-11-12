@@ -9,6 +9,8 @@ public:
     enum SourceId {
         SourceText = 0,
         SourceFile,
+        SourceHostsText,
+        SourceHostsFile,
         SourceWinSpyBlock,
         SourceFireHol_Level1,
         SourceTasix,

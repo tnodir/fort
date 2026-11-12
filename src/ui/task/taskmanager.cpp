@@ -3,6 +3,7 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <fortglobal.h>
+#include <model/zonelistmodel.h>
 #include <util/dateutil.h>
 
 #include "taskinfoapppurger.h"
@@ -50,6 +51,9 @@ TaskInfo *TaskManager::taskInfoAt(int row) const
 void TaskManager::setUp()
 {
     auto confManager = Fort::dependency<ConfManager>();
+
+    // The Zones' types and sources tell the Hosts Zones
+    Fort::dependency<ZoneListModel>();
 
     loadSettings();
     initializeTasks();
