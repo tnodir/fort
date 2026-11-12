@@ -22,10 +22,15 @@ public:
 
     bool isStarted() const { return m_resolver.isOpened(); }
 
+    // The rule of a crashed service is removed by the uninstall
+    static bool removeNrptRule();
+
     void setUp() override;
     void tearDown() override;
 
 private:
+    static bool addNrptRule();
+
     void setupConfManager();
     void setupZones();
 

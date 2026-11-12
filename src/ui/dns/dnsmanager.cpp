@@ -12,6 +12,7 @@
 #include <task/taskinfozonedownloader.h>
 #include <task/taskmanager.h>
 #include <util/conf/confbuffer.h>
+#include <util/regkey.h>
 
 using namespace Fort;
 
@@ -21,6 +22,11 @@ const QLoggingCategory LC("dns.manager");
 
 // The programs connect after the answer and may keep the addresses a bit longer, e.g. of a TTL of 0
 inline constexpr quint32 ttlMargin = 60; // seconds
+
+// The Name Resolution Policy Table's rule sends the Dnscache's queries of all names to the listener
+inline constexpr char nrptPolicyKey[] =
+        R"(SYSTEM\CurrentControlSet\Services\Dnscache\Parameters\DnsPolicyConfig)";
+inline constexpr char nrptRuleKey[] = "{B6CDD146-F253-408C-B158-F8D0C0874B12}";
 
 quint32 hostIpsTtl(quint32 ttl)
 {
@@ -35,6 +41,28 @@ DnsManager::DnsManager(QObject *parent) : QObject(parent)
     connect(&m_listener, &DnsListener::queryReceived, this, &DnsManager::processQuery);
     connect(&m_resolver, &DnsResolver::resolved, this, &DnsManager::processAnswer);
     connect(&m_zonesTimer, &QTimer::timeout, this, &DnsManager::loadZones);
+}
+
+bool DnsManager::addNrptRule()
+{
+    const RegKey policyReg(RegKey::HKLM, nrptPolicyKey, RegKey::DefaultCreate);
+    RegKey reg(policyReg, nrptRuleKey, RegKey::DefaultCreate);
+
+    // ConfigOptions: use the GenericDNSServers
+    return reg.setValue("Version", 2) && reg.setValue("Name", QStringList { "." })
+            && reg.setValue("GenericDNSServers", "127.0.0.1") && reg.setValue("ConfigOptions", 8)
+            && reg.setValue("IPSECCARestriction", QString());
+}
+
+bool DnsManager::removeNrptRule()
+{
+    RegKey policyReg(RegKey::HKLM, nrptPolicyKey, RegKey::DefaultReadWrite);
+
+    const RegKey reg(policyReg, nrptRuleKey);
+    if (reg.isNull())
+        return true;
+
+    return policyReg.removeKey(nrptRuleKey);
 }
 
 void DnsManager::setUp()
@@ -98,10 +126,18 @@ void DnsManager::start(const QString &servers)
     m_servers = servers;
 
     loadHosts();
+
+    if (!addNrptRule()) {
+        qCWarning(LC) << "NRPT rule error";
+    }
 }
 
 void DnsManager::stop()
 {
+    if (!removeNrptRule()) {
+        qCWarning(LC) << "NRPT rule removal error";
+    }
+
     m_listener.close();
     m_resolver.close();
 
