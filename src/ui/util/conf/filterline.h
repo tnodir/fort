@@ -23,6 +23,9 @@ public:
 
     static QStringList values(const RuleFilter *filter);
 
+    // The values' lines as written, with their comments; one line's values are a value per line
+    static QString valuesLines(const RuleFilter *filter);
+
 private:
     FilterLineText m_text;
 

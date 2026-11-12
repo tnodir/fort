@@ -391,11 +391,17 @@ void RuleTextParser::parseBracketValues()
 {
     RuleCharTypes expectedSeparator = CharNone;
 
+    const QChar *text = currentCharPtr();
+
     for (;;) {
         if (!parseBracketValue(expectedSeparator))
             break;
 
         expectedSeparator = CharValueSeparator | CharNewLine;
+    }
+
+    if (!hasError()) {
+        m_ruleFilter.valuesText = QStringView(text, parsedCharPtr() - text);
     }
 }
 
@@ -517,6 +523,7 @@ void RuleTextParser::resetFilter()
 
     // m_ruleFilter.type is not reset
 
+    m_ruleFilter.valuesText = {};
     m_ruleFilter.values.clear();
 }
 

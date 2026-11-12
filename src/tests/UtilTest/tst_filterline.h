@@ -92,6 +92,34 @@ TEST_F(FilterLineTest, singleLine)
     ASSERT_FALSE(line5.isSingleLine());
 }
 
+TEST_F(FilterLineTest, valuesLines)
+{
+    FilterLineText text;
+    text.addFilter(FORT_RULE_FILTER_TYPE_HOST, "# CDN (old)\na.com\n\nb.com # main");
+    text.addFilter(FORT_RULE_FILTER_TYPE_ADDRESS, "1.1.1.1 # DNS");
+    text.addFilter(FORT_RULE_FILTER_TYPE_PORT, "80, 443");
+    text.addFilter(FORT_RULE_FILTER_TYPE_ACTION, "Allow");
+    ASSERT_EQ(text.text(),
+            "Host(\n# CDN (old)\na.com\n\nb.com # main\n):IP(\n1.1.1.1 # DNS\n)"
+            ":Port(80, 443):Act(Allow)");
+
+    ASSERT_TRUE(ConfBuffer().validateRuleText(text.text()));
+
+    FilterLine line(text);
+    ASSERT_TRUE(line.parse());
+    ASSERT_TRUE(line.isSingleLine());
+
+    checkFilter(line, FORT_RULE_FILTER_TYPE_HOST, { "a.com", "b.com" });
+    checkFilter(line, FORT_RULE_FILTER_TYPE_ADDRESS, { "1.1.1.1" });
+    checkFilter(line, FORT_RULE_FILTER_TYPE_ACTION, { "Allow" });
+
+    ASSERT_EQ(FilterLine::valuesLines(line.filter(FORT_RULE_FILTER_TYPE_HOST)),
+            "# CDN (old)\na.com\n\nb.com # main");
+    ASSERT_EQ(FilterLine::valuesLines(line.filter(FORT_RULE_FILTER_TYPE_ADDRESS)), "1.1.1.1 # DNS");
+    ASSERT_EQ(FilterLine::valuesLines(line.filter(FORT_RULE_FILTER_TYPE_PORT)), "80\n443");
+    ASSERT_EQ(FilterLine::valuesLines(nullptr), QString());
+}
+
 TEST_F(FilterLineTest, connText)
 {
     Conn conn;

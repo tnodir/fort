@@ -117,20 +117,10 @@ void setEqualEditFilter(
     btEqual->setChecked(filter && filter->equalValues);
 }
 
-// The area's lines are the values, the filter's text is a line
+// The area's lines are the values with their comments, kept as written
 void addAreaFilter(FilterLineText &line, qint8 type, QToolButton *btNot, PlainTextEdit *area)
 {
-    QStringList values;
-
-    const QStringList lines = area->toPlainText().split('\n');
-    for (const QString &text : lines) {
-        const QString value = text.trimmed();
-        if (!value.isEmpty()) {
-            values << value;
-        }
-    }
-
-    line.addFilter(type, values.join(", "), btNot->isChecked());
+    line.addFilter(type, area->toPlainText().trimmed(), btNot->isChecked());
 }
 
 void setAreaFilter(QToolButton *btNot, PlainTextEdit *area, const RuleFilter *filter)
@@ -139,7 +129,7 @@ void setAreaFilter(QToolButton *btNot, PlainTextEdit *area, const RuleFilter *fi
 
     const QSignalBlocker blocker(area); // textChanged() isn't by the user only
 
-    area->setText(FilterLine::values(filter).join('\n'));
+    area->setText(FilterLine::valuesLines(filter));
 }
 
 // A line of the filters, as copied: its values may be on their own lines, but not the ";" line,
