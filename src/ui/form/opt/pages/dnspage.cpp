@@ -36,6 +36,8 @@ void DnsPage::onResetToDefault()
 
 void DnsPage::onRetranslateUi()
 {
+    m_labelNoService->setText(tr("Without the Service, the DNS options don't work"));
+
     m_gbForwarder->setTitle(tr("DNS Forwarder"));
 
     m_cbFilterEnabled->setText(tr("Filter DNS"));
@@ -65,11 +67,17 @@ void DnsPage::onRetranslateUi()
 
 void DnsPage::setupUi()
 {
+    // No Service's Warning
+    m_labelNoService = ControlUtil::createLabel();
+
+    auto noServiceWarning = createNoServiceWarning(m_labelNoService);
+
     // DNS Forwarder Group Box
     setupForwarderBox();
 
     auto colLayout = new QVBoxLayout();
     colLayout->setSpacing(10);
+    colLayout->addWidget(noServiceWarning);
     colLayout->addWidget(m_gbForwarder);
     colLayout->addStretch();
 

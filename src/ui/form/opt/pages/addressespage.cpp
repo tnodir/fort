@@ -66,6 +66,8 @@ void AddressesPage::onRetranslateUi()
     m_cbFilterFortService->setText(tr("Filter Fort Firewall's Service"));
     m_cbFilterFortService->setToolTip(
             tr("Filter the Service's connections as the other programs' ones, else allow them"));
+    m_labelNoService->setText(
+            tr("Without the Service, Fort Firewall is filtered as the other programs"));
 
     for (AddressesArea *addressesArea : addressesAreas()) {
         addressesArea->retranslateUi();
@@ -166,6 +168,11 @@ void AddressesPage::setupInetBox()
                 ctrl()->setFlagsEdited();
             });
 
+    // No Service's Warning
+    m_labelNoService = ControlUtil::createLabel();
+
+    auto noServiceWarning = createNoServiceWarning(m_labelNoService);
+
     // Allow Inet Addresses
     m_allowInetAddresses =
             createAddressesArea(FirewallConf::AddressListAllowInet, ":/icons/global_telecom.png");
@@ -177,6 +184,7 @@ void AddressesPage::setupInetBox()
     // Layout
     auto layout = ControlUtil::createVLayout(/*margin=*/-1);
     layout->addWidget(m_cbFilterFortService);
+    layout->addWidget(noServiceWarning);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addWidget(m_allowInetAddresses, 1);
     layout->addWidget(ControlUtil::createHSeparator());

@@ -51,6 +51,7 @@ private:
     QAction *m_actAddLocalNetworks = nullptr;
 
     QCheckBox *m_cbFilterFortService = nullptr;
+    QLabel *m_labelNoService = nullptr;
     AddressesArea *m_allowInetAddresses = nullptr;
     AddressesArea *m_blockInetAddresses = nullptr;
 };

@@ -40,6 +40,8 @@ private:
     static QString adaptersServersText();
 
 private:
+    QLabel *m_labelNoService = nullptr;
+
     QGroupBox *m_gbForwarder = nullptr;
 
     QCheckBox *m_cbFilterEnabled = nullptr;
