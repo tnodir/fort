@@ -133,7 +133,7 @@ void DnsPlainResolver::onResolved(void *arg, int status, const ares_dns_record *
     if (record) {
         answer.setRecord(request.query, record, request.responseSizeMax());
     } else {
-        answer.setRcode(request.query, ARES_RCODE_SERVFAIL);
+        answer.setError(request.query, ares_strerror(status));
     }
 
     DnsPlainResolver *resolver = context->resolver;

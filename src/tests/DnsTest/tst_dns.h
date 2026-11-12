@@ -587,6 +587,7 @@ TEST_F(DnsTest, httpsResolver)
 
         ASSERT_EQ(resolvedAnswer.addresses().ip4Array(),
                 QVector<quint32>({ NetFormatUtil::textToIp4("1.2.3.4") }));
+        ASSERT_TRUE(resolvedAnswer.error().isEmpty());
     }
 
     // The failed server is asked after the other ones
@@ -609,6 +610,9 @@ TEST_F(DnsTest, httpsResolver)
     ASSERT_NE(record, nullptr);
     ASSERT_EQ(ares_dns_record_get_id(record.get()), 0x2222);
     ASSERT_EQ(ares_dns_record_get_rcode(record.get()), ARES_RCODE_SERVFAIL);
+
+    // The last server's error
+    ASSERT_FALSE(resolvedAnswer.error().isEmpty());
 }
 
 // Asks each server of the DNS providers: run it manually, with the network

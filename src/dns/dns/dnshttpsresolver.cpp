@@ -6,13 +6,12 @@
 #include <algorithm>
 #include <numeric>
 
-#include <ares.h>
-
 struct DnsHttpsQuery
 {
     DnsRequest request;
     QByteArray data;
     QList<int> serverIndexes; // of the servers to ask yet
+    QString error; // of the last server asked
 };
 
 namespace {
@@ -42,6 +41,16 @@ QNetworkRequest createRequest(const DnsHttpsServer &server)
     request.setAttribute(QNetworkRequest::CookieSaveControlAttribute, QNetworkRequest::Manual);
 
     return request;
+}
+
+QString replyErrorString(const QNetworkReply *reply)
+{
+    // The HTTP answer without the query's DNS response
+    if (reply->error() == QNetworkReply::NoError) {
+        return QStringLiteral("Not a DNS response to the query");
+    }
+
+    return reply->errorString();
 }
 
 }
@@ -101,7 +110,7 @@ void DnsHttpsResolver::sendQuery(const DnsHttpsQueryPtr &query)
 {
     if (query->serverIndexes.isEmpty()) {
         DnsAnswer answer;
-        answer.setRcode(query->request.query, ARES_RCODE_SERVFAIL);
+        answer.setError(query->request.query, query->error);
 
         emit resolved(query->request, answer);
         return;
@@ -126,8 +135,12 @@ void DnsHttpsResolver::processReply(
     const bool ok = (reply->error() == QNetworkReply::NoError)
             && answer.setData(request.query, reply->readAll(), request.responseSizeMax());
 
-    if (!ok && !isServerFailed(serverIndex)) {
-        qCWarning(LC) << "Server error:" << reply->url().host() << reply->errorString();
+    if (!ok) {
+        query->error = replyErrorString(reply);
+
+        if (!isServerFailed(serverIndex)) {
+            qCWarning(LC) << "Server error:" << reply->url().host() << query->error;
+        }
     }
 
     setServerFailed(serverIndex, !ok);
