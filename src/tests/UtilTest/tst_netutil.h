@@ -10,6 +10,7 @@
 #include <util/net/actionrange.h>
 #include <util/net/arearange.h>
 #include <util/net/dirrange.h>
+#include <util/net/hostpattern.h>
 #include <util/net/iprange.h>
 #include <util/net/ipverrange.h>
 #include <util/net/netformatutil.h>
@@ -369,6 +370,48 @@ TEST_F(NetUtilTest, actionRanges)
     ASSERT_EQ(ActionRange::actionTypeIndex(1 << 4), -1);
     ASSERT_TRUE(ActionRange::actionTypeName(0).isEmpty());
     ASSERT_TRUE(ActionRange::actionTypeName(1 << 4).isEmpty());
+}
+
+TEST_F(NetUtilTest, hostPattern)
+{
+    struct PatternNames
+    {
+        const char *pattern;
+        QVector<const char *> matched;
+        QVector<const char *> notMatched;
+    };
+
+    const PatternNames list[] = {
+        // Inside of a label
+        { "ads*.example.com", { "ads.example.com", "ads1.example.com" },
+                { "xads1.example.com", "ads1.x.example.com", "a.ads1.example.com",
+                        "ads1.example.com.net", "example.com" } },
+        { "a.*.com", { "a.b.com" }, { "a.b.c.com", "a.com", "x.a.b.com" } },
+        { "a*b*c.com", { "abc.com", "axxbxxc.com", "ababc.com", "abcbc.com" },
+                { "axxbxx.com", "abcb.com", "ab.c.com" } },
+        // The trailing one
+        { "google.*", { "google.com", "google.co.uk" },
+                { "google", "www.google.com", "googlex.com" } },
+        { "ads*", { "ads", "ads1.example.com" }, { "xads", "a.ads" } },
+        // The leading one
+        { "*xample.com", { "xample.com", "example.com", "a.b.example.com" },
+                { "example.org", "example.com.net", "xample.co" } },
+        { "*.ads*.example.com", { "x.ads1.example.com", "y.x.ads.example.com" },
+                { "ads1.example.com", "x.ads1.y.example.com" } },
+        // Both
+        { "*telemetry*", { "telemetry", "telemetry.example.com", "a.xtelemetryx.example.com" },
+                { "tele.metry.com", "telemetr.com" } },
+        { "*a.b*", { "a.b", "xa.bx.a.by", "c.xa.b.c" }, { "a.xb", "ax.b", "a" } },
+    };
+
+    for (const auto &item : list) {
+        for (const char *name : item.matched) {
+            ASSERT_TRUE(HostPattern::match(item.pattern, name)) << item.pattern << ' ' << name;
+        }
+        for (const char *name : item.notMatched) {
+            ASSERT_FALSE(HostPattern::match(item.pattern, name)) << item.pattern << ' ' << name;
+        }
+    }
 }
 
 TEST_F(NetUtilTest, taskTasix)
