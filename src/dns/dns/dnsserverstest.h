@@ -9,6 +9,7 @@
 #include <memory>
 
 class DnsAnswer;
+class DnsQuery;
 class DnsResolver;
 
 // The test's result of an upstream server
@@ -19,6 +20,7 @@ struct DnsServerResult
         StatusAnswered,
         StatusFailed, // the resolver's error
         StatusTimeout,
+        StatusLoop, // the server is the forwarder itself
         StatusInvalid, // the server's text isn't valid
         StatusSkipped, // not asked: another server is invalid
     };
@@ -64,6 +66,10 @@ public:
     virtual void start();
 
     void setResult(int index, const DnsServerResult &result);
+
+    // Whether the query, received by the forwarder, is a resolver's own one: its server's result is
+    // the Loop
+    bool checkLoopQuery(const DnsQuery &query);
 
 signals:
     void resultReady(int index);

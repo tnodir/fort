@@ -2,6 +2,8 @@
 
 #include <QLoggingCategory>
 
+#include <algorithm>
+
 #include <ares.h>
 
 #include <dns/dnsutil.h>
@@ -80,7 +82,14 @@ void DnsManager::tearDown()
 
 DnsServersTest *DnsManager::createServersTest(const QStringList &servers, QObject *parent)
 {
-    return new DnsServersTest(servers, parent);
+    auto test = new DnsServersTest(servers, parent);
+
+    // Its queries sent to the listener are a loop
+    m_serversTests.append(test);
+
+    connect(test, &QObject::destroyed, this, [=, this] { m_serversTests.removeOne(test); });
+
+    return test;
 }
 
 void DnsManager::setupConfManager()
@@ -288,15 +297,18 @@ quint8 DnsManager::checkQuery(const DnsRequest &request)
     return ARES_RCODE_NOERROR;
 }
 
-// The upstream servers include the listener
+// The upstream servers of the resolver or of a servers' test include the listener
 bool DnsManager::checkLoopQuery(const DnsRequest &request)
 {
-    if (m_resolver->isOwnQuery(request.query)) {
+    const DnsQuery &query = request.query;
+
+    if (m_resolver->isOwnQuery(query)) {
         logLoop();
         return true;
     }
 
-    return false;
+    return std::any_of(m_serversTests.begin(), m_serversTests.end(),
+            [&](DnsServersTest *test) { return test->checkLoopQuery(query); });
 }
 
 // Once per the forwarder's start: each query loops

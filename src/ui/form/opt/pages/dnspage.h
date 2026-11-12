@@ -36,6 +36,7 @@ private:
     void updateTestResults();
 
     static QString serverResultText(const DnsServerResult &result);
+    static QString serverAnsweredText(const DnsServerResult &result);
     static QString adaptersServersText();
 
 private:

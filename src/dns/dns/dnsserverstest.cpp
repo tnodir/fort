@@ -98,6 +98,21 @@ void DnsServersTest::setResult(int index, const DnsServerResult &result)
     }
 }
 
+bool DnsServersTest::checkLoopQuery(const DnsQuery &query)
+{
+    const auto it = std::find_if(m_resolvers.begin(), m_resolvers.end(),
+            [&](const auto &resolver) { return resolver->isOwnQuery(query); });
+    if (it == m_resolvers.end())
+        return false;
+
+    // The resolvers are of the servers when started
+    const int index = int(it - m_resolvers.begin());
+
+    setResult(index, { .status = DnsServerResult::StatusLoop });
+
+    return true;
+}
+
 bool DnsServersTest::openResolvers()
 {
     QList<int> invalidIndexes;

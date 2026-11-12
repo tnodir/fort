@@ -81,6 +81,8 @@ private:
 
     QStringList m_servers;
 
+    QList<DnsServersTest *> m_serversTests;
+
     HostZonesDb m_hostZonesDb;
     HostMatcher m_hostFiltersMatcher;
 

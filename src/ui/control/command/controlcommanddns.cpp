@@ -29,6 +29,8 @@ QString serverResultText(const DnsServerResult &result)
         return "error: " + result.error;
     case DnsServerResult::StatusTimeout:
         return "timeout";
+    case DnsServerResult::StatusLoop:
+        return "loop";
     case DnsServerResult::StatusInvalid:
         return "invalid server";
     default:

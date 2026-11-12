@@ -201,22 +201,29 @@ void DnsPage::updateTestResults()
 
 QString DnsPage::serverResultText(const DnsServerResult &result)
 {
-    const QString timeText = tr("%1 ms").arg(result.msecs);
-
     switch (result.status) {
     case DnsServerResult::StatusNone:
         return tr("Testing...");
     case DnsServerResult::StatusAnswered:
-        return result.isNoError() ? timeText : DnsUtil::rcodeText(result.rcode) + ", " + timeText;
+        return serverAnsweredText(result);
     case DnsServerResult::StatusFailed:
         return tr("Error: %1").arg(result.error);
     case DnsServerResult::StatusTimeout:
         return tr("Timeout");
+    case DnsServerResult::StatusLoop:
+        return tr("Loop: the server is the DNS Forwarder itself");
     case DnsServerResult::StatusInvalid:
         return tr("Invalid server");
     default:
         return {};
     }
+}
+
+QString DnsPage::serverAnsweredText(const DnsServerResult &result)
+{
+    const QString timeText = tr("%1 ms").arg(result.msecs);
+
+    return result.isNoError() ? timeText : DnsUtil::rcodeText(result.rcode) + ", " + timeText;
 }
 
 QString DnsPage::adaptersServersText()
