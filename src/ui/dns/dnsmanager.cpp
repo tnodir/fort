@@ -111,11 +111,12 @@ void DnsManager::setupZones()
 
     connect(confZoneManager, &ConfZoneManager::zoneUpdated, &m_zonesTimer,
             &TriggerTimer::startTrigger);
-    // The removed Zone's id can be reused: its names aren't resolved at once
+    // The removed Zone's id can be reused: its names aren't matched at once
     connect(confZoneManager, &ConfZoneManager::zoneRemoved, this, &DnsManager::removeZone);
     connect(taskManager, &TaskManager::zonesUpdated, &m_zonesTimer, &TriggerTimer::startTrigger);
 
-    // The removed host() filters' names aren't resolved at once
+    // The removed host() filters' names don't add their IPs at once, the newly referenced Zones'
+    // names are resolved anew
     connect(confManager, &ConfManager::hostRefsChanged, this, &DnsManager::loadHostRefs);
 }
 
@@ -261,7 +262,7 @@ void DnsManager::flushResolverCache()
 HostMatch DnsManager::matchHost(QStringView name) const
 {
     HostMatch match = m_hostFiltersMatcher.match(name);
-    match.zonesMask = m_hostZonesDb.match(name);
+    match.zonesMask = m_hostZonesDb.match(name, confManager()->hostRefs().zonesMask());
 
     return match;
 }

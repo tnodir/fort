@@ -32,5 +32,5 @@ bool DnsHostBlocker::isAnswerBlocked(const DnsQuery &query, const DnsAnswer &ans
 
 bool DnsHostBlocker::isHostBlocked(QStringView name) const
 {
-    return (m_hostZonesDb.match(name) & m_zonesMask) != 0;
+    return m_hostZonesDb.match(name, m_zonesMask) != 0;
 }

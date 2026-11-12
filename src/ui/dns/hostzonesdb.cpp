@@ -175,16 +175,19 @@ bool HostZonesDb::retainZones(quint32 zonesMask)
     return removeZones(~zonesMask);
 }
 
-quint32 HostZonesDb::match(QStringView name) const
+quint32 HostZonesDb::match(QStringView name, quint32 zonesMask) const
 {
-    if (m_enabledMask == 0)
+    zonesMask &= m_enabledMask;
+    if (zonesMask == 0)
         return 0;
 
     const QByteArray key = HostRange::normalizedKey(name);
 
-    const quint32 zonesMask = matchNames(key) | matchPatterns(key);
+    const quint32 namesMask = matchNames(key, zonesMask);
+    if (namesMask == zonesMask)
+        return namesMask;
 
-    return zonesMask & m_enabledMask;
+    return namesMask | matchPatterns(key, zonesMask & ~namesMask);
 }
 
 // Returns whether any Zone was listed
@@ -311,31 +314,44 @@ HostZonesDb::HostMasks HostZonesDb::selectHost(QByteArrayView key) const
     return masks;
 }
 
-quint32 HostZonesDb::matchNames(const QByteArray &key) const
+quint32 HostZonesDb::matchNames(const QByteArray &key, quint32 zonesMask) const
 {
-    quint32 zonesMask = 0;
+    quint32 matchedMask = 0;
 
     // A statement with a transaction of its own takes several times longer
     m_db->beginTransaction();
 
     HostRange::walkName(
-            key, [&](QByteArrayView nameKey) { zonesMask = selectHost(nameKey).nameMask; },
-            [&](QByteArrayView parentKey) { zonesMask |= selectHost(parentKey).subMask; });
+            key,
+            [&](QByteArrayView nameKey) { matchedMask = selectHost(nameKey).nameMask & zonesMask; },
+            [&](QByteArrayView parentKey) {
+                if (matchedMask != zonesMask) {
+                    matchedMask |= selectHost(parentKey).subMask & zonesMask;
+                }
+            });
 
     m_db->commitTransaction();
 
-    return zonesMask;
+    return matchedMask;
 }
 
-quint32 HostZonesDb::matchPatterns(const QByteArray &key) const
+quint32 HostZonesDb::matchPatterns(const QByteArray &key, quint32 zonesMask) const
 {
-    quint32 zonesMask = 0;
+    quint32 matchedMask = 0;
 
     for (const Pattern &pattern : m_patterns) {
+        const quint32 patternMask = pattern.zonesMask & zonesMask;
+        if (patternMask == 0)
+            continue;
+
         if (HostPattern::match(pattern.name, key)) {
-            zonesMask |= pattern.zonesMask;
+            matchedMask |= patternMask;
+            zonesMask &= ~patternMask;
+
+            if (zonesMask == 0)
+                break;
         }
     }
 
-    return zonesMask;
+    return matchedMask;
 }
