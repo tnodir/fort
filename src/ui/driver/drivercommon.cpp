@@ -183,6 +183,11 @@ quint32 ioctlSetZoneFlag()
     return FORT_IOCTL_SETZONEFLAG;
 }
 
+quint32 ioctlAddHostIps()
+{
+    return FORT_IOCTL_ADDHOSTIPS;
+}
+
 quint32 ioctlSetRules()
 {
     return FORT_IOCTL_SETRULES;

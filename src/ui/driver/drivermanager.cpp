@@ -123,6 +123,11 @@ bool DriverManager::writeZones(QByteArray &buf, bool onlyFlags)
     return writeData(code, buf);
 }
 
+bool DriverManager::writeHostIps(QByteArray &buf)
+{
+    return writeData(DriverCommon::ioctlAddHostIps(), buf);
+}
+
 bool DriverManager::writeRules(QByteArray &buf, bool onlyFlags)
 {
     const auto code = onlyFlags ? DriverCommon::ioctlSetRuleFlag() : DriverCommon::ioctlSetRules();
