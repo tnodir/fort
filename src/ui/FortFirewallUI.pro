@@ -286,6 +286,7 @@ SOURCES += \
     util/conf/confutil.cpp \
     util/conf/filterline.cpp \
     util/conf/filterlinetext.cpp \
+    util/conf/hostrefs.cpp \
     util/conf/ruletextparser.cpp \
     util/consoleoutput.cpp \
     util/dateutil.cpp \
@@ -643,6 +644,7 @@ HEADERS += \
     util/conf/conn.h \
     util/conf/filterline.h \
     util/conf/filterlinetext.h \
+    util/conf/hostrefs.h \
     util/conf/ruletextparser.h \
     util/consoleoutput.h \
     util/dateutil.h \

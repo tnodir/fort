@@ -5,6 +5,7 @@
 #include "actionrange.h"
 #include "arearange.h"
 #include "dirrange.h"
+#include "hostrange.h"
 #include "iprange.h"
 #include "ipverrange.h"
 #include "optionrange.h"
@@ -26,6 +27,7 @@ enum RangeType : qint8 {
     RangeTypeProfile,
     RangeTypeAction,
     RangeTypeOption,
+    RangeTypeHost,
 };
 
 // Sync with FORT_RULE_FILTER_TYPE enum
@@ -38,6 +40,7 @@ RangeType g_filterRangeTypes[] = {
     RangeTypeIpVer, // FORT_RULE_FILTER_TYPE_IP_VERSION,
     RangeTypeDir, // FORT_RULE_FILTER_TYPE_DIRECTION,
     RangeTypeZones, // FORT_RULE_FILTER_TYPE_ZONES,
+    RangeTypeHost, // FORT_RULE_FILTER_TYPE_HOST,
     RangeTypeArea, // FORT_RULE_FILTER_TYPE_AREA,
     RangeTypeProfile, // FORT_RULE_FILTER_TYPE_PROFILE,
     RangeTypeAction, // FORT_RULE_FILTER_TYPE_ACTION,
@@ -66,6 +69,7 @@ static const createRange_func createRange_funcList[] = {
     &createRange<ProfileRange>, // RangeTypeProfile
     &createRange<ActionRange>, // RangeTypeAction
     &createRange<OptionRange>, // RangeTypeOption
+    &createRange<HostRange>, // RangeTypeHost
 };
 
 }

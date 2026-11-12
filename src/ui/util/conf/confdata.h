@@ -13,6 +13,7 @@ class ActionRange;
 class AreaRange;
 class DirRange;
 class FirewallConf;
+class HostRange;
 class IpVerRange;
 class OptionRange;
 class PortRange;
@@ -65,6 +66,7 @@ public:
     void writeProfileRange(const ProfileRange &profileRange);
     void writeActionRange(const ActionRange &actionRange);
     void writeOptionRange(const OptionRange &optionRange);
+    void writeHostRange(const HostRange &hostRange);
 
     void writeApps(const appdata_map_t &appsMap, bool useHeader = false);
 

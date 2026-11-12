@@ -4,6 +4,9 @@
 
 #include <algorithm>
 
+#include <common/fortconf.h>
+
+#include <util/conf/confdata.h>
 #include <util/stringutil.h>
 
 namespace {
@@ -93,7 +96,7 @@ bool HostRange::isEmpty() const
 
 int HostRange::sizeToWrite() const
 {
-    return 0; // the driver doesn't get the names
+    return sizeof(FORT_CONF_RULE_FILTER_HOST); // the id: the driver doesn't get the names
 }
 
 void HostRange::clear()
@@ -140,7 +143,10 @@ bool HostRange::fromList(const StringViewList &list, bool /*sort*/)
     return true;
 }
 
-void HostRange::write(ConfData & /*confData*/) const { }
+void HostRange::write(ConfData &confData) const
+{
+    confData.writeHostRange(*this);
+}
 
 QString HostRange::normalizedName(QStringView name)
 {

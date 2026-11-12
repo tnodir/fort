@@ -5,6 +5,7 @@
 #include <util/net/actionrange.h>
 #include <util/net/arearange.h>
 #include <util/net/dirrange.h>
+#include <util/net/hostrange.h>
 #include <util/net/iprange.h>
 #include <util/net/ipverrange.h>
 #include <util/net/optionrange.h>
@@ -240,6 +241,15 @@ void ConfData::writeOptionRange(const OptionRange &optionRange)
     filter->flags = optionRange.optionTypeIds();
 
     m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
+}
+
+void ConfData::writeHostRange(const HostRange &hostRange)
+{
+    PFORT_CONF_RULE_FILTER_HOST filter = PFORT_CONF_RULE_FILTER_HOST(m_data);
+
+    filter->host_id = hostRange.hostId();
+
+    m_data += sizeof(FORT_CONF_RULE_FILTER_HOST);
 }
 
 void ConfData::writeApps(const appdata_map_t &appsMap, bool useHeader)
