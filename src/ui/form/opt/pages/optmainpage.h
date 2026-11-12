@@ -14,6 +14,7 @@ public:
         TabOptions = 0,
         TabIface,
         TabAddresses,
+        TabDns,
         TabStatistics,
         TabGraph,
         TabSchedule,

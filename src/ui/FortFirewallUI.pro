@@ -140,6 +140,7 @@ SOURCES += \
     form/opt/optionswindow.cpp \
     form/opt/pages/addresses/addressesarea.cpp \
     form/opt/pages/addressespage.cpp \
+    form/opt/pages/dnspage.cpp \
     form/opt/pages/graphpage.cpp \
     form/opt/pages/ifacepage.cpp \
     form/opt/pages/optbasepage.cpp \
@@ -482,6 +483,7 @@ HEADERS += \
     form/opt/optionswindow.h \
     form/opt/pages/addresses/addressesarea.h \
     form/opt/pages/addressespage.h \
+    form/opt/pages/dnspage.h \
     form/opt/pages/graphpage.h \
     form/opt/pages/ifacepage.h \
     form/opt/pages/optbasepage.h \
