@@ -498,6 +498,8 @@ typedef struct fort_conf_meta_conn
 
     UINT32 process_id;
 
+    UINT32 host_zones_mask; /* the Zones of the remote IP added at runtime */
+
     UINT64 flow_id;
 
     ip_addr_t local_ip;

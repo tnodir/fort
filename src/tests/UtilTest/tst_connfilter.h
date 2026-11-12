@@ -958,3 +958,32 @@ TEST_F(ConnFilterTest, appZones)
     ASSERT_TRUE(connAllowed("C:\\App\\reject.exe", conn));
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_PROGRAM);
 }
+
+TEST_F(ConnFilterTest, appHostZones)
+{
+    App acceptApp = wildcardApp("C:\\App\\accept.exe");
+    acceptApp.zones.accept_mask = connFilterZone1;
+
+    m_apps << acceptApp;
+    writeConf();
+
+    writeZone1(""); // the Hosts Zone's addresses are added at runtime
+
+    // The Zone's IP
+    FORT_CONF_META_CONN conn = connFilterConn("9.9.9.9");
+    conn.host_zones_mask = connFilterZone1;
+    ASSERT_TRUE(connAllowed("C:\\App\\accept.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_ZONE);
+    ASSERT_EQ(conn.act.zone_id, 1);
+
+    // Not added
+    conn = connFilterConn("9.9.9.9");
+    ASSERT_FALSE(connAllowed("C:\\App\\accept.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_ZONE);
+
+    // Another Zone's IP
+    conn = connFilterConn("9.9.9.9");
+    conn.host_zones_mask = (connFilterZone1 << 1);
+    ASSERT_FALSE(connAllowed("C:\\App\\accept.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_ZONE);
+}

@@ -266,6 +266,12 @@ FORT_API BOOL fort_conf_zones_ip_included(
 {
     zones_mask &= (zones->mask & zones->enabled_mask);
 
+    const UINT32 ips_mask = (zones_mask & conn->host_zones_mask);
+    if (ips_mask != 0) {
+        *zone_id = fort_bit_scan_forward(ips_mask) + 1;
+        return TRUE;
+    }
+
     while (zones_mask != 0) {
         const int zone_index = fort_bit_scan_forward(zones_mask);
 
