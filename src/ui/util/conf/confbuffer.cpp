@@ -124,11 +124,11 @@ void ConfBuffer::writeServices(const QVector<ServiceInfo> &services, int process
 }
 
 bool ConfBuffer::writeConf(const FirewallConf &conf, const ConfAppsWalker *confAppsWalker,
-        EnvManager *envManager, quint64 activePeriodsMask)
+        EnvManager *envManager, const ConfDriverState &state)
 {
     WriteConfArgs wca = {
         .conf = conf,
-        .activePeriodsMask = activePeriodsMask,
+        .state = state,
         .ad = { .addressRanges = addrranges_arr_t(conf.addressGroups().size()) },
     };
 
@@ -171,7 +171,7 @@ bool ConfBuffer::writeConf(const FirewallConf &conf, const ConfAppsWalker *confA
     return true;
 }
 
-void ConfBuffer::writeFlags(const FirewallConf &conf)
+void ConfBuffer::writeFlags(const FirewallConf &conf, const ConfDriverState &state)
 {
     // Resize the buffer
     const int flagsSize = sizeof(FORT_CONF_FLAGS);
@@ -181,7 +181,7 @@ void ConfBuffer::writeFlags(const FirewallConf &conf)
     // Fill the buffer
     char *data = buffer().data();
 
-    ConfData(data).writeConfFlags(conf);
+    ConfData(data).writeConfFlags(conf, state);
 }
 
 bool ConfBuffer::writeAppEntry(const App &app, bool isNew)

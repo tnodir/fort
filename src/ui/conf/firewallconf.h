@@ -114,6 +114,9 @@ public:
     bool filterLocalNet() const { return m_filterLocalNet; }
     void setFilterLocalNet(bool v) { m_filterLocalNet = v; }
 
+    bool filterFortService() const { return m_filterFortService; }
+    void setFilterFortService(bool v) { m_filterFortService = v; }
+
     bool blockTraffic() const { return m_blockTraffic; }
     void setBlockTraffic(bool v) { m_blockTraffic = v; }
 
@@ -239,6 +242,7 @@ private:
     uint m_filterEnabled : 1 = true;
     uint m_filterLocals : 1 = false;
     uint m_filterLocalNet : 1 = false;
+    uint m_filterFortService : 1 = false;
     uint m_blockTraffic : 1 = false;
     uint m_blockLanTraffic : 1 = false;
     uint m_blockInetTraffic : 1 = false;

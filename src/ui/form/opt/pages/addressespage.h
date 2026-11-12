@@ -50,6 +50,7 @@ private:
     AddressesArea *m_lanAddresses = nullptr;
     QAction *m_actAddLocalNetworks = nullptr;
 
+    QCheckBox *m_cbFilterFortService = nullptr;
     AddressesArea *m_allowInetAddresses = nullptr;
     AddressesArea *m_blockInetAddresses = nullptr;
 };

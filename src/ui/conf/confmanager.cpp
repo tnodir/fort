@@ -620,8 +620,7 @@ bool ConfManager::simulateConn(FilterSimConn &simConn)
 {
     // Write the buffers as for the driver
     ConfBuffer confBuf;
-    if (!confBuf.writeConf(conf(), confAppManager(), envManager(),
-                confTimePeriodManager()->activePeriodsMask())) {
+    if (!confBuf.writeConf(conf(), confAppManager(), envManager(), driverConfState())) {
         qCWarning(LC) << "Filter Simulator: Conf error:" << confBuf.errorMessage();
         return false;
     }
@@ -658,6 +657,14 @@ bool ConfManager::simulateConn(FilterSimConn &simConn)
     simConn.conn.app.rule = nullptr; // points into the local conf buffer
 
     return true;
+}
+
+ConfDriverState ConfManager::driverConfState() const
+{
+    return {
+        .isService = settings()->isService(),
+        .activePeriodsMask = confTimePeriodManager()->activePeriodsMask(),
+    };
 }
 
 bool ConfManager::validateConf(const FirewallConf &conf)

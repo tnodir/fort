@@ -46,8 +46,8 @@ public slots:
     void writeServices(const QVector<ServiceInfo> &services, int processCount);
 
     bool writeConf(const FirewallConf &conf, const ConfAppsWalker *confAppsWalker,
-            EnvManager *envManager, quint64 activePeriodsMask = 0);
-    void writeFlags(const FirewallConf &conf);
+            EnvManager *envManager, const ConfDriverState &state = {});
+    void writeFlags(const FirewallConf &conf, const ConfDriverState &state);
     bool writeAppEntry(const App &app, bool isNew = false);
 
     void writeZone(const IpRange &ipRange);

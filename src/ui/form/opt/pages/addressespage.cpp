@@ -41,6 +41,8 @@ void AddressesPage::onResetToDefault()
     m_cbFilterLocals->setChecked(false);
     m_cbFilterLocalNet->setChecked(false);
 
+    m_cbFilterFortService->setChecked(false);
+
     for (auto addressGroup : conf().addressGroups()) {
         addressGroup->resetToDefault();
     }
@@ -60,6 +62,10 @@ void AddressesPage::onRetranslateUi()
     m_cbFilterLocals->setToolTip(
             tr("Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses"));
     m_cbFilterLocalNet->setText(tr("Filter Local Network"));
+
+    m_cbFilterFortService->setText(tr("Filter Fort Firewall's Service"));
+    m_cbFilterFortService->setToolTip(
+            tr("Filter the Service's connections as the other programs' ones, else allow them"));
 
     for (AddressesArea *addressesArea : addressesAreas()) {
         addressesArea->retranslateUi();
@@ -154,6 +160,12 @@ void AddressesPage::setupEditLanTextActions()
 
 void AddressesPage::setupInetBox()
 {
+    m_cbFilterFortService =
+            ControlUtil::createCheckBox(conf().filterFortService(), [&](bool checked) {
+                conf().setFilterFortService(checked);
+                ctrl()->setFlagsEdited();
+            });
+
     // Allow Inet Addresses
     m_allowInetAddresses =
             createAddressesArea(FirewallConf::AddressListAllowInet, ":/icons/global_telecom.png");
@@ -164,6 +176,8 @@ void AddressesPage::setupInetBox()
 
     // Layout
     auto layout = ControlUtil::createVLayout(/*margin=*/-1);
+    layout->addWidget(m_cbFilterFortService);
+    layout->addWidget(ControlUtil::createHSeparator());
     layout->addWidget(m_allowInetAddresses, 1);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addWidget(m_blockInetAddresses, 1);

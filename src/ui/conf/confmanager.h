@@ -20,6 +20,7 @@ class ServiceInfoManager;
 class Settings;
 class TaskInfo;
 
+struct ConfDriverState;
 struct FilterSimConn;
 
 class ConfManager : public QObject, public IocService, public SqliteUtilBase
@@ -76,6 +77,8 @@ public:
     virtual bool checkPassword(const QString &password);
 
     virtual bool simulateConn(FilterSimConn &simConn);
+
+    ConfDriverState driverConfState() const;
 
     bool validateDriver();
 

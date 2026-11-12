@@ -21,7 +21,7 @@ void ConfData::writeConf(const WriteConfArgs &wca, AppParseOptions &opt)
     PFORT_CONF_IO drvConfIo = PFORT_CONF_IO(m_data);
     PFORT_CONF drvConf = &drvConfIo->conf;
 
-    drvConfIo->periods.active_mask = wca.activePeriodsMask;
+    drvConfIo->periods.active_mask = wca.state.activePeriodsMask;
 
     quint32 addrGroupsOff;
     quint32 wildAppsOff, prefixAppsOff, exeAppsOff;
@@ -42,7 +42,7 @@ void ConfData::writeConf(const WriteConfArgs &wca, AppParseOptions &opt)
     exeAppsOff = dataOffset();
     writeApps(opt.exeAppsMap);
 
-    ConfData(&drvConf->flags).writeConfFlags(wca.conf);
+    ConfData(&drvConf->flags).writeConfFlags(wca.conf, wca.state);
 
     drvConf->proc_wild = opt.procWild;
 
@@ -57,7 +57,7 @@ void ConfData::writeConf(const WriteConfArgs &wca, AppParseOptions &opt)
     drvConf->exe_apps_off = exeAppsOff;
 }
 
-void ConfData::writeConfFlags(const FirewallConf &conf)
+void ConfData::writeConfFlags(const FirewallConf &conf, const ConfDriverState &state)
 {
     PFORT_CONF_FLAGS confFlags = PFORT_CONF_FLAGS(m_data);
 
@@ -68,6 +68,8 @@ void ConfData::writeConfFlags(const FirewallConf &conf)
     confFlags->filter_enabled = conf.filterEnabled();
     confFlags->filter_locals = conf.filterLocals();
     confFlags->filter_local_net = conf.filterLocalNet();
+    // Without the Service the driver's client is the UI process: filtered as the other programs
+    confFlags->filter_fort_service = conf.filterFortService() || !state.isService;
 
     confFlags->block_traffic = conf.blockTraffic();
     confFlags->block_lan_traffic = conf.blockLanTraffic();

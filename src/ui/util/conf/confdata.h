@@ -28,11 +28,18 @@ struct ParseAddressGroupsArgs
     longs_arr_t addressGroupOffsets;
 };
 
+// The driver's conf values not kept in the conf
+struct ConfDriverState
+{
+    bool isService = false; // the driver's client is the Service
+
+    quint64 activePeriodsMask = 0;
+};
+
 struct WriteConfArgs
 {
     const FirewallConf &conf;
-
-    quint64 activePeriodsMask = 0;
+    const ConfDriverState &state;
 
     ParseAddressGroupsArgs ad;
 };
@@ -49,7 +56,7 @@ public:
     void resetBase() { m_base = m_data; }
 
     void writeConf(const WriteConfArgs &wca, AppParseOptions &opt);
-    void writeConfFlags(const FirewallConf &conf);
+    void writeConfFlags(const FirewallConf &conf, const ConfDriverState &state);
 
     void writeAddressRanges(const addrranges_arr_t &addressRanges);
     void writeAddressRange(const AddressRange &addressRange);
