@@ -11,7 +11,7 @@ namespace {
 
 // By FORT_RULE_FILTER_TYPE_*
 const char *const filterNames[] = { "IP", "Port", "Local_IP", "Local_Port", "Proto", "IP_Ver",
-    "Dir", "Zones", "Area", "Profile", "Act", "Opt" };
+    "Dir", "Zones", "Host", "Area", "Profile", "Act", "Opt" };
 
 static_assert(std::size(filterNames) == FORT_RULE_FILTER_TYPE_PORT_TCP, "Filter names mismatch");
 

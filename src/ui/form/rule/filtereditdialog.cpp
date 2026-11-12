@@ -199,6 +199,11 @@ void FilterEditDialog::retranslateUi()
     m_cbAreaLan->setToolTip(tr("LAN: by the \"Local Area Network\" addresses in Options"));
     m_cbAreaInet->setText(tr("Internet"));
 
+    m_labelHosts->setText(tr("Host:"));
+    m_btHostsClear->setToolTip(tr("Clear"));
+    m_editHosts->setPlaceholderText(anyText + ":\n# " + tr("The name only") + "\nexample.com\n# "
+            + tr("Its subdomains") + "\n*.example.com\n# " + tr("The name and its subdomains")
+            + "\n.example.com\n# " + tr("A mask in the name") + "\nads*.example.com");
     m_labelRemoteIps->setText(tr("Remote IP:"));
     m_btRemoteIpsClear->setToolTip(tr("Clear"));
     m_editRemoteIps->setPlaceholderText(
@@ -235,8 +240,8 @@ void FilterEditDialog::retranslateNotButtons()
 {
     const QString toolTip = tr("All, except these");
 
-    for (QToolButton *bt : { m_btDirectionNot, m_btProtocolsNot, m_btAreasNot, m_btRemoteIpsNot,
-                 m_btRemotePortsNot, m_btLocalIpsNot, m_btLocalPortsNot }) {
+    for (QToolButton *bt : { m_btDirectionNot, m_btProtocolsNot, m_btAreasNot, m_btHostsNot,
+                 m_btRemoteIpsNot, m_btRemotePortsNot, m_btLocalIpsNot, m_btLocalPortsNot }) {
         bt->setToolTip(toolTip);
     }
 }
@@ -335,6 +340,14 @@ QLayout *FilterEditDialog::setupFormLayout()
 
     m_labelAreas = addWidgetsRow(layout, "Area:",
             { m_btAreasNot, m_cbAreaLocalhost, m_cbAreaLan, m_cbAreaInet, /*stretch*/ nullptr });
+
+    // Host
+    m_btHostsNot = createNotButton();
+    m_btHostsClear = ControlUtil::createClearButton([&] { TextAreaUtil::clearArea(m_editHosts); });
+    m_editHosts = createValuesArea();
+
+    m_labelHosts = addAreaRow(
+            layout, "Host:", { m_btHostsNot, /*stretch*/ nullptr, m_btHostsClear }, m_editHosts);
 
     // Remote IP
     m_btRemoteIpsNot = createNotButton();
@@ -569,6 +582,7 @@ void FilterEditDialog::updateTextByFields()
 
 void FilterEditDialog::updateClearButtons()
 {
+    ControlUtil::setVisibleAnimated(m_btHostsClear, !m_editHosts->toPlainText().isEmpty());
     ControlUtil::setVisibleAnimated(m_btRemoteIpsClear, !m_editRemoteIps->toPlainText().isEmpty());
 }
 
@@ -581,6 +595,7 @@ QString FilterEditDialog::filterText() const
     line.addFilter(FORT_RULE_FILTER_TYPE_PROTOCOL, protocolValues(), m_btProtocolsNot->isChecked());
     line.addFilter(FORT_RULE_FILTER_TYPE_AREA, checkedNames(areasCheckBoxes(), areaNames),
             m_btAreasNot->isChecked());
+    addAreaFilter(line, FORT_RULE_FILTER_TYPE_HOST, m_btHostsNot, m_editHosts);
     addAreaFilter(line, FORT_RULE_FILTER_TYPE_ADDRESS, m_btRemoteIpsNot, m_editRemoteIps);
     addEditFilter(line, FORT_RULE_FILTER_TYPE_PORT, m_btRemotePortsNot, m_editRemotePorts);
 
@@ -632,6 +647,7 @@ void FilterEditDialog::setFilterLine(const FilterLineText &lineText)
     setDirectionFilter(line.filter(FORT_RULE_FILTER_TYPE_DIRECTION));
     setProtocolFilter(line.filter(FORT_RULE_FILTER_TYPE_PROTOCOL));
     setAreasFilter(line.filter(FORT_RULE_FILTER_TYPE_AREA));
+    setAreaFilter(m_btHostsNot, m_editHosts, line.filter(FORT_RULE_FILTER_TYPE_HOST));
     setAreaFilter(m_btRemoteIpsNot, m_editRemoteIps, line.filter(FORT_RULE_FILTER_TYPE_ADDRESS));
     setEditFilter(m_btRemotePortsNot, m_editRemotePorts, line.filter(FORT_RULE_FILTER_TYPE_PORT));
     setEqualEditFilter(m_btLocalIpsNot, m_btLocalIpsEqual, m_editLocalIps,
