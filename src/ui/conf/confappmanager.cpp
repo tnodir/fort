@@ -172,7 +172,7 @@ const char *const sqlInsertAppRule = "INSERT INTO app_rule(app_id, rule_id, orde
 
 const char *const sqlDeleteAppRules = "DELETE FROM app_rule WHERE app_id = ?1;";
 
-const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id) VALUES(?1);";
+const char *const sqlInsertAppAlert = "INSERT OR IGNORE INTO app_alert(app_id) VALUES(?1);";
 
 const char *const sqlDeleteAppAlert = "DELETE FROM app_alert WHERE app_id = ?1;";
 
@@ -488,7 +488,8 @@ bool ConfAppManager::addAlertedApp(qint64 appId)
 {
     const bool ok = DbQuery(sqliteDb()).sql(sqlInsertAppAlert).vars({ appId }).executeOk();
 
-    if (ok) {
+    // The already alerted app isn't alerted again
+    if (ok && sqliteDb()->changes() != 0) {
         emitAppAlerted();
     }
 
