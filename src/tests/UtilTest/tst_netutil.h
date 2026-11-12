@@ -524,6 +524,46 @@ TEST_F(NetUtilTest, hostMatcher)
     ASSERT_EQ(hostMatcher.match(u"a.ads1.example.net").zonesMask, 0b0010);
 }
 
+TEST_F(NetUtilTest, hostMatcherHostFilters)
+{
+    HostMatcher hostMatcher;
+
+    HostRange hostRange;
+
+    ASSERT_TRUE(hostRange.fromText("example.com\n*.example.com"));
+    hostMatcher.addZone(2, hostRange);
+    hostMatcher.addHostFilter(7, hostRange);
+
+    ASSERT_TRUE(hostRange.fromText("www.example.com"));
+    hostMatcher.addHostFilter(9, hostRange);
+
+    ASSERT_TRUE(hostRange.fromText("*.example.com\nexample.org"));
+    hostMatcher.addHostFilter(7, hostRange);
+
+    ASSERT_TRUE(hostMatcher.match(u"example.net").isEmpty());
+
+    {
+        const HostMatch match = hostMatcher.match(u"example.com");
+        ASSERT_EQ(match.zonesMask, 0b10);
+        ASSERT_EQ(match.hostIds, QVector<quint32>({ 7 }));
+    }
+
+    // The host() filter's ids aren't repeated
+    {
+        const HostMatch match = hostMatcher.match(u"www.Example.com.");
+        ASSERT_EQ(match.zonesMask, 0b10);
+        ASSERT_EQ(match.hostIds, QVector<quint32>({ 9, 7 }));
+    }
+
+    // Only the host() filter
+    {
+        const HostMatch match = hostMatcher.match(u"example.org");
+        ASSERT_FALSE(match.isEmpty());
+        ASSERT_EQ(match.zonesMask, 0);
+        ASSERT_EQ(match.hostIds, QVector<quint32>({ 7 }));
+    }
+}
+
 TEST_F(NetUtilTest, taskTasix)
 {
     const QByteArray buf = FileUtil::readFileData(":/data/tasix-mrlg.html");

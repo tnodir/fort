@@ -625,6 +625,48 @@ TEST_F(RuleTextParserTest, linePortEqualValues)
     ASSERT_EQ(p.ruleFilters().size(), 5);
 }
 
+TEST_F(RuleTextParserTest, lineHostDomain)
+{
+    const QString idnName = QString::fromUtf16(u"пример.рф");
+
+    RuleTextParser p(
+            "host(.example.com, " + idnName + ", ads*.example.com, google.*, *telemetry*)");
+
+    ASSERT_TRUE(p.parse());
+
+    const RuleFilter &rf = p.ruleFilters().last();
+    ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_HOST);
+    checkStringList(
+            rf.values, { ".example.com", idnName, "ads*.example.com", "google.*", "*telemetry*" });
+}
+
+TEST_F(RuleTextParserTest, lineHost)
+{
+    RuleTextParser p("!host(example.com, *.cdn.net):443");
+
+    ASSERT_TRUE(p.parse());
+
+    const auto &ruleFilters = p.ruleFilters();
+
+    ASSERT_EQ(ruleFilters.size(), 4);
+
+    // Check Host
+    {
+        const RuleFilter &rf = ruleFilters[2];
+        ASSERT_TRUE(rf.isNot);
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_HOST);
+        checkStringList(rf.values, { "example.com", "*.cdn.net" });
+    }
+
+    // Check Port
+    {
+        const RuleFilter &rf = ruleFilters[3];
+        ASSERT_FALSE(rf.isNot);
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_PORT);
+        checkStringList(rf.values, { "443" });
+    }
+}
+
 TEST_F(RuleTextParserTest, lineVerticalLine)
 {
     RuleTextParser p("1|2");
