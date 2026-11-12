@@ -1,6 +1,13 @@
 #include "hostrefs.h"
 
 #include <util/net/hostrange.h>
+#include <util/stringutil.h>
+
+namespace {
+
+inline constexpr char namesSeparator = ',';
+
+}
 
 void HostRefs::beginSource(Source source)
 {
@@ -39,12 +46,26 @@ quint32 HostRefs::hostId(const HostRange &hostRange)
     return hostId;
 }
 
+HostMatcher HostRefs::hostMatcher() const
+{
+    HostMatcher hostMatcher;
+    HostRange hostRange;
+
+    for (auto it = m_hostIds.constBegin(); it != m_hostIds.constEnd(); ++it) {
+        if (hostRange.fromList(StringUtil::splitView(it.key(), QLatin1Char(namesSeparator)))) {
+            hostMatcher.addHostFilter(it.value(), hostRange);
+        }
+    }
+
+    return hostMatcher;
+}
+
 QString HostRefs::namesKey(const HostRange &hostRange)
 {
     QStringList names;
     hostRange.toList(names);
 
-    return names.join(',');
+    return names.join(QLatin1Char(namesSeparator));
 }
 
 void HostRefs::removeUnusedIds()

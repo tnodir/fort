@@ -43,6 +43,11 @@ void HostMatcher::addZone(int zoneId, const HostRange &hostRange)
     addMatch(hostRange, { .zonesMask = Zone::zoneBit(zoneId) });
 }
 
+void HostMatcher::addHostFilter(quint32 hostId, const HostRange &hostRange)
+{
+    addMatch(hostRange, { .hostIds = { hostId } });
+}
+
 HostMatch HostMatcher::match(QStringView name) const
 {
     const QByteArray key = HostRange::normalizedKey(name);

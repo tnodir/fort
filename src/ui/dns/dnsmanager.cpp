@@ -87,6 +87,7 @@ void DnsManager::setupConfManager()
 
 void DnsManager::setupZones()
 {
+    auto confManager = Fort::dependency<ConfManager>();
     auto confZoneManager = Fort::dependency<ConfZoneManager>();
     auto taskManager = Fort::dependency<TaskManager>();
 
@@ -95,6 +96,9 @@ void DnsManager::setupZones()
     connect(confZoneManager, &ConfZoneManager::zoneRemoved, &m_zonesTimer,
             &TriggerTimer::startTrigger);
     connect(taskManager, &TaskManager::zonesUpdated, &m_zonesTimer, &TriggerTimer::startTrigger);
+
+    // The removed host() filters' names aren't resolved at once
+    connect(confManager, &ConfManager::hostRefsChanged, this, &DnsManager::loadHostRefs);
 }
 
 void DnsManager::setupByConfIni()
@@ -147,11 +151,13 @@ void DnsManager::stop()
 void DnsManager::loadHosts()
 {
     loadZones();
+    loadHostRefs();
 }
 
 void DnsManager::unloadHosts()
 {
     m_zonesMatcher = {};
+    m_hostFiltersMatcher = {};
 }
 
 void DnsManager::loadZones()
@@ -162,9 +168,20 @@ void DnsManager::loadZones()
     m_zonesMatcher = taskManager()->taskInfoZoneDownloader()->loadHostZones();
 }
 
+void DnsManager::loadHostRefs()
+{
+    if (!isStarted())
+        return;
+
+    m_hostFiltersMatcher = confManager()->hostRefs().hostMatcher();
+}
+
 HostMatch DnsManager::matchHost(QStringView name) const
 {
-    return m_zonesMatcher.match(name);
+    HostMatch match = m_zonesMatcher.match(name);
+    match.add(m_hostFiltersMatcher.match(name));
+
+    return match;
 }
 
 void DnsManager::processQuery(const DnsClient &client, const QByteArray &data)
@@ -185,7 +202,7 @@ void DnsManager::processQuery(const DnsClient &client, const QByteArray &data)
 
 void DnsManager::processAnswer(const DnsRequest &request, const DnsAnswer &answer)
 {
-    // The Zones may be changed since the query.
+    // The Zones and host() filters may be changed since the query.
     // The client connects to the addresses after the answer.
     if (!writeHostIps(matchHost(request.query.name()), answer.addresses())) {
         sendRcode(request, ARES_RCODE_SERVFAIL);
