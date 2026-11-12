@@ -32,6 +32,7 @@ struct ParseAddressGroupsArgs
 struct ConfDriverState
 {
     bool isService = false; // the driver's client is the Service
+    bool dnsPortsBlocked = false; // the DNS forwarder runs: the other programs ask it only
 
     quint64 activePeriodsMask = 0;
 };

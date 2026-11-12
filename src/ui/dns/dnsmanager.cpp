@@ -119,6 +119,8 @@ void DnsManager::setupByConfIni()
     } else {
         stop();
     }
+
+    Fort::confManager()->setDnsPortsBlocked(isStarted() && ini.dnsBlockPorts());
 }
 
 void DnsManager::start(const QStringList &servers)

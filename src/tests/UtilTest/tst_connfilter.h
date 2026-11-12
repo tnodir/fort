@@ -389,6 +389,80 @@ TEST_F(ConnFilterTest, fortService)
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_FILTER_MODE);
 }
 
+TEST_F(ConnFilterTest, dnsPorts)
+{
+    const auto dnsConn = [](const char *ip, UCHAR ipProto = IpProto_UDP, UINT16 port = 53) {
+        FORT_CONF_META_CONN conn = connFilterConn(ip);
+        conn.ip_proto = ipProto;
+        conn.remote_port = port;
+        return conn;
+    };
+
+    // Not blocked
+    FORT_CONF_META_CONN conn = dnsConn("8.8.8.8");
+    ASSERT_FALSE(connFlagsFiltered(conn));
+
+    conn = dnsConn("8.8.8.8", IpProto_TCP, 853);
+    ASSERT_FALSE(connFlagsFiltered(conn));
+
+    confFlags()->block_dns_ports = true;
+
+    // Blocked
+    conn = dnsConn("8.8.8.8");
+    ASSERT_TRUE(connFlagsFiltered(conn));
+    ASSERT_TRUE(conn.act.blocked);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_BLOCK_DNS);
+
+    conn = dnsConn("8.8.8.8", IpProto_TCP);
+    ASSERT_TRUE(connFlagsFiltered(conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_BLOCK_DNS);
+
+    // Blocked: DNS over TLS and over QUIC
+    conn = dnsConn("8.8.8.8", IpProto_TCP, 853);
+    ASSERT_TRUE(connFlagsFiltered(conn));
+    ASSERT_TRUE(conn.act.blocked);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_BLOCK_DOT);
+
+    conn = dnsConn("8.8.8.8", IpProto_UDP, 853);
+    ASSERT_TRUE(connFlagsFiltered(conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_BLOCK_DOT);
+
+    // Before the Local Network allowed
+    conn = dnsConn("192.168.1.1");
+    ASSERT_FALSE(connAllowed("C:\\App\\allowed.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_BLOCK_DNS);
+
+    // Not the DNS ports
+    conn = dnsConn("8.8.8.8", IpProto_TCP, 443);
+    ASSERT_FALSE(connFlagsFiltered(conn));
+
+    conn = dnsConn("8.8.8.8", IpProto_ICMP);
+    ASSERT_FALSE(connFlagsFiltered(conn));
+
+    // Inbound
+    conn = dnsConn("8.8.8.8");
+    conn.inbound = true;
+    ASSERT_FALSE(connFlagsFiltered(conn));
+
+    // The DNS Forwarder asks the upstream servers
+    conn = dnsConn("8.8.8.8");
+    conn.is_fort_service = true;
+    ASSERT_FALSE(connFlagsFiltered(conn));
+
+    conn = dnsConn("8.8.8.8", IpProto_TCP, 853);
+    conn.is_fort_service = true;
+    ASSERT_FALSE(connFlagsFiltered(conn));
+
+    // The DNS Forwarder is asked by the loopback
+    confFlags()->filter_locals = true;
+
+    conn = dnsConn("127.0.0.1");
+    conn.is_loopback = true;
+    connFlagsFiltered(conn);
+    ASSERT_FALSE(conn.act.blocked);
+    ASSERT_NE(conn.reason, FORT_CONN_REASON_BLOCK_DNS);
+}
+
 TEST_F(ConnFilterTest, filterModes)
 {
     const auto checkMode = [&](FirewallConf::FilterMode mode, FORT_CONF_META_CONN &conn) {

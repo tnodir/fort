@@ -30,6 +30,7 @@ DnsPage::DnsPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, p
 void DnsPage::onResetToDefault()
 {
     m_cbFilterEnabled->setChecked(false);
+    m_cbBlockPorts->setChecked(true);
     m_editServers->clear();
 }
 
@@ -40,7 +41,16 @@ void DnsPage::onRetranslateUi()
     m_cbFilterEnabled->setText(tr("Filter DNS"));
     m_cbFilterEnabled->setToolTip(
             tr("Resolve only the host names of the enabled Hosts Zones and of the host() filters, "
-               "the other names are not found (only with the Service)"));
+               "the other names are not found (only with the Service). The programs resolving "
+               "the names by DNS over HTTPS themselves, e.g. the browsers with Secure DNS, bypass "
+               "the DNS Forwarder"));
+    m_cbBlockPorts->setText(tr("Block ports 53 and 853 for other programs"));
+    m_cbBlockPorts->setToolTip(
+            tr("Block the connections of the programs other than Fort Firewall's Service to the "
+               "DNS servers' port 53 and to the DNS over TLS and over QUIC servers' port 853, "
+               "while DNS is filtered: they can't resolve the names past the DNS Forwarder by "
+               "these protocols. DNS over HTTPS goes to the port 443 of the web sites, which "
+               "isn't blocked"));
     m_labelServers->setText(tr("Upstream DNS servers:"));
     m_comboServers->setItemText(0, adaptersServersText());
     m_comboServers->setPlaceholderText(tr("Custom"));
@@ -78,11 +88,17 @@ void DnsPage::setupForwarderBox()
         ctrl()->setIniEdited();
     });
 
+    m_cbBlockPorts = ControlUtil::createCheckBox(ini().dnsBlockPorts(), [&](bool checked) {
+        ini().setDnsBlockPorts(checked);
+        ctrl()->setIniEdited();
+    });
+
     // Servers Row
     auto serversLayout = setupServersLayout();
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbFilterEnabled);
+    layout->addWidget(m_cbBlockPorts);
     layout->addLayout(serversLayout);
 
     m_gbForwarder = new QGroupBox();

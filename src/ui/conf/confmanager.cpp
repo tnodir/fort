@@ -663,8 +663,19 @@ ConfDriverState ConfManager::driverConfState() const
 {
     return {
         .isService = settings()->isService(),
+        .dnsPortsBlocked = m_dnsPortsBlocked,
         .activePeriodsMask = confTimePeriodManager()->activePeriodsMask(),
     };
+}
+
+void ConfManager::setDnsPortsBlocked(bool v)
+{
+    if (m_dnsPortsBlocked == v)
+        return;
+
+    m_dnsPortsBlocked = v;
+
+    emit dnsPortsBlockedChanged();
 }
 
 bool ConfManager::validateConf(const FirewallConf &conf)

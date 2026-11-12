@@ -135,6 +135,9 @@ public:
     bool dnsFilterEnabled() const { return valueBool("dns/filterEnabled"); }
     void setDnsFilterEnabled(bool v) { setValue("dns/filterEnabled", v); }
 
+    bool dnsBlockPorts() const { return valueBool("dns/blockPorts", true); }
+    void setDnsBlockPorts(bool v) { setValue("dns/blockPorts", v); }
+
     // Empty for the adapters' DNS servers
     QStringList dnsServers() const { return valueList("dns/servers"); }
     void setDnsServers(const QStringList &v) { setValue("dns/servers", v); }

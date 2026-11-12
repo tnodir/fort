@@ -568,6 +568,9 @@ void FortManager::setupConfManager()
             updateDriverConf(onlyFlags);
         }
     });
+
+    connect(confManager, &ConfManager::dnsPortsBlockedChanged, this,
+            [&] { updateDriverConf(/*onlyFlags=*/true); });
 }
 
 void FortManager::setupConfRuleManager()

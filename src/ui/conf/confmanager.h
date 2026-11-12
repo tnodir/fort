@@ -80,6 +80,8 @@ public:
 
     ConfDriverState driverConfState() const;
 
+    void setDnsPortsBlocked(bool v);
+
     bool validateDriver();
 
     void updateDriverServices(const QVector<ServiceInfo> &services, int runningServicesCount);
@@ -93,6 +95,7 @@ signals:
     void iniChanged();
     void iniUserChanged(bool onlyFlags);
     void hostRefsChanged();
+    void dnsPortsBlockedChanged();
 
 protected:
     virtual void setupTimers();
@@ -131,6 +134,7 @@ private:
 
 private:
     bool m_savedAutoLearn : 1 = false;
+    bool m_dnsPortsBlocked : 1 = false;
 
     SqliteDbPtr m_sqliteDb;
 
