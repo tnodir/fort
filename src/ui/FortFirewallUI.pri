@@ -6,5 +6,8 @@ LIBS *= -L$$builddir/ui
 LIBS *= -lFortFirewallUILib
 PRE_TARGETDEPS *= $$builddir/ui/FortFirewallUILib.lib
 
+# DNS
+include($$PWD/../dns/FortFirewallDns.pri)
+
 # Windows
 LIBS *= -lntdll -lwinmm
