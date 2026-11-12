@@ -184,14 +184,23 @@ HostRange::ParseError HostRange::parsePlainName(QString name)
         return ErrorBadName;
     }
 
-    if (isWildcard) {
-        m_wildcardNames.insert(name);
-    }
-    if (isDomain || !isWildcard) {
+    if (isDomain || withSubdomains()) {
         m_names.insert(name);
+        m_wildcardNames.insert(name);
+    } else {
+        addPlainName(name, isWildcard);
     }
 
     return ErrorOk;
+}
+
+void HostRange::addPlainName(const QString &name, bool isWildcard)
+{
+    if (isWildcard) {
+        m_wildcardNames.insert(name);
+    } else {
+        m_names.insert(name);
+    }
 }
 
 HostRange::ParseError HostRange::parsePattern(const QString &pattern)

@@ -22,6 +22,20 @@
         "url": ""
     },
     {
+        "code": "domain_file",
+        "title": "Hosts with Subdomains from Local File",
+        "zoneType": "host",
+        "subdomains": true,
+        "url": ""
+    },
+    {
+        "code": "domain_hosts_file",
+        "title": "Hosts with Subdomains from Hosts File",
+        "zoneType": "hosts_file",
+        "subdomains": true,
+        "url": ""
+    },
+    {
         "code": "winspyblock",
         "title": "WindowsSpyBlocker",
         "zoneType": "gen",

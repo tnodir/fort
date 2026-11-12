@@ -434,6 +434,14 @@ TEST_F(NetUtilTest, hostRanges)
 
     ASSERT_FALSE(hostRange.fromText(QString::fromUtf16(u"ä..com")));
     ASSERT_FALSE(hostRange.fromText(QString(60, QChar(0x00e4)) + ".com"));
+
+    // The names with their subdomains
+    hostRange.setWithSubdomains(true);
+    ASSERT_TRUE(hostRange.fromText("example.com\n*.example.org\n.example.net\nads*.example.com"));
+    ASSERT_EQ(hostRange.size(), 7);
+    ASSERT_EQ(hostRange.toText(),
+            QString("*.example.com\n*.example.net\n*.example.org\nads*.example.com\n"
+                    "example.com\nexample.net\nexample.org\n"));
 }
 
 TEST_F(NetUtilTest, hostPattern)
@@ -658,4 +666,45 @@ TEST_F(NetUtilTest, taskHosts)
     ASSERT_EQ(savedText, QString("*.example.org\nwww.example.com\n"));
 
     ASSERT_FALSE(hosts.storeHosts({ u"bad..name" }));
+}
+
+TEST_F(NetUtilTest, taskHostsFile)
+{
+    TaskZoneDownloader hosts;
+    hosts.setZoneId(3);
+    hosts.setIsHosts(true);
+    hosts.setHostSubdomains(true);
+    hosts.setPattern(R"(^\s*[^#\s]\S*\s+(?!(?:localhost(?:\.localdomain)?|local|broadcasthost)"
+                     R"(|ip6-\S+|0\.0\.0\.0)(?:\s|#|$))([^#\s]\S*))");
+
+    QString textChecksum;
+    const QString text("# comment\n127.0.0.1 localhost\n127.0.0.1 localhost.localdomain\n"
+                       "127.0.0.1 local\n255.255.255.255 broadcasthost\n::1 ip6-localhost\n"
+                       "0.0.0.0 0.0.0.0\n  # indented comment\n0.0.0.0 # no name\n"
+                       "0.0.0.0 Ads.Example.com # inline comment\n"
+                       "127.0.0.1\tlocal.example.org\r\n0.0.0.0 0.0.0.0.example.net\n"
+                       "no-address.example.com\n");
+    const auto list = hosts.parseAddresses(text, textChecksum);
+    ASSERT_EQ(list.size(), 3);
+
+    hosts.setCachePath("./zones/");
+    ASSERT_TRUE(hosts.storeHosts(list));
+
+    HostRange hostRange;
+    ASSERT_TRUE(hosts.loadHosts(hostRange));
+
+    HostMatcher hostMatcher;
+    hostMatcher.addZone(hosts.zoneId(), hostRange);
+
+    // The names with their subdomains
+    ASSERT_EQ(hostMatcher.match(u"ads.example.com").zonesMask, 0b100);
+    ASSERT_EQ(hostMatcher.match(u"www.ads.example.com").zonesMask, 0b100);
+    ASSERT_EQ(hostMatcher.match(u"local.example.org").zonesMask, 0b100);
+    ASSERT_EQ(hostMatcher.match(u"0.0.0.0.example.net").zonesMask, 0b100);
+    ASSERT_EQ(hostMatcher.match(u"example.com").zonesMask, 0);
+
+    // Not the hosts file's own names
+    ASSERT_EQ(hostMatcher.match(u"localhost").zonesMask, 0);
+    ASSERT_EQ(hostMatcher.match(u"printer.local").zonesMask, 0);
+    ASSERT_EQ(hostMatcher.match(u"0.0.0.0").zonesMask, 0);
 }

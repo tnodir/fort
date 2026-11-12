@@ -11,6 +11,8 @@ public:
         SourceFile,
         SourceHostsText,
         SourceHostsFile,
+        SourceDomainsFile,
+        SourceDomainsHostsFile,
         SourceWinSpyBlock,
         SourceFireHol_Level1,
         SourceTasix,
@@ -24,6 +26,7 @@ public:
     QString code() const;
     QString title() const;
     QString zoneType() const;
+    bool subdomains() const;
     QString url() const;
     QString formData() const;
 

@@ -275,6 +275,8 @@ QString ZoneListModel::zoneSourceTitleById(const int sourceId)
         QT_TR_NOOP("Addresses from Local File"),
         QT_TR_NOOP("Hosts from Inline Text"),
         QT_TR_NOOP("Hosts from Local File"),
+        QT_TR_NOOP("Hosts with Subdomains from Local File"),
+        QT_TR_NOOP("Hosts with Subdomains from Hosts File"),
         QT_TR_NOOP("WindowsSpyBlocker"),
         QT_TR_NOOP("FireHOL Level-1"),
         QT_TR_NOOP("TAS-IX Addresses"),

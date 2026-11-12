@@ -20,6 +20,10 @@ public:
 
     int size() const { return m_names.size() + m_wildcardNames.size() + m_patternNames.size(); }
 
+    // A name and a "*." wildcard are parsed as the "." name: the name with its subdomains
+    bool withSubdomains() const { return m_withSubdomains; }
+    void setWithSubdomains(bool v) { m_withSubdomains = v; }
+
     // The host() filter's id
     quint32 hostId() const { return m_hostId; }
     void setHostId(quint32 v) { m_hostId = v; }
@@ -69,9 +73,12 @@ private:
 
     HostRange::ParseError parseName(QStringView line);
     HostRange::ParseError parsePlainName(QString name);
+    void addPlainName(const QString &name, bool isWildcard);
     HostRange::ParseError parsePattern(const QString &pattern);
 
 private:
+    bool m_withSubdomains = false;
+
     quint32 m_hostId = 0;
 
     QSet<QString> m_names;
