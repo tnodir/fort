@@ -66,14 +66,17 @@ private:
     void processQuery(const DnsClient &client, const QByteArray &data);
     void processAnswer(const DnsRequest &request, const DnsAnswer &answer);
 
-    quint8 checkQuery(const DnsRequest &request) const;
-    bool isLoopQuery(const DnsRequest &request) const;
+    quint8 checkQuery(const DnsRequest &request);
+    bool checkLoopQuery(const DnsRequest &request);
+    void logLoop();
 
     bool writeHostIps(const HostMatch &match, const DnsAddresses &addresses);
 
     void sendRcode(const DnsRequest &request, quint8 rcode);
 
 private:
+    bool m_loopLogged = false;
+
     std::unique_ptr<DnsResolver> m_resolver;
 
     QStringList m_servers;

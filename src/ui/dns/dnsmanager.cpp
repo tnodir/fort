@@ -139,6 +139,7 @@ void DnsManager::start(const QStringList &servers)
     }
 
     m_servers = servers;
+    m_loopLogged = false;
 
     if (!addNrptRule()) {
         qCWarning(LC) << "NRPT rule error";
@@ -269,14 +270,14 @@ void DnsManager::processAnswer(const DnsRequest &request, const DnsAnswer &answe
     m_listener.sendResponse(request.client, answer.response());
 }
 
-quint8 DnsManager::checkQuery(const DnsRequest &request) const
+quint8 DnsManager::checkQuery(const DnsRequest &request)
 {
     const DnsQuery &query = request.query;
 
     if (query.errorRcode() != ARES_RCODE_NOERROR)
         return query.errorRcode();
 
-    if (isLoopQuery(request))
+    if (checkLoopQuery(request))
         return ARES_RCODE_SERVFAIL;
 
     if (matchHost(query.name()).isEmpty()) {
@@ -288,9 +289,25 @@ quint8 DnsManager::checkQuery(const DnsRequest &request) const
 }
 
 // The upstream servers include the listener
-bool DnsManager::isLoopQuery(const DnsRequest &request) const
+bool DnsManager::checkLoopQuery(const DnsRequest &request)
 {
-    return m_resolver->isOwnQuery(request.query);
+    if (m_resolver->isOwnQuery(request.query)) {
+        logLoop();
+        return true;
+    }
+
+    return false;
+}
+
+// Once per the forwarder's start: each query loops
+void DnsManager::logLoop()
+{
+    if (m_loopLogged)
+        return;
+
+    m_loopLogged = true;
+
+    qCWarning(LC) << "Loop: the upstream servers include the forwarder:" << m_servers;
 }
 
 bool DnsManager::writeHostIps(const HostMatch &match, const DnsAddresses &addresses)
