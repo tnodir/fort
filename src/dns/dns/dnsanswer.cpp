@@ -160,6 +160,7 @@ void DnsAnswer::setRecord(const DnsQuery &query, const ares_dns_record *record, 
 {
     readAddresses(record);
 
+    m_rcode = quint8(ares_dns_record_get_rcode(record));
     m_response = forwardResponse(query, record);
 
     if (m_response.isEmpty()) {
@@ -184,6 +185,7 @@ bool DnsAnswer::setData(const DnsQuery &query, const QByteArray &data, int sizeM
 
 void DnsAnswer::setRcode(const DnsQuery &query, quint8 rcode, quint16 flags)
 {
+    m_rcode = rcode;
     m_response = createResponse(query, rcode, flags);
 }
 

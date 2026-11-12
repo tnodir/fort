@@ -14,6 +14,9 @@ class DnsQuery;
 class DnsAnswer
 {
 public:
+    // The response code of the upstream server's answer or of the own one
+    quint8 rcode() const { return m_rcode; }
+
     const QByteArray &response() const { return m_response; }
 
     const DnsAddresses &addresses() const { return m_addresses; }
@@ -39,6 +42,8 @@ private:
     bool readAddress(const ares_dns_rr *rr);
 
 private:
+    quint8 m_rcode = 0;
+
     QByteArray m_response;
 
     DnsAddresses m_addresses;
