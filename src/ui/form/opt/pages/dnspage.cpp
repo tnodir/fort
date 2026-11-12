@@ -5,15 +5,22 @@
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QPushButton>
 #include <QVBoxLayout>
 
+#include <dns/dnsserverstest.h>
 #include <dns/dnsutil.h>
 
 #include <conf/inioptions.h>
+#include <dns/dnsmanager.h>
 #include <dns/dnsprovider.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/plaintextedit.h>
 #include <form/opt/optionscontroller.h>
+#include <fortglobal.h>
+#include <fortsettings.h>
+
+using namespace Fort;
 
 DnsPage::DnsPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
 {
@@ -37,10 +44,13 @@ void DnsPage::onRetranslateUi()
     m_labelServers->setText(tr("Upstream DNS servers:"));
     m_comboServers->setItemText(0, adaptersServersText());
     m_comboServers->setPlaceholderText(tr("Custom"));
+    m_btTest->setText(tr("Test"));
+    m_btTest->setToolTip(tr("Ask each server for \"example.com\" (only with the Service)"));
     m_editServers->setPlaceholderText(adaptersServersText());
     m_editServers->setToolTip(
             tr("A server per line: addresses, e.g. \"1.1.1.1\", or DNS over HTTPS URLs with the "
                "server's address, e.g. \"https://dns.example/dns-query?ip=192.0.2.1\""));
+    updateTestResults();
 }
 
 void DnsPage::setupUi()
@@ -84,11 +94,15 @@ QLayout *DnsPage::setupServersLayout()
     m_labelServers = ControlUtil::createLabel();
 
     setupComboServers();
+    setupTestButton();
     setupEditServers();
+    setupTestResults();
 
     auto layout = new QVBoxLayout();
-    layout->addLayout(ControlUtil::createRowLayout(m_labelServers, m_comboServers));
+    layout->addLayout(ControlUtil::createHLayoutByWidgets(
+            { m_labelServers, /*stretch*/ nullptr, m_comboServers, m_btTest }, /*margin=*/0));
     layout->addWidget(m_editServers);
+    layout->addWidget(m_editTestResults);
 
     return layout;
 }
@@ -104,6 +118,13 @@ void DnsPage::setupComboServers()
     for (const DnsProvider &provider : DnsProvider::readList()) {
         m_comboServers->addItem(provider.title, provider.servers);
     }
+}
+
+void DnsPage::setupTestButton()
+{
+    m_btTest = ControlUtil::createButton(":/icons/play.png", [&] { testServers(); });
+
+    m_btTest->setEnabled(settings()->hasService());
 }
 
 void DnsPage::setupEditServers()
@@ -126,6 +147,60 @@ void DnsPage::setupEditServers()
 
         m_comboServers->setCurrentIndex(m_comboServers->findData(servers));
     });
+}
+
+void DnsPage::setupTestResults()
+{
+    m_editTestResults = new PlainTextEdit();
+    m_editTestResults->setReadOnly(true);
+    m_editTestResults->setLineWrapMode(QPlainTextEdit::NoWrap);
+    m_editTestResults->setFixedHeight(80); // 4 lines
+    m_editTestResults->setVisible(false);
+}
+
+void DnsPage::testServers()
+{
+    delete m_serversTest;
+
+    m_serversTest = dnsManager()->createServersTest(ini().dnsServers(), this);
+
+    connect(m_serversTest, &DnsServersTest::resultReady, this, &DnsPage::updateTestResults);
+
+    m_serversTest->start();
+
+    updateTestResults();
+
+    m_editTestResults->setVisible(true);
+}
+
+void DnsPage::updateTestResults()
+{
+    if (!m_serversTest)
+        return;
+
+    const QStringList lines = m_serversTest->resultLines(&serverResultText, adaptersServersText());
+
+    m_editTestResults->setPlainText(lines.join('\n'));
+}
+
+QString DnsPage::serverResultText(const DnsServerResult &result)
+{
+    const QString timeText = tr("%1 ms").arg(result.msecs);
+
+    switch (result.status) {
+    case DnsServerResult::StatusNone:
+        return tr("Testing...");
+    case DnsServerResult::StatusAnswered:
+        return result.isNoError() ? timeText : DnsUtil::rcodeText(result.rcode) + ", " + timeText;
+    case DnsServerResult::StatusFailed:
+        return tr("Error: %1").arg(result.error);
+    case DnsServerResult::StatusTimeout:
+        return tr("Timeout");
+    case DnsServerResult::StatusInvalid:
+        return tr("Invalid server");
+    default:
+        return {};
+    }
 }
 
 QString DnsPage::adaptersServersText()
