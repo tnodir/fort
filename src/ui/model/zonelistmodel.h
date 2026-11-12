@@ -33,6 +33,9 @@ public:
 
     const ZoneRow &zoneRowAt(int row) const;
 
+    // The Zones of the Hosts types
+    quint32 hostZonesMask() const;
+
     QVariant zoneTypeById(int typeId) const;
     QVariant zoneTypeByCode(const QString &typeCode) const;
     const QVariantList &zoneTypes() const { return m_zoneTypes; }
@@ -61,6 +64,8 @@ private:
     void setupZoneTypes();
     void setupZoneSources();
     void setupZoneSourceNames();
+
+    bool isHostsSource(const QString &sourceCode) const;
 
 private:
     QVariantList m_zoneTypes;

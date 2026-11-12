@@ -99,6 +99,7 @@ SOURCES += \
     form/controls/pushbutton.cpp \
     form/controls/selector/fontselector.cpp \
     form/controls/selector/groupsselector.cpp \
+    form/controls/selector/hostzonesselector.cpp \
     form/controls/selector/maskselector.cpp \
     form/controls/selector/protocolselector.cpp \
     form/controls/selector/ruleselector.cpp \
@@ -446,6 +447,7 @@ HEADERS += \
     form/controls/pushbutton.h \
     form/controls/selector/fontselector.h \
     form/controls/selector/groupsselector.h \
+    form/controls/selector/hostzonesselector.h \
     form/controls/selector/maskselector.h \
     form/controls/selector/protocolselector.h \
     form/controls/selector/ruleselector.h \

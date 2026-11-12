@@ -22,6 +22,8 @@ namespace {
 
 const QLoggingCategory LC("model.zoneList");
 
+inline constexpr char sqlSelectZoneSources[] = "SELECT zone_id, source_code FROM zone;";
+
 // The JSON list's items with their indexes as ids
 template<class Wrapper>
 QVariantList readJsonList(const QString &filePath, const char *title)
@@ -186,6 +188,23 @@ const ZoneRow &ZoneListModel::zoneRowAt(int row) const
     return m_zoneRow;
 }
 
+quint32 ZoneListModel::hostZonesMask() const
+{
+    quint32 zonesMask = 0;
+
+    SqliteStmt stmt;
+    if (!DbQuery(sqliteDb()).sql(sqlSelectZoneSources).prepare(stmt))
+        return 0;
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        if (isHostsSource(stmt.columnText(1))) {
+            zonesMask |= Zone::zoneBit(stmt.columnInt(0));
+        }
+    }
+
+    return zonesMask;
+}
+
 QVariant ZoneListModel::zoneTypeById(int typeId) const
 {
     return zoneTypes().value(typeId);
@@ -289,4 +308,12 @@ QString ZoneListModel::zoneSourceTitleById(const int sourceId)
     }
 
     return {};
+}
+
+bool ZoneListModel::isHostsSource(const QString &sourceCode) const
+{
+    const ZoneSourceWrapper zoneSource(zoneSourceByCode(sourceCode));
+    const ZoneTypeWrapper zoneType(zoneTypeByCode(zoneSource.zoneType()));
+
+    return zoneType.isHosts();
 }

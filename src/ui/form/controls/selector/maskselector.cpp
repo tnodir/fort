@@ -102,6 +102,12 @@ void MaskSelector::onIdRemoved(int id)
     retranslateMaskText();
 }
 
+void MaskSelector::refreshMenu()
+{
+    clearMenu();
+    updateMenuEnabled();
+}
+
 void MaskSelector::setupUi(WindowCode listWindowCode, const QString &iconPath)
 {
     // Menu
@@ -126,15 +132,10 @@ void MaskSelector::setupUi(WindowCode listWindowCode, const QString &iconPath)
 
 void MaskSelector::setupListModel()
 {
-    const auto refreshMenu = [&] {
-        clearMenu();
-        updateMenuEnabled();
-    };
-
     refreshMenu();
 
-    connect(m_listModel, &QAbstractItemModel::modelReset, this, refreshMenu);
-    connect(m_listModel, &QAbstractItemModel::dataChanged, this, refreshMenu);
+    connect(m_listModel, &QAbstractItemModel::modelReset, this, &MaskSelector::refreshMenu);
+    connect(m_listModel, &QAbstractItemModel::dataChanged, this, &MaskSelector::refreshMenu);
 }
 
 void MaskSelector::resetMenu()
@@ -152,9 +153,14 @@ void MaskSelector::clearMenu()
 
 void MaskSelector::createMenu()
 {
+    const quint32 listedMask = this->listedMask();
+
     const int count = qMin(m_listModel->rowCount(), m_maxCount);
     for (int row = 0; row < count; ++row) {
         const auto item = itemAt(row);
+
+        if ((listedMask & getIdMask(item.id)) == 0)
+            continue;
 
         auto cb = new QCheckBox(item.text, m_menu);
         cb->setTristate(isTristate());
@@ -190,7 +196,7 @@ void MaskSelector::updateMenu()
 
 void MaskSelector::updateMenuEnabled()
 {
-    const bool isItemExist = (m_listModel->rowCount() != 0);
+    const bool isItemExist = (m_listModel->rowCount() != 0 && listedMask() != 0);
 
     m_btMenu->setEnabled(isItemExist);
 }
