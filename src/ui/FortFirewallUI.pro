@@ -63,6 +63,7 @@ SOURCES += \
     control/controlmanager.cpp \
     control/controlworker.cpp \
     dns/dnsmanager.cpp \
+    dns/hostzonesdb.cpp \
     driver/drivercommon.cpp \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
@@ -406,6 +407,7 @@ HEADERS += \
     control/controlmanager.h \
     control/controlworker.h \
     dns/dnsmanager.h \
+    dns/hostzonesdb.h \
     driver/drivercommon.h \
     driver/drivermanager.h \
     driver/driverworker.h \
@@ -721,6 +723,7 @@ RESOURCES += \
 OTHER_FILES += \
     appinfo/migrations/*.sql \
     conf/migrations/*.sql \
+    dns/migrations/*.sql \
     stat/migrations/block/*.sql \
     stat/migrations/conn/*.sql \
     stat/migrations/traf/*.sql
@@ -728,6 +731,7 @@ OTHER_FILES += \
 RESOURCES += \
     appinfo/appinfo_migrations.qrc \
     conf/conf_migrations.qrc \
+    dns/dns_migrations.qrc \
     stat/stat_migrations.qrc
 
 # Zone

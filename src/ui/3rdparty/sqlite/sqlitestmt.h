@@ -42,6 +42,7 @@ public:
     bool bindDouble(int index, double number);
     bool bindBool(int index, bool v);
     bool bindText(int index, const QString &text);
+    bool bindTextView(int index, const QByteArrayView &textUtf8);
     bool bindDateTime(int index, const QDateTime &dateTime);
     bool bindBlob(int index, const QByteArray &data);
     bool bindBlobView(int index, const QByteArrayView &data);

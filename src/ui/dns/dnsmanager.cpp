@@ -11,6 +11,7 @@
 #include <conf/inioptions.h>
 #include <driver/drivermanager.h>
 #include <fortglobal.h>
+#include <fortsettings.h>
 #include <task/taskinfozonedownloader.h>
 #include <task/taskmanager.h>
 #include <util/conf/confbuffer.h>
@@ -93,6 +94,8 @@ void DnsManager::setupZones()
     auto confZoneManager = Fort::dependency<ConfZoneManager>();
     auto taskManager = Fort::dependency<TaskManager>();
 
+    m_hostZonesDb.setFilePath(settings()->hostZonesFilePath());
+
     connect(confZoneManager, &ConfZoneManager::zoneUpdated, &m_zonesTimer,
             &TriggerTimer::startTrigger);
     // The removed Zone's id can be reused: its names aren't resolved at once
@@ -152,7 +155,10 @@ void DnsManager::stop()
 
 void DnsManager::loadHosts()
 {
-    loadZonesMatcher();
+    if (m_hostZonesDb.open()) {
+        syncZones();
+    }
+
     m_hostFiltersMatcher = confManager()->hostRefs().hostMatcher();
 
     flushResolverCache();
@@ -160,27 +166,21 @@ void DnsManager::loadHosts()
 
 void DnsManager::unloadHosts()
 {
-    m_zonesMatcher = {};
+    m_hostZonesDb.close();
     m_hostFiltersMatcher = {};
 }
 
 void DnsManager::loadZones()
 {
-    if (isStarted() && loadZonesMatcher()) {
+    if (m_hostZonesDb.isOpened() && syncZones()) {
         flushResolverCache();
     }
 }
 
-// Returns whether the Zones' names changed
-bool DnsManager::loadZonesMatcher()
+// Returns whether the Zones' names to match changed
+bool DnsManager::syncZones()
 {
-    const HostMatcher zonesMatcher = taskManager()->taskInfoZoneDownloader()->loadHostZones();
-    if (zonesMatcher == m_zonesMatcher)
-        return false;
-
-    m_zonesMatcher = zonesMatcher;
-
-    return true;
+    return taskManager()->taskInfoZoneDownloader()->syncHostZones(m_hostZonesDb);
 }
 
 void DnsManager::loadHostRefs()
@@ -195,7 +195,7 @@ void DnsManager::loadHostRefs()
 
 void DnsManager::removeZone(quint8 zoneId)
 {
-    if (m_zonesMatcher.removeZone(zoneId)) {
+    if (m_hostZonesDb.isOpened() && m_hostZonesDb.removeZone(zoneId)) {
         flushResolverCache();
     }
 }
@@ -210,8 +210,8 @@ void DnsManager::flushResolverCache()
 
 HostMatch DnsManager::matchHost(QStringView name) const
 {
-    HostMatch match = m_zonesMatcher.match(name);
-    match.add(m_hostFiltersMatcher.match(name));
+    HostMatch match = m_hostFiltersMatcher.match(name);
+    match.zonesMask = m_hostZonesDb.match(name);
 
     return match;
 }

@@ -64,6 +64,11 @@ QString FortSettings::cacheFilePath() const
     return noCache() ? ":memory:" : cachePath() + "appinfo.db";
 }
 
+QString FortSettings::hostZonesFilePath() const
+{
+    return noCache() ? ":memory:" : cachePath() + "hosts.db";
+}
+
 QString FortSettings::passwordUnlockedTillText() const
 {
     if (m_passwordUnlockTimer.isActive()) {

@@ -5,6 +5,7 @@
 
 #include <googletest.h>
 
+#include <dns/hostzonesdb.h>
 #include <task/taskzonedownloader.h>
 #include <util/conf/confbuffer.h>
 #include <util/fileutil.h>
@@ -31,6 +32,8 @@ protected:
 
 void NetUtilTest::SetUp()
 {
+    Q_INIT_RESOURCE(dns_migrations);
+
     NetUtil::windowsSockInit();
 }
 
@@ -486,52 +489,6 @@ TEST_F(NetUtilTest, hostPattern)
     }
 }
 
-TEST_F(NetUtilTest, hostMatcher)
-{
-    HostMatcher hostMatcher;
-    ASSERT_TRUE(hostMatcher.isEmpty());
-
-    HostRange hostRange;
-
-    ASSERT_TRUE(hostRange.fromText("Example.COM.\n*.Sub.Example.com\nlocalhost"));
-    hostMatcher.addZone(1, hostRange);
-
-    ASSERT_TRUE(hostRange.fromText("example.com\n*.example.com"));
-    hostMatcher.addZone(3, hostRange);
-
-    ASSERT_FALSE(hostMatcher.isEmpty());
-
-    // Exact names
-    ASSERT_EQ(hostMatcher.match(u"example.com").zonesMask, 0b101);
-    ASSERT_EQ(hostMatcher.match(u"EXAMPLE.com.").zonesMask, 0b101);
-    ASSERT_EQ(hostMatcher.match(u"localhost").zonesMask, 0b001);
-    ASSERT_EQ(hostMatcher.match(u"example.co").zonesMask, 0);
-    ASSERT_EQ(hostMatcher.match(u"xexample.com").zonesMask, 0);
-
-    // Wildcards: the subdomains of any depth, not the domain itself
-    ASSERT_EQ(hostMatcher.match(u"www.example.com").zonesMask, 0b100);
-    ASSERT_EQ(hostMatcher.match(u"sub.example.com").zonesMask, 0b100);
-    ASSERT_EQ(hostMatcher.match(u"a.sub.example.com").zonesMask, 0b101);
-    ASSERT_EQ(hostMatcher.match(u"b.a.Sub.example.com.").zonesMask, 0b101);
-    ASSERT_EQ(hostMatcher.match(u"asub.example.org").zonesMask, 0);
-
-    // The name and its subdomains
-    ASSERT_TRUE(hostRange.fromText(".example.net"));
-    hostMatcher.addZone(2, hostRange);
-
-    ASSERT_EQ(hostMatcher.match(u"example.net").zonesMask, 0b010);
-    ASSERT_EQ(hostMatcher.match(u"a.b.example.net").zonesMask, 0b010);
-    ASSERT_EQ(hostMatcher.match(u"xexample.net").zonesMask, 0);
-
-    // The masks
-    ASSERT_TRUE(hostRange.fromText("ads*.example.net\n*telemetry*"));
-    hostMatcher.addZone(4, hostRange);
-
-    ASSERT_EQ(hostMatcher.match(u"Ads1.example.net.").zonesMask, 0b1010);
-    ASSERT_EQ(hostMatcher.match(u"a.telemetry.example.com").zonesMask, 0b1100);
-    ASSERT_EQ(hostMatcher.match(u"a.ads1.example.net").zonesMask, 0b0010);
-}
-
 TEST_F(NetUtilTest, hostMatcherHostFilters)
 {
     HostMatcher hostMatcher;
@@ -539,66 +496,135 @@ TEST_F(NetUtilTest, hostMatcherHostFilters)
     HostRange hostRange;
 
     ASSERT_TRUE(hostRange.fromText("example.com\n*.example.com"));
-    hostMatcher.addZone(2, hostRange);
     hostMatcher.addHostFilter(7, hostRange);
 
     ASSERT_TRUE(hostRange.fromText("www.example.com"));
     hostMatcher.addHostFilter(9, hostRange);
 
-    ASSERT_TRUE(hostRange.fromText("*.example.com\nexample.org"));
+    ASSERT_TRUE(hostRange.fromText("*.example.com\nexample.org\nads*.example.net"));
     hostMatcher.addHostFilter(7, hostRange);
 
     ASSERT_TRUE(hostMatcher.match(u"example.net").isEmpty());
 
-    {
-        const HostMatch match = hostMatcher.match(u"example.com");
-        ASSERT_EQ(match.zonesMask, 0b10);
-        ASSERT_EQ(match.hostIds, QVector<quint32>({ 7 }));
-    }
+    ASSERT_EQ(hostMatcher.match(u"example.com").hostIds, QVector<quint32>({ 7 }));
+    ASSERT_EQ(hostMatcher.match(u"example.org").hostIds, QVector<quint32>({ 7 }));
+    ASSERT_EQ(hostMatcher.match(u"Ads1.example.net.").hostIds, QVector<quint32>({ 7 }));
 
     // The host() filter's ids aren't repeated
     {
         const HostMatch match = hostMatcher.match(u"www.Example.com.");
-        ASSERT_EQ(match.zonesMask, 0b10);
-        ASSERT_EQ(match.hostIds, QVector<quint32>({ 9, 7 }));
-    }
-
-    // Only the host() filter
-    {
-        const HostMatch match = hostMatcher.match(u"example.org");
         ASSERT_FALSE(match.isEmpty());
         ASSERT_EQ(match.zonesMask, 0);
-        ASSERT_EQ(match.hostIds, QVector<quint32>({ 7 }));
+        ASSERT_EQ(match.hostIds, QVector<quint32>({ 9, 7 }));
     }
 }
 
-TEST_F(NetUtilTest, hostMatcherRemoveZone)
+TEST_F(NetUtilTest, hostZonesDb)
 {
+    HostZonesDb db(":memory:");
+    ASSERT_TRUE(db.open());
+    ASSERT_EQ(db.zonesMask(), 0);
+
     HostRange hostRange;
 
-    HostMatcher zone1Matcher;
-    ASSERT_TRUE(hostRange.fromText("example.com\n*.example.org"));
-    zone1Matcher.addZone(1, hostRange);
+    ASSERT_TRUE(hostRange.fromText("Example.COM.\n*.Sub.Example.com\nlocalhost"));
+    ASSERT_TRUE(db.setZone(1, "c1", hostRange));
 
-    HostMatcher hostMatcher = zone1Matcher;
-    ASSERT_TRUE(hostMatcher == zone1Matcher);
+    ASSERT_TRUE(hostRange.fromText("example.com\n*.example.com"));
+    ASSERT_TRUE(db.setZone(3, "c3", hostRange));
+
+    ASSERT_EQ(db.zonesMask(), 0b101);
+
+    // Only the enabled Zones are matched
+    ASSERT_EQ(db.match(u"example.com"), 0);
+
+    db.setEnabledMask(0b001);
+    ASSERT_EQ(db.match(u"example.com"), 0b001);
+
+    db.setEnabledMask(0b1111);
+
+    // Exact names
+    ASSERT_EQ(db.match(u"example.com"), 0b101);
+    ASSERT_EQ(db.match(u"EXAMPLE.com."), 0b101);
+    ASSERT_EQ(db.match(u"localhost"), 0b001);
+    ASSERT_EQ(db.match(u"example.co"), 0);
+    ASSERT_EQ(db.match(u"xexample.com"), 0);
+
+    // Wildcards: the subdomains of any depth, not the domain itself
+    ASSERT_EQ(db.match(u"www.example.com"), 0b100);
+    ASSERT_EQ(db.match(u"sub.example.com"), 0b100);
+    ASSERT_EQ(db.match(u"a.sub.example.com"), 0b101);
+    ASSERT_EQ(db.match(u"b.a.Sub.example.com."), 0b101);
+    ASSERT_EQ(db.match(u"asub.example.org"), 0);
+
+    // The name and its subdomains
+    ASSERT_TRUE(hostRange.fromText(".example.net"));
+    ASSERT_TRUE(db.setZone(2, "c2", hostRange));
+
+    ASSERT_EQ(db.match(u"example.net"), 0b010);
+    ASSERT_EQ(db.match(u"a.b.example.net"), 0b010);
+    ASSERT_EQ(db.match(u"xexample.net"), 0);
+
+    // The masks
+    ASSERT_TRUE(hostRange.fromText("ads*.example.net\n*telemetry*"));
+    ASSERT_TRUE(db.setZone(4, "c4", hostRange));
+
+    ASSERT_EQ(db.match(u"Ads1.example.net."), 0b1010);
+    ASSERT_EQ(db.match(u"a.telemetry.example.com"), 0b1100);
+    ASSERT_EQ(db.match(u"a.ads1.example.net"), 0b0010);
+}
+
+TEST_F(NetUtilTest, hostZonesDbUpdateZones)
+{
+    HostZonesDb db(":memory:");
+    ASSERT_TRUE(db.open());
+    db.setEnabledMask(0b111);
+
+    HostRange hostRange;
+
+    ASSERT_TRUE(hostRange.fromText("example.com\n*.example.org"));
+    ASSERT_TRUE(db.setZone(1, "c1", hostRange));
 
     ASSERT_TRUE(hostRange.fromText("example.com\n*.example.net\nads*.example.net"));
-    hostMatcher.addZone(2, hostRange);
-    ASSERT_FALSE(hostMatcher == zone1Matcher);
-    ASSERT_EQ(hostMatcher.match(u"ads1.example.net").zonesMask, 0b10);
+    ASSERT_TRUE(db.setZone(2, "c2", hostRange));
 
-    ASSERT_FALSE(hostMatcher.removeZone(3));
+    ASSERT_TRUE(db.isZoneActual(2, "c2", false));
+    ASSERT_FALSE(db.isZoneActual(2, "c2", true));
+    ASSERT_FALSE(db.isZoneActual(2, "c1", false));
+    ASSERT_FALSE(db.isZoneActual(3, "c2", false));
+
+    ASSERT_EQ(db.match(u"example.com"), 0b11);
+    ASSERT_EQ(db.match(u"ads1.example.net"), 0b10);
+
+    // The Zone's names are replaced
+    hostRange.setWithSubdomains(true);
+    ASSERT_TRUE(hostRange.fromText("example.net\ntrack*.example.net"));
+    ASSERT_TRUE(db.setZone(2, "c2a", hostRange));
+
+    ASSERT_TRUE(db.isZoneActual(2, "c2a", true));
+    ASSERT_EQ(db.match(u"example.com"), 0b01);
+    ASSERT_EQ(db.match(u"example.net"), 0b10);
+    ASSERT_EQ(db.match(u"www.example.net"), 0b10);
+    ASSERT_EQ(db.match(u"ads1.example.net"), 0b10);
+    ASSERT_EQ(db.match(u"track1.example.net"), 0b10);
+
+    ASSERT_FALSE(db.removeZone(3));
 
     // The names of the removed Zone only are removed
-    ASSERT_TRUE(hostMatcher.removeZone(2));
-    ASSERT_TRUE(hostMatcher == zone1Matcher);
-    ASSERT_EQ(hostMatcher.match(u"example.com").zonesMask, 0b01);
-    ASSERT_TRUE(hostMatcher.match(u"www.example.net").isEmpty());
-    ASSERT_TRUE(hostMatcher.match(u"ads1.example.net").isEmpty());
+    ASSERT_TRUE(db.removeZone(2));
+    ASSERT_EQ(db.zonesMask(), 0b01);
+    ASSERT_FALSE(db.isZoneActual(2, "c2a", true));
+    ASSERT_EQ(db.match(u"example.com"), 0b01);
+    ASSERT_EQ(db.match(u"www.example.org"), 0b01);
+    ASSERT_EQ(db.match(u"www.example.net"), 0);
+    ASSERT_EQ(db.match(u"track1.example.net"), 0);
 
-    ASSERT_TRUE(hostMatcher.removeZone(1));
-    ASSERT_TRUE(hostMatcher.isEmpty());
+    // The other Zones are removed
+    ASSERT_FALSE(db.retainZones(0b101));
+
+    ASSERT_TRUE(db.retainZones(0b100));
+    ASSERT_EQ(db.zonesMask(), 0);
+    ASSERT_EQ(db.match(u"example.com"), 0);
 }
 
 TEST_F(NetUtilTest, taskTasix)
@@ -693,18 +719,20 @@ TEST_F(NetUtilTest, taskHostsFile)
     HostRange hostRange;
     ASSERT_TRUE(hosts.loadHosts(hostRange));
 
-    HostMatcher hostMatcher;
-    hostMatcher.addZone(hosts.zoneId(), hostRange);
+    HostZonesDb db(":memory:");
+    ASSERT_TRUE(db.open());
+    ASSERT_TRUE(db.setZone(hosts.zoneId(), hosts.binChecksum(), hostRange));
+    db.setEnabledMask(0b100);
 
     // The names with their subdomains
-    ASSERT_EQ(hostMatcher.match(u"ads.example.com").zonesMask, 0b100);
-    ASSERT_EQ(hostMatcher.match(u"www.ads.example.com").zonesMask, 0b100);
-    ASSERT_EQ(hostMatcher.match(u"local.example.org").zonesMask, 0b100);
-    ASSERT_EQ(hostMatcher.match(u"0.0.0.0.example.net").zonesMask, 0b100);
-    ASSERT_EQ(hostMatcher.match(u"example.com").zonesMask, 0);
+    ASSERT_EQ(db.match(u"ads.example.com"), 0b100);
+    ASSERT_EQ(db.match(u"www.ads.example.com"), 0b100);
+    ASSERT_EQ(db.match(u"local.example.org"), 0b100);
+    ASSERT_EQ(db.match(u"0.0.0.0.example.net"), 0b100);
+    ASSERT_EQ(db.match(u"example.com"), 0);
 
     // Not the hosts file's own names
-    ASSERT_EQ(hostMatcher.match(u"localhost").zonesMask, 0);
-    ASSERT_EQ(hostMatcher.match(u"printer.local").zonesMask, 0);
-    ASSERT_EQ(hostMatcher.match(u"0.0.0.0").zonesMask, 0);
+    ASSERT_EQ(db.match(u"localhost"), 0);
+    ASSERT_EQ(db.match(u"printer.local"), 0);
+    ASSERT_EQ(db.match(u"0.0.0.0"), 0);
 }

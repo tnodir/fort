@@ -71,6 +71,7 @@ public:
 
     QString cachePath() const { return m_cachePath; }
     QString cacheFilePath() const;
+    QString hostZonesFilePath() const;
 
     QString userPath() const { return m_userPath; }
 

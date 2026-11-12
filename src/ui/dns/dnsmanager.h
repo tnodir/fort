@@ -10,6 +10,8 @@
 #include <util/net/hostmatcher.h>
 #include <util/triggertimer.h>
 
+#include "hostzonesdb.h"
+
 // The DNS forwarder of the service: resolves only the names of the Hosts Zones and host() filters,
 // adding their addresses to the Zones and host() filters in the driver before answering
 class DnsManager : public QObject, public IocService
@@ -43,7 +45,7 @@ private:
     void unloadHosts();
 
     void loadZones();
-    bool loadZonesMatcher();
+    bool syncZones();
     void loadHostRefs();
     void removeZone(quint8 zoneId);
 
@@ -65,7 +67,7 @@ private:
 private:
     QString m_servers;
 
-    HostMatcher m_zonesMatcher;
+    HostZonesDb m_hostZonesDb;
     HostMatcher m_hostFiltersMatcher;
 
     DnsListener m_listener;

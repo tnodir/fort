@@ -5,6 +5,7 @@
 
 #include <conf/confzonemanager.h>
 #include <conf/zone.h>
+#include <dns/hostzonesdb.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
 #include <model/zonelistmodel.h>
@@ -74,9 +75,12 @@ ZonesData TaskInfoZoneDownloader::loadZonesData() const
     return zones;
 }
 
-HostMatcher TaskInfoZoneDownloader::loadHostZones() const
+bool TaskInfoZoneDownloader::syncHostZones(HostZonesDb &db) const
 {
-    HostMatcher hostMatcher;
+    bool changed = false;
+
+    quint32 hostsMask = 0;
+    quint32 enabledMask = 0;
 
     TaskZoneDownloader worker;
     HostRange hostRange;
@@ -85,15 +89,30 @@ HostMatcher TaskInfoZoneDownloader::loadHostZones() const
     for (int zoneIndex = 0; zoneIndex < rowCount; ++zoneIndex) {
         setupTaskWorkerByZone(&worker, zoneIndex);
 
-        if (!(worker.isHosts() && worker.zoneEnabled()))
+        if (!worker.isHosts())
             continue;
 
-        if (worker.loadHosts(hostRange)) {
-            hostMatcher.addZone(worker.zoneId(), hostRange);
+        insertZoneId(hostsMask, worker.zoneId());
+
+        if (worker.zoneEnabled()) {
+            insertZoneId(enabledMask, worker.zoneId());
+        }
+
+        if (syncHostZone(db, worker, hostRange)) {
+            changed = true;
         }
     }
 
-    return hostMatcher;
+    if (db.retainZones(hostsMask)) {
+        changed = true;
+    }
+
+    if (db.enabledMask() != enabledMask) {
+        db.setEnabledMask(enabledMask);
+        changed = true;
+    }
+
+    return changed;
 }
 
 bool TaskInfoZoneDownloader::saveZoneAsText(const QString &filePath, int zoneIndex) const
@@ -220,6 +239,21 @@ void TaskInfoZoneDownloader::addSubResult(TaskZoneDownloader *worker, bool succe
     }
 
     addZoneData(m_zones, *worker);
+}
+
+bool TaskInfoZoneDownloader::syncHostZone(
+        HostZonesDb &db, TaskZoneDownloader &worker, HostRange &hostRange)
+{
+    const int zoneId = worker.zoneId();
+
+    if (db.isZoneActual(zoneId, worker.binChecksum(), worker.hostSubdomains()))
+        return false;
+
+    if (!worker.loadHosts(hostRange)) {
+        return db.removeZone(zoneId);
+    }
+
+    return db.setZone(zoneId, worker.binChecksum(), hostRange);
 }
 
 void TaskInfoZoneDownloader::addZoneData(ZonesData &zones, const TaskZoneDownloader &worker)

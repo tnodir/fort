@@ -151,6 +151,14 @@ bool SqliteStmt::bindText(int index, const QString &text)
             sqlite3_bind_text(m_stmt, index, textUtf8.data(), bytesCount, SQLITE_STATIC));
 }
 
+bool SqliteStmt::bindTextView(int index, const QByteArrayView &textUtf8)
+{
+    const int bytesCount = textUtf8.size();
+
+    return checkBindResult(
+            sqlite3_bind_text(m_stmt, index, textUtf8.constData(), bytesCount, SQLITE_STATIC));
+}
+
 bool SqliteStmt::bindDateTime(int index, const QDateTime &dateTime)
 {
     const auto msecs = dateTime.isNull() ? 0 : dateTime.toMSecsSinceEpoch();
