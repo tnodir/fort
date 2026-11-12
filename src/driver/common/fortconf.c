@@ -912,7 +912,7 @@ inline static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_equal(
 static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_values(
         PCFORT_CONF_RULE_FILTER rule_filter, PFORT_CONF_META_CONN conn, const int filter_type)
 {
-    if (filter_type < FORT_RULE_FILTER_TYPE_ADDRESS || filter_type > FORT_RULE_FILTER_TYPE_PORT_UDP)
+    if (filter_type < FORT_RULE_FILTER_TYPE_ADDRESS || filter_type >= FORT_RULE_FILTER_TYPE_LIST_OR)
         return FORT_CONN_FILTER_RESULT_FALSE;
 
     FORT_CONN_FILTER_RESULT filter_res =
