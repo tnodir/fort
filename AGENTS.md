@@ -43,7 +43,7 @@ With an EWDK instead of an installed WDK, set up the environment non-interactive
 
 `fortdrv.vcxproj` compiles **only `fortdrv_amalg.c`** (an amalgamation that `#include`s every driver .c). A new driver source file must be added there *and* to `FortFirewallDriver.pro`. In the amalgamation `FORT_API` is `static` (`driver/common/common.h`), so a function called from another driver .c needs `FORT_API` and a prototype in its header; the user-mode build below compiles each .c separately (`FORT_API` = `extern`) and catches a missing one.
 
-`src/driver/FortFirewallDriver.pro` builds the driver code as a **user-mode** console app (`driver/test/main.c` plus the `wdm/um_*.c` shims that emulate the kernel APIs) — that is how driver logic is exercised without loading a real driver.
+`src/driver/FortFirewallDriver.pro` builds the driver code as a **user-mode** console app (`driver/test/main.c`, which `#include`s the tests' `driver/test/tst_*.c`, plus the `wdm/um_*.c` shims that emulate the kernel APIs) — that is how driver logic is exercised without loading a real driver.
 
 The driver's errors in the System event log (`TRACE()`, `forttrace.c`, the event codes of `driver/evt/fortevt.mc` and their regeneration, `TRACE` in `driver/common/`, reading a user's events): read `docs/agents/driver.md` before changing or debugging them.
 
