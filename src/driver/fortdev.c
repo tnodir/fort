@@ -8,6 +8,7 @@
 
 #include "fortcnf_conf.h"
 #include "fortcnf_group.h"
+#include "fortcnf_host.h"
 #include "fortcnf_rule.h"
 #include "fortcnf_zone.h"
 #include "fortcout.h"
@@ -296,6 +297,9 @@ static NTSTATUS fort_device_control_setzones(PFORT_DEVICE_CONTROL_ARG dca)
 
     fort_conf_zones_set(&fort_device()->conf, conf_zones);
 
+    /* The removed Zone's id can be reused */
+    fort_host_ips_zones_keep(&fort_device()->host_ips, zones->mask);
+
     return fort_device_control_conf_changed();
 }
 
@@ -306,6 +310,17 @@ static NTSTATUS fort_device_control_setzoneflag(PFORT_DEVICE_CONTROL_ARG dca)
     fort_conf_zone_flag_set(&fort_device()->conf, zone_flag);
 
     return fort_device_control_conf_changed();
+}
+
+static NTSTATUS fort_device_control_addhostips(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    PCFORT_CONF_HOST_IPS host_ips = dca->buffer;
+    const ULONG len = dca->in_len;
+
+    if (!fort_conf_host_ips_valid(host_ips, len))
+        return STATUS_UNSUCCESSFUL;
+
+    return fort_host_ips_add(&fort_device()->host_ips, host_ips);
 }
 
 static NTSTATUS fort_device_control_setrules(PFORT_DEVICE_CONTROL_ARG dca)
@@ -513,6 +528,7 @@ static const FORT_DEVICE_CONTROL_PROCESS fortDeviceControlProcess_list[] = {
     [FORT_IOCTL_INDEX_REAUTHPENDING] = { 0, &fort_device_control_reauthpending },
     [FORT_IOCTL_INDEX_ALLOWPENDING] = { 0, &fort_device_control_allowpending },
     [FORT_IOCTL_INDEX_ALLOWPROC] = { sizeof(FORT_PROC_ALLOW), &fort_device_control_allowproc },
+    [FORT_IOCTL_INDEX_ADDHOSTIPS] = { 0, &fort_device_control_addhostips },
 };
 
 static_assert(FORT_ARRAY_SIZE(fortDeviceControlProcess_list) == FORT_IOCTL_INDEX_COUNT,
@@ -654,6 +670,7 @@ FORT_API NTSTATUS fort_device_load(PVOID device_param)
             &fort_device()->worker, FORT_WORKER_PENDING, &fort_device_block_unlogged_pending);
 
     fort_device_conf_open(&fort_device()->conf);
+    fort_host_ips_open(&fort_device()->host_ips);
     fort_buffer_open(&fort_device()->buffer);
     fort_stat_open(&fort_device()->stat);
     fort_pending_open(&fort_device()->pending);
@@ -728,6 +745,8 @@ FORT_API void fort_device_unload(void)
     if (ps_tree_closed) {
         fort_psname_close(&fort_device()->ps_names);
     }
+
+    fort_host_ips_close(&fort_device()->host_ips);
 
     /* Stop stat & buffer controllers */
     fort_stat_close(&fort_device()->stat);

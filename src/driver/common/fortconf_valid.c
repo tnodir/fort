@@ -426,3 +426,28 @@ FORT_API BOOL fort_conf_zones_valid(PCFORT_CONF_ZONES zones, UINT32 len)
 
     return TRUE;
 }
+
+/* The id 0 is of the Zones' IPs */
+static BOOL fort_conf_host_ids_valid(const UINT32 *host_ids, UINT32 host_n)
+{
+    for (UINT32 i = 0; i < host_n; ++i) {
+        if (host_ids[i] == 0)
+            return FALSE;
+    }
+
+    return TRUE;
+}
+
+FORT_API BOOL fort_conf_host_ips_valid(PCFORT_CONF_HOST_IPS host_ips, UINT32 len)
+{
+    if (len < FORT_CONF_HOST_IPS_DATA_OFF)
+        return FALSE;
+
+    if (host_ips->zones_mask == 0 && host_ips->host_n == 0)
+        return FALSE;
+
+    if (len != FORT_CONF_HOST_IPS_SIZE(host_ips->host_n, host_ips->ip4_n, host_ips->ip6_n))
+        return FALSE;
+
+    return fort_conf_host_ids_valid((const UINT32 *) host_ips->data, host_ips->host_n);
+}

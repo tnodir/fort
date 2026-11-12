@@ -27,6 +27,7 @@
 #include "fortcnf.c"
 #include "fortcnf_conf.c"
 #include "fortcnf_group.c"
+#include "fortcnf_host.c"
 #include "fortcnf_rule.c"
 #include "fortcnf_zone.c"
 #include "fortdbg.c"

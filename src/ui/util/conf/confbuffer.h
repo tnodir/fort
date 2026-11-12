@@ -15,6 +15,8 @@ class AddressGroup;
 class EnvManager;
 class RuleFilter;
 
+struct HostMatch;
+
 class ConfBuffer : public QObject
 {
     Q_OBJECT
@@ -48,6 +50,8 @@ public slots:
     void writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
             const QList<QByteArray> &zonesData);
     void writeZoneFlag(int zoneId, bool enabled);
+    void writeHostIps(const HostMatch &match, quint32 ttl, const ip4_arr_t &ip4Array,
+            const ip6_arr_t &ip6Array);
 
     bool loadZone(IpRange &ipRange);
 

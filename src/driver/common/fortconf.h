@@ -309,6 +309,21 @@ typedef struct fort_conf_zone_flag
 
 typedef const FORT_CONF_ZONE_FLAG *PCFORT_CONF_ZONE_FLAG;
 
+/* The IPs added to the Zones and host() filters at runtime, e.g. of the hosts' DNS answers */
+typedef struct fort_conf_host_ips
+{
+    UINT16 host_n;
+    UINT16 ip4_n;
+    UINT16 ip6_n;
+
+    UINT32 zones_mask;
+    UINT32 ttl; /* seconds */
+
+    char data[4]; /* the host() filters' ids, then the IPv4 addresses, then the IPv6 ones */
+} FORT_CONF_HOST_IPS, *PFORT_CONF_HOST_IPS;
+
+typedef const FORT_CONF_HOST_IPS *PCFORT_CONF_HOST_IPS;
+
 typedef struct fort_conf_rules_rt
 {
     UINT16 max_rule_id;
@@ -644,13 +659,14 @@ typedef struct fort_conf_zones_conn_filtered_opt
     FORT_CONF_ZONES_CONN_FILTERED_RESULT reject;
 } FORT_CONF_ZONES_CONN_FILTERED_OPT, *PFORT_CONF_ZONES_CONN_FILTERED_OPT;
 
-#define FORT_CONF_DATA_OFF       offsetof(FORT_CONF, data)
-#define FORT_CONF_IO_CONF_OFF    offsetof(FORT_CONF_IO, conf)
-#define FORT_CONF_PROTO_LIST_OFF offsetof(FORT_CONF_PROTO_LIST, proto)
-#define FORT_CONF_PORT_LIST_OFF  offsetof(FORT_CONF_PORT_LIST, port)
-#define FORT_CONF_ADDR_LIST_OFF  offsetof(FORT_CONF_ADDR_LIST, ip)
-#define FORT_CONF_ADDR_GROUP_OFF offsetof(FORT_CONF_ADDR_GROUP, data)
-#define FORT_CONF_ZONES_DATA_OFF offsetof(FORT_CONF_ZONES, data)
+#define FORT_CONF_DATA_OFF          offsetof(FORT_CONF, data)
+#define FORT_CONF_IO_CONF_OFF       offsetof(FORT_CONF_IO, conf)
+#define FORT_CONF_PROTO_LIST_OFF    offsetof(FORT_CONF_PROTO_LIST, proto)
+#define FORT_CONF_PORT_LIST_OFF     offsetof(FORT_CONF_PORT_LIST, port)
+#define FORT_CONF_ADDR_LIST_OFF     offsetof(FORT_CONF_ADDR_LIST, ip)
+#define FORT_CONF_ADDR_GROUP_OFF    offsetof(FORT_CONF_ADDR_GROUP, data)
+#define FORT_CONF_ZONES_DATA_OFF    offsetof(FORT_CONF_ZONES, data)
+#define FORT_CONF_HOST_IPS_DATA_OFF offsetof(FORT_CONF_HOST_IPS, data)
 
 #define FORT_CONF_PROTO_LIST_SIZE(proto_n, pair_n)                                                 \
     (FORT_CONF_PROTO_LIST_OFF + FORT_CONF_PROTO_ARR_SIZE(proto_n)                                  \
@@ -667,6 +683,12 @@ typedef struct fort_conf_zones_conn_filtered_opt
 
 #define FORT_CONF_ADDR_LIST_SIZE(ip4_n, pair4_n, ip6_n, pair6_n)                                   \
     (FORT_CONF_ADDR4_LIST_SIZE(ip4_n, pair4_n) + FORT_CONF_ADDR6_LIST_SIZE(ip6_n, pair6_n))
+
+#define FORT_CONF_HOST_IDS_SIZE(n) ((n) * sizeof(UINT32))
+
+#define FORT_CONF_HOST_IPS_SIZE(host_n, ip4_n, ip6_n)                                              \
+    (FORT_CONF_HOST_IPS_DATA_OFF + FORT_CONF_HOST_IDS_SIZE(host_n) + FORT_CONF_IP4_ARR_SIZE(ip4_n) \
+            + FORT_CONF_IP6_ARR_SIZE(ip6_n))
 
 typedef FORT_CONF_APP_FIND_RESULT fort_conf_app_exe_find_func(
         PCFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);

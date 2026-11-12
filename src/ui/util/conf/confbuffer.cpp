@@ -14,6 +14,7 @@
 #include <manager/envmanager.h>
 #include <util/bitutil.h>
 #include <util/fileutil.h>
+#include <util/net/hostmatcher.h>
 #include <util/net/valuerangeutil.h>
 #include <util/stringutil.h>
 
@@ -266,6 +267,36 @@ void ConfBuffer::writeZoneFlag(int zoneId, bool enabled)
 
     confZoneFlag->zone_id = zoneId;
     confZoneFlag->enabled = enabled;
+}
+
+void ConfBuffer::writeHostIps(
+        const HostMatch &match, quint32 ttl, const ip4_arr_t &ip4Array, const ip6_arr_t &ip6Array)
+{
+    const int hostIdsSize = match.hostIds.size();
+    const int ip4Size = ip4Array.size();
+    const int ip6Size = ip6Array.size();
+
+    // Resize the buffer
+    const int hostIpsSize = FORT_CONF_HOST_IPS_SIZE(hostIdsSize, ip4Size, ip6Size);
+
+    buffer().resize(hostIpsSize);
+
+    // Fill the buffer
+    char *data = buffer().data();
+
+    PFORT_CONF_HOST_IPS confHostIps = PFORT_CONF_HOST_IPS(data);
+
+    confHostIps->host_n = quint16(hostIdsSize);
+    confHostIps->ip4_n = quint16(ip4Size);
+    confHostIps->ip6_n = quint16(ip6Size);
+    confHostIps->zones_mask = match.zonesMask;
+    confHostIps->ttl = ttl;
+
+    ConfData confData(confHostIps->data);
+
+    confData.writeLongs(match.hostIds);
+    confData.writeLongs(ip4Array);
+    confData.writeIp6Array(ip6Array);
 }
 
 bool ConfBuffer::loadZone(IpRange &ipRange)
