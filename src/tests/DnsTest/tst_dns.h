@@ -12,8 +12,8 @@
 
 #include <dns/dnsanswer.h>
 #include <dns/dnsclientanswer.h>
+#include <dns/dnsplainresolver.h>
 #include <dns/dnsquery.h>
-#include <dns/dnsresolver.h>
 #include <dns/dnsutil.h>
 #include <util/net/netformatutil.h>
 
@@ -322,7 +322,7 @@ TEST_F(DnsTest, resolverOwnQuery)
     QUdpSocket server;
     ASSERT_TRUE(server.bind(QHostAddress::LocalHost, 0));
 
-    DnsResolver resolver;
+    DnsPlainResolver resolver;
     ASSERT_TRUE(resolver.open(QString("127.0.0.1:%1").arg(server.localPort())));
 
     DnsRequest request;
@@ -330,7 +330,7 @@ TEST_F(DnsTest, resolverOwnQuery)
 
     QEventLoop loop;
     DnsAnswer resolvedAnswer;
-    QObject::connect(&resolver, &DnsResolver::resolved, &loop,
+    QObject::connect(&resolver, &DnsPlainResolver::resolved, &loop,
             [&](const DnsRequest & /*request*/, const DnsAnswer &answer) {
                 resolvedAnswer = answer;
                 loop.quit();

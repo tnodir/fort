@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include <memory>
+
 #include <dns/dnslistener.h>
 #include <dns/dnsresolver.h>
 #include <util/classhelpers.h>
@@ -22,7 +24,7 @@ public:
     explicit DnsManager(QObject *parent = nullptr);
     CLASS_DELETE_COPY_MOVE(DnsManager)
 
-    bool isStarted() const { return m_resolver.isOpened(); }
+    bool isStarted() const { return m_resolver != nullptr; }
 
     // The rule of a crashed service is removed by the uninstall
     static bool removeNrptRule();
@@ -40,6 +42,9 @@ private:
 
     void start(const QString &servers);
     void stop();
+
+    bool openResolver(const QString &servers);
+    void closeResolver();
 
     void loadHosts();
     void unloadHosts();
@@ -65,13 +70,14 @@ private:
     void sendRcode(const DnsRequest &request, quint8 rcode);
 
 private:
+    std::unique_ptr<DnsResolver> m_resolver;
+
     QString m_servers;
 
     HostZonesDb m_hostZonesDb;
     HostMatcher m_hostFiltersMatcher;
 
     DnsListener m_listener;
-    DnsResolver m_resolver;
 
     TriggerTimer m_zonesTimer;
 };

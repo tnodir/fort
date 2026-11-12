@@ -13,6 +13,7 @@ SOURCES += \
     dns/dnsclientanswer.cpp \
     dns/dnsetwlistener.cpp \
     dns/dnslistener.cpp \
+    dns/dnsplainresolver.cpp \
     dns/dnsquery.cpp \
     dns/dnsresolver.cpp \
     dns/dnsutil.cpp
@@ -23,6 +24,7 @@ HEADERS += \
     dns/dnsclientanswer.h \
     dns/dnsetwlistener.h \
     dns/dnslistener.h \
+    dns/dnsplainresolver.h \
     dns/dnsquery.h \
     dns/dnsrequest.h \
     dns/dnsresolver.h \

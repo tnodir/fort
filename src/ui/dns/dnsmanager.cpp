@@ -42,7 +42,6 @@ quint32 hostIpsTtl(quint32 ttl)
 DnsManager::DnsManager(QObject *parent) : QObject(parent)
 {
     connect(&m_listener, &DnsListener::queryReceived, this, &DnsManager::processQuery);
-    connect(&m_resolver, &DnsResolver::resolved, this, &DnsManager::processAnswer);
     connect(&m_zonesTimer, &QTimer::timeout, this, &DnsManager::loadZones);
 }
 
@@ -124,11 +123,11 @@ void DnsManager::start(const QString &servers)
 
     stop();
 
-    if (!m_resolver.open(servers))
+    if (!openResolver(servers))
         return;
 
     if (!m_listener.listen()) {
-        m_resolver.close();
+        closeResolver();
         return;
     }
 
@@ -148,9 +147,28 @@ void DnsManager::stop()
     }
 
     m_listener.close();
-    m_resolver.close();
+    closeResolver();
 
     unloadHosts();
+}
+
+bool DnsManager::openResolver(const QString &servers)
+{
+    auto resolver = DnsResolver::create(servers);
+
+    if (!resolver->open(servers))
+        return false;
+
+    connect(resolver.get(), &DnsResolver::resolved, this, &DnsManager::processAnswer);
+
+    m_resolver = std::move(resolver);
+
+    return true;
+}
+
+void DnsManager::closeResolver()
+{
+    m_resolver.reset();
 }
 
 void DnsManager::loadHosts()
@@ -229,7 +247,7 @@ void DnsManager::processQuery(const DnsClient &client, const QByteArray &data)
         return;
     }
 
-    m_resolver.resolve(request);
+    m_resolver->resolve(request);
 }
 
 void DnsManager::processAnswer(const DnsRequest &request, const DnsAnswer &answer)
@@ -265,7 +283,7 @@ quint8 DnsManager::checkQuery(const DnsRequest &request) const
 // The upstream servers include the listener
 bool DnsManager::isLoopQuery(const DnsRequest &request) const
 {
-    return m_resolver.isOwnQuery(request.query);
+    return m_resolver->isOwnQuery(request.query);
 }
 
 bool DnsManager::writeHostIps(const HostMatch &match, const DnsAddresses &addresses)
