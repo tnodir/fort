@@ -30,6 +30,7 @@ QVariantMap defaultConnFields()
         { "localIp", QString() },
         { "localPort", QVariant::fromValue(quint16(0)) },
         { "loopback", false },
+        { "service", false },
         { "profile", QString("public") },
     };
 }
@@ -91,6 +92,7 @@ bool fillConnFields(ProcessCommandResult &r, FORT_CONF_META_CONN &conn, const QV
     conn.inbound = (directionId == FORT_RULE_FILTER_DIRECTION_IN);
     // The profile's filter bit: 1 << profile_id
     conn.profile_id = BitUtil::bitScanForward(profileId);
+    conn.is_fort_service = fields["service"].toBool();
     conn.local_port = fields["localPort"].toUInt();
     conn.remote_port = fields["port"].toUInt();
 
@@ -150,7 +152,7 @@ bool ControlCommandSimulate::processCommand(
     if (p.args.size() < 2) {
         r.errorMessage = "Usage: simulate <app-path> <remote-ip> [<key>=<value>...];"
                          " keys: port, proto=tcp|udp|icmp|<number>, dir=out|in, localIp,"
-                         " localPort, loopback=0|1, profile=public|private|domain";
+                         " localPort, loopback=0|1, service=0|1, profile=public|private|domain";
         return false;
     }
 

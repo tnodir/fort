@@ -79,6 +79,7 @@ private:
     QLabel *m_labelLocalPort = nullptr;
     QSpinBox *m_spinLocalPort = nullptr;
     QCheckBox *m_cbLoopback = nullptr;
+    QCheckBox *m_cbFortService = nullptr;
     QLabel *m_labelProfile = nullptr;
     QComboBox *m_comboProfile = nullptr;
     QPushButton *m_btSimulate = nullptr;

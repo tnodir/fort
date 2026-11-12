@@ -160,6 +160,7 @@ void FilterSimWindow::initialize(const FilterSimConn &simConn)
     m_editLocalIp->setText(NetFormatUtil::ipToText(conn.local_ip, conn.isIPv6));
     m_spinLocalPort->setValue(conn.local_port);
     m_cbLoopback->setChecked(conn.is_loopback);
+    m_cbFortService->setChecked(conn.is_fort_service);
 
     simulateConn();
 }
@@ -208,6 +209,10 @@ void FilterSimWindow::retranslateUi()
     m_cbLoopback->setText(tr("Loopback"));
     m_cbLoopback->setToolTip(tr("The connection to an address of this computer."
                                 " The addresses 127.0.0.0/8 and ::1 are always loopback."));
+    m_cbFortService->setText(tr("Fort Firewall's Service"));
+    m_cbFortService->setToolTip(tr("The connection of Fort Firewall's Service, e.g. of its DNS"
+                                   " Forwarder. Without the Service it's filtered as the other"
+                                   " programs' ones."));
     m_labelProfile->setText(tr("Network Profile:"));
     retranslateComboProfile();
     m_btSimulate->setText(tr("Simulate"));
@@ -322,6 +327,11 @@ QLayout *FilterSimWindow::setupConnLayout()
     m_cbLoopback = new QCheckBox();
 
     layout->addRow(QString(), m_cbLoopback);
+
+    // Fort Firewall's Service
+    m_cbFortService = new QCheckBox();
+
+    layout->addRow(QString(), m_cbFortService);
 
     // Network Profile
     m_comboProfile = createFixedComboBox();
@@ -475,6 +485,7 @@ bool FilterSimWindow::fillSimConn(FilterSimConn &simConn) const
     conn.ip_proto = m_protocolSelector->protocol();
     conn.inbound = (m_comboDirection->currentIndex() == 0);
     conn.profile_id = m_comboProfile->currentIndex() + 1;
+    conn.is_fort_service = m_cbFortService->isChecked();
     conn.local_port = m_spinLocalPort->value();
     conn.remote_port = m_spinRemotePort->value();
 

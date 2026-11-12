@@ -52,6 +52,8 @@ void showFilterSimWindow(const ConnRow &connRow)
     conn.inbound = connRow.inbound;
     conn.isIPv6 = connRow.isIPv6;
     conn.is_loopback = connRow.loopback;
+    // The Service's connection is known by its reason only
+    conn.is_fort_service = (connRow.reason == FORT_CONN_REASON_FORT_SERVICE);
     conn.ip_proto = connRow.ipProto;
     conn.local_port = connRow.localPort;
     conn.remote_port = connRow.remotePort;
