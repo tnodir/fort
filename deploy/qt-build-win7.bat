@@ -49,7 +49,7 @@ cd %TARGET_PATH%
 	-no-feature-mimetype-database -no-feature-sql -no-feature-sql-odbc ^
 	^
 	-no-feature-getifaddrs -no-feature-ipv6ifname -no-feature-libproxy ^
-	-no-feature-openssl -schannel -ssl -no-feature-sctp -no-feature-udpsocket ^
+	-no-feature-openssl -schannel -ssl -no-feature-sctp ^
 	-no-feature-networkproxy -no-feature-socks5 -no-feature-networkdiskcache ^
 	-no-feature-dnslookup -no-feature-sspi -no-feature-networklistmanager ^
 	^
