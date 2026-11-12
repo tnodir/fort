@@ -19,6 +19,7 @@
 #include <manager/windowmanager.h>
 #include <model/connlistmodel.h>
 #include <util/conf/confbuffer.h>
+#include <util/conf/confutil.h>
 #include <util/conf/filterline.h>
 #include <util/conf/ruletextparser.h>
 #include <util/guiutil.h>
@@ -139,6 +140,19 @@ void setAreaFilter(QToolButton *btNot, PlainTextEdit *area, const RuleFilter *fi
     const QSignalBlocker blocker(area); // textChanged() isn't by the user only
 
     area->setText(FilterLine::values(filter).join('\n'));
+}
+
+// A line of the filters, as copied: its values may be on their own lines, but not the ";" line,
+// which separates the Program's filters
+bool isLineOfFilters(const QString &text)
+{
+    if (ConfUtil::hasAppFiltersSeparator(text))
+        return false;
+
+    FilterLine line(text);
+    line.parse();
+
+    return line.isSingleLine();
 }
 
 void showErrorMessage(const QString &errorMessage)
@@ -759,15 +773,14 @@ bool FilterEditDialog::validateEditText() const
 
 bool FilterEditDialog::validateText(const QString &text) const
 {
-    // A line of the filters, as copied
-    if (text.contains('\n')) {
-        showErrorMessage(tr("The text must be one line of filters"));
-        return false;
-    }
-
     ConfBuffer confBuf;
     if (!confBuf.validateRuleText(text)) {
         showErrorMessage(confBuf.errorMessage());
+        return false;
+    }
+
+    if (!isLineOfFilters(text)) {
+        showErrorMessage(tr("The text must be one line of filters"));
         return false;
     }
 

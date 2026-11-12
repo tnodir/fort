@@ -68,6 +68,30 @@ TEST_F(FilterLineTest, parse)
     ASSERT_EQ(line4.filter(FORT_RULE_FILTER_TYPE_ADDRESS), nullptr);
 }
 
+TEST_F(FilterLineTest, singleLine)
+{
+    FilterLine line;
+    ASSERT_TRUE(line.parse());
+    ASSERT_TRUE(line.isSingleLine());
+
+    FilterLine line2("Port(80)");
+    ASSERT_TRUE(line2.parse());
+    ASSERT_TRUE(line2.isSingleLine());
+
+    FilterLine line3("Host(\na.com\n):Port(80, 443)");
+    ASSERT_TRUE(line3.parse());
+    ASSERT_TRUE(line3.isSingleLine());
+
+    // Lines of filters
+    FilterLine line4("Host(\na.com\n)\nPort(80)");
+    ASSERT_TRUE(line4.parse());
+    ASSERT_FALSE(line4.isSingleLine());
+
+    FilterLine line5("Host(\na.com\n)\n;\nPort(80)");
+    ASSERT_TRUE(line5.parse());
+    ASSERT_FALSE(line5.isSingleLine());
+}
+
 TEST_F(FilterLineTest, connText)
 {
     Conn conn;

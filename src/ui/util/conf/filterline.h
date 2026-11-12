@@ -16,6 +16,9 @@ public:
 
     bool parse();
 
+    // Several lines of filters can't be shown by the types
+    bool isSingleLine() const;
+
     const RuleFilter *filter(qint8 type) const; // nullptr - no filter
 
     static QStringList values(const RuleFilter *filter);
