@@ -11,6 +11,7 @@
 #include <googletest.h>
 
 #include <dns/dnsanswer.h>
+#include <dns/dnsclientanswer.h>
 #include <dns/dnsquery.h>
 #include <dns/dnsresolver.h>
 #include <dns/dnsutil.h>
@@ -368,4 +369,23 @@ TEST_F(DnsTest, resolverOwnQuery)
     ASSERT_NE(record, nullptr);
     ASSERT_EQ(ares_dns_record_get_id(record.get()), 0x1111);
     ASSERT_EQ(ares_dns_record_get_rcode(record.get()), ARES_RCODE_NXDOMAIN);
+}
+
+TEST_F(DnsTest, clientAnswerQueryResults)
+{
+    DnsClientAnswer answer;
+    answer.readQueryResults(
+            u"type: 5 example.cdn.net; ::ffff:1.2.3.4;2001:db8::1;type: 16 text;bad;;5.6.7.8;");
+
+    const DnsAddresses &addresses = answer.addresses();
+    ASSERT_EQ(addresses.ip4Array(),
+            QVector<quint32>(
+                    { NetFormatUtil::textToIp4("1.2.3.4"), NetFormatUtil::textToIp4("5.6.7.8") }));
+    ASSERT_EQ(addresses.ip6Array().size(), 1);
+    ASSERT_EQ(NetFormatUtil::ip6ToText(addresses.ip6Array().at(0)), "2001:db8::1");
+
+    // Without addresses
+    DnsClientAnswer emptyAnswer;
+    emptyAnswer.readQueryResults(u"type: 5 alias.example.com;");
+    ASSERT_TRUE(emptyAnswer.addresses().isEmpty());
 }

@@ -10,6 +10,8 @@ TEMPLATE = lib
 
 SOURCES += \
     dns/dnsanswer.cpp \
+    dns/dnsclientanswer.cpp \
+    dns/dnsetwlistener.cpp \
     dns/dnslistener.cpp \
     dns/dnsquery.cpp \
     dns/dnsresolver.cpp \
@@ -18,6 +20,8 @@ SOURCES += \
 HEADERS += \
     dns/dnsaddresses.h \
     dns/dnsanswer.h \
+    dns/dnsclientanswer.h \
+    dns/dnsetwlistener.h \
     dns/dnslistener.h \
     dns/dnsquery.h \
     dns/dnsrequest.h \
