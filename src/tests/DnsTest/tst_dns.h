@@ -14,12 +14,15 @@
 
 #include <dns/dnsanswer.h>
 #include <dns/dnsclientanswer.h>
+#include <dns/dnshostblocker.h>
 #include <dns/dnshttpsresolver.h>
 #include <dns/dnsplainresolver.h>
 #include <dns/dnsprovider.h>
 #include <dns/dnsquery.h>
 #include <dns/dnsserverstest.h>
 #include <dns/dnsutil.h>
+#include <dns/hostzonesdb.h>
+#include <util/net/hostrange.h>
 #include <util/net/netformatutil.h>
 
 class DnsTest : public Test
@@ -440,6 +443,38 @@ TEST_F(DnsTest, hintsAnswer)
                     NetFormatUtil::textToIp4("5.6.7.8"), NetFormatUtil::textToIp4("9.9.9.9") }));
     ASSERT_EQ(addresses.ip6Array().size(), 1);
     ASSERT_EQ(NetFormatUtil::ip6ToText(addresses.ip6Array().at(0)), "2001:db8::1");
+}
+
+TEST_F(DnsTest, hostBlocker)
+{
+    Q_INIT_RESOURCE(dns_migrations);
+
+    HostZonesDb db(":memory:");
+    ASSERT_TRUE(db.open());
+    db.setEnabledMask(0b1);
+
+    HostRange hostRange;
+
+    ASSERT_TRUE(hostRange.fromText("www.example.com"));
+    ASSERT_TRUE(db.setZone(1, "c1", hostRange));
+
+    DnsQuery query;
+    ASSERT_TRUE(query.parse(writeQuery(0x9999, "www.example.com", /*withOpt=*/false)));
+
+    const DnsRecordPtr upstreamRecord = createUpstreamAnswer();
+
+    DnsAnswer answer;
+    answer.setRecord(query, upstreamRecord.get(), query.udpSizeMax());
+
+    DnsHostBlocker blocker(db);
+
+    ASSERT_FALSE(blocker.isQueryBlocked(query));
+    ASSERT_FALSE(blocker.isAnswerBlocked(query, answer));
+
+    // The name's Zone blocked while the query waits for the upstream's answer
+    blocker.setZonesMask(0b01);
+    ASSERT_TRUE(blocker.isAnswerBlocked(query, answer));
+    ASSERT_TRUE(blocker.isQueryBlocked(query));
 }
 
 TEST_F(DnsTest, resolverOwnQuery)

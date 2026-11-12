@@ -16,6 +16,7 @@
 #include <dns/dnsprovider.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/plaintextedit.h>
+#include <form/controls/selector/hostzonesselector.h>
 #include <form/opt/optionscontroller.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
@@ -30,6 +31,10 @@ DnsPage::DnsPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, p
 void DnsPage::onResetToDefault()
 {
     m_cbFilterEnabled->setChecked(false);
+
+    m_btBlockZones->setMask(0);
+    onBlockZonesEdited();
+
     m_cbBlockPorts->setChecked(true);
     m_editServers->clear();
 }
@@ -42,10 +47,15 @@ void DnsPage::onRetranslateUi()
 
     m_cbFilterEnabled->setText(tr("Filter DNS"));
     m_cbFilterEnabled->setToolTip(
-            tr("Resolve only the host names of the enabled Hosts Zones and of the host() filters, "
-               "the other names are not found (only with the Service). The programs resolving "
-               "the names by DNS over HTTPS themselves, e.g. the browsers with Secure DNS, bypass "
-               "the DNS Forwarder"));
+            tr("Resolve the host names by the upstream DNS servers, adding the addresses of the "
+               "Hosts Zones and of the host() filters before answering; the names of the Block "
+               "Zones are not found (only with the Service). The programs resolving the names by "
+               "DNS over HTTPS themselves, e.g. the browsers with Secure DNS, bypass the DNS "
+               "Forwarder"));
+    m_labelBlockZones->setText(tr("Block Zones:"));
+    m_labelBlockZones->setToolTip(tr("The names of the enabled Hosts Zones are not found, even if "
+                                     "a host() filter lists them"));
+    m_btBlockZones->retranslateUi();
     m_cbBlockPorts->setText(tr("Block ports 53 and 853 for other programs"));
     m_cbBlockPorts->setToolTip(
             tr("Block the connections of the programs other than Fort Firewall's Service to the "
@@ -96,6 +106,9 @@ void DnsPage::setupForwarderBox()
         ctrl()->setIniEdited();
     });
 
+    // Block Zones Row
+    auto blockZonesLayout = setupBlockZonesLayout();
+
     m_cbBlockPorts = ControlUtil::createCheckBox(ini().dnsBlockPorts(), [&](bool checked) {
         ini().setDnsBlockPorts(checked);
         ctrl()->setIniEdited();
@@ -106,11 +119,24 @@ void DnsPage::setupForwarderBox()
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbFilterEnabled);
+    layout->addLayout(blockZonesLayout);
     layout->addWidget(m_cbBlockPorts);
     layout->addLayout(serversLayout);
 
     m_gbForwarder = new QGroupBox();
     m_gbForwarder->setLayout(layout);
+}
+
+QLayout *DnsPage::setupBlockZonesLayout()
+{
+    m_labelBlockZones = ControlUtil::createLabel();
+
+    m_btBlockZones = new HostZonesSelector();
+    m_btBlockZones->setMask(ini().dnsBlockZones());
+
+    connect(m_btBlockZones, &HostZonesSelector::maskChanged, this, &DnsPage::onBlockZonesEdited);
+
+    return ControlUtil::createHLayoutByWidgets({ m_labelBlockZones, m_btBlockZones }, /*margin=*/0);
 }
 
 QLayout *DnsPage::setupServersLayout()
@@ -180,6 +206,12 @@ void DnsPage::setupTestResults()
     m_editTestResults->setLineWrapMode(QPlainTextEdit::NoWrap);
     m_editTestResults->setFixedHeight(80); // 4 lines
     m_editTestResults->setVisible(false);
+}
+
+void DnsPage::onBlockZonesEdited()
+{
+    ini().setDnsBlockZones(m_btBlockZones->mask());
+    ctrl()->setIniEdited();
 }
 
 void DnsPage::testServers()

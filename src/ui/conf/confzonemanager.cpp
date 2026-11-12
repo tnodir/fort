@@ -9,12 +9,14 @@
 #include <conf/zone.h>
 #include <driver/drivermanager.h>
 #include <fortglobal.h>
+#include <model/zonelistmodel.h>
 #include <util/bitutil.h>
 #include <util/conf/confbuffer.h>
 #include <util/conf/confutil.h>
 #include <util/dateutil.h>
 
 #include "confmanager.h"
+#include "inioptions.h"
 
 using namespace Fort;
 
@@ -213,6 +215,8 @@ bool ConfZoneManager::addOrUpdateZone(Zone &zone)
         emit zoneAdded();
     } else {
         emit zoneUpdated();
+
+        updateDnsBlockZones();
     }
 
     return true;
@@ -243,6 +247,8 @@ bool ConfZoneManager::deleteZone(quint8 zoneId)
         emit zoneRemoved(zoneId);
 
         updateDriverZoneFlag(zoneId, /*enabled=*/false);
+
+        updateDnsBlockZones();
     }
 
     return ok;
@@ -307,6 +313,25 @@ bool ConfZoneManager::updateDriverZoneFlag(quint8 zoneId, bool enabled)
     confBuf.writeZoneFlag(zoneId, enabled);
 
     return driverWriteZones(confBuf, /*onlyFlags=*/true);
+}
+
+// The Block Zones are of the Hosts types only: the Zone's source may be changed, the removed Zone's
+// id can be reused
+void ConfZoneManager::updateDnsBlockZones()
+{
+    auto &ini = Fort::ini();
+
+    const quint32 blockZones = ini.dnsBlockZones();
+    if (blockZones == 0)
+        return;
+
+    const quint32 hostBlockZones = blockZones & zoneListModel()->hostZonesMask();
+    if (hostBlockZones == blockZones)
+        return;
+
+    ini.setDnsBlockZones(hostBlockZones);
+
+    confManager()->saveIniChanged();
 }
 
 void ConfZoneManager::setupZoneNamesCache()

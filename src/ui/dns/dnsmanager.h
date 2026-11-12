@@ -13,10 +13,11 @@
 #include <util/net/hostmatcher.h>
 #include <util/triggertimer.h>
 
+#include "dnshostblocker.h"
 #include "hostzonesdb.h"
 
-// The DNS forwarder of the service: resolves only the names of the Hosts Zones and host() filters,
-// adding their addresses to the Zones and host() filters in the driver before answering
+// The DNS forwarder of the service: resolves the names but the Block Zones' ones, adding the
+// addresses of the Hosts Zones' and host() filters' names to them in the driver before answering
 class DnsManager : public QObject, public IocService
 {
     Q_OBJECT
@@ -43,6 +44,7 @@ private:
     void setupZones();
 
     void setupByConfIni();
+    void setupBlockZones(quint32 zonesMask);
 
     void start(const QStringList &servers);
     void stop();
@@ -84,6 +86,7 @@ private:
     QList<DnsServersTest *> m_serversTests;
 
     HostZonesDb m_hostZonesDb;
+    DnsHostBlocker m_hostBlocker;
     HostMatcher m_hostFiltersMatcher;
 
     DnsListener m_listener;

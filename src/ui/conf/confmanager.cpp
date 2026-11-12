@@ -449,6 +449,15 @@ void ConfManager::saveIni()
     conf().resetEdited();
 }
 
+void ConfManager::saveIniChanged()
+{
+    conf().setIniEdited();
+
+    saveConf(conf(), ini());
+
+    applySavedConf(conf());
+}
+
 void ConfManager::saveIniUser()
 {
     iniUser().saveAndClear();

@@ -44,6 +44,8 @@ signals:
 private:
     bool updateDriverZoneFlag(quint8 zoneId, bool enabled);
 
+    void updateDnsBlockZones();
+
     void setupZoneNamesCache();
     void clearZoneNamesCache();
 

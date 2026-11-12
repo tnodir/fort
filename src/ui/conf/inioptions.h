@@ -135,6 +135,10 @@ public:
     bool dnsFilterEnabled() const { return valueBool("dns/filterEnabled"); }
     void setDnsFilterEnabled(bool v) { setValue("dns/filterEnabled", v); }
 
+    // The Hosts Zones, whose names aren't found
+    quint32 dnsBlockZones() const { return valueUInt("dns/blockZones"); }
+    void setDnsBlockZones(quint32 v) { setValue("dns/blockZones", v); }
+
     bool dnsBlockPorts() const { return valueBool("dns/blockPorts", true); }
     void setDnsBlockPorts(bool v) { setValue("dns/blockPorts", v); }
 

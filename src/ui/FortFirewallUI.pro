@@ -63,6 +63,7 @@ SOURCES += \
     control/control.cpp \
     control/controlmanager.cpp \
     control/controlworker.cpp \
+    dns/dnshostblocker.cpp \
     dns/dnsmanager.cpp \
     dns/dnsprovider.cpp \
     dns/hostzonesdb.cpp \
@@ -411,6 +412,7 @@ HEADERS += \
     control/control_types.h \
     control/controlmanager.h \
     control/controlworker.h \
+    dns/dnshostblocker.h \
     dns/dnsmanager.h \
     dns/dnsprovider.h \
     dns/hostzonesdb.h \

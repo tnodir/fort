@@ -4,6 +4,7 @@
 #include "optbasepage.h"
 
 class DnsServersTest;
+class HostZonesSelector;
 class PlainTextEdit;
 
 struct DnsServerResult;
@@ -26,11 +27,14 @@ protected slots:
 private:
     void setupUi();
     void setupForwarderBox();
+    QLayout *setupBlockZonesLayout();
     QLayout *setupServersLayout();
     void setupComboServers();
     void setupTestButton();
     void setupEditServers();
     void setupTestResults();
+
+    void onBlockZonesEdited();
 
     void testServers();
     void updateTestResults();
@@ -45,6 +49,8 @@ private:
     QGroupBox *m_gbForwarder = nullptr;
 
     QCheckBox *m_cbFilterEnabled = nullptr;
+    QLabel *m_labelBlockZones = nullptr;
+    HostZonesSelector *m_btBlockZones = nullptr;
     QCheckBox *m_cbBlockPorts = nullptr;
     QLabel *m_labelServers = nullptr;
     QComboBox *m_comboServers = nullptr;

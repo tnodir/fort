@@ -41,7 +41,7 @@ quint32 hostIpsTtl(quint32 ttl)
 
 }
 
-DnsManager::DnsManager(QObject *parent) : QObject(parent)
+DnsManager::DnsManager(QObject *parent) : QObject(parent), m_hostBlocker(m_hostZonesDb)
 {
     connect(&m_listener, &DnsListener::queryReceived, this, &DnsManager::processQuery);
     connect(&m_zonesTimer, &QTimer::timeout, this, &DnsManager::loadZones);
@@ -123,6 +123,8 @@ void DnsManager::setupByConfIni()
 {
     const auto &ini = Fort::ini();
 
+    setupBlockZones(ini.dnsBlockZones());
+
     if (ini.dnsFilterEnabled()) {
         start(ini.dnsServers());
     } else {
@@ -130,6 +132,19 @@ void DnsManager::setupByConfIni()
     }
 
     Fort::confManager()->setDnsPortsBlocked(isStarted() && ini.dnsBlockPorts());
+}
+
+void DnsManager::setupBlockZones(quint32 zonesMask)
+{
+    if (m_hostBlocker.zonesMask() == zonesMask)
+        return;
+
+    m_hostBlocker.setZonesMask(zonesMask);
+
+    // The names' cached answers, found or not, bypass the forwarder
+    if (isStarted()) {
+        flushResolverCache();
+    }
 }
 
 void DnsManager::start(const QStringList &servers)
@@ -269,6 +284,11 @@ void DnsManager::processQuery(const DnsClient &client, const QByteArray &data)
 
 void DnsManager::processAnswer(const DnsRequest &request, const DnsAnswer &answer)
 {
+    if (m_hostBlocker.isAnswerBlocked(request.query, answer)) {
+        sendRcode(request, ARES_RCODE_NXDOMAIN);
+        return;
+    }
+
     // The Zones and host() filters may be changed since the query.
     // The client connects to the addresses after the answer.
     if (!writeHostIps(matchHost(request.query.name()), answer.addresses())) {
@@ -289,10 +309,8 @@ quint8 DnsManager::checkQuery(const DnsRequest &request)
     if (checkLoopQuery(request))
         return ARES_RCODE_SERVFAIL;
 
-    if (matchHost(query.name()).isEmpty()) {
-        qCDebug(LC) << "Blocked:" << query.name();
+    if (m_hostBlocker.isQueryBlocked(query))
         return ARES_RCODE_NXDOMAIN;
-    }
 
     return ARES_RCODE_NOERROR;
 }
