@@ -333,6 +333,45 @@ inline static BOOL fort_conf_conn_net_flags_filtered(
     }
 }
 
+inline static BOOL fort_conf_conn_is_dns_proto(PCFORT_CONF_META_CONN conn)
+{
+    return conn->ip_proto == IpProto_UDP || conn->ip_proto == IpProto_TCP;
+}
+
+/* The reason of the blocked DNS port, else FORT_CONN_REASON_UNKNOWN */
+inline static UCHAR fort_conf_conn_dns_port_reason(PCFORT_CONF_META_CONN conn)
+{
+    switch (conn->remote_port) {
+    case 53:
+        return FORT_CONN_REASON_BLOCK_DNS;
+    case 853: /* DNS over TLS (TCP) and over QUIC (UDP) */
+        return FORT_CONN_REASON_BLOCK_DOT;
+    default:
+        return FORT_CONN_REASON_UNKNOWN;
+    }
+}
+
+inline static BOOL fort_conf_conn_dns_blocked(
+        PFORT_CONF_META_CONN conn, const FORT_CONF_FLAGS conf_flags)
+{
+    if (!conf_flags.block_dns_ports)
+        return FALSE;
+
+    /* The Service's DNS Forwarder asks the upstream servers and is asked by the loopback */
+    if (conn->is_fort_service || conn->is_loopback)
+        return FALSE;
+
+    if (conn->inbound || !fort_conf_conn_is_dns_proto(conn))
+        return FALSE;
+
+    const UCHAR reason = fort_conf_conn_dns_port_reason(conn);
+    if (reason == FORT_CONN_REASON_UNKNOWN)
+        return FALSE;
+
+    conn->reason = reason;
+    return TRUE; /* block DNS */
+}
+
 inline static FORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT fort_conf_conn_addr_group_opt(
         PCFORT_CONF_CONN_FILTER filter, UCHAR *zone_id)
 {
@@ -374,6 +413,9 @@ inline static BOOL fort_conf_conn_filter_flags_filtered(
     if (conf_flags.block_traffic) {
         return TRUE; /* block all */
     }
+
+    if (fort_conf_conn_dns_blocked(conn, conf_flags))
+        return TRUE;
 
     /* LAN addresses */
     {

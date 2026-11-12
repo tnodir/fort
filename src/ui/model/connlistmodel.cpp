@@ -72,6 +72,8 @@ QString reasonIconPath(const ConnRow &connRow)
         ":/icons/help.png",
         ":/icons/global_telecom.png",
         ":/icons/fort.png",
+        ":/icons/dns.png",
+        ":/icons/lock.png",
     };
     static_assert(
             std::size(reasonIcons) == FORT_CONN_REASON_COUNT - FORT_CONN_REASON_IP_BLOCK_INET);
@@ -587,6 +589,8 @@ QString ConnListModel::reasonText(FortConnReason reason)
         QT_TR_NOOP("Process allowed by \"Ask to Connect\""),
         QT_TR_NOOP("Allowed Internet address"),
         QT_TR_NOOP("Fort Firewall's Service"),
+        QT_TR_NOOP("Block DNS port"),
+        QT_TR_NOOP("Block DNS over TLS port"),
     };
     static_assert(
             std::size(reasonTexts) == FORT_CONN_REASON_COUNT - FORT_CONN_REASON_IP_BLOCK_INET);

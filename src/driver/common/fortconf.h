@@ -50,6 +50,7 @@ typedef struct fort_conf_flags
             UINT32 block_traffic : 1;
             UINT32 block_lan_traffic : 1;
             UINT32 block_inet_traffic : 1;
+            UINT32 block_dns_ports : 1;
 
             UINT32 allow_all_new : 1;
             UINT32 ask_to_connect : 1;
@@ -70,7 +71,7 @@ typedef struct fort_conf_flags
             UINT32 log_blocked_conn : 1;
             UINT32 log_alerted_conn : 1;
 
-            UINT32 reserved_flags : 6; /* not used */
+            UINT32 reserved_flags : 5; /* not used */
         };
     };
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
