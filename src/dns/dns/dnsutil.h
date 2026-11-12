@@ -25,6 +25,9 @@ public:
     static DnsRecordPtr duplicateRecord(const ares_dns_record *record, quint16 id);
 
     static QByteArray writeRecord(const ares_dns_record *record);
+
+    // Clears the Dnscache's answers
+    static bool flushResolverCache();
 };
 
 #endif // DNSUTIL_H

@@ -12,6 +12,8 @@ struct HostMatch
 {
     bool isEmpty() const { return zonesMask == 0 && hostIds.isEmpty(); }
 
+    bool operator==(const HostMatch &other) const;
+
     void add(const HostMatch &other);
 
     quint32 zonesMask = 0;
@@ -23,6 +25,8 @@ class HostMatcher
 {
 public:
     bool isEmpty() const;
+
+    bool operator==(const HostMatcher &other) const;
 
     void addZone(int zoneId, const HostRange &hostRange);
     void addHostFilter(quint32 hostId, const HostRange &hostRange);

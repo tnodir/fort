@@ -4,6 +4,8 @@
 
 #include <ares.h>
 
+#include <dns/dnsutil.h>
+
 #include <conf/confmanager.h>
 #include <conf/confzonemanager.h>
 #include <conf/inioptions.h>
@@ -129,11 +131,11 @@ void DnsManager::start(const QString &servers)
 
     m_servers = servers;
 
-    loadHosts();
-
     if (!addNrptRule()) {
         qCWarning(LC) << "NRPT rule error";
     }
+
+    loadHosts();
 }
 
 void DnsManager::stop()
@@ -150,8 +152,10 @@ void DnsManager::stop()
 
 void DnsManager::loadHosts()
 {
-    loadZones();
-    loadHostRefs();
+    loadZonesMatcher();
+    m_hostFiltersMatcher = confManager()->hostRefs().hostMatcher();
+
+    flushResolverCache();
 }
 
 void DnsManager::unloadHosts()
@@ -162,10 +166,21 @@ void DnsManager::unloadHosts()
 
 void DnsManager::loadZones()
 {
-    if (!isStarted())
-        return;
+    if (isStarted() && loadZonesMatcher()) {
+        flushResolverCache();
+    }
+}
 
-    m_zonesMatcher = taskManager()->taskInfoZoneDownloader()->loadHostZones();
+// Returns whether the Zones' names changed
+bool DnsManager::loadZonesMatcher()
+{
+    const HostMatcher zonesMatcher = taskManager()->taskInfoZoneDownloader()->loadHostZones();
+    if (zonesMatcher == m_zonesMatcher)
+        return false;
+
+    m_zonesMatcher = zonesMatcher;
+
+    return true;
 }
 
 void DnsManager::loadHostRefs()
@@ -174,11 +189,23 @@ void DnsManager::loadHostRefs()
         return;
 
     m_hostFiltersMatcher = confManager()->hostRefs().hostMatcher();
+
+    flushResolverCache();
 }
 
 void DnsManager::removeZone(quint8 zoneId)
 {
-    m_zonesMatcher.removeZone(zoneId);
+    if (m_zonesMatcher.removeZone(zoneId)) {
+        flushResolverCache();
+    }
+}
+
+// The cached answers bypass the forwarder: their names are resolved anew, adding the IPs
+void DnsManager::flushResolverCache()
+{
+    if (!DnsUtil::flushResolverCache()) {
+        qCWarning(LC) << "Flush DNS cache error";
+    }
 }
 
 HostMatch DnsManager::matchHost(QStringView name) const

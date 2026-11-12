@@ -43,6 +43,11 @@ bool removeZoneBit(QHash<QByteArray, HostMatch> &matches, quint32 zoneBit)
 
 }
 
+bool HostMatch::operator==(const HostMatch &other) const
+{
+    return zonesMask == other.zonesMask && hostIds == other.hostIds;
+}
+
 void HostMatch::add(const HostMatch &other)
 {
     zonesMask |= other.zonesMask;
@@ -57,6 +62,12 @@ void HostMatch::add(const HostMatch &other)
 bool HostMatcher::isEmpty() const
 {
     return m_names.isEmpty() && m_wildcardNames.isEmpty() && m_patternNames.isEmpty();
+}
+
+bool HostMatcher::operator==(const HostMatcher &other) const
+{
+    return m_names == other.m_names && m_wildcardNames == other.m_wildcardNames
+            && m_patternNames == other.m_patternNames;
 }
 
 void HostMatcher::addZone(int zoneId, const HostRange &hostRange)
