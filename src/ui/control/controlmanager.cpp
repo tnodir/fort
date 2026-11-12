@@ -120,6 +120,7 @@ bool ControlManager::processCommandClient(ProcessCommandResult &r)
         { "zone", Control::CommandZone },
         { "rule", Control::CommandRule },
         { "addr", Control::CommandAddr },
+        { "dns", Control::CommandDns },
         { "period", Control::CommandPeriod },
         { "simulate", Control::CommandSimulate },
         { "conn", Control::CommandConn },
@@ -158,8 +159,8 @@ bool ControlManager::processCommandClient(ProcessCommandResult &r)
     return ok;
 }
 
-bool ControlManager::postCommand(
-        Control::Command command, const QVariantList &args, ProcessCommandResult *r)
+bool ControlManager::postCommand(Control::Command command, const QVariantList &args,
+        ProcessCommandResult *r, int resultWaitMsecs)
 {
     QLocalSocket socket;
     ControlWorker w(&socket);
@@ -189,7 +190,7 @@ bool ControlManager::postCommand(
     }
 
     // Read response
-    if (!w.waitResult(commandOk)) {
+    if (!w.waitResult(commandOk, resultWaitMsecs)) {
         return postCommandError(r, "No result from the running instance");
     }
 

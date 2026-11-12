@@ -1,5 +1,7 @@
 #include "controlcommandbase.h"
 
+#include <control/controlworker.h>
+
 #include "controlcommandutil.h"
 
 bool ControlCommandBase::prepareClientArgs(QVariantList &args, ProcessCommandResult &r) const
@@ -17,4 +19,9 @@ bool ControlCommandBase::processClientResult(
         return true;
 
     return ControlCommandUtil::writeClientFileArg(args, r);
+}
+
+int ControlCommandBase::resultWaitMsecs(const QVariantList & /*args*/) const
+{
+    return ControlWorker::defaultWaitMsecs;
 }

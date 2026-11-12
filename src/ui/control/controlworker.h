@@ -14,6 +14,8 @@ class ControlWorker : public QObject
     Q_OBJECT
 
 public:
+    static constexpr int defaultWaitMsecs = 700;
+
     explicit ControlWorker(QLocalSocket *socket, QObject *parent = nullptr);
 
     bool isServiceClient() const { return m_isServiceClient; }
@@ -51,10 +53,11 @@ public:
     bool postCommand(Control::Command command, const QVariantList &args = {});
 
     bool sendResult(quint32 requestId, bool ok, const QVariantList &args = {});
-    bool waitResult(const Control::Command &resultCommand, int msecs = 700) const;
+    // Waits 3 times for the msecs at most
+    bool waitResult(const Control::Command &resultCommand, int msecs = defaultWaitMsecs) const;
 
-    bool waitForSent(int msecs = 700) const;
-    bool waitForRead(int msecs = 700) const;
+    bool waitForSent(int msecs = defaultWaitMsecs) const;
+    bool waitForRead(int msecs = defaultWaitMsecs) const;
 
     static QVariantList buildArgs(const QStringList &list);
 
