@@ -7,6 +7,7 @@ class DnsServersTest;
 class HostZonesSelector;
 class PlainTextEdit;
 
+struct DnsForwarderStatus;
 struct DnsServerResult;
 
 class DnsPage : public OptBasePage
@@ -27,6 +28,7 @@ protected slots:
 private:
     void setupUi();
     void setupForwarderBox();
+    void setupForwarderErrorWarning();
     QLayout *setupBlockZonesLayout();
     QLayout *setupServersLayout();
     void setupComboServers();
@@ -37,11 +39,13 @@ private:
 
     void onBlockZonesEdited();
 
+    void updateForwarderErrorWarning();
     void updateMixedServersWarning(const QStringList &servers);
 
     void testServers();
     void updateTestResults();
 
+    static QString forwarderErrorText(const DnsForwarderStatus &status);
     static QString serverResultText(const DnsServerResult &result);
     static QString serverStatusText(const DnsServerResult &result);
     static QString serverAnsweredText(const DnsServerResult &result);
@@ -54,6 +58,8 @@ private:
     QGroupBox *m_gbForwarder = nullptr;
 
     QCheckBox *m_cbFilterEnabled = nullptr;
+    QLabel *m_labelForwarderError = nullptr;
+    QWidget *m_forwarderErrorWarning = nullptr;
     QLabel *m_labelBlockZones = nullptr;
     HostZonesSelector *m_btBlockZones = nullptr;
     QCheckBox *m_cbBlockPorts = nullptr;
