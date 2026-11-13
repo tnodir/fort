@@ -27,6 +27,6 @@
         "title": "Hosts File",
         "description": "Hosts file: each name after an address",
         "hosts": true,
-        "pattern": "^\\s*[^#\\s]\\S*\\s+(?!(?:localhost(?:\\.localdomain)?|local|broadcasthost|ip6-\\S+|0\\.0\\.0\\.0)(?:\\s|#|$))([^#\\s]\\S*)"
+        "pattern": "(?:^\\s*[^#\\s]\\S*|\\G(?!^))(?:\\s+(?:localhost(?:\\.localdomain)?|local|broadcasthost|ip6-\\S+|0\\.0\\.0\\.0)(?=\\s|#|$))*+\\s+([^#\\s]\\S*)"
     }
 ]

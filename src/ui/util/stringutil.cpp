@@ -125,3 +125,13 @@ QRegularExpressionMatch StringUtil::match(const QRegularExpression &re, const QS
     return re.match(text);
 #endif
 }
+
+QRegularExpressionMatchIterator StringUtil::globalMatch(
+        const QRegularExpression &re, const QStringView text)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+    return re.globalMatchView(text);
+#else
+    return re.globalMatch(text);
+#endif
+}
