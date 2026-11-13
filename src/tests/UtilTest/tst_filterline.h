@@ -170,6 +170,19 @@ TEST_F(FilterLineTest, connAddressesText)
     FilterLineText line2;
     line2.addConnAddresses(conn);
     ASSERT_EQ(line2.text(), "Dir(In):Proto(ICMPv6):IP([fe80::2]):Local_IP([fe80::1])");
+
+    conn.inbound = false;
+    conn.remoteHost = "example.com";
+
+    FilterLineText line3;
+    line3.addConnAddresses(conn);
+    ASSERT_EQ(line3.text(),
+            "Dir(Out):Proto(ICMPv6):Host(example.com):IP([fe80::2]):Local_IP([fe80::1])");
+
+    FilterLine filterLine(line3);
+    ASSERT_TRUE(filterLine.parse());
+
+    checkFilter(filterLine, FORT_RULE_FILTER_TYPE_HOST, { "example.com" });
 }
 
 TEST_F(FilterLineTest, equalText)

@@ -24,7 +24,7 @@ public:
     void addFilter(qint8 type, const QString &values, bool isNot = false, bool isEqual = false);
 
     // Adds the connection's filters to match it, in the order of FilterEditDialog's fields: the
-    // direction, protocol, remote IP and port, local IP and port
+    // direction, protocol, remote host (by the DNS Client's answer), IP and port, local IP and port
     void addConnAddresses(const Conn &conn);
 
     // The values need their own lines: several lines or a comment, which ends by its line

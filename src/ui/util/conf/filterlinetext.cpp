@@ -60,6 +60,7 @@ void FilterLineText::addConnAddresses(const Conn &conn)
 {
     addFilter(FORT_RULE_FILTER_TYPE_DIRECTION, conn.inbound ? "In" : "Out");
     addFilter(FORT_RULE_FILTER_TYPE_PROTOCOL, NetUtil::protocolName(conn.ipProto));
+    addFilter(FORT_RULE_FILTER_TYPE_HOST, conn.remoteHost);
     addFilter(FORT_RULE_FILTER_TYPE_ADDRESS,
             NetFormatUtil::ipToAddressText(conn.remoteIp, conn.isIPv6));
     addPort(FORT_RULE_FILTER_TYPE_PORT, conn.remotePort);
