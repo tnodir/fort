@@ -3,6 +3,8 @@
 #include <QHostAddress>
 #include <QUrlQuery>
 
+#include <algorithm>
+
 namespace {
 
 inline constexpr char ipKey[] = "ip";
@@ -47,9 +49,16 @@ bool DnsHttpsServer::parse(const QString &text)
     return true;
 }
 
-bool DnsHttpsServer::isHttpsServers(const QStringList &servers)
+bool DnsHttpsServer::isHttpsServer(const QString &text)
 {
-    return servers.value(0).startsWith(QLatin1String("https://"), Qt::CaseInsensitive);
+    return text.startsWith(QLatin1String("https://"), Qt::CaseInsensitive);
+}
+
+bool DnsHttpsServer::isMixedServers(const QStringList &servers)
+{
+    const auto httpsCount = std::count_if(servers.begin(), servers.end(), &isHttpsServer);
+
+    return httpsCount != 0 && httpsCount != servers.size();
 }
 
 QList<DnsHttpsServer> DnsHttpsServer::parseServers(const QStringList &servers)

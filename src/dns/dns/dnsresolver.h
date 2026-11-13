@@ -24,7 +24,7 @@ public:
 
     virtual void resolve(const DnsRequest &request) = 0;
 
-    // The resolver of the servers' protocol
+    // The resolver of the servers' protocol, null for the mixed ones
     static std::unique_ptr<DnsResolver> create(const QStringList &servers);
 
 signals:

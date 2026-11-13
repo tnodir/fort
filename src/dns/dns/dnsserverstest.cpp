@@ -4,6 +4,7 @@
 
 #include <ares.h>
 
+#include "dnshttpsserver.h"
 #include "dnsresolver.h"
 #include "dnsutil.h"
 
@@ -115,13 +116,20 @@ bool DnsServersTest::checkLoopQuery(const DnsQuery &query)
 
 bool DnsServersTest::openResolvers()
 {
+    // The forwarder can't ask them
+    if (DnsHttpsServer::isMixedServers(m_servers)) {
+        setNotAskedResults(DnsServerResult::StatusMixed);
+        return false;
+    }
+
     QList<int> invalidIndexes;
 
     for (int i = 0; i < m_servers.size(); ++i) {
-        // Of the list's protocol
-        auto resolver = DnsResolver::create(m_servers);
+        const QStringList servers = serverList(m_servers.at(i));
 
-        if (!resolver->open(serverList(m_servers.at(i)))) {
+        auto resolver = DnsResolver::create(servers);
+
+        if (!resolver->open(servers)) {
             invalidIndexes.append(i);
             continue;
         }
@@ -139,13 +147,18 @@ bool DnsServersTest::openResolvers()
 
     m_resolvers.clear();
 
-    for (int i = 0; i < m_servers.size(); ++i) {
-        const auto status = invalidIndexes.contains(i) ? DnsServerResult::StatusInvalid
-                                                       : DnsServerResult::StatusSkipped;
-        setResult(i, { .status = status });
-    }
+    setNotAskedResults(DnsServerResult::StatusSkipped, invalidIndexes);
 
     return false;
+}
+
+void DnsServersTest::setNotAskedResults(
+        DnsServerResult::Status status, const QList<int> &invalidIndexes)
+{
+    for (int i = 0; i < m_servers.size(); ++i) {
+        setResult(i,
+                { .status = invalidIndexes.contains(i) ? DnsServerResult::StatusInvalid : status });
+    }
 }
 
 void DnsServersTest::processAnswer(int index, const DnsAnswer &answer)

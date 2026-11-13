@@ -20,8 +20,11 @@ public:
 
     bool parse(const QString &text);
 
-    // Whether the servers are the DNS over HTTPS ones
-    static bool isHttpsServers(const QStringList &servers);
+    // Whether the server's text is of a DNS over HTTPS one, valid or not
+    static bool isHttpsServer(const QString &text);
+
+    // Whether the list has both the DNS over HTTPS and plain servers: a resolver is of one protocol
+    static bool isMixedServers(const QStringList &servers);
 
     // Empty with a wrong server
     static QList<DnsHttpsServer> parseServers(const QStringList &servers);

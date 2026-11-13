@@ -242,18 +242,28 @@ void DnsPage::updateTestResults()
 QString DnsPage::serverResultText(const DnsServerResult &result)
 {
     switch (result.status) {
-    case DnsServerResult::StatusNone:
-        return tr("Testing...");
     case DnsServerResult::StatusAnswered:
         return serverAnsweredText(result);
     case DnsServerResult::StatusFailed:
         return tr("Error: %1").arg(result.error);
+    default:
+        return serverStatusText(result);
+    }
+}
+
+QString DnsPage::serverStatusText(const DnsServerResult &result)
+{
+    switch (result.status) {
+    case DnsServerResult::StatusNone:
+        return tr("Testing...");
     case DnsServerResult::StatusTimeout:
         return tr("Timeout");
     case DnsServerResult::StatusLoop:
         return tr("Loop: the server is the DNS Forwarder itself");
     case DnsServerResult::StatusInvalid:
         return tr("Invalid server");
+    case DnsServerResult::StatusMixed:
+        return mixedServersText();
     default:
         return {};
     }
@@ -269,4 +279,9 @@ QString DnsPage::serverAnsweredText(const DnsServerResult &result)
 QString DnsPage::adaptersServersText()
 {
     return tr("Adapters' DNS servers");
+}
+
+QString DnsPage::mixedServersText()
+{
+    return tr("Plain and DNS over HTTPS servers can't be mixed");
 }

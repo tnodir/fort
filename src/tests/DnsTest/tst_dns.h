@@ -565,9 +565,19 @@ TEST_F(DnsTest, httpsServers)
             QStringList({ "https://1.1.1.1/dns-query", "9.9.9.9", "1.0.0.1", "1.1.1.1" }));
     ASSERT_TRUE(DnsUtil::splitServers(" ,\n").isEmpty());
 
-    ASSERT_TRUE(DnsHttpsServer::isHttpsServers({ "https://1.1.1.1/dns-query", "9.9.9.9" }));
-    ASSERT_FALSE(DnsHttpsServer::isHttpsServers({ "1.1.1.1", "9.9.9.9" }));
-    ASSERT_FALSE(DnsHttpsServer::isHttpsServers({}));
+    ASSERT_TRUE(DnsHttpsServer::isHttpsServer("HTTPS://1.1.1.1/dns-query"));
+    ASSERT_FALSE(DnsHttpsServer::isHttpsServer("1.1.1.1"));
+    ASSERT_FALSE(DnsHttpsServer::isHttpsServer({}));
+
+    // The mixed protocols in any order
+    ASSERT_TRUE(DnsHttpsServer::isMixedServers({ "https://1.1.1.1/dns-query", "9.9.9.9" }));
+    ASSERT_TRUE(DnsHttpsServer::isMixedServers({ "9.9.9.9", "https://1.1.1.1/dns-query" }));
+    ASSERT_FALSE(DnsHttpsServer::isMixedServers({ "1.1.1.1", "9.9.9.9" }));
+    ASSERT_FALSE(DnsHttpsServer::isMixedServers(
+            { "https://1.1.1.1/dns-query", "https://9.9.9.9/dns-query" }));
+    ASSERT_FALSE(DnsHttpsServer::isMixedServers({}));
+
+    ASSERT_EQ(DnsResolver::create({ "9.9.9.9", "https://1.1.1.1/dns-query" }), nullptr);
 
     const auto servers = DnsHttpsServer::parseServers(
             { "https://1.1.1.1/dns-query", "https://dns.example/dns-query?ip=192.0.2.1" });
@@ -803,8 +813,8 @@ TEST_F(DnsTest, serversTestLoop)
 
 TEST_F(DnsTest, serversTestInvalid)
 {
-    // A plain address among the DNS over HTTPS servers: no server is asked
-    DnsServersTest test({ "https://1.1.1.1/dns-query", "9.9.9.9" });
+    // An invalid server: no server is asked
+    DnsServersTest test({ "https://1.1.1.1/dns-query", "https://dns.example/dns-query" });
 
     QList<int> readyIndexes;
     QObject::connect(&test, &DnsServersTest::resultReady, &test,
@@ -822,7 +832,27 @@ TEST_F(DnsTest, serversTestInvalid)
     DnsServersTest plainTest({ "1.1.1.1", "1.1.1.1:port" });
     plainTest.start();
     ASSERT_TRUE(plainTest.isFinished());
+    ASSERT_EQ(plainTest.results().at(0).status, DnsServerResult::StatusSkipped);
     ASSERT_EQ(plainTest.results().at(1).status, DnsServerResult::StatusInvalid);
+}
+
+TEST_F(DnsTest, serversTestMixed)
+{
+    // The plain and DNS over HTTPS servers in any order: no server is asked
+    const QList<QStringList> serversList = {
+        { "https://1.1.1.1/dns-query", "9.9.9.9" },
+        { "9.9.9.9", "https://1.1.1.1/dns-query" },
+    };
+
+    for (const QStringList &servers : serversList) {
+        DnsServersTest test(servers);
+        test.start();
+        ASSERT_TRUE(test.isFinished());
+
+        for (const DnsServerResult &result : test.results()) {
+            ASSERT_EQ(result.status, DnsServerResult::StatusMixed);
+        }
+    }
 }
 
 // Asks each server of the DNS providers: run it manually, with the network

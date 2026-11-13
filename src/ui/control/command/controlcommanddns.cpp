@@ -33,6 +33,8 @@ QString serverResultText(const DnsServerResult &result)
         return "loop";
     case DnsServerResult::StatusInvalid:
         return "invalid server";
+    case DnsServerResult::StatusMixed:
+        return "mixed protocols";
     default:
         return {};
     }

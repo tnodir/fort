@@ -186,6 +186,10 @@ void DnsManager::stop()
 bool DnsManager::openResolver(const QStringList &servers)
 {
     auto resolver = DnsResolver::create(servers);
+    if (!resolver) {
+        qCWarning(LC) << "Mixed plain and DNS over HTTPS servers:" << servers;
+        return false;
+    }
 
     if (!resolver->open(servers))
         return false;
