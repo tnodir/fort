@@ -78,7 +78,7 @@ void DnsManager::setUp()
 
 void DnsManager::tearDown()
 {
-    stop();
+    closeForwarder();
 }
 
 DnsServersTest *DnsManager::createServersTest(const QStringList &servers, QObject *parent)
@@ -91,6 +91,16 @@ DnsServersTest *DnsManager::createServersTest(const QStringList &servers, QObjec
     connect(test, &QObject::destroyed, this, [=, this] { m_serversTests.removeOne(test); });
 
     return test;
+}
+
+void DnsManager::setStatus(const DnsForwarderStatus &status)
+{
+    if (m_status == status)
+        return;
+
+    m_status = status;
+
+    emit statusChanged();
 }
 
 void DnsManager::setupConfManager()
@@ -147,32 +157,54 @@ void DnsManager::setupBlockZones(quint32 zonesMask)
     }
 }
 
+// The failed start is retried on the options' change
 void DnsManager::start(const QStringList &servers)
 {
     if (isStarted() && m_servers == servers)
         return;
 
-    stop();
+    closeForwarder();
 
-    if (!openResolver(servers))
-        return;
+    setStatus(openForwarder(servers));
+}
+
+void DnsManager::stop()
+{
+    closeForwarder();
+
+    setStatus({});
+}
+
+DnsForwarderStatus DnsManager::openForwarder(const QStringList &servers)
+{
+    const DnsForwarderStatus::Status status = openResolver(servers);
+    if (status != DnsForwarderStatus::StatusStarted) {
+        return { .status = status };
+    }
 
     if (!m_listener.listen()) {
         closeResolver();
-        return;
+        return {
+            .status = DnsForwarderStatus::StatusListenError,
+            .errorMessage = m_listener.errorString(),
+        };
     }
 
     m_servers = servers;
     m_loopLogged = false;
 
-    if (!addNrptRule()) {
+    const bool nrptAdded = addNrptRule();
+    if (!nrptAdded) {
         qCWarning(LC) << "NRPT rule error";
     }
 
     loadHosts();
+
+    return { .status = nrptAdded ? DnsForwarderStatus::StatusStarted
+                                 : DnsForwarderStatus::StatusNrptError };
 }
 
-void DnsManager::stop()
+void DnsManager::closeForwarder()
 {
     if (!removeNrptRule()) {
         qCWarning(LC) << "NRPT rule removal error";
@@ -184,22 +216,22 @@ void DnsManager::stop()
     unloadHosts();
 }
 
-bool DnsManager::openResolver(const QStringList &servers)
+DnsForwarderStatus::Status DnsManager::openResolver(const QStringList &servers)
 {
     auto resolver = DnsResolver::create(servers);
     if (!resolver) {
         qCWarning(LC) << "Mixed plain and DNS over HTTPS servers:" << servers;
-        return false;
+        return DnsForwarderStatus::StatusMixedServers;
     }
 
     if (!resolver->open(servers))
-        return false;
+        return DnsForwarderStatus::StatusInvalidServers;
 
     connect(resolver.get(), &DnsResolver::resolved, this, &DnsManager::processAnswer);
 
     m_resolver = std::move(resolver);
 
-    return true;
+    return DnsForwarderStatus::StatusStarted;
 }
 
 void DnsManager::closeResolver()

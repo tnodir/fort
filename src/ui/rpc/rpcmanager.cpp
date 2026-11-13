@@ -95,6 +95,7 @@ void RpcManager::setupServerSignals()
     ConfGroupManagerRpc::setupServerSignals(this);
     ConfSpeedLimitManagerRpc::setupServerSignals(this);
     ConfTimePeriodManagerRpc::setupServerSignals(this);
+    DnsManagerRpc::setupServerSignals(this);
     DriverManagerRpc::setupServerSignals(this);
     QuotaManagerRpc::setupServerSignals(this);
     StatManagerRpc::setupServerSignals(this);
@@ -199,6 +200,7 @@ void RpcManager::initClientOnServer(ControlWorker *w) const
     w->setIsServiceClient(true);
 
     AutoUpdateManagerRpc::processInitClient(w);
+    DnsManagerRpc::processInitClient(w);
     DriverManagerRpc::processInitClient(w);
 }
 

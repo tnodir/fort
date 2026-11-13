@@ -45,11 +45,10 @@ void writeTcpResponse(QAbstractSocket *socket, const QByteArray &response)
 
 // Deletes the listener on error
 template<typename T>
-bool appendListener(QList<T *> &list, T *listener, bool ok, const QHostAddress &address)
+bool appendListener(QList<T *> &list, T *listener, bool ok, QString &errorString)
 {
     if (!ok) {
-        qCWarning(LC) << "Listen error:" << listener->metaObject()->className() << address
-                      << listener->errorString();
+        errorString = listener->errorString();
 
         delete listener;
         return false;
@@ -67,6 +66,8 @@ DnsListener::DnsListener(QObject *parent) : QObject(parent) { }
 bool DnsListener::listen()
 {
     close();
+
+    m_errorString.clear();
 
     // The NRPT rule sends the queries to 127.0.0.1
     if (!listenAddress(QHostAddress::LocalHost)) {
@@ -103,7 +104,12 @@ void DnsListener::sendResponse(const DnsClient &client, const QByteArray &respon
 
 bool DnsListener::listenAddress(const QHostAddress &address)
 {
-    return listenUdp(address) && listenTcp(address);
+    if (listenUdp(address) && listenTcp(address))
+        return true;
+
+    qCWarning(LC) << "Listen error:" << address << m_errorString;
+
+    return false;
 }
 
 bool DnsListener::listenUdp(const QHostAddress &address)
@@ -114,7 +120,7 @@ bool DnsListener::listenUdp(const QHostAddress &address)
 
     const bool ok = socket->bind(address, dnsPort, QAbstractSocket::DontShareAddress);
 
-    return appendListener(m_udpSockets, socket, ok, address);
+    return appendListener(m_udpSockets, socket, ok, m_errorString);
 }
 
 bool DnsListener::listenTcp(const QHostAddress &address)
@@ -125,7 +131,7 @@ bool DnsListener::listenTcp(const QHostAddress &address)
 
     const bool ok = server->listen(address, dnsPort);
 
-    return appendListener(m_tcpServers, server, ok, address);
+    return appendListener(m_tcpServers, server, ok, m_errorString);
 }
 
 void DnsListener::readDatagrams(QUdpSocket *socket)

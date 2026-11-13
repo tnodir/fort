@@ -35,6 +35,17 @@ private:
     DnsManagerRpc *m_dnsManager = nullptr;
 };
 
+bool processDnsManager_updateState(const ProcessCommandArgs &p)
+{
+    if (auto dnsManager = qobject_cast<DnsManagerRpc *>(Fort::dnsManager())) {
+        dnsManager->updateState({
+                .status = DnsForwarderStatus::Status(p.args.value(0).toInt()),
+                .errorMessage = p.args.value(1).toString(),
+        });
+    }
+    return true;
+}
+
 QVariant resultToVariant(const DnsServerResult &result)
 {
     return QVariantList { result.status, int(result.rcode), result.msecs, result.error };
@@ -113,9 +124,24 @@ void DnsManagerRpc::onServerTested(quint32 testId, int index, const DnsServerRes
     test->setResult(index, result);
 }
 
+QVariantList DnsManagerRpc::updateState_args()
+{
+    const DnsForwarderStatus &status = Fort::dnsManager()->status();
+
+    return { int(status.status), status.errorMessage };
+}
+
+bool DnsManagerRpc::processInitClient(ControlWorker *w)
+{
+    return w->sendCommand(Control::Rpc_DnsManager_updateState, updateState_args());
+}
+
 bool DnsManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     switch (p.command) {
+    case Control::Rpc_DnsManager_updateState: {
+        return processDnsManager_updateState(p);
+    }
     case Control::Rpc_DnsManager_testServers: {
         return processDnsManager_testServers(p);
     }
@@ -125,4 +151,12 @@ bool DnsManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCom
     default:
         return false;
     }
+}
+
+void DnsManagerRpc::setupServerSignals(RpcManager *rpcManager)
+{
+    connect(Fort::dnsManager(), &DnsManager::statusChanged, rpcManager, [=] {
+        rpcManager->invokeOnClients(
+                Control::Rpc_DnsManager_updateState, DnsManagerRpc::updateState_args());
+    });
 }

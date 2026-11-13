@@ -16,6 +16,25 @@
 #include "dnshostblocker.h"
 #include "hostzonesdb.h"
 
+struct DnsForwarderStatus
+{
+    enum Status : qint8 {
+        StatusOff = 0,
+        StatusStarted,
+        StatusNrptError, // started, but the system's queries aren't sent to it
+        StatusMixedServers, // not started: the plain and DNS over HTTPS servers are mixed
+        StatusInvalidServers, // not started: the resolver can't take the servers
+        StatusListenError, // not started: the port 53 can't be listened, e.g. it's busy
+    };
+
+    bool isError() const { return status >= StatusNrptError; }
+
+    bool operator==(const DnsForwarderStatus &o) const = default;
+
+    Status status = StatusOff;
+    QString errorMessage;
+};
+
 // The DNS forwarder of the service: resolves the names but the Block Zones' ones, adding the
 // addresses of the referenced Hosts Zones' and host() filters' names to them in the driver before
 // answering
@@ -29,6 +48,9 @@ public:
 
     bool isStarted() const { return m_resolver != nullptr; }
 
+    // Of the forwarder by the options, set by the service
+    const DnsForwarderStatus &status() const { return m_status; }
+
     // The rule of a crashed service is removed by the uninstall
     static bool removeNrptRule();
 
@@ -37,6 +59,12 @@ public:
 
     // The test of the upstream servers, to start after connecting to its signals
     virtual DnsServersTest *createServersTest(const QStringList &servers, QObject *parent);
+
+signals:
+    void statusChanged();
+
+protected:
+    void setStatus(const DnsForwarderStatus &status);
 
 private:
     static bool addNrptRule();
@@ -50,7 +78,10 @@ private:
     void start(const QStringList &servers);
     void stop();
 
-    bool openResolver(const QStringList &servers);
+    DnsForwarderStatus openForwarder(const QStringList &servers);
+    void closeForwarder();
+
+    DnsForwarderStatus::Status openResolver(const QStringList &servers);
     void closeResolver();
 
     void loadHosts();
@@ -87,6 +118,8 @@ private:
     quint32 m_refZonesMask = 0;
 
     std::unique_ptr<DnsResolver> m_resolver;
+
+    DnsForwarderStatus m_status;
 
     QStringList m_servers;
 

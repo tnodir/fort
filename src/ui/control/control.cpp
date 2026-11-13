@@ -109,6 +109,7 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(Rpc_ConfTimePeriodManager_timePeriodRemoved),
     CASE_STRING(Rpc_ConfTimePeriodManager_timePeriodUpdated),
 
+    CASE_STRING(Rpc_DnsManager_updateState),
     CASE_STRING(Rpc_DnsManager_testServers),
     CASE_STRING(Rpc_DnsManager_serverTested),
 
@@ -289,6 +290,7 @@ static const RpcManager g_commandManagers[] = {
     Rpc_ConfTimePeriodManager, // Rpc_ConfTimePeriodManager_timePeriodRemoved,
     Rpc_ConfTimePeriodManager, // Rpc_ConfTimePeriodManager_timePeriodUpdated,
 
+    Rpc_DnsManager, // Rpc_DnsManager_updateState,
     Rpc_DnsManager, // Rpc_DnsManager_testServers,
     Rpc_DnsManager, // Rpc_DnsManager_serverTested,
 
@@ -443,6 +445,7 @@ static const qint8 g_commandValidations[] = {
     0, // Rpc_ConfTimePeriodManager_timePeriodRemoved,
     0, // Rpc_ConfTimePeriodManager_timePeriodUpdated,
 
+    0, // Rpc_DnsManager_updateState,
     true, // Rpc_DnsManager_testServers,
     0, // Rpc_DnsManager_serverTested,
 
