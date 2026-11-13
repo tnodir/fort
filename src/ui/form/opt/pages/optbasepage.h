@@ -42,6 +42,9 @@ public slots:
     virtual void onResetToDefault() { }
 
 protected:
+    // The warning's icon with the label
+    static QWidget *createWarning(QLabel *label);
+
     // The warning by the label, shown only without the Service
     static QWidget *createNoServiceWarning(QLabel *label);
 

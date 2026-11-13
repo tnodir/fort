@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+#include <dns/dnshttpsserver.h>
 #include <dns/dnsserverstest.h>
 #include <dns/dnsutil.h>
 
@@ -72,6 +73,7 @@ void DnsPage::onRetranslateUi()
     m_editServers->setToolTip(
             tr("A server per line: addresses, e.g. \"1.1.1.1\", or DNS over HTTPS URLs with the "
                "server's address, e.g. \"https://dns.example/dns-query?ip=192.0.2.1\""));
+    m_labelMixedServers->setText(mixedServersText());
     updateTestResults();
 }
 
@@ -146,12 +148,14 @@ QLayout *DnsPage::setupServersLayout()
     setupComboServers();
     setupTestButton();
     setupEditServers();
+    setupMixedServersWarning();
     setupTestResults();
 
     auto layout = new QVBoxLayout();
     layout->addLayout(ControlUtil::createHLayoutByWidgets(
             { m_labelServers, /*stretch*/ nullptr, m_comboServers, m_btTest }, /*margin=*/0));
     layout->addWidget(m_editServers);
+    layout->addWidget(m_mixedServersWarning);
     layout->addWidget(m_editTestResults);
 
     return layout;
@@ -196,7 +200,18 @@ void DnsPage::setupEditServers()
         ctrl()->setIniEdited();
 
         m_comboServers->setCurrentIndex(m_comboServers->findData(servers));
+
+        updateMixedServersWarning(servers);
     });
+}
+
+void DnsPage::setupMixedServersWarning()
+{
+    m_labelMixedServers = ControlUtil::createLabel();
+
+    m_mixedServersWarning = createWarning(m_labelMixedServers);
+
+    updateMixedServersWarning(ini().dnsServers());
 }
 
 void DnsPage::setupTestResults()
@@ -212,6 +227,11 @@ void DnsPage::onBlockZonesEdited()
 {
     ini().setDnsBlockZones(m_btBlockZones->mask());
     ctrl()->setIniEdited();
+}
+
+void DnsPage::updateMixedServersWarning(const QStringList &servers)
+{
+    m_mixedServersWarning->setVisible(DnsHttpsServer::isMixedServers(servers));
 }
 
 void DnsPage::testServers()

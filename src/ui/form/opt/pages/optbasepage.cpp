@@ -27,7 +27,7 @@ IniUser &OptBasePage::iniUser() const
     return ctrl()->iniUserToEdit();
 }
 
-QWidget *OptBasePage::createNoServiceWarning(QLabel *label)
+QWidget *OptBasePage::createWarning(QLabel *label)
 {
     auto iconWarning = ControlUtil::createIconLabel(":/icons/error.png", QSize(16, 16));
 
@@ -35,7 +35,12 @@ QWidget *OptBasePage::createNoServiceWarning(QLabel *label)
 
     auto layout = ControlUtil::createHLayoutByWidgets({ iconWarning, label }, /*margin=*/0);
 
-    auto w = ControlUtil::wrapToWidget(layout);
+    return ControlUtil::wrapToWidget(layout);
+}
+
+QWidget *OptBasePage::createNoServiceWarning(QLabel *label)
+{
+    auto w = createWarning(label);
     w->setVisible(!Fort::settings()->hasService());
 
     return w;
