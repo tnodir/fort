@@ -32,6 +32,8 @@ public:
     ip_addr_t localIp;
     ip_addr_t remoteIp;
 
+    QString remoteHost; // by the DNS Client's answer to the process
+
     QString appPath;
     QString inheritAppPath;
 

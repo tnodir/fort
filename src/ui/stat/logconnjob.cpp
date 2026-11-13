@@ -181,6 +181,7 @@ void LogConnJob::bindConn(
         stmt->bindBlobView(ConnRemoteIp6, entry.remoteIp6View());
     }
 
+    stmt->bindVar(ConnRemoteHost, DbVar::nullable(entry.remoteHost()));
     stmt->bindInt(ConnZoneId, entry.zoneId());
     stmt->bindInt(ConnRuleId, entry.ruleId());
     stmt->bindBool(ConnLoopback, entry.loopback());

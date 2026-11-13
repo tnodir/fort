@@ -4,6 +4,7 @@
 
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
+#include <dns/dnsclientmanager.h>
 #include <driver/drivercommon.h>
 #include <driver/drivermanager.h>
 #include <driver/driverworker.h>
@@ -196,6 +197,8 @@ bool LogManager::processLogEntryConn(LogBuffer *logBuffer)
     logBuffer->readEntryConn(&connEntry);
 
     connEntry.setConnTime(currentUnixTime());
+    connEntry.setRemoteHost(dnsClientManager()->hostName(
+            connEntry.pid(), connEntry.remoteIp(), connEntry.isIPv6()));
 
     if (connEntry.isAskPending()) {
         pendingConnManager()->logConn(connEntry, /*urgent=*/true);

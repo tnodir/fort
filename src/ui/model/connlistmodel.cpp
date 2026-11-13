@@ -129,6 +129,11 @@ QVariant dataDisplayRemoteHostName(const ConnRow &connRow, int role)
 {
     const bool resolveAddress = (role >= Qt::UserRole);
 
+    // The name the program asked, else the address's PTR one
+    if (resolveAddress && !connRow.remoteHost.isEmpty()) {
+        return connRow.remoteHost;
+    }
+
     return formatIp(connRow.remoteIp, connRow.isIPv6, resolveAddress);
 }
 
@@ -429,14 +434,16 @@ void ConnListModel::fillConnRow(ConnRow &connRow, const SqliteStmt &stmt)
         connRow.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(17, /*isView=*/true));
     }
 
-    connRow.zoneId = stmt.columnInt(18);
-    connRow.ruleId = stmt.columnInt(19);
+    connRow.remoteHost = stmt.columnText(18);
 
-    connRow.loopback = stmt.columnBool(20);
+    connRow.zoneId = stmt.columnInt(19);
+    connRow.ruleId = stmt.columnInt(20);
 
-    connRow.confAppId = stmt.columnInt64(21);
-    connRow.appPath = stmt.columnText(22);
-    connRow.inheritAppPath = stmt.columnText(23);
+    connRow.loopback = stmt.columnBool(21);
+
+    connRow.confAppId = stmt.columnInt64(22);
+    connRow.appPath = stmt.columnText(23);
+    connRow.inheritAppPath = stmt.columnText(24);
 }
 
 StatConnManager *ConnListModel::connManager() const
@@ -494,6 +501,7 @@ QString ConnListModel::sqlBase() const
            "    t.remote_ip,"
            "    t.local_ip6,"
            "    t.remote_ip6,"
+           "    t.remote_host,"
            "    t.zone_id,"
            "    t.rule_id,"
            "    t.loopback,"
