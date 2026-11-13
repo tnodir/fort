@@ -23,9 +23,9 @@ void DnsClientManager::tearDown()
     m_listener.close();
 }
 
-QString DnsClientManager::hostName(quint32 pid, const ip_addr_t &ip, bool isIPv6) const
+QString DnsClientManager::hostName(const ProcessIpKey &key) const
 {
-    return m_hosts.value(hostKey(pid, ip, isIPv6));
+    return m_hosts.value(key);
 }
 
 void DnsClientManager::addAnswer(const DnsClientAnswer &answer)
@@ -40,31 +40,25 @@ void DnsClientManager::addAnswer(const DnsClientAnswer &answer)
         ip_addr_t ip;
         ip.v4 = ip4;
 
-        m_hosts.insert(hostKey(pid, ip, /*isIPv6=*/false), name, deadline);
+        addHost(ProcessIpKey(pid, ip, /*isIPv6=*/false), name, deadline);
     }
 
     for (const ip6_addr_t &ip6 : addresses.ip6Array()) {
         ip_addr_t ip;
         ip.v6 = ip6;
 
-        m_hosts.insert(hostKey(pid, ip, /*isIPv6=*/true), name, deadline);
+        addHost(ProcessIpKey(pid, ip, /*isIPv6=*/true), name, deadline);
     }
 }
 
-DnsClientManager::HostKey DnsClientManager::hostKey(quint32 pid, const ip_addr_t &ip, bool isIPv6)
+void DnsClientManager::addHost(
+        const ProcessIpKey &key, const QString &name, const QDeadlineTimer &deadline)
 {
-    // Compared and hashed by the bytes: the unused ones are zeroes
-    HostKey key;
-    std::memset(&key, 0, sizeof(key));
+    const QString oldName = m_hosts.value(key);
 
-    key.pid = pid;
-    key.isIPv6 = isIPv6;
+    m_hosts.insert(key, name, deadline);
 
-    if (isIPv6) {
-        key.ip.v6 = ip.v6;
-    } else {
-        key.ip.v4 = ip.v4;
+    if (oldName != name) {
+        emit hostNameAdded(key, name);
     }
-
-    return key;
 }

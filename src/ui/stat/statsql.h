@@ -81,6 +81,10 @@ public:
 
     static const char *const sqlUpdateConnId;
 
+    static const char *const sqlUpdateConnHostIp4;
+    static const char *const sqlUpdateConnHostIp6;
+    static const char *const sqlSelectConnHosts;
+
     static const char *const sqlDeleteConn;
     static const char *const sqlDeleteConnApps;
 

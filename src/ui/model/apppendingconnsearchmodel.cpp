@@ -71,6 +71,13 @@ void AppPendingConnSearchModel::clearConnRows()
     AppConnSearchModel::clearConnRows();
 }
 
+void AppPendingConnSearchModel::updateConnHosts()
+{
+    loadConnHosts(m_listedRows);
+
+    AppConnSearchModel::updateConnHosts();
+}
+
 void AppPendingConnSearchModel::updateSearch()
 {
     // Another program's connections are loaded

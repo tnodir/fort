@@ -9,6 +9,7 @@
 
 #include <appinfo/appinfocache.h>
 #include <fortglobal.h>
+#include <stat/statsql.h>
 #include <util/fileutil.h>
 #include <util/net/netformatutil.h>
 #include <util/net/netutil.h>
@@ -125,6 +126,15 @@ void ConnSearchModel::reloadConnRows()
 
     reset();
     updateConnIdRange();
+}
+
+void ConnSearchModel::updateConnHosts()
+{
+    if (isSearching()) {
+        loadConnHosts(m_connRows);
+    }
+
+    ConnListModel::updateConnHosts();
 }
 
 bool ConnSearchModel::updateTableRow(const QVariantHash &vars, int row) const
@@ -247,6 +257,32 @@ void ConnSearchModel::appendMatchedConnRows(const QVector<ConnRow> &connRows)
     m_connRows.append(matchedRows);
     invalidateRowCache();
     endInsertRows();
+}
+
+void ConnSearchModel::loadConnHosts(QVector<ConnRow> &connRows) const
+{
+    // The rows are ascending by conn_id
+    auto rowIt = std::find_if(connRows.begin(), connRows.end(),
+            [](const ConnRow &connRow) { return connRow.remoteHost.isEmpty(); });
+    if (rowIt == connRows.end())
+        return;
+
+    SqliteStmt stmt;
+    if (!DbQuery(sqliteDb()).sql(StatSql::sqlSelectConnHosts).vars({ rowIt->connId }).prepare(stmt))
+        return;
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        const qint64 connId = stmt.columnInt64(0);
+
+        rowIt = std::lower_bound(rowIt, connRows.end(), connId,
+                [](const ConnRow &connRow, qint64 id) { return connRow.connId < id; });
+        if (rowIt == connRows.end())
+            break;
+
+        if (rowIt->connId == connId) {
+            rowIt->remoteHost = stmt.columnText(1);
+        }
+    }
 }
 
 void ConnSearchModel::loadConnRows(qint64 connIdFrom, QVector<ConnRow> &connRows, int count)

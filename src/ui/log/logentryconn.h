@@ -3,6 +3,8 @@
 
 #include <common/common_types.h>
 
+#include <util/net/processipkey.h>
+
 #include "logentryapp.h"
 
 class LogEntryConn : public LogEntryApp
@@ -83,6 +85,8 @@ public:
 
     QByteArrayView remoteIp6View() const;
     void setRemoteIp6ByView(const QByteArrayView &ip);
+
+    ProcessIpKey remoteIpKey() const { return ProcessIpKey(pid(), m_remoteIp, m_isIPv6); }
 
     // By the DNS Client's answer to the process
     const QString &remoteHost() const { return m_remoteHost; }

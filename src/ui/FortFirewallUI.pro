@@ -269,6 +269,7 @@ SOURCES += \
     stat/statconnworker.cpp \
     stat/statmanager.cpp \
     stat/statsql.cpp \
+    stat/updateconnhostsjob.cpp \
     task/taskdownloader.cpp \
     task/taskeditinfo.cpp \
     task/taskinfo.cpp \
@@ -627,6 +628,7 @@ HEADERS += \
     stat/statmanager.h \
     stat/statsql.h \
     stat/trafbytes.h \
+    stat/updateconnhostsjob.h \
     task/taskdownloader.h \
     task/taskeditinfo.h \
     task/taskinfo.h \
@@ -692,6 +694,7 @@ HEADERS += \
     util/net/netutil.h \
     util/net/optionrange.h \
     util/net/portrange.h \
+    util/net/processipkey.h \
     util/net/profilerange.h \
     util/net/protorange.h \
     util/net/textrange.h \
