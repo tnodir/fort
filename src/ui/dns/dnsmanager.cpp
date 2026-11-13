@@ -325,6 +325,18 @@ HostMatch DnsManager::matchHost(QStringView name) const
     return match;
 }
 
+// The answer's addresses are of its last canonical name
+HostMatch DnsManager::matchAnswer(const DnsRequest &request, const DnsAnswer &answer) const
+{
+    HostMatch match = matchHost(request.query.name());
+
+    for (const QString &target : answer.cnameTargets()) {
+        match.add(matchHost(target));
+    }
+
+    return match;
+}
+
 void DnsManager::processQuery(const DnsClient &client, const QByteArray &data)
 {
     DnsRequest request = { .client = client };
@@ -353,7 +365,7 @@ void DnsManager::processAnswer(const DnsRequest &request, const DnsAnswer &answe
     const QString &name = request.query.name();
     const DnsAddresses &addresses = answer.addresses();
 
-    if (!writeHostIps(matchHost(name), addresses)) {
+    if (!writeHostIps(request, answer)) {
         sendRcode(request, ARES_RCODE_SERVFAIL);
         return;
     }
@@ -404,9 +416,14 @@ void DnsManager::logLoop()
     qCWarning(LC) << "Loop: the upstream servers include the forwarder:" << m_servers;
 }
 
-bool DnsManager::writeHostIps(const HostMatch &match, const DnsAddresses &addresses)
+bool DnsManager::writeHostIps(const DnsRequest &request, const DnsAnswer &answer)
 {
-    if (addresses.isEmpty() || match.isEmpty())
+    const DnsAddresses &addresses = answer.addresses();
+    if (addresses.isEmpty())
+        return true;
+
+    const HostMatch match = matchAnswer(request, answer);
+    if (match.isEmpty())
         return true;
 
     ConfBuffer confBuf;
