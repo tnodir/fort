@@ -3,6 +3,7 @@
 
 #include <QByteArray>
 #include <QString>
+#include <QStringList>
 
 #include "dnsaddresses.h"
 
@@ -21,6 +22,9 @@ public:
 
     const DnsAddresses &addresses() const { return m_addresses; }
 
+    // The CNAME records' targets, the canonical names of the answer
+    const QStringList &cnameTargets() const { return m_cnameTargets; }
+
     // The resolver's error, empty for the upstream server's answer
     const QString &error() const { return m_error; }
 
@@ -38,7 +42,7 @@ public:
     void setError(const DnsQuery &query, const QString &error);
 
 private:
-    void readAddresses(const ares_dns_record *record);
+    void readAnswers(const ares_dns_record *record);
     bool readAddress(const ares_dns_rr *rr);
 
 private:
@@ -47,6 +51,8 @@ private:
     QByteArray m_response;
 
     DnsAddresses m_addresses;
+
+    QStringList m_cnameTargets;
 
     QString m_error;
 };

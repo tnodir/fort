@@ -2,6 +2,7 @@
 
 #include <QLoggingCategory>
 
+#include <dns/dnsanswer.h>
 #include <dns/dnsquery.h>
 
 #include "hostzonesdb.h"
@@ -24,10 +25,21 @@ bool DnsHostBlocker::isQueryBlocked(const DnsQuery &query) const
     return false;
 }
 
-// The Block Zones may be changed while the query waits for the answer
+// The Block Zones may be changed while the query waits for the answer. Their names may be the
+// canonical names of another name's answer, e.g. of a tracker behind the site's subdomain
 bool DnsHostBlocker::isAnswerBlocked(const DnsQuery &query, const DnsAnswer &answer) const
 {
-    return isQueryBlocked(query);
+    if (isQueryBlocked(query))
+        return true;
+
+    for (const QString &target : answer.cnameTargets()) {
+        if (isHostBlocked(target)) {
+            qCDebug(LC) << "Blocked:" << query.name() << "CNAME:" << target;
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool DnsHostBlocker::isHostBlocked(QStringView name) const

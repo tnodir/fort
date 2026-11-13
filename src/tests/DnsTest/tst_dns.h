@@ -299,6 +299,8 @@ TEST_F(DnsTest, recordAnswer)
     ASSERT_EQ(addresses.ip6Array().size(), 1);
     ASSERT_EQ(NetFormatUtil::ip6ToText(addresses.ip6Array().at(0)), "2001:db8::1");
 
+    ASSERT_EQ(answer.cnameTargets(), QStringList({ "cdn.example.net" }));
+
     // The client's id, without EDNS
     {
         const DnsRecordPtr record = DnsUtil::parseRecord(answer.response());
@@ -451,12 +453,15 @@ TEST_F(DnsTest, hostBlocker)
 
     HostZonesDb db(":memory:");
     ASSERT_TRUE(db.open());
-    db.setEnabledMask(0b1);
+    db.setEnabledMask(0b11);
 
     HostRange hostRange;
 
     ASSERT_TRUE(hostRange.fromText("www.example.com"));
     ASSERT_TRUE(db.setZone(1, "c1", hostRange));
+
+    ASSERT_TRUE(hostRange.fromText("cdn.example.net"));
+    ASSERT_TRUE(db.setZone(2, "c2", hostRange));
 
     DnsQuery query;
     ASSERT_TRUE(query.parse(writeQuery(0x9999, "www.example.com", /*withOpt=*/false)));
@@ -470,6 +475,11 @@ TEST_F(DnsTest, hostBlocker)
 
     ASSERT_FALSE(blocker.isQueryBlocked(query));
     ASSERT_FALSE(blocker.isAnswerBlocked(query, answer));
+
+    // The CNAME target's Zone
+    blocker.setZonesMask(0b10);
+    ASSERT_FALSE(blocker.isQueryBlocked(query));
+    ASSERT_TRUE(blocker.isAnswerBlocked(query, answer));
 
     // The name's Zone blocked while the query waits for the upstream's answer
     blocker.setZonesMask(0b01);
