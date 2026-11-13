@@ -11,6 +11,7 @@
 #include <conf/confmanager.h>
 #include <conf/confzonemanager.h>
 #include <conf/inioptions.h>
+#include <dns/dnsclientmanager.h>
 #include <driver/drivermanager.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
@@ -317,10 +318,15 @@ void DnsManager::processAnswer(const DnsRequest &request, const DnsAnswer &answe
 
     // The Zones and host() filters may be changed since the query.
     // The client connects to the addresses after the answer.
-    if (!writeHostIps(matchHost(request.query.name()), answer.addresses())) {
+    const QString &name = request.query.name();
+    const DnsAddresses &addresses = answer.addresses();
+
+    if (!writeHostIps(matchHost(name), addresses)) {
         sendRcode(request, ARES_RCODE_SERVFAIL);
         return;
     }
+
+    addConnHostName(name, addresses);
 
     m_listener.sendResponse(request.client, answer.response());
 }
@@ -384,6 +390,16 @@ bool DnsManager::writeHostIps(const HostMatch &match, const DnsAddresses &addres
     }
 
     return true;
+}
+
+void DnsManager::addConnHostName(const QString &name, const DnsAddresses &addresses)
+{
+    if (addresses.isEmpty())
+        return;
+
+    const qint64 lifetimeMsecs = qint64(hostIpsTtl(addresses.ttl())) * 1000;
+
+    Fort::dnsClientManager()->addForwarderAnswer(name, addresses, lifetimeMsecs);
 }
 
 void DnsManager::sendRcode(const DnsRequest &request, quint8 rcode)

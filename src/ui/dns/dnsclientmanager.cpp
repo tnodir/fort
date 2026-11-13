@@ -23,19 +23,31 @@ void DnsClientManager::tearDown()
     m_listener.close();
 }
 
-QString DnsClientManager::hostName(const ProcessIpKey &key) const
+DnsClientManager::ConnHostName DnsClientManager::connHostName(const ProcessIpKey &key) const
 {
-    return m_hosts.value(key);
+    const QString name = m_hosts.value(key);
+    if (!name.isEmpty()) {
+        return { .ofProcess = true, .name = name };
+    }
+
+    return { .name = m_hosts.value(ProcessIpKey(/*pid=*/0, key.ip, key.isIPv6)) };
+}
+
+void DnsClientManager::addForwarderAnswer(
+        const QString &name, const DnsAddresses &addresses, qint64 lifetimeMsecs)
+{
+    addHosts(/*pid=*/0, addresses, name, QDeadlineTimer(lifetimeMsecs));
 }
 
 void DnsClientManager::addAnswer(const DnsClientAnswer &answer)
 {
-    const quint32 pid = answer.processId();
-    const QString &name = answer.name();
-    const QDeadlineTimer deadline(hostLifetimeMsecs);
+    addHosts(answer.processId(), answer.addresses(), answer.name(),
+            QDeadlineTimer(hostLifetimeMsecs));
+}
 
-    const DnsAddresses &addresses = answer.addresses();
-
+void DnsClientManager::addHosts(quint32 pid, const DnsAddresses &addresses, const QString &name,
+        const QDeadlineTimer &deadline)
+{
     for (const quint32 ip4 : addresses.ip4Array()) {
         ip_addr_t ip;
         ip.v4 = ip4;
@@ -58,7 +70,8 @@ void DnsClientManager::addHost(
 
     m_hosts.insert(key, name, deadline);
 
-    if (oldName != name) {
+    // The forwarder's names don't change the logged ones
+    if (key.pid != 0 && oldName != name) {
         emit hostNameAdded(key, name);
     }
 }

@@ -129,13 +129,13 @@ void ConnSearchModel::reloadConnRows()
     updateConnIdRange();
 }
 
-void ConnSearchModel::updateConnHosts()
+void ConnSearchModel::updateConnHosts(qint64 connIdMin)
 {
     if (isSearching()) {
-        loadConnHosts(m_connRows);
+        loadConnHosts(m_connRows, connIdMin);
     }
 
-    ConnListModel::updateConnHosts();
+    ConnListModel::updateConnHosts(connIdMin);
 }
 
 bool ConnSearchModel::updateTableRow(const QVariantHash &vars, int row) const
@@ -260,11 +260,11 @@ void ConnSearchModel::appendMatchedConnRows(const QVector<ConnRow> &connRows)
     endInsertRows();
 }
 
-void ConnSearchModel::loadConnHosts(QVector<ConnRow> &connRows) const
+void ConnSearchModel::loadConnHosts(QVector<ConnRow> &connRows, qint64 connIdMin) const
 {
     // The rows are ascending by conn_id
-    auto rowIt = std::find_if(connRows.begin(), connRows.end(),
-            [](const ConnRow &connRow) { return connRow.remoteHost.isEmpty(); });
+    auto rowIt = std::upper_bound(connRows.begin(), connRows.end(), connIdMin,
+            [](qint64 id, const ConnRow &connRow) { return id < connRow.connId; });
     if (rowIt == connRows.end())
         return;
 

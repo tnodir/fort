@@ -37,7 +37,7 @@ protected slots:
     void updateConnIdRange() override;
     void clearConnRows() override;
     void reloadConnRows() override;
-    void updateConnHosts() override;
+    void updateConnHosts(qint64 connIdMin) override;
 
     virtual void updateSearch();
 
@@ -71,8 +71,8 @@ protected:
     void appendConnRows(qint64 connIdFrom);
     void appendMatchedConnRows(const QVector<ConnRow> &connRows);
 
-    /* The loaded rows' host names, set after their loading */
-    void loadConnHosts(QVector<ConnRow> &connRows) const;
+    /* The host names of the loaded rows after the id, set after their loading */
+    void loadConnHosts(QVector<ConnRow> &connRows, qint64 connIdMin) const;
 
 private:
     void removeConnRowsBefore(qint64 idMin);

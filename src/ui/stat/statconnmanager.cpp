@@ -94,7 +94,7 @@ bool StatConnManager::logConn(const LogEntryConn &entry, bool urgent)
 
     enqueueJob(WorkerJobPtr(createLogConnJob(entry)));
 
-    if (entry.remoteHost().isEmpty()) {
+    if (!entry.remoteHostOfProcess()) {
         waitConnHost(entry);
     }
 

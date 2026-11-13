@@ -34,6 +34,10 @@ public:
     bool appAsked() const { return m_appAsked; }
     void setAppAsked(bool v) { m_appAsked = v; }
 
+    // The remote host's name is by the DNS Client's answer to the process
+    bool remoteHostOfProcess() const { return m_remoteHostOfProcess; }
+    void setRemoteHostOfProcess(bool v) { m_remoteHostOfProcess = v; }
+
     QString inheritKernelPath() const { return m_inheritKernelPath; }
     void setInheritKernelPath(const QString &v) { m_inheritKernelPath = v; }
 
@@ -88,7 +92,7 @@ public:
 
     ProcessIpKey remoteIpKey() const { return ProcessIpKey(pid(), m_remoteIp, m_isIPv6); }
 
-    // By the DNS Client's answer to the process
+    // By the DNS Client's answer to the process, else by the DNS forwarder's answer
     const QString &remoteHost() const { return m_remoteHost; }
     void setRemoteHost(const QString &v) { m_remoteHost = v; }
 
@@ -102,6 +106,7 @@ private:
     bool m_loopback : 1 = false;
     bool m_inherited : 1 = false;
     bool m_appAsked : 1 = false;
+    bool m_remoteHostOfProcess : 1 = false;
     quint8 m_reason = 0;
     quint8 m_ipProto = 0;
     quint8 m_zoneId = 0;

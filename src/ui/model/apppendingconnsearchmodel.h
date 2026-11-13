@@ -25,7 +25,7 @@ protected slots:
     /* The listed rows are kept: the new ones are appended */
     void updateConnIdRange() override;
     void clearConnRows() override;
-    void updateConnHosts() override;
+    void updateConnHosts(qint64 connIdMin) override;
 
     /* The listed rows are filtered: the no longer pending ones aren't in the DB */
     void updateSearch() override;

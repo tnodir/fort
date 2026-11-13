@@ -49,7 +49,7 @@ signals:
     void connChanged();
     void connCleared();
     void connIdsShifted(); // the later connections' ids, after deleting by ids
-    void connHostsChanged(); // the logged connections' host names
+    void connHostsChanged(qint64 connIdMin); // the host names of the connections after the id
 
     void logConnFinished(int count, qint64 newConnId);
     void deleteConnFinished(qint64 connIdTo);

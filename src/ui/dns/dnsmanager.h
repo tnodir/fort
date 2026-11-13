@@ -75,6 +75,7 @@ private:
     void logLoop();
 
     bool writeHostIps(const HostMatch &match, const DnsAddresses &addresses);
+    void addConnHostName(const QString &name, const DnsAddresses &addresses);
 
     void sendRcode(const DnsRequest &request, quint8 rcode);
 
