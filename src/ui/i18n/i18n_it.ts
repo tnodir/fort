@@ -77,6 +77,18 @@
         <source>Filter Local Network</source>
         <translation>Filtra rete locale</translation>
     </message>
+    <message>
+        <source>Filter Fort Firewall&apos;s Service</source>
+        <translation>Filtra il Servizio di Fort Firewall</translation>
+    </message>
+    <message>
+        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
+        <translation>Filtra le connessioni del Servizio come quelle degli altri programmi, altrimenti consentile</translation>
+    </message>
+    <message>
+        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
+        <translation>Senza il Servizio, Fort Firewall viene filtrato come gli altri programmi</translation>
+    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -417,6 +429,18 @@
         <translation>Indirizzo Internet consentito</translation>
     </message>
     <message>
+        <source>Fort Firewall&apos;s Service</source>
+        <translation>Servizio di Fort Firewall</translation>
+    </message>
+    <message>
+        <source>Block DNS port</source>
+        <translation>Blocca porta DNS</translation>
+    </message>
+    <message>
+        <source>Block DNS over TLS port</source>
+        <translation>Blocca porta DNS over TLS</translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>Sconosciuto</translation>
     </message>
@@ -603,6 +627,93 @@
     </message>
 </context>
 <context>
+    <name>DnsPage</name>
+    <message>
+        <source>Without the Service, the DNS options don&apos;t work</source>
+        <translation>Senza il Servizio, le opzioni DNS non funzionano</translation>
+    </message>
+    <message>
+        <source>DNS Forwarder</source>
+        <translation>Inoltro DNS</translation>
+    </message>
+    <message>
+        <source>Filter DNS</source>
+        <translation>Filtra DNS</translation>
+    </message>
+    <message>
+        <source>Resolve the host names by the upstream DNS servers, adding the addresses of the Hosts Zones used by the IP Addresses, Programs and Rules and of the host() filters before answering; the names of the Block Zones are not found (only with the Service). The programs resolving the names by DNS over HTTPS themselves, e.g. the browsers with Secure DNS, bypass the DNS Forwarder</source>
+        <translation>Risolvi i nomi host tramite i server DNS upstream, aggiungendo prima della risposta gli indirizzi delle Zone host usate dagli Indirizzi IP, dai Programmi e dalle Regole e dei filtri host(); i nomi delle Zone di blocco non vengono trovati (solo con il Servizio). I programmi che risolvono da sé i nomi tramite DNS over HTTPS, ad es. i browser con DNS sicuro, aggirano l&apos;Inoltro DNS</translation>
+    </message>
+    <message>
+        <source>Block Zones:</source>
+        <translation>Zone di blocco:</translation>
+    </message>
+    <message>
+        <source>The names of the enabled Hosts Zones are not found, even if a host() filter lists them</source>
+        <translation>I nomi delle Zone host abilitate non vengono trovati, anche se un filtro host() li elenca</translation>
+    </message>
+    <message>
+        <source>Block ports 53 and 853 for other programs</source>
+        <translation>Blocca le porte 53 e 853 per gli altri programmi</translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>Blocca le connessioni dei programmi diversi dal Servizio di Fort Firewall alla porta 53 dei server DNS e alla porta 853 dei server DNS over TLS e over QUIC, mentre il DNS è filtrato: non possono risolvere i nomi tramite questi protocolli aggirando l&apos;Inoltro DNS. Il DNS over HTTPS va alla porta 443 dei siti web, che non è bloccata</translation>
+    </message>
+    <message>
+        <source>Upstream DNS servers:</source>
+        <translation>Server DNS upstream:</translation>
+    </message>
+    <message>
+        <source>Adapters&apos; DNS servers</source>
+        <translation>Server DNS degli adattatori</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Personalizzato</translation>
+    </message>
+    <message>
+        <source>Test</source>
+        <translation>Prova</translation>
+    </message>
+    <message>
+        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
+        <translation>Chiedi &quot;example.com&quot; a ogni server (solo con il Servizio)</translation>
+    </message>
+    <message>
+        <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
+        <translation>Un server per riga: indirizzi, ad es. &quot;1.1.1.1&quot;, o URL DNS over HTTPS con l&apos;indirizzo del server, ad es. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</translation>
+    </message>
+    <message>
+        <source>Error: %1</source>
+        <translation>Errore: %1</translation>
+    </message>
+    <message>
+        <source>Testing...</source>
+        <translation>Prova in corso...</translation>
+    </message>
+    <message>
+        <source>Timeout</source>
+        <translation>Timeout</translation>
+    </message>
+    <message>
+        <source>Loop: the server is the DNS Forwarder itself</source>
+        <translation>Ciclo: il server è l&apos;Inoltro DNS stesso</translation>
+    </message>
+    <message>
+        <source>Invalid server</source>
+        <translation>Server non valido</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>Plain and DNS over HTTPS servers can&apos;t be mixed</source>
+        <translation>Non è possibile mescolare server DNS semplici e DNS over HTTPS</translation>
+    </message>
+</context>
+<context>
     <name>FilterEditDialog</name>
     <message>
         <source>Action:</source>
@@ -667,6 +778,26 @@
     <message>
         <source>Internet</source>
         <translation>Internet</translation>
+    </message>
+    <message>
+        <source>Host:</source>
+        <translation>Host:</translation>
+    </message>
+    <message>
+        <source>The name only</source>
+        <translation>Solo il nome</translation>
+    </message>
+    <message>
+        <source>Its subdomains</source>
+        <translation>I suoi sottodomini</translation>
+    </message>
+    <message>
+        <source>The name and its subdomains</source>
+        <translation>Il nome e i suoi sottodomini</translation>
+    </message>
+    <message>
+        <source>A mask in the name</source>
+        <translation>Una maschera nel nome</translation>
     </message>
     <message>
         <source>Remote IP:</source>
@@ -829,6 +960,14 @@
     <message>
         <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
         <translation>La connessione a un indirizzo di questo computer. Gli indirizzi 127.0.0.0/8 e ::1 sono sempre loopback.</translation>
+    </message>
+    <message>
+        <source>Fort Firewall&apos;s Service</source>
+        <translation>Servizio di Fort Firewall</translation>
+    </message>
+    <message>
+        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
+        <translation>La connessione del Servizio di Fort Firewall, ad es. del suo Inoltro DNS. Senza il Servizio viene filtrata come quelle degli altri programmi.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
@@ -1473,6 +1612,24 @@ Un programma è abilitato solo se QUALSIASI suo gruppo esclusivo è abilitato op
     </message>
 </context>
 <context>
+    <name>HostRange</name>
+    <message>
+        <source>Bad host name</source>
+        <translation>Nome host errato</translation>
+    </message>
+    <message>
+        <source>Too many host name masks</source>
+        <translation>Troppe maschere di nomi host</translation>
+    </message>
+</context>
+<context>
+    <name>HostZonesSelector</name>
+    <message>
+        <source>Select Hosts Zones</source>
+        <translation>Seleziona zone host</translation>
+    </message>
+</context>
+<context>
     <name>IfacePage</name>
     <message>
         <source>Global</source>
@@ -1809,6 +1966,10 @@ Un programma è abilitato solo se QUALSIASI suo gruppo esclusivo è abilitato op
     <message>
         <source>IP Addresses</source>
         <translation>Indirizzi IP</translation>
+    </message>
+    <message>
+        <source>DNS</source>
+        <translation>DNS</translation>
     </message>
     <message>
         <source>Statistics</source>
@@ -2394,6 +2555,10 @@ Assicurati di avere un nuovo backup.</translation>
         <translation>Connessioni</translation>
     </message>
     <message>
+        <source>Service</source>
+        <translation>Servizio</translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>Ok</translation>
     </message>
@@ -2844,6 +3009,10 @@ Salvare le modifiche?</translation>
     <message>
         <source>Tray Menu</source>
         <translation>Menu&apos; Vassoio</translation>
+    </message>
+    <message>
+        <source>Usages</source>
+        <translation>Utilizzi</translation>
     </message>
     <message>
         <source>Inline Zones</source>
@@ -3917,6 +4086,21 @@ Perdita pacchetti: %2</translation>
     </message>
 </context>
 <context>
+    <name>UsagesModel</name>
+    <message>
+        <source>IP Addresses</source>
+        <translation>Indirizzi IP</translation>
+    </message>
+    <message>
+        <source>Programs</source>
+        <translation>Programmi</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Gruppi</translation>
+    </message>
+</context>
+<context>
     <name>ValueRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -3951,6 +4135,14 @@ Perdita pacchetti: %2</translation>
 </context>
 <context>
     <name>ZoneEditDialog</name>
+    <message>
+        <source>General</source>
+        <translation>Generale</translation>
+    </message>
+    <message>
+        <source>Usages</source>
+        <translation>Utilizzi</translation>
+    </message>
     <message>
         <source>Source:</source>
         <translation>Fonte:</translation>
@@ -4027,6 +4219,22 @@ Perdita pacchetti: %2</translation>
         <translation>Indirizzi da file locale</translation>
     </message>
     <message>
+        <source>Hosts from Inline Text</source>
+        <translation>Host da testo in linea</translation>
+    </message>
+    <message>
+        <source>Hosts from Local File</source>
+        <translation>Host da file locale</translation>
+    </message>
+    <message>
+        <source>Hosts with Subdomains from Local File</source>
+        <translation>Host con sottodomini da file locale</translation>
+    </message>
+    <message>
+        <source>Hosts with Subdomains from Hosts File</source>
+        <translation>Host con sottodomini da file hosts</translation>
+    </message>
+    <message>
         <source>WindowsSpyBlocker</source>
         <translation>WindowsSpyBlocker</translation>
     </message>
@@ -4037,6 +4245,14 @@ Perdita pacchetti: %2</translation>
     <message>
         <source>TAS-IX Addresses</source>
         <translation>Indirizzi TAS-IX</translation>
+    </message>
+    <message>
+        <source>OISD Big</source>
+        <translation>OISD Big</translation>
+    </message>
+    <message>
+        <source>StevenBlack Hosts</source>
+        <translation>StevenBlack Hosts</translation>
     </message>
 </context>
 <context>

@@ -77,6 +77,18 @@
         <source>Filter Local Network</source>
         <translation>ローカルネットワークのフィルタリング</translation>
     </message>
+    <message>
+        <source>Filter Fort Firewall&apos;s Service</source>
+        <translation>Fort Firewall のサービスをフィルター</translation>
+    </message>
+    <message>
+        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
+        <translation>サービスの接続を他のプログラムの接続と同様にフィルターし、そうでなければ許可します</translation>
+    </message>
+    <message>
+        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
+        <translation>サービスがない場合、Fort Firewall は他のプログラムと同様にフィルターされます</translation>
+    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -417,6 +429,18 @@
         <translation>許可されたインターネットアドレス</translation>
     </message>
     <message>
+        <source>Fort Firewall&apos;s Service</source>
+        <translation>Fort Firewall のサービス</translation>
+    </message>
+    <message>
+        <source>Block DNS port</source>
+        <translation>DNS ポートをブロック</translation>
+    </message>
+    <message>
+        <source>Block DNS over TLS port</source>
+        <translation>DNS over TLS ポートをブロック</translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>不明</translation>
     </message>
@@ -603,6 +627,93 @@
     </message>
 </context>
 <context>
+    <name>DnsPage</name>
+    <message>
+        <source>Without the Service, the DNS options don&apos;t work</source>
+        <translation>サービスがない場合、DNS オプションは機能しません</translation>
+    </message>
+    <message>
+        <source>DNS Forwarder</source>
+        <translation>DNS フォワーダー</translation>
+    </message>
+    <message>
+        <source>Filter DNS</source>
+        <translation>DNS をフィルター</translation>
+    </message>
+    <message>
+        <source>Resolve the host names by the upstream DNS servers, adding the addresses of the Hosts Zones used by the IP Addresses, Programs and Rules and of the host() filters before answering; the names of the Block Zones are not found (only with the Service). The programs resolving the names by DNS over HTTPS themselves, e.g. the browsers with Secure DNS, bypass the DNS Forwarder</source>
+        <translation>上位 DNS サーバーでホスト名を解決し、応答する前に IPアドレス、プログラム、ルールで使用されているホストゾーンと host() フィルターのアドレスを追加します。ブロックゾーンの名前は見つかりません (サービスがある場合のみ)。DNS over HTTPS で自ら名前を解決するプログラム (セキュア DNS を使用するブラウザーなど) は DNS フォワーダーを迂回します</translation>
+    </message>
+    <message>
+        <source>Block Zones:</source>
+        <translation>ブロックゾーン:</translation>
+    </message>
+    <message>
+        <source>The names of the enabled Hosts Zones are not found, even if a host() filter lists them</source>
+        <translation>有効なホストゾーンの名前は、host() フィルターに記載されていても見つかりません</translation>
+    </message>
+    <message>
+        <source>Block ports 53 and 853 for other programs</source>
+        <translation>他のプログラムのポート 53 と 853 をブロック</translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>DNS のフィルター中、Fort Firewall のサービス以外のプログラムから DNS サーバーのポート 53 および DNS over TLS と DNS over QUIC サーバーのポート 853 への接続をブロックします。これらのプログラムはこれらのプロトコルで DNS フォワーダーを迂回して名前を解決できません。DNS over HTTPS はウェブサイトのポート 443 を使用し、これはブロックされません</translation>
+    </message>
+    <message>
+        <source>Upstream DNS servers:</source>
+        <translation>上位 DNS サーバー:</translation>
+    </message>
+    <message>
+        <source>Adapters&apos; DNS servers</source>
+        <translation>アダプターの DNS サーバー</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>カスタム</translation>
+    </message>
+    <message>
+        <source>Test</source>
+        <translation>テスト</translation>
+    </message>
+    <message>
+        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
+        <translation>各サーバーに「example.com」を問い合わせ (サービスがある場合のみ)</translation>
+    </message>
+    <message>
+        <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
+        <translation>1 行に 1 サーバー: アドレス (例:「1.1.1.1」) またはサーバーのアドレス付きの DNS over HTTPS の URL (例:「https://dns.example/dns-query?ip=192.0.2.1」)</translation>
+    </message>
+    <message>
+        <source>Error: %1</source>
+        <translation>エラー: %1</translation>
+    </message>
+    <message>
+        <source>Testing...</source>
+        <translation>テスト中...</translation>
+    </message>
+    <message>
+        <source>Timeout</source>
+        <translation>タイムアウト</translation>
+    </message>
+    <message>
+        <source>Loop: the server is the DNS Forwarder itself</source>
+        <translation>ループ: サーバーは DNS フォワーダー自身です</translation>
+    </message>
+    <message>
+        <source>Invalid server</source>
+        <translation>無効なサーバー</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>Plain and DNS over HTTPS servers can&apos;t be mixed</source>
+        <translation>通常の DNS サーバーと DNS over HTTPS サーバーは混在できません</translation>
+    </message>
+</context>
+<context>
     <name>FilterEditDialog</name>
     <message>
         <source>Action:</source>
@@ -667,6 +778,26 @@
     <message>
         <source>Internet</source>
         <translation>インターネット</translation>
+    </message>
+    <message>
+        <source>Host:</source>
+        <translation>ホスト:</translation>
+    </message>
+    <message>
+        <source>The name only</source>
+        <translation>名前のみ</translation>
+    </message>
+    <message>
+        <source>Its subdomains</source>
+        <translation>そのサブドメイン</translation>
+    </message>
+    <message>
+        <source>The name and its subdomains</source>
+        <translation>名前とそのサブドメイン</translation>
+    </message>
+    <message>
+        <source>A mask in the name</source>
+        <translation>名前内のマスク</translation>
     </message>
     <message>
         <source>Remote IP:</source>
@@ -829,6 +960,14 @@
     <message>
         <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
         <translation>このコンピューターのアドレスへの接続。アドレス 127.0.0.0/8 と ::1 は常にループバックです。</translation>
+    </message>
+    <message>
+        <source>Fort Firewall&apos;s Service</source>
+        <translation>Fort Firewall のサービス</translation>
+    </message>
+    <message>
+        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
+        <translation>Fort Firewall のサービスの接続 (DNS フォワーダーなど)。サービスがない場合、他のプログラムの接続と同様にフィルターされます。</translation>
     </message>
     <message>
         <source>Network Profile:</source>
@@ -1473,6 +1612,24 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>HostRange</name>
+    <message>
+        <source>Bad host name</source>
+        <translation>不正なホスト名</translation>
+    </message>
+    <message>
+        <source>Too many host name masks</source>
+        <translation>ホスト名のマスクが多すぎます</translation>
+    </message>
+</context>
+<context>
+    <name>HostZonesSelector</name>
+    <message>
+        <source>Select Hosts Zones</source>
+        <translation>ホストゾーンの選択</translation>
+    </message>
+</context>
+<context>
     <name>IfacePage</name>
     <message>
         <source>Global</source>
@@ -1809,6 +1966,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>IP Addresses</source>
         <translation>IP アドレス</translation>
+    </message>
+    <message>
+        <source>DNS</source>
+        <translation>DNS</translation>
     </message>
     <message>
         <source>Statistics</source>
@@ -2394,6 +2555,10 @@ Make sure that you have a fresh backup.</source>
         <translation>接続</translation>
     </message>
     <message>
+        <source>Service</source>
+        <translation>サービス</translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -2844,6 +3009,10 @@ Save the changes?</source>
     <message>
         <source>Tray Menu</source>
         <translation>トレイメニュー</translation>
+    </message>
+    <message>
+        <source>Usages</source>
+        <translation>使用箇所</translation>
     </message>
     <message>
         <source>Inline Zones</source>
@@ -3917,6 +4086,21 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
+    <name>UsagesModel</name>
+    <message>
+        <source>IP Addresses</source>
+        <translation>IPアドレス</translation>
+    </message>
+    <message>
+        <source>Programs</source>
+        <translation>プログラム</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>グループ</translation>
+    </message>
+</context>
+<context>
     <name>ValueRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -3951,6 +4135,14 @@ Packet loss: %2</source>
 </context>
 <context>
     <name>ZoneEditDialog</name>
+    <message>
+        <source>General</source>
+        <translation>全般</translation>
+    </message>
+    <message>
+        <source>Usages</source>
+        <translation>使用箇所</translation>
+    </message>
     <message>
         <source>Source:</source>
         <translation>ソース :</translation>
@@ -4027,6 +4219,22 @@ Packet loss: %2</source>
         <translation>ローカルファイルからのアドレス</translation>
     </message>
     <message>
+        <source>Hosts from Inline Text</source>
+        <translation>インラインテキストからのホスト</translation>
+    </message>
+    <message>
+        <source>Hosts from Local File</source>
+        <translation>ローカルファイルからのホスト</translation>
+    </message>
+    <message>
+        <source>Hosts with Subdomains from Local File</source>
+        <translation>ローカルファイルからのサブドメイン付きホスト</translation>
+    </message>
+    <message>
+        <source>Hosts with Subdomains from Hosts File</source>
+        <translation>hosts ファイルからのサブドメイン付きホスト</translation>
+    </message>
+    <message>
         <source>WindowsSpyBlocker</source>
         <translation>Windowsスパイブロッカー</translation>
     </message>
@@ -4037,6 +4245,14 @@ Packet loss: %2</source>
     <message>
         <source>TAS-IX Addresses</source>
         <translation>TAS-IX アドレス</translation>
+    </message>
+    <message>
+        <source>OISD Big</source>
+        <translation>OISD Big</translation>
+    </message>
+    <message>
+        <source>StevenBlack Hosts</source>
+        <translation>StevenBlack Hosts</translation>
     </message>
 </context>
 <context>

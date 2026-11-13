@@ -77,6 +77,18 @@
         <source>Filter Local Network</source>
         <translation>Filtruj sieć lokalną</translation>
     </message>
+    <message>
+        <source>Filter Fort Firewall&apos;s Service</source>
+        <translation>Filtruj Usługę Fort Firewall</translation>
+    </message>
+    <message>
+        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
+        <translation>Filtruj połączenia Usługi jak połączenia innych programów, w przeciwnym razie zezwalaj na nie</translation>
+    </message>
+    <message>
+        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
+        <translation>Bez Usługi Fort Firewall jest filtrowany jak inne programy</translation>
+    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -417,6 +429,18 @@
         <translation>Dozwolony adres internetowy</translation>
     </message>
     <message>
+        <source>Fort Firewall&apos;s Service</source>
+        <translation>Usługa Fort Firewall</translation>
+    </message>
+    <message>
+        <source>Block DNS port</source>
+        <translation>Blokuj port DNS</translation>
+    </message>
+    <message>
+        <source>Block DNS over TLS port</source>
+        <translation>Blokuj port DNS over TLS</translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>Nieznany</translation>
     </message>
@@ -603,6 +627,93 @@
     </message>
 </context>
 <context>
+    <name>DnsPage</name>
+    <message>
+        <source>Without the Service, the DNS options don&apos;t work</source>
+        <translation>Bez Usługi opcje DNS nie działają</translation>
+    </message>
+    <message>
+        <source>DNS Forwarder</source>
+        <translation>Przekazywanie DNS</translation>
+    </message>
+    <message>
+        <source>Filter DNS</source>
+        <translation>Filtruj DNS</translation>
+    </message>
+    <message>
+        <source>Resolve the host names by the upstream DNS servers, adding the addresses of the Hosts Zones used by the IP Addresses, Programs and Rules and of the host() filters before answering; the names of the Block Zones are not found (only with the Service). The programs resolving the names by DNS over HTTPS themselves, e.g. the browsers with Secure DNS, bypass the DNS Forwarder</source>
+        <translation>Rozwiązuj nazwy hostów przez nadrzędne serwery DNS, dodając przed odpowiedzią adresy Stref hostów używanych przez Adresy IP, Programy i Reguły oraz filtrów host(); nazwy Stref blokowania nie są znajdowane (tylko z Usługą). Programy, które same rozwiązują nazwy przez DNS over HTTPS, np. przeglądarki z bezpiecznym DNS, omijają Przekazywanie DNS</translation>
+    </message>
+    <message>
+        <source>Block Zones:</source>
+        <translation>Strefy blokowania:</translation>
+    </message>
+    <message>
+        <source>The names of the enabled Hosts Zones are not found, even if a host() filter lists them</source>
+        <translation>Nazwy włączonych Stref hostów nie są znajdowane, nawet jeśli wymienia je filtr host()</translation>
+    </message>
+    <message>
+        <source>Block ports 53 and 853 for other programs</source>
+        <translation>Blokuj porty 53 i 853 dla innych programów</translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>Blokuj połączenia programów innych niż Usługa Fort Firewall z portem 53 serwerów DNS i z portem 853 serwerów DNS over TLS i over QUIC, gdy DNS jest filtrowany: nie mogą one przez te protokoły rozwiązywać nazw z pominięciem Przekazywania DNS. DNS over HTTPS trafia na port 443 witryn, który nie jest blokowany</translation>
+    </message>
+    <message>
+        <source>Upstream DNS servers:</source>
+        <translation>Nadrzędne serwery DNS:</translation>
+    </message>
+    <message>
+        <source>Adapters&apos; DNS servers</source>
+        <translation>Serwery DNS kart sieciowych</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Własne</translation>
+    </message>
+    <message>
+        <source>Test</source>
+        <translation>Testuj</translation>
+    </message>
+    <message>
+        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
+        <translation>Zapytaj każdy serwer o &quot;example.com&quot; (tylko z Usługą)</translation>
+    </message>
+    <message>
+        <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
+        <translation>Jeden serwer w wierszu: adresy, np. &quot;1.1.1.1&quot;, lub adresy URL DNS over HTTPS z adresem serwera, np. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</translation>
+    </message>
+    <message>
+        <source>Error: %1</source>
+        <translation>Błąd: %1</translation>
+    </message>
+    <message>
+        <source>Testing...</source>
+        <translation>Testowanie...</translation>
+    </message>
+    <message>
+        <source>Timeout</source>
+        <translation>Przekroczono limit czasu</translation>
+    </message>
+    <message>
+        <source>Loop: the server is the DNS Forwarder itself</source>
+        <translation>Pętla: serwer to samo Przekazywanie DNS</translation>
+    </message>
+    <message>
+        <source>Invalid server</source>
+        <translation>Nieprawidłowy serwer</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>Plain and DNS over HTTPS servers can&apos;t be mixed</source>
+        <translation>Nie można mieszać zwykłych serwerów DNS i serwerów DNS over HTTPS</translation>
+    </message>
+</context>
+<context>
     <name>FilterEditDialog</name>
     <message>
         <source>Action:</source>
@@ -667,6 +778,26 @@
     <message>
         <source>Internet</source>
         <translation>Internet</translation>
+    </message>
+    <message>
+        <source>Host:</source>
+        <translation>Host:</translation>
+    </message>
+    <message>
+        <source>The name only</source>
+        <translation>Tylko nazwa</translation>
+    </message>
+    <message>
+        <source>Its subdomains</source>
+        <translation>Jej subdomeny</translation>
+    </message>
+    <message>
+        <source>The name and its subdomains</source>
+        <translation>Nazwa i jej subdomeny</translation>
+    </message>
+    <message>
+        <source>A mask in the name</source>
+        <translation>Maska w nazwie</translation>
     </message>
     <message>
         <source>Remote IP:</source>
@@ -829,6 +960,14 @@
     <message>
         <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
         <translation>Połączenie z adresem tego komputera. Adresy 127.0.0.0/8 i ::1 to zawsze pętla zwrotna.</translation>
+    </message>
+    <message>
+        <source>Fort Firewall&apos;s Service</source>
+        <translation>Usługa Fort Firewall</translation>
+    </message>
+    <message>
+        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
+        <translation>Połączenie Usługi Fort Firewall, np. jej Przekazywania DNS. Bez Usługi jest filtrowane jak połączenia innych programów.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
@@ -1473,6 +1612,24 @@ Program jest włączony tylko wtedy, gdy DOWOLNA z jego grup wyłącznych jest w
     </message>
 </context>
 <context>
+    <name>HostRange</name>
+    <message>
+        <source>Bad host name</source>
+        <translation>Błędna nazwa hosta</translation>
+    </message>
+    <message>
+        <source>Too many host name masks</source>
+        <translation>Zbyt wiele masek nazw hostów</translation>
+    </message>
+</context>
+<context>
+    <name>HostZonesSelector</name>
+    <message>
+        <source>Select Hosts Zones</source>
+        <translation>Wybierz strefy hostów</translation>
+    </message>
+</context>
+<context>
     <name>IfacePage</name>
     <message>
         <source>Global</source>
@@ -1809,6 +1966,10 @@ Program jest włączony tylko wtedy, gdy DOWOLNA z jego grup wyłącznych jest w
     <message>
         <source>IP Addresses</source>
         <translation>Adresy IP</translation>
+    </message>
+    <message>
+        <source>DNS</source>
+        <translation>DNS</translation>
     </message>
     <message>
         <source>Statistics</source>
@@ -2394,6 +2555,10 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <translation>Połączenia</translation>
     </message>
     <message>
+        <source>Service</source>
+        <translation>Usługa</translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -2844,6 +3009,10 @@ Zapisać zmiany?</translation>
     <message>
         <source>Tray Menu</source>
         <translation>Menu zasobnika</translation>
+    </message>
+    <message>
+        <source>Usages</source>
+        <translation>Użycia</translation>
     </message>
     <message>
         <source>Inline Zones</source>
@@ -3917,6 +4086,21 @@ Utrata pakietów: %2</translation>
     </message>
 </context>
 <context>
+    <name>UsagesModel</name>
+    <message>
+        <source>IP Addresses</source>
+        <translation>Adresy IP</translation>
+    </message>
+    <message>
+        <source>Programs</source>
+        <translation>Programy</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Grupy</translation>
+    </message>
+</context>
+<context>
     <name>ValueRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -3951,6 +4135,14 @@ Utrata pakietów: %2</translation>
 </context>
 <context>
     <name>ZoneEditDialog</name>
+    <message>
+        <source>General</source>
+        <translation>Ogólne</translation>
+    </message>
+    <message>
+        <source>Usages</source>
+        <translation>Użycia</translation>
+    </message>
     <message>
         <source>Source:</source>
         <translation>Źródło:</translation>
@@ -4027,6 +4219,22 @@ Utrata pakietów: %2</translation>
         <translation>Adresy z lokalnego pliku</translation>
     </message>
     <message>
+        <source>Hosts from Inline Text</source>
+        <translation>Hosty z tekstu wbudowanego</translation>
+    </message>
+    <message>
+        <source>Hosts from Local File</source>
+        <translation>Hosty z lokalnego pliku</translation>
+    </message>
+    <message>
+        <source>Hosts with Subdomains from Local File</source>
+        <translation>Hosty z subdomenami z lokalnego pliku</translation>
+    </message>
+    <message>
+        <source>Hosts with Subdomains from Hosts File</source>
+        <translation>Hosty z subdomenami z pliku hosts</translation>
+    </message>
+    <message>
         <source>WindowsSpyBlocker</source>
         <translation>WindowsSpyBlocker</translation>
     </message>
@@ -4037,6 +4245,14 @@ Utrata pakietów: %2</translation>
     <message>
         <source>TAS-IX Addresses</source>
         <translation>Adresy TAS-IX</translation>
+    </message>
+    <message>
+        <source>OISD Big</source>
+        <translation>OISD Big</translation>
+    </message>
+    <message>
+        <source>StevenBlack Hosts</source>
+        <translation>StevenBlack Hosts</translation>
     </message>
 </context>
 <context>

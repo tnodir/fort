@@ -77,6 +77,18 @@
         <source>Filter Local Network</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Filter Fort Firewall&apos;s Service</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -417,6 +429,18 @@
         <translation></translation>
     </message>
     <message>
+        <source>Fort Firewall&apos;s Service</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block DNS port</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block DNS over TLS port</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation></translation>
     </message>
@@ -603,6 +627,93 @@
     </message>
 </context>
 <context>
+    <name>DnsPage</name>
+    <message>
+        <source>Without the Service, the DNS options don&apos;t work</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>DNS Forwarder</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Filter DNS</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Resolve the host names by the upstream DNS servers, adding the addresses of the Hosts Zones used by the IP Addresses, Programs and Rules and of the host() filters before answering; the names of the Block Zones are not found (only with the Service). The programs resolving the names by DNS over HTTPS themselves, e.g. the browsers with Secure DNS, bypass the DNS Forwarder</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block Zones:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The names of the enabled Hosts Zones are not found, even if a host() filter lists them</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block ports 53 and 853 for other programs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Upstream DNS servers:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Adapters&apos; DNS servers</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Test</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Error: %1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Testing...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Timeout</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Loop: the server is the DNS Forwarder itself</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Invalid server</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Plain and DNS over HTTPS servers can&apos;t be mixed</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>FilterEditDialog</name>
     <message>
         <source>Action:</source>
@@ -666,6 +777,26 @@
     </message>
     <message>
         <source>Internet</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Host:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The name only</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Its subdomains</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The name and its subdomains</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>A mask in the name</source>
         <translation></translation>
     </message>
     <message>
@@ -828,6 +959,14 @@
     </message>
     <message>
         <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Fort Firewall&apos;s Service</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
         <translation></translation>
     </message>
     <message>
@@ -1472,6 +1611,24 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>HostRange</name>
+    <message>
+        <source>Bad host name</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Too many host name masks</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>HostZonesSelector</name>
+    <message>
+        <source>Select Hosts Zones</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>IfacePage</name>
     <message>
         <source>Global</source>
@@ -1807,6 +1964,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>IP Addresses</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>DNS</source>
         <translation></translation>
     </message>
     <message>
@@ -2391,6 +2552,10 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
+        <source>Service</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation></translation>
     </message>
@@ -2832,6 +2997,10 @@ Save the changes?</source>
     </message>
     <message>
         <source>Tray Menu</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Usages</source>
         <translation></translation>
     </message>
     <message>
@@ -3905,6 +4074,21 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
+    <name>UsagesModel</name>
+    <message>
+        <source>IP Addresses</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Programs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>ValueRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -3939,6 +4123,14 @@ Packet loss: %2</source>
 </context>
 <context>
     <name>ZoneEditDialog</name>
+    <message>
+        <source>General</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Usages</source>
+        <translation></translation>
+    </message>
     <message>
         <source>Source:</source>
         <translation></translation>
@@ -4015,6 +4207,22 @@ Packet loss: %2</source>
         <translation></translation>
     </message>
     <message>
+        <source>Hosts from Inline Text</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Hosts from Local File</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Hosts with Subdomains from Local File</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Hosts with Subdomains from Hosts File</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>WindowsSpyBlocker</source>
         <translation></translation>
     </message>
@@ -4024,6 +4232,14 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>TAS-IX Addresses</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>OISD Big</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>StevenBlack Hosts</source>
         <translation></translation>
     </message>
 </context>
