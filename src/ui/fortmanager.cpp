@@ -10,6 +10,7 @@
 #include <appinfo/appinfocache.h>
 #include <conf/firewallconf.h>
 #include <control/controlmanager.h>
+#include <dns/dnsclientmanager.h>
 #include <dns/dnsmanager.h>
 #include <driver/drivercommon.h>
 #include <form/dialog/dialogutil.h>
@@ -106,6 +107,7 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService(new AutoUpdateManager(settings->updatePath()));
     ioc->setService(new DriverManager());
     ioc->setService(new AppInfoManager(settings->cacheFilePath()));
+    ioc->setService(new DnsClientManager());
     ioc->setService(new LogManager());
     ioc->setService(new ServiceInfoManager());
     ioc->setService(new TaskManager());

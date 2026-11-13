@@ -7,6 +7,7 @@ HEADERS += \
     tst_connfilter.h \
     tst_controlcommandutil.h \
     tst_dateutil.h \
+    tst_expiringhash.h \
     tst_fileutil.h \
     tst_filterline.h \
     tst_formatutil.h \

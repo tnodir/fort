@@ -63,6 +63,7 @@ SOURCES += \
     control/control.cpp \
     control/controlmanager.cpp \
     control/controlworker.cpp \
+    dns/dnsclientmanager.cpp \
     dns/dnshostblocker.cpp \
     dns/dnsmanager.cpp \
     dns/dnsprovider.cpp \
@@ -412,6 +413,7 @@ HEADERS += \
     control/control_types.h \
     control/controlmanager.h \
     control/controlworker.h \
+    dns/dnsclientmanager.h \
     dns/dnshostblocker.h \
     dns/dnsmanager.h \
     dns/dnsprovider.h \
@@ -662,6 +664,7 @@ HEADERS += \
     util/dateutil.h \
     util/device.h \
     util/dirinfo.h \
+    util/expiringhash.h \
     util/fileutil.h \
     util/formatutil.h \
     util/guiutil.h \

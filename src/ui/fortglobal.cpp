@@ -11,6 +11,7 @@
 #include <conf/confzonemanager.h>
 #include <conf/firewallconf.h>
 #include <control/controlmanager.h>
+#include <dns/dnsclientmanager.h>
 #include <dns/dnsmanager.h>
 #include <driver/drivermanager.h>
 #include <fortmanager.h>
@@ -92,6 +93,11 @@ ConfZoneManager *confZoneManager()
 ControlManager *controlManager()
 {
     return IoC<ControlManager>();
+}
+
+DnsClientManager *dnsClientManager()
+{
+    return IoC<DnsClientManager>();
 }
 
 DnsManager *dnsManager()

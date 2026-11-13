@@ -2,11 +2,6 @@
 
 #include <QHostAddress>
 
-#define WIN32_LEAN_AND_MEAN
-#include <qt_windows.h>
-
-#include <windns.h>
-
 namespace {
 
 // The records without an address, e.g. "type: 5 alias.com" of a CNAME
@@ -25,24 +20,6 @@ void DnsClientAnswer::readQueryResults(QStringView results)
             readAddress(text);
         }
     }
-}
-
-void DnsClientAnswer::readCacheTtls()
-{
-    PDNS_RECORD records = nullptr;
-
-    if (DnsQuery_W(LPCWSTR(m_name.utf16()), m_queryType, DNS_QUERY_NO_WIRE_QUERY, nullptr, &records,
-                nullptr)
-            != ERROR_SUCCESS)
-        return;
-
-    for (PDNS_RECORD record = records; record != nullptr; record = record->pNext) {
-        if (record->wType == m_queryType) {
-            m_addresses.addTtl(record->dwTtl);
-        }
-    }
-
-    DnsRecordListFree(records, DnsFreeRecordList);
 }
 
 void DnsClientAnswer::readAddress(QStringView text)
