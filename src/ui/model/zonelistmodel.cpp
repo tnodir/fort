@@ -276,6 +276,7 @@ QString ZoneListModel::zoneSourceTitleById(const int sourceId)
         QT_TR_NOOP("WindowsSpyBlocker"),
         QT_TR_NOOP("FireHOL Level-1"),
         QT_TR_NOOP("TAS-IX Addresses"),
+        QT_TR_NOOP("NetAPI Honeypot Attackers"),
     };
 
     if (sourceId >= 0 && sourceId < std::ssize(sourceTitles)) {
