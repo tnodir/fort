@@ -26,15 +26,16 @@ bool DnsHostBlocker::isQueryBlocked(const DnsQuery &query) const
 }
 
 // The Block Zones may be changed while the query waits for the answer. Their names may be the
-// canonical names of another name's answer, e.g. of a tracker behind the site's subdomain
+// canonical names or the SVCB/HTTPS records' targets of another name's answer, e.g. of a tracker
+// behind the site's subdomain
 bool DnsHostBlocker::isAnswerBlocked(const DnsQuery &query, const DnsAnswer &answer) const
 {
     if (isQueryBlocked(query))
         return true;
 
-    for (const QString &target : answer.cnameTargets()) {
+    for (const QString &target : answer.targetNames()) {
         if (isHostBlocked(target)) {
-            qCDebug(LC) << "Blocked:" << query.name() << "CNAME:" << target;
+            qCDebug(LC) << "Blocked:" << query.name() << "Target:" << target;
             return true;
         }
     }

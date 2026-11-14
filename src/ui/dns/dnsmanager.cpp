@@ -325,12 +325,13 @@ HostMatch DnsManager::matchHost(QStringView name) const
     return match;
 }
 
-// The answer's addresses are of its last canonical name
+// The answer's addresses are of its last canonical name, its hints of the SVCB/HTTPS records'
+// targets
 HostMatch DnsManager::matchAnswer(const DnsRequest &request, const DnsAnswer &answer) const
 {
     HostMatch match = matchHost(request.query.name());
 
-    for (const QString &target : answer.cnameTargets()) {
+    for (const QString &target : answer.targetNames()) {
         match.add(matchHost(target));
     }
 

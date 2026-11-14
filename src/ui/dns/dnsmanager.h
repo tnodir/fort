@@ -37,7 +37,7 @@ struct DnsForwarderStatus
 
 // The DNS forwarder of the service: resolves the names but the Block Zones' ones, adding the
 // addresses of the referenced Hosts Zones' and host() filters' names to them in the driver before
-// answering; an answer's CNAME targets are matched as its name
+// answering; an answer's CNAME targets and SVCB/HTTPS TargetNames are matched as its name
 class DnsManager : public QObject, public IocService
 {
     Q_OBJECT

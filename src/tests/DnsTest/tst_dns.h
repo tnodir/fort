@@ -299,7 +299,7 @@ TEST_F(DnsTest, recordAnswer)
     ASSERT_EQ(addresses.ip6Array().size(), 1);
     ASSERT_EQ(NetFormatUtil::ip6ToText(addresses.ip6Array().at(0)), "2001:db8::1");
 
-    ASSERT_EQ(answer.cnameTargets(), QStringList({ "cdn.example.net" }));
+    ASSERT_EQ(answer.targetNames(), QStringList({ "cdn.example.net" }));
 
     // The client's id, without EDNS
     {
@@ -419,9 +419,10 @@ TEST_F(DnsTest, hintsAnswer)
     // The HTTPS record of the alias mode, without hints: its TTL isn't of the addresses
     addSvcbRr(record.get(), ARES_REC_TYPE_HTTPS, "cdn.example.net", 600);
 
-    // The SVCB record with an IPv4 hint
+    // The SVCB record of the service mode with a target and an IPv4 hint
     {
-        ares_dns_rr_t *rr = addSvcbRr(record.get(), ARES_REC_TYPE_SVCB, ".", 60);
+        ares_dns_rr_t *rr = addSvcbRr(record.get(), ARES_REC_TYPE_SVCB, "svc.example.net", 60);
+        ares_dns_rr_set_u16(rr, ARES_RR_SVCB_PRIORITY, 1);
 
         const unsigned char ip4Hint[] = { 9, 9, 9, 9 };
         ares_dns_rr_set_opt(
@@ -445,6 +446,9 @@ TEST_F(DnsTest, hintsAnswer)
                     NetFormatUtil::textToIp4("5.6.7.8"), NetFormatUtil::textToIp4("9.9.9.9") }));
     ASSERT_EQ(addresses.ip6Array().size(), 1);
     ASSERT_EQ(NetFormatUtil::ip6ToText(addresses.ip6Array().at(0)), "2001:db8::1");
+
+    // The targets of both modes, without the root names
+    ASSERT_EQ(answer.targetNames(), QStringList({ "cdn.example.net", "svc.example.net" }));
 }
 
 TEST_F(DnsTest, hostBlocker)
