@@ -12,6 +12,7 @@ public:
         SourceWinSpyBlock,
         SourceFireHol_Level1,
         SourceTasix,
+        SourceNetApiAttackers,
     };
 
     explicit ZoneSourceWrapper(const QVariant &var = {});
