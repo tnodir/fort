@@ -29,6 +29,10 @@
 #include <util/osutil.h>
 #include <util/window/widgetwindow.h>
 
+#ifdef Q_OS_WIN
+#    include "trayiconwin.h"
+#endif
+
 #include "traycontroller.h"
 
 using namespace Fort;
@@ -280,11 +284,20 @@ bool checkAlertFilterMode(const FirewallConf &conf, const IniUser &iniUser)
 
 TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayController(this))
 {
+#ifdef Q_OS_WIN
+    m_nativeTrayIcon = new TrayIconWin(this);
+#endif
     setupUi();
     setupController();
 
+#ifdef Q_OS_WIN
+    connect(m_nativeTrayIcon, &TrayIconWin::activated, this,
+            [this](auto reason) { emit activated(reason); });
+    connect(m_nativeTrayIcon, &TrayIconWin::contextMenuRequested, this, &TrayIcon::showTrayMenu);
+    connect(m_nativeTrayIcon, &TrayIconWin::messageClicked, this,
+            [this] { emit messageClicked(); });
+#endif
     connect(this, &QSystemTrayIcon::activated, this, &TrayIcon::onTrayActivated);
-
     connect(this, &QSystemTrayIcon::messageClicked, this, &TrayIcon::onTrayMessageClicked,
             Qt::QueuedConnection);
 
@@ -308,6 +321,50 @@ TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayCo
 
     connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this,
             &TrayIcon::updateTrayIconShape);
+}
+
+void TrayIcon::show()
+{
+    setVisible(true);
+}
+
+void TrayIcon::hide()
+{
+    setVisible(false);
+}
+
+void TrayIcon::setVisible(bool visible)
+{
+#ifdef Q_OS_WIN
+    m_nativeTrayIcon->setVisible(visible);
+#else
+    QSystemTrayIcon::setVisible(visible);
+#endif
+}
+
+bool TrayIcon::isVisible() const
+{
+#ifdef Q_OS_WIN
+    return m_nativeTrayIcon->isVisible();
+#else
+    return QSystemTrayIcon::isVisible();
+#endif
+}
+
+void TrayIcon::setIcon(const QIcon &icon)
+{
+    QSystemTrayIcon::setIcon(icon);
+#ifdef Q_OS_WIN
+    m_nativeTrayIcon->setIcon(icon);
+#endif
+}
+
+void TrayIcon::setToolTip(const QString &toolTip)
+{
+    QSystemTrayIcon::setToolTip(toolTip);
+#ifdef Q_OS_WIN
+    m_nativeTrayIcon->setToolTip(toolTip);
+#endif
 }
 
 void TrayIcon::setIconPath(const QString &v)
@@ -404,7 +461,11 @@ void TrayIcon::showTrayMessage(const QString &message, tray::MessageType type)
 {
     m_lastTrayMessageType = type;
 
+#ifdef Q_OS_WIN
+    m_nativeTrayIcon->showMessage(QGuiApplication::applicationDisplayName(), message);
+#else
     showMessage(QGuiApplication::applicationDisplayName(), message);
+#endif
 }
 
 void TrayIcon::showTrayMenu(const QPoint &pos)

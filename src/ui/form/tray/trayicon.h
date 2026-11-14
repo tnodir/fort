@@ -12,6 +12,9 @@ QT_FORWARD_DECLARE_CLASS(QTimer)
 
 class IniUser;
 class TrayController;
+#ifdef Q_OS_WIN
+class TrayIconWin;
+#endif
 
 class TrayIcon : public QSystemTrayIcon
 {
@@ -19,6 +22,13 @@ class TrayIcon : public QSystemTrayIcon
 
 public:
     explicit TrayIcon(QObject *parent = nullptr);
+
+    void show();
+    void hide();
+    void setVisible(bool visible);
+    bool isVisible() const;
+    void setIcon(const QIcon &icon);
+    void setToolTip(const QString &toolTip);
 
     QString iconPath() const { return m_iconPath; }
 
@@ -137,6 +147,9 @@ private:
     QString m_iconPath;
 
     TrayController *m_ctrl = nullptr;
+#ifdef Q_OS_WIN
+    TrayIconWin *m_nativeTrayIcon = nullptr;
+#endif
 
     QMenu *m_menu = nullptr;
     QAction *m_homeAction = nullptr;

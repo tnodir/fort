@@ -175,6 +175,7 @@ SOURCES += \
     form/traf/trafficwindow.cpp \
     form/tray/traycontroller.cpp \
     form/tray/trayicon.cpp \
+    form/tray/trayiconwin.cpp \
     form/usage/usagesview.cpp \
     form/zone/zoneeditdialog.cpp \
     form/zone/zonescontroller.cpp \
@@ -514,6 +515,7 @@ HEADERS += \
     form/tray/traycontroller.h \
     form/tray/trayicon.h \
     form/tray/trayicon_types.h \
+    form/tray/trayiconwin.h \
     form/usage/usagesview.h \
     form/zone/zoneeditdialog.h \
     form/zone/zonescontroller.h \
