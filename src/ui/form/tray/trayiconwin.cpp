@@ -1,5 +1,6 @@
 #include "trayiconwin.h"
 
+#include <QCursor>
 #include <QGuiApplication>
 #include <QPixmap>
 #include <QWindow>
@@ -8,7 +9,6 @@
 #include <qt_windows.h>
 
 #include <shellapi.h>
-#include <windowsx.h>
 
 namespace {
 
@@ -115,7 +115,7 @@ bool TrayIconWin::nativeEventFilter(const QByteArray &eventType, void *message, 
     if (msg->hwnd != HWND(m_window->winId()) || msg->message != trayCallbackMessage)
         return false;
 
-    processTrayEvent(quint32(LOWORD(msg->lParam)), quintptr(msg->wParam));
+    processTrayEvent(quint32(LOWORD(msg->lParam)));
 
     if (result)
         *result = 0;
@@ -131,7 +131,7 @@ void TrayIconWin::processTaskbarCreated(quintptr window)
     }
 }
 
-void TrayIconWin::processTrayEvent(quint32 event, quintptr eventParam)
+void TrayIconWin::processTrayEvent(quint32 event)
 {
     switch (event) {
     case NIN_SELECT:
@@ -147,11 +147,9 @@ void TrayIconWin::processTrayEvent(quint32 event, quintptr eventParam)
         emit activated(QSystemTrayIcon::DoubleClick);
         break;
     case WM_CONTEXTMENU: {
-        const WPARAM param = WPARAM(eventParam);
-        const QPoint pos(GET_X_LPARAM(param), GET_Y_LPARAM(param));
         emit activated(QSystemTrayIcon::Context);
         SetForegroundWindow(HWND(m_window->winId()));
-        emit contextMenuRequested(pos);
+        emit contextMenuRequested(QCursor::pos());
     } break;
     case WM_MBUTTONUP:
         emit activated(QSystemTrayIcon::MiddleClick);

@@ -32,7 +32,7 @@ private:
     void addIcon();
     void removeIcon();
     void processTaskbarCreated(quintptr window);
-    void processTrayEvent(quint32 event, quintptr eventParam);
+    void processTrayEvent(quint32 event);
     void updateIcon();
     void updateToolTip();
 
