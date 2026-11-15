@@ -327,7 +327,7 @@ void DnsManager::flushResolverCache()
 }
 
 // Returns whether a Block Zone lists the query's name or a target, else adds the referenced Hosts
-// Zones and host() filters listing the name
+// Zones and host() filters listing them. The answer's addresses are of its last canonical name
 bool DnsManager::matchAnswer(const DnsQuery &query, const DnsAnswer &answer, HostMatch &match) const
 {
     // The referenced names add the answer's addresses
@@ -337,7 +337,7 @@ bool DnsManager::matchAnswer(const DnsQuery &query, const DnsAnswer &answer, Hos
         return true;
 
     for (const QString &target : answer.cnameTargets()) {
-        if (matchAnswerName(query, target, /*matchRefs=*/false, match))
+        if (matchAnswerName(query, target, matchRefs, match))
             return true;
     }
 
