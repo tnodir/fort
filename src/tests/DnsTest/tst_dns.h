@@ -18,6 +18,7 @@
 #include <dns/dnsplainresolver.h>
 #include <dns/dnsprovider.h>
 #include <dns/dnsquery.h>
+#include <dns/dnsserverstest.h>
 #include <dns/dnsutil.h>
 #include <util/net/netformatutil.h>
 
@@ -246,6 +247,7 @@ TEST_F(DnsTest, rcodeAnswer)
     DnsAnswer answer;
     answer.setRcode(query, ARES_RCODE_NXDOMAIN);
 
+    ASSERT_EQ(answer.rcode(), ARES_RCODE_NXDOMAIN);
     ASSERT_TRUE(answer.addresses().isEmpty());
 
     const DnsRecordPtr record = DnsUtil::parseRecord(answer.response());
@@ -493,6 +495,7 @@ TEST_F(DnsTest, resolverOwnQuery)
     ASSERT_NE(record, nullptr);
     ASSERT_EQ(ares_dns_record_get_id(record.get()), 0x1111);
     ASSERT_EQ(ares_dns_record_get_rcode(record.get()), ARES_RCODE_NXDOMAIN);
+    ASSERT_EQ(resolvedAnswer.rcode(), ARES_RCODE_NXDOMAIN);
 }
 
 TEST_F(DnsTest, httpsServers)
@@ -610,9 +613,99 @@ TEST_F(DnsTest, httpsResolver)
     ASSERT_NE(record, nullptr);
     ASSERT_EQ(ares_dns_record_get_id(record.get()), 0x2222);
     ASSERT_EQ(ares_dns_record_get_rcode(record.get()), ARES_RCODE_SERVFAIL);
+    ASSERT_EQ(resolvedAnswer.rcode(), ARES_RCODE_SERVFAIL);
 
     // The last server's error
     ASSERT_FALSE(resolvedAnswer.error().isEmpty());
+}
+
+TEST_F(DnsTest, serversTest)
+{
+    // The upstream server answering NXDOMAIN
+    QUdpSocket server;
+    ASSERT_TRUE(server.bind(QHostAddress::LocalHost, 0));
+
+    QObject::connect(&server, &QUdpSocket::readyRead, &server, [&] {
+        while (server.hasPendingDatagrams()) {
+            const QNetworkDatagram datagram = server.receiveDatagram();
+
+            DnsQuery query;
+            if (!query.parse(datagram.data()))
+                continue;
+
+            DnsAnswer answer;
+            answer.setRcode(query, ARES_RCODE_NXDOMAIN);
+            server.writeDatagram(
+                    answer.response(), datagram.senderAddress(), datagram.senderPort());
+        }
+    });
+
+    // The upstream server not answering
+    QUdpSocket silentServer;
+    ASSERT_TRUE(silentServer.bind(QHostAddress::LocalHost, 0));
+
+    DnsServersTest test({ QString("127.0.0.1:%1").arg(server.localPort()),
+            QString("127.0.0.1:%1").arg(silentServer.localPort()) });
+    test.setTimeout(500);
+
+    QEventLoop loop;
+    QObject::connect(&test, &DnsServersTest::finished, &loop, &QEventLoop::quit);
+
+    test.start();
+    ASSERT_FALSE(test.isFinished());
+
+    loop.exec();
+
+    const auto &results = test.results();
+    ASSERT_EQ(results.size(), 2);
+
+    ASSERT_EQ(results.at(0).status, DnsServerResult::StatusAnswered);
+    ASSERT_EQ(results.at(0).rcode, ARES_RCODE_NXDOMAIN);
+    ASSERT_FALSE(results.at(0).isNoError());
+    ASSERT_TRUE(results.at(0).error.isEmpty());
+
+    ASSERT_EQ(results.at(1).status, DnsServerResult::StatusTimeout);
+
+    ASSERT_FALSE(test.isAllNoError());
+
+    // The lines of the results with a text
+    const auto timeoutText = [](const DnsServerResult &result) {
+        return (result.status == DnsServerResult::StatusTimeout) ? QString("timeout") : QString();
+    };
+    ASSERT_EQ(test.resultLines(timeoutText, "adapters"),
+            QStringList({ QString("127.0.0.1:%1: timeout").arg(silentServer.localPort()) }));
+
+    // The adapters' DNS servers
+    DnsServersTest adaptersTest({});
+    ASSERT_EQ(adaptersTest.servers(), QStringList({ QString() }));
+
+    adaptersTest.setResult(0, { .status = DnsServerResult::StatusTimeout });
+    ASSERT_EQ(adaptersTest.resultLines(timeoutText, "adapters"),
+            QStringList({ "adapters: timeout" }));
+}
+
+TEST_F(DnsTest, serversTestInvalid)
+{
+    // A plain address among the DNS over HTTPS servers: no server is asked
+    DnsServersTest test({ "https://1.1.1.1/dns-query", "9.9.9.9" });
+
+    QList<int> readyIndexes;
+    QObject::connect(&test, &DnsServersTest::resultReady, &test,
+            [&](int index) { readyIndexes.append(index); });
+
+    test.start();
+    ASSERT_TRUE(test.isFinished());
+    ASSERT_EQ(readyIndexes, QList<int>({ 0, 1 }));
+
+    const auto &results = test.results();
+    ASSERT_EQ(results.at(0).status, DnsServerResult::StatusSkipped);
+    ASSERT_EQ(results.at(1).status, DnsServerResult::StatusInvalid);
+
+    // An invalid address
+    DnsServersTest plainTest({ "1.1.1.1", "1.1.1.1:port" });
+    plainTest.start();
+    ASSERT_TRUE(plainTest.isFinished());
+    ASSERT_EQ(plainTest.results().at(1).status, DnsServerResult::StatusInvalid);
 }
 
 // Asks each server of the DNS providers: run it manually, with the network

@@ -18,6 +18,7 @@ SOURCES += \
     dns/dnsplainresolver.cpp \
     dns/dnsquery.cpp \
     dns/dnsresolver.cpp \
+    dns/dnsserverstest.cpp \
     dns/dnsutil.cpp
 
 HEADERS += \
@@ -32,6 +33,7 @@ HEADERS += \
     dns/dnsquery.h \
     dns/dnsrequest.h \
     dns/dnsresolver.h \
+    dns/dnsserverstest.h \
     dns/dnsutil.h
 
 # 3rd party integrations

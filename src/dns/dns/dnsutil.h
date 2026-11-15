@@ -27,6 +27,12 @@ public:
 
     static QByteArray writeRecord(const ares_dns_record *record);
 
+    // The recursive query of the name's A records
+    static QByteArray writeQuery(quint16 id, const char *name);
+
+    // The response code's name, e.g. "NXDOMAIN"
+    static QString rcodeText(quint8 rcode);
+
     // The upstream servers of a text: separated by commas, spaces or new lines
     static QStringList splitServers(const QString &text);
 

@@ -74,6 +74,26 @@ QByteArray DnsUtil::writeRecord(const ares_dns_record *record)
     return data;
 }
 
+QByteArray DnsUtil::writeQuery(quint16 id, const char *name)
+{
+    ares_dns_record_t *record = nullptr;
+
+    if (ares_dns_record_create(&record, id, ARES_FLAG_RD, ARES_OPCODE_QUERY, ARES_RCODE_NOERROR)
+            != ARES_SUCCESS)
+        return {};
+
+    const DnsRecordPtr recordPtr(record, &ares_dns_record_destroy);
+
+    ares_dns_record_query_add(record, name, ARES_REC_TYPE_A, ARES_CLASS_IN);
+
+    return writeRecord(record);
+}
+
+QString DnsUtil::rcodeText(quint8 rcode)
+{
+    return QLatin1String(ares_dns_rcode_tostr(ares_dns_rcode_t(rcode)));
+}
+
 QStringList DnsUtil::splitServers(const QString &text)
 {
     static const QRegularExpression separatorsRe("[,\\s]+");
