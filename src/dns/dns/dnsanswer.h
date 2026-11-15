@@ -22,8 +22,9 @@ public:
 
     const DnsAddresses &addresses() const { return m_addresses; }
 
-    // The CNAME records' targets, the canonical names of the answer
-    const QStringList &cnameTargets() const { return m_cnameTargets; }
+    // The CNAME records' targets, the canonical names of the answer, and the SVCB and HTTPS
+    // records' TargetNames (RFC 9460), the names its addresses may be of
+    const QStringList &targetNames() const { return m_targetNames; }
 
     // The resolver's error, empty for the upstream server's answer
     const QString &error() const { return m_error; }
@@ -43,6 +44,7 @@ public:
 
 private:
     void readAnswers(const ares_dns_record *record);
+    void readTargetName(const ares_dns_rr *rr);
     bool readAddress(const ares_dns_rr *rr);
 
 private:
@@ -52,7 +54,7 @@ private:
 
     DnsAddresses m_addresses;
 
-    QStringList m_cnameTargets;
+    QStringList m_targetNames;
 
     QString m_error;
 };

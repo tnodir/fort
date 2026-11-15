@@ -327,7 +327,8 @@ void DnsManager::flushResolverCache()
 }
 
 // Returns whether a Block Zone lists the query's name or a target, else adds the referenced Hosts
-// Zones and host() filters listing them. The answer's addresses are of its last canonical name
+// Zones and host() filters listing them. The answer's addresses are of its last canonical name, its
+// hints of the SVCB/HTTPS records' targets
 bool DnsManager::matchAnswer(const DnsQuery &query, const DnsAnswer &answer, HostMatch &match) const
 {
     // The referenced names add the answer's addresses
@@ -336,7 +337,7 @@ bool DnsManager::matchAnswer(const DnsQuery &query, const DnsAnswer &answer, Hos
     if (matchAnswerName(query, query.name(), matchRefs, match))
         return true;
 
-    for (const QString &target : answer.cnameTargets()) {
+    for (const QString &target : answer.targetNames()) {
         if (matchAnswerName(query, target, matchRefs, match))
             return true;
     }
@@ -365,8 +366,9 @@ bool DnsManager::matchAnswerName(
 }
 
 // The names of the Block Zones aren't found, even if a host() filter lists them. The Block Zones
-// may be changed while the query waits for the answer. Their names may be the canonical names of
-// another name's answer, e.g. of a tracker behind the site's subdomain
+// may be changed while the query waits for the answer. Their names may be the canonical names or
+// the SVCB/HTTPS records' targets of another name's answer, e.g. of a tracker behind the site's
+// subdomain
 bool DnsManager::isNameBlocked(const DnsQuery &query, QStringView name, quint32 nameZonesMask) const
 {
     if ((nameZonesMask & m_blockZonesMask) == 0)
@@ -375,7 +377,7 @@ bool DnsManager::isNameBlocked(const DnsQuery &query, QStringView name, quint32 
     if (name == query.name()) {
         qCDebug(LC) << "Blocked:" << name;
     } else {
-        qCDebug(LC) << "Blocked:" << query.name() << "CNAME:" << name;
+        qCDebug(LC) << "Blocked:" << query.name() << "Target:" << name;
     }
 
     return true;

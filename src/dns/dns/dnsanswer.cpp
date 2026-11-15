@@ -154,6 +154,21 @@ bool readHints(DnsAddresses &addresses, const ares_dns_rr_t *rr, ares_dns_rr_key
     return ip4Count != 0 || ip6Count != 0;
 }
 
+// The target name of the CNAME, SVCB or HTTPS record, else null
+const char *targetName(const ares_dns_rr_t *rr)
+{
+    switch (ares_dns_rr_get_type(rr)) {
+    case ARES_REC_TYPE_CNAME:
+        return ares_dns_rr_get_str(rr, ARES_RR_CNAME_CNAME);
+    case ARES_REC_TYPE_SVCB:
+        return ares_dns_rr_get_str(rr, ARES_RR_SVCB_TARGET);
+    case ARES_REC_TYPE_HTTPS:
+        return ares_dns_rr_get_str(rr, ARES_RR_HTTPS_TARGET);
+    default:
+        return nullptr;
+    }
+}
+
 }
 
 void DnsAnswer::setRecord(const DnsQuery &query, const ares_dns_record *record, int sizeMax)
@@ -203,13 +218,24 @@ void DnsAnswer::readAnswers(const ares_dns_record *record)
     for (size_t i = 0; i < count; ++i) {
         const ares_dns_rr_t *rr = ares_dns_record_rr_get_const(record, ARES_SECTION_ANSWER, i);
 
-        if (ares_dns_rr_get_type(rr) == ARES_REC_TYPE_CNAME) {
-            m_cnameTargets.append(
-                    QString::fromLatin1(ares_dns_rr_get_str(rr, ARES_RR_CNAME_CNAME)));
-        } else if (readAddress(rr)) {
+        readTargetName(rr);
+
+        if (readAddress(rr)) {
             m_addresses.addTtl(ares_dns_rr_get_ttl(rr));
         }
     }
+}
+
+void DnsAnswer::readTargetName(const ares_dns_rr *rr)
+{
+    const char *name = targetName(rr);
+
+    // The root name "." (of the service mode's owner name or the alias mode's no service) is
+    // parsed as empty
+    if (name == nullptr || *name == '\0')
+        return;
+
+    m_targetNames.append(QString::fromLatin1(name));
 }
 
 bool DnsAnswer::readAddress(const ares_dns_rr *rr)
