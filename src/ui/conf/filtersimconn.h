@@ -15,7 +15,8 @@ struct FilterSimConn
 
     DriverCommon::ConnFilterResult result = DriverCommon::ConnFilterAllowed;
 
-    // The input: direction, IP version, profile, loopback, protocol, addresses and ports.
+    // The input: direction, IP version, profile, loopback, the Service's, protocol, addresses and
+    // ports.
     // The results: reason, rule_id, act.zone_id and app.data.
     FORT_CONF_META_CONN conn {};
 
