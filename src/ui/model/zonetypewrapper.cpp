@@ -44,7 +44,7 @@ int ZoneTypeWrapper::emptyNetMask() const
 
 bool ZoneTypeWrapper::isHosts() const
 {
-    return id() == TypeHosts;
+    return valueBool("hosts");
 }
 
 int ZoneTypeWrapper::idByCode(const QString &code)
@@ -53,6 +53,7 @@ int ZoneTypeWrapper::idByCode(const QString &code)
         { "gen", TypeGeneric },
         { "bgp", TypeBgp },
         { "host", TypeHosts },
+        { "hosts_file", TypeHostsFile },
     };
 
     return map.value(code, TypeGeneric);

@@ -10,6 +10,7 @@ public:
         TypeGeneric = 0,
         TypeBgp,
         TypeHosts,
+        TypeHostsFile,
     };
 
     explicit ZoneTypeWrapper(const QVariant &var = {});

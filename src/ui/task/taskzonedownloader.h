@@ -25,6 +25,9 @@ public:
     bool isHosts() const { return m_isHosts; }
     void setIsHosts(bool v) { m_isHosts = v; }
 
+    bool hostSubdomains() const { return m_hostSubdomains; }
+    void setHostSubdomains(bool v) { m_hostSubdomains = v; }
+
     int emptyNetMask() const { return m_emptyNetMask; }
     void setEmptyNetMask(int v) { m_emptyNetMask = v; }
 
@@ -101,6 +104,7 @@ private:
     bool m_zoneEnabled : 1 = false;
     bool m_sort : 1 = false;
     bool m_isHosts : 1 = false;
+    bool m_hostSubdomains : 1 = false;
 
     int m_emptyNetMask = 32;
 

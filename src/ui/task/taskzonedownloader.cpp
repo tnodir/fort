@@ -190,6 +190,8 @@ bool TaskZoneDownloader::loadHosts(HostRange &hostRange)
     if (!loadCacheData(data))
         return false;
 
+    hostRange.setWithSubdomains(hostSubdomains());
+
     return hostRange.fromText(QString::fromUtf8(data));
 }
 

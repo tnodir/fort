@@ -19,6 +19,14 @@
         "code": "host",
         "title": "Hosts",
         "description": "Host names list",
+        "hosts": true,
         "pattern": "^\\s*(\\S+)"
+    },
+    {
+        "code": "hosts_file",
+        "title": "Hosts File",
+        "description": "Hosts file: each name after an address",
+        "hosts": true,
+        "pattern": "^\\s*[^#\\s]\\S*\\s+(?!(?:localhost(?:\\.localdomain)?|local|broadcasthost|ip6-\\S+|0\\.0\\.0\\.0)(?:\\s|#|$))([^#\\s]\\S*)"
     }
 ]

@@ -29,6 +29,11 @@ QString ZoneSourceWrapper::zoneType() const
     return valueText("zoneType");
 }
 
+bool ZoneSourceWrapper::subdomains() const
+{
+    return valueBool("subdomains");
+}
+
 QString ZoneSourceWrapper::url() const
 {
     return valueText("url");
@@ -53,6 +58,8 @@ int ZoneSourceWrapper::idByCode(const QString &code)
         { "file", SourceFile },
         { "host_text", SourceHostsText },
         { "host_file", SourceHostsFile },
+        { "domain_file", SourceDomainsFile },
+        { "domain_hosts_file", SourceDomainsHostsFile },
         { "winspyblock", SourceWinSpyBlock },
         { "firehol_level1", SourceFireHol_Level1 },
         { "tasix", SourceTasix },
