@@ -258,7 +258,6 @@ void DnsEtwListener::processEvent(PEVENT_RECORD event)
         return;
 
     DnsClientAnswer answer;
-    answer.setQueryType(quint16(queryType));
     answer.setProcessId(event->EventHeader.ProcessId);
     answer.setName(eventPropertyString(event, L"QueryName"));
     answer.readQueryResults(eventPropertyString(event, L"QueryResults"));

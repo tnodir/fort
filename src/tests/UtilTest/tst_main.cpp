@@ -3,6 +3,7 @@
 #include "tst_connfilter.h"
 #include "tst_controlcommandutil.h"
 #include "tst_dateutil.h"
+#include "tst_expiringhash.h"
 #include "tst_fileutil.h"
 #include "tst_filterline.h"
 #include "tst_formatutil.h"
