@@ -5,6 +5,7 @@
 #include <QByteArrayView>
 #include <QObject>
 #include <QSet>
+#include <QVector>
 
 #include "valuerange.h"
 
@@ -24,10 +25,6 @@ public:
     bool withSubdomains() const { return m_withSubdomains; }
     void setWithSubdomains(bool v) { m_withSubdomains = v; }
 
-    // The host() filter's id
-    quint32 hostId() const { return m_hostId; }
-    void setHostId(quint32 v) { m_hostId = v; }
-
     const QSet<QString> &names() const { return m_names; }
     const QSet<QString> &wildcardNames() const { return m_wildcardNames; }
     const QSet<QString> &patternNames() const { return m_patternNames; }
@@ -43,6 +40,16 @@ public:
     bool fromList(const StringViewList &list, bool sort = true) override;
 
     void write(ConfData &confData) const override;
+
+    // The names' ids, sorted: the driver's host() filter has them instead of the names
+    QVector<quint64> nameIds() const;
+
+    // The id of a name as listed by toList(): the same name has the same id after the service's
+    // restart and in another host() filter
+    static quint64 nameId(QStringView name);
+
+    // The id of the "*." wildcard of the parent domain
+    static quint64 wildcardNameId(QStringView parentName);
 
     // Lower case, without the root's trailing dot
     static QString normalizedName(QStringView name);
@@ -78,8 +85,6 @@ private:
 
 private:
     bool m_withSubdomains = false;
-
-    quint32 m_hostId = 0;
 
     QSet<QString> m_names;
     QSet<QString> m_wildcardNames; // the parent domains of the "*." wildcards and "." names

@@ -5,6 +5,7 @@
 
 #include <googletest.h>
 
+#include <common/fortconf.h>
 #include <dns/hostzonesdb.h>
 #include <task/taskzonedownloader.h>
 #include <util/conf/confbuffer.h>
@@ -496,27 +497,54 @@ TEST_F(NetUtilTest, hostMatcherHostFilters)
     HostRange hostRange;
 
     ASSERT_TRUE(hostRange.fromText("example.com\n*.example.com"));
-    hostMatcher.addHostFilter(7, hostRange);
+    hostMatcher.addHostFilter(hostRange);
 
     ASSERT_TRUE(hostRange.fromText("www.example.com"));
-    hostMatcher.addHostFilter(9, hostRange);
+    hostMatcher.addHostFilter(hostRange);
 
     ASSERT_TRUE(hostRange.fromText("*.example.com\nexample.org\nads*.example.net"));
-    hostMatcher.addHostFilter(7, hostRange);
+    hostMatcher.addHostFilter(hostRange);
 
     ASSERT_TRUE(hostMatcher.match(u"example.net").isEmpty());
 
-    ASSERT_EQ(hostMatcher.match(u"example.com").hostIds, QVector<quint32>({ 7 }));
-    ASSERT_EQ(hostMatcher.match(u"example.org").hostIds, QVector<quint32>({ 7 }));
-    ASSERT_EQ(hostMatcher.match(u"Ads1.example.net.").hostIds, QVector<quint32>({ 7 }));
+    ASSERT_EQ(hostMatcher.match(u"example.com").nameIds,
+            QVector<quint64>({ HostRange::nameId(u"example.com") }));
+    ASSERT_EQ(hostMatcher.match(u"example.org").nameIds,
+            QVector<quint64>({ HostRange::nameId(u"example.org") }));
+    ASSERT_EQ(hostMatcher.match(u"Ads1.example.net.").nameIds,
+            QVector<quint64>({ HostRange::nameId(u"ads*.example.net") }));
 
-    // The host() filter's ids aren't repeated
+    // The wildcard of two filters isn't repeated
     {
         const HostMatch match = hostMatcher.match(u"www.Example.com.");
         ASSERT_FALSE(match.isEmpty());
         ASSERT_EQ(match.zonesMask, 0);
-        ASSERT_EQ(match.hostIds, QVector<quint32>({ 9, 7 }));
+        ASSERT_EQ(match.nameIds,
+                QVector<quint64>({ HostRange::nameId(u"www.example.com"),
+                        HostRange::nameId(u"*.example.com") }));
     }
+}
+
+TEST_F(NetUtilTest, hostRangeNameIds)
+{
+    HostRange hostRange;
+
+    // The name with its subdomains is listed as the name and its "*." wildcard
+    ASSERT_TRUE(hostRange.fromText(".Example.com\nads*.example.net"));
+
+    QVector<quint64> nameIds = {
+        HostRange::nameId(u"example.com"),
+        HostRange::wildcardNameId(u"example.com"),
+        HostRange::nameId(u"ads*.example.net"),
+    };
+    std::sort(nameIds.begin(), nameIds.end());
+
+    ASSERT_EQ(hostRange.nameIds(), nameIds);
+    ASSERT_EQ(hostRange.sizeToWrite(), int(FORT_CONF_RULE_FILTER_HOST_SIZE(3)));
+
+    ASSERT_EQ(HostRange::wildcardNameId(u"example.com"), HostRange::nameId(u"*.example.com"));
+    ASSERT_NE(HostRange::nameId(u"example.com"), HostRange::nameId(u"example.org"));
+    ASSERT_NE(HostRange::nameId(u"example.com"), 0u);
 }
 
 namespace {

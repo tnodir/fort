@@ -3,15 +3,15 @@
 
 #include "fortcnf.h"
 
-/* The IP added to the Zones or to a host() filter at runtime */
+/* The IP added to the Zones or to a host() filter's name at runtime */
 typedef struct fort_host_ip
 {
     UCHAR isIPv6;
-    UCHAR isFilter; /* the host() filter's IP, else the Zones' one */
+    UCHAR isFilter; /* the host() filter's name's IP, else the Zones' one */
 
     union {
         UINT32 zones_mask;
-        UINT32 host_id; /* the host() filter's id */
+        UINT64 name_id; /* the host() filter's name's id */
     };
 
     union {
@@ -52,15 +52,12 @@ FORT_API NTSTATUS fort_host_ips_add(PFORT_HOST_IPS host_ips, PCFORT_CONF_HOST_IP
 /* Removes the IPs' Zones not in the mask */
 FORT_API void fort_host_ips_zones_keep(PFORT_HOST_IPS host_ips, UINT32 zones_mask);
 
-/* Removes the host() filters' IPs */
-FORT_API void fort_host_ips_filters_clear(PFORT_HOST_IPS host_ips);
-
 /* Returns the Zones of the connection's remote IP */
 FORT_API UINT32 fort_host_ips_zones_mask(PFORT_HOST_IPS host_ips, PCFORT_CONF_META_CONN conn);
 
-/* Is the connection's remote IP added to the host() filter */
+/* Is the connection's remote IP added to a name of the host() filter */
 FORT_API BOOL fort_host_ips_filter_included(
-        PFORT_HOST_IPS host_ips, PCFORT_CONF_META_CONN conn, UINT32 host_id);
+        PFORT_HOST_IPS host_ips, PCFORT_CONF_META_CONN conn, PCFORT_CONF_RULE_FILTER_HOST host);
 
 #ifdef __cplusplus
 } // extern "C"

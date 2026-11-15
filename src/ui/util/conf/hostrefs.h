@@ -9,24 +9,23 @@
 
 class HostRange;
 
-// The driver's conf's references, which the DNS answers' IPs are added for: the host() filters' ids
-// by their names and the Zones. The ids aren't reused, so the driver's IPs of a removed filter's
-// names don't match a new filter. The Programs' references are kept by their paths, as the driver
-// keeps the Programs: a Program written alone replaces its own.
+// The driver's conf's references, which the DNS answers' IPs are added for: the host() filters'
+// names and the Zones. The Programs' references are kept by their paths, as the driver keeps the
+// Programs: a Program written alone replaces its own.
 class HostRefs
 {
 public:
     enum Source : qint8 { SourceRules = 0, SourceConf, SourceCount };
 
-    // Whether the ids or the Zones changed
+    // Whether the host() filters or the Zones changed
     bool isChanged() const { return m_changed; }
     void resetChanged() { m_changed = false; }
 
-    // The ids by the names' key
-    const QHash<QString, quint32> &hostIds() const { return m_hostIds; }
+    // The host() filters' sets of names by their keys
+    const QSet<QString> &hostKeys() const { return m_hostKeys; }
 
-    // The ids grow: a new one is greater
-    quint32 lastHostId() const { return m_lastHostId; }
+    // Grows when a name, which no host() filter had, is referenced
+    quint32 addedNamesCount() const { return m_addedNamesCount; }
 
     // The Zones referenced by any source
     quint32 zonesMask() const { return m_zonesMask; }
@@ -34,8 +33,8 @@ public:
     // Starts collecting all host() filters and Zones of the source
     void beginSource(Source source);
 
-    // On success the source has the collected host() filters and Zones only, then the ids of the
-    // names, which no source's host() filter has, are removed
+    // On success the source has the collected host() filters and Zones only, then the host()
+    // filters, which no source has, are removed
     void endSource(bool ok);
 
     // Starts collecting a Program's host() filters and Zones: of the conf's source, else of the
@@ -43,12 +42,12 @@ public:
     void beginApp(const QString &appPath);
 
     // On success the Program has the collected host() filters and Zones only. Written alone, then
-    // the unused ids are removed.
+    // the unused host() filters are removed.
     void endApp(bool ok);
 
-    // Returns the names' id, a new one for new names. The names are collected only between the
-    // begin*() and end*() calls, as the Zones are.
-    quint32 hostId(const HostRange &hostRange);
+    // The host() filters are collected only between the begin*() and end*() calls, as the Zones
+    // are
+    void addHostFilter(const HostRange &hostRange);
 
     void addZones(quint32 zonesMask);
 
@@ -82,7 +81,8 @@ private:
 
     void updateRefs();
 
-    void removeUnusedIds(const QSet<QString> &usedKeys);
+    void setHostKeys(const QSet<QString> &hostKeys);
+    void updateNames();
 
     void setZonesMask(quint32 zonesMask);
 
@@ -93,12 +93,13 @@ private:
 
     Source m_source = SourceConf;
 
-    quint32 m_lastHostId = 0;
+    quint32 m_addedNamesCount = 0;
     quint32 m_zonesMask = 0;
 
     QString m_appPath;
 
-    QHash<QString, quint32> m_hostIds;
+    QSet<QString> m_hostKeys;
+    QSet<QString> m_names; // of the host() filters
 
     Refs m_collectedApp;
     SourceRefs m_collected;

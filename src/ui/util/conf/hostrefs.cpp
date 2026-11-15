@@ -54,20 +54,9 @@ void HostRefs::endApp(bool ok)
     m_collectedApp = {};
 }
 
-quint32 HostRefs::hostId(const HostRange &hostRange)
+void HostRefs::addHostFilter(const HostRange &hostRange)
 {
-    const QString key = namesKey(hostRange);
-
-    collectedRefs().keys.insert(key);
-
-    quint32 &hostId = m_hostIds[key];
-
-    if (hostId == 0) {
-        hostId = ++m_lastHostId;
-        m_changed = true;
-    }
-
-    return hostId;
+    collectedRefs().keys.insert(namesKey(hostRange));
 }
 
 void HostRefs::addZones(quint32 zonesMask)
@@ -80,9 +69,9 @@ HostMatcher HostRefs::hostMatcher() const
     HostMatcher hostMatcher;
     HostRange hostRange;
 
-    for (auto it = m_hostIds.constBegin(); it != m_hostIds.constEnd(); ++it) {
-        if (hostRange.fromList(StringUtil::splitView(it.key(), QLatin1Char(namesSeparator)))) {
-            hostMatcher.addHostFilter(it.value(), hostRange);
+    for (const QString &key : m_hostKeys) {
+        if (hostRange.fromList(StringUtil::splitView(key, QLatin1Char(namesSeparator)))) {
+            hostMatcher.addHostFilter(hostRange);
         }
     }
 
@@ -129,21 +118,37 @@ void HostRefs::updateRefs()
         addSourceRefs(usedRefs, sourceRefs);
     }
 
-    removeUnusedIds(usedRefs.keys);
+    setHostKeys(usedRefs.keys);
 
     setZonesMask(usedRefs.zonesMask);
 }
 
-void HostRefs::removeUnusedIds(const QSet<QString> &usedKeys)
+void HostRefs::setHostKeys(const QSet<QString> &hostKeys)
 {
-    for (auto it = m_hostIds.begin(); it != m_hostIds.end();) {
-        if (usedKeys.contains(it.key())) {
-            ++it;
-        } else {
-            it = m_hostIds.erase(it);
-            m_changed = true;
+    if (m_hostKeys == hostKeys)
+        return;
+
+    m_hostKeys = hostKeys;
+    m_changed = true;
+
+    updateNames();
+}
+
+void HostRefs::updateNames()
+{
+    QSet<QString> names;
+
+    for (const QString &key : std::as_const(m_hostKeys)) {
+        for (const QStringView name : StringUtil::splitView(key, QLatin1Char(namesSeparator))) {
+            names.insert(name.toString());
         }
     }
+
+    if (!m_names.contains(names)) {
+        ++m_addedNamesCount;
+    }
+
+    m_names = names;
 }
 
 void HostRefs::setZonesMask(quint32 zonesMask)

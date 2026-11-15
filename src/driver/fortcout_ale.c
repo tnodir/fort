@@ -405,9 +405,10 @@ inline static void fort_callout_ale_check_app(PCFORT_CALLOUT_ARG ca, PFORT_CALLO
     fort_callout_ale_log_app_path(cx, conf_ref, conf_flags, app_data);
 }
 
-static BOOL fort_callout_ale_host_ip_included(PCFORT_CONF_META_CONN conn, UINT32 host_id)
+static BOOL fort_callout_ale_host_ip_included(
+        PCFORT_CONF_META_CONN conn, PCFORT_CONF_RULE_FILTER_HOST host)
 {
-    return fort_host_ips_filter_included(&fort_device()->host_ips, conn, host_id);
+    return fort_host_ips_filter_included(&fort_device()->host_ips, conn, host);
 }
 
 static BOOL fort_callout_ale_zones_ip_included(

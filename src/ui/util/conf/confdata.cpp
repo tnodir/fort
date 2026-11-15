@@ -247,11 +247,15 @@ void ConfData::writeOptionRange(const OptionRange &optionRange)
 
 void ConfData::writeHostRange(const HostRange &hostRange)
 {
+    const longlongs_arr_t nameIds = hostRange.nameIds();
+
     PFORT_CONF_RULE_FILTER_HOST filter = PFORT_CONF_RULE_FILTER_HOST(m_data);
 
-    filter->host_id = hostRange.hostId();
+    filter->name_n = quint32(nameIds.size());
 
-    m_data += sizeof(FORT_CONF_RULE_FILTER_HOST);
+    m_data += FORT_CONF_RULE_FILTER_HOST_OFF;
+
+    writeLongLongs(nameIds);
 }
 
 void ConfData::writeApps(const appdata_map_t &appsMap, bool useHeader)
@@ -325,6 +329,11 @@ void ConfData::writeShorts(const shorts_arr_t &array)
 void ConfData::writeLongs(const longs_arr_t &array)
 {
     writeData(array.constData(), array.size(), sizeof(quint32));
+}
+
+void ConfData::writeLongLongs(const longlongs_arr_t &array)
+{
+    writeData(array.constData(), array.size(), sizeof(quint64));
 }
 
 void ConfData::writeIp6Array(const ip6_arr_t &array)

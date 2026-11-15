@@ -1,8 +1,10 @@
 #include "hostrange.h"
 
+#include <QCryptographicHash>
 #include <QUrl>
 
 #include <algorithm>
+#include <cstring>
 
 #include <common/fortconf.h>
 
@@ -96,7 +98,7 @@ bool HostRange::isEmpty() const
 
 int HostRange::sizeToWrite() const
 {
-    return sizeof(FORT_CONF_RULE_FILTER_HOST); // the id: the driver doesn't get the names
+    return FORT_CONF_RULE_FILTER_HOST_SIZE(size()); // the ids: the driver doesn't get the names
 }
 
 void HostRange::clear()
@@ -146,6 +148,41 @@ bool HostRange::fromList(const StringViewList &list, bool /*sort*/)
 void HostRange::write(ConfData &confData) const
 {
     confData.writeHostRange(*this);
+}
+
+QVector<quint64> HostRange::nameIds() const
+{
+    QStringList names;
+    toList(names);
+
+    QVector<quint64> ids;
+    ids.reserve(names.size());
+
+    for (const auto &name : std::as_const(names)) {
+        ids.append(nameId(name));
+    }
+
+    std::sort(ids.begin(), ids.end());
+
+    return ids;
+}
+
+quint64 HostRange::nameId(QStringView name)
+{
+    const QByteArray hash = QCryptographicHash::hash(name.toLatin1(), QCryptographicHash::Sha256);
+
+    quint64 id;
+    std::memcpy(&id, hash.constData(), sizeof(id));
+
+    return (id != 0) ? id : 1; // 0 is of the Zones' IPs
+}
+
+quint64 HostRange::wildcardNameId(QStringView parentName)
+{
+    QString name(wildcardPrefix);
+    name += parentName;
+
+    return nameId(name);
 }
 
 QString HostRange::normalizedName(QStringView name)

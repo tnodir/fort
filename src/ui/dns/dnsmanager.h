@@ -112,7 +112,7 @@ private:
     bool checkLoopQuery(const DnsRequest &request);
     void logLoop();
 
-    bool writeHostIps(const HostMatch &match, const DnsAddresses &addresses);
+    bool writeHostIps(const QString &name, const HostMatch &match, const DnsAddresses &addresses);
     void addConnHostName(const QString &name, const DnsAddresses &addresses);
 
     void sendRcode(const DnsRequest &request, quint8 rcode);
@@ -120,8 +120,8 @@ private:
 private:
     bool m_loopLogged = false;
 
-    // The host() filters' last id and the Hosts Zones referenced, as loaded
-    quint32 m_lastHostId = 0;
+    // The host() filters' names added and the Hosts Zones referenced, as loaded
+    quint32 m_addedNamesCount = 0;
     quint32 m_refZonesMask = 0;
 
     quint32 m_blockZonesMask = 0;

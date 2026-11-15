@@ -2,6 +2,7 @@
 
 #include <QVector>
 
+using longlongs_arr_t = QVector<quint64>;
 using longs_arr_t = QVector<quint32>;
 using shorts_arr_t = QVector<quint16>;
 using bytes_arr_t = QVector<quint8>;

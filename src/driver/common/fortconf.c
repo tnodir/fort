@@ -207,6 +207,31 @@ FORT_API BOOL fort_conf_ip_inlist(PCFORT_CONF_ADDR_LIST addr_list, const ip_addr
     }
 }
 
+FORT_API BOOL fort_conf_host_name_included(PCFORT_CONF_RULE_FILTER_HOST host, UINT64 name_id)
+{
+    int low = 0;
+    int high = (int) host->name_n - 1;
+
+    while (low <= high) {
+        const int mid = (low + high) / 2;
+
+        /* The filter's ids may be unaligned */
+        UINT64 mid_id;
+        RtlCopyMemory(&mid_id, host->name_ids + FORT_CONF_HOST_NAME_IDS_SIZE(mid), sizeof(UINT64));
+
+        if (name_id == mid_id)
+            return TRUE;
+
+        if (name_id < mid_id) {
+            high = mid - 1;
+        } else {
+            low = mid + 1;
+        }
+    }
+
+    return FALSE;
+}
+
 FORT_API PCFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(PCFORT_CONF conf, int addr_group_index)
 {
     const UINT32 *addr_group_offsets = (const UINT32 *) (conf->data + conf->addr_groups_off);
@@ -803,13 +828,13 @@ static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_port_udp(
 static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_host(
         PFORT_CONF_META_CONN conn, const void *data)
 {
-    const UINT32 host_id = ((PCFORT_CONF_RULE_FILTER_HOST) data)->host_id;
+    PCFORT_CONF_RULE_FILTER_HOST host = data;
 
-    if (host_id == 0 || conn->host_ip_included == NULL)
+    if (host->name_n == 0 || conn->host_ip_included == NULL)
         return FORT_CONN_FILTER_RESULT_FALSE;
 
-    return conn->host_ip_included(conn, host_id) ? FORT_CONN_FILTER_RESULT_TRUE
-                                                 : FORT_CONN_FILTER_RESULT_FALSE;
+    return conn->host_ip_included(conn, host) ? FORT_CONN_FILTER_RESULT_TRUE
+                                              : FORT_CONN_FILTER_RESULT_FALSE;
 }
 
 typedef FORT_CONN_FILTER_RESULT (*FORT_CONF_RULE_FILTER_CHECK_FUNC)(

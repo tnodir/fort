@@ -4,25 +4,91 @@
 
 #include "../fortcnf_host.h"
 
-#define TEST_HOST_ID 7
+#define TEST_NAME_ID 7
 
-static void test_host_ips_add(PFORT_HOST_IPS host_ips, UINT32 ip, UINT32 ttl)
+/* Adds the IP to the Zone 1 and to the host() filter's name */
+static void test_host_ips_add_name(PFORT_HOST_IPS host_ips, UINT32 ip, UINT64 name_id, UINT32 ttl)
 {
-    char buf[FORT_CONF_HOST_IPS_SIZE(1, 1, 0)];
+    UINT64 buf[(FORT_CONF_HOST_IPS_SIZE(1, 1, 0) + sizeof(UINT64) - 1) / sizeof(UINT64)];
     PFORT_CONF_HOST_IPS conf_ips = (PFORT_CONF_HOST_IPS) buf;
 
     *conf_ips = (FORT_CONF_HOST_IPS) {
-        .host_n = 1,
+        .name_n = 1,
         .ip4_n = 1,
         .zones_mask = 1,
         .ttl = ttl,
     };
 
-    const UINT32 host_id = TEST_HOST_ID;
-    RtlCopyMemory(conf_ips->data, &host_id, sizeof(host_id));
-    RtlCopyMemory(conf_ips->data + FORT_CONF_HOST_IDS_SIZE(1), &ip, sizeof(ip));
+    RtlCopyMemory(conf_ips->data, &name_id, sizeof(name_id));
+    RtlCopyMemory(conf_ips->data + FORT_CONF_HOST_NAME_IDS_SIZE(1), &ip, sizeof(ip));
 
     assert(fort_host_ips_add(host_ips, conf_ips) == STATUS_SUCCESS);
+}
+
+static void test_host_ips_add(PFORT_HOST_IPS host_ips, UINT32 ip, UINT32 ttl)
+{
+    test_host_ips_add_name(host_ips, ip, TEST_NAME_ID, ttl);
+}
+
+#define TEST_FILTER_NAMES_MAX 3
+
+static BOOL test_host_ips_filter_included(
+        PFORT_HOST_IPS host_ips, PCFORT_CONF_META_CONN conn, const UINT64 *name_ids, UINT32 name_n)
+{
+    UINT64 buf[(FORT_CONF_RULE_FILTER_HOST_SIZE(TEST_FILTER_NAMES_MAX) + sizeof(UINT64) - 1)
+            / sizeof(UINT64)];
+    PFORT_CONF_RULE_FILTER_HOST host = (PFORT_CONF_RULE_FILTER_HOST) buf;
+
+    assert(name_n <= TEST_FILTER_NAMES_MAX);
+
+    host->name_n = name_n;
+    RtlCopyMemory(host->name_ids, name_ids, FORT_CONF_HOST_NAME_IDS_SIZE(name_n));
+
+    return fort_host_ips_filter_included(host_ips, conn, host);
+}
+
+static BOOL test_host_ips_name_included(PFORT_HOST_IPS host_ips, PCFORT_CONF_META_CONN conn)
+{
+    const UINT64 name_id = TEST_NAME_ID;
+
+    return test_host_ips_filter_included(host_ips, conn, &name_id, 1);
+}
+
+static void test_host_ips_filter(void)
+{
+    FORT_HOST_IPS host_ips = { 0 };
+    fort_host_ips_open(&host_ips);
+
+    /* The IP of two names: the user-mode KeQueryInterruptTime() stands still, a TTL of 0 has
+     * expired */
+    test_host_ips_add_name(&host_ips, 0x01020304, /*name_id=*/7, /*ttl=*/1);
+    test_host_ips_add_name(&host_ips, 0x01020304, /*name_id=*/9, /*ttl=*/0);
+
+    FORT_CONF_META_CONN conn = { .remote_ip.v4 = 0x01020304 };
+
+    /* A filter of the IP's name among others */
+    const UINT64 names7[] = { 5, 7, 11 };
+    assert(test_host_ips_filter_included(&host_ips, &conn, names7, 3));
+
+    /* A filter of other names */
+    const UINT64 names5[] = { 5, 11 };
+    assert(!test_host_ips_filter_included(&host_ips, &conn, names5, 2));
+    assert(!test_host_ips_filter_included(&host_ips, &conn, names5, 0));
+
+    /* The expired name's IP is matched by an established connection's reauthorization only */
+    const UINT64 names9[] = { 9 };
+    assert(!test_host_ips_filter_included(&host_ips, &conn, names9, 1));
+
+    conn.is_reauth = TRUE;
+    assert(test_host_ips_filter_included(&host_ips, &conn, names9, 1));
+
+    /* Another IP */
+    conn = (FORT_CONF_META_CONN) { .remote_ip.v4 = 0x05060708 };
+    assert(!test_host_ips_filter_included(&host_ips, &conn, names7, 3));
+
+    fort_host_ips_close(&host_ips);
+
+    printf("test_host_ips_filter: OK\n");
 }
 
 static void test_host_ips_reauth(void)
@@ -38,12 +104,12 @@ static void test_host_ips_reauth(void)
 
     /* The expired IP isn't matched by a new connection */
     assert(fort_host_ips_zones_mask(&host_ips, &conn) == 0);
-    assert(!fort_host_ips_filter_included(&host_ips, &conn, TEST_HOST_ID));
+    assert(!test_host_ips_name_included(&host_ips, &conn));
 
     /* The expired IP is matched by an established connection's reauthorization */
     conn.is_reauth = TRUE;
     assert(fort_host_ips_zones_mask(&host_ips, &conn) == 1);
-    assert(fort_host_ips_filter_included(&host_ips, &conn, TEST_HOST_ID));
+    assert(test_host_ips_name_included(&host_ips, &conn));
 
     /* The purge keeps it */
     fort_host_ips_zones_keep(&host_ips, 1);
@@ -52,7 +118,7 @@ static void test_host_ips_reauth(void)
     /* The not expired IP is matched by a new connection */
     conn = (FORT_CONF_META_CONN) { .remote_ip.v4 = 0x05060708 };
     assert(fort_host_ips_zones_mask(&host_ips, &conn) == 1);
-    assert(fort_host_ips_filter_included(&host_ips, &conn, TEST_HOST_ID));
+    assert(test_host_ips_name_included(&host_ips, &conn));
 
     fort_host_ips_close(&host_ips);
 
@@ -75,11 +141,7 @@ static void test_host_ips_purge(void)
 
     const FORT_CONF_META_CONN conn = { .remote_ip.v4 = 0x05060708 };
     assert(fort_host_ips_zones_mask(&host_ips, &conn) == 0);
-    assert(fort_host_ips_filter_included(&host_ips, &conn, TEST_HOST_ID));
-
-    fort_host_ips_filters_clear(&host_ips);
-    assert(host_ips.count == 0);
-    assert(!fort_host_ips_filter_included(&host_ips, &conn, TEST_HOST_ID));
+    assert(test_host_ips_name_included(&host_ips, &conn));
 
     fort_host_ips_close(&host_ips);
 
@@ -218,6 +280,7 @@ static void test_host_ips_full(void)
 static void tst_host_main(void)
 {
     test_host_ips_reauth();
+    test_host_ips_filter();
     test_host_ips_purge();
     test_host_ips_reauth_zones();
     test_host_ips_full();

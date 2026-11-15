@@ -308,22 +308,22 @@ void DnsManager::loadHostRefs()
     }
 }
 
-// Returns whether a host() filter or an enabled Hosts Zone was referenced anew
+// Returns whether a host() filter's name or an enabled Hosts Zone was referenced anew
 bool DnsManager::updateHostRefs()
 {
     const auto &hostRefs = confManager()->hostRefs();
 
     m_hostFiltersMatcher = hostRefs.hostMatcher();
 
-    const quint32 lastHostId = hostRefs.lastHostId();
+    const quint32 addedNamesCount = hostRefs.addedNamesCount();
     const quint32 refZonesMask = hostRefs.zonesMask();
 
     // A Zone's enabling is flushed by loadZones()
     const quint32 addedZonesMask = refZonesMask & ~m_refZonesMask & m_hostZonesDb.enabledMask();
 
-    const bool added = (lastHostId != m_lastHostId) || addedZonesMask != 0;
+    const bool added = (addedNamesCount != m_addedNamesCount) || addedZonesMask != 0;
 
-    m_lastHostId = lastHostId;
+    m_addedNamesCount = addedNamesCount;
     m_refZonesMask = refZonesMask;
 
     return added;
@@ -430,7 +430,7 @@ void DnsManager::processAnswer(const DnsRequest &request, const DnsAnswer &answe
     const QString &name = request.query.name();
     const DnsAddresses &addresses = answer.addresses();
 
-    if (!writeHostIps(match, addresses)) {
+    if (!writeHostIps(name, match, addresses)) {
         sendRcode(request, ARES_RCODE_SERVFAIL);
         return;
     }
@@ -486,15 +486,19 @@ void DnsManager::logLoop()
 }
 
 // The match is empty for the answer without addresses
-bool DnsManager::writeHostIps(const HostMatch &match, const DnsAddresses &addresses)
+bool DnsManager::writeHostIps(
+        const QString &name, const HostMatch &match, const DnsAddresses &addresses)
 {
     if (match.isEmpty())
         return true;
 
     ConfBuffer confBuf;
 
-    confBuf.writeHostIps(
-            match, hostIpsTtl(addresses.ttl()), addresses.ip4Array(), addresses.ip6Array());
+    if (!confBuf.writeHostIps(
+                match, hostIpsTtl(addresses.ttl()), addresses.ip4Array(), addresses.ip6Array())) {
+        qCWarning(LC) << "Host IPs error:" << name << confBuf.errorMessage();
+        return false;
+    }
 
     auto driverManager = Fort::driverManager();
 

@@ -83,6 +83,7 @@ public:
     void writeBytes(const bytes_arr_t &array);
     void writeShorts(const shorts_arr_t &array);
     void writeLongs(const longs_arr_t &array);
+    void writeLongLongs(const longlongs_arr_t &array);
     void writeIp6Array(const ip6_arr_t &array);
     void writeData(void const *src, int elemCount, uint elemSize);
     void writeChars(const chars_arr_t &array);

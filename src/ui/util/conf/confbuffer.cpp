@@ -3,6 +3,8 @@
 #include <QHash>
 #include <QMap>
 
+#include <climits>
+
 #include <fort_version.h>
 
 #include <conf/addressgroup.h>
@@ -78,6 +80,15 @@ FORT_CONF_RULE confRuleFlags(const Rule &rule)
 bool isAppRuleEmpty(const Rule &rule)
 {
     return rule.ruleText.isEmpty() && !rule.terminate && rule.ruleSet.isEmpty();
+}
+
+bool isHostIpsCountValid(int nameIdsSize, quint32 zonesMask, int ip4Size, int ip6Size)
+{
+    if (qMax(nameIdsSize, qMax(ip4Size, ip6Size)) > USHRT_MAX)
+        return false;
+
+    return FORT_CONF_HOST_IPS_COUNT(nameIdsSize, zonesMask, ip4Size + ip6Size)
+            <= FORT_CONF_HOST_IPS_MAX;
 }
 
 }
@@ -273,15 +284,21 @@ void ConfBuffer::writeZoneFlag(int zoneId, bool enabled)
     confZoneFlag->enabled = enabled;
 }
 
-void ConfBuffer::writeHostIps(
+bool ConfBuffer::writeHostIps(
         const HostMatch &match, quint32 ttl, const ip4_arr_t &ip4Array, const ip6_arr_t &ip6Array)
 {
-    const int hostIdsSize = match.hostIds.size();
+    const int nameIdsSize = match.nameIds.size();
     const int ip4Size = ip4Array.size();
     const int ip6Size = ip6Array.size();
 
+    if (!isHostIpsCountValid(nameIdsSize, match.zonesMask, ip4Size, ip6Size)) {
+        setErrorMessage(QStringLiteral("Too many host IP addresses: %1 names, %2 IPs")
+                        .arg(QString::number(nameIdsSize), QString::number(ip4Size + ip6Size)));
+        return false;
+    }
+
     // Resize the buffer
-    const int hostIpsSize = FORT_CONF_HOST_IPS_SIZE(hostIdsSize, ip4Size, ip6Size);
+    const int hostIpsSize = FORT_CONF_HOST_IPS_SIZE(nameIdsSize, ip4Size, ip6Size);
 
     buffer().resize(hostIpsSize);
 
@@ -290,7 +307,7 @@ void ConfBuffer::writeHostIps(
 
     PFORT_CONF_HOST_IPS confHostIps = PFORT_CONF_HOST_IPS(data);
 
-    confHostIps->host_n = quint16(hostIdsSize);
+    confHostIps->name_n = quint16(nameIdsSize);
     confHostIps->ip4_n = quint16(ip4Size);
     confHostIps->ip6_n = quint16(ip6Size);
     confHostIps->zones_mask = match.zonesMask;
@@ -298,9 +315,11 @@ void ConfBuffer::writeHostIps(
 
     ConfData confData(confHostIps->data);
 
-    confData.writeLongs(match.hostIds);
+    confData.writeLongLongs(match.nameIds);
     confData.writeLongs(ip4Array);
     confData.writeIp6Array(ip6Array);
+
+    return true;
 }
 
 bool ConfBuffer::loadZone(IpRange &ipRange)
@@ -734,8 +753,7 @@ bool ConfBuffer::writeRuleFilterValues(const RuleFilter &ruleFilter)
     }
 
     if (ruleFilter.type == FORT_RULE_FILTER_TYPE_HOST) {
-        auto &hostRange = static_cast<HostRange &>(*range);
-        hostRange.setHostId(m_hostRefs->hostId(hostRange));
+        m_hostRefs->addHostFilter(static_cast<const HostRange &>(*range));
     }
 
     // Resize the buffer

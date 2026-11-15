@@ -237,9 +237,13 @@ static BOOL fort_conf_rule_filter_flags_valid(const char *data, UINT32 len)
 
 static BOOL fort_conf_rule_filter_host_valid(const char *data, UINT32 len)
 {
-    UNUSED(data);
+    if (len < FORT_CONF_RULE_FILTER_HOST_OFF)
+        return FALSE;
 
-    return len >= sizeof(FORT_CONF_RULE_FILTER_HOST);
+    PCFORT_CONF_RULE_FILTER_HOST host = (PCFORT_CONF_RULE_FILTER_HOST) data;
+
+    /* Without the size's overflow */
+    return host->name_n <= (len - FORT_CONF_RULE_FILTER_HOST_OFF) / sizeof(UINT64);
 }
 
 typedef BOOL (*FORT_CONF_RULE_FILTER_VALID_FUNC)(const char *data, UINT32 len);
@@ -436,10 +440,10 @@ FORT_API BOOL fort_conf_zones_valid(PCFORT_CONF_ZONES zones, UINT32 len)
 }
 
 /* The id 0 is of the Zones' IPs */
-static BOOL fort_conf_host_ids_valid(const UINT32 *host_ids, UINT32 host_n)
+static BOOL fort_conf_host_name_ids_valid(const UINT64 *name_ids, UINT32 name_n)
 {
-    for (UINT32 i = 0; i < host_n; ++i) {
-        if (host_ids[i] == 0)
+    for (UINT32 i = 0; i < name_n; ++i) {
+        if (name_ids[i] == 0)
             return FALSE;
     }
 
@@ -451,11 +455,17 @@ FORT_API BOOL fort_conf_host_ips_valid(PCFORT_CONF_HOST_IPS host_ips, UINT32 len
     if (len < FORT_CONF_HOST_IPS_DATA_OFF)
         return FALSE;
 
-    if (host_ips->zones_mask == 0 && host_ips->host_n == 0)
+    if (host_ips->zones_mask == 0 && host_ips->name_n == 0)
         return FALSE;
 
-    if (len != FORT_CONF_HOST_IPS_SIZE(host_ips->host_n, host_ips->ip4_n, host_ips->ip6_n))
+    if (len != FORT_CONF_HOST_IPS_SIZE(host_ips->name_n, host_ips->ip4_n, host_ips->ip6_n))
         return FALSE;
 
-    return fort_conf_host_ids_valid((const UINT32 *) host_ips->data, host_ips->host_n);
+    /* Wouldn't fit even the empty table */
+    if (FORT_CONF_HOST_IPS_COUNT(
+                host_ips->name_n, host_ips->zones_mask, host_ips->ip4_n + host_ips->ip6_n)
+            > FORT_CONF_HOST_IPS_MAX)
+        return FALSE;
+
+    return fort_conf_host_name_ids_valid((const UINT64 *) host_ips->data, host_ips->name_n);
 }

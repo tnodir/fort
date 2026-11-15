@@ -5,8 +5,6 @@
 #include "common/fortcmnutl.h"
 
 #define FORT_HOST_IPS_POOL_SIZE (16 * 1024)
-/* The map doubles its buckets when they are half filled: 65536 IPs would take 2^18 ones */
-#define FORT_HOST_IPS_MAX 65535
 
 #define FORT_HOST_IPS_ZONES_ALL 0xFFFFFFFF
 
@@ -30,7 +28,6 @@ typedef const FORT_HOST_IPS_ADD_ARG *PCFORT_HOST_IPS_ADD_ARG;
 
 typedef struct fort_host_ips_purge_arg
 {
-    BOOL keep_filters;
     BOOL keep_reauth; /* keep the IPs expired by the TTL, but not for the reauthorization */
 
     UINT32 zones_mask;
@@ -41,6 +38,21 @@ typedef struct fort_host_ips_purge_arg
 } FORT_HOST_IPS_PURGE_ARG, *PFORT_HOST_IPS_PURGE_ARG;
 
 typedef const FORT_HOST_IPS_PURGE_ARG *PCFORT_HOST_IPS_PURGE_ARG;
+
+typedef struct fort_host_ips_filter_arg
+{
+    BOOL is_reauth;
+
+    tommy_hash_t hash;
+
+    INT64 now;
+
+    PCFORT_CONF_RULE_FILTER_HOST host;
+
+    FORT_HOST_IP key; /* the connection's remote IP */
+} FORT_HOST_IPS_FILTER_ARG, *PFORT_HOST_IPS_FILTER_ARG;
+
+typedef const FORT_HOST_IPS_FILTER_ARG *PCFORT_HOST_IPS_FILTER_ARG;
 
 FORT_API void fort_host_ips_open(PFORT_HOST_IPS host_ips)
 {
@@ -63,16 +75,35 @@ FORT_API void fort_host_ips_close(PFORT_HOST_IPS host_ips)
     ExReleaseSpinLockExclusive(&host_ips->lock, oldIrql);
 }
 
-/* Returns the host() filter's id, 0 - the Zones' IP */
-inline static UINT32 fort_host_ip_filter_id(PCFORT_HOST_IP host_ip)
+/* Returns the host() filter's name's id, 0 - the Zones' IP */
+inline static UINT64 fort_host_ip_filter_id(PCFORT_HOST_IP host_ip)
 {
-    return host_ip->isFilter ? host_ip->host_id : 0;
+    return host_ip->isFilter ? host_ip->name_id : 0;
 }
 
+inline static FORT_HOST_IP fort_host_ip_conn_key(PCFORT_CONF_META_CONN conn)
+{
+    const FORT_HOST_IP key = {
+        .isIPv6 = (UCHAR) conn->isIPv6,
+        .ip = conn->remote_ip,
+    };
+
+    return key;
+}
+
+/* By the IP only: a host() filter's check walks the IP's names in its bucket */
 inline static tommy_hash_t fort_host_ip_hash(PCFORT_HOST_IP key)
 {
-    return tommy_hash_u32(fort_host_ip_filter_id(key), &key->ip,
-            key->isIPv6 ? sizeof(ip6_addr_t) : sizeof(UINT32));
+    return tommy_hash_u32(0, &key->ip, key->isIPv6 ? sizeof(ip6_addr_t) : sizeof(UINT32));
+}
+
+static int fort_host_ip_addr_cmp(PCFORT_HOST_IP key, PCFORT_HOST_IP host_ip)
+{
+    if (key->isIPv6 != host_ip->isIPv6)
+        return 1;
+
+    return key->isIPv6 ? fort_ip6_cmp(&key->ip.v6, &host_ip->ip.v6)
+                       : (key->ip.v4 != host_ip->ip.v4);
 }
 
 static int fort_host_ip_cmp(const void *arg, const void *obj)
@@ -80,12 +111,10 @@ static int fort_host_ip_cmp(const void *arg, const void *obj)
     PCFORT_HOST_IP key = arg;
     PCFORT_HOST_IP host_ip = obj;
 
-    if (key->isIPv6 != host_ip->isIPv6
-            || fort_host_ip_filter_id(key) != fort_host_ip_filter_id(host_ip))
+    if (fort_host_ip_filter_id(key) != fort_host_ip_filter_id(host_ip))
         return 1;
 
-    return key->isIPv6 ? fort_ip6_cmp(&key->ip.v6, &host_ip->ip.v6)
-                       : (key->ip.v4 != host_ip->ip.v4);
+    return fort_host_ip_addr_cmp(key, host_ip);
 }
 
 static void fort_host_ip_del_locked(PFORT_HOST_IPS host_ips, PFORT_HOST_IP host_ip)
@@ -109,9 +138,8 @@ static BOOL fort_host_ip_purged(PFORT_HOST_IP host_ip, PCFORT_HOST_IPS_PURGE_ARG
     if (fort_host_ip_expired(host_ip, arg->keep_reauth, arg->now))
         return TRUE;
 
-    if (host_ip->isFilter) {
-        return !arg->keep_filters;
-    }
+    if (host_ip->isFilter)
+        return FALSE;
 
     host_ip->zones_mask &= arg->zones_mask;
 
@@ -130,8 +158,7 @@ static void fort_host_ip_purge_check(void *arg, void *obj)
     purge_arg->purged_ips = host_ip;
 }
 
-/* Removes the expired IPs (for the reauthorization too, if kept), the Zones not in the mask and
- * the host() filters' IPs, if not kept */
+/* Removes the expired IPs (for the reauthorization too, if kept) and the Zones not in the mask */
 static void fort_host_ips_purge_locked(PFORT_HOST_IPS host_ips, PFORT_HOST_IPS_PURGE_ARG arg)
 {
     arg->purged_ips = NULL;
@@ -152,7 +179,7 @@ static void fort_host_ips_purge_locked(PFORT_HOST_IPS host_ips, PFORT_HOST_IPS_P
 
 inline static BOOL fort_host_ips_full_locked(PFORT_HOST_IPS host_ips, INT64 now)
 {
-    if (host_ips->count < FORT_HOST_IPS_MAX)
+    if (host_ips->count < FORT_CONF_HOST_IPS_MAX)
         return FALSE;
 
     if (now < host_ips->purge_time)
@@ -161,7 +188,6 @@ inline static BOOL fort_host_ips_full_locked(PFORT_HOST_IPS host_ips, INT64 now)
     host_ips->purge_time = now + FORT_HOST_IPS_PURGE_PERIOD;
 
     FORT_HOST_IPS_PURGE_ARG arg = {
-        .keep_filters = TRUE,
         .keep_reauth = TRUE,
         .zones_mask = FORT_HOST_IPS_ZONES_ALL,
         .now = now,
@@ -169,7 +195,7 @@ inline static BOOL fort_host_ips_full_locked(PFORT_HOST_IPS host_ips, INT64 now)
 
     fort_host_ips_purge_locked(host_ips, &arg);
 
-    if (host_ips->count < FORT_HOST_IPS_MAX)
+    if (host_ips->count < FORT_CONF_HOST_IPS_MAX)
         return FALSE;
 
     /* The established connections to the IPs expired by the TTL lose their Zones and host()
@@ -178,7 +204,7 @@ inline static BOOL fort_host_ips_full_locked(PFORT_HOST_IPS host_ips, INT64 now)
 
     fort_host_ips_purge_locked(host_ips, &arg);
 
-    return host_ips->count >= FORT_HOST_IPS_MAX;
+    return host_ips->count >= FORT_CONF_HOST_IPS_MAX;
 }
 
 static PFORT_HOST_IP fort_host_ip_new_locked(
@@ -254,14 +280,14 @@ static NTSTATUS fort_host_ip_add_all_locked(
         PFORT_HOST_IPS host_ips, PCFORT_HOST_IPS_ADD_ARG arg, PCFORT_HOST_IP ip_key)
 {
     PCFORT_CONF_HOST_IPS conf_ips = arg->conf_ips;
-    const UINT32 *host_ids = (const UINT32 *) conf_ips->data;
+    const UINT64 *name_ids = (const UINT64 *) conf_ips->data;
 
     NTSTATUS status = fort_host_ip_add_zones_locked(host_ips, arg, ip_key);
 
-    for (UINT32 i = 0; NT_SUCCESS(status) && i < conf_ips->host_n; ++i) {
+    for (UINT32 i = 0; NT_SUCCESS(status) && i < conf_ips->name_n; ++i) {
         FORT_HOST_IP key = *ip_key;
         key.isFilter = TRUE;
-        key.host_id = host_ids[i];
+        key.name_id = name_ids[i];
 
         status = fort_host_ip_add_locked(host_ips, arg, &key);
     }
@@ -276,7 +302,7 @@ static NTSTATUS fort_host_ips_add_locked(PFORT_HOST_IPS host_ips, PCFORT_HOST_IP
     const UINT32 ip4_n = conf_ips->ip4_n;
     const UINT32 ip_n = ip4_n + conf_ips->ip6_n;
 
-    const char *data = conf_ips->data + FORT_CONF_HOST_IDS_SIZE(conf_ips->host_n);
+    const char *data = conf_ips->data + FORT_CONF_HOST_NAME_IDS_SIZE(conf_ips->name_n);
 
     for (UINT32 i = 0; i < ip_n; ++i) {
         const BOOL isIPv6 = (i >= ip4_n);
@@ -315,10 +341,9 @@ FORT_API NTSTATUS fort_host_ips_add(PFORT_HOST_IPS host_ips, PCFORT_CONF_HOST_IP
     return status;
 }
 
-static void fort_host_ips_purge(PFORT_HOST_IPS host_ips, UINT32 zones_mask, BOOL keep_filters)
+FORT_API void fort_host_ips_zones_keep(PFORT_HOST_IPS host_ips, UINT32 zones_mask)
 {
     FORT_HOST_IPS_PURGE_ARG arg = {
-        .keep_filters = keep_filters,
         .keep_reauth = TRUE,
         .zones_mask = zones_mask,
         .now = (INT64) KeQueryInterruptTime(),
@@ -331,33 +356,16 @@ static void fort_host_ips_purge(PFORT_HOST_IPS host_ips, UINT32 zones_mask, BOOL
     ExReleaseSpinLockExclusive(&host_ips->lock, oldIrql);
 }
 
-FORT_API void fort_host_ips_zones_keep(PFORT_HOST_IPS host_ips, UINT32 zones_mask)
-{
-    fort_host_ips_purge(host_ips, zones_mask, /*keep_filters=*/TRUE);
-}
-
-FORT_API void fort_host_ips_filters_clear(PFORT_HOST_IPS host_ips)
-{
-    fort_host_ips_purge(host_ips, FORT_HOST_IPS_ZONES_ALL, /*keep_filters=*/FALSE);
-}
-
-/* Looks up the not expired IP of the Zones or of the host() filter */
-static BOOL fort_host_ips_search(
-        PFORT_HOST_IPS host_ips, PCFORT_CONF_META_CONN conn, UINT32 host_id, UINT32 *zones_mask)
+FORT_API UINT32 fort_host_ips_zones_mask(PFORT_HOST_IPS host_ips, PCFORT_CONF_META_CONN conn)
 {
     if (host_ips->count == 0)
-        return FALSE;
+        return 0;
 
-    const FORT_HOST_IP key = {
-        .isIPv6 = (UCHAR) conn->isIPv6,
-        .isFilter = (UCHAR) (host_id != 0),
-        .host_id = host_id,
-        .ip = conn->remote_ip,
-    };
+    const FORT_HOST_IP key = fort_host_ip_conn_key(conn);
     const tommy_hash_t hash = fort_host_ip_hash(&key);
     const INT64 now = (INT64) KeQueryInterruptTime();
 
-    BOOL found = FALSE;
+    UINT32 zones_mask = 0;
 
     KIRQL oldIrql = ExAcquireSpinLockShared(&host_ips->lock);
     {
@@ -365,28 +373,66 @@ static BOOL fort_host_ips_search(
                 tommy_hashdyn_search(&host_ips->ips_map, &fort_host_ip_cmp, &key, hash);
 
         if (host_ip != NULL && !fort_host_ip_expired(host_ip, conn->is_reauth, now)) {
-            *zones_mask = host_ip->zones_mask;
-            found = TRUE;
+            zones_mask = host_ip->zones_mask;
         }
     }
     ExReleaseSpinLockShared(&host_ips->lock, oldIrql);
 
-    return found;
-}
-
-FORT_API UINT32 fort_host_ips_zones_mask(PFORT_HOST_IPS host_ips, PCFORT_CONF_META_CONN conn)
-{
-    UINT32 zones_mask = 0;
-
-    fort_host_ips_search(host_ips, conn, /*host_id=*/0, &zones_mask);
-
     return zones_mask;
 }
 
-FORT_API BOOL fort_host_ips_filter_included(
-        PFORT_HOST_IPS host_ips, PCFORT_CONF_META_CONN conn, UINT32 host_id)
+/* Is the bucket's node the not expired IP of a name of the host() filter */
+static BOOL fort_host_ip_filter_matched(
+        const tommy_hashdyn_node *node, PCFORT_HOST_IPS_FILTER_ARG arg)
 {
-    UINT32 zones_mask;
+    if (node->index != arg->hash)
+        return FALSE;
 
-    return fort_host_ips_search(host_ips, conn, host_id, &zones_mask);
+    PCFORT_HOST_IP host_ip = node->data;
+
+    if (!host_ip->isFilter || fort_host_ip_addr_cmp(&arg->key, host_ip) != 0)
+        return FALSE;
+
+    if (fort_host_ip_expired(host_ip, arg->is_reauth, arg->now))
+        return FALSE;
+
+    return fort_conf_host_name_included(arg->host, host_ip->name_id);
+}
+
+static BOOL fort_host_ips_filter_included_locked(
+        PFORT_HOST_IPS host_ips, PCFORT_HOST_IPS_FILTER_ARG arg)
+{
+    const tommy_hashdyn_node *node = tommy_hashdyn_bucket(&host_ips->ips_map, arg->hash);
+
+    for (; node != NULL; node = node->next) {
+        if (fort_host_ip_filter_matched(node, arg))
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+FORT_API BOOL fort_host_ips_filter_included(
+        PFORT_HOST_IPS host_ips, PCFORT_CONF_META_CONN conn, PCFORT_CONF_RULE_FILTER_HOST host)
+{
+    if (host_ips->count == 0)
+        return FALSE;
+
+    FORT_HOST_IPS_FILTER_ARG arg = {
+        .is_reauth = conn->is_reauth,
+        .now = (INT64) KeQueryInterruptTime(),
+        .host = host,
+        .key = fort_host_ip_conn_key(conn),
+    };
+    arg.hash = fort_host_ip_hash(&arg.key);
+
+    BOOL included;
+
+    KIRQL oldIrql = ExAcquireSpinLockShared(&host_ips->lock);
+    {
+        included = fort_host_ips_filter_included_locked(host_ips, &arg);
+    }
+    ExReleaseSpinLockShared(&host_ips->lock, oldIrql);
+
+    return included;
 }

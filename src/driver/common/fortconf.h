@@ -231,7 +231,9 @@ typedef const FORT_CONF_RULE_FILTER *PCFORT_CONF_RULE_FILTER;
 
 typedef struct fort_conf_rule_filter_host
 {
-    UINT32 host_id; /* the host() filter's names, whose IPs ADDHOSTIPS adds; 0 - none */
+    UINT32 name_n;
+
+    char name_ids[4]; /* the sorted ids of the names, whose IPs ADDHOSTIPS adds (UINT64) */
 } FORT_CONF_RULE_FILTER_HOST, *PFORT_CONF_RULE_FILTER_HOST;
 
 typedef const FORT_CONF_RULE_FILTER_HOST *PCFORT_CONF_RULE_FILTER_HOST;
@@ -322,14 +324,14 @@ typedef const FORT_CONF_ZONE_FLAG *PCFORT_CONF_ZONE_FLAG;
 /* The IPs added to the Zones and host() filters at runtime, e.g. of the hosts' DNS answers */
 typedef struct fort_conf_host_ips
 {
-    UINT16 host_n;
+    UINT16 name_n;
     UINT16 ip4_n;
     UINT16 ip6_n;
 
     UINT32 zones_mask;
     UINT32 ttl; /* seconds */
 
-    char data[4]; /* the host() filters' ids, then the IPv4 addresses, then the IPv6 ones */
+    char data[4]; /* the host() filters' names' ids, then the IPv4 addresses, then the IPv6 ones */
 } FORT_CONF_HOST_IPS, *PFORT_CONF_HOST_IPS;
 
 typedef const FORT_CONF_HOST_IPS *PCFORT_CONF_HOST_IPS;
@@ -489,9 +491,9 @@ typedef struct fort_conf_conn_actions
     UCHAR zone_id;
 } FORT_CONF_CONN_ACTIONS;
 
-/* Is the connection's remote IP added to the host() filter */
+/* Is the connection's remote IP added to a name of the host() filter */
 typedef BOOL fort_conf_host_ip_included_func(
-        const struct fort_conf_meta_conn *conn, UINT32 host_id);
+        const struct fort_conf_meta_conn *conn, PCFORT_CONF_RULE_FILTER_HOST host);
 
 typedef struct fort_conf_meta_conn
 {
@@ -702,11 +704,23 @@ typedef struct fort_conf_zones_conn_filtered_opt
 #define FORT_CONF_ADDR_LIST_SIZE(ip4_n, pair4_n, ip6_n, pair6_n)                                   \
     (FORT_CONF_ADDR4_LIST_SIZE(ip4_n, pair4_n) + FORT_CONF_ADDR6_LIST_SIZE(ip6_n, pair6_n))
 
-#define FORT_CONF_HOST_IDS_SIZE(n) ((n) * sizeof(UINT32))
+#define FORT_CONF_HOST_NAME_IDS_SIZE(n) ((n) * sizeof(UINT64))
 
-#define FORT_CONF_HOST_IPS_SIZE(host_n, ip4_n, ip6_n)                                              \
-    (FORT_CONF_HOST_IPS_DATA_OFF + FORT_CONF_HOST_IDS_SIZE(host_n) + FORT_CONF_IP4_ARR_SIZE(ip4_n) \
-            + FORT_CONF_IP6_ARR_SIZE(ip6_n))
+#define FORT_CONF_RULE_FILTER_HOST_OFF offsetof(FORT_CONF_RULE_FILTER_HOST, name_ids)
+
+#define FORT_CONF_RULE_FILTER_HOST_SIZE(name_n)                                                    \
+    (FORT_CONF_RULE_FILTER_HOST_OFF + FORT_CONF_HOST_NAME_IDS_SIZE(name_n))
+
+#define FORT_CONF_HOST_IPS_SIZE(name_n, ip4_n, ip6_n)                                              \
+    (FORT_CONF_HOST_IPS_DATA_OFF + FORT_CONF_HOST_NAME_IDS_SIZE(name_n)                            \
+            + FORT_CONF_IP4_ARR_SIZE(ip4_n) + FORT_CONF_IP6_ARR_SIZE(ip6_n))
+
+/* The map doubles its buckets when they are half filled: 65536 IPs would take 2^18 ones */
+#define FORT_CONF_HOST_IPS_MAX 65535
+
+/* The driver's table keeps each IP of the Zones and of each host() filter's name apart */
+#define FORT_CONF_HOST_IPS_COUNT(name_n, zones_mask, ip_n)                                         \
+    ((UINT64) (ip_n) * ((name_n) + ((zones_mask) != 0)))
 
 typedef FORT_CONF_APP_FIND_RESULT fort_conf_app_exe_find_func(
         PCFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);
@@ -719,6 +733,8 @@ extern "C" {
 #endif
 
 FORT_API BOOL fort_conf_ip_inlist(PCFORT_CONF_ADDR_LIST addr_list, const ip_addr_t ip, BOOL isIPv6);
+
+FORT_API BOOL fort_conf_host_name_included(PCFORT_CONF_RULE_FILTER_HOST host, UINT64 name_id);
 
 FORT_API PCFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(PCFORT_CONF conf, int addr_group_index);
 
