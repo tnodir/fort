@@ -58,6 +58,8 @@ public:
 
     quint16 filterListCount = 0;
 
+    QStringView valuesText; // inside the brackets, as written
+
     StringViewList values;
 };
 

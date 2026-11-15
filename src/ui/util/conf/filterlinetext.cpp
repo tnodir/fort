@@ -15,6 +15,15 @@ const char *const filterNames[] = { "IP", "Port", "Local_IP", "Local_Port", "Pro
 
 static_assert(std::size(filterNames) == FORT_RULE_FILTER_TYPE_PORT_TCP, "Filter names mismatch");
 
+// e.g. "(80, 443)"; the values' lines with comments are on their own lines
+QString valuesSection(const QString &values)
+{
+    if (values.isEmpty())
+        return {};
+
+    return FilterLineText::isValuesLines(values) ? ("(\n" + values + "\n)") : ('(' + values + ')');
+}
+
 }
 
 FilterLineText::FilterLineText(const QString &text) : m_text(text) { }
@@ -44,9 +53,7 @@ void FilterLineText::addFilter(qint8 type, const QString &values, bool isNot, bo
 
     m_text += QLatin1String(filterNames[type]);
 
-    if (!values.isEmpty()) {
-        m_text += '(' + values + ')';
-    }
+    m_text += valuesSection(values);
 }
 
 void FilterLineText::addConnAddresses(const Conn &conn)
@@ -59,6 +66,11 @@ void FilterLineText::addConnAddresses(const Conn &conn)
     addFilter(FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS,
             NetFormatUtil::ipToAddressText(conn.localIp, conn.isIPv6));
     addPort(FORT_RULE_FILTER_TYPE_LOCAL_PORT, conn.localPort);
+}
+
+bool FilterLineText::isValuesLines(QStringView values)
+{
+    return values.contains('\n') || values.contains('#');
 }
 
 void FilterLineText::addPort(qint8 type, quint16 port)

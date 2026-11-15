@@ -239,8 +239,10 @@ void ProgNetworkPage::setupFilterListView()
     m_filterListView = new ListView();
     m_filterListView->setFlow(QListView::TopToBottom);
     m_filterListView->setViewMode(QListView::ListMode);
-    m_filterListView->setUniformItemSizes(true);
     m_filterListView->setAlternatingRowColors(true);
+
+    // A filter may be of several lines, more than the list shows
+    m_filterListView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
     // Don't enlarge the dialog by the list's size hint, but stretch the list with it
     m_filterListView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Ignored);

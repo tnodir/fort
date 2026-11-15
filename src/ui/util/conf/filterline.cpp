@@ -70,3 +70,16 @@ QStringList FilterLine::values(const RuleFilter *filter)
 
     return list;
 }
+
+QString FilterLine::valuesLines(const RuleFilter *filter)
+{
+    if (!filter)
+        return {};
+
+    const QStringView text = filter->valuesText.trimmed();
+    if (FilterLineText::isValuesLines(text)) {
+        return text.toString();
+    }
+
+    return values(filter).join('\n');
+}
