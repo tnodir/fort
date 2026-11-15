@@ -67,6 +67,10 @@ public:
     // The test of the upstream servers, to start after connecting to its signals
     virtual DnsServersTest *createServersTest(const QStringList &servers, QObject *parent);
 
+    // Returns the Block Zones listing the name, else adds the referenced Hosts Zones and host()
+    // filters listing it, which the answer's addresses are added to, when it has them
+    quint32 matchName(QStringView name, bool matchRefs, HostMatch &match) const;
+
 signals:
     void statusChanged();
 

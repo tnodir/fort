@@ -552,24 +552,30 @@ bool DnsManager::matchAnswer(const DnsQuery &query, const DnsAnswer &answer, Hos
     return false;
 }
 
-// One lookup of the name by the Block and referenced Zones
 bool DnsManager::matchAnswerName(
         const DnsQuery &query, QStringView name, bool matchRefs, HostMatch &match) const
+{
+    return isNameBlocked(query, name, matchName(name, matchRefs, match));
+}
+
+// One lookup of the name by the Block and referenced Zones
+quint32 DnsManager::matchName(QStringView name, bool matchRefs, HostMatch &match) const
 {
     const QByteArray key = HostRange::normalizedKey(name);
 
     const quint32 refZonesMask = matchRefs ? m_refZonesMask : 0;
     const quint32 zonesMask = m_hostZonesDb.matchKey(key, m_blockZonesMask | refZonesMask);
 
-    if (isNameBlocked(query, name, zonesMask))
-        return true;
+    const quint32 blockZonesMask = zonesMask & m_blockZonesMask;
+    if (blockZonesMask != 0)
+        return blockZonesMask;
 
     if (matchRefs) {
         match.zonesMask |= zonesMask & refZonesMask;
         match.add(m_hostFiltersMatcher.matchKey(key));
     }
 
-    return false;
+    return 0;
 }
 
 // The names of the Block Zones aren't found, even if a host() filter lists them. The Block Zones

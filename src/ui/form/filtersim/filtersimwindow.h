@@ -42,6 +42,7 @@ private:
     QLayout *setupConnLayout();
     QLayout *setupAppPathLayout();
     QLayout *setupRemoteLayout();
+    void setupHostName();
     QLayout *setupLocalLayout();
     QLayout *setupResultLayout();
     QLayout *setupResultActionLayout();
@@ -75,6 +76,8 @@ private:
     LineEdit *m_editRemoteIp = nullptr;
     QLabel *m_labelRemotePort = nullptr;
     QSpinBox *m_spinRemotePort = nullptr;
+    QLabel *m_labelHostName = nullptr;
+    LineEdit *m_editHostName = nullptr;
     QLabel *m_labelLocalIp = nullptr;
     LineEdit *m_editLocalIp = nullptr;
     QLabel *m_labelLocalPort = nullptr;

@@ -1,5 +1,7 @@
 #include "filtersimconn.h"
 
+#include <QUrl>
+
 #include <util/net/netformatutil.h>
 #include <util/net/netutil.h>
 
@@ -25,4 +27,17 @@ bool FilterSimConn::setLocalIp(const QString &text)
     bool isIPv6 = false;
 
     return NetFormatUtil::textToIp(ipText, conn.local_ip, isIPv6) && isIPv6 == bool(conn.isIPv6);
+}
+
+bool FilterSimConn::setHostName(const QString &text)
+{
+    const QString name = text.trimmed();
+    if (name.isEmpty()) {
+        hostName.clear();
+        return true;
+    }
+
+    hostName = QString::fromLatin1(QUrl::toAce(name));
+
+    return !hostName.isEmpty();
 }

@@ -5,6 +5,7 @@
 #include <manager/envmanager.h>
 #include <task/taskinfozonedownloader.h>
 #include <task/taskmanager.h>
+#include <util/bitutil.h>
 
 #include "confappmanager.h"
 #include "confgroupmanager.h"
@@ -32,6 +33,49 @@ DnsManager *receivingDnsManager()
         return nullptr;
 
     return dnsManager;
+}
+
+// The DNS Forwarder's match of the host name, as of an answer with addresses
+FilterSimConn::HostNameResult matchSimHostName(
+        const QString &hostName, HostMatch &match, quint8 &blockZoneId)
+{
+    auto dnsManager = receivingDnsManager();
+    if (dnsManager == nullptr)
+        return FilterSimConn::HostNameNoForwarder;
+
+    const quint32 blockZonesMask = dnsManager->matchName(hostName, /*matchRefs=*/true, match);
+    if (blockZonesMask != 0) {
+        blockZoneId = BitUtil::bitScanForward(blockZonesMask) + 1;
+        return FilterSimConn::HostNameBlocked;
+    }
+
+    return FilterSimConn::HostNameMatched;
+}
+
+// The remote IP is of the host name's addresses, which the DNS Forwarder adds to the driver
+void simulateConnHostName(DriverCommon::ConnFilterConf cf, FilterSimConn &simConn,
+        const FORT_CONF_APP_FIND_RESULT &app)
+{
+    HostMatch match;
+    quint8 blockZoneId = 0;
+
+    simConn.hostNameResult = matchSimHostName(simConn.hostName, match, blockZoneId);
+
+    FORT_CONF_META_CONN &conn = simConn.conn;
+
+    if (simConn.hostNameResult == FilterSimConn::HostNameBlocked) {
+        // The name isn't resolved: the program doesn't connect
+        simConn.result = DriverCommon::ConnFilterBlocked;
+        conn.app = app;
+        conn.act.zone_id = blockZoneId;
+        return;
+    }
+
+    conn.host_zones_mask = match.zonesMask;
+
+    cf.hostNameIds = &match.nameIds;
+
+    simConn.result = DriverCommon::confConnFilter(cf, &conn, app);
 }
 
 // The remote IP's names aren't known
@@ -91,7 +135,11 @@ void FilterSimulator::simulate(FilterSimConn &simConn) const
     const DriverCommon::ConnFilterConf cf = connFilterConf();
     const FORT_CONF_APP_FIND_RESULT app = DriverCommon::confAppFind(drvConf, simConn.appPath);
 
-    simulateConnUnknownHost(cf, simConn, app, m_allHostMatch);
+    if (!simConn.hostName.isEmpty()) {
+        simulateConnHostName(cf, simConn, app);
+    } else {
+        simulateConnUnknownHost(cf, simConn, app, m_allHostMatch);
+    }
 
     simConn.conn.app.rule = nullptr; // points into the conf buffer
 }

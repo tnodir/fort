@@ -47,6 +47,7 @@ void showFilterSimWindow(const ConnRow &connRow)
 
     FilterSimConn simConn;
     simConn.appPath = connRow.appPath;
+    simConn.hostName = connRow.remoteHost;
 
     FORT_CONF_META_CONN &conn = simConn.conn;
     conn.inbound = connRow.inbound;

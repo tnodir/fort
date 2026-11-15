@@ -108,8 +108,14 @@ QString resultText(DriverCommon::ConnFilterResult result)
 }
 
 // E.g. "Rule (Terminating Rule)"
-QString reasonText(const FORT_CONF_META_CONN &conn)
+QString reasonText(const FilterSimConn &simConn)
 {
+    if (simConn.hostNameResult == FilterSimConn::HostNameBlocked) {
+        return FilterSimWindow::tr("Block Zone of the DNS Forwarder");
+    }
+
+    const FORT_CONF_META_CONN &conn = simConn.conn;
+
     const QString reason = ConnListModel::reasonText(FortConnReason(conn.reason));
 
     return StringUtil::textWithDetails(
@@ -124,6 +130,34 @@ QString ruleText(quint16 ruleId)
 QString zoneText(quint8 zoneId)
 {
     return (zoneId != 0) ? confZoneManager()->zoneNameById(zoneId) : QString();
+}
+
+QString hostNameNoteText(FilterSimConn::HostNameResult hostNameResult)
+{
+    switch (hostNameResult) {
+    case FilterSimConn::HostNameMatched:
+        return FilterSimWindow::tr("The IP is of the names, which the DNS Forwarder matches the"
+                                   " host name by now. The canonical names and the HTTPS records'"
+                                   " targets of its answer aren't known here.");
+    case FilterSimConn::HostNameBlocked:
+        return FilterSimWindow::tr("The DNS Forwarder doesn't resolve the host name.");
+    case FilterSimConn::HostNameNoForwarder:
+        return FilterSimWindow::tr("The system's DNS queries aren't sent to the DNS Forwarder: the"
+                                   " driver doesn't get the names' addresses.");
+    default:
+        return {};
+    }
+}
+
+QString hostNoteText(const FilterSimConn &simConn)
+{
+    if (simConn.hostDependent) {
+        return FilterSimWindow::tr("The driver's result may differ: it depends on the host names of"
+                                   " the remote IP (the host() filters and the Hosts Zones). Enter"
+                                   " the Host Name to simulate them.");
+    }
+
+    return hostNameNoteText(simConn.hostNameResult);
 }
 
 QString appText(const FORT_APP_DATA &appData)
@@ -157,6 +191,7 @@ void FilterSimWindow::initialize(const FilterSimConn &simConn)
     m_protocolSelector->setProtocol(conn.ip_proto);
     m_editRemoteIp->setText(NetFormatUtil::ipToText(conn.remote_ip, conn.isIPv6));
     m_spinRemotePort->setValue(conn.remote_port);
+    m_editHostName->setText(simConn.hostName);
     m_editLocalIp->setText(NetFormatUtil::ipToText(conn.local_ip, conn.isIPv6));
     m_spinLocalPort->setValue(conn.local_port);
     m_cbLoopback->setChecked(conn.is_loopback);
@@ -203,6 +238,11 @@ void FilterSimWindow::retranslateUi()
     m_protocolSelector->retranslateUi();
     m_labelRemoteIp->setText(tr("Remote IP:"));
     m_labelRemotePort->setText(tr("Port:"));
+    m_labelHostName->setText(tr("Host Name:"));
+    m_editHostName->setPlaceholderText(tr("Unknown"));
+    m_editHostName->setToolTip(tr("The name, which the program resolved to the remote IP: the IP is"
+                                  " of the host() filters' and the Hosts Zones' names, which the"
+                                  " DNS Forwarder matches the name by."));
     m_labelLocalIp->setText(tr("Local IP:"));
     m_editLocalIp->setPlaceholderText(tr("Any"));
     m_labelLocalPort->setText(tr("Port:"));
@@ -317,6 +357,12 @@ QLayout *FilterSimWindow::setupConnLayout()
     layout->addRow("Remote IP:", remoteLayout);
     m_labelRemoteIp = ControlUtil::formRowLabel(layout, remoteLayout);
 
+    // Host Name
+    setupHostName();
+
+    layout->addRow("Host Name:", m_editHostName);
+    m_labelHostName = ControlUtil::formRowLabel(layout, m_editHostName);
+
     // Local IP & Port
     auto localLayout = setupLocalLayout();
 
@@ -384,6 +430,16 @@ QLayout *FilterSimWindow::setupRemoteLayout()
     m_spinRemotePort->setValue(443);
 
     return createIpPortLayout(m_editRemoteIp, m_labelRemotePort, m_spinRemotePort);
+}
+
+void FilterSimWindow::setupHostName()
+{
+    m_editHostName = new LineEdit();
+    m_editHostName->setMaxLength(253);
+    m_editHostName->setMaximumWidth(200); // as the IPs' fields
+    m_editHostName->setClearButtonEnabled(true);
+
+    connect(m_editHostName, &QLineEdit::returnPressed, this, &FilterSimWindow::simulateConn);
 }
 
 QLayout *FilterSimWindow::setupLocalLayout()
@@ -508,6 +564,11 @@ bool FilterSimWindow::fillConnAddresses(FilterSimConn &simConn) const
         return false;
     }
 
+    if (!simConn.setHostName(m_editHostName->text())) {
+        showInputError(tr("Invalid host name"));
+        return false;
+    }
+
     if (!simConn.setLocalIp(m_editLocalIp->text())) {
         showInputError(tr("Invalid local IP address"));
         return false;
@@ -527,7 +588,7 @@ void FilterSimWindow::updateResult()
 
     m_iconAction->setPixmap(IconCache::pixmap(resultIconPath(m_simConn.result), resultIconSize));
     m_resultAction->setText(resultText(m_simConn.result));
-    m_resultReason->setText(reasonText(conn));
+    m_resultReason->setText(reasonText(m_simConn));
     m_resultRule->setText(ruleText(conn.rule_id));
     m_resultZone->setText(zoneText(conn.act.zone_id));
     m_resultProgram->setText(appText(conn.app.data));
@@ -537,13 +598,10 @@ void FilterSimWindow::updateResult()
 
 void FilterSimWindow::updateResultHostNote()
 {
-    m_resultHostNote->setVisible(m_simConn.hostDependent);
+    const QString text = hostNoteText(m_simConn);
 
-    m_resultHostNote->setText(m_simConn.hostDependent
-                    ? tr("The driver's result may differ: it depends on the host names of the"
-                         " remote IP (the host() filters and the Hosts Zones), which the simulator"
-                         " doesn't know.")
-                    : QString());
+    m_resultHostNote->setText(text);
+    m_resultHostNote->setVisible(!text.isEmpty());
 }
 
 void FilterSimWindow::clearResult()
