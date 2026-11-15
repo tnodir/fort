@@ -47,10 +47,10 @@ void DnsPage::onRetranslateUi()
     m_cbFilterEnabled->setText(tr("Filter DNS"));
     m_cbFilterEnabled->setToolTip(
             tr("Resolve the host names by the upstream DNS servers, adding the addresses of the "
-               "Hosts Zones and of the host() filters before answering; the names of the Block "
-               "Zones are not found (only with the Service). The programs resolving the names by "
-               "DNS over HTTPS themselves, e.g. the browsers with Secure DNS, bypass the DNS "
-               "Forwarder"));
+               "Hosts Zones used by the IP Addresses, Programs and Rules and of the host() "
+               "filters before answering; the names of the Block Zones are not found (only with "
+               "the Service). The programs resolving the names by DNS over HTTPS themselves, "
+               "e.g. the browsers with Secure DNS, bypass the DNS Forwarder"));
     m_labelServers->setText(tr("Upstream DNS servers:"));
     m_comboServers->setItemText(0, adaptersServersText());
     m_comboServers->setPlaceholderText(tr("Custom"));

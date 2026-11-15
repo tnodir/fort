@@ -49,9 +49,9 @@ public:
     // Removes the other Zones; returns whether any was listed
     bool retainZones(quint32 zonesMask);
 
-    // The enabled Zones listing the name by itself, by a "*." wildcard of its parent domain or by
-    // another mask
-    quint32 match(QStringView name) const;
+    // The enabled Zones of the mask listing the name by itself, by a "*." wildcard of its parent
+    // domain or by another mask
+    quint32 match(QStringView name, quint32 zonesMask) const;
 
 private:
     struct HostMasks
@@ -81,8 +81,10 @@ private:
 
     HostMasks selectHost(QByteArrayView key) const;
 
-    quint32 matchNames(const QByteArray &key) const;
-    quint32 matchPatterns(const QByteArray &key) const;
+    // The Zones of the mask listing the name by itself or by a "*." wildcard of its parent domain
+    quint32 matchNames(const QByteArray &key, quint32 zonesMask) const;
+    // The Zones of the mask listing the name by a pattern
+    quint32 matchPatterns(const QByteArray &key, quint32 zonesMask) const;
 
 private:
     quint32 m_enabledMask = 0;
