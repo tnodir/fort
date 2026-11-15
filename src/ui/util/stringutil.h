@@ -35,6 +35,8 @@ public:
     static QString textWithCount(const QString &text, int count);
 
     static QRegularExpressionMatch match(const QRegularExpression &re, const QStringView text);
+    static QRegularExpressionMatchIterator globalMatch(
+            const QRegularExpression &re, const QStringView text);
 };
 
 #endif // STRINGUTIL_H

@@ -122,15 +122,17 @@ StringViewList TaskZoneDownloader::parseAddresses(const QString &text, QString &
         if (line.startsWith('#') || line.startsWith(';')) // commented line
             continue;
 
-        const auto match = StringUtil::match(re, line);
-        if (!match.hasMatch())
-            continue;
+        // A pattern may match several addresses of a line, e.g. the hosts file's aliases
+        auto it = StringUtil::globalMatch(re, line);
+        while (it.hasNext()) {
+            const auto match = it.next();
 
-        const auto ip = line.mid(match.capturedStart(1), match.capturedLength(1));
-        list.append(ip);
+            const auto ip = line.mid(match.capturedStart(1), match.capturedLength(1));
+            list.append(ip);
 
-        cryptoHash.addData(ip.toLatin1());
-        cryptoHash.addData("\n");
+            cryptoHash.addData(ip.toLatin1());
+            cryptoHash.addData("\n");
+        }
     }
 
     checksum = QString::fromLatin1(cryptoHash.result().toHex());

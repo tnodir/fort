@@ -727,18 +727,21 @@ TEST_F(NetUtilTest, taskHostsFile)
     hosts.setZoneId(3);
     hosts.setIsHosts(true);
     hosts.setHostSubdomains(true);
-    hosts.setPattern(R"(^\s*[^#\s]\S*\s+(?!(?:localhost(?:\.localdomain)?|local|broadcasthost)"
-                     R"(|ip6-\S+|0\.0\.0\.0)(?:\s|#|$))([^#\s]\S*))");
+    hosts.setPattern(R"((?:^\s*[^#\s]\S*|\G(?!^))(?:\s+(?:localhost(?:\.localdomain)?|local)"
+                     R"(|broadcasthost|ip6-\S+|0\.0\.0\.0)(?=\s|#|$))*+\s+([^#\s]\S*))");
 
     QString textChecksum;
     const QString text("# comment\n127.0.0.1 localhost\n127.0.0.1 localhost.localdomain\n"
                        "127.0.0.1 local\n255.255.255.255 broadcasthost\n::1 ip6-localhost\n"
+                       "::1 localhost ip6-localhost ip6-loopback\n"
                        "0.0.0.0 0.0.0.0\n  # indented comment\n0.0.0.0 # no name\n"
                        "0.0.0.0 Ads.Example.com # inline comment\n"
                        "127.0.0.1\tlocal.example.org\r\n0.0.0.0 0.0.0.0.example.net\n"
-                       "no-address.example.com\n");
+                       "  no-address.example.com\n"
+                       "0.0.0.0 alias1.example.com\talias2.example.com  alias3.example.com\r\n"
+                       "127.0.0.1 localhost alias.example.org # commented.example.org\n");
     const auto list = hosts.parseAddresses(text, textChecksum);
-    ASSERT_EQ(list.size(), 3);
+    ASSERT_EQ(list.size(), 7);
 
     hosts.setCachePath("./zones/");
     ASSERT_TRUE(hosts.storeHosts(list));
@@ -757,9 +760,18 @@ TEST_F(NetUtilTest, taskHostsFile)
     ASSERT_EQ(db.match(u"local.example.org", allZonesMask), 0b100);
     ASSERT_EQ(db.match(u"0.0.0.0.example.net", allZonesMask), 0b100);
     ASSERT_EQ(db.match(u"example.com", allZonesMask), 0);
+    ASSERT_EQ(db.match(u"no-address.example.com", allZonesMask), 0);
+
+    // All the names after an address
+    ASSERT_EQ(db.match(u"alias1.example.com", allZonesMask), 0b100);
+    ASSERT_EQ(db.match(u"alias2.example.com", allZonesMask), 0b100);
+    ASSERT_EQ(db.match(u"alias3.example.com", allZonesMask), 0b100);
+    ASSERT_EQ(db.match(u"alias.example.org", allZonesMask), 0b100);
+    ASSERT_EQ(db.match(u"commented.example.org", allZonesMask), 0);
 
     // Not the hosts file's own names
     ASSERT_EQ(db.match(u"localhost", allZonesMask), 0);
+    ASSERT_EQ(db.match(u"ip6-loopback", allZonesMask), 0);
     ASSERT_EQ(db.match(u"printer.local", allZonesMask), 0);
     ASSERT_EQ(db.match(u"0.0.0.0", allZonesMask), 0);
 }
