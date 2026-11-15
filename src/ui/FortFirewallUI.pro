@@ -241,6 +241,7 @@ SOURCES += \
     rpc/conftimeperiodmanagerrpc.cpp \
     rpc/confzonemanagerrpc.cpp \
     rpc/dberrormanagerrpc.cpp \
+    rpc/dnsmanagerrpc.cpp \
     rpc/drivermanagerrpc.cpp \
     rpc/logmanagerrpc.cpp \
     rpc/pendingconnmanagerrpc.cpp \
@@ -593,6 +594,7 @@ HEADERS += \
     rpc/conftimeperiodmanagerrpc.h \
     rpc/confzonemanagerrpc.h \
     rpc/dberrormanagerrpc.h \
+    rpc/dnsmanagerrpc.h \
     rpc/drivermanagerrpc.h \
     rpc/logmanagerrpc.h \
     rpc/pendingconnmanagerrpc.h \

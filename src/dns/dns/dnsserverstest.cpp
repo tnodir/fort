@@ -73,8 +73,7 @@ void DnsServersTest::start()
     DnsRequest request;
     request.query.parse(DnsUtil::writeQuery(/*id=*/1, testName));
 
-    m_elapsedTimer.start();
-    m_timer.start();
+    startTimeout();
 
     for (const auto &resolver : m_resolvers) {
         resolver->resolve(request);
@@ -83,6 +82,10 @@ void DnsServersTest::start()
 
 void DnsServersTest::setResult(int index, const DnsServerResult &result)
 {
+    // The late result after the timeout, the resolver's repeated query
+    if (m_results.at(index).status != DnsServerResult::StatusNone)
+        return;
+
     m_results[index] = result;
     ++m_resultsCount;
 
@@ -132,10 +135,6 @@ bool DnsServersTest::openResolvers()
 
 void DnsServersTest::processAnswer(int index, const DnsAnswer &answer)
 {
-    // The late answer after the timeout
-    if (m_results.at(index).status != DnsServerResult::StatusNone)
-        return;
-
     const bool failed = !answer.error().isEmpty();
 
     setResult(index,
@@ -146,6 +145,12 @@ void DnsServersTest::processAnswer(int index, const DnsAnswer &answer)
                     .msecs = int(m_elapsedTimer.elapsed()),
                     .error = answer.error(),
             });
+}
+
+void DnsServersTest::startTimeout()
+{
+    m_elapsedTimer.start();
+    m_timer.start();
 }
 
 void DnsServersTest::processTimeout()

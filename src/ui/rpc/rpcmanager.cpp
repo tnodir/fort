@@ -19,6 +19,7 @@
 #include <rpc/confspeedlimitmanagerrpc.h>
 #include <rpc/conftimeperiodmanagerrpc.h>
 #include <rpc/confzonemanagerrpc.h>
+#include <rpc/dnsmanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/pendingconnmanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
@@ -232,6 +233,7 @@ static const processCommand_func processManager_funcList[] = {
     &ConfGroupManagerRpc::processServerCommand, // Control::Rpc_ConfGroupManager,
     &ConfSpeedLimitManagerRpc::processServerCommand, // Control::Rpc_ConfSpeedLimitManager,
     &ConfTimePeriodManagerRpc::processServerCommand, // Control::Rpc_ConfTimePeriodManager,
+    &DnsManagerRpc::processServerCommand, // Control::Rpc_DnsManager,
     &DriverManagerRpc::processServerCommand, // Control::Rpc_DriverManager,
     &QuotaManagerRpc::processServerCommand, // Control::Rpc_QuotaManager,
     &StatManagerRpc::processServerCommand, // Control::Rpc_StatManager,

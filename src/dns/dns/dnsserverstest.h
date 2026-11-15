@@ -57,6 +57,7 @@ public:
     // The "server: text" lines of the results with a text, the adapters' DNS servers by the name
     QStringList resultLines(ResultTextFunc resultText, const QString &adaptersName) const;
 
+    int timeout() const { return m_timer.interval(); }
     void setTimeout(int msecs) { m_timer.setInterval(msecs); }
 
     // With an invalid server no server is asked
@@ -67,6 +68,10 @@ public:
 signals:
     void resultReady(int index);
     void finished();
+
+protected:
+    // The results not set till the timeout are the Timeout
+    void startTimeout();
 
 private:
     bool openResolvers();

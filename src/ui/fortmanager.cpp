@@ -37,6 +37,7 @@
 #include <rpc/conftimeperiodmanagerrpc.h>
 #include <rpc/confzonemanagerrpc.h>
 #include <rpc/dberrormanagerrpc.h>
+#include <rpc/dnsmanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/logmanagerrpc.h>
 #include <rpc/pendingconnmanagerrpc.h>
@@ -132,6 +133,7 @@ inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService<ServiceInfoManager>(new ServiceInfoManagerRpc());
     ioc->setService<TaskManager>(new TaskManagerRpc());
     ioc->setService<DbErrorManager>(new DbErrorManagerRpc());
+    ioc->setService<DnsManager>(new DnsManagerRpc());
 }
 
 inline void setupServices(IocContainer *ioc, const FortSettings *settings)

@@ -7,6 +7,7 @@
 
 #include <dns/dnslistener.h>
 #include <dns/dnsresolver.h>
+#include <dns/dnsserverstest.h>
 #include <util/classhelpers.h>
 #include <util/ioc/iocservice.h>
 #include <util/net/hostmatcher.h>
@@ -31,6 +32,9 @@ public:
 
     void setUp() override;
     void tearDown() override;
+
+    // The test of the upstream servers, to start after connecting to its signals
+    virtual DnsServersTest *createServersTest(const QStringList &servers, QObject *parent);
 
 private:
     static bool addNrptRule();
