@@ -62,6 +62,7 @@ SOURCES += \
     control/control.cpp \
     control/controlmanager.cpp \
     control/controlworker.cpp \
+    dns/dnsmanager.cpp \
     driver/drivercommon.cpp \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
@@ -402,6 +403,7 @@ HEADERS += \
     control/control_types.h \
     control/controlmanager.h \
     control/controlworker.h \
+    dns/dnsmanager.h \
     driver/drivercommon.h \
     driver/drivermanager.h \
     driver/driverworker.h \

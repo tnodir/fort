@@ -229,6 +229,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_askToConnectSeconds = o.askToConnectSeconds();
     m_groupBlocked = o.groupBlocked();
     m_speedLimiterEnabled = o.speedLimiterEnabled();
+    m_dnsForwarderEnabled = o.dnsForwarderEnabled();
 
     m_logStat = o.logStat();
     m_logStatNoFilter = o.logStatNoFilter();
@@ -288,6 +289,7 @@ QVariant FirewallConf::flagsToVariant() const
     map["askToConnectSeconds"] = askToConnectSeconds();
     map["groupBlocked"] = groupBlocked();
     map["speedLimiterEnabled"] = speedLimiterEnabled();
+    map["dnsForwarderEnabled"] = dnsForwarderEnabled();
 
     map["logStat"] = logStat();
     map["logStatNoFilter"] = logStatNoFilter();
@@ -325,6 +327,7 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_askToConnectSeconds = map["askToConnectSeconds"].toUInt();
     m_groupBlocked = map["groupBlocked"].toBool();
     m_speedLimiterEnabled = map["speedLimiterEnabled"].toBool();
+    m_dnsForwarderEnabled = map["dnsForwarderEnabled"].toBool();
 
     m_logApp = map["logApp"].toBool();
     m_logStat = map["logStat"].toBool();

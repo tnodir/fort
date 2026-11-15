@@ -475,6 +475,7 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setAskToConnectSeconds(iniUInt("askToConnectSeconds", DEFAULT_ASK_TO_CONNECT_SECONDS));
     conf.setGroupBlocked(iniBool("groupBlocked", true));
     conf.setSpeedLimiterEnabled(iniBool("speedLimiterEnabled", true));
+    conf.setDnsForwarderEnabled(iniBool("dnsForwarderEnabled", false));
     conf.setLogStat(iniBool("logStat", true));
     conf.setLogStatNoFilter(iniBool("logStatNoFilter", true));
     conf.setLogStatReinjected(iniBool("logStatReinjected"));
@@ -523,6 +524,7 @@ void FortSettings::writeConfIni(const FirewallConf &conf, IniOptions &iniOpt)
         setIniValue("askToConnectSeconds", conf.askToConnectSeconds());
         setIniValue("groupBlocked", conf.groupBlocked());
         setIniValue("speedLimiterEnabled", conf.speedLimiterEnabled());
+        setIniValue("dnsForwarderEnabled", conf.dnsForwarderEnabled());
         setIniValue("logStat", conf.logStat());
         setIniValue("logStatNoFilter", conf.logStatNoFilter());
         setIniValue("logStatReinjected", conf.logStatReinjected());

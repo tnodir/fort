@@ -138,6 +138,9 @@ public:
     bool speedLimiterEnabled() const { return m_speedLimiterEnabled; }
     void setSpeedLimiterEnabled(bool v) { m_speedLimiterEnabled = v; }
 
+    bool dnsForwarderEnabled() const { return m_dnsForwarderEnabled; }
+    void setDnsForwarderEnabled(bool v) { m_dnsForwarderEnabled = v; }
+
     bool logStat() const { return m_logStat; }
     void setLogStat(bool v) { m_logStat = v; }
 
@@ -246,6 +249,7 @@ private:
     uint m_askToConnect : 1 = false;
     uint m_groupBlocked : 1 = true;
     uint m_speedLimiterEnabled : 1 = true;
+    uint m_dnsForwarderEnabled : 1 = false;
 
     uint m_logStat : 1 = false;
     uint m_logStatNoFilter : 1 = false;

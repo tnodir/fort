@@ -16,6 +16,21 @@ int DnsUtil::optIndex(const ares_dns_record *record)
     return -1;
 }
 
+bool DnsUtil::isSameQuestion(const ares_dns_record *record, const ares_dns_record *other)
+{
+    const char *name = nullptr;
+    const char *otherName = nullptr;
+    ares_dns_rec_type_t type, otherType;
+    ares_dns_class_t dnsClass, otherClass;
+
+    if (ares_dns_record_query_get(record, 0, &name, &type, &dnsClass) != ARES_SUCCESS
+            || ares_dns_record_query_get(other, 0, &otherName, &otherType, &otherClass)
+                    != ARES_SUCCESS)
+        return false;
+
+    return type == otherType && dnsClass == otherClass && qstricmp(name, otherName) == 0;
+}
+
 DnsRecordPtr DnsUtil::parseRecord(const QByteArray &data)
 {
     ares_dns_record_t *record = nullptr;

@@ -131,6 +131,10 @@ public:
 
     bool progPurgeOnMounted() const { return valueBool("prog/purgeOnMounted"); }
     void setProgPurgeOnMounted(bool v) { setValue("prog/purgeOnMounted", v); }
+
+    // Comma-separated, empty for the adapters' DNS servers
+    QString dnsServers() const { return valueText("dns/servers"); }
+    void setDnsServers(const QString &v) { setValue("dns/servers", v); }
 };
 
 #endif // INIOPTIONS_H
