@@ -71,6 +71,7 @@ quint32 ioctlAllowPending();
 quint32 ioctlAllowProc();
 
 quint32 userErrorCode();
+quint32 driverBlockedErrorCode();
 
 qint64 systemToUnixTime(qint64 systemTime);
 

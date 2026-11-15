@@ -182,6 +182,7 @@ FortManager::~FortManager()
 {
     if (m_initialized) {
         closeDriver();
+        checkStopDriver();
 
         emit aboutToDestroy();
 
@@ -418,6 +419,16 @@ void FortManager::closeDriver()
     driverManager()->closeDevice();
 
     QCoreApplication::sendPostedEvents(this);
+}
+
+void FortManager::checkStopDriver()
+{
+    if (!settings()->isService() || !serviceManager()->stopDriverRequested())
+        return;
+
+    if (!StartupUtil::stopDriverService()) {
+        qCWarning(LC) << "Driver stop error:" << OsUtil::lastErrorCode();
+    }
 }
 
 void FortManager::checkRemoveDriver()

@@ -20,6 +20,8 @@ public:
     bool controlEnabled() const { return m_controlEnabled; }
     void setControlEnabled(bool v);
 
+    bool stopDriverRequested() const { return m_stopDriverRequested; }
+
     bool acceptStop() const override { return controlEnabled(); }
     bool acceptPauseContinue() const override { return controlEnabled(); }
 
@@ -45,6 +47,7 @@ private:
 
 private:
     bool m_controlEnabled = false;
+    bool m_stopDriverRequested = false;
 };
 
 #endif // SERVICEMANAGER_H

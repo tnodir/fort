@@ -31,6 +31,7 @@ public:
     bool queryIsStopped();
 
     bool startService();
+    bool ensureServiceStarted();
     bool stopService(ServiceControlCode controlCode = ServiceControlStop);
     bool stopServiceWait(ServiceControlCode controlCode = ServiceControlStop);
 

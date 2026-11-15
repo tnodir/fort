@@ -8,6 +8,7 @@
 #include <driver/drivercommon.h>
 #include <util/fileutil.h>
 #include <util/osutil.h>
+#include <util/startuputil.h>
 
 namespace {
 
@@ -50,6 +51,11 @@ bool DriverManager::isDeviceError() const
     return errorCode() != 0 && errorCode() != DriverCommon::userErrorCode();
 }
 
+bool DriverManager::isDriverBlocked() const
+{
+    return errorCode() == DriverCommon::driverBlockedErrorCode();
+}
+
 bool DriverManager::isDeviceOpened() const
 {
     return device().isOpened();
@@ -74,9 +80,28 @@ void DriverManager::closeWorker()
     }
 }
 
+bool DriverManager::startDriver()
+{
+    // The driver's loader crashes the system when HVCI is running
+    if (OsUtil::isHvciRunning()) {
+        OsUtil::setLastErrorCode(DriverCommon::driverBlockedErrorCode());
+        return false;
+    }
+
+    return StartupUtil::startDriverService();
+}
+
+bool DriverManager::openDriverDevice()
+{
+    if (device().open(DriverCommon::deviceName()))
+        return true;
+
+    return startDriver() && device().open(DriverCommon::deviceName());
+}
+
 bool DriverManager::openDevice()
 {
-    const bool ok = device().open(DriverCommon::deviceName());
+    const bool ok = openDriverDevice();
 
     updateErrorCode(ok);
 

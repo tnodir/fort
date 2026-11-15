@@ -35,7 +35,9 @@ const wchar_t *const serviceDisplayStr = L"" APP_NAME_L L" Service";
 const wchar_t *const serviceDescriptionStr = L"Manages " APP_NAME_L L" logic as background server";
 const wchar_t *const serviceGroupStr = L"NetworkProvider"; // Group of "BFE" service
 // Service Dependencies: Double null-terminated array of null-separated names of services
-const wchar_t *const serviceDependenciesStr = L"fortfw\0\0";
+const wchar_t *const serviceDependenciesStr = L"BFE\0\0";
+
+const wchar_t *const driverServiceNameStr = L"fortfw";
 
 QString startupShortcutPath()
 {
@@ -125,6 +127,27 @@ bool uninstallService(const wchar_t *serviceName)
     return false;
 }
 
+bool startServiceByName(const wchar_t *serviceName)
+{
+    ServiceHandle svc(serviceName, SC_MANAGER_CONNECT, SERVICE_START);
+    if (svc.isServiceOpened()) {
+        return svc.ensureServiceStarted();
+    }
+
+    return false;
+}
+
+bool stopServiceByName(const wchar_t *serviceName, ServiceControlCode controlCode)
+{
+    ServiceHandle svc(serviceName, SC_MANAGER_CONNECT,
+            SERVICE_QUERY_STATUS | SERVICE_STOP | SERVICE_USER_DEFINED_CONTROL);
+    if (svc.isServiceOpened()) {
+        return svc.stopServiceWait(controlCode);
+    }
+
+    return false;
+}
+
 RegKey registryAppKey(quint32 flags = RegKey::DefaultReadOnly)
 {
     const RegKey regSw(RegKey::HKLM, R"(SOFTWARE)", flags);
@@ -183,22 +206,22 @@ bool StartupUtil::isServiceRunning()
 
 bool StartupUtil::startService()
 {
-    ServiceHandle svc(serviceNameStr, SC_MANAGER_CONNECT, SERVICE_START);
-    if (svc.isServiceOpened()) {
-        return svc.startService();
-    }
-
-    return false;
+    return startServiceByName(serviceNameStr);
 }
 
 bool StartupUtil::stopService(ServiceControlCode controlCode)
 {
-    ServiceHandle svc(serviceNameStr, SC_MANAGER_ALL_ACCESS, SERVICE_ALL_ACCESS);
-    if (svc.isServiceOpened()) {
-        return svc.stopServiceWait(controlCode);
-    }
+    return stopServiceByName(serviceNameStr, controlCode);
+}
 
-    return false;
+bool StartupUtil::startDriverService()
+{
+    return startServiceByName(driverServiceNameStr);
+}
+
+bool StartupUtil::stopDriverService()
+{
+    return stopServiceByName(driverServiceNameStr, ServiceControlStopStandard);
 }
 
 StartupUtil::AutoRunMode StartupUtil::autoRunMode()

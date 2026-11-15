@@ -66,6 +66,12 @@ quint32 processControlShutdownState(
     return SERVICE_STOP_PENDING;
 }
 
+bool isDriverStopControl(quint32 code)
+{
+    // Keep the driver for the system's shutdown and the service's restart
+    return code != SERVICE_CONTROL_SHUTDOWN && code != ServiceControlStopRestarting;
+}
+
 enum ServiceControlHandlerCode : qint8 {
     ControlHandlerNone = -1,
     ControlHandlerPause = 0,
@@ -171,6 +177,8 @@ void ServiceManager::processControl(quint32 code, quint32 eventType)
     const auto state = processControlState(this, code, eventType);
 
     if (state == SERVICE_STOP_PENDING) {
+        m_stopDriverRequested = isDriverStopControl(code);
+
         OsUtil::quit("service control"); // it's threadsafe
     }
 

@@ -20,6 +20,9 @@ public:
     static bool startService();
     static bool stopService(ServiceControlCode controlCode = ServiceControlStop);
 
+    static bool startDriverService();
+    static bool stopDriverService();
+
     static AutoRunMode autoRunMode();
     static void setAutoRunMode(int mode, const QString &defaultLanguage = QString());
 

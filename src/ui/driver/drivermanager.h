@@ -27,6 +27,7 @@ public:
     quint32 errorCode() const { return m_errorCode; }
     QString errorMessage() const;
     bool isDeviceError() const;
+    bool isDriverBlocked() const;
 
     virtual bool isDeviceOpened() const;
 
@@ -68,6 +69,9 @@ private:
 
     void setupWorker();
     void closeWorker();
+
+    static bool startDriver();
+    bool openDriverDevice();
 
     bool writeData(quint32 code, QByteArray &buf);
     bool ioctlData(quint32 code, QByteArray &inBuf, QByteArray &outBuf);

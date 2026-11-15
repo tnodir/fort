@@ -263,6 +263,11 @@ quint32 userErrorCode()
     return FORT_ERROR_USER_ERROR;
 }
 
+quint32 driverBlockedErrorCode()
+{
+    return ERROR_DRIVER_BLOCKED;
+}
+
 qint64 systemToUnixTime(qint64 systemTime)
 {
     return fort_system_to_unix_time(systemTime);

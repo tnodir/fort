@@ -14,6 +14,7 @@
 #include <lmcons.h>
 #include <mmsystem.h>
 #include <shellapi.h>
+#include <winternl.h>
 
 #include <fort_version.h>
 
@@ -86,6 +87,11 @@ quint32 OsUtil::lastErrorCode()
     return GetLastError();
 }
 
+void OsUtil::setLastErrorCode(quint32 errorCode)
+{
+    SetLastError(errorCode);
+}
+
 QString OsUtil::errorMessage(quint32 errorCode)
 {
     LPWSTR buf = nullptr;
@@ -127,6 +133,18 @@ bool OsUtil::isUserAdmin()
     }
 
     return res;
+}
+
+bool OsUtil::isHvciRunning()
+{
+    SYSTEM_CODEINTEGRITY_INFORMATION info = { .Length = sizeof(info) };
+
+    const NTSTATUS status =
+            NtQuerySystemInformation(SystemCodeIntegrityInformation, &info, sizeof(info), nullptr);
+    if (!NT_SUCCESS(status))
+        return false;
+
+    return (info.CodeIntegrityOptions & CODEINTEGRITY_OPTION_HVCI_KMCI_ENABLED) != 0;
 }
 
 bool OsUtil::beep(BeepType type)

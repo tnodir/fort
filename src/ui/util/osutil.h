@@ -32,10 +32,13 @@ public:
     static void closeMutex(void *mutexHandle);
 
     static quint32 lastErrorCode();
+    static void setLastErrorCode(quint32 errorCode);
     static QString errorMessage(quint32 errorCode = lastErrorCode());
 
     static QString userName();
     static bool isUserAdmin();
+
+    static bool isHvciRunning();
 
     static bool beep(BeepType type = BeepSimple);
     static bool playSound(SoundType type = SoundDefault);

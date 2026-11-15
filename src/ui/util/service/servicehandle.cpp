@@ -34,6 +34,11 @@ bool ServiceHandle::startService()
     return StartServiceW(SC_HANDLE(m_serviceHandle), 0, nullptr);
 }
 
+bool ServiceHandle::ensureServiceStarted()
+{
+    return startService() || GetLastError() == ERROR_SERVICE_ALREADY_RUNNING;
+}
+
 bool ServiceHandle::stopService(ServiceControlCode controlCode)
 {
     SERVICE_STATUS status;

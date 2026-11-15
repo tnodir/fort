@@ -53,6 +53,7 @@ private:
     bool setupDriver();
     void closeDriver();
 
+    void checkStopDriver();
     void checkRemoveDriver();
 
     void checkReinstallDriver();
