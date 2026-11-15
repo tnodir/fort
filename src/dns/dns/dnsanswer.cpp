@@ -187,6 +187,13 @@ void DnsAnswer::setRcode(const DnsQuery &query, quint8 rcode, quint16 flags)
     m_response = createResponse(query, rcode, flags);
 }
 
+void DnsAnswer::setError(const DnsQuery &query, const QString &error)
+{
+    setRcode(query, ARES_RCODE_SERVFAIL);
+
+    m_error = error;
+}
+
 void DnsAnswer::readAddresses(const ares_dns_record *record)
 {
     const size_t count = ares_dns_record_rr_cnt(record, ARES_SECTION_ANSWER);
