@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/dns">
+        <file>data/providers.json</file>
+    </qresource>
+</RCC>

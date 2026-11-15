@@ -1,0 +1,36 @@
+[
+    {
+        "title": "Cloudflare (with Malware Filter)",
+        "servers": [
+            "https://security.cloudflare-dns.com/dns-query?ip=1.1.1.2",
+            "https://security.cloudflare-dns.com/dns-query?ip=1.0.0.2"
+        ]
+    },
+    {
+        "title": "Quad9",
+        "servers": [
+            "https://dns.quad9.net/dns-query?ip=9.9.9.9",
+            "https://dns.quad9.net/dns-query?ip=149.112.112.112"
+        ]
+    },
+    {
+        "title": "AdGuard",
+        "servers": [
+            "https://dns.adguard-dns.com/dns-query?ip=94.140.14.14",
+            "https://dns.adguard-dns.com/dns-query?ip=94.140.15.15"
+        ]
+    },
+    {
+        "title": "Foundation for Applied Privacy",
+        "servers": [
+            "https://doh.applied-privacy.net/query?ip=146.255.56.98"
+        ]
+    },
+    {
+        "title": "Cloudflare",
+        "servers": [
+            "https://cloudflare-dns.com/dns-query?ip=1.1.1.1",
+            "https://cloudflare-dns.com/dns-query?ip=1.0.0.1"
+        ]
+    }
+]
