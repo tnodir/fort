@@ -185,6 +185,27 @@ ConfManager::ConfManager(const QString &filePath, QObject *parent, quint32 openF
     setupTimers();
 }
 
+bool ConfManager::writeConfBuffer(ConfBuffer &confBuf, const std::function<bool()> &write)
+{
+    confBuf.setHostRefs(&m_hostRefs);
+
+    const bool ok = write();
+
+    checkHostRefsChanged();
+
+    return ok;
+}
+
+void ConfManager::checkHostRefsChanged()
+{
+    if (!m_hostRefs.isChanged())
+        return;
+
+    m_hostRefs.resetChanged();
+
+    emit hostRefsChanged();
+}
+
 void ConfManager::setUp()
 {
     setupDb();
