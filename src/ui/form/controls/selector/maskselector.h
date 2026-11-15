@@ -50,7 +50,13 @@ protected:
     virtual QString titleText() const = 0;
     virtual MaskSelectorItem itemAt(int row) const = 0;
 
+    // The ids of the items the menu lists
+    virtual quint32 listedMask() const { return quint32(-1); }
+
     void onIdRemoved(int id);
+
+    // The base's constructor refreshes the menu without the variant's listedMask()
+    void refreshMenu();
 
 private:
     void retranslateMaskText();
