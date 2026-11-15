@@ -34,23 +34,14 @@ copy "%SRCPATH%" "%DSTPATH%"
 :END_USE_COPY
 
 
-@rem Create the driver service
-sc create %DRIVERSVC% binPath= "%DSTPATH%" type= kernel start= auto ^
+@rem Create the driver service: Fort Firewall starts it, when HVCI isn't running
+sc create %DRIVERSVC% binPath= "%DSTPATH%" type= kernel start= demand ^
 	group= "NetworkProvider" depend= BFE DisplayName= "%DISPNAME%"
 @if ERRORLEVEL 1 (
     @echo Error: Cannot create a service: %DRIVERSVC% "%DSTPATH%"
     @set RCODE=%ERRORLEVEL%
     @goto EXIT
 )
-
-@rem Start the driver service
-sc start %DRIVERSVC%
-@if ERRORLEVEL 1 (
-    @echo Error: Cannot start a service: %DRIVERSVC%
-    @set RCODE=%ERRORLEVEL%
-    @goto EXIT
-)
-
 
 @rem Start the FortFirewall service
 @sc start %FORTSVC%
