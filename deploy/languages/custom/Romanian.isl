@@ -15,6 +15,5 @@ UninstallPasswordCancel=Anulează
 WrongPassword=Parolă greșită
 NotCompatibleWithWindows=Acest program nu este compatibil cu această versiune de Windows (este necesar Windows 10 1809 sau mai nou).
 NotCompatibleWithWindows7=Acest program nu este compatibil cu această versiune de Windows 7 (este necesar KB4474419).
-NotCompatibleWithHVCI=Acest program nu este compatibil cu HVCI (Izolare nucleu).
 InstallVCRedist=Instalează cea mai recentă versiune a pachetului redistribuibil Visual C++!
 IsDeleteData=Ștergi fișierele de configurare și de date?

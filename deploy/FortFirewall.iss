@@ -284,16 +284,6 @@ begin
   Result := ResultCode = 0;
 end;
 
-function HVCIEnabled(): Boolean;
-var
-  EnabledValue: Cardinal;
-begin
-  Result := RegQueryDWordValue(HKEY_LOCAL_MACHINE,
-      'SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity',
-      'Enabled', EnabledValue)
-    and (EnabledValue = 1);
-end;
-
 function AskPassword(): String;
 var
   Form: TSetupForm;
@@ -500,14 +490,6 @@ begin
     Exit;
   end;
 #endif
-
-  if HVCIEnabled() then
-  begin
-    SuppressibleMsgBox(ExpandConstant('{cm:NotCompatibleWithHVCI}'), mbCriticalError, MB_OK, IDOK);
-
-    Result := False;
-    Exit;
-  end;
 
   Result := True;
 end;
