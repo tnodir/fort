@@ -50,6 +50,7 @@ public slots:
     bool writeConf(QByteArray &buf, bool onlyFlags = false);
     bool writeApp(QByteArray &buf, bool remove = false);
     bool writeZones(QByteArray &buf, bool onlyFlags = false);
+    bool writeHostIps(QByteArray &buf);
     bool writeRules(QByteArray &buf, bool onlyFlags = false);
     bool writeGroups(QByteArray &buf, bool onlyFlags = false);
     bool writeSpeedLimits(QByteArray &buf, bool onlyFlags = false);
