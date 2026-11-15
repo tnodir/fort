@@ -11,6 +11,7 @@
 #include <util/net/arearange.h>
 #include <util/net/dirrange.h>
 #include <util/net/hostpattern.h>
+#include <util/net/hostrange.h>
 #include <util/net/iprange.h>
 #include <util/net/ipverrange.h>
 #include <util/net/netformatutil.h>
@@ -370,6 +371,67 @@ TEST_F(NetUtilTest, actionRanges)
     ASSERT_EQ(ActionRange::actionTypeIndex(1 << 4), -1);
     ASSERT_TRUE(ActionRange::actionTypeName(0).isEmpty());
     ASSERT_TRUE(ActionRange::actionTypeName(1 << 4).isEmpty());
+}
+
+TEST_F(NetUtilTest, hostRanges)
+{
+    HostRange hostRange;
+
+    // Bad names
+    for (const auto &text :
+            { "*", "*.", ".", "a..b", "-a.com", "a-.com", "a b.com", "a.com..", "..", "..a.com",
+                    ".*.com", "*..com", "*.*", "a**.com", "-*.com", "ä*.com", ".ads*.com" }) {
+        ASSERT_FALSE(hostRange.fromText(text)) << text;
+        ASSERT_EQ(hostRange.errorLineNo(), 1) << text;
+    }
+
+    const QString label63(63, 'a');
+    ASSERT_TRUE(hostRange.fromText(label63 + ".com"));
+    ASSERT_FALSE(hostRange.fromText(label63 + "a.com"));
+
+    const QString name253 = QStringList(4, label63).join('.').left(253);
+    ASSERT_TRUE(hostRange.fromText(name253));
+    ASSERT_FALSE(hostRange.fromText(name253 + "a"));
+
+    ASSERT_FALSE(hostRange.fromText("example.com\n# comment\nbad..name"));
+    ASSERT_EQ(hostRange.errorLineNo(), 3);
+
+    // Normalized names
+    ASSERT_TRUE(hostRange.fromText(
+            "Example.COM.\n*.Sub.Example.com\n_dmarc.example.org\nlocalhost\nexample.com"));
+    ASSERT_EQ(hostRange.size(), 4);
+    ASSERT_EQ(hostRange.toText(),
+            QString("*.sub.example.com\n_dmarc.example.org\nexample.com\nlocalhost\n"));
+
+    // The name and its subdomains
+    ASSERT_TRUE(hostRange.fromText(".Example.com.\n*.example.com\n.org"));
+    ASSERT_EQ(hostRange.size(), 4);
+    ASSERT_EQ(hostRange.toText(), QString("*.example.com\n*.org\nexample.com\norg\n"));
+
+    // The masks
+    ASSERT_TRUE(hostRange.fromText("Ads*.Example.com.\n*.example.com\ngoogle.*\n*.*.com\n"
+                                   "*telemetry*\nads*.example.com"));
+    ASSERT_EQ(hostRange.size(), 5);
+    ASSERT_EQ(hostRange.patternNames().size(), 4);
+    ASSERT_EQ(hostRange.toText(),
+            QString("*.*.com\n*.example.com\n*telemetry*\nads*.example.com\ngoogle.*\n"));
+
+    QString masksText;
+    for (int i = 0; i < HostRange::patternNamesMax; ++i) {
+        masksText += QString("a%1*.com\n").arg(i);
+    }
+    ASSERT_TRUE(hostRange.fromText(masksText));
+    ASSERT_FALSE(hostRange.fromText(masksText + "example.com\nb*.com"));
+    ASSERT_EQ(hostRange.errorLineNo(), HostRange::patternNamesMax + 2);
+
+    // Internationalized names
+    ASSERT_TRUE(hostRange.fromText(QString::fromUtf16(u"München.de\n"
+                                                      u".Пример.РФ.")));
+    ASSERT_EQ(hostRange.toText(),
+            QString("*.xn--e1afmkfd.xn--p1ai\nxn--e1afmkfd.xn--p1ai\nxn--mnchen-3ya.de\n"));
+
+    ASSERT_FALSE(hostRange.fromText(QString::fromUtf16(u"ä..com")));
+    ASSERT_FALSE(hostRange.fromText(QString(60, QChar(0x00e4)) + ".com"));
 }
 
 TEST_F(NetUtilTest, hostPattern)
