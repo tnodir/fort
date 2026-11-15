@@ -129,6 +129,11 @@ bool SqliteDb::vacuumInto(const QString &filePath)
     return DbQuery(this).sql("VACUUM INTO ?1;").vars({ filePath }).executeOk();
 }
 
+bool SqliteDb::shrinkMemory()
+{
+    return execute("PRAGMA shrink_memory;");
+}
+
 bool SqliteDb::optimize(OptimizeFlags flags)
 {
     if (flags == OptimizeDefault) {

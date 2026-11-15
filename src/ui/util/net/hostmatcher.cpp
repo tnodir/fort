@@ -1,7 +1,5 @@
 #include "hostmatcher.h"
 
-#include <conf/zone.h>
-
 #include "hostpattern.h"
 #include "hostrange.h"
 
@@ -20,32 +18,6 @@ QByteArray rawKey(QByteArrayView name)
     return QByteArray::fromRawData(name.constData(), name.size());
 }
 
-bool removeZoneBit(QHash<QByteArray, HostMatch> &matches, quint32 zoneBit)
-{
-    bool removed = false;
-
-    for (auto it = matches.begin(); it != matches.end();) {
-        HostMatch &match = it.value();
-
-        if ((match.zonesMask & zoneBit) == 0) {
-            ++it;
-            continue;
-        }
-
-        removed = true;
-        match.zonesMask &= ~zoneBit;
-
-        it = match.isEmpty() ? matches.erase(it) : std::next(it);
-    }
-
-    return removed;
-}
-
-}
-
-bool HostMatch::operator==(const HostMatch &other) const
-{
-    return zonesMask == other.zonesMask && hostIds == other.hostIds;
 }
 
 void HostMatch::add(const HostMatch &other)
@@ -59,36 +31,13 @@ void HostMatch::add(const HostMatch &other)
     }
 }
 
-bool HostMatcher::isEmpty() const
-{
-    return m_names.isEmpty() && m_wildcardNames.isEmpty() && m_patternNames.isEmpty();
-}
-
-bool HostMatcher::operator==(const HostMatcher &other) const
-{
-    return m_names == other.m_names && m_wildcardNames == other.m_wildcardNames
-            && m_patternNames == other.m_patternNames;
-}
-
-void HostMatcher::addZone(int zoneId, const HostRange &hostRange)
-{
-    addMatch(hostRange, { .zonesMask = Zone::zoneBit(zoneId) });
-}
-
 void HostMatcher::addHostFilter(quint32 hostId, const HostRange &hostRange)
 {
-    addMatch(hostRange, { .hostIds = { hostId } });
-}
+    const HostMatch match = { .hostIds = { hostId } };
 
-bool HostMatcher::removeZone(int zoneId)
-{
-    const quint32 zoneBit = Zone::zoneBit(zoneId);
-
-    const bool namesRemoved = removeZoneBit(m_names, zoneBit);
-    const bool wildcardNamesRemoved = removeZoneBit(m_wildcardNames, zoneBit);
-    const bool patternNamesRemoved = removeZoneBit(m_patternNames, zoneBit);
-
-    return namesRemoved || wildcardNamesRemoved || patternNamesRemoved;
+    addNames(m_names, hostRange.names(), match);
+    addNames(m_wildcardNames, hostRange.wildcardNames(), match);
+    addNames(m_patternNames, hostRange.patternNames(), match);
 }
 
 HostMatch HostMatcher::match(QStringView name) const
@@ -108,11 +57,4 @@ HostMatch HostMatcher::match(QStringView name) const
     }
 
     return match;
-}
-
-void HostMatcher::addMatch(const HostRange &hostRange, const HostMatch &match)
-{
-    addNames(m_names, hostRange.names(), match);
-    addNames(m_wildcardNames, hostRange.wildcardNames(), match);
-    addNames(m_patternNames, hostRange.patternNames(), match);
 }

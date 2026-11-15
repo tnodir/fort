@@ -100,6 +100,8 @@ public:
     bool vacuum();
     bool vacuumInto(const QString &filePath);
 
+    bool shrinkMemory();
+
     bool optimize(OptimizeFlags flags = OptimizeDefault);
 
     bool execute(const char *sql);

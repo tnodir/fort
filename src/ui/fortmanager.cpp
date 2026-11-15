@@ -756,6 +756,7 @@ void FortManager::setupResources()
     Q_INIT_RESOURCE(conf_migrations);
     Q_INIT_RESOURCE(conf_rule);
     Q_INIT_RESOURCE(conf_zone);
+    Q_INIT_RESOURCE(dns_migrations);
     Q_INIT_RESOURCE(stat_migrations);
 
     Q_INIT_RESOURCE(fort_icons);

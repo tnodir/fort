@@ -3,10 +3,10 @@
 
 #include <QByteArray>
 
-#include <util/net/hostmatcher.h>
-
 #include "taskinfo.h"
 
+class HostRange;
+class HostZonesDb;
 class TaskZoneDownloader;
 
 struct ZonesData
@@ -37,8 +37,9 @@ public:
     // Loads the Zones' addresses from the cache
     ZonesData loadZonesData() const;
 
-    // Loads the enabled Hosts Zones' names from the cache
-    HostMatcher loadHostZones() const;
+    // Loads the changed Hosts Zones' names from the cache into the DB.
+    // Returns whether the names to match changed.
+    bool syncHostZones(HostZonesDb &db) const;
 
 public slots:
     bool processResult(bool success) override;
@@ -57,6 +58,8 @@ private:
     void setupNextTaskWorker();
     void setupTaskWorkerByZone(TaskZoneDownloader *worker, int zoneIndex) const;
     void addSubResult(TaskZoneDownloader *worker, bool success);
+
+    static bool syncHostZone(HostZonesDb &db, TaskZoneDownloader &worker, HostRange &hostRange);
 
     static void addZoneData(ZonesData &zones, const TaskZoneDownloader &worker);
 
