@@ -264,7 +264,7 @@ static const FORT_CONF_RULE_FILTER_VALID_FUNC fort_conf_rule_filter_valid_funcLi
 };
 
 static_assert(
-        FORT_ARRAY_SIZE(fort_conf_rule_filter_valid_funcList) == FORT_RULE_FILTER_TYPE_PORT_UDP + 1,
+        FORT_ARRAY_SIZE(fort_conf_rule_filter_valid_funcList) == FORT_RULE_FILTER_TYPE_LIST_OR,
         "fort_conf_rule_filter_valid_funcList size mismatch");
 
 static BOOL fort_conf_rule_filter_values_valid(int filter_type, const char *data, UINT32 len)
