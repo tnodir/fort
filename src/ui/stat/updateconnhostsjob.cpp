@@ -1,5 +1,7 @@
 #include "updateconnhostsjob.h"
 
+#include <algorithm>
+
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -39,7 +41,13 @@ void UpdateConnHostsJob::processJob()
 
 void UpdateConnHostsJob::emitFinished()
 {
-    emit manager()->connHostsChanged();
+    if (resultCount() == 0)
+        return;
+
+    const auto it = std::min_element(m_connHosts.cbegin(), m_connHosts.cend(),
+            [](const ConnHost &a, const ConnHost &b) { return a.connIdMin < b.connIdMin; });
+
+    emit manager()->connHostsChanged(it->connIdMin);
 }
 
 int UpdateConnHostsJob::updateConnHost(const ConnHost &connHost)

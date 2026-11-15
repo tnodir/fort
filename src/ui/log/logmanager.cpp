@@ -207,7 +207,9 @@ bool LogManager::processLogEntryConn(LogBuffer *logBuffer)
     logBuffer->readEntryConn(&connEntry);
 
     connEntry.setConnTime(currentUnixTime());
-    connEntry.setRemoteHost(dnsClientManager()->hostName(connEntry.remoteIpKey()));
+    const auto hostName = dnsClientManager()->connHostName(connEntry.remoteIpKey());
+    connEntry.setRemoteHostOfProcess(hostName.ofProcess);
+    connEntry.setRemoteHost(hostName.name);
 
     if (connEntry.isAskPending()) {
         pendingConnManager()->logConn(connEntry, /*urgent=*/true);

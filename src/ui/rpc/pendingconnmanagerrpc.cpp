@@ -57,7 +57,7 @@ bool PendingConnManagerRpc::processServerCommand(
         return true;
     }
     case Control::Rpc_PendingConnManager_connHostsChanged: {
-        emit pendingConnManager->connHostsChanged();
+        emit pendingConnManager->connHostsChanged(p.args.value(0).toLongLong());
         return true;
     }
     default: {
@@ -77,5 +77,8 @@ void PendingConnManagerRpc::setupServerSignals(RpcManager *rpcManager)
     connect(pendingConnManager, &PendingConnManager::connCleared, rpcManager,
             [=] { rpcManager->invokeOnClients(Control::Rpc_PendingConnManager_connCleared); });
     connect(pendingConnManager, &PendingConnManager::connHostsChanged, rpcManager,
-            [=] { rpcManager->invokeOnClients(Control::Rpc_PendingConnManager_connHostsChanged); });
+            [=](qint64 connIdMin) {
+                rpcManager->invokeOnClients(
+                        Control::Rpc_PendingConnManager_connHostsChanged, { connIdMin });
+            });
 }

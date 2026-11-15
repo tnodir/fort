@@ -71,11 +71,11 @@ void AppPendingConnSearchModel::clearConnRows()
     AppConnSearchModel::clearConnRows();
 }
 
-void AppPendingConnSearchModel::updateConnHosts()
+void AppPendingConnSearchModel::updateConnHosts(qint64 connIdMin)
 {
-    loadConnHosts(m_listedRows);
+    loadConnHosts(m_listedRows, connIdMin);
 
-    AppConnSearchModel::updateConnHosts();
+    AppConnSearchModel::updateConnHosts(connIdMin);
 }
 
 void AppPendingConnSearchModel::updateSearch()

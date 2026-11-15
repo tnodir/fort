@@ -397,7 +397,7 @@ void ConnListModel::reloadConnRows()
     resetConnRows(idMin, idMax);
 }
 
-void ConnListModel::updateConnHosts()
+void ConnListModel::updateConnHosts(qint64 /*connIdMin*/)
 {
     refresh();
 }

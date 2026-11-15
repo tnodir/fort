@@ -8,7 +8,7 @@
 
 #include "statconnbasejob.h"
 
-/* Names the process's connections to the address, logged without a name */
+/* Names the process's connections to the address, logged without its name */
 class UpdateConnHostsJob : public StatConnBaseJob
 {
 public:

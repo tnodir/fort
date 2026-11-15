@@ -70,7 +70,7 @@ bool StatConnManagerRpc::processServerCommand(const ProcessCommandArgs &p, Proce
         return true;
     }
     case Control::Rpc_StatConnManager_connHostsChanged: {
-        emit statConnManager->connHostsChanged();
+        emit statConnManager->connHostsChanged(p.args.value(0).toLongLong());
         return true;
     }
     default: {
@@ -91,6 +91,7 @@ void StatConnManagerRpc::setupServerSignals(RpcManager *rpcManager)
             [=] { rpcManager->invokeOnClients(Control::Rpc_StatConnManager_connCleared); });
     connect(statConnManager, &StatConnManager::connIdsShifted, rpcManager,
             [=] { rpcManager->invokeOnClients(Control::Rpc_StatConnManager_connIdsShifted); });
-    connect(statConnManager, &StatConnManager::connHostsChanged, rpcManager,
-            [=] { rpcManager->invokeOnClients(Control::Rpc_StatConnManager_connHostsChanged); });
+    connect(statConnManager, &StatConnManager::connHostsChanged, rpcManager, [=](qint64 connIdMin) {
+        rpcManager->invokeOnClients(Control::Rpc_StatConnManager_connHostsChanged, { connIdMin });
+    });
 }
