@@ -20,11 +20,18 @@ QStringList resultNames()
     return { "allowed", "blocked", "ask", "ignored" };
 }
 
+QStringList hostNameResultNames()
+{
+    // Sync with enum FilterSimConn::HostNameResult
+    return { "none", "matched", "blocked", "noForwarder" };
+}
+
 QVariantMap defaultConnFields()
 {
     // The Filter Simulator window's defaults
     return {
         { "port", QVariant::fromValue(quint16(443)) },
+        { "host", QString() },
         { "proto", QString("tcp") },
         { "dir", QString("out") },
         { "localIp", QString() },
@@ -40,6 +47,13 @@ bool fillConnAddresses(ProcessCommandResult &r, FilterSimConn &simConn, const QS
 {
     if (!simConn.setRemoteIp(remoteIpText, fields["loopback"].toBool())) {
         r.errorMessage = "Invalid <remote-ip>: " + remoteIpText;
+        return false;
+    }
+
+    const QString hostNameText = fields["host"].toString();
+
+    if (!simConn.setHostName(hostNameText)) {
+        r.errorMessage = ControlCommandUtil::invalidValueText("host", hostNameText);
         return false;
     }
 
@@ -119,6 +133,7 @@ QVariantMap simConnFields(const FilterSimConn &simConn)
 
     return {
         { "result", resultNames().value(simConn.result) },
+        { "hostName", hostNameResultNames().value(simConn.hostNameResult) },
         { "hostDependent", simConn.hostDependent },
         { "reason", int(conn.reason) },
         { "terminated", bool(conn.act.terminated) },
@@ -152,7 +167,7 @@ bool ControlCommandSimulate::processCommand(
 {
     if (p.args.size() < 2) {
         r.errorMessage = "Usage: simulate <app-path> <remote-ip> [<key>=<value>...];"
-                         " keys: port, proto=tcp|udp|icmp|<number>, dir=out|in, localIp,"
+                         " keys: port, host, proto=tcp|udp|icmp|<number>, dir=out|in, localIp,"
                          " localPort, loopback=0|1, dnsForwarder=0|1,"
                          " profile=public|private|domain";
         return false;
