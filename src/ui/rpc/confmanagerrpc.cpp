@@ -159,9 +159,9 @@ QVariantList ConfManagerRpc::simConnToVarList(const FilterSimConn &simConn)
 {
     const FORT_CONF_META_CONN &conn = simConn.conn;
 
-    return { int(simConn.result), bool(conn.inbound), bool(conn.isIPv6), int(conn.profile_id),
-        bool(conn.is_loopback), bool(conn.is_fort_service), conn.ip_proto, conn.local_port,
-        conn.remote_port, NetUtil::ip6ToArrayView(conn.local_ip.v6).toByteArray(),
+    return { int(simConn.result), simConn.hostDependent, bool(conn.inbound), bool(conn.isIPv6),
+        int(conn.profile_id), bool(conn.is_loopback), bool(conn.is_fort_service), conn.ip_proto,
+        conn.local_port, conn.remote_port, NetUtil::ip6ToArrayView(conn.local_ip.v6).toByteArray(),
         NetUtil::ip6ToArrayView(conn.remote_ip.v6).toByteArray(), conn.reason, conn.rule_id,
         bool(conn.act.terminated), conn.act.zone_id, conn.app.data.app_id,
         bool(conn.app.data.flags.found), simConn.appPath };
@@ -171,26 +171,27 @@ FilterSimConn ConfManagerRpc::varListToSimConn(const QVariantList &v)
 {
     FilterSimConn simConn;
     simConn.result = DriverCommon::ConnFilterResult(v.value(0).toInt());
+    simConn.hostDependent = v.value(1).toBool();
 
     FORT_CONF_META_CONN &conn = simConn.conn;
-    conn.inbound = v.value(1).toBool();
-    conn.isIPv6 = v.value(2).toBool();
-    conn.profile_id = v.value(3).toUInt();
-    conn.is_loopback = v.value(4).toBool();
-    conn.is_fort_service = v.value(5).toBool();
-    conn.ip_proto = v.value(6).toUInt();
-    conn.local_port = v.value(7).toUInt();
-    conn.remote_port = v.value(8).toUInt();
-    conn.local_ip.v6 = NetUtil::arrayViewToIp6(v.value(9).toByteArray());
-    conn.remote_ip.v6 = NetUtil::arrayViewToIp6(v.value(10).toByteArray());
-    conn.reason = v.value(11).toUInt();
-    conn.rule_id = v.value(12).toUInt();
-    conn.act.terminated = v.value(13).toBool();
-    conn.act.zone_id = v.value(14).toUInt();
-    conn.app.data.app_id = v.value(15).toUInt();
-    conn.app.data.flags.found = v.value(16).toBool();
+    conn.inbound = v.value(2).toBool();
+    conn.isIPv6 = v.value(3).toBool();
+    conn.profile_id = v.value(4).toUInt();
+    conn.is_loopback = v.value(5).toBool();
+    conn.is_fort_service = v.value(6).toBool();
+    conn.ip_proto = v.value(7).toUInt();
+    conn.local_port = v.value(8).toUInt();
+    conn.remote_port = v.value(9).toUInt();
+    conn.local_ip.v6 = NetUtil::arrayViewToIp6(v.value(10).toByteArray());
+    conn.remote_ip.v6 = NetUtil::arrayViewToIp6(v.value(11).toByteArray());
+    conn.reason = v.value(12).toUInt();
+    conn.rule_id = v.value(13).toUInt();
+    conn.act.terminated = v.value(14).toBool();
+    conn.act.zone_id = v.value(15).toUInt();
+    conn.app.data.app_id = v.value(16).toUInt();
+    conn.app.data.flags.found = v.value(17).toBool();
 
-    simConn.appPath = v.value(17).toString();
+    simConn.appPath = v.value(18).toString();
 
     return simConn;
 }

@@ -406,9 +406,9 @@ inline static void fort_callout_ale_check_app(PCFORT_CALLOUT_ARG ca, PFORT_CALLO
 }
 
 static BOOL fort_callout_ale_host_ip_included(
-        PCFORT_CONF_META_CONN conn, PCFORT_CONF_RULE_FILTER_HOST host)
+        void *ctx, PCFORT_CONF_META_CONN conn, PCFORT_CONF_RULE_FILTER_HOST host)
 {
-    return fort_host_ips_filter_included(&fort_device()->host_ips, conn, host);
+    return fort_host_ips_filter_included(ctx, conn, host);
 }
 
 static BOOL fort_callout_ale_zones_ip_included(
@@ -529,8 +529,11 @@ inline static void fort_callout_ale_check_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALL
     fort_callout_ale_fill_meta_conn_proc(ca, conn);
     fort_callout_ale_fill_meta_conn(ca, conn);
 
-    conn->host_zones_mask = fort_host_ips_zones_mask(&fort_device()->host_ips, conn);
+    PFORT_HOST_IPS host_ips = &fort_device()->host_ips;
+
+    conn->host_zones_mask = fort_host_ips_zones_mask(host_ips, conn);
     conn->host_ip_included = &fort_callout_ale_host_ip_included;
+    conn->host_ip_ctx = host_ips;
 
     const FORT_CONF_CONN_FILTER filter = {
         .conf_flags = conf_flags,

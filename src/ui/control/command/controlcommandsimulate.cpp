@@ -119,6 +119,7 @@ QVariantMap simConnFields(const FilterSimConn &simConn)
 
     return {
         { "result", resultNames().value(simConn.result) },
+        { "hostDependent", simConn.hostDependent },
         { "reason", int(conn.reason) },
         { "terminated", bool(conn.act.terminated) },
         { "rule", int(conn.rule_id) },

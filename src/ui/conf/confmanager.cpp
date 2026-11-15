@@ -7,7 +7,6 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
-#include <driver/drivercommon.h>
 #include <driver/drivermanager.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
@@ -15,7 +14,6 @@
 #include <manager/serviceinfomanager.h>
 #include <manager/windowmanager.h>
 #include <task/taskinfo.h>
-#include <task/taskinfozonedownloader.h>
 #include <task/taskmanager.h>
 #include <user/usersettings.h>
 #include <util/conf/confbuffer.h>
@@ -27,7 +25,7 @@
 #include "confmigration.h"
 #include "confrulemanager.h"
 #include "conftimeperiodmanager.h"
-#include "filtersimconn.h"
+#include "filtersimulator.h"
 
 using namespace Fort;
 
@@ -627,43 +625,14 @@ bool ConfManager::checkPassword(const QString &password)
 
 bool ConfManager::simulateConn(FilterSimConn &simConn)
 {
-    // Write the buffers as for the driver
-    ConfBuffer confBuf;
-    if (!confBuf.writeConf(conf(), confAppManager(), envManager(), driverConfState())) {
-        qCWarning(LC) << "Filter Simulator: Conf error:" << confBuf.errorMessage();
+    FilterSimulator simulator;
+
+    if (!simulator.writeConf()) {
+        qCWarning(LC) << "Filter Simulator:" << simulator.errorMessage();
         return false;
     }
 
-    const auto zones = taskManager()->taskInfoZoneDownloader()->loadZonesData();
-
-    ConfBuffer zonesBuf;
-    zonesBuf.writeZones(zones.dataZonesMask, zones.enabledMask, zones.dataSize, zones.zonesData);
-
-    ConfBuffer rulesBuf;
-    rulesBuf.writeRules(*confRuleManager());
-
-    if (rulesBuf.hasError()) {
-        qCWarning(LC) << "Filter Simulator: Rules error:" << rulesBuf.errorMessage();
-        return false;
-    }
-
-    ConfBuffer groupsBuf;
-    groupsBuf.writeGroups(*confGroupManager(), confGroupManager()->activeGroupsMask());
-
-    // Filter the connection
-    const char *drvConf = confBuf.data() + DriverCommon::confIoConfOff();
-
-    const DriverCommon::ConnFilterConf cf = {
-        .drvConfIo = confBuf.data(),
-        .drvZones = zonesBuf.dataOrNull(),
-        .drvRules = rulesBuf.dataOrNull(),
-        .drvGroups = groupsBuf.dataOrNull(),
-    };
-
-    const FORT_CONF_APP_FIND_RESULT app = DriverCommon::confAppFind(drvConf, simConn.appPath);
-
-    simConn.result = DriverCommon::confConnFilter(cf, &simConn.conn, app);
-    simConn.conn.app.rule = nullptr; // points into the local conf buffer
+    simulator.simulate(simConn);
 
     return true;
 }

@@ -7,12 +7,14 @@
 
 #include <conf/addressgroup.h>
 #include <conf/app.h>
+#include <conf/filtersimulator.h>
 #include <conf/firewallconf.h>
 #include <conf/group.h>
 #include <conf/rule.h>
 #include <driver/drivercommon.h>
 #include <manager/envmanager.h>
 #include <util/conf/confbuffer.h>
+#include <util/net/hostrange.h>
 #include <util/net/iprange.h>
 #include <util/net/netformatutil.h>
 
@@ -52,8 +54,14 @@ protected:
     void writeZone1(const QString &text);
 
     bool connFlagsFiltered(FORT_CONF_META_CONN &conn);
-    DriverCommon::ConnFilterResult connFilter(const QString &appPath, FORT_CONF_META_CONN &conn);
-    bool connAllowed(const QString &appPath, FORT_CONF_META_CONN &conn);
+    DriverCommon::ConnFilterConf connFilterConf(
+            const QVector<quint64> *hostNameIds = nullptr) const;
+    FORT_CONF_APP_FIND_RESULT confAppFind(const QString &appPath) const;
+    DriverCommon::ConnFilterResult connFilter(const QString &appPath, FORT_CONF_META_CONN &conn,
+            const QVector<quint64> *hostNameIds = nullptr);
+    bool connAllowed(const QString &appPath, FORT_CONF_META_CONN &conn,
+            const QVector<quint64> *hostNameIds = nullptr);
+    bool connHostDependent(const QString &appPath, const HostMatch &allHostMatch);
 
 protected:
     QList<App> m_apps;
@@ -150,26 +158,45 @@ bool ConnFilterTest::connFlagsFiltered(FORT_CONF_META_CONN &conn)
     return fort_conf_conn_flags_filtered(&filter, &conn);
 }
 
-DriverCommon::ConnFilterResult ConnFilterTest::connFilter(
-        const QString &appPath, FORT_CONF_META_CONN &conn)
+DriverCommon::ConnFilterConf ConnFilterTest::connFilterConf(
+        const QVector<quint64> *hostNameIds) const
 {
-    const char *drvConf = m_confBuf.data() + DriverCommon::confIoConfOff();
-
-    const DriverCommon::ConnFilterConf cf = {
+    return {
         .drvConfIo = m_confBuf.data(),
         .drvZones = m_zonesBuf.dataOrNull(),
         .drvRules = m_rulesBuf.dataOrNull(),
         .drvGroups = m_groupsBuf.dataOrNull(),
+        .hostNameIds = hostNameIds,
     };
-
-    const FORT_CONF_APP_FIND_RESULT app = DriverCommon::confAppFind(drvConf, appPath);
-
-    return DriverCommon::confConnFilter(cf, &conn, app);
 }
 
-bool ConnFilterTest::connAllowed(const QString &appPath, FORT_CONF_META_CONN &conn)
+FORT_CONF_APP_FIND_RESULT ConnFilterTest::confAppFind(const QString &appPath) const
 {
-    return connFilter(appPath, conn) == DriverCommon::ConnFilterAllowed;
+    const char *drvConf = m_confBuf.data() + DriverCommon::confIoConfOff();
+
+    return DriverCommon::confAppFind(drvConf, appPath);
+}
+
+DriverCommon::ConnFilterResult ConnFilterTest::connFilter(
+        const QString &appPath, FORT_CONF_META_CONN &conn, const QVector<quint64> *hostNameIds)
+{
+    return DriverCommon::confConnFilter(connFilterConf(hostNameIds), &conn, confAppFind(appPath));
+}
+
+bool ConnFilterTest::connAllowed(
+        const QString &appPath, FORT_CONF_META_CONN &conn, const QVector<quint64> *hostNameIds)
+{
+    return connFilter(appPath, conn, hostNameIds) == DriverCommon::ConnFilterAllowed;
+}
+
+bool ConnFilterTest::connHostDependent(const QString &appPath, const HostMatch &allHostMatch)
+{
+    FilterSimConn simConn;
+    simConn.conn = connFilterConn("9.9.9.9");
+    simConn.result = connFilter(appPath, simConn.conn);
+
+    return FilterSimulator::isConnHostDependent(
+            connFilterConf(), simConn, confAppFind(appPath), allHostMatch);
 }
 
 TEST_F(ConnFilterTest, filterDisabled)
@@ -1105,4 +1132,70 @@ TEST_F(ConnFilterTest, appHostZones)
     conn.host_zones_mask = (connFilterZone1 << 1);
     ASSERT_FALSE(connAllowed("C:\\App\\accept.exe", conn));
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_ZONE);
+}
+
+TEST_F(ConnFilterTest, appHostNames)
+{
+    App rulesApp = wildcardApp("C:\\App\\rules.exe");
+    rulesApp.ruleSet = { 1 };
+
+    m_apps << rulesApp;
+    writeConf();
+
+    writeRules(TestRuleList({
+            { .blocked = true, .ruleId = 1, .ruleText = "host(example.com)" },
+    }));
+
+    // The name's IP
+    const QVector<quint64> nameIds = { HostRange::nameId(u"example.com") };
+
+    FORT_CONF_META_CONN conn = connFilterConn("9.9.9.9");
+    ASSERT_FALSE(connAllowed("C:\\App\\rules.exe", conn, &nameIds));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_RULE);
+    ASSERT_EQ(conn.rule_id, 1);
+
+    // Another name's IP
+    const QVector<quint64> otherNameIds = { HostRange::nameId(u"example.net") };
+
+    conn = connFilterConn("9.9.9.9");
+    ASSERT_TRUE(connAllowed("C:\\App\\rules.exe", conn, &otherNameIds));
+    ASSERT_EQ(conn.rule_id, 0);
+
+    // No names' addresses
+    conn = connFilterConn("9.9.9.9");
+    ASSERT_TRUE(connAllowed("C:\\App\\rules.exe", conn));
+    ASSERT_EQ(conn.rule_id, 0);
+}
+
+TEST_F(ConnFilterTest, hostDependent)
+{
+    App rulesApp = wildcardApp("C:\\App\\rules.exe");
+    rulesApp.ruleSet = { 1 };
+
+    App acceptApp = wildcardApp("C:\\App\\accept.exe");
+    acceptApp.zones.accept_mask = connFilterZone1;
+
+    m_apps << rulesApp << acceptApp;
+    writeConf();
+
+    writeRules(TestRuleList({
+            { .blocked = true, .ruleId = 1, .ruleText = "host(example.com)" },
+    }));
+
+    writeZone1(""); // the Hosts Zone's addresses are added at runtime
+
+    // A host() filter decides by the names
+    const HostMatch namesMatch = { .nameIds = { HostRange::nameId(u"example.com") } };
+
+    ASSERT_TRUE(connHostDependent("C:\\App\\rules.exe", namesMatch));
+    ASSERT_FALSE(connHostDependent("C:\\App\\allowed.exe", namesMatch));
+
+    // A Hosts Zone decides by the names
+    const HostMatch zonesMatch = { .zonesMask = connFilterZone1 };
+
+    ASSERT_TRUE(connHostDependent("C:\\App\\accept.exe", zonesMatch));
+    ASSERT_FALSE(connHostDependent("C:\\App\\rules.exe", zonesMatch));
+
+    // No names
+    ASSERT_FALSE(connHostDependent("C:\\App\\rules.exe", {}));
 }

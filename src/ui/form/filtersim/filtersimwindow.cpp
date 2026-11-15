@@ -438,6 +438,13 @@ QLayout *FilterSimWindow::setupResultLayout()
     layout->addRow("Program:", m_resultProgram);
     m_labelProgram = ControlUtil::formRowLabel(layout, m_resultProgram);
 
+    // Host Note
+    m_resultHostNote = ControlUtil::createLabel();
+    m_resultHostNote->setWordWrap(true);
+    m_resultHostNote->setVisible(false);
+
+    layout->addRow(m_resultHostNote);
+
     return layout;
 }
 
@@ -524,6 +531,19 @@ void FilterSimWindow::updateResult()
     m_resultRule->setText(ruleText(conn.rule_id));
     m_resultZone->setText(zoneText(conn.act.zone_id));
     m_resultProgram->setText(appText(conn.app.data));
+
+    updateResultHostNote();
+}
+
+void FilterSimWindow::updateResultHostNote()
+{
+    m_resultHostNote->setVisible(m_simConn.hostDependent);
+
+    m_resultHostNote->setText(m_simConn.hostDependent
+                    ? tr("The driver's result may differ: it depends on the host names of the"
+                         " remote IP (the host() filters and the Hosts Zones), which the simulator"
+                         " doesn't know.")
+                    : QString());
 }
 
 void FilterSimWindow::clearResult()
@@ -534,6 +554,7 @@ void FilterSimWindow::clearResult()
     m_resultRule->clear();
     m_resultZone->clear();
     m_resultProgram->clear();
+    m_resultHostNote->setVisible(false);
 }
 
 void FilterSimWindow::showInputError(const QString &text) const

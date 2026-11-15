@@ -54,6 +54,9 @@ public:
     // The host() filters' names with their ids
     HostMatcher hostMatcher() const;
 
+    // The ids of all host() filters' names
+    QVector<quint64> nameIds() const;
+
     static QString namesKey(const HostRange &hostRange);
 
 private:

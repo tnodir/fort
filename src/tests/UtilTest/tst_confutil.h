@@ -2230,7 +2230,8 @@ TEST_F(ConfUtilTest, defaultPresetRules)
 namespace {
 
 // 1.1.1.1 is added to the name example.com
-BOOL testHostIpIncluded(PCFORT_CONF_META_CONN conn, PCFORT_CONF_RULE_FILTER_HOST host)
+BOOL testHostIpIncluded(
+        void * /*ctx*/, PCFORT_CONF_META_CONN conn, PCFORT_CONF_RULE_FILTER_HOST host)
 {
     return conn->remote_ip.v4 == NetFormatUtil::textToIp4("1.1.1.1")
             && fort_conf_host_name_included(host, HostRange::nameId(u"example.com"));

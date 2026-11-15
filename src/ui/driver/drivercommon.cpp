@@ -93,6 +93,15 @@ UINT16 connGroupsRulesConnFiltered(void *ctx, PFORT_CONF_META_CONN conn, UINT32 
     return DriverCommon::confGroupsRulesConnFiltered(*connFilterConf(ctx), conn, groups_mask);
 }
 
+BOOL connHostIpIncluded(
+        void *ctx, PCFORT_CONF_META_CONN /*conn*/, PCFORT_CONF_RULE_FILTER_HOST host)
+{
+    const QVector<quint64> &nameIds = *static_cast<const QVector<quint64> *>(ctx);
+
+    return std::any_of(nameIds.begin(), nameIds.end(),
+            [&](quint64 nameId) { return fort_conf_host_name_included(host, nameId); });
+}
+
 inline constexpr FORT_CONF_CONN_FILTER_FUNCS connFilterFuncs = {
     .zones_ip_included = &connZonesIpIncluded,
     .zones_conn_filtered = &connZonesConnFiltered,
@@ -550,6 +559,8 @@ ConnFilterResult confConnFilter(
     *conn = connFilterInput(conn); // reset the results
 
     conn->app = app;
+    conn->host_ip_included = cf.hostNameIds ? &connHostIpIncluded : nullptr;
+    conn->host_ip_ctx = const_cast<QVector<quint64> *>(cf.hostNameIds);
 
     PCFORT_CONF conf = &PCFORT_CONF_IO(cf.drvConfIo)->conf;
 

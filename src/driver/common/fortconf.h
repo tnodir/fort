@@ -493,7 +493,7 @@ typedef struct fort_conf_conn_actions
 
 /* Is the connection's remote IP added to a name of the host() filter */
 typedef BOOL fort_conf_host_ip_included_func(
-        const struct fort_conf_meta_conn *conn, PCFORT_CONF_RULE_FILTER_HOST host);
+        void *ctx, const struct fort_conf_meta_conn *conn, PCFORT_CONF_RULE_FILTER_HOST host);
 
 typedef struct fort_conf_meta_conn
 {
@@ -548,6 +548,7 @@ typedef struct fort_conf_meta_conn
     PVOID ps_name; /* referenced process's name */
 
     fort_conf_host_ip_included_func *host_ip_included; /* NULL - no host() filters' IPs */
+    void *host_ip_ctx; /* of host_ip_included */
 } FORT_CONF_META_CONN, *PFORT_CONF_META_CONN;
 
 typedef const FORT_CONF_META_CONN *PCFORT_CONF_META_CONN;

@@ -2,6 +2,7 @@
 #define DRIVERCOMMON_H
 
 #include <QObject>
+#include <QVector>
 
 #include <common/fortcmnutl.h>
 #include <common/fortconf.h>
@@ -23,6 +24,10 @@ struct ConnFilterConf
     const void *drvZones = nullptr;
     const void *drvRules = nullptr;
     const void *drvGroups = nullptr;
+
+    // The ids of the host() filters' names whose addresses include the remote IP; null: no names'
+    // addresses
+    const QVector<quint64> *hostNameIds = nullptr;
 };
 
 struct LogAppHeader
@@ -137,7 +142,8 @@ bool confRulesConnFiltered(const void *drvRules, PFORT_CONF_META_CONN conn, quin
         const void *drvZones = nullptr);
 bool confRulesConnBlocked(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId);
 
-// The conn's input: direction, IP version, profile, loopback, protocol, addresses and ports
+// The conn's input: direction, IP version, profile, loopback, protocol, addresses and ports; the
+// remote IP's Hosts Zones
 ConnFilterResult confConnFilter(
         const ConnFilterConf &cf, PFORT_CONF_META_CONN conn, const FORT_CONF_APP_FIND_RESULT &app);
 

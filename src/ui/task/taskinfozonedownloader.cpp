@@ -67,6 +67,10 @@ ZonesData TaskInfoZoneDownloader::loadZonesData() const
 
         insertZoneId(zones.zonesMask, worker.zoneId());
 
+        if (worker.isHosts()) {
+            insertZoneId(zones.hostsMask, worker.zoneId());
+        }
+
         if (worker.loadAddresses()) {
             addZoneData(zones, worker);
         }

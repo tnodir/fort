@@ -833,8 +833,8 @@ static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_host(
     if (host->name_n == 0 || conn->host_ip_included == NULL)
         return FORT_CONN_FILTER_RESULT_FALSE;
 
-    return conn->host_ip_included(conn, host) ? FORT_CONN_FILTER_RESULT_TRUE
-                                              : FORT_CONN_FILTER_RESULT_FALSE;
+    return conn->host_ip_included(conn->host_ip_ctx, conn, host) ? FORT_CONN_FILTER_RESULT_TRUE
+                                                                 : FORT_CONN_FILTER_RESULT_FALSE;
 }
 
 typedef FORT_CONN_FILTER_RESULT (*FORT_CONF_RULE_FILTER_CHECK_FUNC)(

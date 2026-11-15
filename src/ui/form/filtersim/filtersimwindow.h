@@ -53,6 +53,7 @@ private:
     bool fillConnAddresses(FilterSimConn &simConn) const;
 
     void updateResult();
+    void updateResultHostNote();
     void clearResult();
 
     void showInputError(const QString &text) const;
@@ -95,6 +96,7 @@ private:
     QLabel *m_resultZone = nullptr;
     QLabel *m_labelProgram = nullptr;
     QLabel *m_resultProgram = nullptr;
+    QLabel *m_resultHostNote = nullptr;
     QLabel *m_labelNote = nullptr;
 
     FilterSimConn m_simConn;

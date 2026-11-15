@@ -29,6 +29,7 @@ SOURCES += \
     conf/conftimeperiodmanager.cpp \
     conf/confzonemanager.cpp \
     conf/filtersimconn.cpp \
+    conf/filtersimulator.cpp \
     conf/firewallconf.cpp \
     conf/group.cpp \
     conf/inioptions.cpp \
@@ -381,6 +382,7 @@ HEADERS += \
     conf/confusages.h \
     conf/confzonemanager.h \
     conf/filtersimconn.h \
+    conf/filtersimulator.h \
     conf/firewallconf.h \
     conf/group.h \
     conf/inioptions.h \

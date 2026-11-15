@@ -78,6 +78,18 @@ HostMatcher HostRefs::hostMatcher() const
     return hostMatcher;
 }
 
+QVector<quint64> HostRefs::nameIds() const
+{
+    QVector<quint64> ids;
+    ids.reserve(m_names.size());
+
+    for (const QString &name : m_names) {
+        ids.append(HostRange::nameId(name));
+    }
+
+    return ids;
+}
+
 QString HostRefs::namesKey(const HostRange &hostRange)
 {
     QStringList names;

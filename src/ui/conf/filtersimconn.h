@@ -15,6 +15,10 @@ struct FilterSimConn
 
     DriverCommon::ConnFilterResult result = DriverCommon::ConnFilterAllowed;
 
+    // The result may change by the remote IP's names, which the driver's addresses of the host()
+    // filters' and the Hosts Zones' names include, unknown here
+    bool hostDependent = false;
+
     // The input: direction, IP version, profile, loopback, the Service's, protocol, addresses and
     // ports.
     // The results: reason, rule_id, act.zone_id and app.data.

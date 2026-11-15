@@ -14,6 +14,7 @@ class TaskZoneDownloader;
 struct ZonesData
 {
     quint32 zonesMask = 0; // all Zones
+    quint32 hostsMask = 0; // the Hosts Zones
     quint32 dataZonesMask = 0;
     quint32 enabledMask = 0;
     quint32 dataSize = 0;
