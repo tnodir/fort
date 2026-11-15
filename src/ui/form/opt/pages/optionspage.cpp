@@ -30,8 +30,10 @@ namespace {
 
 const std::array timedOptionSecondsValues = { 10, 0, 20, 60, 60 * 2, 60 * 5, 60 * 10,
     60 * 60 /* 1 hour */, 60 * 60 * 24 /* 1 day */ };
+inline constexpr int timedOptionSecondsMax = 99999; // ~27.7 hours
 
 const std::array askToConnectSecondsValues = { 15, 10, 20, 30, 60, 60 * 2, 60 * 5 };
+inline constexpr int askToConnectSecondsMax = 3600; // 1 hour
 
 void updateComboBox(
         QComboBox *c, const QStringList &names, const QStringList &iconPaths, int currentIndex)
@@ -313,9 +315,7 @@ void OptionsPage::setupTrafficBox()
             });
 
     // Timed Options
-    setupFilterOffSeconds();
-    setupAutoLearnSeconds();
-    setupAskToConnectSeconds();
+    setupTimedOptions();
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbFilterEnabled);
@@ -356,55 +356,34 @@ QLayout *OptionsPage::setupFilterModeLayout()
     return ControlUtil::createRowLayout(m_labelFilterMode, m_comboFilterMode);
 }
 
-void OptionsPage::setupFilterOffSeconds()
+void OptionsPage::setupTimedOptions()
 {
-    m_lscFilterOffSeconds = new LabelSpinCombo();
-    m_lscFilterOffSeconds->spinBox()->setRange(0, 99999); // ~27.7 hours
-    m_lscFilterOffSeconds->setValues(timedOptionSecondsValues);
+    const auto timedOptionSecondsList = SpinCombo::makeValuesList(timedOptionSecondsValues);
 
-    m_lscFilterOffSeconds->spinBox()->setValue(ini().filterOffSeconds());
-
-    connect(m_lscFilterOffSeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            [&](int value) {
+    m_lscFilterOffSeconds = ControlUtil::createSpinCombo(ini().filterOffSeconds(), 0,
+            timedOptionSecondsMax, timedOptionSecondsList, {}, [&](int value) {
                 if (ini().filterOffSeconds() != value) {
                     ini().setFilterOffSeconds(value);
                     ctrl()->setIniEdited();
                 }
             });
-}
 
-void OptionsPage::setupAutoLearnSeconds()
-{
-    m_lscAutoLearnSeconds = new LabelSpinCombo();
-    m_lscAutoLearnSeconds->spinBox()->setRange(0, 99999); // ~27.7 hours
-    m_lscAutoLearnSeconds->setValues(timedOptionSecondsValues);
-
-    m_lscAutoLearnSeconds->spinBox()->setValue(ini().autoLearnSeconds());
-
-    connect(m_lscAutoLearnSeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            [&](int value) {
+    m_lscAutoLearnSeconds = ControlUtil::createSpinCombo(ini().autoLearnSeconds(), 0,
+            timedOptionSecondsMax, timedOptionSecondsList, {}, [&](int value) {
                 if (ini().autoLearnSeconds() != value) {
                     ini().setAutoLearnSeconds(value);
                     ctrl()->setIniEdited();
                 }
             });
-}
 
-void OptionsPage::setupAskToConnectSeconds()
-{
-    m_lscAskToConnectSeconds = new LabelSpinCombo();
-    m_lscAskToConnectSeconds->spinBox()->setRange(1, 3600); // 1 hour
-    m_lscAskToConnectSeconds->setValues(askToConnectSecondsValues);
-
-    m_lscAskToConnectSeconds->spinBox()->setValue(conf().askToConnectSeconds());
-
-    connect(m_lscAskToConnectSeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            [&](int value) {
-                if (conf().askToConnectSeconds() != value) {
-                    conf().setAskToConnectSeconds(value);
-                    ctrl()->setFlagsEdited();
-                }
-            });
+    m_lscAskToConnectSeconds =
+            ControlUtil::createSpinCombo(conf().askToConnectSeconds(), 1, askToConnectSecondsMax,
+                    SpinCombo::makeValuesList(askToConnectSecondsValues), {}, [&](int value) {
+                        if (conf().askToConnectSeconds() != value) {
+                            conf().setAskToConnectSeconds(value);
+                            ctrl()->setFlagsEdited();
+                        }
+                    });
 }
 
 void OptionsPage::setupProtectionBox()

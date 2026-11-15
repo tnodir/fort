@@ -40,9 +40,7 @@ private:
     void setupTrafficBox();
     QLayout *setupBlockTrafficLayout();
     QLayout *setupFilterModeLayout();
-    void setupFilterOffSeconds();
-    void setupAutoLearnSeconds();
-    void setupAskToConnectSeconds();
+    void setupTimedOptions();
     void setupProtectionBox();
     QLayout *setupPasswordLayout();
     void setupEditPassword();
