@@ -45,6 +45,7 @@ QString connRowSearchText(const ConnRow &connRow, const QString &appText)
         NetUtil::serviceName(connRow.localPort),
         QString::number(connRow.localPort),
         NetFormatUtil::ipToText(connRow.remoteIp, isIPv6),
+        connRow.remoteHost,
         NetUtil::serviceName(connRow.remotePort),
         QString::number(connRow.remotePort),
         ConnListModel::directionText(connRow.inbound),
