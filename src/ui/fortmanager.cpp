@@ -593,14 +593,16 @@ void FortManager::setupConfSpeedLimitManager()
 
 void FortManager::setupConfZoneManager()
 {
-    // The deleted Zone's id can be reused: clear it from the driver's address lists, apps and
-    // rules (ConfZoneManager's earlier connection clears the address lists in the conf)
+    // The deleted Zone's id can be reused: clear it from the driver's address lists, apps, rules
+    // and Zones with their runtime IPs (ConfZoneManager's earlier connection clears the address
+    // lists in the conf, ZoneListModel's one removes the Zone from the model)
     connect(confZoneManager(), &ConfZoneManager::zoneRemoved, this, [&] {
         if (!confAppManager()->canUpdateDriverConf())
             return;
 
         updateDriverConf();
         confRuleManager()->updateDriverRules();
+        updateDriverZones(taskManager()->taskInfoZoneDownloader()->loadZonesData());
     });
 }
 
@@ -696,12 +698,7 @@ bool FortManager::setupDriverConf()
     confManager->updateServices();
 
     // Zones
-    {
-        const auto &zones = taskManager()->taskInfoZoneDownloader()->zones();
-
-        confZoneManager()->updateDriverZones(
-                zones.dataZonesMask, zones.enabledMask, zones.dataSize, zones.zonesData);
-    }
+    updateDriverZones(taskManager()->taskInfoZoneDownloader()->zones());
 
     // Rules
     confRuleManager()->updateDriverRules();
@@ -713,6 +710,12 @@ bool FortManager::setupDriverConf()
     confSpeedLimitManager()->updateDriverSpeedLimits();
 
     return true;
+}
+
+void FortManager::updateDriverZones(const ZonesData &zones)
+{
+    confZoneManager()->updateDriverZones(
+            zones.dataZonesMask, zones.enabledMask, zones.dataSize, zones.zonesData);
 }
 
 void FortManager::updateDriverConf(bool onlyFlags)

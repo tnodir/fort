@@ -27,6 +27,9 @@ public:
     void addZone(int zoneId, const HostRange &hostRange);
     void addHostFilter(quint32 hostId, const HostRange &hostRange);
 
+    // Returns whether the Zone was listed
+    bool removeZone(int zoneId);
+
     // The Zones and host() filters listing the name by itself, by a "*." wildcard of its parent
     // domain or by another mask
     HostMatch match(QStringView name) const;
