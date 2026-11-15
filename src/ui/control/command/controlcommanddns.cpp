@@ -24,7 +24,9 @@ inline constexpr int testResultWaitMsecs = 2 * 1000;
 inline constexpr const char *statusNames[] = {
     "off",
     "started",
+    "checking",
     "nrpt-error",
+    "nrpt-ignored",
     "mixed-servers",
     "invalid-servers",
     "listen-error",

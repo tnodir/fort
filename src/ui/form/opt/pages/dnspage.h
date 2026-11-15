@@ -45,7 +45,9 @@ private:
     void testServers();
     void updateTestResults();
 
+    static QString forwarderWarningText(const DnsForwarderStatus &status);
     static QString forwarderErrorText(const DnsForwarderStatus &status);
+    static QString nrptErrorText(const QString &cause);
     static QString serverResultText(const DnsServerResult &result);
     static QString serverStatusText(const DnsServerResult &result);
     static QString serverAnsweredText(const DnsServerResult &result);

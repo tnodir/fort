@@ -65,6 +65,7 @@ SOURCES += \
     control/controlworker.cpp \
     dns/dnsclientmanager.cpp \
     dns/dnsmanager.cpp \
+    dns/dnsnrptcheck.cpp \
     dns/dnsprovider.cpp \
     dns/hostzonesdb.cpp \
     driver/drivercommon.cpp \
@@ -415,6 +416,7 @@ HEADERS += \
     control/controlworker.h \
     dns/dnsclientmanager.h \
     dns/dnsmanager.h \
+    dns/dnsnrptcheck.h \
     dns/dnsprovider.h \
     dns/hostzonesdb.h \
     driver/drivercommon.h \

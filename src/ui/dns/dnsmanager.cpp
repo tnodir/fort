@@ -47,6 +47,7 @@ quint32 hostIpsTtl(quint32 ttl)
 DnsManager::DnsManager(QObject *parent) : QObject(parent)
 {
     connect(&m_listener, &DnsListener::queryReceived, this, &DnsManager::processQuery);
+    connect(&m_nrptCheck, &DnsNrptCheck::finished, this, &DnsManager::onNrptChecked);
     connect(&m_zonesTimer, &QTimer::timeout, this, &DnsManager::loadZones);
 }
 
@@ -209,8 +210,13 @@ DnsForwarderStatus DnsManager::openForwarder(const QStringList &servers)
 
     loadHosts();
 
-    return { .status = nrptAdded ? DnsForwarderStatus::StatusStarted
-                                 : DnsForwarderStatus::StatusNrptError };
+    if (!nrptAdded) {
+        return { .status = DnsForwarderStatus::StatusNrptError };
+    }
+
+    m_nrptCheck.start();
+
+    return { .status = DnsForwarderStatus::StatusChecking };
 }
 
 void DnsManager::closeForwarder()
@@ -219,10 +225,22 @@ void DnsManager::closeForwarder()
         qCWarning(LC) << "NRPT rule removal error";
     }
 
+    m_nrptCheck.abort();
+
     m_listener.close();
     closeResolver();
 
     unloadHosts();
+}
+
+void DnsManager::onNrptChecked(bool received)
+{
+    if (!received) {
+        qCWarning(LC) << "NRPT rule ignored: the system's queries aren't received";
+    }
+
+    setStatus({ .status = received ? DnsForwarderStatus::StatusStarted
+                                   : DnsForwarderStatus::StatusNrptIgnored });
 }
 
 DnsForwarderStatus::Status DnsManager::openResolver(const QStringList &servers)
@@ -428,6 +446,9 @@ quint8 DnsManager::checkQuery(const DnsRequest &request)
 
     if (query.errorRcode() != ARES_RCODE_NOERROR)
         return query.errorRcode();
+
+    if (m_nrptCheck.checkQuery(query))
+        return ARES_RCODE_NXDOMAIN;
 
     if (checkLoopQuery(request))
         return ARES_RCODE_SERVFAIL;

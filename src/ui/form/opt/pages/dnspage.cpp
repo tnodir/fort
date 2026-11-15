@@ -262,7 +262,7 @@ void DnsPage::updateForwarderErrorWarning()
     auto dnsManager = Fort::dnsManager();
     const DnsForwarderStatus status = dnsManager ? dnsManager->status() : DnsForwarderStatus();
 
-    m_labelForwarderError->setText(forwarderErrorText(status));
+    m_labelForwarderError->setText(forwarderWarningText(status));
     m_forwarderErrorWarning->setVisible(status.isError());
 }
 
@@ -296,12 +296,29 @@ void DnsPage::updateTestResults()
     m_editTestResults->setPlainText(lines.join('\n'));
 }
 
+// The Dnscache asks the adapters' DNS servers, while the forwarder doesn't receive its queries:
+// the blocked ports cut it
+QString DnsPage::forwarderWarningText(const DnsForwarderStatus &status)
+{
+    const QString errorText = forwarderErrorText(status);
+    if (status.status == DnsForwarderStatus::StatusStarted)
+        return errorText;
+
+    return tr("%1; the names aren't resolved while the ports 53 and 853 are blocked for other "
+              "programs")
+            .arg(errorText);
+}
+
 QString DnsPage::forwarderErrorText(const DnsForwarderStatus &status)
 {
     switch (status.status) {
     case DnsForwarderStatus::StatusNrptError:
-        return tr("The system's DNS queries aren't sent to the DNS Forwarder: the rule of the Name "
-                  "Resolution Policy Table can't be added");
+        return nrptErrorText(tr("the rule of the Name Resolution Policy Table can't be added"));
+    case DnsForwarderStatus::StatusNrptIgnored:
+        return nrptErrorText(
+                tr("the rule of the Name Resolution Policy Table is overridden, e.g. "
+                   "by the Group Policy's rules, or the connections to the port 53 "
+                   "of the loopback are blocked, e.g. by a VPN's DNS leak protection"));
     case DnsForwarderStatus::StatusMixedServers:
         return tr("The DNS Forwarder isn't started: the saved upstream DNS servers mix plain and "
                   "DNS over HTTPS ones");
@@ -313,6 +330,11 @@ QString DnsPage::forwarderErrorText(const DnsForwarderStatus &status)
     default:
         return {};
     }
+}
+
+QString DnsPage::nrptErrorText(const QString &cause)
+{
+    return tr("The system's DNS queries aren't sent to the DNS Forwarder: %1").arg(cause);
 }
 
 QString DnsPage::serverResultText(const DnsServerResult &result)

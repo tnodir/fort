@@ -13,6 +13,7 @@
 #include <util/net/hostmatcher.h>
 #include <util/triggertimer.h>
 
+#include "dnsnrptcheck.h"
 #include "hostzonesdb.h"
 
 struct DnsForwarderStatus
@@ -20,7 +21,9 @@ struct DnsForwarderStatus
     enum Status : qint8 {
         StatusOff = 0,
         StatusStarted,
+        StatusChecking, // started, the system's queries aren't known to be sent to it yet
         StatusNrptError, // started, but the system's queries aren't sent to it
+        StatusNrptIgnored, // started, but its NRPT rule is overridden or its port is blocked
         StatusMixedServers, // not started: the plain and DNS over HTTPS servers are mixed
         StatusInvalidServers, // not started: the resolver can't take the servers
         StatusListenError, // not started: the port 53 can't be listened, e.g. it's busy
@@ -81,6 +84,8 @@ private:
     DnsForwarderStatus openForwarder(const QStringList &servers);
     void closeForwarder();
 
+    void onNrptChecked(bool received);
+
     DnsForwarderStatus::Status openResolver(const QStringList &servers);
     void closeResolver();
 
@@ -130,6 +135,7 @@ private:
     QList<DnsServersTest *> m_serversTests;
 
     HostZonesDb m_hostZonesDb;
+    DnsNrptCheck m_nrptCheck;
     HostMatcher m_hostFiltersMatcher;
 
     DnsListener m_listener;
