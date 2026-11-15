@@ -54,6 +54,7 @@ typedef struct fort_conf_flags
             UINT32 ask_to_connect : 1;
             UINT32 group_blocked : 1;
             UINT32 speed_limiter_enabled : 1;
+            UINT32 dns_forwarder_enabled : 1;
 
             UINT32 app_block_all : 1;
             UINT32 app_allow_all : 1;
@@ -69,7 +70,7 @@ typedef struct fort_conf_flags
             UINT32 log_blocked_conn : 1;
             UINT32 log_alerted_conn : 1;
 
-            UINT32 reserved_flags : 7; /* not used */
+            UINT32 reserved_flags : 6; /* not used */
         };
     };
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
@@ -477,6 +478,7 @@ typedef struct fort_conf_conn_actions
 {
     UCHAR blocked : 1;
     UCHAR drop_blocked : 1;
+    UCHAR permit_hard : 1;
     UCHAR ask : 1; /* the blocked connection asks the user */
     UCHAR conn_log : 1;
     UCHAR conn_nolog : 1;
@@ -501,11 +503,12 @@ typedef struct fort_conf_meta_conn
     UINT16 is_loopback : 1;
     UINT16 is_broadcast : 1;
     UINT16 is_local_net : 1;
+    UINT16 is_fort_service : 1; /* the device's client: Fort Firewall's Service */
     UINT16 inherited : 1;
     UINT16 ignore : 1;
     UINT16 ask_to_connect : 1;
     UINT16 app_asked : 1; /* asked by the App's data, else by a Rule */
-    UINT16 reserved : 3; /* not used */
+    UINT16 reserved : 2; /* not used */
 
     FORT_CONF_CONN_ACTIONS act;
 

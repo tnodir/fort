@@ -33,29 +33,34 @@ static const UINT32 *fort_log_flow_id_read(const UINT32 *up, UINT64 *flow_id)
     return up;
 }
 
-FORT_API void fort_log_app_header_write(char *p, BOOL blocked, UINT32 pid, UINT16 path_len)
+FORT_API void fort_log_app_header_write(
+        char *p, const FORT_APP_FLAGS app_flags, UINT32 pid, UINT16 path_len)
 {
     UINT32 *up = (UINT32 *) p;
 
-    *up++ = fort_log_flag_type(FORT_LOG_TYPE_APP) | (blocked ? FORT_LOG_FLAG_OPT_BLOCKED : 0)
-            | path_len;
+    *up++ = fort_log_flag_type(FORT_LOG_TYPE_APP)
+            | (app_flags.blocked ? FORT_LOG_FLAG_OPT_BLOCKED : 0)
+            | (app_flags.alerted ? FORT_LOG_FLAG_OPT_ALERTED : 0) | path_len;
     *up = pid;
 }
 
-FORT_API void fort_log_app_write(char *p, BOOL blocked, UINT32 pid, PCFORT_APP_PATH path)
+FORT_API void fort_log_app_write(
+        char *p, const FORT_APP_FLAGS app_flags, UINT32 pid, PCFORT_APP_PATH path)
 {
     const UINT16 path_len = path->len;
 
-    fort_log_app_header_write(p, blocked, pid, path_len);
+    fort_log_app_header_write(p, app_flags, pid, path_len);
 
     fort_log_path_write(p + FORT_LOG_APP_HEADER_SIZE, path);
 }
 
-FORT_API void fort_log_app_header_read(const char *p, BOOL *blocked, UINT32 *pid, UINT16 *path_len)
+FORT_API void fort_log_app_header_read(
+        const char *p, PFORT_APP_FLAGS app_flags, UINT32 *pid, UINT16 *path_len)
 {
     const UINT32 *up = (const UINT32 *) p;
 
-    *blocked = (*up & FORT_LOG_FLAG_OPT_BLOCKED) != 0;
+    app_flags->blocked = (*up & FORT_LOG_FLAG_OPT_BLOCKED) != 0;
+    app_flags->alerted = (*up & FORT_LOG_FLAG_OPT_ALERTED) != 0;
     *path_len = (UINT16) (*up++ & ~FORT_LOG_FLAG_EX_MASK);
     *pid = *up;
 }

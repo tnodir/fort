@@ -316,6 +316,7 @@ TEST_F(LogBufferTest, procNewWriteRead)
     for (int i = 0; i < testCount; ++i) {
         LogEntryApp appEntry(i + 1, path.left(path.size() - i));
         appEntry.setBlocked(i % 2 != 0);
+        appEntry.setAlerted(i % 2 == 0);
         buf.writeEntryApp(&appEntry);
 
         LogEntryProcNew procNewEntry(i + 11, path.left(i + 1));
@@ -330,6 +331,7 @@ TEST_F(LogBufferTest, procNewWriteRead)
         buf.readEntryApp(&appEntry);
         ASSERT_EQ(appEntry.pid(), i + 1);
         ASSERT_EQ(appEntry.blocked(), i % 2 != 0);
+        ASSERT_EQ(appEntry.alerted(), i % 2 == 0);
         ASSERT_EQ(appEntry.kernelPath(), path.left(path.size() - i));
 
         ASSERT_EQ(buf.peekEntryType(), FORT_LOG_TYPE_PROC_NEW);

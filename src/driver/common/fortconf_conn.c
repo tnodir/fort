@@ -4,6 +4,8 @@
 
 #include "fortdef.h"
 
+#define FORT_CONF_DNS_PORT 53
+
 inline static BOOL fort_conf_conn_is_local_broadcast(PCFORT_CONF_META_CONN conn)
 {
     if (conn->isIPv6) {
@@ -11,6 +13,25 @@ inline static BOOL fort_conf_conn_is_local_broadcast(PCFORT_CONF_META_CONN conn)
     }
 
     return conn->remote_ip.v4 == 0xFFFFFFFF;
+}
+
+inline static BOOL fort_conf_conn_is_dns_query(PCFORT_CONF_META_CONN conn)
+{
+    return !conn->inbound && conn->remote_port == FORT_CONF_DNS_PORT;
+}
+
+inline static BOOL fort_conf_conn_loopback_allowed(
+        PFORT_CONF_META_CONN conn, const FORT_CONF_FLAGS conf_flags)
+{
+    if (conf_flags.block_traffic)
+        return FALSE;
+
+    if (conf_flags.dns_forwarder_enabled && fort_conf_conn_is_dns_query(conn)) {
+        /* The Service's DNS Forwarder asked by the loopback */
+        conn->act.permit_hard = TRUE;
+    }
+
+    return TRUE;
 }
 
 FORT_API BOOL fort_conf_conn_local_allowed(
@@ -23,7 +44,7 @@ FORT_API BOOL fort_conf_conn_local_allowed(
 
     /* Loopback */
     if (conn->is_loopback) {
-        return !conf_flags.block_traffic;
+        return fort_conf_conn_loopback_allowed(conn, conf_flags);
     }
 
     /* Broadcast */
@@ -264,11 +285,26 @@ inline static BOOL fort_conf_conn_asked_by_app(PCFORT_CONF_META_CONN conn)
     return conn->reason == FORT_CONN_REASON_FILTER_MODE || conn->reason == FORT_CONN_REASON_PROGRAM;
 }
 
+inline static BOOL fort_conf_conn_fort_service_allowed(
+        PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn)
+{
+    if (!(conn->is_fort_service && filter->conf_flags.dns_forwarder_enabled))
+        return FALSE;
+
+    conn->act.blocked = FALSE;
+    conn->act.permit_hard = TRUE;
+    conn->reason = FORT_CONN_REASON_DNS_FORWARDER;
+    return TRUE; /* allow Fort Firewall's DNS Forwarder */
+}
+
 FORT_API BOOL fort_conf_conn_app_allowed(
         PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn, const FORT_APP_DATA app_data)
 {
     if (!conn->act.blocked)
         return TRUE; /* collect traffic, when Filter Disabled or the address is allowed */
+
+    if (fort_conf_conn_fort_service_allowed(filter, conn))
+        return TRUE;
 
     const BOOL app_found = fort_conf_conn_app_found(filter, app_data);
 

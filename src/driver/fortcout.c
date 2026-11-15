@@ -37,6 +37,12 @@ FORT_API void fort_callout_classify_permit(
     }
 }
 
+FORT_API void fort_callout_classify_permit_hard(FWPS_CLASSIFY_OUT0 *classifyOut)
+{
+    classifyOut->actionType = FWP_ACTION_PERMIT;
+    classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
+}
+
 FORT_API void fort_callout_classify_continue(FWPS_CLASSIFY_OUT0 *classifyOut)
 {
     classifyOut->actionType = FWP_ACTION_CONTINUE;

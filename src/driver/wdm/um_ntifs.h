@@ -50,6 +50,8 @@ FORT_API NTSTATUS ObOpenObjectByPointer(PVOID object, ULONG handleAttributes,
 FORT_API NTSTATUS IoQueryFileDosDeviceName(
         PFILE_OBJECT fileObject, POBJECT_NAME_INFORMATION *objectNameInformation);
 
+FORT_API ULONG IoGetRequestorProcessId(PIRP irp);
+
 FORT_API void KeStackAttachProcess(PRKPROCESS process, PRKAPC_STATE apcState);
 
 FORT_API void KeUnstackDetachProcess(PRKAPC_STATE apcState);

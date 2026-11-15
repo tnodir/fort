@@ -15,6 +15,8 @@
 
 typedef struct fort_device
 {
+    UINT32 client_process_id; /* the process which opened the device */
+
     PDEVICE_OBJECT device;
 
     PCALLBACK_OBJECT power_cb_obj;

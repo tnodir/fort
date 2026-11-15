@@ -102,6 +102,13 @@ static void fort_callout_ale_fill_meta_path(PCFORT_CALLOUT_ARG ca, PFORT_CONF_ME
     }
 }
 
+inline static void fort_callout_fill_meta_port(PCFORT_CALLOUT_ARG ca, UCHAR portIndex, UINT16 *port)
+{
+    const FWP_VALUE0 value = ca->inFixedValues->incomingValue[portIndex].value;
+
+    *port = value.uint16;
+}
+
 static void fort_callout_fill_meta_ip(PCFORT_CALLOUT_ARG ca, UCHAR ipIndex, ip_addr_t *ip)
 {
     const FWP_VALUE0 value = ca->inFixedValues->incomingValue[ipIndex].value;
@@ -121,6 +128,10 @@ inline static void fort_callout_ale_fill_meta_conn_proc(
     conn->process_id = FWPS_IS_METADATA_FIELD_PRESENT(inMetaValues, FWPS_METADATA_FIELD_PROCESS_ID)
             ? (UINT32) inMetaValues->processId
             : 0;
+
+    const UINT32 client_process_id = fort_device()->client_process_id;
+
+    conn->is_fort_service = (client_process_id != 0 && conn->process_id == client_process_id);
 }
 
 static void fort_callout_ale_fill_meta_conn(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn)
@@ -131,9 +142,7 @@ static void fort_callout_ale_fill_meta_conn(PCFORT_CALLOUT_ARG ca, PFORT_CONF_ME
 
     conn->ip_proto = ca->inFixedValues->incomingValue[ca->fi->ipProto].value.uint8;
 
-    conn->local_port = ca->inFixedValues->incomingValue[ca->fi->localPort].value.uint16;
-    conn->remote_port = ca->inFixedValues->incomingValue[ca->fi->remotePort].value.uint16;
-
+    fort_callout_fill_meta_port(ca, ca->fi->localPort, &conn->local_port);
     fort_callout_fill_meta_ip(ca, ca->fi->localIp, &conn->local_ip);
 }
 
@@ -206,14 +215,18 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
     if (conn->ignore || !fort_callout_ale_log_app_path_check(conf_flags, app_data))
         return;
 
+    /* Fort Firewall's Service is logged allowed, without an alert */
+    const BOOL dns_forwarder_allowed = (conn->reason == FORT_CONN_REASON_DNS_FORWARDER);
+
     app_data.flags.log_stat = TRUE;
     app_data.flags.log_allowed_conn = TRUE;
     app_data.flags.log_blocked_conn = TRUE;
-    app_data.flags.blocked = !(conf_flags.allow_all_new || conf_flags.app_allow_all);
+    app_data.flags.blocked =
+            !dns_forwarder_allowed && !(conf_flags.allow_all_new || conf_flags.app_allow_all);
 
     app_data.flags.is_new = TRUE;
     app_data.flags.found = TRUE;
-    app_data.flags.alerted = TRUE;
+    app_data.flags.alerted = !dns_forwarder_allowed;
 
     const FORT_APP_ENTRY app_entry = {
         .app_data = app_data,
@@ -441,25 +454,38 @@ static const FORT_CONF_CONN_FILTER_FUNCS fort_callout_ale_filter_funcs = {
     .groups_rules_conn_filtered = &fort_callout_ale_groups_rules_conn_filtered,
 };
 
+inline static void fort_callout_ale_classify_block(
+        PCFORT_CALLOUT_ARG ca, PCFORT_CONF_META_CONN conn)
+{
+    if (conn->act.drop_blocked) {
+        fort_callout_classify_drop(ca->classifyOut);
+    } else {
+        fort_callout_classify_block(ca->classifyOut);
+    }
+}
+
+inline static void fort_callout_ale_classify_permit(
+        PCFORT_CALLOUT_ARG ca, PCFORT_CONF_META_CONN conn)
+{
+    if (conn->act.permit_hard) {
+        fort_callout_classify_permit_hard(ca->classifyOut);
+    } else {
+        fort_callout_classify_permit(ca->filter, ca->classifyOut);
+    }
+}
+
 inline static void fort_callout_ale_classify_action(
         PCFORT_CALLOUT_ARG ca, PCFORT_CONF_META_CONN conn)
 {
-    FWPS_CLASSIFY_OUT0 *classifyOut = ca->classifyOut;
-
     if (conn->ignore) {
         /* Continue the search */
-        fort_callout_classify_continue(classifyOut);
+        fort_callout_classify_continue(ca->classifyOut);
     } else if (conn->act.blocked) {
-        if (conn->act.drop_blocked) {
-            /* Drop the connection */
-            fort_callout_classify_drop(classifyOut);
-        } else {
-            /* Block the connection */
-            fort_callout_classify_block(classifyOut);
-        }
+        /* Block the connection */
+        fort_callout_ale_classify_block(ca, conn);
     } else {
         /* Allow the connection */
-        fort_callout_classify_permit(ca->filter, classifyOut);
+        fort_callout_ale_classify_permit(ca, conn);
     }
 }
 
@@ -560,6 +586,7 @@ inline static BOOL fort_callout_ale_is_local_address(
 {
     PFORT_CONF_META_CONN conn = &cx->conn;
 
+    fort_callout_fill_meta_port(ca, ca->fi->remotePort, &conn->remote_port);
     fort_callout_fill_meta_ip(ca, ca->fi->remoteIp, &conn->remote_ip);
 
     return fort_conf_conn_local_allowed(conn, conf_flags);
@@ -584,7 +611,7 @@ static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca)
     const FORT_CONF_FLAGS conf_flags = fort_device_conf_flags(device_conf);
 
     if (fort_callout_ale_is_local_address(ca, &cx, conf_flags)) {
-        fort_callout_classify_permit(ca->filter, ca->classifyOut);
+        fort_callout_ale_classify_permit(ca, &cx.conn);
         return;
     }
 

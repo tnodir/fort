@@ -84,6 +84,8 @@ FORT_API NTSTATUS fort_device_create(PDEVICE_OBJECT device, PIRP irp)
 
         /* The new client's host() filters have new ids */
         fort_host_ips_filters_clear(&fort_device()->host_ips);
+
+        fort_device()->client_process_id = IoGetRequestorProcessId(irp);
     }
 
     fort_request_complete(irp, status);
@@ -111,6 +113,8 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
     /* Device closed */
     fort_device_flag_set(
             &fort_device()->conf, (FORT_DEVICE_IS_OPENED | FORT_DEVICE_IS_VALIDATED), FALSE);
+
+    fort_device()->client_process_id = 0;
 
     /* Clear conf */
     {

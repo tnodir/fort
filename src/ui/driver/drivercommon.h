@@ -28,6 +28,7 @@ struct ConnFilterConf
 struct LogAppHeader
 {
     bool blocked = false;
+    bool alerted = false;
     quint16 pathLen = 0;
     quint32 pid = 0;
 };
@@ -97,7 +98,7 @@ quint32 logFlowClosedSize();
 
 quint8 logType(const char *input);
 
-void logAppHeaderWrite(char *output, bool blocked, quint32 pid, quint16 pathLen);
+void logAppHeaderWrite(char *output, const LogAppHeader &header);
 LogAppHeader logAppHeaderRead(const char *input);
 
 void logConnHeaderWrite(
