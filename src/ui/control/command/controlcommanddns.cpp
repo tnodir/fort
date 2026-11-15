@@ -20,6 +20,37 @@ namespace {
 // Of each of the 3 waits: over DnsServersTest's timeout, a client's one included
 inline constexpr int testResultWaitMsecs = 2 * 1000;
 
+// By DnsForwarderStatus::Status
+inline constexpr const char *statusNames[] = {
+    "off",
+    "started",
+    "nrpt-error",
+    "mixed-servers",
+    "invalid-servers",
+    "listen-error",
+};
+
+bool reportStatus(ProcessCommandResult &r)
+{
+    auto dnsManager = Fort::dnsManager();
+    if (!dnsManager) {
+        r.errorMessage = "The DNS Forwarder runs only with the service";
+        return false;
+    }
+
+    const DnsForwarderStatus &status = dnsManager->status();
+
+    r.commandResult = Control::CommandResult(Control::CommandResultBase + status.status);
+
+    r.errorMessage = statusNames[status.status];
+
+    if (!status.errorMessage.isEmpty()) {
+        r.errorMessage += ": " + status.errorMessage;
+    }
+
+    return true;
+}
+
 QString serverResultText(const DnsServerResult &result)
 {
     switch (result.status) {
@@ -87,18 +118,23 @@ bool testServers(const ProcessCommandArgs &p, ProcessCommandResult &r)
 
 bool ControlCommandDns::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const
 {
-    if (p.args.value(0).toString() != "test") {
-        r.errorMessage = "Usage: dns test";
+    const QString commandText = p.args.value(0).toString();
+
+    const bool report = (commandText == "report");
+
+    if (!report && commandText != "test") {
+        r.errorMessage = "Usage: dns test|report";
         return false;
     }
 
     if (!ControlCommandUtil::checkCommandActionPassword(r, /*action=*/0))
         return false;
 
-    return testServers(p, r);
+    return report ? reportStatus(r) : testServers(p, r);
 }
 
-int ControlCommandDns::resultWaitMsecs(const QVariantList & /*args*/) const
+int ControlCommandDns::resultWaitMsecs(const QVariantList &args) const
 {
-    return testResultWaitMsecs;
+    return (args.value(0).toString() == "test") ? testResultWaitMsecs
+                                                : ControlCommandBase::resultWaitMsecs(args);
 }
