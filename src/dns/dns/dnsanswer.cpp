@@ -102,6 +102,14 @@ void fixOpt(const DnsQuery &query, ares_dns_record_t *record)
     ares_dns_rr_del_opt_byid(rr, ARES_RR_OPT_OPTIONS, ARES_OPT_PARAM_COOKIE);
 }
 
+bool isQueryResponse(const DnsQuery &query, const ares_dns_record_t *record)
+{
+    if ((ares_dns_record_get_flags(record) & ARES_FLAG_QR) == 0)
+        return false;
+
+    return DnsUtil::isSameQuestion(query.record(), record);
+}
+
 QByteArray forwardResponse(const DnsQuery &query, const ares_dns_record_t *answer)
 {
     const DnsRecordPtr record = DnsUtil::duplicateRecord(answer, query.id());
@@ -159,6 +167,19 @@ void DnsAnswer::setRecord(const DnsQuery &query, const ares_dns_record *record, 
     } else if (m_response.size() > sizeMax) {
         setRcode(query, ARES_RCODE_NOERROR, ARES_FLAG_TC);
     }
+}
+
+bool DnsAnswer::setData(const DnsQuery &query, const QByteArray &data, int sizeMax)
+{
+    const DnsRecordPtr record = DnsUtil::parseRecord(data);
+
+    // Not a response to the query
+    if (!record || !isQueryResponse(query, record.get()))
+        return false;
+
+    setRecord(query, record.get(), sizeMax);
+
+    return true;
 }
 
 void DnsAnswer::setRcode(const DnsQuery &query, quint8 rcode, quint16 flags)

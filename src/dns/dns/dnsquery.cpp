@@ -39,6 +39,15 @@ bool DnsQuery::parse(const QByteArray &data)
     return true;
 }
 
+QByteArray DnsQuery::write(quint16 id) const
+{
+    const DnsRecordPtr copy = DnsUtil::duplicateRecord(record(), id);
+    if (!copy)
+        return {};
+
+    return DnsUtil::writeRecord(copy.get());
+}
+
 void DnsQuery::parseOpt()
 {
     const int optIndex = DnsUtil::optIndex(record());

@@ -28,6 +28,9 @@ public:
 
     bool parse(const QByteArray &data);
 
+    // The query's message with the id
+    QByteArray write(quint16 id) const;
+
 private:
     void parseOpt();
     void parseName();
