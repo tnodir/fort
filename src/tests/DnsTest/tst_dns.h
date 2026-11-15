@@ -5,6 +5,7 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QUdpSocket>
+#include <QtEndian>
 
 #include <memory>
 
@@ -15,6 +16,7 @@
 #include <dns/dnsanswer.h>
 #include <dns/dnsclientanswer.h>
 #include <dns/dnshttpsresolver.h>
+#include <dns/dnslistener.h>
 #include <dns/dnsplainresolver.h>
 #include <dns/dnsprovider.h>
 #include <dns/dnsquery.h>
@@ -446,6 +448,83 @@ TEST_F(DnsTest, hintsAnswer)
 
     // The targets of both modes, without the root names
     ASSERT_EQ(answer.targetNames(), QStringList({ "cdn.example.net", "svc.example.net" }));
+}
+
+TEST_F(DnsTest, listenerPaused)
+{
+    QUdpSocket portSocket;
+    ASSERT_TRUE(portSocket.bind(QHostAddress::LocalHost, 0));
+    const quint16 port = portSocket.localPort();
+    portSocket.close();
+
+    DnsListener listener;
+    listener.setPort(port);
+    ASSERT_TRUE(listener.listen());
+
+    QByteArrayList queries;
+    QEventLoop loop;
+    QObject::connect(&listener, &DnsListener::queryReceived, &loop,
+            [&](const DnsClient & /*client*/, const QByteArray &data) {
+                queries.append(data);
+                loop.quit();
+            });
+
+    QUdpSocket udpClient;
+
+    // The listener's datagrams sent before the probe's one are notified before it
+    QUdpSocket probe;
+    ASSERT_TRUE(probe.bind(QHostAddress::LocalHost, 0));
+
+    const auto waitProbe = [&] {
+        QEventLoop probeLoop;
+        QObject::connect(&probe, &QUdpSocket::readyRead, &probeLoop, &QEventLoop::quit);
+
+        udpClient.writeDatagram("probe", QHostAddress::LocalHost, probe.localPort());
+        probeLoop.exec();
+
+        probe.receiveDatagram();
+    };
+
+    listener.setPaused(true);
+
+    udpClient.writeDatagram("u1", QHostAddress::LocalHost, port);
+    udpClient.writeDatagram("u2", QHostAddress::LocalHost, port);
+
+    // The connection's data is read into its socket's buffer while the listener is paused
+    QTcpServer *server = listener.findChild<QTcpServer *>();
+    ASSERT_NE(server, nullptr);
+
+    QEventLoop tcpLoop;
+    QObject::connect(server, &QTcpServer::newConnection, &tcpLoop, [&] {
+        QTcpSocket *socket = server->findChild<QTcpSocket *>();
+        QObject::connect(socket, &QTcpSocket::readyRead, &tcpLoop, &QEventLoop::quit);
+    });
+
+    QTcpSocket tcpClient;
+    tcpClient.connectToHost(QHostAddress::LocalHost, port);
+    ASSERT_TRUE(tcpClient.waitForConnected());
+
+    const QByteArray tcpQuery = "t1";
+    const quint16 tcpQuerySize = qToBigEndian(quint16(tcpQuery.size()));
+    tcpClient.write((const char *) &tcpQuerySize, sizeof(tcpQuerySize));
+    tcpClient.write(tcpQuery);
+    ASSERT_TRUE(tcpClient.waitForBytesWritten());
+
+    tcpLoop.exec();
+
+    waitProbe();
+
+    ASSERT_TRUE(queries.isEmpty());
+
+    listener.setPaused(false);
+
+    ASSERT_EQ(queries.join(' '), QByteArray("u1 u2 t1"));
+
+    // The socket is notified again
+    udpClient.writeDatagram("u3", QHostAddress::LocalHost, port);
+    loop.exec();
+
+    ASSERT_EQ(queries.join(' '), QByteArray("u1 u2 t1 u3"));
 }
 
 TEST_F(DnsTest, resolverOwnQuery)

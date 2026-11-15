@@ -12,8 +12,6 @@ namespace {
 
 const QLoggingCategory LC("dns.listener");
 
-inline constexpr quint16 dnsPort = 53;
-
 inline constexpr int tcpConnectionsMax = 64;
 // The Dnscache waits 10 s for a TCP answer, then resets the connection
 inline constexpr int tcpIdleTimeout = 10000; // milliseconds
@@ -64,6 +62,18 @@ bool appendListener(QList<T *> &list, T *listener, bool ok, QString &errorString
 
 DnsListener::DnsListener(QObject *parent) : QObject(parent) { }
 
+void DnsListener::setPaused(bool v)
+{
+    if (m_paused == v)
+        return;
+
+    m_paused = v;
+
+    if (!m_paused) {
+        readPausedQueries();
+    }
+}
+
 bool DnsListener::listen()
 {
     close();
@@ -84,6 +94,8 @@ bool DnsListener::listen()
 
 void DnsListener::close()
 {
+    m_paused = false;
+
     qDeleteAll(m_udpSockets);
     m_udpSockets.clear();
 
@@ -125,7 +137,7 @@ bool DnsListener::listenUdp(const QHostAddress &address, QString &errorString)
 
     connect(socket, &QUdpSocket::readyRead, this, [=, this] { readDatagrams(socket); });
 
-    const bool ok = socket->bind(address, dnsPort, QAbstractSocket::DontShareAddress);
+    const bool ok = socket->bind(address, m_port, QAbstractSocket::DontShareAddress);
 
     return appendListener(m_udpSockets, socket, ok, errorString);
 }
@@ -136,13 +148,33 @@ bool DnsListener::listenTcp(const QHostAddress &address, QString &errorString)
 
     connect(server, &QTcpServer::newConnection, this, [=, this] { acceptConnections(server); });
 
-    const bool ok = server->listen(address, dnsPort);
+    const bool ok = server->listen(address, m_port);
 
     return appendListener(m_tcpServers, server, ok, errorString);
 }
 
+// Their readyRead() isn't emitted again
+void DnsListener::readPausedQueries()
+{
+    for (QUdpSocket *socket : std::as_const(m_udpSockets)) {
+        readDatagrams(socket);
+    }
+
+    for (QTcpServer *server : std::as_const(m_tcpServers)) {
+        const auto sockets =
+                server->findChildren<QTcpSocket *>(QString(), Qt::FindDirectChildrenOnly);
+        for (QTcpSocket *socket : sockets) {
+            readTcpQueries(socket);
+        }
+    }
+}
+
+// While paused the datagrams stay in the socket: Qt disables its notifications till one is read
 void DnsListener::readDatagrams(QUdpSocket *socket)
 {
+    if (m_paused)
+        return;
+
     while (socket->hasPendingDatagrams()) {
         const QNetworkDatagram datagram = socket->receiveDatagram();
 
@@ -196,6 +228,9 @@ void DnsListener::setupTcpConnection(QTcpSocket *socket)
 
 void DnsListener::readTcpQueries(QTcpSocket *socket)
 {
+    if (m_paused)
+        return;
+
     const DnsClient client = {
         .tcp = true,
         .port = socket->peerPort(),

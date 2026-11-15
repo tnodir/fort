@@ -18,7 +18,15 @@ public:
     explicit DnsListener(QObject *parent = nullptr);
     Q_DISABLE_COPY_MOVE(DnsListener)
 
-    // Listens on 127.0.0.1:53 and, if free, on [::1]:53
+    // The queries received while paused wait in the sockets till the resume
+    bool isPaused() const { return m_paused; }
+    void setPaused(bool v);
+
+    // 53 by default
+    quint16 port() const { return m_port; }
+    void setPort(quint16 v) { m_port = v; }
+
+    // Listens on 127.0.0.1 and, if free, on [::1]
     bool listen();
     void close();
 
@@ -35,6 +43,8 @@ private:
     bool listenUdp(const QHostAddress &address, QString &errorString);
     bool listenTcp(const QHostAddress &address, QString &errorString);
 
+    void readPausedQueries();
+
     void readDatagrams(QUdpSocket *socket);
 
     void acceptConnections(QTcpServer *server);
@@ -42,6 +52,10 @@ private:
     void readTcpQueries(QTcpSocket *socket);
 
 private:
+    bool m_paused = false;
+
+    quint16 m_port = 53;
+
     int m_tcpConnCount = 0;
 
     QString m_errorString;
