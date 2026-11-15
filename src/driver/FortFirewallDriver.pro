@@ -90,6 +90,7 @@ HEADERS += \
     proxycb/fortpcb_drv.h \
     proxycb/fortpcb_dst.h \
     proxycb/fortpcb_src.h \
+    test/test.h \
     wdm/um_aux_klib.h \
     wdm/um_fwpmk.h \
     wdm/um_fwpsk.h \
