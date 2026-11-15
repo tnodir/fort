@@ -723,6 +723,49 @@ TEST_F(DnsTest, serversTest)
             QStringList({ "adapters: timeout" }));
 }
 
+TEST_F(DnsTest, serversTestLoop)
+{
+    // The forwarder's listener
+    QUdpSocket listener;
+    ASSERT_TRUE(listener.bind(QHostAddress::LocalHost, 0));
+
+    // Another upstream server, not answering
+    QUdpSocket silentServer;
+    ASSERT_TRUE(silentServer.bind(QHostAddress::LocalHost, 0));
+
+    DnsServersTest test({ QString("127.0.0.1:%1").arg(silentServer.localPort()),
+            QString("127.0.0.1:%1").arg(listener.localPort()) });
+    test.setTimeout(500);
+
+    QEventLoop loop;
+    QObject::connect(&test, &DnsServersTest::finished, &loop, &QEventLoop::quit);
+
+    test.start();
+
+    ASSERT_TRUE(listener.waitForReadyRead());
+
+    DnsQuery query;
+    ASSERT_TRUE(query.parse(listener.receiveDatagram().data()));
+
+    // Another name of the same id isn't the test's query
+    DnsQuery otherQuery;
+    ASSERT_TRUE(otherQuery.parse(writeQuery(query.id(), "other.example", /*withOpt=*/false)));
+    ASSERT_FALSE(test.checkLoopQuery(otherQuery));
+
+    ASSERT_TRUE(test.checkLoopQuery(query));
+    ASSERT_EQ(test.results().at(1).status, DnsServerResult::StatusLoop);
+
+    // The repeated query keeps the result
+    ASSERT_TRUE(test.checkLoopQuery(query));
+    ASSERT_EQ(test.results().at(1).status, DnsServerResult::StatusLoop);
+
+    loop.exec();
+
+    ASSERT_EQ(test.results().at(0).status, DnsServerResult::StatusTimeout);
+    ASSERT_EQ(test.results().at(1).status, DnsServerResult::StatusLoop);
+    ASSERT_FALSE(test.isAllNoError());
+}
+
 TEST_F(DnsTest, serversTestInvalid)
 {
     // A plain address among the DNS over HTTPS servers: no server is asked
