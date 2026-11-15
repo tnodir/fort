@@ -7,6 +7,7 @@ class DnsServersTest;
 class HostZonesSelector;
 class PlainTextEdit;
 
+struct DnsForwarderStatus;
 struct DnsServerResult;
 
 class DnsPage : public OptBasePage
@@ -34,14 +35,17 @@ private:
     void setupMixedServersWarning();
     void setupTestResults();
     QLayout *setupBlockZonesLayout();
+    void setupForwarderErrorWarning();
 
     void onBlockZonesEdited();
 
+    void updateForwarderErrorWarning();
     void updateMixedServersWarning(const QStringList &servers);
 
     void testServers();
     void updateTestResults();
 
+    static QString forwarderErrorText(const DnsForwarderStatus &status);
     static QString serverResultText(const DnsServerResult &result);
     static QString serverStatusText(const DnsServerResult &result);
     static QString serverAnsweredText(const DnsServerResult &result);
@@ -64,6 +68,9 @@ private:
     QCheckBox *m_cbBlockPorts = nullptr;
     QLabel *m_labelBlockZones = nullptr;
     HostZonesSelector *m_btBlockZones = nullptr;
+
+    QLabel *m_labelForwarderError = nullptr;
+    QWidget *m_forwarderErrorWarning = nullptr;
 
     DnsServersTest *m_serversTest = nullptr;
 };

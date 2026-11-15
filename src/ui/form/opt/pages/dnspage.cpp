@@ -76,6 +76,8 @@ void DnsPage::onRetranslateUi()
     m_labelBlockZones->setToolTip(tr("The names of the enabled Hosts Zones are not found, even if "
                                      "a host() filter lists them"));
     m_btBlockZones->retranslateUi();
+
+    updateForwarderErrorWarning();
 }
 
 void DnsPage::setupUi()
@@ -88,11 +90,15 @@ void DnsPage::setupUi()
     // DNS Forwarder Group Box
     setupForwarderBox();
 
+    // DNS Forwarder's Error Warning
+    setupForwarderErrorWarning();
+
     auto colLayout = new QVBoxLayout();
     colLayout->setSpacing(10);
     colLayout->addWidget(noServiceWarning);
     colLayout->addWidget(m_gbForwarder);
     colLayout->addStretch();
+    colLayout->addWidget(m_forwarderErrorWarning);
 
     // Main layout
     auto layout = new QHBoxLayout();
@@ -229,10 +235,35 @@ QLayout *DnsPage::setupBlockZonesLayout()
             { m_labelBlockZones, m_btBlockZones, /*stretch*/ nullptr }, /*margin=*/0);
 }
 
+void DnsPage::setupForwarderErrorWarning()
+{
+    m_labelForwarderError = ControlUtil::createLabel();
+
+    m_forwarderErrorWarning = createWarning(m_labelForwarderError);
+
+    // Only with the Service
+    if (auto dnsManager = Fort::dnsManager()) {
+        connect(dnsManager, &DnsManager::statusChanged, this,
+                &DnsPage::updateForwarderErrorWarning);
+    }
+
+    updateForwarderErrorWarning();
+}
+
 void DnsPage::onBlockZonesEdited()
 {
     ini().setDnsBlockZones(m_btBlockZones->mask());
     ctrl()->setIniEdited();
+}
+
+// Of the saved options
+void DnsPage::updateForwarderErrorWarning()
+{
+    auto dnsManager = Fort::dnsManager();
+    const DnsForwarderStatus status = dnsManager ? dnsManager->status() : DnsForwarderStatus();
+
+    m_labelForwarderError->setText(forwarderErrorText(status));
+    m_forwarderErrorWarning->setVisible(status.isError());
 }
 
 void DnsPage::updateMixedServersWarning(const QStringList &servers)
@@ -263,6 +294,25 @@ void DnsPage::updateTestResults()
     const QStringList lines = m_serversTest->resultLines(&serverResultText, adaptersServersText());
 
     m_editTestResults->setPlainText(lines.join('\n'));
+}
+
+QString DnsPage::forwarderErrorText(const DnsForwarderStatus &status)
+{
+    switch (status.status) {
+    case DnsForwarderStatus::StatusNrptError:
+        return tr("The system's DNS queries aren't sent to the DNS Forwarder: the rule of the Name "
+                  "Resolution Policy Table can't be added");
+    case DnsForwarderStatus::StatusMixedServers:
+        return tr("The DNS Forwarder isn't started: the saved upstream DNS servers mix plain and "
+                  "DNS over HTTPS ones");
+    case DnsForwarderStatus::StatusInvalidServers:
+        return tr("The DNS Forwarder isn't started: the saved upstream DNS servers are invalid");
+    case DnsForwarderStatus::StatusListenError:
+        return tr("The DNS Forwarder isn't started: can't listen on the port 53: %1")
+                .arg(status.errorMessage);
+    default:
+        return {};
+    }
 }
 
 QString DnsPage::serverResultText(const DnsServerResult &result)
