@@ -21,7 +21,7 @@ void ConfData::writeConf(const WriteConfArgs &wca, AppParseOptions &opt)
     PFORT_CONF_IO drvConfIo = PFORT_CONF_IO(m_data);
     PFORT_CONF drvConf = &drvConfIo->conf;
 
-    drvConfIo->periods.active_mask = wca.activePeriodsMask;
+    drvConfIo->periods.active_mask = wca.state.activePeriodsMask;
 
     quint32 addrGroupsOff;
     quint32 wildAppsOff, prefixAppsOff, exeAppsOff;
@@ -42,7 +42,7 @@ void ConfData::writeConf(const WriteConfArgs &wca, AppParseOptions &opt)
     exeAppsOff = dataOffset();
     writeApps(opt.exeAppsMap);
 
-    ConfData(&drvConf->flags).writeConfFlags(wca.conf);
+    ConfData(&drvConf->flags).writeConfFlags(wca.conf, wca.state);
 
     drvConf->proc_wild = opt.procWild;
 
@@ -57,7 +57,7 @@ void ConfData::writeConf(const WriteConfArgs &wca, AppParseOptions &opt)
     drvConf->exe_apps_off = exeAppsOff;
 }
 
-void ConfData::writeConfFlags(const FirewallConf &conf)
+void ConfData::writeConfFlags(const FirewallConf &conf, const ConfDriverState &state)
 {
     PFORT_CONF_FLAGS confFlags = PFORT_CONF_FLAGS(m_data);
 
@@ -76,6 +76,7 @@ void ConfData::writeConfFlags(const FirewallConf &conf)
     confFlags->ask_to_connect = conf.askToConnect();
     confFlags->group_blocked = conf.groupBlocked();
     confFlags->speed_limiter_enabled = conf.speedLimiterEnabled();
+    confFlags->dns_forwarder_enabled = conf.dnsForwarderEnabled() && state.isService;
 
     confFlags->app_block_all = conf.appBlockAll();
     confFlags->app_allow_all = conf.appAllowAll();

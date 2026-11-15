@@ -101,7 +101,8 @@ void ConnFilterTest::writeConf(quint64 activePeriodsMask)
 
     m_conf.resetEdited(FirewallConf::AllEdited);
 
-    if (!m_confBuf.writeConf(m_conf, &apps, &envManager, activePeriodsMask)) {
+    if (!m_confBuf.writeConf(
+                m_conf, &apps, &envManager, { .activePeriodsMask = activePeriodsMask })) {
         qCritical() << "Error:" << m_confBuf.errorMessage();
         Q_UNREACHABLE();
     }
@@ -348,6 +349,44 @@ TEST_F(ConnFilterTest, allowInetAddresses)
 
     conn = connFilterConn("8.8.8.8");
     ASSERT_FALSE(connAllowed("C:\\App\\unknown.exe", conn));
+}
+
+TEST_F(ConnFilterTest, fortService)
+{
+    // Without the Service its connections are filtered
+    ASSERT_FALSE(confFlags()->dns_forwarder_enabled);
+
+    confFlags()->dns_forwarder_enabled = true;
+    setFilterMode(FirewallConf::ModeBlockAll);
+
+    // Allowed
+    FORT_CONF_META_CONN conn = connFilterConn("8.8.8.8");
+    conn.is_fort_service = true;
+    ASSERT_TRUE(connAllowed("C:\\App\\unknown.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_DNS_FORWARDER);
+
+    // The traffic is collected: the App is checked
+    conn = connFilterConn("8.8.8.8");
+    conn.is_fort_service = true;
+    ASSERT_FALSE(connFlagsFiltered(conn));
+
+    // Blocked Internet
+    confFlags()->block_inet_traffic = true;
+
+    conn = connFilterConn("8.8.8.8");
+    conn.is_fort_service = true;
+    ASSERT_FALSE(connAllowed("C:\\App\\unknown.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_UNKNOWN);
+
+    confFlags()->block_inet_traffic = false;
+
+    // Filtered
+    confFlags()->dns_forwarder_enabled = false;
+
+    conn = connFilterConn("8.8.8.8");
+    conn.is_fort_service = true;
+    ASSERT_FALSE(connAllowed("C:\\App\\unknown.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_FILTER_MODE);
 }
 
 TEST_F(ConnFilterTest, filterModes)

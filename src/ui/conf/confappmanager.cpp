@@ -23,7 +23,6 @@
 #include <util/variantutil.h>
 
 #include "confmanager.h"
-#include "conftimeperiodmanager.h"
 #include "firewallconf.h"
 
 using namespace Fort;
@@ -877,11 +876,11 @@ bool ConfAppManager::updateDriverConf(bool onlyFlags)
     ConfBuffer confBuf;
 
     const auto &conf = Fort::conf();
+    const ConfDriverState state = Fort::confManager()->driverConfState();
 
-    const bool ok = onlyFlags ? (confBuf.writeFlags(conf), true)
+    const bool ok = onlyFlags ? (confBuf.writeFlags(conf, state), true)
                               : Fort::confManager()->writeConfBuffer(confBuf, [&] {
-                                    return confBuf.writeConf(conf, this, envManager(),
-                                            confTimePeriodManager()->activePeriodsMask());
+                                    return confBuf.writeConf(conf, this, envManager(), state);
                                 });
 
     if (!ok) {
