@@ -84,6 +84,10 @@ public:
     QByteArrayView remoteIp6View() const;
     void setRemoteIp6ByView(const QByteArrayView &ip);
 
+    // By the DNS Client's answer to the process
+    const QString &remoteHost() const { return m_remoteHost; }
+    void setRemoteHost(const QString &v) { m_remoteHost = v; }
+
     bool isAskPending() const;
 
 private:
@@ -105,6 +109,7 @@ private:
     quint64 m_flowId = 0;
     ip_addr_t m_localIp;
     ip_addr_t m_remoteIp;
+    QString m_remoteHost;
     QString m_inheritKernelPath;
 };
 

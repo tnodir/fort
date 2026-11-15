@@ -35,6 +35,7 @@ QVariantMap connFields(const ConnRow &connRow)
         { "rule", int(connRow.ruleId) },
         { "local", addressText(connRow.localIp, connRow.localPort, connRow.isIPv6) },
         { "remote", addressText(connRow.remoteIp, connRow.remotePort, connRow.isIPv6) },
+        { "host", connRow.remoteHost },
         { "pid", connRow.pid },
         { "path", connRow.appPath },
         { "time", connRow.connTime.toSecsSinceEpoch() },

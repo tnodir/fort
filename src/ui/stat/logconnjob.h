@@ -39,6 +39,7 @@ protected:
         ConnRemoteIp,
         ConnLocalIp6,
         ConnRemoteIp6,
+        ConnRemoteHost,
         ConnZoneId,
         ConnRuleId,
         ConnLoopback,

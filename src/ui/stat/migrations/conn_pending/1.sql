@@ -30,6 +30,7 @@ CREATE TABLE conn(
   remote_ip INTEGER,
   local_ip6 BLOB,
   remote_ip6 BLOB,
+  remote_host TEXT,
   zone_id INTEGER,
   rule_id INTEGER,
   flow_id INTEGER NOT NULL,
