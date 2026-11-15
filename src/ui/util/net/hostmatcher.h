@@ -18,12 +18,14 @@ struct HostMatch
     QVector<quint32> hostIds; // the host() filters' ids
 };
 
+// The names of the Hosts Zones and of the host() filters
 class HostMatcher
 {
 public:
     bool isEmpty() const;
 
     void addZone(int zoneId, const HostRange &hostRange);
+    void addHostFilter(quint32 hostId, const HostRange &hostRange);
 
     // The Zones and host() filters listing the name by itself, by a "*." wildcard of its parent
     // domain or by another mask

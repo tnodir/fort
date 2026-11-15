@@ -5,6 +5,8 @@
 #include <QSet>
 #include <QString>
 
+#include <util/net/hostmatcher.h>
+
 class HostRange;
 
 // The host() filters' ids by their names. The ids aren't reused, so the driver's IPs of a removed
@@ -29,6 +31,9 @@ public:
 
     // Returns the names' id, a new one for new names. Out of collecting it's a Program's filter.
     quint32 hostId(const HostRange &hostRange);
+
+    // The host() filters' names with their ids
+    HostMatcher hostMatcher() const;
 
     static QString namesKey(const HostRange &hostRange);
 

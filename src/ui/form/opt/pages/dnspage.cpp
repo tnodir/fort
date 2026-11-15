@@ -28,8 +28,8 @@ void DnsPage::onRetranslateUi()
 
     m_cbFilterEnabled->setText(tr("Filter DNS"));
     m_cbFilterEnabled->setToolTip(
-            tr("Resolve only the host names of the enabled Hosts Zones, the other names are not "
-               "found (only with the Service)"));
+            tr("Resolve only the host names of the enabled Hosts Zones and of the host() filters, "
+               "the other names are not found (only with the Service)"));
     m_labelServers->setText(tr("Upstream DNS servers:"));
     m_editServers->setPlaceholderText(tr("Adapters' DNS servers"));
     m_editServers->setToolTip(tr("Comma-separated, e.g. \"1.1.1.1, 9.9.9.9\""));
