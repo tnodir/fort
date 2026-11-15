@@ -136,11 +136,13 @@ enum Command : qint8 {
     Rpc_StatConnManager_connChanged,
     Rpc_StatConnManager_connCleared,
     Rpc_StatConnManager_connIdsShifted,
+    Rpc_StatConnManager_connHostsChanged,
 
     Rpc_PendingConnManager_decideConn,
     Rpc_PendingConnManager_allowProcess,
     Rpc_PendingConnManager_connChanged,
     Rpc_PendingConnManager_connCleared,
+    Rpc_PendingConnManager_connHostsChanged,
 
     Rpc_ServiceInfoManager_trackService,
     Rpc_ServiceInfoManager_revertService,

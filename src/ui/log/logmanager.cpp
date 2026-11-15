@@ -82,10 +82,14 @@ void LogManager::setUp()
 {
     connect(driverWorker(), &DriverWorker::readLogResult, this, &LogManager::processLogBuffer,
             Qt::QueuedConnection);
+
+    connect(dnsClientManager(), &DnsClientManager::hostNameAdded, this,
+            &LogManager::updateConnHost);
 }
 
 void LogManager::tearDown()
 {
+    dnsClientManager()->disconnect(this);
     driverWorker()->disconnect(this);
 }
 
@@ -138,6 +142,12 @@ void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success, quint32 er
 
     logBuffer->reset();
     addFreeBuffer(logBuffer);
+}
+
+void LogManager::updateConnHost(const ProcessIpKey &key, const QString &name)
+{
+    statConnManager()->updateConnHost(key, name);
+    pendingConnManager()->updateConnHost(key, name);
 }
 
 void LogManager::processLogEntries(LogBuffer *logBuffer)
@@ -197,8 +207,7 @@ bool LogManager::processLogEntryConn(LogBuffer *logBuffer)
     logBuffer->readEntryConn(&connEntry);
 
     connEntry.setConnTime(currentUnixTime());
-    connEntry.setRemoteHost(dnsClientManager()->hostName(
-            connEntry.pid(), connEntry.remoteIp(), connEntry.isIPv6()));
+    connEntry.setRemoteHost(dnsClientManager()->hostName(connEntry.remoteIpKey()));
 
     if (connEntry.isAskPending()) {
         pendingConnManager()->logConn(connEntry, /*urgent=*/true);

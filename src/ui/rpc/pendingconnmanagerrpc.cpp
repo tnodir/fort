@@ -56,6 +56,10 @@ bool PendingConnManagerRpc::processServerCommand(
         emit pendingConnManager->connCleared();
         return true;
     }
+    case Control::Rpc_PendingConnManager_connHostsChanged: {
+        emit pendingConnManager->connHostsChanged();
+        return true;
+    }
     default: {
         r.ok = processPendingConnManagerRpcResult(pendingConnManager, p);
         r.isSendResult = true;
@@ -72,4 +76,6 @@ void PendingConnManagerRpc::setupServerSignals(RpcManager *rpcManager)
             [=] { rpcManager->invokeOnClients(Control::Rpc_PendingConnManager_connChanged); });
     connect(pendingConnManager, &PendingConnManager::connCleared, rpcManager,
             [=] { rpcManager->invokeOnClients(Control::Rpc_PendingConnManager_connCleared); });
+    connect(pendingConnManager, &PendingConnManager::connHostsChanged, rpcManager,
+            [=] { rpcManager->invokeOnClients(Control::Rpc_PendingConnManager_connHostsChanged); });
 }

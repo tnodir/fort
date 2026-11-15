@@ -1,6 +1,7 @@
 #include "dnsetwlistener.h"
 
 #include <QLoggingCategory>
+#include <QOperatingSystemVersion>
 #include <QThread>
 #include <QtEndian>
 
@@ -11,6 +12,11 @@
 #include <evntrace.h>
 #include <tdh.h>
 #include <windns.h>
+
+// Declared for Windows 8+ only
+#ifndef EVENT_TRACE_USE_MS_FLUSH_TIMER
+#    define EVENT_TRACE_USE_MS_FLUSH_TIMER 0x00000010
+#endif
 
 namespace {
 
@@ -37,10 +43,16 @@ SessionProperties makeSessionProperties()
     sp.props.Wnode.BufferSize = sizeof(SessionProperties);
     sp.props.Wnode.Flags = WNODE_FLAG_TRACED_GUID;
     sp.props.Wnode.ClientContext = 1; // QueryPerformanceCounter
-    // Deliver the events soon: the programs connect right after the answer
     sp.props.LogFileMode = EVENT_TRACE_REAL_TIME_MODE;
-    sp.props.FlushTimer = 1; // seconds
     sp.props.LoggerNameOffset = offsetof(SessionProperties, name);
+
+    // Deliver the events soon: the programs connect right after the answer
+    if (QOperatingSystemVersion::current() >= QOperatingSystemVersion::Windows8) {
+        sp.props.LogFileMode |= EVENT_TRACE_USE_MS_FLUSH_TIMER;
+        sp.props.FlushTimer = 100; // milliseconds
+    } else {
+        sp.props.FlushTimer = 1; // seconds
+    }
 
     return sp;
 }

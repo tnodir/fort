@@ -9,6 +9,8 @@
 class LogBuffer;
 class LogEntry;
 
+struct ProcessIpKey;
+
 class LogManager : public QObject, public IocService
 {
     Q_OBJECT
@@ -29,6 +31,9 @@ signals:
 
 private slots:
     void processLogBuffer(LogBuffer *logBuffer, bool success, quint32 errorCode);
+
+    // The DNS Client's answer came after the connections' logging
+    void updateConnHost(const ProcessIpKey &key, const QString &name);
 
 private:
     void setErrorMessage(const QString &errorMessage);

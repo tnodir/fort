@@ -8,7 +8,9 @@
 #include <sqlite/sqliteutilbase.h>
 
 #include <util/classhelpers.h>
+#include <util/expiringhash.h>
 #include <util/ioc/iocservice.h>
+#include <util/net/processipkey.h>
 #include <util/triggertimer.h>
 #include <util/worker/workermanager.h>
 
@@ -34,6 +36,10 @@ public:
 
     virtual bool logConn(const LogEntryConn &entry, bool urgent = false);
 
+    /* Names the process's connections to the address, logged without a name before the DNS
+     * Client's answer */
+    void updateConnHost(const ProcessIpKey &key, const QString &name);
+
     virtual void deleteConn(qint64 connIdTo = 0);
     virtual void deleteConns(const QVector<qint64> &connIds);
 
@@ -43,6 +49,7 @@ signals:
     void connChanged();
     void connCleared();
     void connIdsShifted(); // the later connections' ids, after deleting by ids
+    void connHostsChanged(); // the logged connections' host names
 
     void logConnFinished(int count, qint64 newConnId);
     void deleteConnFinished(qint64 connIdTo);
@@ -50,6 +57,9 @@ signals:
 private:
     void onLogConnFinished(int count, qint64 newConnId);
     void onDeleteConnFinished(qint64 connIdTo);
+
+    void waitConnHost(const LogEntryConn &entry);
+    void resetHostWaitsConnIds();
 
 protected:
     void emitConnChanged();
@@ -87,8 +97,13 @@ private:
 
     int m_connInc = 999999999; // to trigger on first check
 
+    qint64 m_lastConnId = 0; // the newest logged connection's id
+
     SqliteDbPtr m_sqliteDb;
     SqliteDbPtr m_roSqliteDb;
+
+    // The connections logged without a name: after the id
+    ExpiringHash<ProcessIpKey, qint64> m_hostWaits;
 
     TriggerTimer m_connChangedTimer;
 };

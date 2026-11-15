@@ -17,6 +17,7 @@
 #include "shiftconnidsjob.h"
 #include "statconnworker.h"
 #include "statsql.h"
+#include "updateconnhostsjob.h"
 
 using namespace Fort;
 
@@ -25,6 +26,9 @@ namespace {
 const QLoggingCategory LC("statConn");
 
 inline constexpr int DATABASE_USER_VERSION = 12;
+
+// The DNS Client's answers' events come later than their connections' log
+inline constexpr qint64 hostWaitMsecs = 5 * 1000;
 
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
@@ -51,6 +55,7 @@ StatConnManager::StatConnManager(const QString &filePath, QObject *parent, quint
     m_roSqliteDb((openFlags == 0 || (openFlags & SqliteDb::OpenReadWrite) != 0)
                     ? SqliteDbPtr::create(filePath, SqliteDb::OpenDefaultReadOnly)
                     : m_sqliteDb),
+    m_hostWaits(hostWaitMsecs),
     m_connChangedTimer(500)
 {
     connect(&m_connChangedTimer, &QTimer::timeout, this, &StatConnManager::connChanged);
@@ -89,7 +94,26 @@ bool StatConnManager::logConn(const LogEntryConn &entry, bool urgent)
 
     enqueueJob(WorkerJobPtr(createLogConnJob(entry)));
 
+    if (entry.remoteHost().isEmpty()) {
+        waitConnHost(entry);
+    }
+
     return true;
+}
+
+void StatConnManager::updateConnHost(const ProcessIpKey &key, const QString &name)
+{
+    const std::optional<qint64> connIdMin = m_hostWaits.take(key);
+    if (!connIdMin)
+        return;
+
+    const UpdateConnHostsJob::ConnHost connHost = {
+        .connIdMin = *connIdMin,
+        .key = key,
+        .name = name,
+    };
+
+    enqueueJob(WorkerJobPtr(new UpdateConnHostsJob(connHost)));
 }
 
 void StatConnManager::deleteConn(qint64 connIdTo)
@@ -117,8 +141,10 @@ void StatConnManager::getConnIdRange(SqliteDb *db, qint64 &connIdMin, qint64 &co
     connIdMax = vars.value(1).toLongLong();
 }
 
-void StatConnManager::onLogConnFinished(int count, qint64 /*newConnId*/)
+void StatConnManager::onLogConnFinished(int count, qint64 newConnId)
 {
+    m_lastConnId = newConnId;
+
     emitConnChanged();
 
     if (m_keepCount <= 0)
@@ -145,10 +171,29 @@ void StatConnManager::onDeleteConnFinished(qint64 connIdTo)
 {
     /* The conn_id-s are reused after the table's clearing */
     if (connIdTo <= 0) {
+        resetHostWaitsConnIds();
+
         emit connCleared();
     }
 
     emitConnChanged();
+}
+
+void StatConnManager::waitConnHost(const LogEntryConn &entry)
+{
+    const ProcessIpKey key = entry.remoteIpKey();
+
+    // The older connections' wait goes on
+    const qint64 connIdMin = m_hostWaits.value(key, m_lastConnId);
+
+    m_hostWaits.insert(key, connIdMin, QDeadlineTimer(hostWaitMsecs));
+}
+
+void StatConnManager::resetHostWaitsConnIds()
+{
+    m_lastConnId = 0;
+
+    m_hostWaits.forEachValue([](qint64 &connIdMin) { connIdMin = 0; });
 }
 
 WorkerObject *StatConnManager::createWorker()
@@ -163,6 +208,7 @@ void StatConnManager::setupWorker()
     connect(this, &StatConnManager::logConnFinished, this, &StatConnManager::onLogConnFinished);
     connect(this, &StatConnManager::deleteConnFinished, this,
             &StatConnManager::onDeleteConnFinished);
+    connect(this, &StatConnManager::connIdsShifted, this, &StatConnManager::resetHostWaitsConnIds);
 }
 
 void StatConnManager::setupConfManager()
