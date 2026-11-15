@@ -12,6 +12,7 @@
 #include <conf/confzonemanager.h>
 #include <conf/firewallconf.h>
 #include <conf/inioptions.h>
+#include <conf/zone.h>
 #include <dns/dnsclientmanager.h>
 #include <driver/drivermanager.h>
 #include <fortglobal.h>
@@ -19,6 +20,7 @@
 #include <task/taskinfozonedownloader.h>
 #include <task/taskmanager.h>
 #include <util/conf/confbuffer.h>
+#include <util/fileutil.h>
 #include <util/net/hostrange.h>
 #include <util/regkey.h>
 
@@ -173,6 +175,8 @@ void DnsManager::start(const QStringList &servers)
     closeForwarder();
 
     setStatus(openForwarder(servers));
+
+    startNrptCheck();
 }
 
 void DnsManager::stop()
@@ -214,8 +218,6 @@ DnsForwarderStatus DnsManager::openForwarder(const QStringList &servers)
         return { .status = DnsForwarderStatus::StatusNrptError };
     }
 
-    m_nrptCheck.start();
-
     return { .status = DnsForwarderStatus::StatusChecking };
 }
 
@@ -231,6 +233,15 @@ void DnsManager::closeForwarder()
     closeResolver();
 
     unloadHosts();
+}
+
+// Its query would wait in the paused listener
+void DnsManager::startNrptCheck()
+{
+    if (m_status.status != DnsForwarderStatus::StatusChecking || m_listener.isPaused())
+        return;
+
+    m_nrptCheck.start();
 }
 
 void DnsManager::onNrptChecked(bool received)
@@ -269,6 +280,7 @@ void DnsManager::closeResolver()
 void DnsManager::loadHosts()
 {
     if (m_hostZonesDb.open()) {
+        openZonesSync();
         syncZones();
     }
 
@@ -279,21 +291,164 @@ void DnsManager::loadHosts()
 
 void DnsManager::unloadHosts()
 {
+    closeZonesSync();
+
     m_hostZonesDb.close();
     m_hostFiltersMatcher = {};
 }
 
+void DnsManager::openZonesSync()
+{
+    m_hostZonesSync = std::make_unique<HostZonesSync>();
+
+    // The result reported before the sync's close isn't received
+    connect(m_hostZonesSync.get(), &HostZonesSync::synced, m_hostZonesSync.get(),
+            [this](bool changed) { onZonesSynced(changed); });
+}
+
+// Waits for the Zone's transaction being written
+void DnsManager::closeZonesSync()
+{
+    m_hostZonesSync.reset();
+
+    m_zonesSyncing = false;
+    m_zonesSyncPending = false;
+    m_zonesChanged = false;
+
+    m_filledZonesMask = 0;
+}
+
 void DnsManager::loadZones()
 {
-    if (m_hostZonesDb.isOpened() && syncZones()) {
+    if (m_hostZonesDb.isOpened()) {
+        syncZones();
+    }
+}
+
+// The worker writes the names by its own connection: the matches meanwhile read the last commit
+void DnsManager::syncZones()
+{
+    const HostZonesSource source = taskManager()->taskInfoZoneDownloader()->hostZonesSource();
+
+    updateFilledZonesMask(source);
+
+    // A Zone's disabling at once, its old names till the commit of the new ones
+    updateZonesEnabledMask(source.enabledMask);
+
+    // The names of a Zone filled anew aren't matched till the commit: its queries wait for it
+    const bool fillZones = hasZonesToFill(source);
+
+    if (m_zonesSyncing) {
+        m_zonesSyncPending = true;
+
+        if (fillZones) {
+            setQueriesPaused(true);
+        }
+        return;
+    }
+
+    m_zonesSyncing = true;
+
+    setQueriesPaused(fillZones);
+
+    m_hostZonesSync->sync(m_hostZonesDb.filePath(), source);
+}
+
+void DnsManager::onZonesSynced(bool changed)
+{
+    m_zonesSyncing = false;
+    m_zonesChanged |= changed;
+
+    m_hostZonesDb.loadPatterns();
+
+    if (m_zonesSyncPending) {
+        m_zonesSyncPending = false;
+        syncZones();
+        return;
+    }
+
+    finishZonesSync();
+}
+
+void DnsManager::finishZonesSync()
+{
+    const HostZonesSource source = taskManager()->taskInfoZoneDownloader()->hostZonesSource();
+
+    updateFilledZonesMask(source);
+    updateZonesEnabledMask(source.enabledMask);
+
+    setQueriesPaused(false);
+
+    if (m_zonesChanged) {
+        m_zonesChanged = false;
         flushResolverCache();
     }
 }
 
-// Returns whether the Zones' names to match changed
-bool DnsManager::syncZones()
+// Only the enabled Zones having their own names in the DB are matched
+void DnsManager::updateZonesEnabledMask(quint32 enabledMask)
 {
-    return taskManager()->taskInfoZoneDownloader()->syncHostZones(m_hostZonesDb);
+    enabledMask &= m_filledZonesMask;
+
+    if (m_hostZonesDb.enabledMask() == enabledMask)
+        return;
+
+    m_hostZonesDb.setEnabledMask(enabledMask);
+    m_zonesChanged = true;
+}
+
+// A Zone's names are its own since they are of its cache file, also its old names after its update
+// till the new ones are written: the DB's names of a Zone removed meanwhile (e.g. while the
+// forwarder was stopped), whose id is reused, aren't matched
+void DnsManager::updateFilledZonesMask(const HostZonesSource &source)
+{
+    if (!m_hostZonesDb.isOpened())
+        return;
+
+    m_filledZonesMask |= actualZonesMask(source);
+    m_filledZonesMask &= source.hostsMask & m_hostZonesDb.zonesMask();
+}
+
+// The Zones having the names of their cache files in the DB
+quint32 DnsManager::actualZonesMask(const HostZonesSource &source) const
+{
+    quint32 zonesMask = 0;
+
+    for (const HostZoneSource &zone : source.zones) {
+        if (m_hostZonesDb.isZoneActual(zone.zoneId, zone.binChecksum, zone.subdomains)) {
+            zonesMask |= Zone::zoneBit(zone.zoneId);
+        }
+    }
+
+    return zonesMask;
+}
+
+// The enabled Zones having their cache files, but no names in the DB
+bool DnsManager::hasZonesToFill(const HostZonesSource &source) const
+{
+    const quint32 unfilledMask = source.enabledMask & ~m_filledZonesMask;
+    if (unfilledMask == 0)
+        return false;
+
+    return std::any_of(source.zones.begin(), source.zones.end(), [&](const HostZoneSource &zone) {
+        return (unfilledMask & Zone::zoneBit(zone.zoneId)) != 0
+                && FileUtil::fileExists(zone.cacheFilePath);
+    });
+}
+
+// The queries wait in the listener's sockets
+void DnsManager::setQueriesPaused(bool paused)
+{
+    if (m_listener.isPaused() == paused)
+        return;
+
+    m_listener.setPaused(paused);
+
+    if (paused) {
+        m_nrptCheck.abort();
+    } else {
+        startNrptCheck();
+    }
 }
 
 void DnsManager::loadHostRefs()
@@ -331,9 +486,15 @@ bool DnsManager::updateHostRefs()
 
 void DnsManager::removeZone(quint8 zoneId)
 {
-    if (m_hostZonesDb.isOpened() && m_hostZonesDb.removeZone(zoneId)) {
-        flushResolverCache();
-    }
+    if (!m_hostZonesDb.isOpened())
+        return;
+
+    const quint32 zoneBit = Zone::zoneBit(zoneId);
+
+    m_filledZonesMask &= ~zoneBit;
+    m_hostZonesDb.setEnabledMask(m_hostZonesDb.enabledMask() & ~zoneBit);
+
+    m_zonesTimer.startTrigger();
 }
 
 // The cached answers bypass the forwarder: their names are resolved anew, adding the IPs

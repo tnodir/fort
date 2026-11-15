@@ -1,9 +1,11 @@
 #pragma once
 
+#include <QCryptographicHash>
 #include <QEventLoop>
 #include <QNetworkDatagram>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QTemporaryDir>
 #include <QUdpSocket>
 #include <QtEndian>
 
@@ -22,6 +24,11 @@
 #include <dns/dnsquery.h>
 #include <dns/dnsserverstest.h>
 #include <dns/dnsutil.h>
+#include <dns/hostzonesdb.h>
+#include <dns/hostzonessync.h>
+#include <task/taskinfozonedownloader.h>
+#include <util/fileutil.h>
+#include <util/net/hostrange.h>
 #include <util/net/netformatutil.h>
 
 class DnsTest : public Test
@@ -525,6 +532,74 @@ TEST_F(DnsTest, listenerPaused)
     loop.exec();
 
     ASSERT_EQ(queries.join(' '), QByteArray("u1 u2 t1 u3"));
+}
+
+TEST_F(DnsTest, hostZonesSync)
+{
+    Q_INIT_RESOURCE(dns_migrations);
+
+    QTemporaryDir dir;
+    ASSERT_TRUE(dir.isValid());
+
+    const QString dbPath = dir.filePath("hosts.db");
+
+    HostZonesDb db(dbPath);
+    ASSERT_TRUE(db.open());
+
+    HostRange hostRange;
+    ASSERT_TRUE(hostRange.fromText("cdn.example.net"));
+    ASSERT_TRUE(db.setZone(2, "c2", hostRange));
+
+    const QByteArray binData = qCompress(QByteArray("www.example.com"));
+    const QString checksum = QString::fromLatin1(
+            QCryptographicHash::hash(binData, QCryptographicHash::Sha256).toHex());
+
+    const QString cachePath = dir.filePath("1.bin");
+    ASSERT_TRUE(FileUtil::writeFileData(cachePath, binData));
+
+    const HostZonesSource source = {
+        .hostsMask = 0b111,
+        .enabledMask = 0b111,
+        .zones = {
+                { .zoneId = 1, .binChecksum = checksum, .cacheFilePath = cachePath },
+                // The cache file being rewritten keeps the old names
+                { .zoneId = 2, .binChecksum = "c2-new", .cacheFilePath = cachePath },
+                { .zoneId = 3, .binChecksum = "c3", .cacheFilePath = dir.filePath("3.bin") },
+        },
+    };
+
+    HostZonesSync sync;
+
+    QEventLoop loop;
+    bool changed = false;
+    QObject::connect(&sync, &HostZonesSync::synced, &loop, [&](bool v) {
+        changed = v;
+        loop.quit();
+    });
+
+    sync.sync(dbPath, source);
+    loop.exec();
+
+    ASSERT_TRUE(changed);
+    ASSERT_EQ(db.zonesMask(), 0b011);
+    ASSERT_TRUE(FileUtil::fileExists(cachePath));
+
+    // The commit of another connection
+    db.setEnabledMask(0b111);
+    ASSERT_EQ(db.match(u"www.example.com", 0b111), 0b001);
+    ASSERT_EQ(db.match(u"cdn.example.net", 0b111), 0b010);
+
+    sync.sync(dbPath, source);
+    loop.exec();
+
+    ASSERT_FALSE(changed);
+
+    // The removed Zones
+    sync.sync(dbPath, { .hostsMask = 0b001 });
+    loop.exec();
+
+    ASSERT_TRUE(changed);
+    ASSERT_EQ(db.zonesMask(), 0b001);
 }
 
 TEST_F(DnsTest, resolverOwnQuery)

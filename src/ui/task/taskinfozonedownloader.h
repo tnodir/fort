@@ -2,6 +2,8 @@
 #define TASKINFOZONEDOWNLOADER_H
 
 #include <QByteArray>
+#include <QList>
+#include <QString>
 
 #include "taskinfo.h"
 
@@ -17,6 +19,25 @@ struct ZonesData
     quint32 dataSize = 0;
 
     QList<QByteArray> zonesData;
+};
+
+// A Hosts Zone's cache file to load its names from
+struct HostZoneSource
+{
+    bool subdomains = false;
+
+    int zoneId = 0;
+
+    QString binChecksum;
+    QString cacheFilePath;
+};
+
+struct HostZonesSource
+{
+    quint32 hostsMask = 0; // all Hosts Zones
+    quint32 enabledMask = 0;
+
+    QList<HostZoneSource> zones;
 };
 
 class TaskInfoZoneDownloader : public TaskInfo
@@ -37,9 +58,12 @@ public:
     // Loads the Zones' addresses from the cache
     ZonesData loadZonesData() const;
 
-    // Loads the changed Hosts Zones' names from the cache into the DB.
-    // Returns whether the names to match changed.
-    bool syncHostZones(HostZonesDb &db) const;
+    // The Hosts Zones' cache files to load their names from
+    HostZonesSource hostZonesSource() const;
+
+    // Loads the changed Hosts Zone's names from its cache file into the DB: called by a worker
+    // thread. Returns whether the names to match changed.
+    static bool syncHostZone(HostZonesDb &db, const HostZoneSource &zone, HostRange &hostRange);
 
 public slots:
     bool processResult(bool success) override;
@@ -58,8 +82,6 @@ private:
     void setupNextTaskWorker();
     void setupTaskWorkerByZone(TaskZoneDownloader *worker, int zoneIndex) const;
     void addSubResult(TaskZoneDownloader *worker, bool success);
-
-    static bool syncHostZone(HostZonesDb &db, TaskZoneDownloader &worker, HostRange &hostRange);
 
     static void addZoneData(ZonesData &zones, const TaskZoneDownloader &worker);
 

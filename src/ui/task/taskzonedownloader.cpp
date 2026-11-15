@@ -186,13 +186,14 @@ bool TaskZoneDownloader::loadAddresses()
     return true;
 }
 
-bool TaskZoneDownloader::loadHosts(HostRange &hostRange)
+bool TaskZoneDownloader::loadHosts(const QString &cacheFilePath, const QString &binChecksum,
+        bool subdomains, HostRange &hostRange)
 {
     QByteArray data;
-    if (!loadCacheData(data))
+    if (!readCacheFile(cacheFilePath, binChecksum, data))
         return false;
 
-    hostRange.setWithSubdomains(hostSubdomains());
+    hostRange.setWithSubdomains(subdomains);
 
     return hostRange.fromText(QString::fromUtf8(data));
 }
@@ -229,12 +230,21 @@ bool TaskZoneDownloader::loadCacheData(QByteArray &data)
     if (!hasCache())
         return false;
 
-    const auto binData = FileUtil::readFileData(cacheFileBinPath());
-
-    if (binChecksum() != binDataChecksum(binData)) {
+    if (!readCacheFile(cacheFileBinPath(), binChecksum(), data)) {
         FileUtil::removeFile(cacheFileBinPath());
         return false;
     }
+
+    return true;
+}
+
+bool TaskZoneDownloader::readCacheFile(
+        const QString &filePath, const QString &binChecksum, QByteArray &data)
+{
+    const auto binData = FileUtil::readFileData(filePath);
+
+    if (binChecksum != binDataChecksum(binData))
+        return false;
 
     data = qUncompress(binData);
 

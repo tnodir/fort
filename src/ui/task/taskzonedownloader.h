@@ -74,7 +74,10 @@ public:
     bool storeAddresses(const StringViewList &list);
     bool storeHosts(const StringViewList &list);
     bool loadAddresses();
-    bool loadHosts(HostRange &hostRange);
+
+    // Of a Hosts Zone's cache file of the checksum: called by a worker thread too
+    static bool loadHosts(const QString &cacheFilePath, const QString &binChecksum, bool subdomains,
+            HostRange &hostRange);
 
     bool saveAddressesAsText(const QString &filePath);
 
@@ -95,6 +98,10 @@ private:
 
     bool storeCacheData(const QByteArray &data);
     bool loadCacheData(QByteArray &data);
+
+    // The file of another checksum is kept
+    static bool readCacheFile(
+            const QString &filePath, const QString &binChecksum, QByteArray &data);
 
     bool cacheDataToText(const QByteArray &data, QString &text) const;
     bool isCacheOutdated(const QString &newChecksum) const;

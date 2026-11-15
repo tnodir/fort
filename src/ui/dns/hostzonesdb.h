@@ -55,6 +55,9 @@ public:
     // By the name's HostRange::normalizedKey()
     quint32 matchKey(const QByteArray &key, quint32 zonesMask) const;
 
+    // Reloads the patterns written by another connection
+    void loadPatterns();
+
 private:
     struct HostMasks
     {
@@ -78,8 +81,6 @@ private:
     bool deleteZones(quint32 zonesMask);
     bool insertZone(int zoneId, const HostRange &hostRange);
     bool saveZone(int zoneId, const QString &checksum, bool subdomains);
-
-    void loadPatterns();
 
     HostMasks selectHost(QByteArrayView key) const;
 

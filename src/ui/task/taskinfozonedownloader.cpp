@@ -75,15 +75,11 @@ ZonesData TaskInfoZoneDownloader::loadZonesData() const
     return zones;
 }
 
-bool TaskInfoZoneDownloader::syncHostZones(HostZonesDb &db) const
+HostZonesSource TaskInfoZoneDownloader::hostZonesSource() const
 {
-    bool changed = false;
-
-    quint32 hostsMask = 0;
-    quint32 enabledMask = 0;
+    HostZonesSource source;
 
     TaskZoneDownloader worker;
-    HostRange hostRange;
 
     const int rowCount = zoneListModel()->rowCount();
     for (int zoneIndex = 0; zoneIndex < rowCount; ++zoneIndex) {
@@ -92,27 +88,41 @@ bool TaskInfoZoneDownloader::syncHostZones(HostZonesDb &db) const
         if (!worker.isHosts())
             continue;
 
-        insertZoneId(hostsMask, worker.zoneId());
+        insertZoneId(source.hostsMask, worker.zoneId());
 
         if (worker.zoneEnabled()) {
-            insertZoneId(enabledMask, worker.zoneId());
+            insertZoneId(source.enabledMask, worker.zoneId());
         }
 
-        if (syncHostZone(db, worker, hostRange)) {
-            changed = true;
-        }
+        source.zones.append({
+                .subdomains = worker.hostSubdomains(),
+                .zoneId = worker.zoneId(),
+                .binChecksum = worker.binChecksum(),
+                .cacheFilePath = worker.cacheFileBinPath(),
+        });
     }
 
-    if (db.retainZones(hostsMask)) {
-        changed = true;
+    return source;
+}
+
+bool TaskInfoZoneDownloader::syncHostZone(
+        HostZonesDb &db, const HostZoneSource &zone, HostRange &hostRange)
+{
+    const int zoneId = zone.zoneId;
+
+    if (db.isZoneActual(zoneId, zone.binChecksum, zone.subdomains))
+        return false;
+
+    if (!FileUtil::fileExists(zone.cacheFilePath)) {
+        return db.removeZone(zoneId);
     }
 
-    if (db.enabledMask() != enabledMask) {
-        db.setEnabledMask(enabledMask);
-        changed = true;
-    }
+    // The file being rewritten by the Zone's download: its update syncs it again
+    if (!TaskZoneDownloader::loadHosts(
+                zone.cacheFilePath, zone.binChecksum, zone.subdomains, hostRange))
+        return false;
 
-    return changed;
+    return db.setZone(zoneId, zone.binChecksum, hostRange);
 }
 
 bool TaskInfoZoneDownloader::saveZoneAsText(const QString &filePath, int zoneIndex) const
@@ -239,21 +249,6 @@ void TaskInfoZoneDownloader::addSubResult(TaskZoneDownloader *worker, bool succe
     }
 
     addZoneData(m_zones, *worker);
-}
-
-bool TaskInfoZoneDownloader::syncHostZone(
-        HostZonesDb &db, TaskZoneDownloader &worker, HostRange &hostRange)
-{
-    const int zoneId = worker.zoneId();
-
-    if (db.isZoneActual(zoneId, worker.binChecksum(), worker.hostSubdomains()))
-        return false;
-
-    if (!worker.loadHosts(hostRange)) {
-        return db.removeZone(zoneId);
-    }
-
-    return db.setZone(zoneId, worker.binChecksum(), hostRange);
 }
 
 void TaskInfoZoneDownloader::addZoneData(ZonesData &zones, const TaskZoneDownloader &worker)

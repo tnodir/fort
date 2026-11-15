@@ -814,7 +814,8 @@ TEST_F(NetUtilTest, taskHostsFile)
     ASSERT_TRUE(hosts.storeHosts(list));
 
     HostRange hostRange;
-    ASSERT_TRUE(hosts.loadHosts(hostRange));
+    ASSERT_TRUE(TaskZoneDownloader::loadHosts(
+            hosts.cacheFileBinPath(), hosts.binChecksum(), hosts.hostSubdomains(), hostRange));
 
     HostZonesDb db(":memory:");
     ASSERT_TRUE(db.open());
