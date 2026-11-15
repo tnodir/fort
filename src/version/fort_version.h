@@ -17,6 +17,6 @@
 #define APP_UPDATES_API_URL	"https://api.github.com/repos/tnodir/fort/releases/latest"
 #define APP_WIKI_URL		"https://github.com/tnodir/fort/wiki"
 
-#define DRIVER_VERSION		65
+#define DRIVER_VERSION		66
 
 #endif // FORT_VERSION_H

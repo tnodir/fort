@@ -112,6 +112,7 @@ FORT_CONF_META_CONN connFilterInput(PCFORT_CONF_META_CONN conn)
         .ip_proto = conn->ip_proto,
         .local_port = conn->local_port,
         .remote_port = conn->remote_port,
+        .host_zones_mask = conn->host_zones_mask,
         .local_ip = conn->local_ip,
         .remote_ip = conn->remote_ip,
     };
