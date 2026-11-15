@@ -27,8 +27,10 @@
 #include <util/conf/confruleswalker.h>
 #include <util/conf/confspeedlimitswalker.h>
 #include <util/conf/confutil.h>
+#include <util/conf/hostrefs.h>
 #include <util/fileutil.h>
 #include <util/net/hostmatcher.h>
+#include <util/net/hostrange.h>
 #include <util/net/iprange.h>
 #include <util/net/netformatutil.h>
 #include <util/net/netutil.h>
@@ -1256,9 +1258,12 @@ private:
     ruleid_arr_t m_ruleSetIds;
 };
 
-QByteArray writeTestRules(const TestRulesWalker &testRules)
+QByteArray writeTestRules(const TestRulesWalker &testRules, HostRefs *hostRefs = nullptr)
 {
     ConfBuffer confBuf;
+    if (hostRefs) {
+        confBuf.setHostRefs(hostRefs);
+    }
 
     if (!confBuf.writeRules(testRules)) {
         qCritical() << "Error:" << confBuf.errorMessage();
@@ -2204,6 +2209,174 @@ TEST_F(ConfUtilTest, defaultPresetRules)
     }
 }
 
+TEST_F(ConfUtilTest, ruleFilterHost)
+{
+    const QList<Rule> rules = {
+        { .blocked = true, .ruleId = 1, .ruleText = "host(example.com, *.Example.org)" },
+        { .blocked = true, .ruleId = 2, .ruleText = "!host(*.example.org, example.com.):tcp(443)" },
+        { .blocked = true, .ruleId = 3, .ruleText = "host(example.net)" },
+    };
+
+    const TestRulesWalker testRules(rules, /*maxRuleId=*/3);
+
+    HostRefs hostRefs;
+
+    const QByteArray buf = writeTestRules(testRules, &hostRefs);
+
+    // The same names have one id
+    ASSERT_TRUE(hostRefs.isChanged());
+    ASSERT_EQ(hostRefs.hostIds().size(), 2);
+
+    static quint32 orgHostId;
+    orgHostId = hostRefs.hostIds().value("*.example.org,example.com");
+    const quint32 netHostId = hostRefs.hostIds().value("example.net");
+
+    ASSERT_NE(orgHostId, 0);
+    ASSERT_NE(netHostId, 0);
+    ASSERT_NE(orgHostId, netHostId);
+
+    // 1.1.1.1 is added to the host() filter of example.com and *.example.org
+    const auto hostIpIncluded = [](PCFORT_CONF_META_CONN conn, UINT32 host_id) -> BOOL {
+        return host_id == orgHostId && conn->remote_ip.v4 == NetFormatUtil::textToIp4("1.1.1.1");
+    };
+
+    const auto connBlocked = [&](const QByteArray &rulesBuf, quint16 ruleId, const char *ip) {
+        FORT_CONF_META_CONN conn = {
+            .ip_proto = IpProto_TCP,
+            .remote_port = 443,
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4(ip) },
+            .host_ip_included = hostIpIncluded,
+        };
+
+        return DriverCommon::confRulesConnBlocked(rulesBuf.data(), &conn, ruleId);
+    };
+
+    ASSERT_TRUE(connBlocked(buf, /*ruleId=*/1, "1.1.1.1"));
+    ASSERT_FALSE(connBlocked(buf, /*ruleId=*/1, "2.2.2.2"));
+
+    ASSERT_FALSE(connBlocked(buf, /*ruleId=*/2, "1.1.1.1"));
+    ASSERT_TRUE(connBlocked(buf, /*ruleId=*/2, "2.2.2.2"));
+
+    ASSERT_FALSE(connBlocked(buf, /*ruleId=*/3, "1.1.1.1"));
+
+    // Without the IPs
+    {
+        FORT_CONF_META_CONN conn = {
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4("1.1.1.1") },
+        };
+
+        ASSERT_FALSE(DriverCommon::confRulesConnBlocked(buf.data(), &conn, /*ruleId=*/1));
+    }
+}
+
+TEST_F(ConfUtilTest, ruleFilterHostIds)
+{
+    QList<Rule> rules = {
+        { .ruleId = 1, .ruleText = "host(example.com)" },
+        { .ruleId = 2, .ruleText = "host(example.net)" },
+    };
+
+    HostRefs hostRefs;
+
+    writeTestRules(TestRulesWalker(rules, /*maxRuleId=*/2), &hostRefs);
+
+    const quint32 comHostId = hostRefs.hostIds().value("example.com");
+    const quint32 netHostId = hostRefs.hostIds().value("example.net");
+
+    // The removed names' id isn't reused
+    {
+        hostRefs.resetChanged();
+
+        rules[1].ruleText = "host(example.io)";
+        writeTestRules(TestRulesWalker(rules, /*maxRuleId=*/2), &hostRefs);
+
+        ASSERT_TRUE(hostRefs.isChanged());
+        ASSERT_EQ(hostRefs.hostIds().size(), 2);
+        ASSERT_FALSE(hostRefs.hostIds().contains("example.net"));
+        ASSERT_EQ(hostRefs.hostIds().value("example.com"), comHostId);
+
+        const quint32 ioHostId = hostRefs.hostIds().value("example.io");
+        ASSERT_NE(ioHostId, 0);
+        ASSERT_NE(ioHostId, comHostId);
+        ASSERT_NE(ioHostId, netHostId);
+    }
+
+    // The same names keep their ids
+    {
+        hostRefs.resetChanged();
+
+        writeTestRules(TestRulesWalker(rules, /*maxRuleId=*/2), &hostRefs);
+
+        ASSERT_FALSE(hostRefs.isChanged());
+    }
+}
+
+TEST_F(ConfUtilTest, hostRefsMatcher)
+{
+    const QList<Rule> rules = {
+        { .ruleId = 1, .ruleText = "host(example.com, *.example.org)" },
+        { .ruleId = 2, .ruleText = "host(example.net)" },
+    };
+
+    HostRefs hostRefs;
+
+    writeTestRules(TestRulesWalker(rules, /*maxRuleId=*/2), &hostRefs);
+
+    const quint32 orgHostId = hostRefs.hostIds().value("*.example.org,example.com");
+    const quint32 netHostId = hostRefs.hostIds().value("example.net");
+    ASSERT_NE(orgHostId, 0);
+    ASSERT_NE(netHostId, 0);
+
+    const HostMatcher hostMatcher = hostRefs.hostMatcher();
+
+    ASSERT_EQ(hostMatcher.match(u"example.com").hostIds, QVector<quint32>({ orgHostId }));
+    ASSERT_EQ(hostMatcher.match(u"www.example.org").hostIds, QVector<quint32>({ orgHostId }));
+    ASSERT_EQ(hostMatcher.match(u"example.net").hostIds, QVector<quint32>({ netHostId }));
+    ASSERT_TRUE(hostMatcher.match(u"example.org").isEmpty());
+}
+
+TEST_F(ConfUtilTest, hostRefsSources)
+{
+    HostRange rulesRange;
+    ASSERT_TRUE(rulesRange.fromText("example.com"));
+
+    HostRange appsRange;
+    ASSERT_TRUE(appsRange.fromText("example.org"));
+
+    HostRefs hostRefs;
+
+    hostRefs.beginSource(HostRefs::SourceConf);
+    const quint32 appsHostId = hostRefs.hostId(appsRange);
+    hostRefs.endSource(/*ok=*/true);
+
+    // The Rules keep the Programs' ids
+    hostRefs.beginSource(HostRefs::SourceRules);
+    const quint32 rulesHostId = hostRefs.hostId(rulesRange);
+    hostRefs.endSource(/*ok=*/true);
+
+    ASSERT_EQ(hostRefs.hostIds().size(), 2);
+    ASSERT_EQ(hostRefs.hostIds().value("example.org"), appsHostId);
+    ASSERT_EQ(hostRefs.hostIds().value("example.com"), rulesHostId);
+
+    // The failed write of the Rules keeps their ids: the driver keeps the Rules
+    hostRefs.beginSource(HostRefs::SourceRules);
+    hostRefs.endSource(/*ok=*/false);
+
+    hostRefs.beginSource(HostRefs::SourceConf);
+    hostRefs.hostId(appsRange);
+    hostRefs.endSource(/*ok=*/true);
+
+    ASSERT_EQ(hostRefs.hostIds().size(), 2);
+    ASSERT_EQ(hostRefs.hostIds().value("example.com"), rulesHostId);
+
+    // The Programs without host() filters
+    hostRefs.beginSource(HostRefs::SourceConf);
+    hostRefs.endSource(/*ok=*/true);
+
+    ASSERT_EQ(hostRefs.hostIds().size(), 1);
+    ASSERT_EQ(hostRefs.hostIds().value("example.com"), rulesHostId);
+}
+
 TEST_F(ConfUtilTest, hostIpsWrite)
 {
     const ip4_arr_t ip4Array = {
@@ -2234,4 +2407,26 @@ TEST_F(ConfUtilTest, hostIpsWrite)
     confBuf.writeHostIps({}, 300, ip4Array, {});
     ASSERT_FALSE(fort_conf_host_ips_valid(
             PCFORT_CONF_HOST_IPS(confBuf.buffer().constData()), confBuf.buffer().size()));
+
+    // With the host() filters' ids only
+    {
+        const longs_arr_t hostIds = { 3, 5 };
+
+        confBuf.writeHostIps({ .hostIds = hostIds }, 300, ip4Array, {});
+
+        const QByteArray &hostsBuf = confBuf.buffer();
+        const auto hostsIps = PCFORT_CONF_HOST_IPS(hostsBuf.constData());
+
+        ASSERT_TRUE(fort_conf_host_ips_valid(hostsIps, hostsBuf.size()));
+
+        ASSERT_EQ(hostsIps->host_n, 2);
+        ASSERT_EQ(hostsIps->ip4_n, 2);
+        ASSERT_EQ(hostsIps->zones_mask, 0);
+
+        const char *hostsData = hostsIps->data;
+        ASSERT_EQ(memcmp(hostsData, hostIds.constData(), 2 * sizeof(quint32)), 0);
+        ASSERT_EQ(
+                memcmp(hostsData + 2 * sizeof(quint32), ip4Array.constData(), 2 * sizeof(quint32)),
+                0);
+    }
 }
