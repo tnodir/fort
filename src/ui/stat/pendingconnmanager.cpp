@@ -170,11 +170,6 @@ int PendingConnManager::appConnsCount(const App &app) const
             .toInt();
 }
 
-qint64 PendingConnManager::lastConnId() const
-{
-    return DbQuery(roSqliteDb()).sql(StatSql::sqlSelectMaxConnId).execute().toLongLong();
-}
-
 qint64 PendingConnManager::expireTime()
 {
     return DateUtil::getUnixTime() - Fort::conf().askToConnectSeconds();

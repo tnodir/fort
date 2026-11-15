@@ -43,6 +43,9 @@ public:
     virtual void deleteConn(qint64 connIdTo = 0);
     virtual void deleteConns(const QVector<qint64> &connIds);
 
+    /* The newest logged connection's id, 0 - none */
+    qint64 lastConnId() const;
+
     static void getConnIdRange(SqliteDb *db, qint64 &rowIdMin, qint64 &rowIdMax);
 
 signals:
@@ -53,13 +56,16 @@ signals:
 
     void logConnFinished(int count, qint64 newConnId);
     void deleteConnFinished(qint64 connIdTo);
+    void shiftConnIdsFinished(qint64 connIdFrom);
 
 private:
     void onLogConnFinished(int count, qint64 newConnId);
     void onDeleteConnFinished(qint64 connIdTo);
+    void onShiftConnIdsFinished(qint64 connIdFrom);
 
     void waitConnHost(const LogEntryConn &entry);
     void resetHostWaitsConnIds();
+    void shiftHostWaitsConnIds(qint64 connIdFrom);
 
 protected:
     void emitConnChanged();

@@ -19,12 +19,17 @@ void ShiftConnIdsJob::deleteConns()
 
 void ShiftConnIdsJob::emitFinished()
 {
-    emit manager()->connIdsShifted();
+    emit manager()->shiftConnIdsFinished(connIdFrom());
+}
+
+qint64 ShiftConnIdsJob::connIdFrom() const
+{
+    return *std::min_element(connIds().cbegin(), connIds().cend());
 }
 
 void ShiftConnIdsJob::shiftConnIds()
 {
-    const qint64 connIdFrom = *std::min_element(connIds().cbegin(), connIds().cend());
+    const qint64 connIdFrom = this->connIdFrom();
 
     /* In ascending order each new id is already free: deleted or shifted */
     qint64 newConnId = connIdFrom;

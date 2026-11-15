@@ -16,6 +16,8 @@ protected:
     void emitFinished() override;
 
 private:
+    qint64 connIdFrom() const;
+
     void shiftConnIds();
 
     QVector<qint64> selectConnIdsAfter(qint64 connId);

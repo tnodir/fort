@@ -73,7 +73,9 @@ void StatConnManager::setUp()
 
     checkClearConnOnStartup();
 
-    setupDb();
+    if (setupDb()) {
+        m_lastConnId = lastConnId();
+    }
 }
 
 void StatConnManager::tearDown()
@@ -133,6 +135,11 @@ void StatConnManager::deleteConns(const QVector<qint64> &connIds)
     enqueueJob(WorkerJobPtr(createDeleteConnIdsJob(connIds)));
 }
 
+qint64 StatConnManager::lastConnId() const
+{
+    return DbQuery(roSqliteDb()).sql(StatSql::sqlSelectMaxConnId).execute().toLongLong();
+}
+
 void StatConnManager::getConnIdRange(SqliteDb *db, qint64 &connIdMin, qint64 &connIdMax)
 {
     const auto vars = DbQuery(db).sql(StatSql::sqlSelectMinMaxConnId).execute(2).toList();
@@ -143,7 +150,9 @@ void StatConnManager::getConnIdRange(SqliteDb *db, qint64 &connIdMin, qint64 &co
 
 void StatConnManager::onLogConnFinished(int count, qint64 newConnId)
 {
-    m_lastConnId = newConnId;
+    if (newConnId > 0) {
+        m_lastConnId = newConnId;
+    }
 
     emitConnChanged();
 
@@ -179,6 +188,15 @@ void StatConnManager::onDeleteConnFinished(qint64 connIdTo)
     emitConnChanged();
 }
 
+void StatConnManager::onShiftConnIdsFinished(qint64 connIdFrom)
+{
+    m_lastConnId = lastConnId();
+
+    shiftHostWaitsConnIds(connIdFrom);
+
+    emit connIdsShifted();
+}
+
 void StatConnManager::waitConnHost(const LogEntryConn &entry)
 {
     const ProcessIpKey key = entry.remoteIpKey();
@@ -196,6 +214,14 @@ void StatConnManager::resetHostWaitsConnIds()
     m_hostWaits.forEachValue([](qint64 &connIdMin) { connIdMin = 0; });
 }
 
+void StatConnManager::shiftHostWaitsConnIds(qint64 connIdFrom)
+{
+    // The ids after the first deleted one are shifted down
+    const qint64 connIdMax = connIdFrom - 1;
+
+    m_hostWaits.forEachValue([=](qint64 &connIdMin) { connIdMin = qMin(connIdMin, connIdMax); });
+}
+
 WorkerObject *StatConnManager::createWorker()
 {
     return new StatConnWorker(this);
@@ -208,7 +234,8 @@ void StatConnManager::setupWorker()
     connect(this, &StatConnManager::logConnFinished, this, &StatConnManager::onLogConnFinished);
     connect(this, &StatConnManager::deleteConnFinished, this,
             &StatConnManager::onDeleteConnFinished);
-    connect(this, &StatConnManager::connIdsShifted, this, &StatConnManager::resetHostWaitsConnIds);
+    connect(this, &StatConnManager::shiftConnIdsFinished, this,
+            &StatConnManager::onShiftConnIdsFinished);
 }
 
 void StatConnManager::setupConfManager()

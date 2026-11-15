@@ -45,9 +45,6 @@ public:
     /* The program's not timed out pending connections, as AppPendingConnSearchModel lists them */
     int appConnsCount(const App &app) const;
 
-    /* The newest logged connection's id, 0 - none */
-    qint64 lastConnId() const;
-
     /* The connections logged till the time are timed out */
     static qint64 expireTime();
 
