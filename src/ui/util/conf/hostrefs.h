@@ -25,6 +25,9 @@ public:
     // The ids by the names' key
     const QHash<QString, quint32> &hostIds() const { return m_hostIds; }
 
+    // The ids grow: a new one is greater
+    quint32 lastHostId() const { return m_lastHostId; }
+
     // The Zones referenced by any source
     quint32 zonesMask() const { return m_zonesMask; }
 
