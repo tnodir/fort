@@ -281,6 +281,8 @@ QString ZoneListModel::zoneSourceTitleById(const int sourceId)
         QT_TR_NOOP("FireHOL Level-1"),
         QT_TR_NOOP("TAS-IX Addresses"),
         QT_TR_NOOP("NetAPI Honeypot Attackers"),
+        QT_TR_NOOP("OISD Big"),
+        QT_TR_NOOP("StevenBlack Hosts"),
     };
 
     if (sourceId >= 0 && sourceId < std::ssize(sourceTitles)) {

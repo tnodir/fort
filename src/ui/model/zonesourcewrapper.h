@@ -17,6 +17,8 @@ public:
         SourceFireHol_Level1,
         SourceTasix,
         SourceNetApiAttackers,
+        SourceOisdBig,
+        SourceStevenBlackHosts,
     };
 
     explicit ZoneSourceWrapper(const QVariant &var = {});

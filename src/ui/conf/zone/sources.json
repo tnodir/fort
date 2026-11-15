@@ -62,5 +62,21 @@
         "zoneType": "gen",
         "url": "https://netapi.com/api2/?method=compromised&dataset_type=ip",
         "formData": ""
+    },
+    {
+        "code": "oisd_big",
+        "title": "OISD Big",
+        "zoneType": "host",
+        "subdomains": true,
+        "url": "https://big.oisd.nl/domainswild2",
+        "formData": ""
+    },
+    {
+        "code": "stevenblack_hosts",
+        "title": "StevenBlack Hosts",
+        "zoneType": "hosts_file",
+        "subdomains": true,
+        "url": "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
+        "formData": ""
     }
 ]
