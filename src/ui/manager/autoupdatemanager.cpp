@@ -134,7 +134,7 @@ bool AutoUpdateManager::startDownload()
     return true;
 }
 
-void AutoUpdateManager::setupDownloader()
+bool AutoUpdateManager::setupDownloader()
 {
     TaskDownloader::setupDownloader();
 
@@ -145,6 +145,8 @@ void AutoUpdateManager::setupDownloader()
 
     setIsDownloaded(false);
     setIsDownloading(true);
+
+    return true;
 }
 
 void AutoUpdateManager::downloadFinished(const QByteArray &data, bool success)

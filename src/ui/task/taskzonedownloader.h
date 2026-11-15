@@ -3,6 +3,8 @@
 
 #include <QDateTime>
 
+QT_FORWARD_DECLARE_CLASS(QThread)
+
 #include <util/util_types.h>
 
 #include "taskdownloader.h"
@@ -15,6 +17,7 @@ class TaskZoneDownloader : public TaskDownloader
 
 public:
     explicit TaskZoneDownloader(QObject *parent = nullptr);
+    ~TaskZoneDownloader() override;
 
     bool zoneEnabled() const { return m_zoneEnabled; }
     void setZoneEnabled(bool v) { m_zoneEnabled = v; }
@@ -84,8 +87,11 @@ public:
     QString cacheFileBasePath() const;
     QString cacheFileBinPath() const;
 
+public slots:
+    void finish(bool success = false) override;
+
 protected:
-    void setupDownloader() override;
+    bool setupDownloader() override;
 
 protected slots:
     void downloadFinished(const QByteArray &data, bool success) override;
@@ -93,6 +99,9 @@ protected slots:
 private:
     void loadTextInline();
     void loadLocalFile();
+
+    void startStore(const QByteArray &data);
+    void waitStore();
 
     bool storeChangedAddresses(const QByteArray &data);
 
@@ -113,11 +122,15 @@ private:
     bool m_isHosts : 1 = false;
     bool m_hostSubdomains : 1 = false;
 
+    bool m_stored = false; // written by the store's thread
+
     int m_emptyNetMask = 32;
 
     int m_zoneId = 0;
 
     int m_addressCount = 0;
+
+    QThread *m_storeThread = nullptr;
 
     QString m_zoneName;
 

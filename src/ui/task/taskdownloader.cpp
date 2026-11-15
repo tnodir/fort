@@ -4,18 +4,20 @@
 
 TaskDownloader::TaskDownloader(QObject *parent) : TaskWorker(parent) { }
 
-void TaskDownloader::setupDownloader()
+bool TaskDownloader::setupDownloader()
 {
     m_downloadTryCount = 0;
+
+    return true;
 }
 
 void TaskDownloader::run()
 {
     createDownloader();
 
-    setupDownloader();
-
-    startDownloader();
+    if (setupDownloader()) {
+        startDownloader();
+    }
 }
 
 void TaskDownloader::finish(bool success)

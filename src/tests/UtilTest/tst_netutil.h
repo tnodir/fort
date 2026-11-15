@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QCoreApplication>
 #include <QFileInfo>
 #include <QSignalSpy>
 
@@ -786,6 +787,45 @@ TEST_F(NetUtilTest, taskHosts)
     ASSERT_EQ(savedText, QString("*.example.org\nwww.example.com\n"));
 
     ASSERT_FALSE(hosts.storeHosts({ u"bad..name" }));
+}
+
+TEST_F(NetUtilTest, taskStoreThread)
+{
+    TaskZoneDownloader hosts;
+    hosts.setZoneId(4);
+    hosts.setIsHosts(true);
+    hosts.setPattern(R"(^\s*(\S+))");
+    hosts.setCachePath("./zones/");
+    hosts.setTextInline("www.example.com\n");
+
+    QSignalSpy spy(&hosts, &TaskWorker::finished);
+
+    // Stored by a thread of its own
+    hosts.run();
+    ASSERT_TRUE(spy.isEmpty());
+
+    ASSERT_TRUE(spy.wait());
+    ASSERT_EQ(spy.size(), 1);
+    ASSERT_TRUE(spy.at(0).at(0).toBool());
+    ASSERT_EQ(hosts.addressCount(), 1);
+
+    // The abort waits for the store and reports the cache file's new checksum
+    hosts.setTextInline("www.example.org\n");
+
+    hosts.run();
+    hosts.finish();
+
+    ASSERT_EQ(spy.size(), 2);
+    ASSERT_TRUE(spy.at(1).at(0).toBool());
+
+    HostRange hostRange;
+    ASSERT_TRUE(TaskZoneDownloader::loadHosts(
+            hosts.cacheFileBinPath(), hosts.binChecksum(), /*subdomains=*/false, hostRange));
+    ASSERT_EQ(hostRange.toText(), QString("www.example.org\n"));
+
+    // The thread's end posted before the abort finishes nothing
+    QCoreApplication::sendPostedEvents(&hosts);
+    ASSERT_EQ(spy.size(), 2);
 }
 
 TEST_F(NetUtilTest, taskHostsFile)

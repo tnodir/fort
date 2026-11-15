@@ -17,7 +17,8 @@ public:
 protected:
     void setDownloadMaxTryCount(quint16 v) { m_downloadMaxTryCount = v; }
 
-    virtual void setupDownloader();
+    // Returns whether to download: else the data is loaded without the downloader
+    virtual bool setupDownloader();
 
 public slots:
     void run() override;

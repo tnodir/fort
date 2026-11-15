@@ -85,7 +85,7 @@ protected:
 
     void setupRestart();
 
-    void setupDownloader() override;
+    bool setupDownloader() override;
 
 protected slots:
     void downloadFinished(const QByteArray &data, bool success) override;

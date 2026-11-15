@@ -2,6 +2,7 @@
 
 #include <QCryptographicHash>
 #include <QLoggingCategory>
+#include <QThread>
 #include <QUrl>
 
 #include <util/conf/confbuffer.h>
@@ -33,29 +34,72 @@ QByteArray emptyZoneData()
 
 TaskZoneDownloader::TaskZoneDownloader(QObject *parent) : TaskDownloader(parent) { }
 
-void TaskZoneDownloader::setupDownloader()
+TaskZoneDownloader::~TaskZoneDownloader()
+{
+    if (m_storeThread) {
+        waitStore();
+    }
+}
+
+void TaskZoneDownloader::finish(bool success)
+{
+    // On abort too: the cache file may be written already
+    if (m_storeThread) {
+        waitStore();
+        success = m_stored;
+    }
+
+    TaskDownloader::finish(success);
+}
+
+bool TaskZoneDownloader::setupDownloader()
 {
     TaskDownloader::setupDownloader();
 
     // Load addresses from text inline
     if (url().isEmpty()) {
         loadTextInline();
-        return;
+        return false;
     }
 
     // Load addresses from local file
     if (QUrl::fromUserInput(url()).isLocalFile()) {
         loadLocalFile();
-        return;
+        return false;
     }
 
     downloader()->setUrl(url());
     downloader()->setData(formData().toUtf8());
+
+    return true;
 }
 
 void TaskZoneDownloader::downloadFinished(const QByteArray &data, bool success)
 {
-    finish(success && storeChangedAddresses(data));
+    if (!success) {
+        finish();
+        return;
+    }
+
+    startStore(data);
+}
+
+// A large list is parsed for seconds: the service's thread answers the DNS queries meanwhile
+void TaskZoneDownloader::startStore(const QByteArray &data)
+{
+    m_storeThread = QThread::create([=, this] { m_stored = storeChangedAddresses(data); });
+
+    connect(m_storeThread, &QThread::finished, this, [this] { finish(); });
+
+    m_storeThread->start();
+}
+
+void TaskZoneDownloader::waitStore()
+{
+    m_storeThread->wait();
+
+    delete m_storeThread;
+    m_storeThread = nullptr;
 }
 
 bool TaskZoneDownloader::storeChangedAddresses(const QByteArray &data)

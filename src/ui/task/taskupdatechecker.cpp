@@ -51,11 +51,13 @@ QString TaskUpdateChecker::releaseText() const
             + m_releaseNotes;
 }
 
-void TaskUpdateChecker::setupDownloader()
+bool TaskUpdateChecker::setupDownloader()
 {
     TaskDownloader::setupDownloader();
 
     downloader()->setUrl(APP_UPDATES_API_URL);
+
+    return true;
 }
 
 void TaskUpdateChecker::downloadFinished(const QByteArray &data, bool success)
