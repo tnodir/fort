@@ -23,6 +23,7 @@ struct DnsServerResult
         StatusLoop, // the server is the forwarder itself
         StatusInvalid, // the server's text isn't valid
         StatusSkipped, // not asked: another server is invalid
+        StatusMixed, // not asked: the plain and DNS over HTTPS servers are mixed
     };
 
     // The server's answer is NOERROR
@@ -81,6 +82,9 @@ protected:
 
 private:
     bool openResolvers();
+
+    // The results of the servers not asked: the invalid ones' and the others' status
+    void setNotAskedResults(DnsServerResult::Status status, const QList<int> &invalidIndexes = {});
 
     void processAnswer(int index, const DnsAnswer &answer);
     void processTimeout();

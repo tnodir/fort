@@ -40,8 +40,10 @@ private:
     void updateTestResults();
 
     static QString serverResultText(const DnsServerResult &result);
+    static QString serverStatusText(const DnsServerResult &result);
     static QString serverAnsweredText(const DnsServerResult &result);
     static QString adaptersServersText();
+    static QString mixedServersText();
 
 private:
     QLabel *m_labelNoService = nullptr;
