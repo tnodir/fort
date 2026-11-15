@@ -1,6 +1,11 @@
 #include "optbasepage.h"
 
+#include <QLabel>
+
+#include <form/controls/controlutil.h>
 #include <form/opt/optionscontroller.h>
+#include <fortglobal.h>
+#include <fortsettings.h>
 
 OptBasePage::OptBasePage(OptionsController *ctrl, QWidget *parent) : QFrame(parent), m_ctrl(ctrl)
 {
@@ -20,6 +25,20 @@ IniOptions &OptBasePage::ini() const
 IniUser &OptBasePage::iniUser() const
 {
     return ctrl()->iniUserToEdit();
+}
+
+QWidget *OptBasePage::createNoServiceWarning(QLabel *label)
+{
+    auto iconWarning = ControlUtil::createIconLabel(":/icons/error.png", QSize(16, 16));
+
+    label->setWordWrap(true);
+
+    auto layout = ControlUtil::createHLayoutByWidgets({ iconWarning, label }, /*margin=*/0);
+
+    auto w = ControlUtil::wrapToWidget(layout);
+    w->setVisible(!Fort::settings()->hasService());
+
+    return w;
 }
 
 void OptBasePage::setupController()

@@ -41,6 +41,10 @@ public slots:
     virtual void onPageActivated() { }
     virtual void onResetToDefault() { }
 
+protected:
+    // The warning by the label, shown only without the Service
+    static QWidget *createNoServiceWarning(QLabel *label);
+
 protected slots:
     virtual void onAboutToSave() { }
     virtual void onEditResetted() { }
