@@ -1,9 +1,13 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
+    dns \
     ui \
     ui_bin
 
+dns.file = dns/FortFirewallDns.pro
+
+ui.depends = dns
 ui.file = ui/FortFirewallUI.pro
 
 ui_bin.depends = ui
