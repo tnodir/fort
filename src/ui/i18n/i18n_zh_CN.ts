@@ -77,6 +77,18 @@
         <source>Filter Local Network</source>
         <translation>过滤本地网络</translation>
     </message>
+    <message>
+        <source>Filter Fort Firewall&apos;s Service</source>
+        <translation>过滤 Fort Firewall 服务</translation>
+    </message>
+    <message>
+        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
+        <translation>像其他应用程序的连接一样过滤服务的连接，否则允许它们</translation>
+    </message>
+    <message>
+        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
+        <translation>没有服务时，Fort Firewall 会像其他应用程序一样被过滤</translation>
+    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -417,6 +429,18 @@
         <translation>已允许的互联网地址</translation>
     </message>
     <message>
+        <source>Fort Firewall&apos;s Service</source>
+        <translation>Fort Firewall 服务</translation>
+    </message>
+    <message>
+        <source>Block DNS port</source>
+        <translation>阻止 DNS 端口</translation>
+    </message>
+    <message>
+        <source>Block DNS over TLS port</source>
+        <translation>阻止 DNS over TLS 端口</translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
@@ -603,6 +627,93 @@
     </message>
 </context>
 <context>
+    <name>DnsPage</name>
+    <message>
+        <source>Without the Service, the DNS options don&apos;t work</source>
+        <translation>没有服务时，DNS 选项不起作用</translation>
+    </message>
+    <message>
+        <source>DNS Forwarder</source>
+        <translation>DNS 转发器</translation>
+    </message>
+    <message>
+        <source>Filter DNS</source>
+        <translation>过滤 DNS</translation>
+    </message>
+    <message>
+        <source>Resolve the host names by the upstream DNS servers, adding the addresses of the Hosts Zones used by the IP Addresses, Programs and Rules and of the host() filters before answering; the names of the Block Zones are not found (only with the Service). The programs resolving the names by DNS over HTTPS themselves, e.g. the browsers with Secure DNS, bypass the DNS Forwarder</source>
+        <translation>通过上游 DNS 服务器解析主机名，并在应答前添加 IP 地址、应用程序和规则所用的主机区域以及 host() 过滤器的地址；阻止区域的名称将找不到（仅限有服务时）。自行通过 DNS over HTTPS 解析名称的应用程序（例如启用了安全 DNS 的浏览器）会绕过 DNS 转发器</translation>
+    </message>
+    <message>
+        <source>Block Zones:</source>
+        <translation>阻止区域：</translation>
+    </message>
+    <message>
+        <source>The names of the enabled Hosts Zones are not found, even if a host() filter lists them</source>
+        <translation>已启用的主机区域的名称将找不到，即使 host() 过滤器列出了它们</translation>
+    </message>
+    <message>
+        <source>Block ports 53 and 853 for other programs</source>
+        <translation>为其他应用程序阻止端口 53 和 853</translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>在过滤 DNS 时，阻止除 Fort Firewall 服务以外的应用程序连接 DNS 服务器的端口 53 以及 DNS over TLS 和 DNS over QUIC 服务器的端口 853：它们无法通过这些协议绕过 DNS 转发器解析名称。DNS over HTTPS 使用网站的端口 443，该端口不会被阻止</translation>
+    </message>
+    <message>
+        <source>Upstream DNS servers:</source>
+        <translation>上游 DNS 服务器：</translation>
+    </message>
+    <message>
+        <source>Adapters&apos; DNS servers</source>
+        <translation>适配器的 DNS 服务器</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>自定义</translation>
+    </message>
+    <message>
+        <source>Test</source>
+        <translation>测试</translation>
+    </message>
+    <message>
+        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
+        <translation>向每个服务器查询“example.com”（仅限有服务时）</translation>
+    </message>
+    <message>
+        <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
+        <translation>每行一个服务器：地址，例如“1.1.1.1”，或带服务器地址的 DNS over HTTPS URL，例如“https://dns.example/dns-query?ip=192.0.2.1”</translation>
+    </message>
+    <message>
+        <source>Error: %1</source>
+        <translation>错误：%1</translation>
+    </message>
+    <message>
+        <source>Testing...</source>
+        <translation>正在测试...</translation>
+    </message>
+    <message>
+        <source>Timeout</source>
+        <translation>超时</translation>
+    </message>
+    <message>
+        <source>Loop: the server is the DNS Forwarder itself</source>
+        <translation>循环：该服务器就是 DNS 转发器本身</translation>
+    </message>
+    <message>
+        <source>Invalid server</source>
+        <translation>无效的服务器</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 毫秒</translation>
+    </message>
+    <message>
+        <source>Plain and DNS over HTTPS servers can&apos;t be mixed</source>
+        <translation>普通 DNS 服务器和 DNS over HTTPS 服务器不能混用</translation>
+    </message>
+</context>
+<context>
     <name>FilterEditDialog</name>
     <message>
         <source>Action:</source>
@@ -667,6 +778,26 @@
     <message>
         <source>Internet</source>
         <translation>互联网</translation>
+    </message>
+    <message>
+        <source>Host:</source>
+        <translation>主机：</translation>
+    </message>
+    <message>
+        <source>The name only</source>
+        <translation>仅名称</translation>
+    </message>
+    <message>
+        <source>Its subdomains</source>
+        <translation>其子域名</translation>
+    </message>
+    <message>
+        <source>The name and its subdomains</source>
+        <translation>名称及其子域名</translation>
+    </message>
+    <message>
+        <source>A mask in the name</source>
+        <translation>名称中的掩码</translation>
     </message>
     <message>
         <source>Remote IP:</source>
@@ -829,6 +960,14 @@
     <message>
         <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
         <translation>连接到本计算机的地址。地址 127.0.0.0/8 和 ::1 始终是回环地址。</translation>
+    </message>
+    <message>
+        <source>Fort Firewall&apos;s Service</source>
+        <translation>Fort Firewall 服务</translation>
+    </message>
+    <message>
+        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
+        <translation>Fort Firewall 服务的连接，例如其 DNS 转发器的连接。没有服务时，它会像其他应用程序的连接一样被过滤。</translation>
     </message>
     <message>
         <source>Network Profile:</source>
@@ -1473,6 +1612,24 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>HostRange</name>
+    <message>
+        <source>Bad host name</source>
+        <translation>主机名错误</translation>
+    </message>
+    <message>
+        <source>Too many host name masks</source>
+        <translation>主机名掩码过多</translation>
+    </message>
+</context>
+<context>
+    <name>HostZonesSelector</name>
+    <message>
+        <source>Select Hosts Zones</source>
+        <translation>选择主机区域</translation>
+    </message>
+</context>
+<context>
     <name>IfacePage</name>
     <message>
         <source>Global</source>
@@ -1809,6 +1966,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>IP Addresses</source>
         <translation>IP 地址</translation>
+    </message>
+    <message>
+        <source>DNS</source>
+        <translation>DNS</translation>
     </message>
     <message>
         <source>Statistics</source>
@@ -2394,6 +2555,10 @@ Make sure that you have a fresh backup.</source>
         <translation>连接数</translation>
     </message>
     <message>
+        <source>Service</source>
+        <translation>服务</translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>确定</translation>
     </message>
@@ -2844,6 +3009,10 @@ Save the changes?</source>
     <message>
         <source>Tray Menu</source>
         <translation>托盘菜单</translation>
+    </message>
+    <message>
+        <source>Usages</source>
+        <translation>使用位置</translation>
     </message>
     <message>
         <source>Inline Zones</source>
@@ -3917,6 +4086,21 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
+    <name>UsagesModel</name>
+    <message>
+        <source>IP Addresses</source>
+        <translation>IP 地址</translation>
+    </message>
+    <message>
+        <source>Programs</source>
+        <translation>应用程序</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>分组</translation>
+    </message>
+</context>
+<context>
     <name>ValueRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -3951,6 +4135,14 @@ Packet loss: %2</source>
 </context>
 <context>
     <name>ZoneEditDialog</name>
+    <message>
+        <source>General</source>
+        <translation>通用</translation>
+    </message>
+    <message>
+        <source>Usages</source>
+        <translation>使用位置</translation>
+    </message>
     <message>
         <source>Source:</source>
         <translation>来源：</translation>
@@ -4027,6 +4219,22 @@ Packet loss: %2</source>
         <translation>来自于本地文件中的地址</translation>
     </message>
     <message>
+        <source>Hosts from Inline Text</source>
+        <translation>来自于内联文本中的主机</translation>
+    </message>
+    <message>
+        <source>Hosts from Local File</source>
+        <translation>来自于本地文件中的主机</translation>
+    </message>
+    <message>
+        <source>Hosts with Subdomains from Local File</source>
+        <translation>来自于本地文件中的带子域名主机</translation>
+    </message>
+    <message>
+        <source>Hosts with Subdomains from Hosts File</source>
+        <translation>来自于 hosts 文件中的带子域名主机</translation>
+    </message>
+    <message>
         <source>WindowsSpyBlocker</source>
         <translation>WindowsSpyBlocker 地址</translation>
     </message>
@@ -4037,6 +4245,14 @@ Packet loss: %2</source>
     <message>
         <source>TAS-IX Addresses</source>
         <translation>TAS-IX 地址</translation>
+    </message>
+    <message>
+        <source>OISD Big</source>
+        <translation>OISD Big</translation>
+    </message>
+    <message>
+        <source>StevenBlack Hosts</source>
+        <translation>StevenBlack Hosts</translation>
     </message>
 </context>
 <context>

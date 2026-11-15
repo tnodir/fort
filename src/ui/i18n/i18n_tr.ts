@@ -77,6 +77,18 @@
         <source>Filter Local Network</source>
         <translation>Yerel Ağı Filtrele </translation>
     </message>
+    <message>
+        <source>Filter Fort Firewall&apos;s Service</source>
+        <translation>Fort Firewall Hizmetini Filtrele</translation>
+    </message>
+    <message>
+        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
+        <translation>Hizmetin bağlantılarını diğer programlarınkiler gibi filtrele, aksi halde bunlara izin ver</translation>
+    </message>
+    <message>
+        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
+        <translation>Hizmet olmadan Fort Firewall diğer programlar gibi filtrelenir</translation>
+    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -417,6 +429,18 @@
         <translation>İzin verilen İnternet adresi</translation>
     </message>
     <message>
+        <source>Fort Firewall&apos;s Service</source>
+        <translation>Fort Firewall Hizmeti</translation>
+    </message>
+    <message>
+        <source>Block DNS port</source>
+        <translation>DNS Portunu Engelle</translation>
+    </message>
+    <message>
+        <source>Block DNS over TLS port</source>
+        <translation>DNS over TLS Portunu Engelle</translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>Bilinmeyen</translation>
     </message>
@@ -603,6 +627,93 @@
     </message>
 </context>
 <context>
+    <name>DnsPage</name>
+    <message>
+        <source>Without the Service, the DNS options don&apos;t work</source>
+        <translation>Hizmet olmadan DNS seçenekleri çalışmaz</translation>
+    </message>
+    <message>
+        <source>DNS Forwarder</source>
+        <translation>DNS Yönlendirici</translation>
+    </message>
+    <message>
+        <source>Filter DNS</source>
+        <translation>DNS&apos;i Filtrele</translation>
+    </message>
+    <message>
+        <source>Resolve the host names by the upstream DNS servers, adding the addresses of the Hosts Zones used by the IP Addresses, Programs and Rules and of the host() filters before answering; the names of the Block Zones are not found (only with the Service). The programs resolving the names by DNS over HTTPS themselves, e.g. the browsers with Secure DNS, bypass the DNS Forwarder</source>
+        <translation>Host adlarını üst DNS sunucuları üzerinden çözümle; yanıtlamadan önce IP Adresleri, Programlar ve Kurallar tarafından kullanılan Host Bölgelerinin ve host() filtrelerinin adreslerini ekle; Engelleme Bölgelerinin adları bulunmaz (yalnızca Hizmet ile). Adları DNS over HTTPS ile kendileri çözümleyen programlar, ör. Güvenli DNS kullanan tarayıcılar, DNS Yönlendiriciyi atlar</translation>
+    </message>
+    <message>
+        <source>Block Zones:</source>
+        <translation>Engelleme Bölgeleri:</translation>
+    </message>
+    <message>
+        <source>The names of the enabled Hosts Zones are not found, even if a host() filter lists them</source>
+        <translation>Etkin Host Bölgelerinin adları, bir host() filtresi listelese bile bulunmaz</translation>
+    </message>
+    <message>
+        <source>Block ports 53 and 853 for other programs</source>
+        <translation>Diğer Programlar için 53 ve 853 Portlarını Engelle</translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>DNS filtrelenirken Fort Firewall Hizmeti dışındaki programların DNS sunucularının 53 portuna ve DNS over TLS ve over QUIC sunucularının 853 portuna bağlantılarını engelle: bu programlar adları bu protokollerle DNS Yönlendiriciyi atlayarak çözümleyemez. DNS over HTTPS, web sitelerinin engellenmeyen 443 portuna gider</translation>
+    </message>
+    <message>
+        <source>Upstream DNS servers:</source>
+        <translation>Üst DNS Sunucuları:</translation>
+    </message>
+    <message>
+        <source>Adapters&apos; DNS servers</source>
+        <translation>Bağdaştırıcıların DNS Sunucuları</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Özel</translation>
+    </message>
+    <message>
+        <source>Test</source>
+        <translation>Test Et</translation>
+    </message>
+    <message>
+        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
+        <translation>Her sunucuya &quot;example.com&quot; sor (yalnızca Hizmet ile)</translation>
+    </message>
+    <message>
+        <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
+        <translation>Satır başına bir sunucu: adresler, ör. &quot;1.1.1.1&quot; veya sunucunun adresini içeren DNS over HTTPS URL&apos;leri, ör. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</translation>
+    </message>
+    <message>
+        <source>Error: %1</source>
+        <translation>Hata: %1</translation>
+    </message>
+    <message>
+        <source>Testing...</source>
+        <translation>Test Ediliyor...</translation>
+    </message>
+    <message>
+        <source>Timeout</source>
+        <translation>Zaman Aşımı</translation>
+    </message>
+    <message>
+        <source>Loop: the server is the DNS Forwarder itself</source>
+        <translation>Döngü: sunucu DNS Yönlendiricinin kendisi</translation>
+    </message>
+    <message>
+        <source>Invalid server</source>
+        <translation>Geçersiz Sunucu</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>Plain and DNS over HTTPS servers can&apos;t be mixed</source>
+        <translation>Düz DNS ve DNS over HTTPS sunucuları karıştırılamaz</translation>
+    </message>
+</context>
+<context>
     <name>FilterEditDialog</name>
     <message>
         <source>Action:</source>
@@ -667,6 +778,26 @@
     <message>
         <source>Internet</source>
         <translation>İnternet</translation>
+    </message>
+    <message>
+        <source>Host:</source>
+        <translation>Host:</translation>
+    </message>
+    <message>
+        <source>The name only</source>
+        <translation>Yalnızca ad</translation>
+    </message>
+    <message>
+        <source>Its subdomains</source>
+        <translation>Alt alan adları</translation>
+    </message>
+    <message>
+        <source>The name and its subdomains</source>
+        <translation>Ad ve alt alan adları</translation>
+    </message>
+    <message>
+        <source>A mask in the name</source>
+        <translation>Addaki bir maske</translation>
     </message>
     <message>
         <source>Remote IP:</source>
@@ -829,6 +960,14 @@
     <message>
         <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
         <translation>Bu bilgisayarın bir adresine bağlantı. 127.0.0.0/8 ve ::1 adresleri her zaman geri döngüdür.</translation>
+    </message>
+    <message>
+        <source>Fort Firewall&apos;s Service</source>
+        <translation>Fort Firewall Hizmeti</translation>
+    </message>
+    <message>
+        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
+        <translation>Fort Firewall Hizmetinin bağlantısı, ör. DNS Yönlendiricisinin. Hizmet olmadan diğer programlarınkiler gibi filtrelenir.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
@@ -1473,6 +1612,24 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
     </message>
 </context>
 <context>
+    <name>HostRange</name>
+    <message>
+        <source>Bad host name</source>
+        <translation>Geçersiz Host Adı</translation>
+    </message>
+    <message>
+        <source>Too many host name masks</source>
+        <translation>Çok Fazla Host Adı Maskesi</translation>
+    </message>
+</context>
+<context>
+    <name>HostZonesSelector</name>
+    <message>
+        <source>Select Hosts Zones</source>
+        <translation>Host Bölgelerini Seç</translation>
+    </message>
+</context>
+<context>
     <name>IfacePage</name>
     <message>
         <source>Global</source>
@@ -1809,6 +1966,10 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
     <message>
         <source>IP Addresses</source>
         <translation>IP Adresleri</translation>
+    </message>
+    <message>
+        <source>DNS</source>
+        <translation>DNS</translation>
     </message>
     <message>
         <source>Statistics</source>
@@ -2394,6 +2555,10 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Bağlantılar</translation>
     </message>
     <message>
+        <source>Service</source>
+        <translation>Hizmet</translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>Tamam</translation>
     </message>
@@ -2843,6 +3008,10 @@ Değişiklikler kaydedilsin mi?</translation>
     <message>
         <source>Tray Menu</source>
         <translation>Tepsi Menüsü</translation>
+    </message>
+    <message>
+        <source>Usages</source>
+        <translation>Kullanımlar</translation>
     </message>
     <message>
         <source>Inline Zones</source>
@@ -3916,6 +4085,21 @@ Paket kaybı: %2</translation>
     </message>
 </context>
 <context>
+    <name>UsagesModel</name>
+    <message>
+        <source>IP Addresses</source>
+        <translation>IP Adresleri</translation>
+    </message>
+    <message>
+        <source>Programs</source>
+        <translation>Programlar</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Gruplar</translation>
+    </message>
+</context>
+<context>
     <name>ValueRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -3950,6 +4134,14 @@ Paket kaybı: %2</translation>
 </context>
 <context>
     <name>ZoneEditDialog</name>
+    <message>
+        <source>General</source>
+        <translation>Genel</translation>
+    </message>
+    <message>
+        <source>Usages</source>
+        <translation>Kullanımlar</translation>
+    </message>
     <message>
         <source>Source:</source>
         <translation>Kaynak:</translation>
@@ -4026,6 +4218,22 @@ Paket kaybı: %2</translation>
         <translation>Yerel Dosyadaki Adresler</translation>
     </message>
     <message>
+        <source>Hosts from Inline Text</source>
+        <translation>Metin İçi Hostlar</translation>
+    </message>
+    <message>
+        <source>Hosts from Local File</source>
+        <translation>Yerel Dosyadaki Hostlar</translation>
+    </message>
+    <message>
+        <source>Hosts with Subdomains from Local File</source>
+        <translation>Yerel Dosyadaki Alt Alan Adlı Hostlar</translation>
+    </message>
+    <message>
+        <source>Hosts with Subdomains from Hosts File</source>
+        <translation>Hosts Dosyasındaki Alt Alan Adlı Hostlar</translation>
+    </message>
+    <message>
         <source>WindowsSpyBlocker</source>
         <translation>WindowsSpyBlocker</translation>
     </message>
@@ -4036,6 +4244,14 @@ Paket kaybı: %2</translation>
     <message>
         <source>TAS-IX Addresses</source>
         <translation>TAS-IX Adresleri</translation>
+    </message>
+    <message>
+        <source>OISD Big</source>
+        <translation>OISD Big</translation>
+    </message>
+    <message>
+        <source>StevenBlack Hosts</source>
+        <translation>StevenBlack Hosts</translation>
     </message>
 </context>
 <context>

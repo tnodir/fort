@@ -77,6 +77,18 @@
         <source>Filter Local Network</source>
         <translation>Filtriraj lokalno omrežje</translation>
     </message>
+    <message>
+        <source>Filter Fort Firewall&apos;s Service</source>
+        <translation>Filtriraj Storitev Fort Firewall</translation>
+    </message>
+    <message>
+        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
+        <translation>Filtriraj povezave Storitve kot povezave drugih programov, sicer jih dovoli</translation>
+    </message>
+    <message>
+        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
+        <translation>Brez Storitve je Fort Firewall filtriran kot drugi programi</translation>
+    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -417,6 +429,18 @@
         <translation>Dovoljen internetni naslov</translation>
     </message>
     <message>
+        <source>Fort Firewall&apos;s Service</source>
+        <translation>Storitev Fort Firewall</translation>
+    </message>
+    <message>
+        <source>Block DNS port</source>
+        <translation>Blokiraj vrata DNS</translation>
+    </message>
+    <message>
+        <source>Block DNS over TLS port</source>
+        <translation>Blokiraj vrata DNS over TLS</translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>Neznano</translation>
     </message>
@@ -603,6 +627,93 @@
     </message>
 </context>
 <context>
+    <name>DnsPage</name>
+    <message>
+        <source>Without the Service, the DNS options don&apos;t work</source>
+        <translation>Brez Storitve možnosti DNS ne delujejo</translation>
+    </message>
+    <message>
+        <source>DNS Forwarder</source>
+        <translation>Posredovalnik DNS</translation>
+    </message>
+    <message>
+        <source>Filter DNS</source>
+        <translation>Filtriraj DNS</translation>
+    </message>
+    <message>
+        <source>Resolve the host names by the upstream DNS servers, adding the addresses of the Hosts Zones used by the IP Addresses, Programs and Rules and of the host() filters before answering; the names of the Block Zones are not found (only with the Service). The programs resolving the names by DNS over HTTPS themselves, e.g. the browsers with Secure DNS, bypass the DNS Forwarder</source>
+        <translation>Razreši imena gostiteljev prek nadrejenih strežnikov DNS in pred odgovorom dodaj naslove Področij gostiteljev, ki jih uporabljajo Naslovi IP, Programi in Pravila, ter filtrov host(); imena Področij blokiranja niso najdena (samo s Storitvijo). Programi, ki imena sami razrešujejo prek DNS over HTTPS, npr. brskalniki z varnim DNS, obidejo Posredovalnik DNS</translation>
+    </message>
+    <message>
+        <source>Block Zones:</source>
+        <translation>Področja blokiranja:</translation>
+    </message>
+    <message>
+        <source>The names of the enabled Hosts Zones are not found, even if a host() filter lists them</source>
+        <translation>Imena omogočenih Področij gostiteljev niso najdena, tudi če jih navaja filter host()</translation>
+    </message>
+    <message>
+        <source>Block ports 53 and 853 for other programs</source>
+        <translation>Blokiraj vrata 53 in 853 za druge programe</translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>Blokiraj povezave programov, razen Storitve Fort Firewall, na vrata 53 strežnikov DNS in na vrata 853 strežnikov DNS over TLS in over QUIC, medtem ko je DNS filtriran: imen ne morejo razreševati prek teh protokolov mimo Posredovalnika DNS. DNS over HTTPS gre na vrata 443 spletnih mest, ki niso blokirana</translation>
+    </message>
+    <message>
+        <source>Upstream DNS servers:</source>
+        <translation>Nadrejeni strežniki DNS:</translation>
+    </message>
+    <message>
+        <source>Adapters&apos; DNS servers</source>
+        <translation>Strežniki DNS vmesnikov</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Po meri</translation>
+    </message>
+    <message>
+        <source>Test</source>
+        <translation>Preizkusi</translation>
+    </message>
+    <message>
+        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
+        <translation>Vprašaj vsak strežnik za &quot;example.com&quot; (samo s Storitvijo)</translation>
+    </message>
+    <message>
+        <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
+        <translation>En strežnik na vrstico: naslovi, npr. &quot;1.1.1.1&quot;, ali URL-ji DNS over HTTPS z naslovom strežnika, npr. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</translation>
+    </message>
+    <message>
+        <source>Error: %1</source>
+        <translation>Napaka: %1</translation>
+    </message>
+    <message>
+        <source>Testing...</source>
+        <translation>Preizkušanje...</translation>
+    </message>
+    <message>
+        <source>Timeout</source>
+        <translation>Časovna omejitev je potekla</translation>
+    </message>
+    <message>
+        <source>Loop: the server is the DNS Forwarder itself</source>
+        <translation>Zanka: strežnik je sam Posredovalnik DNS</translation>
+    </message>
+    <message>
+        <source>Invalid server</source>
+        <translation>Neveljaven strežnik</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>Plain and DNS over HTTPS servers can&apos;t be mixed</source>
+        <translation>Navadnih strežnikov DNS in strežnikov DNS over HTTPS ni mogoče mešati</translation>
+    </message>
+</context>
+<context>
     <name>FilterEditDialog</name>
     <message>
         <source>Action:</source>
@@ -667,6 +778,26 @@
     <message>
         <source>Internet</source>
         <translation>Internet</translation>
+    </message>
+    <message>
+        <source>Host:</source>
+        <translation>Gostitelj:</translation>
+    </message>
+    <message>
+        <source>The name only</source>
+        <translation>Samo ime</translation>
+    </message>
+    <message>
+        <source>Its subdomains</source>
+        <translation>Njegove poddomene</translation>
+    </message>
+    <message>
+        <source>The name and its subdomains</source>
+        <translation>Ime in njegove poddomene</translation>
+    </message>
+    <message>
+        <source>A mask in the name</source>
+        <translation>Maska v imenu</translation>
     </message>
     <message>
         <source>Remote IP:</source>
@@ -829,6 +960,14 @@
     <message>
         <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
         <translation>Povezava na naslov tega računalnika. Naslovi 127.0.0.0/8 in ::1 so vedno povratna zanka.</translation>
+    </message>
+    <message>
+        <source>Fort Firewall&apos;s Service</source>
+        <translation>Storitev Fort Firewall</translation>
+    </message>
+    <message>
+        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
+        <translation>Povezava Storitve Fort Firewall, npr. njenega Posredovalnika DNS. Brez Storitve je filtrirana kot povezave drugih programov.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
@@ -1473,6 +1612,24 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
     </message>
 </context>
 <context>
+    <name>HostRange</name>
+    <message>
+        <source>Bad host name</source>
+        <translation>Napačno ime gostitelja</translation>
+    </message>
+    <message>
+        <source>Too many host name masks</source>
+        <translation>Preveč mask imen gostiteljev</translation>
+    </message>
+</context>
+<context>
+    <name>HostZonesSelector</name>
+    <message>
+        <source>Select Hosts Zones</source>
+        <translation>Izberi področja gostiteljev</translation>
+    </message>
+</context>
+<context>
     <name>IfacePage</name>
     <message>
         <source>Global</source>
@@ -1809,6 +1966,10 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
     <message>
         <source>IP Addresses</source>
         <translation>Naslovi IP</translation>
+    </message>
+    <message>
+        <source>DNS</source>
+        <translation>DNS</translation>
     </message>
     <message>
         <source>Statistics</source>
@@ -2394,6 +2555,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Povezave</translation>
     </message>
     <message>
+        <source>Service</source>
+        <translation>Storitev</translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>Vredu</translation>
     </message>
@@ -2844,6 +3009,10 @@ Shraniti spremembe?</translation>
     <message>
         <source>Tray Menu</source>
         <translation>Meni pladnja</translation>
+    </message>
+    <message>
+        <source>Usages</source>
+        <translation>Uporabe</translation>
     </message>
     <message>
         <source>Inline Zones</source>
@@ -3917,6 +4086,21 @@ Izguba paketov: %2</translation>
     </message>
 </context>
 <context>
+    <name>UsagesModel</name>
+    <message>
+        <source>IP Addresses</source>
+        <translation>Naslovi IP</translation>
+    </message>
+    <message>
+        <source>Programs</source>
+        <translation>Programi</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Skupine</translation>
+    </message>
+</context>
+<context>
     <name>ValueRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -3951,6 +4135,14 @@ Izguba paketov: %2</translation>
 </context>
 <context>
     <name>ZoneEditDialog</name>
+    <message>
+        <source>General</source>
+        <translation>Splošno</translation>
+    </message>
+    <message>
+        <source>Usages</source>
+        <translation>Uporabe</translation>
+    </message>
     <message>
         <source>Source:</source>
         <translation>Vir:</translation>
@@ -4027,6 +4219,22 @@ Izguba paketov: %2</translation>
         <translation>Naslovi iz lokalne datoteke</translation>
     </message>
     <message>
+        <source>Hosts from Inline Text</source>
+        <translation>Gostitelji iz besedila v vrstici</translation>
+    </message>
+    <message>
+        <source>Hosts from Local File</source>
+        <translation>Gostitelji iz lokalne datoteke</translation>
+    </message>
+    <message>
+        <source>Hosts with Subdomains from Local File</source>
+        <translation>Gostitelji s poddomenami iz lokalne datoteke</translation>
+    </message>
+    <message>
+        <source>Hosts with Subdomains from Hosts File</source>
+        <translation>Gostitelji s poddomenami iz datoteke hosts</translation>
+    </message>
+    <message>
         <source>WindowsSpyBlocker</source>
         <translation>WindowsSpyBlocker</translation>
     </message>
@@ -4037,6 +4245,14 @@ Izguba paketov: %2</translation>
     <message>
         <source>TAS-IX Addresses</source>
         <translation>Naslovi TAS-IX</translation>
+    </message>
+    <message>
+        <source>OISD Big</source>
+        <translation>OISD Big</translation>
+    </message>
+    <message>
+        <source>StevenBlack Hosts</source>
+        <translation>StevenBlack Hosts</translation>
     </message>
 </context>
 <context>

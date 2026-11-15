@@ -77,6 +77,18 @@
         <source>Filter Local Network</source>
         <translation>로컬 네트워크 필터링</translation>
     </message>
+    <message>
+        <source>Filter Fort Firewall&apos;s Service</source>
+        <translation>Fort Firewall 서비스 필터링</translation>
+    </message>
+    <message>
+        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
+        <translation>서비스의 연결을 다른 프로그램의 연결처럼 필터링하고, 그렇지 않으면 허용합니다</translation>
+    </message>
+    <message>
+        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
+        <translation>서비스가 없으면 Fort Firewall은 다른 프로그램처럼 필터링됩니다</translation>
+    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -417,6 +429,18 @@
         <translation>허용된 인터넷 주소</translation>
     </message>
     <message>
+        <source>Fort Firewall&apos;s Service</source>
+        <translation>Fort Firewall 서비스</translation>
+    </message>
+    <message>
+        <source>Block DNS port</source>
+        <translation>DNS 포트 차단</translation>
+    </message>
+    <message>
+        <source>Block DNS over TLS port</source>
+        <translation>DNS over TLS 포트 차단</translation>
+    </message>
+    <message>
         <source>Unknown</source>
         <translation>알 수 없음</translation>
     </message>
@@ -603,6 +627,93 @@
     </message>
 </context>
 <context>
+    <name>DnsPage</name>
+    <message>
+        <source>Without the Service, the DNS options don&apos;t work</source>
+        <translation>서비스가 없으면 DNS 옵션이 작동하지 않습니다</translation>
+    </message>
+    <message>
+        <source>DNS Forwarder</source>
+        <translation>DNS 전달자</translation>
+    </message>
+    <message>
+        <source>Filter DNS</source>
+        <translation>DNS 필터링</translation>
+    </message>
+    <message>
+        <source>Resolve the host names by the upstream DNS servers, adding the addresses of the Hosts Zones used by the IP Addresses, Programs and Rules and of the host() filters before answering; the names of the Block Zones are not found (only with the Service). The programs resolving the names by DNS over HTTPS themselves, e.g. the browsers with Secure DNS, bypass the DNS Forwarder</source>
+        <translation>업스트림 DNS 서버로 호스트 이름을 확인하고, 응답하기 전에 IP 주소, 프로그램, 규칙에서 사용하는 호스트 영역과 host() 필터의 주소를 추가합니다. 차단 영역의 이름은 찾을 수 없습니다(서비스가 있는 경우에만). DNS over HTTPS로 직접 이름을 확인하는 프로그램(예: 보안 DNS를 사용하는 브라우저)은 DNS 전달자를 우회합니다</translation>
+    </message>
+    <message>
+        <source>Block Zones:</source>
+        <translation>차단 영역:</translation>
+    </message>
+    <message>
+        <source>The names of the enabled Hosts Zones are not found, even if a host() filter lists them</source>
+        <translation>활성화된 호스트 영역의 이름은 host() 필터에 나열되어 있어도 찾을 수 없습니다</translation>
+    </message>
+    <message>
+        <source>Block ports 53 and 853 for other programs</source>
+        <translation>다른 프로그램의 포트 53 및 853 차단</translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>DNS를 필터링하는 동안 Fort Firewall 서비스 이외의 프로그램이 DNS 서버의 포트 53 및 DNS over TLS와 DNS over QUIC 서버의 포트 853에 연결하는 것을 차단합니다. 이 프로그램들은 이 프로토콜들로 DNS 전달자를 우회하여 이름을 확인할 수 없습니다. DNS over HTTPS는 웹 사이트의 포트 443으로 가며, 이 포트는 차단되지 않습니다</translation>
+    </message>
+    <message>
+        <source>Upstream DNS servers:</source>
+        <translation>업스트림 DNS 서버:</translation>
+    </message>
+    <message>
+        <source>Adapters&apos; DNS servers</source>
+        <translation>어댑터의 DNS 서버</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>사용자 지정</translation>
+    </message>
+    <message>
+        <source>Test</source>
+        <translation>테스트</translation>
+    </message>
+    <message>
+        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
+        <translation>각 서버에 &quot;example.com&quot; 질의(서비스가 있는 경우에만)</translation>
+    </message>
+    <message>
+        <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
+        <translation>한 줄에 서버 하나: 주소(예: &quot;1.1.1.1&quot;) 또는 서버 주소가 포함된 DNS over HTTPS URL(예: &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;)</translation>
+    </message>
+    <message>
+        <source>Error: %1</source>
+        <translation>오류: %1</translation>
+    </message>
+    <message>
+        <source>Testing...</source>
+        <translation>테스트 중...</translation>
+    </message>
+    <message>
+        <source>Timeout</source>
+        <translation>시간 초과</translation>
+    </message>
+    <message>
+        <source>Loop: the server is the DNS Forwarder itself</source>
+        <translation>루프: 서버가 DNS 전달자 자신입니다</translation>
+    </message>
+    <message>
+        <source>Invalid server</source>
+        <translation>잘못된 서버</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1ms</translation>
+    </message>
+    <message>
+        <source>Plain and DNS over HTTPS servers can&apos;t be mixed</source>
+        <translation>일반 DNS 서버와 DNS over HTTPS 서버는 함께 사용할 수 없습니다</translation>
+    </message>
+</context>
+<context>
     <name>FilterEditDialog</name>
     <message>
         <source>Action:</source>
@@ -667,6 +778,26 @@
     <message>
         <source>Internet</source>
         <translation>인터넷</translation>
+    </message>
+    <message>
+        <source>Host:</source>
+        <translation>호스트:</translation>
+    </message>
+    <message>
+        <source>The name only</source>
+        <translation>이름만</translation>
+    </message>
+    <message>
+        <source>Its subdomains</source>
+        <translation>하위 도메인</translation>
+    </message>
+    <message>
+        <source>The name and its subdomains</source>
+        <translation>이름과 하위 도메인</translation>
+    </message>
+    <message>
+        <source>A mask in the name</source>
+        <translation>이름의 마스크</translation>
     </message>
     <message>
         <source>Remote IP:</source>
@@ -829,6 +960,14 @@
     <message>
         <source>The connection to an address of this computer. The addresses 127.0.0.0/8 and ::1 are always loopback.</source>
         <translation>이 컴퓨터의 주소와의 연결입니다. 127.0.0.0/8 및 ::1 주소는 항상 루프백입니다.</translation>
+    </message>
+    <message>
+        <source>Fort Firewall&apos;s Service</source>
+        <translation>Fort Firewall 서비스</translation>
+    </message>
+    <message>
+        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
+        <translation>Fort Firewall 서비스의 연결(예: DNS 전달자). 서비스가 없으면 다른 프로그램의 연결처럼 필터링됩니다.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
@@ -1473,6 +1612,24 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>HostRange</name>
+    <message>
+        <source>Bad host name</source>
+        <translation>잘못된 호스트 이름</translation>
+    </message>
+    <message>
+        <source>Too many host name masks</source>
+        <translation>호스트 이름 마스크가 너무 많습니다</translation>
+    </message>
+</context>
+<context>
+    <name>HostZonesSelector</name>
+    <message>
+        <source>Select Hosts Zones</source>
+        <translation>호스트 영역 선택</translation>
+    </message>
+</context>
+<context>
     <name>IfacePage</name>
     <message>
         <source>Global</source>
@@ -1809,6 +1966,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>IP Addresses</source>
         <translation>IP 주소</translation>
+    </message>
+    <message>
+        <source>DNS</source>
+        <translation>DNS</translation>
     </message>
     <message>
         <source>Statistics</source>
@@ -2394,6 +2555,10 @@ Make sure that you have a fresh backup.</source>
         <translation>연결</translation>
     </message>
     <message>
+        <source>Service</source>
+        <translation>서비스</translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>확인</translation>
     </message>
@@ -2844,6 +3009,10 @@ Save the changes?</source>
     <message>
         <source>Tray Menu</source>
         <translation>트레이 메뉴</translation>
+    </message>
+    <message>
+        <source>Usages</source>
+        <translation>사용처</translation>
     </message>
     <message>
         <source>Inline Zones</source>
@@ -3917,6 +4086,21 @@ Packet loss: %2</source>
     </message>
 </context>
 <context>
+    <name>UsagesModel</name>
+    <message>
+        <source>IP Addresses</source>
+        <translation>IP 주소</translation>
+    </message>
+    <message>
+        <source>Programs</source>
+        <translation>프로그램</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>그룹</translation>
+    </message>
+</context>
+<context>
     <name>ValueRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -3951,6 +4135,14 @@ Packet loss: %2</source>
 </context>
 <context>
     <name>ZoneEditDialog</name>
+    <message>
+        <source>General</source>
+        <translation>일반</translation>
+    </message>
+    <message>
+        <source>Usages</source>
+        <translation>사용처</translation>
+    </message>
     <message>
         <source>Source:</source>
         <translation>소스:</translation>
@@ -4027,6 +4219,22 @@ Packet loss: %2</source>
         <translation>로컬 파일의 주소</translation>
     </message>
     <message>
+        <source>Hosts from Inline Text</source>
+        <translation>인라인 텍스트의 호스트</translation>
+    </message>
+    <message>
+        <source>Hosts from Local File</source>
+        <translation>로컬 파일의 호스트</translation>
+    </message>
+    <message>
+        <source>Hosts with Subdomains from Local File</source>
+        <translation>로컬 파일의 하위 도메인 포함 호스트</translation>
+    </message>
+    <message>
+        <source>Hosts with Subdomains from Hosts File</source>
+        <translation>hosts 파일의 하위 도메인 포함 호스트</translation>
+    </message>
+    <message>
         <source>WindowsSpyBlocker</source>
         <translation>WindowsSpyBlocker</translation>
     </message>
@@ -4037,6 +4245,14 @@ Packet loss: %2</source>
     <message>
         <source>TAS-IX Addresses</source>
         <translation>TAS-IX 주소</translation>
+    </message>
+    <message>
+        <source>OISD Big</source>
+        <translation>OISD Big</translation>
+    </message>
+    <message>
+        <source>StevenBlack Hosts</source>
+        <translation>StevenBlack Hosts</translation>
     </message>
 </context>
 <context>
