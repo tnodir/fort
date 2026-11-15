@@ -133,19 +133,16 @@ bool ConfBuffer::writeConf(const FirewallConf &conf, const ConfAppsWalker *confA
     };
 
     quint32 addressGroupsSize = 0;
-
-    if (!parseAddressGroups(conf.addressGroups(), wca.ad, addressGroupsSize))
-        return false;
-
     AppParseOptions opt;
 
     m_hostRefs->beginSource(HostRefs::SourceConf);
 
-    const bool appsOk = parseExeApps(*envManager, confAppsWalker, opt);
+    const bool ok = parseAddressGroups(conf.addressGroups(), wca.ad, addressGroupsSize)
+            && parseExeApps(*envManager, confAppsWalker, opt);
 
-    m_hostRefs->endSource(appsOk);
+    m_hostRefs->endSource(ok);
 
-    if (!appsOk)
+    if (!ok)
         return false;
 
     const quint32 appsSize = opt.wildAppsSize + opt.prefixAppsSize + opt.exeAppsSize;
@@ -342,6 +339,8 @@ bool ConfBuffer::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
         addressRange.setIncludeZones(addressGroup->includeZones());
         addressRange.setExcludeZones(addressGroup->excludeZones());
 
+        m_hostRefs->addZones(addressGroup->includeZones() | addressGroup->excludeZones());
+
         if (!parseAddressList(addressRange.includeRange(), addressGroup->includeText(),
                     FirewallConf::addressList(i, /*isExclude=*/false)))
             return false;
@@ -443,7 +442,7 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
     }
 
     QByteArray ruleData;
-    if (!parseAppRule(app, ruleData))
+    if (!parseAppRefsRule(app, appPath, ruleData))
         return false;
 
     const quint16 appPathLen = quint16(appPathSize * sizeof(wchar_t));
@@ -480,6 +479,19 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
     appsMap.insert(appPath, { appData, ruleData });
 
     return true;
+}
+
+bool ConfBuffer::parseAppRefsRule(const App &app, const QString &appPath, QByteArray &ruleData)
+{
+    m_hostRefs->beginApp(appPath);
+
+    m_hostRefs->addZones(app.zones.accept_mask | app.zones.reject_mask);
+
+    const bool ok = parseAppRule(app, ruleData);
+
+    m_hostRefs->endApp(ok);
+
+    return ok;
 }
 
 bool ConfBuffer::parseAppRule(const App &app, QByteArray &ruleData)
@@ -610,6 +622,8 @@ bool ConfBuffer::writeRuleData(const Rule &rule, const QByteArray &ruleSet)
         *ruleZones = rule.zones;
 
         data += sizeof(FORT_CONF_RULE_ZONES);
+
+        m_hostRefs->addZones(rule.zones.accept_mask | rule.zones.reject_mask);
     }
 
     // Write the rule's set

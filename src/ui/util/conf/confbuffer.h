@@ -90,6 +90,7 @@ private:
 
     bool addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint32 &appsSize);
 
+    bool parseAppRefsRule(const App &app, const QString &appPath, QByteArray &ruleData);
     bool parseAppRule(const App &app, QByteArray &ruleData);
 
     bool writeRule(const Rule &rule, const WalkRulesArgs &wra);

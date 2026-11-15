@@ -2393,6 +2393,208 @@ TEST_F(ConfUtilTest, hostRefsSources)
     ASSERT_EQ(hostRefs.hostIds().value("example.com"), rulesHostId);
 }
 
+namespace {
+
+void writeTestConf(const FirewallConf &conf, const TestApps &testApps, HostRefs *hostRefs)
+{
+    EnvManager envManager;
+
+    ConfBuffer confBuf;
+    confBuf.setHostRefs(hostRefs);
+
+    if (!confBuf.writeConf(conf, &testApps, &envManager)) {
+        qCritical() << "Error:" << confBuf.errorMessage();
+        Q_UNREACHABLE();
+    }
+}
+
+App exeApp(const QString &appPath, const FORT_CONF_RULE_ZONES &zones)
+{
+    App app;
+    app.appPath = appPath;
+    app.zones = zones;
+    return app;
+}
+
+bool writeTestApp(const App &app, HostRefs *hostRefs)
+{
+    ConfBuffer appBuf;
+    appBuf.setHostRefs(hostRefs);
+
+    return appBuf.writeAppEntry(app);
+}
+
+App hostApp(const QString &appPath, const QString &hostNames)
+{
+    App app;
+    app.appPath = appPath;
+    app.filtersText = QString("Host(%1):Act(Block)").arg(hostNames);
+    return app;
+}
+
+}
+
+TEST_F(ConfUtilTest, hostRefsZonesAddressGroups)
+{
+    FirewallConf conf;
+
+    conf.lanAddressGroup()->setExcludeZones(0x1);
+    conf.inetAddressGroup()->setIncludeZones(0x2);
+    conf.inetAddressGroup()->setExcludeZones(0x4);
+
+    HostRefs hostRefs;
+
+    writeTestConf(conf, TestApps(QList<App> {}), &hostRefs);
+
+    ASSERT_TRUE(hostRefs.isChanged());
+    ASSERT_EQ(hostRefs.zonesMask(), 0x7u);
+
+    // The removed Zones aren't referenced
+    {
+        hostRefs.resetChanged();
+
+        conf.inetAddressGroup()->setExcludeZones(0);
+        writeTestConf(conf, TestApps(QList<App> {}), &hostRefs);
+
+        ASSERT_TRUE(hostRefs.isChanged());
+        ASSERT_EQ(hostRefs.zonesMask(), 0x3u);
+    }
+
+    // The same Zones
+    {
+        hostRefs.resetChanged();
+
+        writeTestConf(conf, TestApps(QList<App> {}), &hostRefs);
+
+        ASSERT_FALSE(hostRefs.isChanged());
+    }
+}
+
+TEST_F(ConfUtilTest, hostRefsZonesApps)
+{
+    FirewallConf conf;
+
+    App wildApp = wildcardApp("C:\\A\\**");
+    wildApp.zones = { .accept_mask = 0x1 };
+
+    const TestApps testApps({
+            wildApp,
+            exeApp("C:\\B\\b.exe", { .reject_mask = 0x2 }),
+    });
+
+    HostRefs hostRefs;
+
+    writeTestConf(conf, testApps, &hostRefs);
+
+    ASSERT_TRUE(hostRefs.isChanged());
+    ASSERT_EQ(hostRefs.zonesMask(), 0x3u);
+
+    // A Program written alone adds its Zones
+    {
+        hostRefs.resetChanged();
+
+        ASSERT_TRUE(writeTestApp(exeApp("C:\\C\\c.exe", { .accept_mask = 0x4 }), &hostRefs));
+
+        ASSERT_TRUE(hostRefs.isChanged());
+        ASSERT_EQ(hostRefs.zonesMask(), 0x7u);
+    }
+
+    // A Program written alone replaces its Zones of the full write
+    {
+        hostRefs.resetChanged();
+
+        ASSERT_TRUE(writeTestApp(exeApp("C:\\B\\b.exe", {}), &hostRefs));
+
+        ASSERT_TRUE(hostRefs.isChanged());
+        ASSERT_EQ(hostRefs.zonesMask(), 0x5u);
+    }
+
+    // The full write forgets the Zones of the Programs it hasn't
+    {
+        hostRefs.resetChanged();
+
+        writeTestConf(conf, testApps, &hostRefs);
+
+        ASSERT_TRUE(hostRefs.isChanged());
+        ASSERT_EQ(hostRefs.zonesMask(), 0x3u);
+    }
+}
+
+TEST_F(ConfUtilTest, hostRefsAppAlone)
+{
+    HostRefs hostRefs;
+
+    ASSERT_TRUE(writeTestApp(hostApp("C:\\A\\a.exe", "example.com"), &hostRefs));
+    ASSERT_TRUE(writeTestApp(hostApp("C:\\B\\b.exe", "example.com"), &hostRefs));
+
+    ASSERT_TRUE(hostRefs.isChanged());
+    ASSERT_EQ(hostRefs.hostIds().size(), 1);
+
+    const quint32 comHostId = hostRefs.hostIds().value("example.com");
+    ASSERT_NE(comHostId, 0u);
+
+    // The Program's filter replaced
+    {
+        hostRefs.resetChanged();
+
+        ASSERT_TRUE(writeTestApp(hostApp("C:\\A\\a.exe", "example.net"), &hostRefs));
+
+        ASSERT_TRUE(hostRefs.isChanged());
+        ASSERT_EQ(hostRefs.hostIds().size(), 2);
+        ASSERT_EQ(hostRefs.hostIds().value("example.com"), comHostId);
+    }
+
+    // The removed Programs
+    {
+        hostRefs.resetChanged();
+
+        ASSERT_TRUE(writeTestApp(exeApp("C:\\B\\b.exe", {}), &hostRefs));
+
+        ASSERT_TRUE(hostRefs.isChanged());
+        ASSERT_EQ(hostRefs.hostIds().size(), 1);
+        ASSERT_TRUE(hostRefs.hostIds().contains("example.net"));
+
+        ASSERT_TRUE(writeTestApp(exeApp("C:\\A\\a.exe", {}), &hostRefs));
+
+        ASSERT_TRUE(hostRefs.hostIds().isEmpty());
+    }
+}
+
+TEST_F(ConfUtilTest, hostRefsZonesRules)
+{
+    QList<Rule> rules = {
+        { .ruleId = 1, .zones = { .accept_mask = 0x1 } },
+        { .ruleId = 2, .zones = { .reject_mask = 0x2 } },
+    };
+
+    HostRefs hostRefs;
+
+    writeTestRules(TestRulesWalker(rules, /*maxRuleId=*/2), &hostRefs);
+
+    ASSERT_TRUE(hostRefs.isChanged());
+    ASSERT_EQ(hostRefs.zonesMask(), 0x3u);
+
+    // The Rules keep the conf's Zones
+    FirewallConf conf;
+    conf.inetAddressGroup()->setExcludeZones(0x4);
+
+    writeTestConf(conf, TestApps(QList<App> {}), &hostRefs);
+
+    ASSERT_EQ(hostRefs.zonesMask(), 0x7u);
+
+    // The Rules without Zones
+    {
+        hostRefs.resetChanged();
+
+        rules[0].zones = {};
+        rules[1].zones = {};
+        writeTestRules(TestRulesWalker(rules, /*maxRuleId=*/2), &hostRefs);
+
+        ASSERT_TRUE(hostRefs.isChanged());
+        ASSERT_EQ(hostRefs.zonesMask(), 0x4u);
+    }
+}
+
 TEST_F(ConfUtilTest, hostIpsWrite)
 {
     const ip4_arr_t ip4Array = {
