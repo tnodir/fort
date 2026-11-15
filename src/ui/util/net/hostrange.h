@@ -20,6 +20,10 @@ public:
 
     int size() const { return m_names.size() + m_wildcardNames.size() + m_patternNames.size(); }
 
+    // The host() filter's id
+    quint32 hostId() const { return m_hostId; }
+    void setHostId(quint32 v) { m_hostId = v; }
+
     const QSet<QString> &names() const { return m_names; }
     const QSet<QString> &wildcardNames() const { return m_wildcardNames; }
     const QSet<QString> &patternNames() const { return m_patternNames; }
@@ -68,6 +72,8 @@ private:
     HostRange::ParseError parsePattern(const QString &pattern);
 
 private:
+    quint32 m_hostId = 0;
+
     QSet<QString> m_names;
     QSet<QString> m_wildcardNames; // the parent domains of the "*." wildcards and "." names
     QSet<QString> m_patternNames; // the names with other masks: HostPattern

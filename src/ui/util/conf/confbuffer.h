@@ -10,6 +10,7 @@
 #include <util/conf/confspeedlimitswalker.h>
 
 #include "confdata.h"
+#include "hostrefs.h"
 
 class AddressGroup;
 class EnvManager;
@@ -35,6 +36,9 @@ public:
     char *data() { return m_buffer.data(); }
 
     const char *dataOrNull() const { return buffer().isEmpty() ? nullptr : data(); }
+
+    // Without the references set the buffer's own ones are used: only to validate the text
+    void setHostRefs(HostRefs *v) { m_hostRefs = v; }
 
 public slots:
     void writeVersion();
@@ -96,9 +100,13 @@ private:
     bool writeRuleFilterValues(const RuleFilter &ruleFilter);
 
 private:
+    HostRefs *m_hostRefs = &m_ownHostRefs;
+
     QString m_errorMessage;
 
     QByteArray m_buffer;
+
+    HostRefs m_ownHostRefs;
 };
 
 #endif // CONFBUFFER_H

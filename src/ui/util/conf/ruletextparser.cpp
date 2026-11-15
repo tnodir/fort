@@ -7,8 +7,8 @@
 namespace {
 
 const char *const extraNameChars = "_";
-const char *const extraValueChars = "._-/";
-const char *const extraValueEndChars = "._-/:";
+const char *const extraValueChars = "._-/*";
+const char *const extraValueEndChars = "._-/*:";
 
 int getCharIndex(const char *chars, const char c)
 {
@@ -77,7 +77,7 @@ RuleCharType getCharType(RuleCharType prevCharType, const QChar c, const char *e
 bool RuleFilter::isTypeAddress() const
 {
     return type == FORT_RULE_FILTER_TYPE_ADDRESS || type == FORT_RULE_FILTER_TYPE_ZONES
-            || type == FORT_RULE_FILTER_TYPE_AREA;
+            || type == FORT_RULE_FILTER_TYPE_AREA || type == FORT_RULE_FILTER_TYPE_HOST;
 }
 
 bool RuleFilter::isTypeList() const
@@ -339,6 +339,7 @@ bool RuleTextParser::parseName()
         { "dir", FORT_RULE_FILTER_TYPE_DIRECTION },
         { "direction", FORT_RULE_FILTER_TYPE_DIRECTION },
         { "zones", FORT_RULE_FILTER_TYPE_ZONES },
+        { "host", FORT_RULE_FILTER_TYPE_HOST },
         { "area", FORT_RULE_FILTER_TYPE_AREA },
         { "profile", FORT_RULE_FILTER_TYPE_PROFILE },
         { "act", FORT_RULE_FILTER_TYPE_ACTION },

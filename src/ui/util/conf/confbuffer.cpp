@@ -15,6 +15,7 @@
 #include <util/bitutil.h>
 #include <util/fileutil.h>
 #include <util/net/hostmatcher.h>
+#include <util/net/hostrange.h>
 #include <util/net/valuerangeutil.h>
 #include <util/stringutil.h>
 
@@ -138,7 +139,13 @@ bool ConfBuffer::writeConf(const FirewallConf &conf, const ConfAppsWalker *confA
 
     AppParseOptions opt;
 
-    if (!parseExeApps(*envManager, confAppsWalker, opt))
+    m_hostRefs->beginSource(HostRefs::SourceConf);
+
+    const bool appsOk = parseExeApps(*envManager, confAppsWalker, opt);
+
+    m_hostRefs->endSource(appsOk);
+
+    if (!appsOk)
         return false;
 
     const quint32 appsSize = opt.wildAppsSize + opt.prefixAppsSize + opt.exeAppsSize;
@@ -491,6 +498,8 @@ bool ConfBuffer::parseAppRule(const App &app, QByteArray &ruleData)
             FORT_CONF_RULES_SET_INDEXES_SIZE(rule.ruleSet.size()));
 
     ConfBuffer ruleBuf;
+    ruleBuf.setHostRefs(m_hostRefs);
+
     if (!ruleBuf.writeRuleData(rule, ruleSet)) {
         setErrorMessage(ruleBuf.errorMessage());
         return false;
@@ -505,7 +514,9 @@ bool ConfBuffer::writeRules(const ConfRulesWalker &confRulesWalker)
 {
     WalkRulesArgs wra;
 
-    return confRulesWalker.walkRules(wra, [&](const Rule &rule) -> bool {
+    m_hostRefs->beginSource(HostRefs::SourceRules);
+
+    const bool ok = confRulesWalker.walkRules(wra, [&](const Rule &rule) -> bool {
         if (buffer().isEmpty()) {
             const int outSize =
                     FORT_CONF_RULES_DATA_OFF + FORT_CONF_RULES_OFFSETS_SIZE(wra.maxRuleId);
@@ -522,6 +533,10 @@ bool ConfBuffer::writeRules(const ConfRulesWalker &confRulesWalker)
 
         return writeRule(rule, wra);
     });
+
+    m_hostRefs->endSource(ok);
+
+    return ok;
 }
 
 void ConfBuffer::writeRuleFlag(int ruleId, bool enabled)
@@ -702,6 +717,11 @@ bool ConfBuffer::writeRuleFilterValues(const RuleFilter &ruleFilter)
     if (!range->checkSize()) {
         setErrorMessage(tr("Too many values"));
         return false;
+    }
+
+    if (ruleFilter.type == FORT_RULE_FILTER_TYPE_HOST) {
+        auto &hostRange = static_cast<HostRange &>(*range);
+        hostRange.setHostId(m_hostRefs->hostId(hostRange));
     }
 
     // Resize the buffer

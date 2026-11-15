@@ -30,7 +30,7 @@ enum RuleCharType : RuleCharTypes {
     CharLineBegin = (CharListBegin | CharListEnd | CharBracketBegin | CharLetter | CharDigit
             | CharValueBegin | CharNot | CharEqualValues),
     CharName = (CharLetter | CharExtra), // a-zA-Z_
-    CharValue = (CharDigit | CharExtra), // 0-9._-/:
+    CharValue = (CharDigit | CharExtra), // 0-9._-/*:
     CharSpaceComment = (CharSpace | CharComment),
     CharLineBreak = (CharSpaceComment | CharNewLine),
 };
