@@ -16,8 +16,8 @@ class DnsResolver : public QObject
 public:
     explicit DnsResolver(QObject *parent = nullptr);
 
-    // The comma-separated servers
-    virtual bool open(const QString &servers) = 0;
+    // The servers as of DnsUtil::splitServers()
+    virtual bool open(const QStringList &servers) = 0;
 
     // Whether the query is the resolver's own one, sent to the listener: a loop
     virtual bool isOwnQuery(const DnsQuery & /*query*/) const { return false; }
@@ -25,7 +25,7 @@ public:
     virtual void resolve(const DnsRequest &request) = 0;
 
     // The resolver of the servers' protocol
-    static std::unique_ptr<DnsResolver> create(const QString &servers);
+    static std::unique_ptr<DnsResolver> create(const QStringList &servers);
 
 signals:
     void resolved(const DnsRequest &request, const DnsAnswer &answer);

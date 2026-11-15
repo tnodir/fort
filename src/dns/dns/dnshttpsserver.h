@@ -20,11 +20,11 @@ public:
 
     bool parse(const QString &text);
 
-    // Whether the comma-separated servers are the DNS over HTTPS ones
-    static bool isHttpsServers(const QString &servers);
+    // Whether the servers are the DNS over HTTPS ones
+    static bool isHttpsServers(const QStringList &servers);
 
     // Empty with a wrong server
-    static QList<DnsHttpsServer> parseServers(const QString &servers);
+    static QList<DnsHttpsServer> parseServers(const QStringList &servers);
 
 private:
     QUrl m_url;

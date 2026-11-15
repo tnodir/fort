@@ -26,7 +26,7 @@ QList<DnsProvider> DnsProvider::readList()
 
         list.append(DnsProvider {
                 .title = map["title"].toString(),
-                .servers = map["servers"].toStringList().join(", "),
+                .servers = map["servers"].toStringList(),
         });
     }
 

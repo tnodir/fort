@@ -47,18 +47,16 @@ bool DnsHttpsServer::parse(const QString &text)
     return true;
 }
 
-bool DnsHttpsServer::isHttpsServers(const QString &servers)
+bool DnsHttpsServer::isHttpsServers(const QStringList &servers)
 {
-    return servers.trimmed().startsWith(QLatin1String("https://"), Qt::CaseInsensitive);
+    return servers.value(0).startsWith(QLatin1String("https://"), Qt::CaseInsensitive);
 }
 
-QList<DnsHttpsServer> DnsHttpsServer::parseServers(const QString &servers)
+QList<DnsHttpsServer> DnsHttpsServer::parseServers(const QStringList &servers)
 {
     QList<DnsHttpsServer> list;
 
-    const auto texts = servers.simplified().split(u',', Qt::SkipEmptyParts);
-
-    for (const QString &text : texts) {
+    for (const QString &text : servers) {
         DnsHttpsServer server;
         if (!server.parse(text))
             return {};

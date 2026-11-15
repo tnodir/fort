@@ -447,7 +447,7 @@ TEST_F(DnsTest, resolverOwnQuery)
     ASSERT_TRUE(server.bind(QHostAddress::LocalHost, 0));
 
     DnsPlainResolver resolver;
-    ASSERT_TRUE(resolver.open(QString("127.0.0.1:%1").arg(server.localPort())));
+    ASSERT_TRUE(resolver.open({ QString("127.0.0.1:%1").arg(server.localPort()) }));
 
     DnsRequest request;
     ASSERT_TRUE(request.query.parse(writeQuery(0x1111, "loop.example", /*withOpt=*/false)));
@@ -523,17 +523,21 @@ TEST_F(DnsTest, httpsServers)
     ASSERT_FALSE(server.parse("1.1.1.1"));
 
     // The servers
-    ASSERT_TRUE(DnsHttpsServer::isHttpsServers(" https://1.1.1.1/dns-query, 9.9.9.9"));
-    ASSERT_FALSE(DnsHttpsServer::isHttpsServers("1.1.1.1, 9.9.9.9"));
-    ASSERT_FALSE(DnsHttpsServer::isHttpsServers(""));
+    ASSERT_EQ(DnsUtil::splitServers(" https://1.1.1.1/dns-query,\n9.9.9.9 ,\r\n\n1.0.0.1 1.1.1.1"),
+            QStringList({ "https://1.1.1.1/dns-query", "9.9.9.9", "1.0.0.1", "1.1.1.1" }));
+    ASSERT_TRUE(DnsUtil::splitServers(" ,\n").isEmpty());
+
+    ASSERT_TRUE(DnsHttpsServer::isHttpsServers({ "https://1.1.1.1/dns-query", "9.9.9.9" }));
+    ASSERT_FALSE(DnsHttpsServer::isHttpsServers({ "1.1.1.1", "9.9.9.9" }));
+    ASSERT_FALSE(DnsHttpsServer::isHttpsServers({}));
 
     const auto servers = DnsHttpsServer::parseServers(
-            "https://1.1.1.1/dns-query, https://dns.example/dns-query?ip=192.0.2.1,");
+            { "https://1.1.1.1/dns-query", "https://dns.example/dns-query?ip=192.0.2.1" });
     ASSERT_EQ(servers.size(), 2);
     ASSERT_EQ(servers.at(0).url(), QUrl("https://1.1.1.1/dns-query"));
     ASSERT_EQ(servers.at(1).verifyName(), "dns.example");
 
-    ASSERT_TRUE(DnsHttpsServer::parseServers("https://1.1.1.1/dns-query, 9.9.9.9").isEmpty());
+    ASSERT_TRUE(DnsHttpsServer::parseServers({ "https://1.1.1.1/dns-query", "9.9.9.9" }).isEmpty());
 }
 
 TEST_F(DnsTest, httpsResolver)

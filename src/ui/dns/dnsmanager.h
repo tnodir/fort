@@ -41,10 +41,10 @@ private:
     void setupByConf();
     void setupByConfIni();
 
-    void start(const QString &servers);
+    void start(const QStringList &servers);
     void stop();
 
-    bool openResolver(const QString &servers);
+    bool openResolver(const QStringList &servers);
     void closeResolver();
 
     void loadHosts();
@@ -73,7 +73,7 @@ private:
 private:
     std::unique_ptr<DnsResolver> m_resolver;
 
-    QString m_servers;
+    QStringList m_servers;
 
     HostZonesDb m_hostZonesDb;
     HostMatcher m_hostFiltersMatcher;
