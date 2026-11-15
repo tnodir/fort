@@ -77,18 +77,6 @@
         <source>Filter Local Network</source>
         <translation>Filtrează rețeaua locală</translation>
     </message>
-    <message>
-        <source>Filter Fort Firewall&apos;s Service</source>
-        <translation>Filtrează Serviciul Fort Firewall</translation>
-    </message>
-    <message>
-        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
-        <translation>Filtrează conexiunile Serviciului ca pe ale celorlalte programe, altfel permite-le</translation>
-    </message>
-    <message>
-        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
-        <translation>Fără Serviciu, Fort Firewall este filtrat ca celelalte programe</translation>
-    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -345,6 +333,10 @@
         <translation>Proces permis de „Întreabă la conectare”</translation>
     </message>
     <message>
+        <source>DNS Forwarder</source>
+        <translation>Redirecționare DNS</translation>
+    </message>
+    <message>
         <source>Inherited</source>
         <translation>Moștenită</translation>
     </message>
@@ -427,10 +419,6 @@
     <message>
         <source>Allowed Internet address</source>
         <translation>Adresă de internet permisă</translation>
-    </message>
-    <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>Serviciul Fort Firewall</translation>
     </message>
     <message>
         <source>Block DNS port</source>
@@ -657,12 +645,16 @@
         <translation>Blochează porturile 53 și 853 pentru alte programe</translation>
     </message>
     <message>
-        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
-        <translation>Blochează conexiunile programelor, altele decât Serviciul Fort Firewall, la portul 53 al serverelor DNS și la portul 853 al serverelor DNS over TLS și over QUIC, cât timp DNS este filtrat: ele nu pot rezolva numele prin aceste protocoale ocolind Redirecționarea DNS. DNS over HTTPS merge la portul 443 al site-urilor web, care nu este blocat</translation>
-    </message>
-    <message>
         <source>Upstream DNS servers:</source>
         <translation>Servere DNS din amonte:</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table is overridden, e.g. by the Group Policy&apos;s rules, or the connections to the port 53 of the loopback are blocked, e.g. by a VPN&apos;s DNS leak protection</source>
+        <translation>regula tabelului de politici de rezolvare a numelor este suprascrisă, de ex. de regulile politicii de grup, sau conexiunile la portul 53 al loopback-ului sunt blocate, de ex. de protecția împotriva scurgerilor DNS a unui VPN</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: %1</source>
+        <translation>Interogările DNS ale sistemului nu sunt trimise Redirecționării DNS: %1</translation>
     </message>
     <message>
         <source>Adapters&apos; DNS servers</source>
@@ -671,6 +663,10 @@
     <message>
         <source>Custom</source>
         <translation>Personalizat</translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>Blochează conexiunile programelor, altele decât Serviciul Fort Firewall, la portul 53 al serverelor DNS și la portul 853 al serverelor DNS over TLS și over QUIC, cât timp DNS este filtrat: ele nu pot rezolva numele prin aceste protocoale ocolind Redirecționarea DNS. Activați-o după ce verificați că numele sunt rezolvate cu DNS filtrat: cât timp Redirecționarea DNS eșuează, de ex. portul ei este blocat de un VPN, niciun nume nu este rezolvat. DNS over HTTPS merge la portul 443 al site-urilor web, care nu este blocat</translation>
     </message>
     <message>
         <source>Test</source>
@@ -683,6 +679,34 @@
     <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>Un server pe rând: adrese, de ex. „1.1.1.1”, sau URL-uri DNS over HTTPS cu adresa serverului, de ex. „https://dns.example/dns-query?ip=192.0.2.1”</translation>
+    </message>
+    <message>
+        <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
+        <translation>%1; numele nu sunt rezolvate cât timp porturile 53 și 853 sunt blocate pentru alte programe</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table can&apos;t be added</source>
+        <translation>regula tabelului de politici de rezolvare a numelor nu poate fi adăugată</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers mix plain and DNS over HTTPS ones</source>
+        <translation>Redirecționarea DNS nu este pornită: serverele DNS din amonte salvate amestecă servere obișnuite și DNS over HTTPS</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers are invalid</source>
+        <translation>Redirecționarea DNS nu este pornită: serverele DNS din amonte salvate nu sunt valide</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: can&apos;t listen on the port 53: %1</source>
+        <translation>Redirecționarea DNS nu este pornită: nu se poate asculta pe portul 53: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
+        <translation>Redirecționarea DNS nu compară numele cu Zonele de gazde sau le compară cu cele învechite: baza lor de date nu poate fi deschisă sau scrisă: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
+        <translation>Redirecționarea DNS nu rezolvă numele: numele Zonelor de blocare activate nu sunt încărcate</translation>
     </message>
     <message>
         <source>Error: %1</source>
@@ -914,6 +938,26 @@
         <translation>Ignorată: decid alte firewall-uri</translation>
     </message>
     <message>
+        <source>Block Zone of the DNS Forwarder</source>
+        <translation>Zona de blocare a Redirecționării DNS</translation>
+    </message>
+    <message>
+        <source>The IP is of the names, which the DNS Forwarder matches the host name by now. The canonical names and the HTTPS records&apos; targets of its answer aren&apos;t known here.</source>
+        <translation>IP-ul este considerat al numelor cu care Redirecționarea DNS compară acum numele gazdei. Numele canonice și țintele înregistrărilor HTTPS ale răspunsului său nu sunt cunoscute aici.</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the host name.</source>
+        <translation>Redirecționarea DNS nu rezolvă numele gazdei.</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: the driver doesn&apos;t get the names&apos; addresses.</source>
+        <translation>Interogările DNS ale sistemului nu sunt trimise Redirecționării DNS: driverul nu primește adresele numelor.</translation>
+    </message>
+    <message>
+        <source>The driver&apos;s result may differ: it depends on the host names of the remote IP (the host() filters and the Hosts Zones). Enter the Host Name to simulate them.</source>
+        <translation>Rezultatul driverului poate diferi: depinde de numele gazdelor IP-ului la distanță (filtrele host() și Zonele de gazde). Introduceți numele gazdei pentru a le simula.</translation>
+    </message>
+    <message>
         <source>Not found</source>
         <translation>Negăsit</translation>
     </message>
@@ -946,6 +990,18 @@
         <translation>Port:</translation>
     </message>
     <message>
+        <source>Host Name:</source>
+        <translation>Nume gazdă:</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Necunoscut</translation>
+    </message>
+    <message>
+        <source>The name, which the program resolved to the remote IP: the IP is of the host() filters&apos; and the Hosts Zones&apos; names, which the DNS Forwarder matches the name by.</source>
+        <translation>Numele pe care programul l-a rezolvat în IP-ul la distanță: IP-ul este considerat al numelor filtrelor host() și ale Zonelor de gazde cu care Redirecționarea DNS compară acest nume.</translation>
+    </message>
+    <message>
         <source>Local IP:</source>
         <translation>IP local:</translation>
     </message>
@@ -962,12 +1018,12 @@
         <translation>Conexiunea către o adresă a acestui computer. Adresele 127.0.0.0/8 și ::1 sunt întotdeauna loopback.</translation>
     </message>
     <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>Serviciul Fort Firewall</translation>
+        <source>DNS Forwarder</source>
+        <translation>Redirecționare DNS</translation>
     </message>
     <message>
-        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
-        <translation>Conexiunea Serviciului Fort Firewall, de ex. a Redirecționării sale DNS. Fără Serviciu, este filtrată ca ale celorlalte programe.</translation>
+        <source>The connection of Fort Firewall&apos;s Service, allowed while DNS is filtered. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
+        <translation>Conexiunea Serviciului Fort Firewall, permisă cât timp DNS este filtrat. Fără Serviciu, este filtrată ca ale celorlalte programe.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
@@ -1024,6 +1080,10 @@
     <message>
         <source>Invalid remote IP address</source>
         <translation>Adresă IP la distanță nevalidă</translation>
+    </message>
+    <message>
+        <source>Invalid host name</source>
+        <translation>Nume de gazdă nevalid</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
@@ -4245,6 +4305,10 @@ Pierdere de pachete: %2</translation>
     <message>
         <source>TAS-IX Addresses</source>
         <translation>Adrese TAS-IX</translation>
+    </message>
+    <message>
+        <source>NetAPI Honeypot Attackers</source>
+        <translation>Atacatorii honeypot-urilor NetAPI</translation>
     </message>
     <message>
         <source>OISD Big</source>

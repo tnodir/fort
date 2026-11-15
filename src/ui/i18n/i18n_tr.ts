@@ -77,18 +77,6 @@
         <source>Filter Local Network</source>
         <translation>Yerel Ağı Filtrele </translation>
     </message>
-    <message>
-        <source>Filter Fort Firewall&apos;s Service</source>
-        <translation>Fort Firewall Hizmetini Filtrele</translation>
-    </message>
-    <message>
-        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
-        <translation>Hizmetin bağlantılarını diğer programlarınkiler gibi filtrele, aksi halde bunlara izin ver</translation>
-    </message>
-    <message>
-        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
-        <translation>Hizmet olmadan Fort Firewall diğer programlar gibi filtrelenir</translation>
-    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -345,6 +333,10 @@
         <translation>&quot;Bağlantı Kurmayı İste&quot; ile işleme izin verildi</translation>
     </message>
     <message>
+        <source>DNS Forwarder</source>
+        <translation>DNS Yönlendirici</translation>
+    </message>
+    <message>
         <source>Inherited</source>
         <translation>Devralınmış</translation>
     </message>
@@ -427,10 +419,6 @@
     <message>
         <source>Allowed Internet address</source>
         <translation>İzin verilen İnternet adresi</translation>
-    </message>
-    <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>Fort Firewall Hizmeti</translation>
     </message>
     <message>
         <source>Block DNS port</source>
@@ -657,12 +645,16 @@
         <translation>Diğer Programlar için 53 ve 853 Portlarını Engelle</translation>
     </message>
     <message>
-        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
-        <translation>DNS filtrelenirken Fort Firewall Hizmeti dışındaki programların DNS sunucularının 53 portuna ve DNS over TLS ve over QUIC sunucularının 853 portuna bağlantılarını engelle: bu programlar adları bu protokollerle DNS Yönlendiriciyi atlayarak çözümleyemez. DNS over HTTPS, web sitelerinin engellenmeyen 443 portuna gider</translation>
-    </message>
-    <message>
         <source>Upstream DNS servers:</source>
         <translation>Üst DNS Sunucuları:</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table is overridden, e.g. by the Group Policy&apos;s rules, or the connections to the port 53 of the loopback are blocked, e.g. by a VPN&apos;s DNS leak protection</source>
+        <translation>Ad Çözümleme İlkesi Tablosu&apos;nun kuralı geçersiz kılınıyor, ör. Grup İlkesi&apos;nin kurallarıyla, ya da geri döngünün 53 portuna bağlantılar engelleniyor, ör. bir VPN&apos;in DNS sızıntısı korumasıyla</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: %1</source>
+        <translation>Sistemin DNS sorguları DNS Yönlendiriciye gönderilmiyor: %1</translation>
     </message>
     <message>
         <source>Adapters&apos; DNS servers</source>
@@ -671,6 +663,10 @@
     <message>
         <source>Custom</source>
         <translation>Özel</translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>DNS filtrelenirken Fort Firewall Hizmeti dışındaki programların DNS sunucularının 53 portuna ve DNS over TLS ve over QUIC sunucularının 853 portuna bağlantılarını engelle: bu programlar adları bu protokollerle DNS Yönlendiriciyi atlayarak çözümleyemez. Adların DNS filtrelenirken çözümlendiğini denetledikten sonra açın: DNS Yönlendirici çalışmadığı sürece, ör. portu bir VPN tarafından engellendiğinde, hiçbir ad çözümlenmez. DNS over HTTPS, web sitelerinin engellenmeyen 443 portuna gider</translation>
     </message>
     <message>
         <source>Test</source>
@@ -683,6 +679,34 @@
     <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>Satır başına bir sunucu: adresler, ör. &quot;1.1.1.1&quot; veya sunucunun adresini içeren DNS over HTTPS URL&apos;leri, ör. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</translation>
+    </message>
+    <message>
+        <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
+        <translation>%1; 53 ve 853 numaralı portlar diğer programlar için engellendiği sürece adlar çözümlenmez</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table can&apos;t be added</source>
+        <translation>Ad Çözümleme İlkesi Tablosu&apos;nun kuralı eklenemiyor</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers mix plain and DNS over HTTPS ones</source>
+        <translation>DNS Yönlendirici başlatılmadı: kaydedilen üst DNS sunucuları düz ve DNS over HTTPS sunucularını karıştırıyor</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers are invalid</source>
+        <translation>DNS Yönlendirici başlatılmadı: kaydedilen üst DNS sunucuları geçersiz</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: can&apos;t listen on the port 53: %1</source>
+        <translation>DNS Yönlendirici başlatılmadı: 53 numaralı port dinlenemiyor: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
+        <translation>DNS Yönlendirici adları Host Bölgeleriyle eşleştirmiyor veya eskileriyle eşleştiriyor: veritabanları açılamıyor veya yazılamıyor: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
+        <translation>DNS Yönlendirici adları çözümlemiyor: etkin Engelleme Bölgelerinin adları yüklenmedi</translation>
     </message>
     <message>
         <source>Error: %1</source>
@@ -914,6 +938,26 @@
         <translation>Yok sayıldı: diğer güvenlik duvarları karar verir</translation>
     </message>
     <message>
+        <source>Block Zone of the DNS Forwarder</source>
+        <translation>DNS Yönlendiricinin Engelleme Bölgesi</translation>
+    </message>
+    <message>
+        <source>The IP is of the names, which the DNS Forwarder matches the host name by now. The canonical names and the HTTPS records&apos; targets of its answer aren&apos;t known here.</source>
+        <translation>IP, DNS Yönlendiricinin şu anda host adını eşleştirdiği adlara ait sayılır. Yanıtının kanonik adları ve HTTPS kayıtlarının hedefleri burada bilinmiyor.</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the host name.</source>
+        <translation>DNS Yönlendirici host adını çözümlemiyor.</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: the driver doesn&apos;t get the names&apos; addresses.</source>
+        <translation>Sistemin DNS sorguları DNS Yönlendiriciye gönderilmiyor: sürücü adların adreslerini almıyor.</translation>
+    </message>
+    <message>
+        <source>The driver&apos;s result may differ: it depends on the host names of the remote IP (the host() filters and the Hosts Zones). Enter the Host Name to simulate them.</source>
+        <translation>Sürücünün sonucu farklı olabilir: uzak IP&apos;nin host adlarına (host() filtreleri ve Host Bölgeleri) bağlıdır. Bunları simüle etmek için Host Adı&apos;nı girin.</translation>
+    </message>
+    <message>
         <source>Not found</source>
         <translation>Bulunamadı</translation>
     </message>
@@ -946,6 +990,18 @@
         <translation>Port:</translation>
     </message>
     <message>
+        <source>Host Name:</source>
+        <translation>Host Adı:</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Bilinmeyen</translation>
+    </message>
+    <message>
+        <source>The name, which the program resolved to the remote IP: the IP is of the host() filters&apos; and the Hosts Zones&apos; names, which the DNS Forwarder matches the name by.</source>
+        <translation>Programın uzak IP&apos;ye çözümlediği ad: IP, DNS Yönlendiricinin bu adı eşleştirdiği host() filtrelerinin ve Host Bölgelerinin adlarına ait sayılır.</translation>
+    </message>
+    <message>
         <source>Local IP:</source>
         <translation>Yerel IP:</translation>
     </message>
@@ -962,12 +1018,12 @@
         <translation>Bu bilgisayarın bir adresine bağlantı. 127.0.0.0/8 ve ::1 adresleri her zaman geri döngüdür.</translation>
     </message>
     <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>Fort Firewall Hizmeti</translation>
+        <source>DNS Forwarder</source>
+        <translation>DNS Yönlendirici</translation>
     </message>
     <message>
-        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
-        <translation>Fort Firewall Hizmetinin bağlantısı, ör. DNS Yönlendiricisinin. Hizmet olmadan diğer programlarınkiler gibi filtrelenir.</translation>
+        <source>The connection of Fort Firewall&apos;s Service, allowed while DNS is filtered. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
+        <translation>Fort Firewall Hizmetinin DNS filtrelenirken izin verilen bağlantısı. Hizmet olmadan diğer programlarınkiler gibi filtrelenir.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
@@ -1024,6 +1080,10 @@
     <message>
         <source>Invalid remote IP address</source>
         <translation>Geçersiz uzak IP adresi</translation>
+    </message>
+    <message>
+        <source>Invalid host name</source>
+        <translation>Geçersiz host adı</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
@@ -4244,6 +4304,10 @@ Paket kaybı: %2</translation>
     <message>
         <source>TAS-IX Addresses</source>
         <translation>TAS-IX Adresleri</translation>
+    </message>
+    <message>
+        <source>NetAPI Honeypot Attackers</source>
+        <translation>NetAPI Honeypot Saldırganları</translation>
     </message>
     <message>
         <source>OISD Big</source>

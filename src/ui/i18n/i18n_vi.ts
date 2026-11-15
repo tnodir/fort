@@ -77,18 +77,6 @@
         <source>Filter Local Network</source>
         <translation>Lọc mạng nội bộ</translation>
     </message>
-    <message>
-        <source>Filter Fort Firewall&apos;s Service</source>
-        <translation>Lọc Dịch vụ Fort Firewall</translation>
-    </message>
-    <message>
-        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
-        <translation>Lọc các kết nối của Dịch vụ như của các chương trình khác, nếu không thì cho phép chúng</translation>
-    </message>
-    <message>
-        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
-        <translation>Khi không có Dịch vụ, Fort Firewall được lọc như các chương trình khác</translation>
-    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -345,6 +333,10 @@
         <translation>Tiến trình được cho phép bởi &quot;Hỏi khi kết nối&quot;</translation>
     </message>
     <message>
+        <source>DNS Forwarder</source>
+        <translation>Bộ chuyển tiếp DNS</translation>
+    </message>
+    <message>
         <source>Inherited</source>
         <translation>Kế thừa</translation>
     </message>
@@ -427,10 +419,6 @@
     <message>
         <source>Allowed Internet address</source>
         <translation>Địa chỉ Internet được cho phép</translation>
-    </message>
-    <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>Dịch vụ Fort Firewall</translation>
     </message>
     <message>
         <source>Block DNS port</source>
@@ -657,12 +645,16 @@
         <translation>Chặn cổng 53 và 853 cho các chương trình khác</translation>
     </message>
     <message>
-        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
-        <translation>Chặn các kết nối của các chương trình không phải Dịch vụ Fort Firewall đến cổng 53 của các máy chủ DNS và cổng 853 của các máy chủ DNS over TLS và over QUIC khi DNS đang được lọc: chúng không thể phân giải tên qua các giao thức này mà bỏ qua Bộ chuyển tiếp DNS. DNS over HTTPS đi đến cổng 443 của các trang web, cổng này không bị chặn</translation>
-    </message>
-    <message>
         <source>Upstream DNS servers:</source>
         <translation>Máy chủ DNS thượng nguồn:</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table is overridden, e.g. by the Group Policy&apos;s rules, or the connections to the port 53 of the loopback are blocked, e.g. by a VPN&apos;s DNS leak protection</source>
+        <translation>quy tắc của bảng chính sách phân giải tên bị ghi đè, ví dụ bởi các quy tắc của Chính sách nhóm, hoặc các kết nối đến cổng 53 của loopback bị chặn, ví dụ bởi tính năng chống rò rỉ DNS của VPN</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: %1</source>
+        <translation>Các truy vấn DNS của hệ thống không được gửi tới Bộ chuyển tiếp DNS: %1</translation>
     </message>
     <message>
         <source>Adapters&apos; DNS servers</source>
@@ -671,6 +663,10 @@
     <message>
         <source>Custom</source>
         <translation>Tùy chỉnh</translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>Chặn các kết nối của các chương trình không phải Dịch vụ Fort Firewall đến cổng 53 của các máy chủ DNS và cổng 853 của các máy chủ DNS over TLS và over QUIC khi DNS đang được lọc: chúng không thể phân giải tên qua các giao thức này mà bỏ qua Bộ chuyển tiếp DNS. Hãy bật tùy chọn này sau khi kiểm tra rằng các tên được phân giải khi DNS được lọc: khi Bộ chuyển tiếp DNS gặp lỗi, ví dụ cổng của nó bị VPN chặn, không tên nào được phân giải. DNS over HTTPS đi đến cổng 443 của các trang web, cổng này không bị chặn</translation>
     </message>
     <message>
         <source>Test</source>
@@ -683,6 +679,34 @@
     <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>Mỗi dòng một máy chủ: địa chỉ, ví dụ &quot;1.1.1.1&quot;, hoặc URL DNS over HTTPS kèm địa chỉ máy chủ, ví dụ &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</translation>
+    </message>
+    <message>
+        <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
+        <translation>%1; các tên không được phân giải khi các cổng 53 và 853 bị chặn đối với các chương trình khác</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table can&apos;t be added</source>
+        <translation>không thể thêm quy tắc của bảng chính sách phân giải tên</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers mix plain and DNS over HTTPS ones</source>
+        <translation>Bộ chuyển tiếp DNS chưa được khởi động: các máy chủ DNS thượng nguồn đã lưu trộn lẫn máy chủ thường và máy chủ DNS over HTTPS</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers are invalid</source>
+        <translation>Bộ chuyển tiếp DNS chưa được khởi động: các máy chủ DNS thượng nguồn đã lưu không hợp lệ</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: can&apos;t listen on the port 53: %1</source>
+        <translation>Bộ chuyển tiếp DNS chưa được khởi động: không thể lắng nghe trên cổng 53: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
+        <translation>Bộ chuyển tiếp DNS không so khớp tên với các Vùng tên máy hoặc so khớp với tên đã lỗi thời: không thể mở hoặc ghi cơ sở dữ liệu của chúng: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
+        <translation>Bộ chuyển tiếp DNS không phân giải tên: tên của các Vùng chặn đã bật chưa được tải</translation>
     </message>
     <message>
         <source>Error: %1</source>
@@ -914,6 +938,26 @@
         <translation>Đã bỏ qua: tường lửa khác quyết định</translation>
     </message>
     <message>
+        <source>Block Zone of the DNS Forwarder</source>
+        <translation>Vùng chặn của Bộ chuyển tiếp DNS</translation>
+    </message>
+    <message>
+        <source>The IP is of the names, which the DNS Forwarder matches the host name by now. The canonical names and the HTTPS records&apos; targets of its answer aren&apos;t known here.</source>
+        <translation>IP được coi là thuộc các tên mà Bộ chuyển tiếp DNS hiện so khớp tên máy với chúng. Các tên chuẩn và mục tiêu của các bản ghi HTTPS trong câu trả lời của nó không được biết ở đây.</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the host name.</source>
+        <translation>Bộ chuyển tiếp DNS không phân giải tên máy này.</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: the driver doesn&apos;t get the names&apos; addresses.</source>
+        <translation>Các truy vấn DNS của hệ thống không được gửi tới Bộ chuyển tiếp DNS: trình điều khiển không nhận được địa chỉ của các tên.</translation>
+    </message>
+    <message>
+        <source>The driver&apos;s result may differ: it depends on the host names of the remote IP (the host() filters and the Hosts Zones). Enter the Host Name to simulate them.</source>
+        <translation>Kết quả của trình điều khiển có thể khác: nó phụ thuộc vào tên máy của IP từ xa (các bộ lọc host() và các Vùng tên máy). Nhập tên máy để mô phỏng chúng.</translation>
+    </message>
+    <message>
         <source>Not found</source>
         <translation>Không tìm thấy</translation>
     </message>
@@ -946,6 +990,18 @@
         <translation>Cổng:</translation>
     </message>
     <message>
+        <source>Host Name:</source>
+        <translation>Tên máy:</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Không rõ</translation>
+    </message>
+    <message>
+        <source>The name, which the program resolved to the remote IP: the IP is of the host() filters&apos; and the Hosts Zones&apos; names, which the DNS Forwarder matches the name by.</source>
+        <translation>Tên mà chương trình đã phân giải thành IP từ xa: IP được coi là thuộc các tên của bộ lọc host() và các Vùng tên máy mà Bộ chuyển tiếp DNS so khớp tên này với chúng.</translation>
+    </message>
+    <message>
         <source>Local IP:</source>
         <translation>IP cục bộ:</translation>
     </message>
@@ -962,12 +1018,12 @@
         <translation>Kết nối đến địa chỉ của máy tính này. Các địa chỉ 127.0.0.0/8 và ::1 luôn là loopback.</translation>
     </message>
     <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>Dịch vụ Fort Firewall</translation>
+        <source>DNS Forwarder</source>
+        <translation>Bộ chuyển tiếp DNS</translation>
     </message>
     <message>
-        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
-        <translation>Kết nối của Dịch vụ Fort Firewall, ví dụ của Bộ chuyển tiếp DNS của nó. Khi không có Dịch vụ, nó được lọc như kết nối của các chương trình khác.</translation>
+        <source>The connection of Fort Firewall&apos;s Service, allowed while DNS is filtered. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
+        <translation>Kết nối của Dịch vụ Fort Firewall, được cho phép khi DNS đang được lọc. Khi không có Dịch vụ, nó được lọc như kết nối của các chương trình khác.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
@@ -1024,6 +1080,10 @@
     <message>
         <source>Invalid remote IP address</source>
         <translation>Địa chỉ IP từ xa không hợp lệ</translation>
+    </message>
+    <message>
+        <source>Invalid host name</source>
+        <translation>Tên máy không hợp lệ</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
@@ -4245,6 +4305,10 @@ Mất gói tin: %2</translation>
     <message>
         <source>TAS-IX Addresses</source>
         <translation>Địa chỉ TAS-IX</translation>
+    </message>
+    <message>
+        <source>NetAPI Honeypot Attackers</source>
+        <translation>Kẻ tấn công honeypot NetAPI</translation>
     </message>
     <message>
         <source>OISD Big</source>

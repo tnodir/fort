@@ -77,18 +77,6 @@
         <source>Filter Local Network</source>
         <translation>过滤本地网络</translation>
     </message>
-    <message>
-        <source>Filter Fort Firewall&apos;s Service</source>
-        <translation>过滤 Fort Firewall 服务</translation>
-    </message>
-    <message>
-        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
-        <translation>像其他应用程序的连接一样过滤服务的连接，否则允许它们</translation>
-    </message>
-    <message>
-        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
-        <translation>没有服务时，Fort Firewall 会像其他应用程序一样被过滤</translation>
-    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -345,6 +333,10 @@
         <translation>进程被“请求连接”允许</translation>
     </message>
     <message>
+        <source>DNS Forwarder</source>
+        <translation>DNS 转发器</translation>
+    </message>
+    <message>
         <source>Inherited</source>
         <translation>继承</translation>
     </message>
@@ -427,10 +419,6 @@
     <message>
         <source>Allowed Internet address</source>
         <translation>已允许的互联网地址</translation>
-    </message>
-    <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>Fort Firewall 服务</translation>
     </message>
     <message>
         <source>Block DNS port</source>
@@ -657,12 +645,16 @@
         <translation>为其他应用程序阻止端口 53 和 853</translation>
     </message>
     <message>
-        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
-        <translation>在过滤 DNS 时，阻止除 Fort Firewall 服务以外的应用程序连接 DNS 服务器的端口 53 以及 DNS over TLS 和 DNS over QUIC 服务器的端口 853：它们无法通过这些协议绕过 DNS 转发器解析名称。DNS over HTTPS 使用网站的端口 443，该端口不会被阻止</translation>
-    </message>
-    <message>
         <source>Upstream DNS servers:</source>
         <translation>上游 DNS 服务器：</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table is overridden, e.g. by the Group Policy&apos;s rules, or the connections to the port 53 of the loopback are blocked, e.g. by a VPN&apos;s DNS leak protection</source>
+        <translation>名称解析策略表的规则被覆盖，例如被组策略的规则覆盖，或者到回环端口 53 的连接被阻止，例如被 VPN 的 DNS 泄漏保护阻止</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: %1</source>
+        <translation>系统的 DNS 查询未发送到 DNS 转发器：%1</translation>
     </message>
     <message>
         <source>Adapters&apos; DNS servers</source>
@@ -671,6 +663,10 @@
     <message>
         <source>Custom</source>
         <translation>自定义</translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>在过滤 DNS 时，阻止除 Fort Firewall 服务以外的应用程序连接 DNS 服务器的端口 53 以及 DNS over TLS 和 DNS over QUIC 服务器的端口 853：它们无法通过这些协议绕过 DNS 转发器解析名称。请在确认过滤 DNS 时名称能够解析后再启用：DNS 转发器失败时（例如其端口被 VPN 阻止），任何名称都无法解析。DNS over HTTPS 使用网站的端口 443，该端口不会被阻止</translation>
     </message>
     <message>
         <source>Test</source>
@@ -683,6 +679,34 @@
     <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>每行一个服务器：地址，例如“1.1.1.1”，或带服务器地址的 DNS over HTTPS URL，例如“https://dns.example/dns-query?ip=192.0.2.1”</translation>
+    </message>
+    <message>
+        <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
+        <translation>%1；端口 53 和 853 对其他应用程序阻止期间，名称无法解析</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table can&apos;t be added</source>
+        <translation>无法添加名称解析策略表的规则</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers mix plain and DNS over HTTPS ones</source>
+        <translation>DNS 转发器未启动：保存的上游 DNS 服务器混用了普通服务器和 DNS over HTTPS 服务器</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers are invalid</source>
+        <translation>DNS 转发器未启动：保存的上游 DNS 服务器无效</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: can&apos;t listen on the port 53: %1</source>
+        <translation>DNS 转发器未启动：无法在端口 53 上监听：%1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
+        <translation>DNS 转发器未与主机区域的名称匹配，或与过时的名称匹配：无法打开或写入其数据库：%1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
+        <translation>DNS 转发器不解析名称：已启用的阻止区域的名称未加载</translation>
     </message>
     <message>
         <source>Error: %1</source>
@@ -914,6 +938,26 @@
         <translation>已忽略：由其他防火墙决定</translation>
     </message>
     <message>
+        <source>Block Zone of the DNS Forwarder</source>
+        <translation>DNS 转发器的阻止区域</translation>
+    </message>
+    <message>
+        <source>The IP is of the names, which the DNS Forwarder matches the host name by now. The canonical names and the HTTPS records&apos; targets of its answer aren&apos;t known here.</source>
+        <translation>该 IP 被视为 DNS 转发器当前用于匹配该主机名的名称的地址。其应答的规范名称和 HTTPS 记录的目标在此未知。</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the host name.</source>
+        <translation>DNS 转发器不解析该主机名。</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: the driver doesn&apos;t get the names&apos; addresses.</source>
+        <translation>系统的 DNS 查询未发送到 DNS 转发器：驱动无法获取这些名称的地址。</translation>
+    </message>
+    <message>
+        <source>The driver&apos;s result may differ: it depends on the host names of the remote IP (the host() filters and the Hosts Zones). Enter the Host Name to simulate them.</source>
+        <translation>驱动的结果可能不同：它取决于远程 IP 的主机名（host() 过滤器和主机区域）。输入主机名以模拟它们。</translation>
+    </message>
+    <message>
         <source>Not found</source>
         <translation>未找到</translation>
     </message>
@@ -946,6 +990,18 @@
         <translation>端口：</translation>
     </message>
     <message>
+        <source>Host Name:</source>
+        <translation>主机名：</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>未知</translation>
+    </message>
+    <message>
+        <source>The name, which the program resolved to the remote IP: the IP is of the host() filters&apos; and the Hosts Zones&apos; names, which the DNS Forwarder matches the name by.</source>
+        <translation>应用程序解析为远程 IP 的名称：该 IP 被视为 DNS 转发器用于匹配此名称的 host() 过滤器和主机区域的名称的地址。</translation>
+    </message>
+    <message>
         <source>Local IP:</source>
         <translation>本地 IP：</translation>
     </message>
@@ -962,12 +1018,12 @@
         <translation>连接到本计算机的地址。地址 127.0.0.0/8 和 ::1 始终是回环地址。</translation>
     </message>
     <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>Fort Firewall 服务</translation>
+        <source>DNS Forwarder</source>
+        <translation>DNS 转发器</translation>
     </message>
     <message>
-        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
-        <translation>Fort Firewall 服务的连接，例如其 DNS 转发器的连接。没有服务时，它会像其他应用程序的连接一样被过滤。</translation>
+        <source>The connection of Fort Firewall&apos;s Service, allowed while DNS is filtered. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
+        <translation>Fort Firewall 服务的连接，在过滤 DNS 时被允许。没有服务时，它会像其他应用程序的连接一样被过滤。</translation>
     </message>
     <message>
         <source>Network Profile:</source>
@@ -1024,6 +1080,10 @@
     <message>
         <source>Invalid remote IP address</source>
         <translation>无效的远程 IP 地址</translation>
+    </message>
+    <message>
+        <source>Invalid host name</source>
+        <translation>无效的主机名</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
@@ -4245,6 +4305,10 @@ Packet loss: %2</source>
     <message>
         <source>TAS-IX Addresses</source>
         <translation>TAS-IX 地址</translation>
+    </message>
+    <message>
+        <source>NetAPI Honeypot Attackers</source>
+        <translation>NetAPI 蜜罐攻击者</translation>
     </message>
     <message>
         <source>OISD Big</source>

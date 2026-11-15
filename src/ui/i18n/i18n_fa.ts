@@ -77,18 +77,6 @@
         <source>Filter Local Network</source>
         <translation>فیلتر کردن شبکه محلی</translation>
     </message>
-    <message>
-        <source>Filter Fort Firewall&apos;s Service</source>
-        <translation>فیلتر کردن سرویس Fort Firewall</translation>
-    </message>
-    <message>
-        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
-        <translation>فیلتر کردن اتصال‌های سرویس مانند اتصال‌های برنامه‌های دیگر، وگرنه اجازه دادن به آن‌ها</translation>
-    </message>
-    <message>
-        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
-        <translation>بدون سرویس، Fort Firewall مانند برنامه‌های دیگر فیلتر می‌شود</translation>
-    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -345,6 +333,10 @@
         <translation>فرایند مجازشده توسط «پرسش برای اتصال»</translation>
     </message>
     <message>
+        <source>DNS Forwarder</source>
+        <translation>بازارسال‌کننده DNS</translation>
+    </message>
+    <message>
         <source>Inherited</source>
         <translation>به ارث رسیده</translation>
     </message>
@@ -427,10 +419,6 @@
     <message>
         <source>Allowed Internet address</source>
         <translation>آدرس اینترنتی مجاز</translation>
-    </message>
-    <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>سرویس Fort Firewall</translation>
     </message>
     <message>
         <source>Block DNS port</source>
@@ -657,12 +645,16 @@
         <translation>مسدود کردن پورت‌های 53 و 853 برای برنامه‌های دیگر</translation>
     </message>
     <message>
-        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
-        <translation>مسدود کردن اتصال‌های برنامه‌های غیر از سرویس Fort Firewall به پورت 53 سرورهای DNS و پورت 853 سرورهای DNS over TLS و over QUIC، هنگامی که DNS فیلتر می‌شود: آن‌ها نمی‌توانند نام‌ها را با این پروتکل‌ها و با دور زدن بازارسال‌کننده DNS تفکیک کنند. DNS over HTTPS به پورت 443 وب‌سایت‌ها می‌رود که مسدود نمی‌شود</translation>
-    </message>
-    <message>
         <source>Upstream DNS servers:</source>
         <translation>سرورهای DNS بالادستی:</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table is overridden, e.g. by the Group Policy&apos;s rules, or the connections to the port 53 of the loopback are blocked, e.g. by a VPN&apos;s DNS leak protection</source>
+        <translation>قانون جدول خط‌مشی تفکیک نام بازنویسی شده است، مثلاً با قوانین خط‌مشی گروه، یا اتصال‌ها به پورت 53 حلقه‌بازگشت مسدود می‌شوند، مثلاً با محافظت VPN در برابر نشت DNS</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: %1</source>
+        <translation>پرس‌وجوهای DNS سیستم به بازارسال‌کننده DNS فرستاده نمی‌شوند: %1</translation>
     </message>
     <message>
         <source>Adapters&apos; DNS servers</source>
@@ -671,6 +663,10 @@
     <message>
         <source>Custom</source>
         <translation>سفارشی</translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>مسدود کردن اتصال‌های برنامه‌های غیر از سرویس Fort Firewall به پورت 53 سرورهای DNS و پورت 853 سرورهای DNS over TLS و over QUIC، هنگامی که DNS فیلتر می‌شود: آن‌ها نمی‌توانند نام‌ها را با این پروتکل‌ها و با دور زدن بازارسال‌کننده DNS تفکیک کنند. آن را پس از بررسی اینکه نام‌ها با فیلتر شدن DNS تفکیک می‌شوند روشن کنید: تا زمانی که بازارسال‌کننده DNS از کار افتاده است، مثلاً پورت آن با یک VPN مسدود شده است، هیچ نامی تفکیک نمی‌شود. DNS over HTTPS به پورت 443 وب‌سایت‌ها می‌رود که مسدود نمی‌شود</translation>
     </message>
     <message>
         <source>Test</source>
@@ -683,6 +679,34 @@
     <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>یک سرور در هر خط: آدرس‌ها، مثلاً «1.1.1.1»، یا URLهای DNS over HTTPS با آدرس سرور، مثلاً «https://dns.example/dns-query?ip=192.0.2.1»</translation>
+    </message>
+    <message>
+        <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
+        <translation>%1؛ تا زمانی که پورت‌های 53 و 853 برای برنامه‌های دیگر مسدود می‌شوند، نام‌ها تفکیک نمی‌شوند</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table can&apos;t be added</source>
+        <translation>قانون جدول خط‌مشی تفکیک نام را نمی‌توان افزود</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers mix plain and DNS over HTTPS ones</source>
+        <translation>بازارسال‌کننده DNS آغاز نشده است: سرورهای DNS بالادستی ذخیره‌شده، سرورهای معمولی و DNS over HTTPS را با هم دارند</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers are invalid</source>
+        <translation>بازارسال‌کننده DNS آغاز نشده است: سرورهای DNS بالادستی ذخیره‌شده نامعتبرند</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: can&apos;t listen on the port 53: %1</source>
+        <translation>بازارسال‌کننده DNS آغاز نشده است: نمی‌توان روی پورت 53 گوش داد: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
+        <translation>بازارسال‌کننده DNS نام‌ها را با مناطق میزبان‌ها تطبیق نمی‌دهد یا با نام‌های قدیمی تطبیق می‌دهد: پایگاه داده آن‌ها را نمی‌توان باز کرد یا در آن نوشت: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
+        <translation>بازارسال‌کننده DNS نام‌ها را تفکیک نمی‌کند: نام‌های مناطق مسدودسازی فعال بارگذاری نشده‌اند</translation>
     </message>
     <message>
         <source>Error: %1</source>
@@ -914,6 +938,26 @@
         <translation>نادیده گرفته شد: فایروال‌های دیگر تصمیم می‌گیرند</translation>
     </message>
     <message>
+        <source>Block Zone of the DNS Forwarder</source>
+        <translation>منطقه مسدودسازی بازارسال‌کننده DNS</translation>
+    </message>
+    <message>
+        <source>The IP is of the names, which the DNS Forwarder matches the host name by now. The canonical names and the HTTPS records&apos; targets of its answer aren&apos;t known here.</source>
+        <translation>این IP متعلق به نام‌هایی در نظر گرفته می‌شود که بازارسال‌کننده DNS اکنون نام میزبان را با آن‌ها تطبیق می‌دهد. نام‌های متعارف و مقصدهای رکوردهای HTTPS پاسخ آن در اینجا معلوم نیستند.</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the host name.</source>
+        <translation>بازارسال‌کننده DNS این نام میزبان را تفکیک نمی‌کند.</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: the driver doesn&apos;t get the names&apos; addresses.</source>
+        <translation>پرس‌وجوهای DNS سیستم به بازارسال‌کننده DNS فرستاده نمی‌شوند: درایور آدرس‌های نام‌ها را دریافت نمی‌کند.</translation>
+    </message>
+    <message>
+        <source>The driver&apos;s result may differ: it depends on the host names of the remote IP (the host() filters and the Hosts Zones). Enter the Host Name to simulate them.</source>
+        <translation>نتیجه درایور ممکن است متفاوت باشد: به نام‌های میزبان IP راه دور (فیلترهای host() و مناطق میزبان‌ها) بستگی دارد. برای شبیه‌سازی آن‌ها، نام میزبان را وارد کنید.</translation>
+    </message>
+    <message>
         <source>Not found</source>
         <translation>یافت نشد</translation>
     </message>
@@ -946,6 +990,18 @@
         <translation>پورت:</translation>
     </message>
     <message>
+        <source>Host Name:</source>
+        <translation>نام میزبان:</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>ناشناخته</translation>
+    </message>
+    <message>
+        <source>The name, which the program resolved to the remote IP: the IP is of the host() filters&apos; and the Hosts Zones&apos; names, which the DNS Forwarder matches the name by.</source>
+        <translation>نامی که برنامه به IP راه دور تفکیک کرد: این IP متعلق به نام‌های فیلترهای host() و مناطق میزبان‌ها در نظر گرفته می‌شود که بازارسال‌کننده DNS این نام را با آن‌ها تطبیق می‌دهد.</translation>
+    </message>
+    <message>
         <source>Local IP:</source>
         <translation>IP محلی:</translation>
     </message>
@@ -962,12 +1018,12 @@
         <translation>اتصال به یکی از آدرس‌های همین رایانه. آدرس‌های 127.0.0.0/8 و ::1 همیشه حلقه‌بازگشت هستند.</translation>
     </message>
     <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>سرویس Fort Firewall</translation>
+        <source>DNS Forwarder</source>
+        <translation>بازارسال‌کننده DNS</translation>
     </message>
     <message>
-        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
-        <translation>اتصال سرویس Fort Firewall، مثلاً بازارسال‌کننده DNS آن. بدون سرویس، مانند اتصال‌های برنامه‌های دیگر فیلتر می‌شود.</translation>
+        <source>The connection of Fort Firewall&apos;s Service, allowed while DNS is filtered. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
+        <translation>اتصال سرویس Fort Firewall، که هنگام فیلتر شدن DNS مجاز است. بدون سرویس، مانند اتصال‌های برنامه‌های دیگر فیلتر می‌شود.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
@@ -1024,6 +1080,10 @@
     <message>
         <source>Invalid remote IP address</source>
         <translation>آدرس IP راه دور نامعتبر است</translation>
+    </message>
+    <message>
+        <source>Invalid host name</source>
+        <translation>نام میزبان نامعتبر است</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
@@ -4245,6 +4305,10 @@ Packet loss: %2</source>
     <message>
         <source>TAS-IX Addresses</source>
         <translation>آدرس‌های TAS-IX</translation>
+    </message>
+    <message>
+        <source>NetAPI Honeypot Attackers</source>
+        <translation>مهاجمان هانی‌پات NetAPI</translation>
     </message>
     <message>
         <source>OISD Big</source>

@@ -77,18 +77,6 @@
         <source>Filter Local Network</source>
         <translation>Lokale Netzwerke filtern</translation>
     </message>
-    <message>
-        <source>Filter Fort Firewall&apos;s Service</source>
-        <translation>Dienst von Fort Firewall filtern</translation>
-    </message>
-    <message>
-        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
-        <translation>Die Verbindungen des Dienstes wie die anderer Programme filtern, sonst sie zulassen</translation>
-    </message>
-    <message>
-        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
-        <translation>Ohne den Dienst wird Fort Firewall wie die anderen Programme gefiltert</translation>
-    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -345,6 +333,10 @@
         <translation>Prozess zugelassen durch &quot;Nach Verbindung fragen&quot;</translation>
     </message>
     <message>
+        <source>DNS Forwarder</source>
+        <translation>DNS-Weiterleitung</translation>
+    </message>
+    <message>
         <source>Inherited</source>
         <translation>Vererbt</translation>
     </message>
@@ -427,10 +419,6 @@
     <message>
         <source>Allowed Internet address</source>
         <translation>Zugelassene Internetadresse</translation>
-    </message>
-    <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>Dienst von Fort Firewall</translation>
     </message>
     <message>
         <source>Block DNS port</source>
@@ -657,12 +645,16 @@
         <translation>Ports 53 und 853 für andere Programme blockieren</translation>
     </message>
     <message>
-        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
-        <translation>Die Verbindungen der Programme außer dem Dienst von Fort Firewall zum Port 53 der DNS-Server und zum Port 853 der DNS-over-TLS- und DNS-over-QUIC-Server blockieren, während DNS gefiltert wird: Sie können die Namen über diese Protokolle nicht an der DNS-Weiterleitung vorbei auflösen. DNS over HTTPS geht an den Port 443 der Websites, der nicht blockiert wird</translation>
-    </message>
-    <message>
         <source>Upstream DNS servers:</source>
         <translation>Upstream-DNS-Server:</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table is overridden, e.g. by the Group Policy&apos;s rules, or the connections to the port 53 of the loopback are blocked, e.g. by a VPN&apos;s DNS leak protection</source>
+        <translation>die Regel der Richtlinientabelle für die Namensauflösung wird überschrieben, z. B. durch die Regeln der Gruppenrichtlinie, oder die Verbindungen zum Port 53 des Loopbacks werden blockiert, z. B. durch den DNS-Leckschutz eines VPN</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: %1</source>
+        <translation>Die DNS-Anfragen des Systems werden nicht an die DNS-Weiterleitung gesendet: %1</translation>
     </message>
     <message>
         <source>Adapters&apos; DNS servers</source>
@@ -671,6 +663,10 @@
     <message>
         <source>Custom</source>
         <translation>Benutzerdefiniert</translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>Die Verbindungen der Programme außer dem Dienst von Fort Firewall zum Port 53 der DNS-Server und zum Port 853 der DNS-over-TLS- und DNS-over-QUIC-Server blockieren, während DNS gefiltert wird: Sie können die Namen über diese Protokolle nicht an der DNS-Weiterleitung vorbei auflösen. Schalten Sie es ein, nachdem Sie geprüft haben, dass die Namen bei gefiltertem DNS aufgelöst werden: Solange die DNS-Weiterleitung ausfällt, z. B. weil ihr Port durch ein VPN blockiert wird, wird kein Name aufgelöst. DNS over HTTPS geht an den Port 443 der Websites, der nicht blockiert wird</translation>
     </message>
     <message>
         <source>Test</source>
@@ -683,6 +679,34 @@
     <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>Ein Server pro Zeile: Adressen, z. B. &quot;1.1.1.1&quot;, oder DNS-over-HTTPS-URLs mit der Adresse des Servers, z. B. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</translation>
+    </message>
+    <message>
+        <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
+        <translation>%1; die Namen werden nicht aufgelöst, solange die Ports 53 und 853 für andere Programme blockiert werden</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table can&apos;t be added</source>
+        <translation>die Regel der Richtlinientabelle für die Namensauflösung kann nicht hinzugefügt werden</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers mix plain and DNS over HTTPS ones</source>
+        <translation>Die DNS-Weiterleitung ist nicht gestartet: Die gespeicherten Upstream-DNS-Server mischen normale und DNS-over-HTTPS-Server</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers are invalid</source>
+        <translation>Die DNS-Weiterleitung ist nicht gestartet: Die gespeicherten Upstream-DNS-Server sind ungültig</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: can&apos;t listen on the port 53: %1</source>
+        <translation>Die DNS-Weiterleitung ist nicht gestartet: Port 53 kann nicht abgehört werden: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
+        <translation>Die DNS-Weiterleitung gleicht die Namen nicht mit den Hosts-Zonen ab oder mit veralteten: Deren Datenbank kann nicht geöffnet oder beschrieben werden: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
+        <translation>Die DNS-Weiterleitung löst die Namen nicht auf: Die Namen der aktivierten Sperrzonen sind nicht geladen</translation>
     </message>
     <message>
         <source>Error: %1</source>
@@ -914,6 +938,26 @@
         <translation>Ignoriert: andere Firewalls entscheiden</translation>
     </message>
     <message>
+        <source>Block Zone of the DNS Forwarder</source>
+        <translation>Sperrzone der DNS-Weiterleitung</translation>
+    </message>
+    <message>
+        <source>The IP is of the names, which the DNS Forwarder matches the host name by now. The canonical names and the HTTPS records&apos; targets of its answer aren&apos;t known here.</source>
+        <translation>Die IP gilt als Adresse der Namen, mit denen die DNS-Weiterleitung den Hostnamen derzeit abgleicht. Die kanonischen Namen und die Ziele der HTTPS-Einträge ihrer Antwort sind hier nicht bekannt.</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the host name.</source>
+        <translation>Die DNS-Weiterleitung löst den Hostnamen nicht auf.</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: the driver doesn&apos;t get the names&apos; addresses.</source>
+        <translation>Die DNS-Anfragen des Systems werden nicht an die DNS-Weiterleitung gesendet: Der Treiber erhält die Adressen der Namen nicht.</translation>
+    </message>
+    <message>
+        <source>The driver&apos;s result may differ: it depends on the host names of the remote IP (the host() filters and the Hosts Zones). Enter the Host Name to simulate them.</source>
+        <translation>Das Ergebnis des Treibers kann abweichen: Es hängt von den Hostnamen der entfernten IP ab (den host()-Filtern und den Hosts-Zonen). Geben Sie den Hostnamen ein, um sie zu simulieren.</translation>
+    </message>
+    <message>
         <source>Not found</source>
         <translation>Nicht gefunden</translation>
     </message>
@@ -946,6 +990,18 @@
         <translation>Port:</translation>
     </message>
     <message>
+        <source>Host Name:</source>
+        <translation>Hostname:</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Unbekannt</translation>
+    </message>
+    <message>
+        <source>The name, which the program resolved to the remote IP: the IP is of the host() filters&apos; and the Hosts Zones&apos; names, which the DNS Forwarder matches the name by.</source>
+        <translation>Der Name, den das Programm in die entfernte IP aufgelöst hat: Die IP gilt als Adresse der Namen der host()-Filter und der Hosts-Zonen, mit denen die DNS-Weiterleitung diesen Namen abgleicht.</translation>
+    </message>
+    <message>
         <source>Local IP:</source>
         <translation>Lokale IP:</translation>
     </message>
@@ -962,12 +1018,12 @@
         <translation>Die Verbindung zu einer Adresse dieses Computers. Die Adressen 127.0.0.0/8 und ::1 sind immer Loopback.</translation>
     </message>
     <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>Dienst von Fort Firewall</translation>
+        <source>DNS Forwarder</source>
+        <translation>DNS-Weiterleitung</translation>
     </message>
     <message>
-        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
-        <translation>Die Verbindung des Dienstes von Fort Firewall, z. B. seiner DNS-Weiterleitung. Ohne den Dienst wird sie wie die anderer Programme gefiltert.</translation>
+        <source>The connection of Fort Firewall&apos;s Service, allowed while DNS is filtered. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
+        <translation>Die Verbindung des Dienstes von Fort Firewall, erlaubt, solange DNS gefiltert wird. Ohne den Dienst wird sie wie die anderer Programme gefiltert.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
@@ -1024,6 +1080,10 @@
     <message>
         <source>Invalid remote IP address</source>
         <translation>Ungültige entfernte IP-Adresse</translation>
+    </message>
+    <message>
+        <source>Invalid host name</source>
+        <translation>Ungültiger Hostname</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
@@ -4245,6 +4305,10 @@ Paketverlust: %2</translation>
     <message>
         <source>TAS-IX Addresses</source>
         <translation>TAS-IX-Adressen</translation>
+    </message>
+    <message>
+        <source>NetAPI Honeypot Attackers</source>
+        <translation>Angreifer der NetAPI-Honeypots</translation>
     </message>
     <message>
         <source>OISD Big</source>

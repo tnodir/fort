@@ -77,18 +77,6 @@
         <source>Filter Local Network</source>
         <translation>ローカルネットワークのフィルタリング</translation>
     </message>
-    <message>
-        <source>Filter Fort Firewall&apos;s Service</source>
-        <translation>Fort Firewall のサービスをフィルター</translation>
-    </message>
-    <message>
-        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
-        <translation>サービスの接続を他のプログラムの接続と同様にフィルターし、そうでなければ許可します</translation>
-    </message>
-    <message>
-        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
-        <translation>サービスがない場合、Fort Firewall は他のプログラムと同様にフィルターされます</translation>
-    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -345,6 +333,10 @@
         <translation>「接続を確認する」によりプロセスを許可</translation>
     </message>
     <message>
+        <source>DNS Forwarder</source>
+        <translation>DNS フォワーダー</translation>
+    </message>
+    <message>
         <source>Inherited</source>
         <translation>継承</translation>
     </message>
@@ -427,10 +419,6 @@
     <message>
         <source>Allowed Internet address</source>
         <translation>許可されたインターネットアドレス</translation>
-    </message>
-    <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>Fort Firewall のサービス</translation>
     </message>
     <message>
         <source>Block DNS port</source>
@@ -657,12 +645,16 @@
         <translation>他のプログラムのポート 53 と 853 をブロック</translation>
     </message>
     <message>
-        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
-        <translation>DNS のフィルター中、Fort Firewall のサービス以外のプログラムから DNS サーバーのポート 53 および DNS over TLS と DNS over QUIC サーバーのポート 853 への接続をブロックします。これらのプログラムはこれらのプロトコルで DNS フォワーダーを迂回して名前を解決できません。DNS over HTTPS はウェブサイトのポート 443 を使用し、これはブロックされません</translation>
-    </message>
-    <message>
         <source>Upstream DNS servers:</source>
         <translation>上位 DNS サーバー:</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table is overridden, e.g. by the Group Policy&apos;s rules, or the connections to the port 53 of the loopback are blocked, e.g. by a VPN&apos;s DNS leak protection</source>
+        <translation>名前解決ポリシーテーブルのルールが、グループポリシーのルールなどによって上書きされているか、ループバックのポート 53 への接続が VPN の DNS リーク保護などによってブロックされています</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: %1</source>
+        <translation>システムの DNS クエリは DNS フォワーダーに送信されません: %1</translation>
     </message>
     <message>
         <source>Adapters&apos; DNS servers</source>
@@ -671,6 +663,10 @@
     <message>
         <source>Custom</source>
         <translation>カスタム</translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>DNS のフィルター中、Fort Firewall のサービス以外のプログラムから DNS サーバーのポート 53 および DNS over TLS と DNS over QUIC サーバーのポート 853 への接続をブロックします。これらのプログラムはこれらのプロトコルで DNS フォワーダーを迂回して名前を解決できません。DNS のフィルター中に名前が解決されることを確認してからオンにしてください。DNS フォワーダーが失敗している間 (VPN によってそのポートがブロックされている場合など)、名前は解決されません。DNS over HTTPS はウェブサイトのポート 443 を使用し、これはブロックされません</translation>
     </message>
     <message>
         <source>Test</source>
@@ -683,6 +679,34 @@
     <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>1 行に 1 サーバー: アドレス (例:「1.1.1.1」) またはサーバーのアドレス付きの DNS over HTTPS の URL (例:「https://dns.example/dns-query?ip=192.0.2.1」)</translation>
+    </message>
+    <message>
+        <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
+        <translation>%1; 他のプログラムに対してポート 53 と 853 がブロックされている間、名前は解決されません</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table can&apos;t be added</source>
+        <translation>名前解決ポリシーテーブルのルールを追加できません</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers mix plain and DNS over HTTPS ones</source>
+        <translation>DNS フォワーダーは開始されていません: 保存された上位 DNS サーバーに通常のサーバーと DNS over HTTPS のサーバーが混在しています</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers are invalid</source>
+        <translation>DNS フォワーダーは開始されていません: 保存された上位 DNS サーバーが無効です</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: can&apos;t listen on the port 53: %1</source>
+        <translation>DNS フォワーダーは開始されていません: ポート 53 で待ち受けできません: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
+        <translation>DNS フォワーダーはホストゾーンの名前と照合しないか、古い名前と照合しています: そのデータベースを開くことも書き込むこともできません: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
+        <translation>DNS フォワーダーは名前を解決しません: 有効なブロックゾーンの名前が読み込まれていません</translation>
     </message>
     <message>
         <source>Error: %1</source>
@@ -914,6 +938,26 @@
         <translation>無視 : 他のファイアウォールが決定します</translation>
     </message>
     <message>
+        <source>Block Zone of the DNS Forwarder</source>
+        <translation>DNS フォワーダーのブロックゾーン</translation>
+    </message>
+    <message>
+        <source>The IP is of the names, which the DNS Forwarder matches the host name by now. The canonical names and the HTTPS records&apos; targets of its answer aren&apos;t known here.</source>
+        <translation>この IP は、DNS フォワーダーが現在ホスト名を照合する名前のアドレスとみなされます。その応答の正規名と HTTPS レコードのターゲットはここでは不明です。</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the host name.</source>
+        <translation>DNS フォワーダーはこのホスト名を解決しません。</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: the driver doesn&apos;t get the names&apos; addresses.</source>
+        <translation>システムの DNS クエリは DNS フォワーダーに送信されません: ドライバーは名前のアドレスを取得しません。</translation>
+    </message>
+    <message>
+        <source>The driver&apos;s result may differ: it depends on the host names of the remote IP (the host() filters and the Hosts Zones). Enter the Host Name to simulate them.</source>
+        <translation>ドライバーの結果は異なる場合があります: リモート IP のホスト名 (host() フィルターとホストゾーン) に依存します。それらをシミュレートするにはホスト名を入力してください。</translation>
+    </message>
+    <message>
         <source>Not found</source>
         <translation>見つかりません</translation>
     </message>
@@ -946,6 +990,18 @@
         <translation>ポート :</translation>
     </message>
     <message>
+        <source>Host Name:</source>
+        <translation>ホスト名 :</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>不明</translation>
+    </message>
+    <message>
+        <source>The name, which the program resolved to the remote IP: the IP is of the host() filters&apos; and the Hosts Zones&apos; names, which the DNS Forwarder matches the name by.</source>
+        <translation>プログラムがリモート IP に解決した名前です: この IP は、DNS フォワーダーがこの名前を照合する host() フィルターとホストゾーンの名前のアドレスとみなされます。</translation>
+    </message>
+    <message>
         <source>Local IP:</source>
         <translation>ローカル IP :</translation>
     </message>
@@ -962,12 +1018,12 @@
         <translation>このコンピューターのアドレスへの接続。アドレス 127.0.0.0/8 と ::1 は常にループバックです。</translation>
     </message>
     <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>Fort Firewall のサービス</translation>
+        <source>DNS Forwarder</source>
+        <translation>DNS フォワーダー</translation>
     </message>
     <message>
-        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
-        <translation>Fort Firewall のサービスの接続 (DNS フォワーダーなど)。サービスがない場合、他のプログラムの接続と同様にフィルターされます。</translation>
+        <source>The connection of Fort Firewall&apos;s Service, allowed while DNS is filtered. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
+        <translation>Fort Firewall のサービスの接続で、DNS のフィルター中は許可されます。サービスがない場合、他のプログラムの接続と同様にフィルターされます。</translation>
     </message>
     <message>
         <source>Network Profile:</source>
@@ -1024,6 +1080,10 @@
     <message>
         <source>Invalid remote IP address</source>
         <translation>無効なリモート IP アドレス</translation>
+    </message>
+    <message>
+        <source>Invalid host name</source>
+        <translation>無効なホスト名</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
@@ -4245,6 +4305,10 @@ Packet loss: %2</source>
     <message>
         <source>TAS-IX Addresses</source>
         <translation>TAS-IX アドレス</translation>
+    </message>
+    <message>
+        <source>NetAPI Honeypot Attackers</source>
+        <translation>NetAPI ハニーポットの攻撃者</translation>
     </message>
     <message>
         <source>OISD Big</source>

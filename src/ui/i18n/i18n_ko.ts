@@ -77,18 +77,6 @@
         <source>Filter Local Network</source>
         <translation>로컬 네트워크 필터링</translation>
     </message>
-    <message>
-        <source>Filter Fort Firewall&apos;s Service</source>
-        <translation>Fort Firewall 서비스 필터링</translation>
-    </message>
-    <message>
-        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
-        <translation>서비스의 연결을 다른 프로그램의 연결처럼 필터링하고, 그렇지 않으면 허용합니다</translation>
-    </message>
-    <message>
-        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
-        <translation>서비스가 없으면 Fort Firewall은 다른 프로그램처럼 필터링됩니다</translation>
-    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -345,6 +333,10 @@
         <translation>&quot;연결 요청&quot;을 통해 허용된 프로세스</translation>
     </message>
     <message>
+        <source>DNS Forwarder</source>
+        <translation>DNS 전달자</translation>
+    </message>
+    <message>
         <source>Inherited</source>
         <translation>상속됨</translation>
     </message>
@@ -427,10 +419,6 @@
     <message>
         <source>Allowed Internet address</source>
         <translation>허용된 인터넷 주소</translation>
-    </message>
-    <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>Fort Firewall 서비스</translation>
     </message>
     <message>
         <source>Block DNS port</source>
@@ -657,12 +645,16 @@
         <translation>다른 프로그램의 포트 53 및 853 차단</translation>
     </message>
     <message>
-        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
-        <translation>DNS를 필터링하는 동안 Fort Firewall 서비스 이외의 프로그램이 DNS 서버의 포트 53 및 DNS over TLS와 DNS over QUIC 서버의 포트 853에 연결하는 것을 차단합니다. 이 프로그램들은 이 프로토콜들로 DNS 전달자를 우회하여 이름을 확인할 수 없습니다. DNS over HTTPS는 웹 사이트의 포트 443으로 가며, 이 포트는 차단되지 않습니다</translation>
-    </message>
-    <message>
         <source>Upstream DNS servers:</source>
         <translation>업스트림 DNS 서버:</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table is overridden, e.g. by the Group Policy&apos;s rules, or the connections to the port 53 of the loopback are blocked, e.g. by a VPN&apos;s DNS leak protection</source>
+        <translation>이름 확인 정책 테이블의 규칙이 재정의되었거나(예: 그룹 정책의 규칙에 의해) 루프백의 포트 53에 대한 연결이 차단됨(예: VPN의 DNS 누출 방지에 의해)</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: %1</source>
+        <translation>시스템의 DNS 쿼리가 DNS 전달자로 전송되지 않습니다: %1</translation>
     </message>
     <message>
         <source>Adapters&apos; DNS servers</source>
@@ -671,6 +663,10 @@
     <message>
         <source>Custom</source>
         <translation>사용자 지정</translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>DNS를 필터링하는 동안 Fort Firewall 서비스 이외의 프로그램이 DNS 서버의 포트 53 및 DNS over TLS와 DNS over QUIC 서버의 포트 853에 연결하는 것을 차단합니다. 이 프로그램들은 이 프로토콜들로 DNS 전달자를 우회하여 이름을 확인할 수 없습니다. DNS를 필터링할 때 이름이 확인되는지 점검한 후에 켜세요. DNS 전달자가 실패하는 동안(예: VPN이 해당 포트를 차단하는 경우) 어떤 이름도 확인되지 않습니다. DNS over HTTPS는 웹 사이트의 포트 443으로 가며, 이 포트는 차단되지 않습니다</translation>
     </message>
     <message>
         <source>Test</source>
@@ -683,6 +679,34 @@
     <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>한 줄에 서버 하나: 주소(예: &quot;1.1.1.1&quot;) 또는 서버 주소가 포함된 DNS over HTTPS URL(예: &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;)</translation>
+    </message>
+    <message>
+        <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
+        <translation>%1; 포트 53과 853이 다른 프로그램에 대해 차단되는 동안 이름이 확인되지 않습니다</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table can&apos;t be added</source>
+        <translation>이름 확인 정책 테이블의 규칙을 추가할 수 없음</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers mix plain and DNS over HTTPS ones</source>
+        <translation>DNS 전달자가 시작되지 않았습니다: 저장된 업스트림 DNS 서버에 일반 서버와 DNS over HTTPS 서버가 섞여 있습니다</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers are invalid</source>
+        <translation>DNS 전달자가 시작되지 않았습니다: 저장된 업스트림 DNS 서버가 잘못되었습니다</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: can&apos;t listen on the port 53: %1</source>
+        <translation>DNS 전달자가 시작되지 않았습니다: 포트 53에서 수신 대기할 수 없습니다: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
+        <translation>DNS 전달자가 호스트 영역의 이름과 대조하지 않거나 오래된 이름과 대조합니다: 해당 데이터베이스를 열거나 쓸 수 없습니다: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
+        <translation>DNS 전달자가 이름을 확인하지 않습니다: 사용하는 차단 영역의 이름이 로드되지 않았습니다</translation>
     </message>
     <message>
         <source>Error: %1</source>
@@ -914,6 +938,26 @@
         <translation>무시됨: 다른 방화벽이 결정합니다</translation>
     </message>
     <message>
+        <source>Block Zone of the DNS Forwarder</source>
+        <translation>DNS 전달자의 차단 영역</translation>
+    </message>
+    <message>
+        <source>The IP is of the names, which the DNS Forwarder matches the host name by now. The canonical names and the HTTPS records&apos; targets of its answer aren&apos;t known here.</source>
+        <translation>이 IP는 DNS 전달자가 현재 호스트 이름을 대조하는 이름들의 주소로 간주됩니다. 응답의 정식 이름과 HTTPS 레코드의 대상은 여기서 알 수 없습니다.</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the host name.</source>
+        <translation>DNS 전달자가 이 호스트 이름을 확인하지 않습니다.</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: the driver doesn&apos;t get the names&apos; addresses.</source>
+        <translation>시스템의 DNS 쿼리가 DNS 전달자로 전송되지 않습니다: 드라이버가 이름들의 주소를 받지 못합니다.</translation>
+    </message>
+    <message>
+        <source>The driver&apos;s result may differ: it depends on the host names of the remote IP (the host() filters and the Hosts Zones). Enter the Host Name to simulate them.</source>
+        <translation>드라이버의 결과는 다를 수 있습니다: 원격 IP의 호스트 이름(host() 필터와 호스트 영역)에 따라 달라집니다. 이를 시뮬레이션하려면 호스트 이름을 입력하세요.</translation>
+    </message>
+    <message>
         <source>Not found</source>
         <translation>찾을 수 없음</translation>
     </message>
@@ -946,6 +990,18 @@
         <translation>포트:</translation>
     </message>
     <message>
+        <source>Host Name:</source>
+        <translation>호스트 이름:</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>알 수 없음</translation>
+    </message>
+    <message>
+        <source>The name, which the program resolved to the remote IP: the IP is of the host() filters&apos; and the Hosts Zones&apos; names, which the DNS Forwarder matches the name by.</source>
+        <translation>프로그램이 원격 IP로 확인한 이름: 이 IP는 DNS 전달자가 이 이름을 대조하는 host() 필터와 호스트 영역의 이름들의 주소로 간주됩니다.</translation>
+    </message>
+    <message>
         <source>Local IP:</source>
         <translation>로컬 IP:</translation>
     </message>
@@ -962,12 +1018,12 @@
         <translation>이 컴퓨터의 주소와의 연결입니다. 127.0.0.0/8 및 ::1 주소는 항상 루프백입니다.</translation>
     </message>
     <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>Fort Firewall 서비스</translation>
+        <source>DNS Forwarder</source>
+        <translation>DNS 전달자</translation>
     </message>
     <message>
-        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
-        <translation>Fort Firewall 서비스의 연결(예: DNS 전달자). 서비스가 없으면 다른 프로그램의 연결처럼 필터링됩니다.</translation>
+        <source>The connection of Fort Firewall&apos;s Service, allowed while DNS is filtered. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
+        <translation>DNS를 필터링하는 동안 허용되는 Fort Firewall 서비스의 연결. 서비스가 없으면 다른 프로그램의 연결처럼 필터링됩니다.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
@@ -1024,6 +1080,10 @@
     <message>
         <source>Invalid remote IP address</source>
         <translation>잘못된 원격 IP 주소</translation>
+    </message>
+    <message>
+        <source>Invalid host name</source>
+        <translation>잘못된 호스트 이름</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
@@ -4245,6 +4305,10 @@ Packet loss: %2</source>
     <message>
         <source>TAS-IX Addresses</source>
         <translation>TAS-IX 주소</translation>
+    </message>
+    <message>
+        <source>NetAPI Honeypot Attackers</source>
+        <translation>NetAPI 허니팟 공격자</translation>
     </message>
     <message>
         <source>OISD Big</source>

@@ -77,18 +77,6 @@
         <source>Filter Local Network</source>
         <translation>Filtriraj lokalno omrežje</translation>
     </message>
-    <message>
-        <source>Filter Fort Firewall&apos;s Service</source>
-        <translation>Filtriraj Storitev Fort Firewall</translation>
-    </message>
-    <message>
-        <source>Filter the Service&apos;s connections as the other programs&apos; ones, else allow them</source>
-        <translation>Filtriraj povezave Storitve kot povezave drugih programov, sicer jih dovoli</translation>
-    </message>
-    <message>
-        <source>Without the Service, Fort Firewall is filtered as the other programs</source>
-        <translation>Brez Storitve je Fort Firewall filtriran kot drugi programi</translation>
-    </message>
 </context>
 <context>
     <name>AppConnsWindow</name>
@@ -345,6 +333,10 @@
         <translation>Proces dovoljen z &quot;Vprašaj za povezavo&quot;</translation>
     </message>
     <message>
+        <source>DNS Forwarder</source>
+        <translation>Posredovalnik DNS</translation>
+    </message>
+    <message>
         <source>Inherited</source>
         <translation>Podedovano</translation>
     </message>
@@ -427,10 +419,6 @@
     <message>
         <source>Allowed Internet address</source>
         <translation>Dovoljen internetni naslov</translation>
-    </message>
-    <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>Storitev Fort Firewall</translation>
     </message>
     <message>
         <source>Block DNS port</source>
@@ -657,12 +645,16 @@
         <translation>Blokiraj vrata 53 in 853 za druge programe</translation>
     </message>
     <message>
-        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
-        <translation>Blokiraj povezave programov, razen Storitve Fort Firewall, na vrata 53 strežnikov DNS in na vrata 853 strežnikov DNS over TLS in over QUIC, medtem ko je DNS filtriran: imen ne morejo razreševati prek teh protokolov mimo Posredovalnika DNS. DNS over HTTPS gre na vrata 443 spletnih mest, ki niso blokirana</translation>
-    </message>
-    <message>
         <source>Upstream DNS servers:</source>
         <translation>Nadrejeni strežniki DNS:</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table is overridden, e.g. by the Group Policy&apos;s rules, or the connections to the port 53 of the loopback are blocked, e.g. by a VPN&apos;s DNS leak protection</source>
+        <translation>pravilo tabele pravilnika za razreševanje imen je preglašeno, npr. s pravili pravilnika skupine, ali pa so povezave na vrata 53 povratne zanke blokirane, npr. z zaščito VPN pred uhajanjem DNS</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: %1</source>
+        <translation>Sistemske poizvedbe DNS se ne pošiljajo Posredovalniku DNS: %1</translation>
     </message>
     <message>
         <source>Adapters&apos; DNS servers</source>
@@ -671,6 +663,10 @@
     <message>
         <source>Custom</source>
         <translation>Po meri</translation>
+    </message>
+    <message>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>Blokiraj povezave programov, razen Storitve Fort Firewall, na vrata 53 strežnikov DNS in na vrata 853 strežnikov DNS over TLS in over QUIC, medtem ko je DNS filtriran: imen ne morejo razreševati prek teh protokolov mimo Posredovalnika DNS. Vklopite ga, ko preverite, da se imena razrešujejo s filtriranim DNS: dokler Posredovalnik DNS ne deluje, npr. ker so njegova vrata blokirana z VPN, se nobeno ime ne razreši. DNS over HTTPS gre na vrata 443 spletnih mest, ki niso blokirana</translation>
     </message>
     <message>
         <source>Test</source>
@@ -683,6 +679,34 @@
     <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>En strežnik na vrstico: naslovi, npr. &quot;1.1.1.1&quot;, ali URL-ji DNS over HTTPS z naslovom strežnika, npr. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</translation>
+    </message>
+    <message>
+        <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
+        <translation>%1; imena se ne razrešujejo, dokler so vrata 53 in 853 blokirana za druge programe</translation>
+    </message>
+    <message>
+        <source>the rule of the Name Resolution Policy Table can&apos;t be added</source>
+        <translation>pravila tabele pravilnika za razreševanje imen ni mogoče dodati</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers mix plain and DNS over HTTPS ones</source>
+        <translation>Posredovalnik DNS ni zagnan: shranjeni nadrejeni strežniki DNS mešajo navadne strežnike in strežnike DNS over HTTPS</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: the saved upstream DNS servers are invalid</source>
+        <translation>Posredovalnik DNS ni zagnan: shranjeni nadrejeni strežniki DNS so neveljavni</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder isn&apos;t started: can&apos;t listen on the port 53: %1</source>
+        <translation>Posredovalnik DNS ni zagnan: ni mogoče poslušati na vratih 53: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
+        <translation>Posredovalnik DNS imen ne primerja s Področji gostiteljev ali jih primerja z zastarelimi: njihove zbirke podatkov ni mogoče odpreti ali zapisati: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
+        <translation>Posredovalnik DNS ne razrešuje imen: imena omogočenih Področij blokiranja niso naložena</translation>
     </message>
     <message>
         <source>Error: %1</source>
@@ -914,6 +938,26 @@
         <translation>Prezrto: odločajo drugi požarni zidovi</translation>
     </message>
     <message>
+        <source>Block Zone of the DNS Forwarder</source>
+        <translation>Področje blokiranja Posredovalnika DNS</translation>
+    </message>
+    <message>
+        <source>The IP is of the names, which the DNS Forwarder matches the host name by now. The canonical names and the HTTPS records&apos; targets of its answer aren&apos;t known here.</source>
+        <translation>IP velja za naslov imen, s katerimi Posredovalnik DNS zdaj primerja ime gostitelja. Kanonična imena in cilji zapisov HTTPS njegovega odgovora tukaj niso znani.</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t resolve the host name.</source>
+        <translation>Posredovalnik DNS ne razreši imena gostitelja.</translation>
+    </message>
+    <message>
+        <source>The system&apos;s DNS queries aren&apos;t sent to the DNS Forwarder: the driver doesn&apos;t get the names&apos; addresses.</source>
+        <translation>Sistemske poizvedbe DNS se ne pošiljajo Posredovalniku DNS: gonilnik ne prejme naslovov imen.</translation>
+    </message>
+    <message>
+        <source>The driver&apos;s result may differ: it depends on the host names of the remote IP (the host() filters and the Hosts Zones). Enter the Host Name to simulate them.</source>
+        <translation>Rezultat gonilnika se lahko razlikuje: odvisen je od imen gostiteljev oddaljenega IP (filtrov host() in Področij gostiteljev). Vnesite ime gostitelja, da jih simulirate.</translation>
+    </message>
+    <message>
         <source>Not found</source>
         <translation>Ni najdeno</translation>
     </message>
@@ -946,6 +990,18 @@
         <translation>Vrata:</translation>
     </message>
     <message>
+        <source>Host Name:</source>
+        <translation>Ime gostitelja:</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Neznano</translation>
+    </message>
+    <message>
+        <source>The name, which the program resolved to the remote IP: the IP is of the host() filters&apos; and the Hosts Zones&apos; names, which the DNS Forwarder matches the name by.</source>
+        <translation>Ime, ki ga je program razrešil v oddaljeni IP: IP velja za naslov imen filtrov host() in Področij gostiteljev, s katerimi Posredovalnik DNS primerja to ime.</translation>
+    </message>
+    <message>
         <source>Local IP:</source>
         <translation>Lokalni IP:</translation>
     </message>
@@ -962,12 +1018,12 @@
         <translation>Povezava na naslov tega računalnika. Naslovi 127.0.0.0/8 in ::1 so vedno povratna zanka.</translation>
     </message>
     <message>
-        <source>Fort Firewall&apos;s Service</source>
-        <translation>Storitev Fort Firewall</translation>
+        <source>DNS Forwarder</source>
+        <translation>Posredovalnik DNS</translation>
     </message>
     <message>
-        <source>The connection of Fort Firewall&apos;s Service, e.g. of its DNS Forwarder. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
-        <translation>Povezava Storitve Fort Firewall, npr. njenega Posredovalnika DNS. Brez Storitve je filtrirana kot povezave drugih programov.</translation>
+        <source>The connection of Fort Firewall&apos;s Service, allowed while DNS is filtered. Without the Service it&apos;s filtered as the other programs&apos; ones.</source>
+        <translation>Povezava Storitve Fort Firewall, dovoljena, medtem ko je DNS filtriran. Brez Storitve je filtrirana kot povezave drugih programov.</translation>
     </message>
     <message>
         <source>Network Profile:</source>
@@ -1024,6 +1080,10 @@
     <message>
         <source>Invalid remote IP address</source>
         <translation>Neveljaven oddaljeni naslov IP</translation>
+    </message>
+    <message>
+        <source>Invalid host name</source>
+        <translation>Neveljavno ime gostitelja</translation>
     </message>
     <message>
         <source>Invalid local IP address</source>
@@ -4245,6 +4305,10 @@ Izguba paketov: %2</translation>
     <message>
         <source>TAS-IX Addresses</source>
         <translation>Naslovi TAS-IX</translation>
+    </message>
+    <message>
+        <source>NetAPI Honeypot Attackers</source>
+        <translation>Napadalci honeypotov NetAPI</translation>
     </message>
     <message>
         <source>OISD Big</source>
