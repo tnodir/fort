@@ -23,6 +23,7 @@ enum Command : qint8 {
     CommandZone,
     CommandRule,
     CommandAddr,
+    CommandDns,
     CommandPeriod,
     CommandSimulate,
     CommandConn,
@@ -195,6 +196,7 @@ struct ProcessCommandResult
 {
     bool ok : 1 = false;
     bool isSendResult : 1 = false;
+    bool isResultDeferred : 1 = false; // the command sends its result later itself
     bool disableCmdLine : 1 = false;
 
     Control::CommandResult commandResult = Control::CommandResultNone;

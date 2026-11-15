@@ -11,6 +11,9 @@ public:
             Control::Command command, QVariantList &args, ProcessCommandResult &r);
 
     static bool processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
+
+    // The command's result to the client, later by the command deferring it
+    static void sendResult(ControlWorker *w, quint32 requestId, const ProcessCommandResult &r);
 };
 
 #endif // CONTROLCOMMANDMANAGER_H

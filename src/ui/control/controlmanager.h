@@ -8,6 +8,7 @@
 #include <util/ioc/iocservice.h>
 
 #include "control.h"
+#include "controlworker.h"
 
 QT_FORWARD_DECLARE_CLASS(QLocalServer)
 
@@ -33,8 +34,9 @@ public:
 
     bool processCommandClient(ProcessCommandResult &r);
 
-    bool postCommand(
-            Control::Command command, const QVariantList &args, ProcessCommandResult *r = nullptr);
+    bool postCommand(Control::Command command, const QVariantList &args,
+            ProcessCommandResult *r = nullptr,
+            int resultWaitMsecs = ControlWorker::defaultWaitMsecs);
 
 private slots:
     bool connectToAnyServer(ControlWorker &w);

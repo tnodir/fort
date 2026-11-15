@@ -43,6 +43,7 @@ SOURCES += \
     control/command/controlcommandblock.cpp \
     control/command/controlcommandconf.cpp \
     control/command/controlcommandconn.cpp \
+    control/command/controlcommanddns.cpp \
     control/command/controlcommandfilter.cpp \
     control/command/controlcommandfiltermode.cpp \
     control/command/controlcommandgraph.cpp \
@@ -388,6 +389,7 @@ HEADERS += \
     control/command/controlcommandblock.h \
     control/command/controlcommandconf.h \
     control/command/controlcommandconn.h \
+    control/command/controlcommanddns.h \
     control/command/controlcommandfilter.h \
     control/command/controlcommandfiltermode.h \
     control/command/controlcommandgraph.h \

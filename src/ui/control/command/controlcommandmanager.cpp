@@ -11,6 +11,7 @@
 #include "controlcommandblock.h"
 #include "controlcommandconf.h"
 #include "controlcommandconn.h"
+#include "controlcommanddns.h"
 #include "controlcommandfilter.h"
 #include "controlcommandfiltermode.h"
 #include "controlcommandgraph.h"
@@ -41,6 +42,7 @@ inline constexpr ControlCommandBackup commandBackup;
 inline constexpr ControlCommandZone commandZone;
 inline constexpr ControlCommandRule commandRule;
 inline constexpr ControlCommandAddr commandAddr;
+inline constexpr ControlCommandDns commandDns;
 inline constexpr ControlCommandPeriod commandPeriod;
 inline constexpr ControlCommandSimulate commandSimulate;
 inline constexpr ControlCommandConn commandConn;
@@ -63,6 +65,7 @@ inline constexpr const ControlCommandBase *commandList[] = {
     &commandZone, // Control::CommandZone,
     &commandRule, // Control::CommandRule,
     &commandAddr, // Control::CommandAddr,
+    &commandDns, // Control::CommandDns,
     &commandPeriod, // Control::CommandPeriod,
     &commandSimulate, // Control::CommandSimulate,
     &commandConn, // Control::CommandConn,
@@ -95,7 +98,8 @@ bool ControlCommandManager::processCommandClient(
     const ControlCommandBase *controlCommand = commandByType(command);
 
     return controlCommand->prepareClientArgs(args, r)
-            && Fort::controlManager()->postCommand(command, args, &r)
+            && Fort::controlManager()->postCommand(
+                    command, args, &r, controlCommand->resultWaitMsecs(args))
             && controlCommand->processClientResult(args, r);
 }
 
@@ -105,24 +109,30 @@ bool ControlCommandManager::processCommand(const ProcessCommandArgs &p, ProcessC
 
     const bool ok = checkCommandWindows(command, p.args, r) && command->processCommand(p, r);
 
-    if (command != &commandRpc) {
-        ControlCommandUtil::uncheckCommandActionPassword();
-    }
-
     if (!ok && r.errorMessage.isEmpty()) {
         r.errorMessage = "Invalid command";
     }
 
-    if (command != &commandRpc) {
-        r.ok = ok;
-        r.isSendResult = true;
-
-        r.args = { r.commandResult, r.errorMessage };
+    if (command == &commandRpc) {
+        if (r.isSendResult) {
+            p.worker->sendResult(p.requestId, r.ok, r.args);
+        }
+        return ok;
     }
 
-    if (r.isSendResult) {
-        p.worker->sendResult(p.requestId, r.ok, r.args);
+    ControlCommandUtil::uncheckCommandActionPassword();
+
+    r.ok = ok;
+
+    if (!r.isResultDeferred) {
+        sendResult(p.worker, p.requestId, r);
     }
 
     return ok;
+}
+
+void ControlCommandManager::sendResult(
+        ControlWorker *w, quint32 requestId, const ProcessCommandResult &r)
+{
+    w->sendResult(requestId, r.ok, { r.commandResult, r.errorMessage });
 }

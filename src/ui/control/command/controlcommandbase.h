@@ -21,6 +21,9 @@ public:
     // The command shows the windows, which the service has none of
     virtual bool needsWindows(const QVariantList & /*args*/) const { return false; }
 
+    // Client: The msecs of ControlWorker::waitResult() for the command's result
+    virtual int resultWaitMsecs(const QVariantList &args) const;
+
 protected:
     // Client: The <file-path> argument's file to send its text instead of the path,
     // or to write the result's text to
