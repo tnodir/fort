@@ -6,6 +6,7 @@
 #include <googletest.h>
 
 #include <task/taskzonedownloader.h>
+#include <util/conf/confbuffer.h>
 #include <util/fileutil.h>
 #include <util/net/actionrange.h>
 #include <util/net/arearange.h>
@@ -502,4 +503,43 @@ TEST_F(NetUtilTest, taskTasix)
     const QFileInfo out(cachePath + "tasix-mrlg.txt");
     ASSERT_TRUE(tasix.saveAddressesAsText(out.filePath()));
     ASSERT_GT(out.size(), 0);
+}
+
+TEST_F(NetUtilTest, taskHosts)
+{
+    TaskZoneDownloader hosts;
+    hosts.setZoneId(2);
+    hosts.setIsHosts(true);
+    hosts.setPattern(R"(^\s*(\S+))");
+
+    QString textChecksum;
+    const QString text("# comment\nWWW.Example.com # inline comment\n\n*.example.org\n");
+    const auto list = hosts.parseAddresses(text, textChecksum);
+    ASSERT_EQ(list.size(), 2);
+
+    const QString cachePath("./zones/");
+
+    hosts.setCachePath(cachePath);
+    ASSERT_TRUE(hosts.storeHosts(list));
+
+    // The driver gets an empty address list
+    const QByteArray zoneData = hosts.zoneData();
+    ASSERT_FALSE(zoneData.isEmpty());
+
+    ASSERT_TRUE(hosts.loadAddresses());
+    ASSERT_EQ(hosts.zoneData(), zoneData);
+
+    IpRange ipRange;
+    ASSERT_TRUE(ConfBuffer(zoneData).loadZone(ipRange));
+    ASSERT_TRUE(ipRange.isEmpty());
+
+    // The cache keeps the names
+    const QString filePath(cachePath + "hosts.txt");
+    ASSERT_TRUE(hosts.saveAddressesAsText(filePath));
+
+    QString savedText;
+    ASSERT_TRUE(FileUtil::readFile(filePath, savedText));
+    ASSERT_EQ(savedText, QString("*.example.org\nwww.example.com\n"));
+
+    ASSERT_FALSE(hosts.storeHosts({ u"bad..name" }));
 }

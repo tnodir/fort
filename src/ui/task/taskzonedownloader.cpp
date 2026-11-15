@@ -6,6 +6,7 @@
 
 #include <util/conf/confbuffer.h>
 #include <util/fileutil.h>
+#include <util/net/hostrange.h>
 #include <util/net/iprange.h>
 #include <util/net/netdownloader.h>
 #include <util/stringutil.h>
@@ -18,6 +19,15 @@ QString binDataChecksum(const QByteArray &binData)
     const auto checksumData = QCryptographicHash::hash(binData, QCryptographicHash::Sha256);
 
     return QString::fromLatin1(checksumData.toHex());
+}
+
+// The driver gets the Hosts Zone's addresses at runtime
+QByteArray emptyZoneData()
+{
+    ConfBuffer confBuf;
+    confBuf.writeZone(IpRange());
+
+    return confBuf.buffer();
 }
 }
 
@@ -59,7 +69,7 @@ bool TaskZoneDownloader::storeChangedAddresses(const QByteArray &data)
 
     setTextChecksum(newChecksum);
 
-    const bool success = storeAddresses(list);
+    const bool success = isHosts() ? storeHosts(list) : storeAddresses(list);
     setAddressCount(success ? list.size() : 0);
 
     return success;
@@ -138,25 +148,67 @@ bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
         return false;
     }
 
-    FileUtil::removeFile(cacheFileBinPath());
-
-    // Store binary file
     ConfBuffer confBuf;
-
     confBuf.writeZone(ipRange);
 
     m_zoneData = confBuf.buffer();
-    if (m_zoneData.isEmpty())
+
+    return storeCacheData(m_zoneData);
+}
+
+bool TaskZoneDownloader::storeHosts(const StringViewList &list)
+{
+    HostRange hostRange;
+
+    if (!hostRange.fromList(list)) {
+        qCWarning(LC) << zoneName() << ":" << hostRange.errorLineAndMessageDetails();
+        return false;
+    }
+
+    m_zoneData = emptyZoneData();
+
+    return storeCacheData(hostRange.toText().toUtf8());
+}
+
+bool TaskZoneDownloader::loadAddresses()
+{
+    QByteArray data;
+    if (!loadCacheData(data))
         return false;
 
-    const auto binData = qCompress(m_zoneData);
+    m_zoneData = isHosts() ? emptyZoneData() : data;
+
+    return true;
+}
+
+bool TaskZoneDownloader::saveAddressesAsText(const QString &filePath)
+{
+    QByteArray data;
+    QString text;
+
+    if (loadCacheData(data) && !data.isEmpty()) {
+        if (!cacheDataToText(data, text))
+            return false;
+    }
+
+    return FileUtil::writeFile(filePath, text);
+}
+
+bool TaskZoneDownloader::storeCacheData(const QByteArray &data)
+{
+    FileUtil::removeFile(cacheFileBinPath());
+
+    if (data.isEmpty())
+        return false;
+
+    const auto binData = qCompress(data);
 
     setBinChecksum(binDataChecksum(binData));
 
     return FileUtil::writeFileData(cacheFileBinPath(), binData);
 }
 
-bool TaskZoneDownloader::loadAddresses()
+bool TaskZoneDownloader::loadCacheData(QByteArray &data)
 {
     if (!hasCache())
         return false;
@@ -168,26 +220,27 @@ bool TaskZoneDownloader::loadAddresses()
         return false;
     }
 
-    m_zoneData = qUncompress(binData);
+    data = qUncompress(binData);
 
     return true;
 }
 
-bool TaskZoneDownloader::saveAddressesAsText(const QString &filePath)
+bool TaskZoneDownloader::cacheDataToText(const QByteArray &data, QString &text) const
 {
-    QString text;
-
-    if (loadAddresses() && !zoneData().isEmpty()) {
-        ConfBuffer confBuf(zoneData());
-
-        IpRange ipRange;
-        if (!confBuf.loadZone(ipRange))
-            return false;
-
-        text = ipRange.toText();
+    if (isHosts()) {
+        text = QString::fromUtf8(data);
+        return true;
     }
 
-    return FileUtil::writeFile(filePath, text);
+    ConfBuffer confBuf(data);
+
+    IpRange ipRange;
+    if (!confBuf.loadZone(ipRange))
+        return false;
+
+    text = ipRange.toText();
+
+    return true;
 }
 
 QString TaskZoneDownloader::cacheFileBasePath() const

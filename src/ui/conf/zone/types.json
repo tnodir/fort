@@ -14,5 +14,11 @@
         "sort": true,
         "pattern": "^\\D{0,9}([\\d./-]{7,})",
         "emptyNetMask": 24
+    },
+    {
+        "code": "host",
+        "title": "Hosts",
+        "description": "Host names list",
+        "pattern": "^\\s*(\\S+)"
     }
 ]

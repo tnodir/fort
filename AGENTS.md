@@ -98,7 +98,7 @@ One executable, several roles selected by command line / settings (`FortSettings
 
 ### IoC container + RPC mirroring
 
-`IocContainer` (`src/ui/util/ioc/ioccontainer.h`) is a thread-pinned, type-id-indexed service locator (max 32 services). Services derive from `IocService` and get `setUp()`/`tearDown()` lifecycle. Typed accessors live in `Fort::` namespace helpers (`src/ui/fortglobal.h`, e.g. `Fort::confManager()`, `IoC<T>()`).
+`IocContainer` (`src/ui/util/ioc/ioccontainer.h`) is a thread-pinned, type-id-indexed service locator (max 32 services). Services derive from `IocService` and get `setUp()`/`tearDown()` lifecycle. The `setUp()`s run in the order of the registration (`setupServices()`): a service using another's state in its `setUp()` takes it by `Fort::dependency<T>()`, which sets that one up first (cf. `TaskManager::setUp()` and the Zones' types of `ZoneListModel`). Typed accessors live in `Fort::` namespace helpers (`src/ui/fortglobal.h`, e.g. `Fort::confManager()`, `IoC<T>()`).
 
 `setupServices()` in `src/ui/fortmanager.cpp` is the key place to read: for a **master** it registers the real managers (`ConfManager`, `StatManager`, `DriverManager`, …); for a **client** it registers `*Rpc` subclasses from `src/ui/rpc/` that implement the same interface by marshalling calls over IPC to the service. **Any new manager method that a client can invoke needs a matching override in its `…Rpc` class and a `Control::Command` entry.**
 
@@ -110,7 +110,7 @@ IPC is `QLocalServer`/`QLocalSocket` (`src/ui/control/`): `ControlManager` liste
 
 `src/driver/common/` is compiled into **both** the UI and the driver (via `src/driver/Driver.pri`). It is the shared contract: changing the `fortconf.h` layout, the IOCTL set, or the log record format requires updating both sides and bumping `DRIVER_VERSION` in `src/version/fort_version.h` (checked in `driver/fortdev.c` against the value written by `confbuffer.cpp`).
 
-The IP Addresses tab's two `AddressGroup`s (`FirewallConf::addressGroups()`, the LAN and Internet lists, `AddressesArea`), a Program's Network Filters and Rules (`app.filters_text`, `FilterEditDialog`, `FilterLine`, `FilterLineText`, the Terminating Rule's line, `app_rule`, the Rules tab) and the Time Periods (`period_id`, `ConfTimePeriodManager`, `SETPERIODS`): read `docs/agents/conf-model.md` before changing them.
+The IP Addresses tab's two `AddressGroup`s (`FirewallConf::addressGroups()`, the LAN and Internet lists, `AddressesArea`), a Program's Network Filters and Rules (`app.filters_text`, `FilterEditDialog`, `FilterLine`, `FilterLineText`, the Terminating Rule's line, `app_rule`, the Rules tab), the Time Periods (`period_id`, `ConfTimePeriodManager`, `SETPERIODS`) and the Hosts Zones (`HostRange`): read `docs/agents/conf-model.md` before changing them.
 
 Programs belong to `Group`s (`conf/group.h`, max 32: enabled, exclusive, an optional Time Period and an optional Rule) by the `app.groups_mask` bit mask, and reference one-direction `SpeedLimit`s (`conf/speedlimit.h`, max 32) by `app.in_limit_id` / `app.out_limit_id`. They replace the old App. Groups, which the conf DB's migration (`ConfMigration`) converts.
 

@@ -42,11 +42,17 @@ int ZoneTypeWrapper::emptyNetMask() const
     return valueInt("emptyNetMask");
 }
 
+bool ZoneTypeWrapper::isHosts() const
+{
+    return id() == TypeHosts;
+}
+
 int ZoneTypeWrapper::idByCode(const QString &code)
 {
     static const QHash<QString, int> map = {
         { "gen", TypeGeneric },
         { "bgp", TypeBgp },
+        { "host", TypeHosts },
     };
 
     return map.value(code, TypeGeneric);

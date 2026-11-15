@@ -20,6 +20,9 @@ public:
     bool sort() const { return m_sort; }
     void setSort(bool v) { m_sort = v; }
 
+    bool isHosts() const { return m_isHosts; }
+    void setIsHosts(bool v) { m_isHosts = v; }
+
     int emptyNetMask() const { return m_emptyNetMask; }
     void setEmptyNetMask(int v) { m_emptyNetMask = v; }
 
@@ -64,6 +67,7 @@ public:
     StringViewList parseAddresses(const QString &text, QString &textChecksum) const;
 
     bool storeAddresses(const StringViewList &list);
+    bool storeHosts(const StringViewList &list);
     bool loadAddresses();
 
     bool saveAddressesAsText(const QString &filePath);
@@ -82,12 +86,18 @@ private:
     void loadLocalFile();
 
     bool storeChangedAddresses(const QByteArray &data);
+
+    bool storeCacheData(const QByteArray &data);
+    bool loadCacheData(QByteArray &data);
+
+    bool cacheDataToText(const QByteArray &data, QString &text) const;
     bool isCacheOutdated(const QString &newChecksum) const;
     bool hasCache() const;
 
 private:
     bool m_zoneEnabled : 1 = false;
     bool m_sort : 1 = false;
+    bool m_isHosts : 1 = false;
 
     int m_emptyNetMask = 32;
 

@@ -41,7 +41,9 @@ QString ZoneSourceWrapper::formData() const
 
 bool ZoneSourceWrapper::isTextInline() const
 {
-    return id() == SourceText;
+    const int sourceId = id();
+
+    return sourceId == SourceText || sourceId == SourceHostsText;
 }
 
 int ZoneSourceWrapper::idByCode(const QString &code)
@@ -49,6 +51,8 @@ int ZoneSourceWrapper::idByCode(const QString &code)
     static const QHash<QString, int> map = {
         { "text", SourceText },
         { "file", SourceFile },
+        { "host_text", SourceHostsText },
+        { "host_file", SourceHostsFile },
         { "winspyblock", SourceWinSpyBlock },
         { "firehol_level1", SourceFireHol_Level1 },
         { "tasix", SourceTasix },

@@ -126,6 +126,7 @@ void TaskInfoZoneDownloader::setupTaskWorkerByZone(TaskZoneDownloader *worker, i
 
     worker->setZoneEnabled(zoneRow.enabled);
     worker->setSort(zoneType.sort());
+    worker->setIsHosts(zoneType.isHosts());
     worker->setEmptyNetMask(zoneType.emptyNetMask());
     worker->setZoneId(zoneRow.zoneId);
     worker->setZoneName(zoneRow.zoneName);

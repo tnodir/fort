@@ -9,6 +9,7 @@ public:
     enum TypeId {
         TypeGeneric = 0,
         TypeBgp,
+        TypeHosts,
     };
 
     explicit ZoneTypeWrapper(const QVariant &var = {});
@@ -22,6 +23,8 @@ public:
     bool sort() const;
     QString pattern() const;
     int emptyNetMask() const;
+
+    bool isHosts() const;
 
     static int idByCode(const QString &code);
 };
