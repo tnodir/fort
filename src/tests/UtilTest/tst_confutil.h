@@ -7,6 +7,8 @@
 
 #include <googletest.h>
 
+#include <common/fortconf_valid.h>
+
 #include <conf/addressgroup.h>
 #include <conf/app.h>
 #include <conf/confrulemanager.h>
@@ -26,6 +28,7 @@
 #include <util/conf/confspeedlimitswalker.h>
 #include <util/conf/confutil.h>
 #include <util/fileutil.h>
+#include <util/net/hostmatcher.h>
 #include <util/net/iprange.h>
 #include <util/net/netformatutil.h>
 #include <util/net/netutil.h>
@@ -2199,4 +2202,36 @@ TEST_F(ConfUtilTest, defaultPresetRules)
 
         codes.append(code);
     }
+}
+
+TEST_F(ConfUtilTest, hostIpsWrite)
+{
+    const ip4_arr_t ip4Array = {
+        NetFormatUtil::textToIp4("1.1.1.1"),
+        NetFormatUtil::textToIp4("8.8.8.8"),
+    };
+    const ip6_arr_t ip6Array = { NetFormatUtil::textToIp6("2001:db8::1") };
+
+    ConfBuffer confBuf;
+    confBuf.writeHostIps({ .zonesMask = 0x5 }, 300, ip4Array, ip6Array);
+
+    const QByteArray &buf = confBuf.buffer();
+    const auto hostIps = PCFORT_CONF_HOST_IPS(buf.constData());
+
+    ASSERT_TRUE(fort_conf_host_ips_valid(hostIps, buf.size()));
+    ASSERT_FALSE(fort_conf_host_ips_valid(hostIps, buf.size() - 1));
+
+    ASSERT_EQ(hostIps->ip4_n, 2);
+    ASSERT_EQ(hostIps->ip6_n, 1);
+    ASSERT_EQ(hostIps->zones_mask, 0x5);
+    ASSERT_EQ(hostIps->ttl, 300);
+
+    const char *data = hostIps->data;
+    ASSERT_EQ(memcmp(data, ip4Array.constData(), 2 * sizeof(quint32)), 0);
+    ASSERT_EQ(memcmp(data + 2 * sizeof(quint32), ip6Array.constData(), sizeof(ip6_addr_t)), 0);
+
+    // Without Zones
+    confBuf.writeHostIps({}, 300, ip4Array, {});
+    ASSERT_FALSE(fort_conf_host_ips_valid(
+            PCFORT_CONF_HOST_IPS(confBuf.buffer().constData()), confBuf.buffer().size()));
 }

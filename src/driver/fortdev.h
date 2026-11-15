@@ -5,6 +5,7 @@
 
 #include "fortbuf.h"
 #include "fortcnf.h"
+#include "fortcnf_host.h"
 #include "fortpkt_pending.h"
 #include "fortpkt_shaper.h"
 #include "fortps.h"
@@ -23,6 +24,7 @@ typedef struct fort_device
     PVOID systime_cb_reg;
 
     FORT_DEVICE_CONF conf;
+    FORT_HOST_IPS host_ips;
     FORT_BUFFER buffer;
     FORT_STAT stat;
     FORT_PENDING pending;
