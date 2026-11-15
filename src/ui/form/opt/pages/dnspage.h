@@ -3,7 +3,10 @@
 
 #include "optbasepage.h"
 
+class DnsServersTest;
 class PlainTextEdit;
+
+struct DnsServerResult;
 
 class DnsPage : public OptBasePage
 {
@@ -25,8 +28,14 @@ private:
     void setupForwarderBox();
     QLayout *setupServersLayout();
     void setupComboServers();
+    void setupTestButton();
     void setupEditServers();
+    void setupTestResults();
 
+    void testServers();
+    void updateTestResults();
+
+    static QString serverResultText(const DnsServerResult &result);
     static QString adaptersServersText();
 
 private:
@@ -35,7 +44,11 @@ private:
     QCheckBox *m_cbFilterEnabled = nullptr;
     QLabel *m_labelServers = nullptr;
     QComboBox *m_comboServers = nullptr;
+    QPushButton *m_btTest = nullptr;
     PlainTextEdit *m_editServers = nullptr;
+    PlainTextEdit *m_editTestResults = nullptr;
+
+    DnsServersTest *m_serversTest = nullptr;
 };
 
 #endif // DNSPAGE_H
