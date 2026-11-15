@@ -15,8 +15,8 @@
 
 #include "hostzonesdb.h"
 
-// The DNS forwarder of the service: resolves only the names of the Hosts Zones and host() filters,
-// adding their addresses to the Zones and host() filters in the driver before answering
+// The DNS forwarder of the service: resolves the names but the Block Zones' ones, adding the
+// addresses of the Hosts Zones' and host() filters' names to them in the driver before answering
 class DnsManager : public QObject, public IocService
 {
     Q_OBJECT
@@ -44,6 +44,7 @@ private:
 
     void setupByConf();
     void setupByConfIni();
+    void setupBlockZones(quint32 zonesMask);
 
     void start(const QStringList &servers);
     void stop();
@@ -63,6 +64,7 @@ private:
 
     // The Hosts Zones and host() filters listing the name
     HostMatch matchHost(QStringView name) const;
+    bool isNameBlocked(const DnsQuery &query, QStringView name, quint32 nameZonesMask) const;
 
     void processQuery(const DnsClient &client, const QByteArray &data);
     void processAnswer(const DnsRequest &request, const DnsAnswer &answer);
@@ -77,6 +79,8 @@ private:
 
 private:
     bool m_loopLogged = false;
+
+    quint32 m_blockZonesMask = 0;
 
     std::unique_ptr<DnsResolver> m_resolver;
 

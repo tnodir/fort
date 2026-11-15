@@ -4,6 +4,7 @@
 #include "optbasepage.h"
 
 class DnsServersTest;
+class HostZonesSelector;
 class PlainTextEdit;
 
 struct DnsServerResult;
@@ -31,6 +32,9 @@ private:
     void setupTestButton();
     void setupEditServers();
     void setupTestResults();
+    QLayout *setupBlockZonesLayout();
+
+    void onBlockZonesEdited();
 
     void testServers();
     void updateTestResults();
@@ -51,6 +55,8 @@ private:
     PlainTextEdit *m_editServers = nullptr;
     PlainTextEdit *m_editTestResults = nullptr;
     QCheckBox *m_cbBlockPorts = nullptr;
+    QLabel *m_labelBlockZones = nullptr;
+    HostZonesSelector *m_btBlockZones = nullptr;
 
     DnsServersTest *m_serversTest = nullptr;
 };

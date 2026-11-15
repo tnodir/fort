@@ -132,7 +132,22 @@ void DnsManager::setupByConf()
 
 void DnsManager::setupByConfIni()
 {
+    setupBlockZones(Fort::ini().dnsBlockZones());
+
     setupByConf();
+}
+
+void DnsManager::setupBlockZones(quint32 zonesMask)
+{
+    if (m_blockZonesMask == zonesMask)
+        return;
+
+    m_blockZonesMask = zonesMask;
+
+    // The names' cached answers, found or not, bypass the forwarder
+    if (isStarted()) {
+        flushResolverCache();
+    }
 }
 
 void DnsManager::start(const QStringList &servers)
@@ -254,6 +269,18 @@ HostMatch DnsManager::matchHost(QStringView name) const
     return match;
 }
 
+// The names of the Block Zones aren't found, even if a host() filter lists them. The Block Zones
+// may be changed while the query waits for the answer
+bool DnsManager::isNameBlocked(const DnsQuery &query, QStringView name, quint32 nameZonesMask) const
+{
+    if ((nameZonesMask & m_blockZonesMask) == 0)
+        return false;
+
+    qCDebug(LC) << "Blocked:" << name;
+
+    return true;
+}
+
 void DnsManager::processQuery(const DnsClient &client, const QByteArray &data)
 {
     DnsRequest request = { .client = client };
@@ -272,6 +299,12 @@ void DnsManager::processQuery(const DnsClient &client, const QByteArray &data)
 
 void DnsManager::processAnswer(const DnsRequest &request, const DnsAnswer &answer)
 {
+    if (isNameBlocked(
+                request.query, request.query.name(), m_hostZonesDb.match(request.query.name()))) {
+        sendRcode(request, ARES_RCODE_NXDOMAIN);
+        return;
+    }
+
     // The Zones and host() filters may be changed since the query.
     // The client connects to the addresses after the answer.
     if (!writeHostIps(matchHost(request.query.name()), answer.addresses())) {
@@ -292,10 +325,9 @@ quint8 DnsManager::checkQuery(const DnsRequest &request)
     if (checkLoopQuery(request))
         return ARES_RCODE_SERVFAIL;
 
-    if (matchHost(query.name()).isEmpty()) {
-        qCDebug(LC) << "Blocked:" << query.name();
+    const QString &name = query.name();
+    if (isNameBlocked(query, name, m_hostZonesDb.match(name)))
         return ARES_RCODE_NXDOMAIN;
-    }
 
     return ARES_RCODE_NOERROR;
 }

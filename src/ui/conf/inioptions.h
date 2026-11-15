@@ -132,6 +132,10 @@ public:
     bool progPurgeOnMounted() const { return valueBool("prog/purgeOnMounted"); }
     void setProgPurgeOnMounted(bool v) { setValue("prog/purgeOnMounted", v); }
 
+    // The Hosts Zones, whose names aren't found
+    quint32 dnsBlockZones() const { return valueUInt("dns/blockZones"); }
+    void setDnsBlockZones(quint32 v) { setValue("dns/blockZones", v); }
+
     // Empty for the adapters' DNS servers
     QStringList dnsServers() const { return valueList("dns/servers"); }
     void setDnsServers(const QStringList &v) { setValue("dns/servers", v); }

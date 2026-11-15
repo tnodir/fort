@@ -59,6 +59,9 @@ public:
     bool saveFlags();
     void saveIni();
 
+    // Saves the master's own change of the ini, as the Options window's one: the clients reload it
+    void saveIniChanged();
+
     void saveIniUser();
     void saveIniUser(IniUser &iniUser, bool onlyFlags = false);
 
