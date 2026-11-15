@@ -31,10 +31,13 @@ private:
     void setupComboServers();
     void setupTestButton();
     void setupEditServers();
+    void setupMixedServersWarning();
     void setupTestResults();
     QLayout *setupBlockZonesLayout();
 
     void onBlockZonesEdited();
+
+    void updateMixedServersWarning(const QStringList &servers);
 
     void testServers();
     void updateTestResults();
@@ -55,6 +58,8 @@ private:
     QComboBox *m_comboServers = nullptr;
     QPushButton *m_btTest = nullptr;
     PlainTextEdit *m_editServers = nullptr;
+    QLabel *m_labelMixedServers = nullptr;
+    QWidget *m_mixedServersWarning = nullptr;
     PlainTextEdit *m_editTestResults = nullptr;
     QCheckBox *m_cbBlockPorts = nullptr;
     QLabel *m_labelBlockZones = nullptr;
