@@ -1,6 +1,12 @@
 #include "dnsutil.h"
 
+#define WIN32_LEAN_AND_MEAN
+#include <qt_windows.h>
+
 #include <ares.h>
+
+// Not declared in the SDK, but exported by dnsapi.lib: "ipconfig /flushdns" calls it
+extern "C" BOOL WINAPI DnsFlushResolverCache();
 
 int DnsUtil::optIndex(const ares_dns_record *record)
 {
@@ -64,4 +70,9 @@ QByteArray DnsUtil::writeRecord(const ares_dns_record *record)
     ares_free_string(buf);
 
     return data;
+}
+
+bool DnsUtil::flushResolverCache()
+{
+    return DnsFlushResolverCache();
 }
