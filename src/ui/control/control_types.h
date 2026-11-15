@@ -112,6 +112,7 @@ enum Command : qint8 {
     Rpc_ConfTimePeriodManager_timePeriodRemoved,
     Rpc_ConfTimePeriodManager_timePeriodUpdated,
 
+    Rpc_DnsManager_updateState,
     Rpc_DnsManager_testServers,
     Rpc_DnsManager_serverTested,
 

@@ -46,11 +46,10 @@ void writeTcpResponse(QAbstractSocket *socket, const QByteArray &response)
 
 // Deletes the listener on error
 template<typename T>
-bool appendListener(QList<T *> &list, T *listener, bool ok, const QHostAddress &address)
+bool appendListener(QList<T *> &list, T *listener, bool ok, QString &errorString)
 {
     if (!ok) {
-        qCWarning(LC) << "Listen error:" << listener->metaObject()->className() << address
-                      << listener->errorString();
+        errorString = listener->errorString();
 
         delete listener;
         return false;
@@ -69,13 +68,16 @@ bool DnsListener::listen()
 {
     close();
 
+    m_errorString.clear();
+
     // The NRPT rule sends the queries to 127.0.0.1
-    if (!listenAddress(QHostAddress::LocalHost)) {
+    if (!listenAddress(QHostAddress::LocalHost, m_errorString)) {
         close();
         return false;
     }
 
-    listenAddress(QHostAddress::LocalHostIPv6);
+    QString errorString;
+    listenAddress(QHostAddress::LocalHostIPv6, errorString);
 
     return true;
 }
@@ -102,20 +104,22 @@ void DnsListener::sendResponse(const DnsClient &client, const QByteArray &respon
     }
 }
 
-bool DnsListener::listenAddress(const QHostAddress &address)
+bool DnsListener::listenAddress(const QHostAddress &address, QString &errorString)
 {
-    if (listenUdp(address)) {
-        if (listenTcp(address))
+    if (listenUdp(address, errorString)) {
+        if (listenTcp(address, errorString))
             return true;
 
         // Doesn't keep the address's UDP socket without its TCP server
         delete m_udpSockets.takeLast();
     }
 
+    qCWarning(LC) << "Listen error:" << address << errorString;
+
     return false;
 }
 
-bool DnsListener::listenUdp(const QHostAddress &address)
+bool DnsListener::listenUdp(const QHostAddress &address, QString &errorString)
 {
     auto socket = new QUdpSocket(this);
 
@@ -123,10 +127,10 @@ bool DnsListener::listenUdp(const QHostAddress &address)
 
     const bool ok = socket->bind(address, dnsPort, QAbstractSocket::DontShareAddress);
 
-    return appendListener(m_udpSockets, socket, ok, address);
+    return appendListener(m_udpSockets, socket, ok, errorString);
 }
 
-bool DnsListener::listenTcp(const QHostAddress &address)
+bool DnsListener::listenTcp(const QHostAddress &address, QString &errorString)
 {
     auto server = new QTcpServer(this);
 
@@ -134,7 +138,7 @@ bool DnsListener::listenTcp(const QHostAddress &address)
 
     const bool ok = server->listen(address, dnsPort);
 
-    return appendListener(m_tcpServers, server, ok, address);
+    return appendListener(m_tcpServers, server, ok, errorString);
 }
 
 void DnsListener::readDatagrams(QUdpSocket *socket)

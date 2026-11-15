@@ -22,15 +22,18 @@ public:
     bool listen();
     void close();
 
+    // The socket's error of the failed listen()
+    const QString &errorString() const { return m_errorString; }
+
     void sendResponse(const DnsClient &client, const QByteArray &response);
 
 signals:
     void queryReceived(const DnsClient &client, const QByteArray &data);
 
 private:
-    bool listenAddress(const QHostAddress &address);
-    bool listenUdp(const QHostAddress &address);
-    bool listenTcp(const QHostAddress &address);
+    bool listenAddress(const QHostAddress &address, QString &errorString);
+    bool listenUdp(const QHostAddress &address, QString &errorString);
+    bool listenTcp(const QHostAddress &address, QString &errorString);
 
     void readDatagrams(QUdpSocket *socket);
 
@@ -40,6 +43,8 @@ private:
 
 private:
     int m_tcpConnCount = 0;
+
+    QString m_errorString;
 
     QList<QUdpSocket *> m_udpSockets;
     QList<QTcpServer *> m_tcpServers;
