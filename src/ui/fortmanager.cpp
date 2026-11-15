@@ -337,6 +337,8 @@ void FortManager::uninstall(const char *arg)
     StartupUtil::stopService(ServiceControlStopUninstall); // Quit clients & Stop service
     StartupUtil::setServiceInstalled(false); // Uninstall service
 
+    DnsManager::removeNrptRule(); // Remove the DNS forwarding of a crashed service
+
     if (!arg) { // !"most"
         StartupUtil::setAutoRunMode(StartupUtil::StartupDisabled); // Remove auto-run
 

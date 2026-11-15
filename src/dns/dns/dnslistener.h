@@ -18,9 +18,7 @@ public:
     explicit DnsListener(QObject *parent = nullptr);
     Q_DISABLE_COPY_MOVE(DnsListener)
 
-    bool isListening() const { return !m_udpSockets.isEmpty(); }
-
-    // Listens on 127.0.0.1:53 and [::1]:53
+    // Listens on 127.0.0.1:53 and, if free, on [::1]:53
     bool listen();
     void close();
 
@@ -30,8 +28,9 @@ signals:
     void queryReceived(const DnsClient &client, const QByteArray &data);
 
 private:
-    void listenUdp(const QHostAddress &address);
-    void listenTcp(const QHostAddress &address);
+    bool listenAddress(const QHostAddress &address);
+    bool listenUdp(const QHostAddress &address);
+    bool listenTcp(const QHostAddress &address);
 
     void readDatagrams(QUdpSocket *socket);
 
