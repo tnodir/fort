@@ -800,6 +800,18 @@ static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_port_udp(
     return fort_conf_rule_filter_check_port_protocol(conn, data, IpProto_UDP);
 }
 
+static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_host(
+        PFORT_CONF_META_CONN conn, const void *data)
+{
+    const UINT32 host_id = ((PCFORT_CONF_RULE_FILTER_HOST) data)->host_id;
+
+    if (host_id == 0 || conn->host_ip_included == NULL)
+        return FORT_CONN_FILTER_RESULT_FALSE;
+
+    return conn->host_ip_included(conn, host_id) ? FORT_CONN_FILTER_RESULT_TRUE
+                                                 : FORT_CONN_FILTER_RESULT_FALSE;
+}
+
 typedef FORT_CONN_FILTER_RESULT (*FORT_CONF_RULE_FILTER_CHECK_FUNC)(
         PFORT_CONF_META_CONN conn, const void *data);
 
@@ -812,6 +824,7 @@ static const FORT_CONF_RULE_FILTER_CHECK_FUNC fort_conf_rule_filter_check_funcLi
     &fort_conf_rule_filter_check_ip_version, // FORT_RULE_FILTER_TYPE_IP_VERSION,
     &fort_conf_rule_filter_check_direction, // FORT_RULE_FILTER_TYPE_DIRECTION,
     &fort_conf_rule_filter_check_zones, // FORT_RULE_FILTER_TYPE_ZONES,
+    &fort_conf_rule_filter_check_host, // FORT_RULE_FILTER_TYPE_HOST,
     &fort_conf_rule_filter_check_area, // FORT_RULE_FILTER_TYPE_AREA,
     &fort_conf_rule_filter_check_profile, // FORT_RULE_FILTER_TYPE_PROFILE,
     &fort_conf_rule_filter_check_action, // FORT_RULE_FILTER_TYPE_ACTION,
@@ -876,6 +889,7 @@ static const FORT_CONF_RULE_FILTER_EQUAL_FUNC fort_conf_rule_filter_equal_funcLi
     NULL, // FORT_RULE_FILTER_TYPE_IP_VERSION,
     NULL, // FORT_RULE_FILTER_TYPE_DIRECTION,
     NULL, // FORT_RULE_FILTER_TYPE_ZONES,
+    NULL, // FORT_RULE_FILTER_TYPE_HOST,
     NULL, // FORT_RULE_FILTER_TYPE_AREA,
     NULL, // FORT_RULE_FILTER_TYPE_PROFILE,
     NULL, // FORT_RULE_FILTER_TYPE_ACTION,

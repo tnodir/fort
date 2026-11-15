@@ -392,6 +392,11 @@ inline static void fort_callout_ale_check_app(PCFORT_CALLOUT_ARG ca, PFORT_CALLO
     fort_callout_ale_log_app_path(cx, conf_ref, conf_flags, app_data);
 }
 
+static BOOL fort_callout_ale_host_ip_included(PCFORT_CONF_META_CONN conn, UINT32 host_id)
+{
+    return fort_host_ips_filter_included(&fort_device()->host_ips, conn, host_id);
+}
+
 static BOOL fort_callout_ale_zones_ip_included(
         void *ctx, PCFORT_CONF_META_CONN conn, UCHAR *zone_id, UINT32 zones_mask)
 {
@@ -498,6 +503,7 @@ inline static void fort_callout_ale_check_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALL
     fort_callout_ale_fill_meta_conn(ca, conn);
 
     conn->host_zones_mask = fort_host_ips_zones_mask(&fort_device()->host_ips, conn);
+    conn->host_ip_included = &fort_callout_ale_host_ip_included;
 
     const FORT_CONF_CONN_FILTER filter = {
         .conf_flags = conf_flags,

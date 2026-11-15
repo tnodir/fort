@@ -336,6 +336,11 @@ FORT_API void fort_host_ips_zones_keep(PFORT_HOST_IPS host_ips, UINT32 zones_mas
     fort_host_ips_purge(host_ips, zones_mask, /*keep_filters=*/TRUE);
 }
 
+FORT_API void fort_host_ips_filters_clear(PFORT_HOST_IPS host_ips)
+{
+    fort_host_ips_purge(host_ips, FORT_HOST_IPS_ZONES_ALL, /*keep_filters=*/FALSE);
+}
+
 /* Looks up the not expired IP of the Zones or of the host() filter */
 static BOOL fort_host_ips_search(
         PFORT_HOST_IPS host_ips, PCFORT_CONF_META_CONN conn, UINT32 host_id, UINT32 *zones_mask)
@@ -376,4 +381,12 @@ FORT_API UINT32 fort_host_ips_zones_mask(PFORT_HOST_IPS host_ips, PCFORT_CONF_ME
     fort_host_ips_search(host_ips, conn, /*host_id=*/0, &zones_mask);
 
     return zones_mask;
+}
+
+FORT_API BOOL fort_host_ips_filter_included(
+        PFORT_HOST_IPS host_ips, PCFORT_CONF_META_CONN conn, UINT32 host_id)
+{
+    UINT32 zones_mask;
+
+    return fort_host_ips_search(host_ips, conn, host_id, &zones_mask);
 }

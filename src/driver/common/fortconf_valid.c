@@ -235,6 +235,13 @@ static BOOL fort_conf_rule_filter_flags_valid(const char *data, UINT32 len)
     return len >= sizeof(FORT_CONF_RULE_FILTER_FLAGS);
 }
 
+static BOOL fort_conf_rule_filter_host_valid(const char *data, UINT32 len)
+{
+    UNUSED(data);
+
+    return len >= sizeof(FORT_CONF_RULE_FILTER_HOST);
+}
+
 typedef BOOL (*FORT_CONF_RULE_FILTER_VALID_FUNC)(const char *data, UINT32 len);
 
 static const FORT_CONF_RULE_FILTER_VALID_FUNC fort_conf_rule_filter_valid_funcList[] = {
@@ -246,6 +253,7 @@ static const FORT_CONF_RULE_FILTER_VALID_FUNC fort_conf_rule_filter_valid_funcLi
     &fort_conf_rule_filter_flags_valid, // FORT_RULE_FILTER_TYPE_IP_VERSION,
     &fort_conf_rule_filter_flags_valid, // FORT_RULE_FILTER_TYPE_DIRECTION,
     &fort_conf_rule_filter_flags_valid, // FORT_RULE_FILTER_TYPE_ZONES,
+    &fort_conf_rule_filter_host_valid, // FORT_RULE_FILTER_TYPE_HOST,
     &fort_conf_rule_filter_flags_valid, // FORT_RULE_FILTER_TYPE_AREA,
     &fort_conf_rule_filter_flags_valid, // FORT_RULE_FILTER_TYPE_PROFILE,
     &fort_conf_rule_filter_flags_valid, // FORT_RULE_FILTER_TYPE_ACTION,

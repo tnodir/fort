@@ -81,6 +81,9 @@ FORT_API NTSTATUS fort_device_create(PDEVICE_OBJECT device, PIRP irp)
     if (NT_SUCCESS(status)) {
         /* Clear buffer */
         fort_buffer_clear(&fort_device()->buffer);
+
+        /* The new client's host() filters have new ids */
+        fort_host_ips_filters_clear(&fort_device()->host_ips);
     }
 
     fort_request_complete(irp, status);

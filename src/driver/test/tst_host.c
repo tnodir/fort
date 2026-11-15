@@ -38,10 +38,12 @@ static void test_host_ips_reauth(void)
 
     /* The expired IP isn't matched by a new connection */
     assert(fort_host_ips_zones_mask(&host_ips, &conn) == 0);
+    assert(!fort_host_ips_filter_included(&host_ips, &conn, TEST_HOST_ID));
 
     /* The expired IP is matched by an established connection's reauthorization */
     conn.is_reauth = TRUE;
     assert(fort_host_ips_zones_mask(&host_ips, &conn) == 1);
+    assert(fort_host_ips_filter_included(&host_ips, &conn, TEST_HOST_ID));
 
     /* The purge keeps it */
     fort_host_ips_zones_keep(&host_ips, 1);
@@ -50,6 +52,7 @@ static void test_host_ips_reauth(void)
     /* The not expired IP is matched by a new connection */
     conn = (FORT_CONF_META_CONN) { .remote_ip.v4 = 0x05060708 };
     assert(fort_host_ips_zones_mask(&host_ips, &conn) == 1);
+    assert(fort_host_ips_filter_included(&host_ips, &conn, TEST_HOST_ID));
 
     fort_host_ips_close(&host_ips);
 
@@ -72,6 +75,11 @@ static void test_host_ips_purge(void)
 
     const FORT_CONF_META_CONN conn = { .remote_ip.v4 = 0x05060708 };
     assert(fort_host_ips_zones_mask(&host_ips, &conn) == 0);
+    assert(fort_host_ips_filter_included(&host_ips, &conn, TEST_HOST_ID));
+
+    fort_host_ips_filters_clear(&host_ips);
+    assert(host_ips.count == 0);
+    assert(!fort_host_ips_filter_included(&host_ips, &conn, TEST_HOST_ID));
 
     fort_host_ips_close(&host_ips);
 

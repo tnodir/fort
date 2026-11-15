@@ -52,8 +52,15 @@ FORT_API NTSTATUS fort_host_ips_add(PFORT_HOST_IPS host_ips, PCFORT_CONF_HOST_IP
 /* Removes the IPs' Zones not in the mask */
 FORT_API void fort_host_ips_zones_keep(PFORT_HOST_IPS host_ips, UINT32 zones_mask);
 
+/* Removes the host() filters' IPs */
+FORT_API void fort_host_ips_filters_clear(PFORT_HOST_IPS host_ips);
+
 /* Returns the Zones of the connection's remote IP */
 FORT_API UINT32 fort_host_ips_zones_mask(PFORT_HOST_IPS host_ips, PCFORT_CONF_META_CONN conn);
+
+/* Is the connection's remote IP added to the host() filter */
+FORT_API BOOL fort_host_ips_filter_included(
+        PFORT_HOST_IPS host_ips, PCFORT_CONF_META_CONN conn, UINT32 host_id);
 
 #ifdef __cplusplus
 } // extern "C"
