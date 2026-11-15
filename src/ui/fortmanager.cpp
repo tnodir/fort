@@ -280,6 +280,9 @@ void FortManager::createManagers()
 
     setupServices(ioc, settings);
 
+    // A client may receive the service's driver state while setting up
+    setupDriverManager();
+
     if (settings->isMaster()) {
         // TODO: COMPAT: Remove after v4.1.0 (via v4.0.0)
         FileUtil::removeFile(settings->statFilePath() + "-block");
@@ -421,6 +424,33 @@ void FortManager::closeDriver()
     QCoreApplication::sendPostedEvents(this);
 }
 
+void FortManager::setupDriverManager()
+{
+    if (settings()->isService())
+        return;
+
+    // Warn after the windows' initialization
+    connect(
+            driverManager(), &DriverManager::errorCodeChanged, this,
+            [&] {
+                if (driverManager()->isDriverBlocked()) {
+                    showDriverBlockedWarning();
+                }
+            },
+            Qt::QueuedConnection);
+}
+
+void FortManager::showDriverBlockedWarning()
+{
+    const QString text = tr("The Driver isn't started: Memory Integrity (HVCI) is enabled!")
+            + "\n\n"
+            + tr("Turn off the Memory Integrity in Windows Security: Device Security"
+                 " > Core Isolation, then restart the computer.")
+            + "\n\n" + "https://github.com/tnodir/fort/wiki/HVCI";
+
+    windowManager()->showErrorBox(text);
+}
+
 void FortManager::checkStopDriver()
 {
     if (!settings()->isService() || !serviceManager()->stopDriverRequested())
@@ -476,6 +506,10 @@ void FortManager::checkDriverAccess()
     const bool isAdmin = settings->isUserAdmin();
 
     if (hasService || isAdmin)
+        return;
+
+    // The service can't start the driver either
+    if (driverManager()->isDriverBlocked())
         return;
 
     // Ask after the windows' initialization

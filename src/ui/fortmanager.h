@@ -53,6 +53,9 @@ private:
     bool setupDriver();
     void closeDriver();
 
+    void setupDriverManager();
+    void showDriverBlockedWarning();
+
     void checkStopDriver();
     void checkRemoveDriver();
 
