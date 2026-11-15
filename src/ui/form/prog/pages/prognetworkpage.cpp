@@ -97,7 +97,7 @@ void ProgNetworkPage::initializeFilters(bool isSingleSelection)
     Rule rule;
     ConfUtil::parseAppFiltersText(app().filtersText, rule);
 
-    m_filterListModel->setList(rule.ruleText.split('\n', Qt::SkipEmptyParts));
+    m_filterListModel->setList(ConfUtil::splitAppFilters(rule.ruleText));
 
     m_btAddFilter->setEnabled(isSingleSelection);
     m_filterListView->setEnabled(isSingleSelection);
@@ -312,7 +312,7 @@ void ProgNetworkPage::fillApp(App &app) const
     // The filters' lines of the Network Filters' text
     Rule rule;
     ConfUtil::parseAppFiltersText(app.filtersText, rule);
-    rule.ruleText = m_filterListModel->list().join('\n');
+    rule.ruleText = ConfUtil::joinAppFilters(m_filterListModel->list());
 
     app.filtersText = ConfUtil::appFiltersText(rule);
 }

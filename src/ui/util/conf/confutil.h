@@ -30,6 +30,12 @@ public:
     static void parseAppFiltersText(const QString &filtersText, Rule &rule);
     static QString appFiltersText(const Rule &rule);
 
+    // The filters of the Program's filters' text: separated by the ";" line, as a filter may be
+    // of several lines
+    static QStringList splitAppFilters(const QString &filtersText);
+    static QString joinAppFilters(const QStringList &filters);
+    static bool hasAppFiltersSeparator(const QString &text);
+
     // The Rules' ids by the SQL's group_concat(), e.g. "1,2,3"
     static RuleSetList parseRuleSetIds(const QString &idsText);
 };

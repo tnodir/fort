@@ -14,6 +14,9 @@ namespace {
 // The Terminating Rule's line follows it in the Program's filters' text
 inline constexpr char terminatingRuleComment[] = "# Terminating";
 
+// The line between the filters of the Program's filters' text: a filter may be of several lines
+inline constexpr QLatin1String appFiltersSeparator("\n;\n", 3);
+
 void parseFilterRange(const RuleFilter *filter, ValueRange &range)
 {
     if (filter) {
@@ -143,11 +146,11 @@ QString ConfUtil::parseAppPath(const QStringView line, bool &isWild, bool &isPre
 
 void ConfUtil::parseAppFiltersText(const QString &filtersText, Rule &rule)
 {
-    const QStringList lines = filtersText.split('\n', Qt::SkipEmptyParts);
+    const QStringList lines = splitAppFilters(filtersText);
 
     const int terminatingIndex = lines.indexOf(terminatingRuleComment);
 
-    rule.ruleText = lines.mid(0, terminatingIndex).join('\n'); // -1: all lines
+    rule.ruleText = joinAppFilters(lines.mid(0, terminatingIndex)); // -1: all lines
 
     parseTerminatingRuleLine(
             (terminatingIndex >= 0) ? lines.value(terminatingIndex + 1) : QString(), rule);
@@ -165,7 +168,22 @@ QString ConfUtil::appFiltersText(const Rule &rule)
         lines << terminatingRuleComment << terminatingRuleLine(rule);
     }
 
-    return lines.join('\n');
+    return joinAppFilters(lines);
+}
+
+QStringList ConfUtil::splitAppFilters(const QString &filtersText)
+{
+    return filtersText.split(appFiltersSeparator, Qt::SkipEmptyParts);
+}
+
+QString ConfUtil::joinAppFilters(const QStringList &filters)
+{
+    return filters.join(appFiltersSeparator);
+}
+
+bool ConfUtil::hasAppFiltersSeparator(const QString &text)
+{
+    return text.contains(appFiltersSeparator);
 }
 
 RuleSetList ConfUtil::parseRuleSetIds(const QString &idsText)

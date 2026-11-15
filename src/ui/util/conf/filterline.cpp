@@ -38,6 +38,19 @@ bool FilterLine::parse()
     return true;
 }
 
+bool FilterLine::isSingleLine() const
+{
+    const auto &ruleFilters = m_parser.ruleFilters();
+
+    if (ruleFilters.size() <= 1)
+        return true;
+
+    // The lines' list has only the line's list
+    const RuleFilter &line = ruleFilters[1];
+
+    return line.isTypeList() && line.filterListCount == ruleFilters.size() - 2;
+}
+
 const RuleFilter *FilterLine::filter(qint8 type) const
 {
     const int index = m_filterIndexes.value(type, -1);

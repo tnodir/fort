@@ -197,7 +197,7 @@ bool getAppFields(ProcessCommandResult &r, const App &app)
 bool setAppFilters(ProcessCommandResult &r, App &app, const QString &filtersText)
 {
     Rule rule;
-    ConfUtil::parseAppFiltersText(filtersText, rule);
+    ConfUtil::parseAppFiltersText(filtersText.trimmed(), rule);
 
     if (!ControlCommandUtil::validateRuleText(r, rule.ruleText))
         return false;

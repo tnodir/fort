@@ -23,7 +23,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-inline constexpr int DATABASE_USER_VERSION = 71;
+inline constexpr int DATABASE_USER_VERSION = 72;
 
 using AppsMap = QHash<qint64, QString>;
 using AppIdsArray = QVector<qint64>;
@@ -530,6 +530,28 @@ bool migrateAppRules(SqliteDb *db)
     return DbQuery(db).sql(sql).executeOk();
 }
 
+// The Programs' filters are separated by the ";" line: a filter may be of several lines
+bool migrateAppFiltersTexts(SqliteDb *db)
+{
+    return DbQuery(db)
+            .sql("UPDATE app SET filters_text = replace(filters_text, char(10), char(10, 59, 10))"
+                 "  WHERE filters_text IS NOT NULL;")
+            .executeOk();
+}
+
+void migrateApps(SqliteDb *db, int version)
+{
+    // COMPAT: The Program's Rule is in its Rules
+    if (version < 71) {
+        migrateAppRules(db);
+    }
+
+    // COMPAT: The Program's filters of several lines
+    if (version < 72) {
+        migrateAppFiltersTexts(db);
+    }
+}
+
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
     Q_UNUSED(ctx);
@@ -567,10 +589,8 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
         migrateAddrGroupExcludeTexts(db, "2001::/32");
     }
 
-    // COMPAT: The Program's Rule is in its Rules
-    if (version < 71) {
-        migrateAppRules(db);
-    }
+    // COMPAT: Migrate the Programs' Rules and filters
+    migrateApps(db, version);
 
     return true;
 }

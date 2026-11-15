@@ -484,12 +484,12 @@ TEST_F(ConnFilterTest, askAction)
 {
     App askApp = wildcardApp("C:\\App\\ask.exe");
     askApp.setAction(App::ActionAsk);
-    askApp.filtersText = "IP(1.1.1.1):Act(Allow)\n"
+    askApp.filtersText = "IP(1.1.1.1):Act(Allow)\n;\n"
                          "IP(2.2.2.2):Act(Block)";
 
     App filtersApp = wildcardApp("C:\\App\\filters.exe");
-    filtersApp.filtersText = "IP(1.1.1.1):Act(Ask)\n"
-                             "# Terminating\n"
+    filtersApp.filtersText = "IP(1.1.1.1):Act(Ask)\n;\n"
+                             "# Terminating\n;\n"
                              "Act(Ask)";
 
     App ruleApp = wildcardApp("C:\\App\\rule.exe");
@@ -835,9 +835,9 @@ TEST_F(ConnFilterTest, globalRules)
 TEST_F(ConnFilterTest, appFilters)
 {
     App filtersApp = wildcardApp("C:\\App\\filters.exe");
-    filtersApp.filtersText = "IP(1.1.1.1):Act(Block)\n"
-                             "IP(2.2.2.2):Act(Allow)\n"
-                             "# Terminating\n"
+    filtersApp.filtersText = "IP(1.1.1.1):Act(Block)\n;\n"
+                             "IP(2.2.2.2):Act(Allow)\n;\n"
+                             "# Terminating\n;\n"
                              "Act(Drop):Opt(Alert)";
 
     App prefixApp = wildcardApp("C:\\Prefix\\**");
@@ -889,8 +889,8 @@ TEST_F(ConnFilterTest, appRules)
 {
     App rulesApp = wildcardApp("C:\\App\\rules.exe");
     rulesApp.ruleSet = { 2, 1 };
-    rulesApp.filtersText = "IP(3.3.3.3):Act(Allow)\n"
-                           "# Terminating\n"
+    rulesApp.filtersText = "IP(3.3.3.3):Act(Allow)\n;\n"
+                           "# Terminating\n;\n"
                            "Act(Block)";
 
     m_apps << rulesApp;

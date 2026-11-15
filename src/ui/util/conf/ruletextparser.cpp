@@ -49,10 +49,10 @@ RuleCharType processChar(const QChar c, const char *extraChars = nullptr)
         return CharExtra;
     }
 
-    static const char chars[] = "{}()[],:#!=|\n";
+    static const char chars[] = "{}()[],:#!=|;\n";
     static const RuleCharType charTypes[] = { CharListBegin, CharListEnd, CharBracketBegin,
         CharBracketEnd, CharValueBegin, CharValueEnd, CharValueSeparator, CharColon, CharComment,
-        CharNot, CharEqualValues, CharNewLine, CharNewLine };
+        CharNot, CharEqualValues, CharNewLine, CharNewLine, CharNewLine };
 
     const int index = getCharIndex(chars, c1);
 

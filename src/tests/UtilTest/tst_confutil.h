@@ -1582,15 +1582,15 @@ TEST_F(ConfUtilTest, editedFlagsFromVariant)
 
 TEST_F(ConfUtilTest, appFiltersText)
 {
-    const QString filtersText = "IP(1.1.1.1):Act(Block)\n"
-                                "Port(80)\n"
-                                "# Terminating\n"
+    const QString filtersText = "IP(1.1.1.1):Act(Block)\n;\n"
+                                "Port(80)\n;\n"
+                                "# Terminating\n;\n"
                                 "Act(Drop):Opt(Alert)";
 
     Rule rule;
     ConfUtil::parseAppFiltersText(filtersText, rule);
 
-    ASSERT_EQ(rule.ruleText, "IP(1.1.1.1):Act(Block)\nPort(80)");
+    ASSERT_EQ(rule.ruleText, "IP(1.1.1.1):Act(Block)\n;\nPort(80)");
     ASSERT_TRUE(rule.terminate);
     ASSERT_TRUE(rule.terminateBlocked);
     ASSERT_TRUE(rule.terminateDrop);
@@ -1600,25 +1600,25 @@ TEST_F(ConfUtilTest, appFiltersText)
 
     // Only the Terminating Rule
     rule = {};
-    ConfUtil::parseAppFiltersText("# Terminating\nAct(Allow)", rule);
+    ConfUtil::parseAppFiltersText("# Terminating\n;\nAct(Allow)", rule);
 
     ASSERT_TRUE(rule.ruleText.isEmpty());
     ASSERT_TRUE(rule.terminate);
     ASSERT_FALSE(rule.terminateBlocked);
     ASSERT_FALSE(rule.terminateAlert);
 
-    ASSERT_EQ(ConfUtil::appFiltersText(rule), "# Terminating\nAct(Allow)");
+    ASSERT_EQ(ConfUtil::appFiltersText(rule), "# Terminating\n;\nAct(Allow)");
 
     // The asking Terminating Rule
     rule = {};
-    ConfUtil::parseAppFiltersText("# Terminating\nAct(Ask)", rule);
+    ConfUtil::parseAppFiltersText("# Terminating\n;\nAct(Ask)", rule);
 
     ASSERT_TRUE(rule.terminate);
     ASSERT_TRUE(rule.terminateBlocked);
     ASSERT_TRUE(rule.terminateAsk);
     ASSERT_FALSE(rule.terminateDrop);
 
-    ASSERT_EQ(ConfUtil::appFiltersText(rule), "# Terminating\nAct(Ask)");
+    ASSERT_EQ(ConfUtil::appFiltersText(rule), "# Terminating\n;\nAct(Ask)");
 
     // No Terminating Rule
     rule = {};
@@ -1628,13 +1628,29 @@ TEST_F(ConfUtilTest, appFiltersText)
     ASSERT_FALSE(rule.terminate);
 
     ASSERT_EQ(ConfUtil::appFiltersText(rule), "Port(80)");
+
+    // A filter of several lines
+    const QString linesText = "Host(\n# CDN\na.com\n):Act(Allow)\n;\nPort(80)";
+
+    rule = {};
+    ConfUtil::parseAppFiltersText(linesText, rule);
+
+    ASSERT_EQ(rule.ruleText, linesText);
+    ASSERT_EQ(ConfUtil::splitAppFilters(rule.ruleText),
+            QStringList({ "Host(\n# CDN\na.com\n):Act(Allow)", "Port(80)" }));
+    ASSERT_TRUE(ConfBuffer().validateRuleText(rule.ruleText));
+
+    ASSERT_EQ(ConfUtil::appFiltersText(rule), linesText);
+
+    ASSERT_TRUE(ConfUtil::hasAppFiltersSeparator("Host(\n;\n)"));
+    ASSERT_FALSE(ConfUtil::hasAppFiltersSeparator("Host(\n# a; b\n)"));
 }
 
 TEST_F(ConfUtilTest, appFiltersValid)
 {
     App app;
     app.appPath = "C:\\App\\filters.exe";
-    app.filtersText = "IP(1.1.1.1):Act(Block)\n# Terminating\nAct(Block)";
+    app.filtersText = "IP(1.1.1.1):Act(Block)\n;\n# Terminating\n;\nAct(Block)";
 
     ConfBuffer confBuf;
     ASSERT_TRUE(confBuf.writeAppEntry(app));
