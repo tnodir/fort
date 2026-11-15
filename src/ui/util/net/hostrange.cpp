@@ -151,6 +151,11 @@ QString HostRange::normalizedName(QStringView name)
     return s;
 }
 
+QByteArray HostRange::normalizedKey(QStringView name)
+{
+    return normalizedName(name).toLatin1();
+}
+
 HostRange::ParseError HostRange::parseName(QStringView line)
 {
     const QString name = normalizedName(line);

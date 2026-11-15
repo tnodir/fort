@@ -3,6 +3,8 @@
 
 #include <QByteArray>
 
+#include <util/net/hostmatcher.h>
+
 #include "taskinfo.h"
 
 class TaskZoneDownloader;
@@ -34,6 +36,9 @@ public:
 
     // Loads the Zones' addresses from the cache
     ZonesData loadZonesData() const;
+
+    // Loads the enabled Hosts Zones' names from the cache
+    HostMatcher loadHostZones() const;
 
 public slots:
     bool processResult(bool success) override;

@@ -7,6 +7,8 @@
 
 #include "taskdownloader.h"
 
+class HostRange;
+
 class TaskZoneDownloader : public TaskDownloader
 {
     Q_OBJECT
@@ -69,6 +71,7 @@ public:
     bool storeAddresses(const StringViewList &list);
     bool storeHosts(const StringViewList &list);
     bool loadAddresses();
+    bool loadHosts(HostRange &hostRange);
 
     bool saveAddressesAsText(const QString &filePath);
 

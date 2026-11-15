@@ -172,13 +172,25 @@ bool TaskZoneDownloader::storeHosts(const StringViewList &list)
 
 bool TaskZoneDownloader::loadAddresses()
 {
+    if (!isHosts()) {
+        return loadCacheData(m_zoneData);
+    }
+
+    if (!hasCache())
+        return false;
+
+    m_zoneData = emptyZoneData();
+
+    return true;
+}
+
+bool TaskZoneDownloader::loadHosts(HostRange &hostRange)
+{
     QByteArray data;
     if (!loadCacheData(data))
         return false;
 
-    m_zoneData = isHosts() ? emptyZoneData() : data;
-
-    return true;
+    return hostRange.fromText(QString::fromUtf8(data));
 }
 
 bool TaskZoneDownloader::saveAddressesAsText(const QString &filePath)

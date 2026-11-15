@@ -11,6 +11,7 @@
 #include <util/net/actionrange.h>
 #include <util/net/arearange.h>
 #include <util/net/dirrange.h>
+#include <util/net/hostmatcher.h>
 #include <util/net/hostpattern.h>
 #include <util/net/hostrange.h>
 #include <util/net/iprange.h>
@@ -475,6 +476,52 @@ TEST_F(NetUtilTest, hostPattern)
             ASSERT_FALSE(HostPattern::match(item.pattern, name)) << item.pattern << ' ' << name;
         }
     }
+}
+
+TEST_F(NetUtilTest, hostMatcher)
+{
+    HostMatcher hostMatcher;
+    ASSERT_TRUE(hostMatcher.isEmpty());
+
+    HostRange hostRange;
+
+    ASSERT_TRUE(hostRange.fromText("Example.COM.\n*.Sub.Example.com\nlocalhost"));
+    hostMatcher.addZone(1, hostRange);
+
+    ASSERT_TRUE(hostRange.fromText("example.com\n*.example.com"));
+    hostMatcher.addZone(3, hostRange);
+
+    ASSERT_FALSE(hostMatcher.isEmpty());
+
+    // Exact names
+    ASSERT_EQ(hostMatcher.match(u"example.com").zonesMask, 0b101);
+    ASSERT_EQ(hostMatcher.match(u"EXAMPLE.com.").zonesMask, 0b101);
+    ASSERT_EQ(hostMatcher.match(u"localhost").zonesMask, 0b001);
+    ASSERT_EQ(hostMatcher.match(u"example.co").zonesMask, 0);
+    ASSERT_EQ(hostMatcher.match(u"xexample.com").zonesMask, 0);
+
+    // Wildcards: the subdomains of any depth, not the domain itself
+    ASSERT_EQ(hostMatcher.match(u"www.example.com").zonesMask, 0b100);
+    ASSERT_EQ(hostMatcher.match(u"sub.example.com").zonesMask, 0b100);
+    ASSERT_EQ(hostMatcher.match(u"a.sub.example.com").zonesMask, 0b101);
+    ASSERT_EQ(hostMatcher.match(u"b.a.Sub.example.com.").zonesMask, 0b101);
+    ASSERT_EQ(hostMatcher.match(u"asub.example.org").zonesMask, 0);
+
+    // The name and its subdomains
+    ASSERT_TRUE(hostRange.fromText(".example.net"));
+    hostMatcher.addZone(2, hostRange);
+
+    ASSERT_EQ(hostMatcher.match(u"example.net").zonesMask, 0b010);
+    ASSERT_EQ(hostMatcher.match(u"a.b.example.net").zonesMask, 0b010);
+    ASSERT_EQ(hostMatcher.match(u"xexample.net").zonesMask, 0);
+
+    // The masks
+    ASSERT_TRUE(hostRange.fromText("ads*.example.net\n*telemetry*"));
+    hostMatcher.addZone(4, hostRange);
+
+    ASSERT_EQ(hostMatcher.match(u"Ads1.example.net.").zonesMask, 0b1010);
+    ASSERT_EQ(hostMatcher.match(u"a.telemetry.example.com").zonesMask, 0b1100);
+    ASSERT_EQ(hostMatcher.match(u"a.ads1.example.net").zonesMask, 0b0010);
 }
 
 TEST_F(NetUtilTest, taskTasix)

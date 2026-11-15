@@ -12,6 +12,7 @@
 #include <model/zonetypewrapper.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
+#include <util/net/hostrange.h>
 
 #include "taskmanager.h"
 #include "taskzonedownloader.h"
@@ -71,6 +72,28 @@ ZonesData TaskInfoZoneDownloader::loadZonesData() const
     }
 
     return zones;
+}
+
+HostMatcher TaskInfoZoneDownloader::loadHostZones() const
+{
+    HostMatcher hostMatcher;
+
+    TaskZoneDownloader worker;
+    HostRange hostRange;
+
+    const int rowCount = zoneListModel()->rowCount();
+    for (int zoneIndex = 0; zoneIndex < rowCount; ++zoneIndex) {
+        setupTaskWorkerByZone(&worker, zoneIndex);
+
+        if (!(worker.isHosts() && worker.zoneEnabled()))
+            continue;
+
+        if (worker.loadHosts(hostRange)) {
+            hostMatcher.addZone(worker.zoneId(), hostRange);
+        }
+    }
+
+    return hostMatcher;
 }
 
 bool TaskInfoZoneDownloader::saveZoneAsText(const QString &filePath, int zoneIndex) const
