@@ -475,6 +475,7 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setBlockTraffic(iniBool("blockTraffic"));
     conf.setBlockLanTraffic(iniBool("blockLanTraffic"));
     conf.setBlockInetTraffic(iniBool("blockInetTraffic"));
+    conf.setBlockDnsPorts(iniBool("blockDnsPorts"));
     conf.setAllowAllNew(iniBool("allowAllNew", true));
     conf.setAskToConnect(iniBool("askToConnect"));
     conf.setAskToConnectSeconds(iniUInt("askToConnectSeconds", DEFAULT_ASK_TO_CONNECT_SECONDS));
@@ -524,6 +525,7 @@ void FortSettings::writeConfIni(const FirewallConf &conf, IniOptions &iniOpt)
         setIniValue("blockTraffic", conf.blockTraffic());
         setIniValue("blockLanTraffic", conf.blockLanTraffic());
         setIniValue("blockInetTraffic", conf.blockInetTraffic());
+        setIniValue("blockDnsPorts", conf.blockDnsPorts());
         setIniValue("allowAllNew", conf.allowAllNew());
         setIniValue("askToConnect", conf.askToConnect());
         setIniValue("askToConnectSeconds", conf.askToConnectSeconds());

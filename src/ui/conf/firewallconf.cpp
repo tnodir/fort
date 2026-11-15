@@ -224,6 +224,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_blockTraffic = o.blockTraffic();
     m_blockLanTraffic = o.blockLanTraffic();
     m_blockInetTraffic = o.blockInetTraffic();
+    m_blockDnsPorts = o.blockDnsPorts();
     m_allowAllNew = o.allowAllNew();
     m_askToConnect = o.askToConnect();
     m_askToConnectSeconds = o.askToConnectSeconds();
@@ -284,6 +285,7 @@ QVariant FirewallConf::flagsToVariant() const
     map["blockTraffic"] = blockTraffic();
     map["blockLanTraffic"] = blockLanTraffic();
     map["blockInetTraffic"] = blockInetTraffic();
+    map["blockDnsPorts"] = blockDnsPorts();
     map["allowAllNew"] = allowAllNew();
     map["askToConnect"] = askToConnect();
     map["askToConnectSeconds"] = askToConnectSeconds();
@@ -322,6 +324,7 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_blockTraffic = map["blockTraffic"].toBool();
     m_blockLanTraffic = map["blockLanTraffic"].toBool();
     m_blockInetTraffic = map["blockInetTraffic"].toBool();
+    m_blockDnsPorts = map["blockDnsPorts"].toBool();
     m_allowAllNew = map["allowAllNew"].toBool();
     m_askToConnect = map["askToConnect"].toBool();
     m_askToConnectSeconds = map["askToConnectSeconds"].toUInt();

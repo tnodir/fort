@@ -47,6 +47,7 @@ private:
     QPushButton *m_btTest = nullptr;
     PlainTextEdit *m_editServers = nullptr;
     PlainTextEdit *m_editTestResults = nullptr;
+    QCheckBox *m_cbBlockPorts = nullptr;
 
     DnsServersTest *m_serversTest = nullptr;
 };

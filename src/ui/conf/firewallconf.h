@@ -123,6 +123,9 @@ public:
     bool blockInetTraffic() const { return m_blockInetTraffic; }
     void setBlockInetTraffic(bool v) { m_blockInetTraffic = v; }
 
+    bool blockDnsPorts() const { return m_blockDnsPorts; }
+    void setBlockDnsPorts(bool v) { m_blockDnsPorts = v; }
+
     bool allowAllNew() const { return m_allowAllNew; }
     void setAllowAllNew(bool v) { m_allowAllNew = v; }
 
@@ -245,6 +248,7 @@ private:
     uint m_blockTraffic : 1 = false;
     uint m_blockLanTraffic : 1 = false;
     uint m_blockInetTraffic : 1 = false;
+    uint m_blockDnsPorts : 1 = false;
     uint m_allowAllNew : 1 = false;
     uint m_askToConnect : 1 = false;
     uint m_groupBlocked : 1 = true;
