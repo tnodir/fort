@@ -109,6 +109,10 @@ private:
     QCheckBox *m_cbAreaLocalhost = nullptr;
     QCheckBox *m_cbAreaLan = nullptr;
     QCheckBox *m_cbAreaInet = nullptr;
+    QLabel *m_labelHosts = nullptr;
+    QToolButton *m_btHostsNot = nullptr;
+    QToolButton *m_btHostsClear = nullptr;
+    PlainTextEdit *m_editHosts = nullptr;
     QLabel *m_labelRemoteIps = nullptr;
     QToolButton *m_btRemoteIpsNot = nullptr;
     QToolButton *m_btRemoteIpsClear = nullptr;

@@ -143,3 +143,21 @@ TEST_F(FilterLineTest, equalText)
 
     checkFilter(filterLine, FORT_RULE_FILTER_TYPE_ACTION, { "Allow" });
 }
+
+TEST_F(FilterLineTest, hostText)
+{
+    FilterLineText line;
+    line.addFilter(FORT_RULE_FILTER_TYPE_HOST, "example.com, *.cdn.net", /*isNot=*/true);
+    line.addFilter(FORT_RULE_FILTER_TYPE_PORT, "443");
+    line.addFilter(FORT_RULE_FILTER_TYPE_ACTION, "Block");
+    ASSERT_EQ(line.text(), "!Host(example.com, *.cdn.net):Port(443):Act(Block)");
+
+    ASSERT_TRUE(ConfBuffer().validateRuleText(line.text()));
+
+    FilterLine filterLine(line);
+    ASSERT_TRUE(filterLine.parse());
+
+    checkFilter(
+            filterLine, FORT_RULE_FILTER_TYPE_HOST, { "example.com", "*.cdn.net" }, /*isNot=*/true);
+    checkFilter(filterLine, FORT_RULE_FILTER_TYPE_PORT, { "443" });
+}
