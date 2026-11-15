@@ -601,6 +601,45 @@ TEST_F(NetUtilTest, hostZonesDb)
     ASSERT_EQ(db.match(u"Ads1.example.net.", 0b00010), 0b00010);
 }
 
+// The match by two masks at once is split by them: the DNS forwarder matches an answer's name by
+// the Block and referenced Zones together
+TEST_F(NetUtilTest, hostZonesDbMasksUnion)
+{
+    HostZonesDb db(":memory:");
+    ASSERT_TRUE(db.open());
+
+    HostRange hostRange;
+
+    ASSERT_TRUE(hostRange.fromText("example.com\n*.example.org\nads*.example.net"));
+    ASSERT_TRUE(db.setZone(1, "c1", hostRange));
+
+    ASSERT_TRUE(hostRange.fromText("www.example.org\n*.example.com\n*telemetry*"));
+    ASSERT_TRUE(db.setZone(2, "c2", hostRange));
+
+    ASSERT_TRUE(hostRange.fromText("example.org\nads1.example.net\n*.telemetry.example.com"));
+    ASSERT_TRUE(db.setZone(3, "c3", hostRange));
+
+    // A disabled Zone
+    ASSERT_TRUE(hostRange.fromText("example.com\n*telemetry*"));
+    ASSERT_TRUE(db.setZone(4, "c4", hostRange));
+
+    db.setEnabledMask(0b0111);
+
+    const QStringList names = { "example.com", "www.example.com", "example.org", "www.example.org",
+        "ads1.example.net", "a.telemetry.example.com", "example.net" };
+
+    for (const QString &name : names) {
+        for (quint32 maskA = 0; maskA <= 0b1111; ++maskA) {
+            for (quint32 maskB = 0; maskB <= 0b1111; ++maskB) {
+                const quint32 unionMask = db.match(name, maskA | maskB);
+
+                ASSERT_EQ(unionMask & maskA, db.match(name, maskA)) << qPrintable(name) << maskA;
+                ASSERT_EQ(unionMask & maskB, db.match(name, maskB)) << qPrintable(name) << maskB;
+            }
+        }
+    }
+}
+
 TEST_F(NetUtilTest, hostZonesDbUpdateZones)
 {
     HostZonesDb db(":memory:");

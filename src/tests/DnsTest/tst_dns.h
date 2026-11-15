@@ -296,6 +296,8 @@ TEST_F(DnsTest, recordAnswer)
     ASSERT_EQ(addresses.ip6Array().size(), 1);
     ASSERT_EQ(NetFormatUtil::ip6ToText(addresses.ip6Array().at(0)), "2001:db8::1");
 
+    ASSERT_EQ(answer.cnameTargets(), QStringList({ "cdn.example.net" }));
+
     // The client's id, without EDNS
     {
         const DnsRecordPtr record = DnsUtil::parseRecord(answer.response());

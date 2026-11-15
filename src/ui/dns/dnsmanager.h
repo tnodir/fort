@@ -34,9 +34,9 @@ struct DnsForwarderStatus
     QString errorMessage;
 };
 
-// The DNS forwarder of the service: resolves the names but the Block Zones' ones, adding the
-// addresses of the referenced Hosts Zones' and host() filters' names to them in the driver before
-// answering
+// The DNS forwarder of the service: resolves the names but the Block Zones' ones (also as the
+// answers' CNAME targets), adding the addresses of the referenced Hosts Zones' and host() filters'
+// names to them in the driver before answering
 class DnsManager : public QObject, public IocService
 {
     Q_OBJECT
@@ -95,8 +95,9 @@ private:
 
     void flushResolverCache();
 
-    // The Hosts Zones referenced by the driver's conf and the host() filters listing the name
-    HostMatch matchHost(QStringView name) const;
+    bool matchAnswer(const DnsQuery &query, const DnsAnswer &answer, HostMatch &match) const;
+    bool matchAnswerName(
+            const DnsQuery &query, QStringView name, bool matchRefs, HostMatch &match) const;
     bool isNameBlocked(const DnsQuery &query, QStringView name, quint32 nameZonesMask) const;
 
     void processQuery(const DnsClient &client, const QByteArray &data);

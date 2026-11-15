@@ -19,6 +19,7 @@
 #include <task/taskinfozonedownloader.h>
 #include <task/taskmanager.h>
 #include <util/conf/confbuffer.h>
+#include <util/net/hostrange.h>
 #include <util/regkey.h>
 
 using namespace Fort;
@@ -325,22 +326,57 @@ void DnsManager::flushResolverCache()
     }
 }
 
-HostMatch DnsManager::matchHost(QStringView name) const
+// Returns whether a Block Zone lists the query's name or a target, else adds the referenced Hosts
+// Zones and host() filters listing the name
+bool DnsManager::matchAnswer(const DnsQuery &query, const DnsAnswer &answer, HostMatch &match) const
 {
-    HostMatch match = m_hostFiltersMatcher.match(name);
-    match.zonesMask = m_hostZonesDb.match(name, m_refZonesMask);
+    // The referenced names add the answer's addresses
+    const bool matchRefs = !answer.addresses().isEmpty();
 
-    return match;
+    if (matchAnswerName(query, query.name(), matchRefs, match))
+        return true;
+
+    for (const QString &target : answer.cnameTargets()) {
+        if (matchAnswerName(query, target, /*matchRefs=*/false, match))
+            return true;
+    }
+
+    return false;
+}
+
+// One lookup of the name by the Block and referenced Zones
+bool DnsManager::matchAnswerName(
+        const DnsQuery &query, QStringView name, bool matchRefs, HostMatch &match) const
+{
+    const QByteArray key = HostRange::normalizedKey(name);
+
+    const quint32 refZonesMask = matchRefs ? m_refZonesMask : 0;
+    const quint32 zonesMask = m_hostZonesDb.matchKey(key, m_blockZonesMask | refZonesMask);
+
+    if (isNameBlocked(query, name, zonesMask))
+        return true;
+
+    if (matchRefs) {
+        match.zonesMask |= zonesMask & refZonesMask;
+        match.add(m_hostFiltersMatcher.matchKey(key));
+    }
+
+    return false;
 }
 
 // The names of the Block Zones aren't found, even if a host() filter lists them. The Block Zones
-// may be changed while the query waits for the answer
+// may be changed while the query waits for the answer. Their names may be the canonical names of
+// another name's answer, e.g. of a tracker behind the site's subdomain
 bool DnsManager::isNameBlocked(const DnsQuery &query, QStringView name, quint32 nameZonesMask) const
 {
     if ((nameZonesMask & m_blockZonesMask) == 0)
         return false;
 
-    qCDebug(LC) << "Blocked:" << name;
+    if (name == query.name()) {
+        qCDebug(LC) << "Blocked:" << name;
+    } else {
+        qCDebug(LC) << "Blocked:" << query.name() << "CNAME:" << name;
+    }
 
     return true;
 }
@@ -363,18 +399,18 @@ void DnsManager::processQuery(const DnsClient &client, const QByteArray &data)
 
 void DnsManager::processAnswer(const DnsRequest &request, const DnsAnswer &answer)
 {
-    if (isNameBlocked(request.query, request.query.name(),
-                m_hostZonesDb.match(request.query.name(), m_blockZonesMask))) {
+    // The Zones and host() filters may be changed since the query.
+    HostMatch match;
+    if (matchAnswer(request.query, answer, match)) {
         sendRcode(request, ARES_RCODE_NXDOMAIN);
         return;
     }
 
-    // The Zones and host() filters may be changed since the query.
     // The client connects to the addresses after the answer.
     const QString &name = request.query.name();
     const DnsAddresses &addresses = answer.addresses();
 
-    if (!writeHostIps(matchHost(name), addresses)) {
+    if (!writeHostIps(match, addresses)) {
         sendRcode(request, ARES_RCODE_SERVFAIL);
         return;
     }
@@ -426,9 +462,10 @@ void DnsManager::logLoop()
     qCWarning(LC) << "Loop: the upstream servers include the forwarder:" << m_servers;
 }
 
+// The match is empty for the answer without addresses
 bool DnsManager::writeHostIps(const HostMatch &match, const DnsAddresses &addresses)
 {
-    if (addresses.isEmpty() || match.isEmpty())
+    if (match.isEmpty())
         return true;
 
     ConfBuffer confBuf;

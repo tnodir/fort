@@ -27,6 +27,8 @@ public:
     // The host() filters listing the name by itself, by a "*." wildcard of its parent
     // domain or by another mask
     HostMatch match(QStringView name) const;
+    // By the name's HostRange::normalizedKey()
+    HostMatch matchKey(const QByteArray &key) const;
 
 private:
     // The names are ASCII by HostRange: in Latin-1 they take half the memory

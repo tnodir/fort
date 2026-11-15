@@ -42,8 +42,11 @@ void HostMatcher::addHostFilter(quint32 hostId, const HostRange &hostRange)
 
 HostMatch HostMatcher::match(QStringView name) const
 {
-    const QByteArray key = HostRange::normalizedKey(name);
+    return matchKey(HostRange::normalizedKey(name));
+}
 
+HostMatch HostMatcher::matchKey(const QByteArray &key) const
+{
     HostMatch match;
 
     HostRange::walkName(

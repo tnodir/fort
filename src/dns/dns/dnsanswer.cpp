@@ -158,7 +158,7 @@ bool readHints(DnsAddresses &addresses, const ares_dns_rr_t *rr, ares_dns_rr_key
 
 void DnsAnswer::setRecord(const DnsQuery &query, const ares_dns_record *record, int sizeMax)
 {
-    readAddresses(record);
+    readAnswers(record);
 
     m_rcode = quint8(ares_dns_record_get_rcode(record));
     m_response = forwardResponse(query, record);
@@ -196,14 +196,17 @@ void DnsAnswer::setError(const DnsQuery &query, const QString &error)
     m_error = error;
 }
 
-void DnsAnswer::readAddresses(const ares_dns_record *record)
+void DnsAnswer::readAnswers(const ares_dns_record *record)
 {
     const size_t count = ares_dns_record_rr_cnt(record, ARES_SECTION_ANSWER);
 
     for (size_t i = 0; i < count; ++i) {
         const ares_dns_rr_t *rr = ares_dns_record_rr_get_const(record, ARES_SECTION_ANSWER, i);
 
-        if (readAddress(rr)) {
+        if (ares_dns_rr_get_type(rr) == ARES_REC_TYPE_CNAME) {
+            m_cnameTargets.append(
+                    QString::fromLatin1(ares_dns_rr_get_str(rr, ARES_RR_CNAME_CNAME)));
+        } else if (readAddress(rr)) {
             m_addresses.addTtl(ares_dns_rr_get_ttl(rr));
         }
     }

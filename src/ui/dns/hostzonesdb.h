@@ -52,6 +52,8 @@ public:
     // The enabled Zones of the mask listing the name by itself, by a "*." wildcard of its parent
     // domain or by another mask
     quint32 match(QStringView name, quint32 zonesMask) const;
+    // By the name's HostRange::normalizedKey()
+    quint32 matchKey(const QByteArray &key, quint32 zonesMask) const;
 
 private:
     struct HostMasks

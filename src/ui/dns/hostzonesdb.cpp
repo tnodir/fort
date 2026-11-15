@@ -217,11 +217,17 @@ bool HostZonesDb::retainZones(quint32 zonesMask)
 
 quint32 HostZonesDb::match(QStringView name, quint32 zonesMask) const
 {
+    if ((zonesMask & m_enabledMask) == 0)
+        return 0;
+
+    return matchKey(HostRange::normalizedKey(name), zonesMask);
+}
+
+quint32 HostZonesDb::matchKey(const QByteArray &key, quint32 zonesMask) const
+{
     zonesMask &= m_enabledMask;
     if (zonesMask == 0)
         return 0;
-
-    const QByteArray key = HostRange::normalizedKey(name);
 
     const quint32 namesMask = matchNames(key, zonesMask);
     if (namesMask == zonesMask)
