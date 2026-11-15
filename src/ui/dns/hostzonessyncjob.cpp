@@ -14,9 +14,21 @@ HostZonesSyncJob::HostZonesSyncJob(const QString &filePath, const HostZonesSourc
 void HostZonesSyncJob::doJob(WorkerManager *manager)
 {
     HostZonesDb db(filePath());
-    if (!db.open())
-        return;
 
+    if (db.open()) {
+        syncZones(manager, db);
+    }
+
+    m_errorMessage = db.errorMessage();
+}
+
+void HostZonesSyncJob::reportResult(WorkerManager *manager)
+{
+    emitSynced(static_cast<HostZonesSync *>(manager));
+}
+
+void HostZonesSyncJob::syncZones(WorkerManager *manager, HostZonesDb &db)
+{
     HostRange hostRange;
 
     for (const HostZoneSource &zone : std::as_const(m_source.zones)) {
@@ -34,12 +46,7 @@ void HostZonesSyncJob::doJob(WorkerManager *manager)
     }
 }
 
-void HostZonesSyncJob::reportResult(WorkerManager *manager)
-{
-    emitSynced(static_cast<HostZonesSync *>(manager));
-}
-
 void HostZonesSyncJob::emitSynced(HostZonesSync *manager)
 {
-    emit manager->synced(m_changed);
+    emit manager->synced(m_changed, m_errorMessage);
 }

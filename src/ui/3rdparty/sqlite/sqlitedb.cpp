@@ -203,6 +203,11 @@ bool SqliteDb::rollbackTransaction()
     return execute("ROLLBACK;");
 }
 
+bool SqliteDb::isAutoCommit() const
+{
+    return sqlite3_get_autocommit(m_db) != 0;
+}
+
 bool SqliteDb::beginSavepoint(const char *name)
 {
     return executeStr(QString("SAVEPOINT %1;").arg(makeSavepointName(name)));

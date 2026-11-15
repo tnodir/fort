@@ -4,6 +4,7 @@
 #include <task/taskinfozonedownloader.h>
 #include <util/worker/workerjob.h>
 
+class HostZonesDb;
 class HostZonesSync;
 
 class HostZonesSyncJob : public WorkerJob
@@ -17,10 +18,14 @@ public:
     void reportResult(WorkerManager *manager) override;
 
 private:
+    void syncZones(WorkerManager *manager, HostZonesDb &db);
+
     void emitSynced(HostZonesSync *manager);
 
 private:
     bool m_changed = false;
+
+    QString m_errorMessage;
 
     HostZonesSource m_source;
 };

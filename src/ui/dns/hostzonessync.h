@@ -17,8 +17,8 @@ public:
     QString workerName() const override { return "HostZonesWorker"; }
 
 signals:
-    // Whether the names to match changed
-    void synced(bool changed);
+    // Whether the names to match changed; the first error of the DB's opening or writing
+    void synced(bool changed, const QString &errorMessage);
 
 public slots:
     void sync(const QString &filePath, const HostZonesSource &source);

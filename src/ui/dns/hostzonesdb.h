@@ -31,6 +31,9 @@ public:
 
     bool isOpened() const;
 
+    // The first error of opening or writing since the open
+    const QString &errorMessage() const { return m_errorMessage; }
+
     bool open();
     void close();
 
@@ -73,8 +76,11 @@ private:
 
     bool removeZones(quint32 zonesMask);
 
+    void setError();
+
     bool execInt(const char *sql, qint64 v);
 
+    bool beginWrite();
     bool endWrite(bool ok);
 
     bool clearZones(quint32 zonesMask);
@@ -93,6 +99,8 @@ private:
     quint32 m_enabledMask = 0;
 
     std::unique_ptr<SqliteDb> m_db;
+
+    QString m_errorMessage;
 
     QVector<Pattern> m_patterns; // the names with other masks: HostPattern
 };

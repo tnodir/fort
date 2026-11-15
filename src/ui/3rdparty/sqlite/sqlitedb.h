@@ -118,6 +118,8 @@ public:
     bool commitTransaction();
     bool rollbackTransaction();
 
+    bool isAutoCommit() const;
+
     bool beginSavepoint(const char *name = nullptr);
     bool releaseSavepoint(const char *name = nullptr);
     bool rollbackSavepoint(const char *name = nullptr);

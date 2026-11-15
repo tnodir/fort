@@ -30,6 +30,7 @@ inline constexpr const char *statusNames[] = {
     "mixed-servers",
     "invalid-servers",
     "listen-error",
+    "zones-error",
 };
 
 bool reportStatus(ProcessCommandResult &r)

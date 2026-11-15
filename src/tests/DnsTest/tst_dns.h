@@ -602,6 +602,34 @@ TEST_F(DnsTest, hostZonesSync)
     ASSERT_EQ(db.zonesMask(), 0b001);
 }
 
+TEST_F(DnsTest, hostZonesOpenError)
+{
+    Q_INIT_RESOURCE(dns_migrations);
+
+    QTemporaryDir dir;
+    ASSERT_TRUE(dir.isValid());
+
+    // A folder isn't a DB file
+    HostZonesDb db(dir.path());
+    ASSERT_FALSE(db.open());
+    ASSERT_FALSE(db.isOpened());
+    ASSERT_FALSE(db.errorMessage().isEmpty());
+
+    HostZonesSync sync;
+
+    QEventLoop loop;
+    QString errorMessage;
+    QObject::connect(&sync, &HostZonesSync::synced, &loop, [&](bool /*changed*/, const QString &v) {
+        errorMessage = v;
+        loop.quit();
+    });
+
+    sync.sync(dir.path(), { .hostsMask = 0b001 });
+    loop.exec();
+
+    ASSERT_EQ(errorMessage, db.errorMessage());
+}
+
 TEST_F(DnsTest, resolverOwnQuery)
 {
     // The upstream server

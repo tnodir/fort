@@ -131,8 +131,11 @@ bool HostZonesDb::isOpened() const
 
 bool HostZonesDb::open()
 {
+    m_errorMessage.clear();
+
     if (!m_db->open()) {
         qCCritical(LC) << "File open error:" << filePath() << m_db->errorMessage();
+        setError();
         close();
         return false;
     }
@@ -146,6 +149,7 @@ bool HostZonesDb::open()
 
     if (!m_db->migrate(opt)) {
         qCCritical(LC) << "Migration error" << filePath();
+        setError();
         close();
         return false;
     }
@@ -193,13 +197,15 @@ bool HostZonesDb::isZoneActual(int zoneId, const QString &checksum, bool subdoma
 
 bool HostZonesDb::setZone(int zoneId, const QString &checksum, const HostRange &hostRange)
 {
-    m_db->beginWriteTransaction();
+    if (!beginWrite())
+        return false;
 
     const bool ok = clearZones(Zone::zoneBit(zoneId)) && insertZone(zoneId, hostRange)
             && saveZone(zoneId, checksum, hostRange.withSubdomains());
 
     if (!ok) {
         qCWarning(LC) << "Zone save error:" << zoneId << m_db->errorMessage();
+        setError();
     }
 
     return endWrite(ok);
@@ -243,15 +249,25 @@ bool HostZonesDb::removeZones(quint32 zonesMask)
     if (zonesMask == 0)
         return false;
 
-    m_db->beginWriteTransaction();
+    if (!beginWrite())
+        return false;
 
     const bool ok = clearZones(zonesMask);
 
     if (!ok) {
         qCWarning(LC) << "Zones remove error:" << zonesMask << m_db->errorMessage();
+        setError();
     }
 
     return endWrite(ok);
+}
+
+// Before the rollback, which resets the connection's error
+void HostZonesDb::setError()
+{
+    if (m_errorMessage.isEmpty()) {
+        m_errorMessage = m_db->errorMessage();
+    }
 }
 
 bool HostZonesDb::execInt(const char *sql, qint64 v)
@@ -263,16 +279,37 @@ bool HostZonesDb::execInt(const char *sql, qint64 v)
     return stepDone(stmt);
 }
 
+bool HostZonesDb::beginWrite()
+{
+    if (m_db->beginWriteTransaction())
+        return true;
+
+    qCWarning(LC) << "Transaction error:" << m_db->errorMessage();
+    setError();
+
+    return false;
+}
+
 bool HostZonesDb::endWrite(bool ok)
 {
-    ok = m_db->endTransaction(ok);
+    const bool committed = m_db->endTransaction(ok);
+
+    if (ok && !committed) {
+        qCWarning(LC) << "Commit error:" << m_db->errorMessage();
+        setError();
+
+        // A failed COMMIT may keep the transaction open
+        if (!m_db->isAutoCommit()) {
+            m_db->rollbackTransaction();
+        }
+    }
 
     // The written pages are kept in the DB's cache
     m_db->shrinkMemory();
 
     loadPatterns();
 
-    return ok;
+    return committed;
 }
 
 bool HostZonesDb::clearZones(quint32 zonesMask)

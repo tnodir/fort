@@ -28,9 +28,13 @@ struct DnsForwarderStatus
         StatusMixedServers, // not started: the plain and DNS over HTTPS servers are mixed
         StatusInvalidServers, // not started: the resolver can't take the servers
         StatusListenError, // not started: the port 53 can't be listened, e.g. it's busy
+        StatusZonesError, // started, but the Hosts Zones' names can't be opened or written
     };
 
     bool isError() const { return status >= StatusNrptError; }
+
+    // The system's queries are sent to it
+    bool isReceiving() const { return status == StatusStarted || status == StatusZonesError; }
 
     bool operator==(const DnsForwarderStatus &o) const = default;
 
@@ -88,6 +92,9 @@ private:
     void startNrptCheck();
     void onNrptChecked(bool received);
 
+    DnsForwarderStatus receivingStatus() const;
+    void setZonesError(const QString &errorMessage);
+
     DnsForwarderStatus::Status openResolver(const QStringList &servers);
     void closeResolver();
 
@@ -99,7 +106,7 @@ private:
 
     void loadZones();
     void syncZones();
-    void onZonesSynced(bool changed);
+    void onZonesSynced(bool changed, const QString &errorMessage);
     void finishZonesSync();
 
     void updateZonesEnabledMask(quint32 enabledMask);
@@ -152,6 +159,9 @@ private:
     std::unique_ptr<HostZonesSync> m_hostZonesSync;
 
     DnsForwarderStatus m_status;
+
+    // Of the Hosts Zones' DB's open or of the last sync
+    QString m_zonesError;
 
     QStringList m_servers;
 

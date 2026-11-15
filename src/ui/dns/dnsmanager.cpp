@@ -246,12 +246,31 @@ void DnsManager::startNrptCheck()
 
 void DnsManager::onNrptChecked(bool received)
 {
-    if (!received) {
+    if (received) {
+        setStatus(receivingStatus());
+    } else {
         qCWarning(LC) << "NRPT rule ignored: the system's queries aren't received";
-    }
 
-    setStatus({ .status = received ? DnsForwarderStatus::StatusStarted
-                                   : DnsForwarderStatus::StatusNrptIgnored });
+        setStatus({ .status = DnsForwarderStatus::StatusNrptIgnored });
+    }
+}
+
+DnsForwarderStatus DnsManager::receivingStatus() const
+{
+    if (m_zonesError.isEmpty())
+        return { .status = DnsForwarderStatus::StatusStarted };
+
+    return { .status = DnsForwarderStatus::StatusZonesError, .errorMessage = m_zonesError };
+}
+
+// Shown while the system's queries are received: else their error is shown
+void DnsManager::setZonesError(const QString &errorMessage)
+{
+    m_zonesError = errorMessage;
+
+    if (m_status.isReceiving()) {
+        setStatus(receivingStatus());
+    }
 }
 
 DnsForwarderStatus::Status DnsManager::openResolver(const QStringList &servers)
@@ -282,6 +301,8 @@ void DnsManager::loadHosts()
     if (m_hostZonesDb.open()) {
         openZonesSync();
         syncZones();
+    } else {
+        m_zonesError = m_hostZonesDb.errorMessage();
     }
 
     updateHostRefs();
@@ -295,6 +316,8 @@ void DnsManager::unloadHosts()
 
     m_hostZonesDb.close();
     m_hostFiltersMatcher = {};
+
+    m_zonesError.clear();
 }
 
 void DnsManager::openZonesSync()
@@ -303,7 +326,9 @@ void DnsManager::openZonesSync()
 
     // The result reported before the sync's close isn't received
     connect(m_hostZonesSync.get(), &HostZonesSync::synced, m_hostZonesSync.get(),
-            [this](bool changed) { onZonesSynced(changed); });
+            [this](bool changed, const QString &errorMessage) {
+                onZonesSynced(changed, errorMessage);
+            });
 }
 
 // Waits for the Zone's transaction being written
@@ -354,10 +379,13 @@ void DnsManager::syncZones()
     m_hostZonesSync->sync(m_hostZonesDb.filePath(), source);
 }
 
-void DnsManager::onZonesSynced(bool changed)
+// A Zone failed to be written keeps its old names and is written again by a later sync
+void DnsManager::onZonesSynced(bool changed, const QString &errorMessage)
 {
     m_zonesSyncing = false;
     m_zonesChanged |= changed;
+
+    setZonesError(errorMessage);
 
     m_hostZonesDb.loadPatterns();
 

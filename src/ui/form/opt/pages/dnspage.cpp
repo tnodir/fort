@@ -301,7 +301,7 @@ void DnsPage::updateTestResults()
 QString DnsPage::forwarderWarningText(const DnsForwarderStatus &status)
 {
     const QString errorText = forwarderErrorText(status);
-    if (status.status == DnsForwarderStatus::StatusStarted)
+    if (status.isReceiving())
         return errorText;
 
     return tr("%1; the names aren't resolved while the ports 53 and 853 are blocked for other "
@@ -326,6 +326,10 @@ QString DnsPage::forwarderErrorText(const DnsForwarderStatus &status)
         return tr("The DNS Forwarder isn't started: the saved upstream DNS servers are invalid");
     case DnsForwarderStatus::StatusListenError:
         return tr("The DNS Forwarder isn't started: can't listen on the port 53: %1")
+                .arg(status.errorMessage);
+    case DnsForwarderStatus::StatusZonesError:
+        return tr("The DNS Forwarder doesn't match the Hosts Zones' names or matches the outdated "
+                  "ones: their database can't be opened or written: %1")
                 .arg(status.errorMessage);
     default:
         return {};
