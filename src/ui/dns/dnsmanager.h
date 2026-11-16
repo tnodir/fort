@@ -15,6 +15,7 @@
 
 #include "dnsnrptcheck.h"
 #include "hostzonesdb.h"
+#include "hostzonesfill.h"
 #include "hostzonessync.h"
 
 struct DnsForwarderStatus
@@ -120,11 +121,6 @@ private:
     void onZonesSynced(bool changed, const QString &errorMessage);
     void finishZonesSync();
 
-    void updateZonesEnabledMask(quint32 enabledMask);
-    void updateFilledZonesMask(const HostZonesSource &source);
-    quint32 actualZonesMask(const HostZonesSource &source) const;
-    bool hasZonesToFill(const HostZonesSource &source, quint32 zonesMask) const;
-
     void setQueriesPaused(bool paused);
 
     void loadHostRefs();
@@ -166,9 +162,6 @@ private:
 
     quint32 m_blockZonesMask = 0;
 
-    // The Zones having their own names in the DB: a removed Zone's id can be reused
-    quint32 m_filledZonesMask = 0;
-
     std::unique_ptr<DnsResolver> m_resolver;
     std::unique_ptr<HostZonesSync> m_hostZonesSync;
 
@@ -182,6 +175,7 @@ private:
     QList<DnsServersTest *> m_serversTests;
 
     HostZonesDb m_hostZonesDb;
+    HostZonesFill m_hostZonesFill { m_hostZonesDb };
     DnsNrptCheck m_nrptCheck;
     HostMatcher m_hostFiltersMatcher;
 

@@ -12,7 +12,6 @@
 #include <conf/confzonemanager.h>
 #include <conf/firewallconf.h>
 #include <conf/inioptions.h>
-#include <conf/zone.h>
 #include <dns/dnsclientmanager.h>
 #include <driver/drivermanager.h>
 #include <fortglobal.h>
@@ -20,7 +19,6 @@
 #include <task/taskinfozonedownloader.h>
 #include <task/taskmanager.h>
 #include <util/conf/confbuffer.h>
-#include <util/fileutil.h>
 #include <util/net/hostrange.h>
 #include <util/regkey.h>
 
@@ -299,7 +297,8 @@ void DnsManager::updateBlockZonesFailed(const HostZonesSource &source)
     if (m_zonesSyncing)
         return;
 
-    const bool failed = hasZonesToFill(source, source.enabledMask & m_blockZonesMask);
+    const bool failed =
+            m_hostZonesFill.hasZonesToFill(source, source.enabledMask & m_blockZonesMask);
     if (m_blockZonesFailed == failed)
         return;
 
@@ -356,6 +355,7 @@ void DnsManager::unloadHosts()
     closeZonesSync();
 
     m_hostZonesDb.close();
+    m_hostZonesFill.clear();
     m_hostFiltersMatcher = {};
 
     m_zonesError.clear();
@@ -381,8 +381,6 @@ void DnsManager::closeZonesSync()
     m_zonesSyncing = false;
     m_zonesSyncPending = false;
     m_zonesChanged = false;
-
-    m_filledZonesMask = 0;
 }
 
 // The DB failed to open isn't opened again till the forwarder's restart
@@ -400,13 +398,11 @@ void DnsManager::syncZones()
 {
     const HostZonesSource source = hostZonesSource();
 
-    updateFilledZonesMask(source);
-
     // A Zone's disabling at once, its old names till the commit of the new ones
-    updateZonesEnabledMask(source.enabledMask);
+    m_zonesChanged |= m_hostZonesFill.update(source);
 
     // The names of a Zone filled anew aren't matched till the commit: its queries wait for it
-    const bool fillZones = hasZonesToFill(source, source.enabledMask);
+    const bool fillZones = m_hostZonesFill.hasZonesToFill(source, source.enabledMask);
 
     if (m_zonesSyncing) {
         m_zonesSyncPending = true;
@@ -447,8 +443,7 @@ void DnsManager::finishZonesSync()
 {
     const HostZonesSource source = hostZonesSource();
 
-    updateFilledZonesMask(source);
-    updateZonesEnabledMask(source.enabledMask);
+    m_zonesChanged |= m_hostZonesFill.update(source);
     updateBlockZonesFailed(source);
 
     setQueriesPaused(false);
@@ -457,57 +452,6 @@ void DnsManager::finishZonesSync()
         m_zonesChanged = false;
         flushResolverCache();
     }
-}
-
-// Only the enabled Zones having their own names in the DB are matched
-void DnsManager::updateZonesEnabledMask(quint32 enabledMask)
-{
-    enabledMask &= m_filledZonesMask;
-
-    if (m_hostZonesDb.enabledMask() == enabledMask)
-        return;
-
-    m_hostZonesDb.setEnabledMask(enabledMask);
-    m_zonesChanged = true;
-}
-
-// A Zone's names are its own since they are of its cache file, also its old names after its update
-// till the new ones are written: the DB's names of a Zone removed meanwhile (e.g. while the
-// forwarder was stopped), whose id is reused, aren't matched
-void DnsManager::updateFilledZonesMask(const HostZonesSource &source)
-{
-    if (!m_hostZonesDb.isOpened())
-        return;
-
-    m_filledZonesMask |= actualZonesMask(source);
-    m_filledZonesMask &= source.hostsMask & m_hostZonesDb.zonesMask();
-}
-
-// The Zones having the names of their cache files in the DB
-quint32 DnsManager::actualZonesMask(const HostZonesSource &source) const
-{
-    quint32 zonesMask = 0;
-
-    for (const HostZoneSource &zone : source.zones) {
-        if (m_hostZonesDb.isZoneActual(zone.zoneId, zone.binChecksum, zone.subdomains)) {
-            zonesMask |= Zone::zoneBit(zone.zoneId);
-        }
-    }
-
-    return zonesMask;
-}
-
-// The Zones of the mask having their cache files, but no names in the DB
-bool DnsManager::hasZonesToFill(const HostZonesSource &source, quint32 zonesMask) const
-{
-    const quint32 unfilledMask = zonesMask & ~m_filledZonesMask;
-    if (unfilledMask == 0)
-        return false;
-
-    return std::any_of(source.zones.begin(), source.zones.end(), [&](const HostZoneSource &zone) {
-        return (unfilledMask & Zone::zoneBit(zone.zoneId)) != 0
-                && FileUtil::fileExists(zone.cacheFilePath);
-    });
 }
 
 // The queries wait in the listener's sockets
@@ -563,10 +507,7 @@ void DnsManager::removeZone(quint8 zoneId)
     if (!m_hostZonesDb.isOpened())
         return;
 
-    const quint32 zoneBit = Zone::zoneBit(zoneId);
-
-    m_filledZonesMask &= ~zoneBit;
-    m_hostZonesDb.setEnabledMask(m_hostZonesDb.enabledMask() & ~zoneBit);
+    m_hostZonesFill.removeZone(zoneId);
 
     m_zonesTimer.startTrigger();
 }

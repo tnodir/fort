@@ -69,6 +69,7 @@ SOURCES += \
     dns/dnsnrptcheck.cpp \
     dns/dnsprovider.cpp \
     dns/hostzonesdb.cpp \
+    dns/hostzonesfill.cpp \
     dns/hostzonessync.cpp \
     dns/hostzonessyncjob.cpp \
     driver/drivercommon.cpp \
@@ -423,6 +424,7 @@ HEADERS += \
     dns/dnsnrptcheck.h \
     dns/dnsprovider.h \
     dns/hostzonesdb.h \
+    dns/hostzonesfill.h \
     dns/hostzonessync.h \
     dns/hostzonessyncjob.h \
     driver/drivercommon.h \
