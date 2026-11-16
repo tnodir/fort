@@ -848,6 +848,14 @@
         <translation>Egal cu portul la distanță</translation>
     </message>
     <message>
+        <source>ICMP Type:</source>
+        <translation>Tip ICMP:</translation>
+    </message>
+    <message>
+        <source>ICMP Code:</source>
+        <translation>Cod ICMP:</translation>
+    </message>
+    <message>
         <source>Options:</source>
         <translation>Opțiuni:</translation>
     </message>
@@ -1161,6 +1169,14 @@
     <message>
         <source>Application is already running!</source>
         <translation>Aplicația rulează deja!</translation>
+    </message>
+    <message>
+        <source>The Driver isn&apos;t started: Memory Integrity (HVCI) is enabled!</source>
+        <translation>Driverul nu este pornit: Integritatea memoriei (HVCI) este activată!</translation>
+    </message>
+    <message>
+        <source>Turn off the Memory Integrity in Windows Security: Device Security &gt; Core Isolation, then restart the computer.</source>
+        <translation>Dezactivați Integritatea memoriei din Securitate Windows: Securitatea dispozitivului &gt; Izolarea nucleului, apoi reporniți computerul.</translation>
     </message>
     <message>
         <source>Install the Windows Service now?</source>
@@ -1687,6 +1703,161 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
     <message>
         <source>Select Hosts Zones</source>
         <translation>Selectați zonele de gazde</translation>
+    </message>
+</context>
+<context>
+    <name>IcmpSelector</name>
+    <message>
+        <source>Echo Reply</source>
+        <translation>Răspuns echo</translation>
+    </message>
+    <message>
+        <source>Destination Unreachable</source>
+        <translation>Destinație inaccesibilă</translation>
+    </message>
+    <message>
+        <source>Network Unreachable</source>
+        <translation>Rețea inaccesibilă</translation>
+    </message>
+    <message>
+        <source>Host Unreachable</source>
+        <translation>Gazdă inaccesibilă</translation>
+    </message>
+    <message>
+        <source>Protocol Unreachable</source>
+        <translation>Protocol inaccesibil</translation>
+    </message>
+    <message>
+        <source>Port Unreachable</source>
+        <translation>Port inaccesibil</translation>
+    </message>
+    <message>
+        <source>Fragmentation Needed</source>
+        <translation>Este necesară fragmentarea</translation>
+    </message>
+    <message>
+        <source>Source Route Failed</source>
+        <translation>Ruta sursă a eșuat</translation>
+    </message>
+    <message>
+        <source>Administratively Prohibited</source>
+        <translation>Interzis administrativ</translation>
+    </message>
+    <message>
+        <source>Redirect</source>
+        <translation>Redirecționare</translation>
+    </message>
+    <message>
+        <source>Redirect for Network</source>
+        <translation>Redirecționare pentru rețea</translation>
+    </message>
+    <message>
+        <source>Redirect for Host</source>
+        <translation>Redirecționare pentru gazdă</translation>
+    </message>
+    <message>
+        <source>Echo Request</source>
+        <translation>Cerere echo</translation>
+    </message>
+    <message>
+        <source>Router Advertisement</source>
+        <translation>Anunț de router</translation>
+    </message>
+    <message>
+        <source>Router Solicitation</source>
+        <translation>Solicitare de router</translation>
+    </message>
+    <message>
+        <source>Time Exceeded</source>
+        <translation>Timp depășit</translation>
+    </message>
+    <message>
+        <source>TTL Exceeded in Transit</source>
+        <translation>TTL depășit în tranzit</translation>
+    </message>
+    <message>
+        <source>Fragment Reassembly Time Exceeded</source>
+        <translation>Timpul de reasamblare a fragmentelor depășit</translation>
+    </message>
+    <message>
+        <source>Parameter Problem</source>
+        <translation>Problemă de parametru</translation>
+    </message>
+    <message>
+        <source>Pointer Indicates the Error</source>
+        <translation>Pointerul indică eroarea</translation>
+    </message>
+    <message>
+        <source>Missing a Required Option</source>
+        <translation>Lipsește o opțiune obligatorie</translation>
+    </message>
+    <message>
+        <source>Bad Length</source>
+        <translation>Lungime incorectă</translation>
+    </message>
+    <message>
+        <source>Timestamp Request</source>
+        <translation>Cerere de marcaj temporal</translation>
+    </message>
+    <message>
+        <source>Timestamp Reply</source>
+        <translation>Răspuns cu marcaj temporal</translation>
+    </message>
+    <message>
+        <source>No Route</source>
+        <translation>Nicio rută</translation>
+    </message>
+    <message>
+        <source>Address Unreachable</source>
+        <translation>Adresă inaccesibilă</translation>
+    </message>
+    <message>
+        <source>Packet Too Big</source>
+        <translation>Pachet prea mare</translation>
+    </message>
+    <message>
+        <source>Hop Limit Exceeded in Transit</source>
+        <translation>Limita de salturi depășită în tranzit</translation>
+    </message>
+    <message>
+        <source>Erroneous Header Field</source>
+        <translation>Câmp de antet eronat</translation>
+    </message>
+    <message>
+        <source>Unrecognized Next Header</source>
+        <translation>Antet următor nerecunoscut</translation>
+    </message>
+    <message>
+        <source>Unrecognized IPv6 Option</source>
+        <translation>Opțiune IPv6 nerecunoscută</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Query</source>
+        <translation>Interogare de ascultător multicast</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report</source>
+        <translation>Raport de ascultător multicast</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Done</source>
+        <translation>Încheiere de ascultător multicast</translation>
+    </message>
+    <message>
+        <source>Neighbor Solicitation</source>
+        <translation>Solicitare de vecin</translation>
+    </message>
+    <message>
+        <source>Neighbor Advertisement</source>
+        <translation>Anunț de vecin</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report v2</source>
+        <translation>Raport de ascultător multicast v2</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Personalizat</translation>
     </message>
 </context>
 <context>

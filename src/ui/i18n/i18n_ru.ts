@@ -848,6 +848,14 @@
         <translation>Равен удалённому порту</translation>
     </message>
     <message>
+        <source>ICMP Type:</source>
+        <translation>Тип ICMP:</translation>
+    </message>
+    <message>
+        <source>ICMP Code:</source>
+        <translation>Код ICMP:</translation>
+    </message>
+    <message>
         <source>Options:</source>
         <translation>Опции:</translation>
     </message>
@@ -1161,6 +1169,14 @@
     <message>
         <source>Application is already running!</source>
         <translation>Приложение уже запущено!</translation>
+    </message>
+    <message>
+        <source>The Driver isn&apos;t started: Memory Integrity (HVCI) is enabled!</source>
+        <translation>Драйвер не запущен: включена целостность памяти (HVCI)!</translation>
+    </message>
+    <message>
+        <source>Turn off the Memory Integrity in Windows Security: Device Security &gt; Core Isolation, then restart the computer.</source>
+        <translation>Отключите &quot;Целостность памяти&quot; в Безопасности Windows: Безопасность устройства &gt; Изоляция ядра, затем перезагрузите компьютер.</translation>
     </message>
     <message>
         <source>Install the Windows Service now?</source>
@@ -1687,6 +1703,161 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Select Hosts Zones</source>
         <translation>Выбрать Зоны хостов</translation>
+    </message>
+</context>
+<context>
+    <name>IcmpSelector</name>
+    <message>
+        <source>Echo Reply</source>
+        <translation>Эхо-ответ</translation>
+    </message>
+    <message>
+        <source>Destination Unreachable</source>
+        <translation>Назначение недостижимо</translation>
+    </message>
+    <message>
+        <source>Network Unreachable</source>
+        <translation>Сеть недостижима</translation>
+    </message>
+    <message>
+        <source>Host Unreachable</source>
+        <translation>Узел недостижим</translation>
+    </message>
+    <message>
+        <source>Protocol Unreachable</source>
+        <translation>Протокол недостижим</translation>
+    </message>
+    <message>
+        <source>Port Unreachable</source>
+        <translation>Порт недостижим</translation>
+    </message>
+    <message>
+        <source>Fragmentation Needed</source>
+        <translation>Требуется фрагментация</translation>
+    </message>
+    <message>
+        <source>Source Route Failed</source>
+        <translation>Сбой маршрута от источника</translation>
+    </message>
+    <message>
+        <source>Administratively Prohibited</source>
+        <translation>Административно запрещено</translation>
+    </message>
+    <message>
+        <source>Redirect</source>
+        <translation>Перенаправление</translation>
+    </message>
+    <message>
+        <source>Redirect for Network</source>
+        <translation>Перенаправление для сети</translation>
+    </message>
+    <message>
+        <source>Redirect for Host</source>
+        <translation>Перенаправление для узла</translation>
+    </message>
+    <message>
+        <source>Echo Request</source>
+        <translation>Эхо-запрос</translation>
+    </message>
+    <message>
+        <source>Router Advertisement</source>
+        <translation>Объявление маршрутизатора</translation>
+    </message>
+    <message>
+        <source>Router Solicitation</source>
+        <translation>Запрос маршрутизатора</translation>
+    </message>
+    <message>
+        <source>Time Exceeded</source>
+        <translation>Превышено время</translation>
+    </message>
+    <message>
+        <source>TTL Exceeded in Transit</source>
+        <translation>Превышено время жизни (TTL) при передаче</translation>
+    </message>
+    <message>
+        <source>Fragment Reassembly Time Exceeded</source>
+        <translation>Превышено время сборки фрагментов</translation>
+    </message>
+    <message>
+        <source>Parameter Problem</source>
+        <translation>Ошибка параметра</translation>
+    </message>
+    <message>
+        <source>Pointer Indicates the Error</source>
+        <translation>Указатель показывает ошибку</translation>
+    </message>
+    <message>
+        <source>Missing a Required Option</source>
+        <translation>Отсутствует обязательная опция</translation>
+    </message>
+    <message>
+        <source>Bad Length</source>
+        <translation>Неверная длина</translation>
+    </message>
+    <message>
+        <source>Timestamp Request</source>
+        <translation>Запрос метки времени</translation>
+    </message>
+    <message>
+        <source>Timestamp Reply</source>
+        <translation>Ответ с меткой времени</translation>
+    </message>
+    <message>
+        <source>No Route</source>
+        <translation>Нет маршрута</translation>
+    </message>
+    <message>
+        <source>Address Unreachable</source>
+        <translation>Адрес недостижим</translation>
+    </message>
+    <message>
+        <source>Packet Too Big</source>
+        <translation>Пакет слишком большой</translation>
+    </message>
+    <message>
+        <source>Hop Limit Exceeded in Transit</source>
+        <translation>Превышен предел переходов при передаче</translation>
+    </message>
+    <message>
+        <source>Erroneous Header Field</source>
+        <translation>Ошибочное поле заголовка</translation>
+    </message>
+    <message>
+        <source>Unrecognized Next Header</source>
+        <translation>Нераспознанный следующий заголовок</translation>
+    </message>
+    <message>
+        <source>Unrecognized IPv6 Option</source>
+        <translation>Нераспознанная опция IPv6</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Query</source>
+        <translation>Запрос получателя многоадресной рассылки</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report</source>
+        <translation>Отчёт получателя многоадресной рассылки</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Done</source>
+        <translation>Завершение получения многоадресной рассылки</translation>
+    </message>
+    <message>
+        <source>Neighbor Solicitation</source>
+        <translation>Запрос соседа</translation>
+    </message>
+    <message>
+        <source>Neighbor Advertisement</source>
+        <translation>Объявление соседа</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report v2</source>
+        <translation>Отчёт получателя многоадресной рассылки v2</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Другое</translation>
     </message>
 </context>
 <context>

@@ -848,6 +848,14 @@
         <translation>リモートポートと同じ</translation>
     </message>
     <message>
+        <source>ICMP Type:</source>
+        <translation>ICMP タイプ :</translation>
+    </message>
+    <message>
+        <source>ICMP Code:</source>
+        <translation>ICMP コード :</translation>
+    </message>
+    <message>
         <source>Options:</source>
         <translation>オプション :</translation>
     </message>
@@ -1161,6 +1169,14 @@
     <message>
         <source>Application is already running!</source>
         <translation>アプリケーションはすでに実行されています!</translation>
+    </message>
+    <message>
+        <source>The Driver isn&apos;t started: Memory Integrity (HVCI) is enabled!</source>
+        <translation>ドライバーが起動していません: メモリ整合性 (HVCI) が有効です!</translation>
+    </message>
+    <message>
+        <source>Turn off the Memory Integrity in Windows Security: Device Security &gt; Core Isolation, then restart the computer.</source>
+        <translation>Windows セキュリティでメモリ整合性をオフにしてください: デバイス セキュリティ &gt; コア分離。その後、コンピューターを再起動してください。</translation>
     </message>
     <message>
         <source>Install the Windows Service now?</source>
@@ -1687,6 +1703,161 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Select Hosts Zones</source>
         <translation>ホストゾーンの選択</translation>
+    </message>
+</context>
+<context>
+    <name>IcmpSelector</name>
+    <message>
+        <source>Echo Reply</source>
+        <translation>エコー応答</translation>
+    </message>
+    <message>
+        <source>Destination Unreachable</source>
+        <translation>宛先に到達できません</translation>
+    </message>
+    <message>
+        <source>Network Unreachable</source>
+        <translation>ネットワークに到達できません</translation>
+    </message>
+    <message>
+        <source>Host Unreachable</source>
+        <translation>ホストに到達できません</translation>
+    </message>
+    <message>
+        <source>Protocol Unreachable</source>
+        <translation>プロトコルに到達できません</translation>
+    </message>
+    <message>
+        <source>Port Unreachable</source>
+        <translation>ポートに到達できません</translation>
+    </message>
+    <message>
+        <source>Fragmentation Needed</source>
+        <translation>フラグメント化が必要です</translation>
+    </message>
+    <message>
+        <source>Source Route Failed</source>
+        <translation>ソースルートの失敗</translation>
+    </message>
+    <message>
+        <source>Administratively Prohibited</source>
+        <translation>管理上禁止されています</translation>
+    </message>
+    <message>
+        <source>Redirect</source>
+        <translation>リダイレクト</translation>
+    </message>
+    <message>
+        <source>Redirect for Network</source>
+        <translation>ネットワーク向けリダイレクト</translation>
+    </message>
+    <message>
+        <source>Redirect for Host</source>
+        <translation>ホスト向けリダイレクト</translation>
+    </message>
+    <message>
+        <source>Echo Request</source>
+        <translation>エコー要求</translation>
+    </message>
+    <message>
+        <source>Router Advertisement</source>
+        <translation>ルーターアドバタイズ</translation>
+    </message>
+    <message>
+        <source>Router Solicitation</source>
+        <translation>ルーター要請</translation>
+    </message>
+    <message>
+        <source>Time Exceeded</source>
+        <translation>時間超過</translation>
+    </message>
+    <message>
+        <source>TTL Exceeded in Transit</source>
+        <translation>転送中の TTL 超過</translation>
+    </message>
+    <message>
+        <source>Fragment Reassembly Time Exceeded</source>
+        <translation>フラグメント再構築の時間超過</translation>
+    </message>
+    <message>
+        <source>Parameter Problem</source>
+        <translation>パラメーターの問題</translation>
+    </message>
+    <message>
+        <source>Pointer Indicates the Error</source>
+        <translation>ポインターがエラーを示しています</translation>
+    </message>
+    <message>
+        <source>Missing a Required Option</source>
+        <translation>必須オプションがありません</translation>
+    </message>
+    <message>
+        <source>Bad Length</source>
+        <translation>長さが不正です</translation>
+    </message>
+    <message>
+        <source>Timestamp Request</source>
+        <translation>タイムスタンプ要求</translation>
+    </message>
+    <message>
+        <source>Timestamp Reply</source>
+        <translation>タイムスタンプ応答</translation>
+    </message>
+    <message>
+        <source>No Route</source>
+        <translation>経路なし</translation>
+    </message>
+    <message>
+        <source>Address Unreachable</source>
+        <translation>アドレスに到達できません</translation>
+    </message>
+    <message>
+        <source>Packet Too Big</source>
+        <translation>パケットが大きすぎます</translation>
+    </message>
+    <message>
+        <source>Hop Limit Exceeded in Transit</source>
+        <translation>転送中のホップ制限超過</translation>
+    </message>
+    <message>
+        <source>Erroneous Header Field</source>
+        <translation>ヘッダーフィールドが不正です</translation>
+    </message>
+    <message>
+        <source>Unrecognized Next Header</source>
+        <translation>認識できない次のヘッダー</translation>
+    </message>
+    <message>
+        <source>Unrecognized IPv6 Option</source>
+        <translation>認識できない IPv6 オプション</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Query</source>
+        <translation>マルチキャストリスナークエリ</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report</source>
+        <translation>マルチキャストリスナーレポート</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Done</source>
+        <translation>マルチキャストリスナー終了</translation>
+    </message>
+    <message>
+        <source>Neighbor Solicitation</source>
+        <translation>近隣要請</translation>
+    </message>
+    <message>
+        <source>Neighbor Advertisement</source>
+        <translation>近隣アドバタイズ</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report v2</source>
+        <translation>マルチキャストリスナーレポート v2</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>カスタム</translation>
     </message>
 </context>
 <context>

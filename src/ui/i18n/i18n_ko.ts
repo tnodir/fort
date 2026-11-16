@@ -848,6 +848,14 @@
         <translation>원격 포트와 동일</translation>
     </message>
     <message>
+        <source>ICMP Type:</source>
+        <translation>ICMP 유형:</translation>
+    </message>
+    <message>
+        <source>ICMP Code:</source>
+        <translation>ICMP 코드:</translation>
+    </message>
+    <message>
         <source>Options:</source>
         <translation>옵션:</translation>
     </message>
@@ -1161,6 +1169,14 @@
     <message>
         <source>Application is already running!</source>
         <translation>프로그램이 이미 실행 중입니다!</translation>
+    </message>
+    <message>
+        <source>The Driver isn&apos;t started: Memory Integrity (HVCI) is enabled!</source>
+        <translation>드라이버가 시작되지 않았습니다: 메모리 무결성(HVCI)이 켜져 있습니다!</translation>
+    </message>
+    <message>
+        <source>Turn off the Memory Integrity in Windows Security: Device Security &gt; Core Isolation, then restart the computer.</source>
+        <translation>Windows 보안에서 메모리 무결성을 끄세요: 장치 보안 &gt; 코어 격리. 그런 다음 컴퓨터를 다시 시작하세요.</translation>
     </message>
     <message>
         <source>Install the Windows Service now?</source>
@@ -1687,6 +1703,161 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Select Hosts Zones</source>
         <translation>호스트 영역 선택</translation>
+    </message>
+</context>
+<context>
+    <name>IcmpSelector</name>
+    <message>
+        <source>Echo Reply</source>
+        <translation>에코 응답</translation>
+    </message>
+    <message>
+        <source>Destination Unreachable</source>
+        <translation>대상에 연결할 수 없음</translation>
+    </message>
+    <message>
+        <source>Network Unreachable</source>
+        <translation>네트워크에 연결할 수 없음</translation>
+    </message>
+    <message>
+        <source>Host Unreachable</source>
+        <translation>호스트에 연결할 수 없음</translation>
+    </message>
+    <message>
+        <source>Protocol Unreachable</source>
+        <translation>프로토콜에 연결할 수 없음</translation>
+    </message>
+    <message>
+        <source>Port Unreachable</source>
+        <translation>포트에 연결할 수 없음</translation>
+    </message>
+    <message>
+        <source>Fragmentation Needed</source>
+        <translation>조각화 필요</translation>
+    </message>
+    <message>
+        <source>Source Route Failed</source>
+        <translation>소스 경로 실패</translation>
+    </message>
+    <message>
+        <source>Administratively Prohibited</source>
+        <translation>관리상 금지됨</translation>
+    </message>
+    <message>
+        <source>Redirect</source>
+        <translation>리디렉션</translation>
+    </message>
+    <message>
+        <source>Redirect for Network</source>
+        <translation>네트워크 리디렉션</translation>
+    </message>
+    <message>
+        <source>Redirect for Host</source>
+        <translation>호스트 리디렉션</translation>
+    </message>
+    <message>
+        <source>Echo Request</source>
+        <translation>에코 요청</translation>
+    </message>
+    <message>
+        <source>Router Advertisement</source>
+        <translation>라우터 알림</translation>
+    </message>
+    <message>
+        <source>Router Solicitation</source>
+        <translation>라우터 요청</translation>
+    </message>
+    <message>
+        <source>Time Exceeded</source>
+        <translation>시간 초과</translation>
+    </message>
+    <message>
+        <source>TTL Exceeded in Transit</source>
+        <translation>전송 중 TTL 초과</translation>
+    </message>
+    <message>
+        <source>Fragment Reassembly Time Exceeded</source>
+        <translation>조각 재조립 시간 초과</translation>
+    </message>
+    <message>
+        <source>Parameter Problem</source>
+        <translation>매개변수 문제</translation>
+    </message>
+    <message>
+        <source>Pointer Indicates the Error</source>
+        <translation>포인터가 오류를 가리킴</translation>
+    </message>
+    <message>
+        <source>Missing a Required Option</source>
+        <translation>필수 옵션 누락</translation>
+    </message>
+    <message>
+        <source>Bad Length</source>
+        <translation>잘못된 길이</translation>
+    </message>
+    <message>
+        <source>Timestamp Request</source>
+        <translation>타임스탬프 요청</translation>
+    </message>
+    <message>
+        <source>Timestamp Reply</source>
+        <translation>타임스탬프 응답</translation>
+    </message>
+    <message>
+        <source>No Route</source>
+        <translation>경로 없음</translation>
+    </message>
+    <message>
+        <source>Address Unreachable</source>
+        <translation>주소에 연결할 수 없음</translation>
+    </message>
+    <message>
+        <source>Packet Too Big</source>
+        <translation>패킷이 너무 큼</translation>
+    </message>
+    <message>
+        <source>Hop Limit Exceeded in Transit</source>
+        <translation>전송 중 홉 제한 초과</translation>
+    </message>
+    <message>
+        <source>Erroneous Header Field</source>
+        <translation>잘못된 헤더 필드</translation>
+    </message>
+    <message>
+        <source>Unrecognized Next Header</source>
+        <translation>인식할 수 없는 다음 헤더</translation>
+    </message>
+    <message>
+        <source>Unrecognized IPv6 Option</source>
+        <translation>인식할 수 없는 IPv6 옵션</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Query</source>
+        <translation>멀티캐스트 수신기 쿼리</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report</source>
+        <translation>멀티캐스트 수신기 보고서</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Done</source>
+        <translation>멀티캐스트 수신기 완료</translation>
+    </message>
+    <message>
+        <source>Neighbor Solicitation</source>
+        <translation>이웃 요청</translation>
+    </message>
+    <message>
+        <source>Neighbor Advertisement</source>
+        <translation>이웃 알림</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report v2</source>
+        <translation>멀티캐스트 수신기 보고서 v2</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>사용자 지정</translation>
     </message>
 </context>
 <context>

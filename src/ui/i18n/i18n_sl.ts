@@ -848,6 +848,14 @@
         <translation>Enako oddaljenim vratom</translation>
     </message>
     <message>
+        <source>ICMP Type:</source>
+        <translation>Vrsta ICMP:</translation>
+    </message>
+    <message>
+        <source>ICMP Code:</source>
+        <translation>Koda ICMP:</translation>
+    </message>
+    <message>
         <source>Options:</source>
         <translation>Možnosti:</translation>
     </message>
@@ -1161,6 +1169,14 @@
     <message>
         <source>Application is already running!</source>
         <translation>Aplikacija se že izvaja</translation>
+    </message>
+    <message>
+        <source>The Driver isn&apos;t started: Memory Integrity (HVCI) is enabled!</source>
+        <translation>Gonilnik ni zagnan: celovitost pomnilnika (HVCI) je omogočena!</translation>
+    </message>
+    <message>
+        <source>Turn off the Memory Integrity in Windows Security: Device Security &gt; Core Isolation, then restart the computer.</source>
+        <translation>Izklopite celovitost pomnilnika v Varnosti sistema Windows: Varnost naprave &gt; Izolacija jedra, nato znova zaženite računalnik.</translation>
     </message>
     <message>
         <source>Install the Windows Service now?</source>
@@ -1687,6 +1703,161 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
     <message>
         <source>Select Hosts Zones</source>
         <translation>Izberi področja gostiteljev</translation>
+    </message>
+</context>
+<context>
+    <name>IcmpSelector</name>
+    <message>
+        <source>Echo Reply</source>
+        <translation>Odgovor na odmev</translation>
+    </message>
+    <message>
+        <source>Destination Unreachable</source>
+        <translation>Cilj ni dosegljiv</translation>
+    </message>
+    <message>
+        <source>Network Unreachable</source>
+        <translation>Omrežje ni dosegljivo</translation>
+    </message>
+    <message>
+        <source>Host Unreachable</source>
+        <translation>Gostitelj ni dosegljiv</translation>
+    </message>
+    <message>
+        <source>Protocol Unreachable</source>
+        <translation>Protokol ni dosegljiv</translation>
+    </message>
+    <message>
+        <source>Port Unreachable</source>
+        <translation>Vrata niso dosegljiva</translation>
+    </message>
+    <message>
+        <source>Fragmentation Needed</source>
+        <translation>Potrebna je fragmentacija</translation>
+    </message>
+    <message>
+        <source>Source Route Failed</source>
+        <translation>Izvorna pot ni uspela</translation>
+    </message>
+    <message>
+        <source>Administratively Prohibited</source>
+        <translation>Administrativno prepovedano</translation>
+    </message>
+    <message>
+        <source>Redirect</source>
+        <translation>Preusmeritev</translation>
+    </message>
+    <message>
+        <source>Redirect for Network</source>
+        <translation>Preusmeritev za omrežje</translation>
+    </message>
+    <message>
+        <source>Redirect for Host</source>
+        <translation>Preusmeritev za gostitelja</translation>
+    </message>
+    <message>
+        <source>Echo Request</source>
+        <translation>Zahteva za odmev</translation>
+    </message>
+    <message>
+        <source>Router Advertisement</source>
+        <translation>Oglas usmerjevalnika</translation>
+    </message>
+    <message>
+        <source>Router Solicitation</source>
+        <translation>Poizvedba usmerjevalnika</translation>
+    </message>
+    <message>
+        <source>Time Exceeded</source>
+        <translation>Čas presežen</translation>
+    </message>
+    <message>
+        <source>TTL Exceeded in Transit</source>
+        <translation>TTL presežen med prenosom</translation>
+    </message>
+    <message>
+        <source>Fragment Reassembly Time Exceeded</source>
+        <translation>Čas sestavljanja fragmentov presežen</translation>
+    </message>
+    <message>
+        <source>Parameter Problem</source>
+        <translation>Težava s parametrom</translation>
+    </message>
+    <message>
+        <source>Pointer Indicates the Error</source>
+        <translation>Kazalec kaže na napako</translation>
+    </message>
+    <message>
+        <source>Missing a Required Option</source>
+        <translation>Manjka zahtevana možnost</translation>
+    </message>
+    <message>
+        <source>Bad Length</source>
+        <translation>Napačna dolžina</translation>
+    </message>
+    <message>
+        <source>Timestamp Request</source>
+        <translation>Zahteva za časovni žig</translation>
+    </message>
+    <message>
+        <source>Timestamp Reply</source>
+        <translation>Odgovor s časovnim žigom</translation>
+    </message>
+    <message>
+        <source>No Route</source>
+        <translation>Ni poti</translation>
+    </message>
+    <message>
+        <source>Address Unreachable</source>
+        <translation>Naslov ni dosegljiv</translation>
+    </message>
+    <message>
+        <source>Packet Too Big</source>
+        <translation>Paket je prevelik</translation>
+    </message>
+    <message>
+        <source>Hop Limit Exceeded in Transit</source>
+        <translation>Omejitev skokov presežena med prenosom</translation>
+    </message>
+    <message>
+        <source>Erroneous Header Field</source>
+        <translation>Napačno polje glave</translation>
+    </message>
+    <message>
+        <source>Unrecognized Next Header</source>
+        <translation>Neprepoznana naslednja glava</translation>
+    </message>
+    <message>
+        <source>Unrecognized IPv6 Option</source>
+        <translation>Neprepoznana možnost IPv6</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Query</source>
+        <translation>Poizvedba poslušalca multicast</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report</source>
+        <translation>Poročilo poslušalca multicast</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Done</source>
+        <translation>Konec poslušalca multicast</translation>
+    </message>
+    <message>
+        <source>Neighbor Solicitation</source>
+        <translation>Poizvedba soseda</translation>
+    </message>
+    <message>
+        <source>Neighbor Advertisement</source>
+        <translation>Oglas soseda</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report v2</source>
+        <translation>Poročilo poslušalca multicast v2</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Po meri</translation>
     </message>
 </context>
 <context>

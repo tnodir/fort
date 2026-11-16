@@ -848,6 +848,14 @@
         <translation>مساوٍ للمنفذ البعيد</translation>
     </message>
     <message>
+        <source>ICMP Type:</source>
+        <translation>نوع ICMP:</translation>
+    </message>
+    <message>
+        <source>ICMP Code:</source>
+        <translation>رمز ICMP:</translation>
+    </message>
+    <message>
         <source>Options:</source>
         <translation>الخيارات:</translation>
     </message>
@@ -1161,6 +1169,14 @@
     <message>
         <source>Application is already running!</source>
         <translation>التطبيق قيد التشغيل!</translation>
+    </message>
+    <message>
+        <source>The Driver isn&apos;t started: Memory Integrity (HVCI) is enabled!</source>
+        <translation>لم يبدأ برنامج التشغيل: سلامة الذاكرة (HVCI) مفعّلة!</translation>
+    </message>
+    <message>
+        <source>Turn off the Memory Integrity in Windows Security: Device Security &gt; Core Isolation, then restart the computer.</source>
+        <translation>أوقف تشغيل سلامة الذاكرة في أمن Windows: أمان الجهاز &gt; عزل النواة، ثم أعد تشغيل الكمبيوتر.</translation>
     </message>
     <message>
         <source>Install the Windows Service now?</source>
@@ -1687,6 +1703,161 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Select Hosts Zones</source>
         <translation>اختيار مناطق المضيفين</translation>
+    </message>
+</context>
+<context>
+    <name>IcmpSelector</name>
+    <message>
+        <source>Echo Reply</source>
+        <translation>رد الصدى</translation>
+    </message>
+    <message>
+        <source>Destination Unreachable</source>
+        <translation>الوجهة غير قابلة للوصول</translation>
+    </message>
+    <message>
+        <source>Network Unreachable</source>
+        <translation>الشبكة غير قابلة للوصول</translation>
+    </message>
+    <message>
+        <source>Host Unreachable</source>
+        <translation>المضيف غير قابل للوصول</translation>
+    </message>
+    <message>
+        <source>Protocol Unreachable</source>
+        <translation>البروتوكول غير قابل للوصول</translation>
+    </message>
+    <message>
+        <source>Port Unreachable</source>
+        <translation>المنفذ غير قابل للوصول</translation>
+    </message>
+    <message>
+        <source>Fragmentation Needed</source>
+        <translation>التجزئة مطلوبة</translation>
+    </message>
+    <message>
+        <source>Source Route Failed</source>
+        <translation>فشل مسار المصدر</translation>
+    </message>
+    <message>
+        <source>Administratively Prohibited</source>
+        <translation>محظور إداريًا</translation>
+    </message>
+    <message>
+        <source>Redirect</source>
+        <translation>إعادة توجيه</translation>
+    </message>
+    <message>
+        <source>Redirect for Network</source>
+        <translation>إعادة توجيه للشبكة</translation>
+    </message>
+    <message>
+        <source>Redirect for Host</source>
+        <translation>إعادة توجيه للمضيف</translation>
+    </message>
+    <message>
+        <source>Echo Request</source>
+        <translation>طلب الصدى</translation>
+    </message>
+    <message>
+        <source>Router Advertisement</source>
+        <translation>إعلان الموجّه</translation>
+    </message>
+    <message>
+        <source>Router Solicitation</source>
+        <translation>طلب الموجّه</translation>
+    </message>
+    <message>
+        <source>Time Exceeded</source>
+        <translation>تم تجاوز الوقت</translation>
+    </message>
+    <message>
+        <source>TTL Exceeded in Transit</source>
+        <translation>تم تجاوز TTL أثناء النقل</translation>
+    </message>
+    <message>
+        <source>Fragment Reassembly Time Exceeded</source>
+        <translation>تم تجاوز وقت إعادة تجميع الأجزاء</translation>
+    </message>
+    <message>
+        <source>Parameter Problem</source>
+        <translation>مشكلة في المعلمة</translation>
+    </message>
+    <message>
+        <source>Pointer Indicates the Error</source>
+        <translation>المؤشر يشير إلى الخطأ</translation>
+    </message>
+    <message>
+        <source>Missing a Required Option</source>
+        <translation>خيار مطلوب مفقود</translation>
+    </message>
+    <message>
+        <source>Bad Length</source>
+        <translation>طول غير صحيح</translation>
+    </message>
+    <message>
+        <source>Timestamp Request</source>
+        <translation>طلب الطابع الزمني</translation>
+    </message>
+    <message>
+        <source>Timestamp Reply</source>
+        <translation>رد الطابع الزمني</translation>
+    </message>
+    <message>
+        <source>No Route</source>
+        <translation>لا يوجد مسار</translation>
+    </message>
+    <message>
+        <source>Address Unreachable</source>
+        <translation>العنوان غير قابل للوصول</translation>
+    </message>
+    <message>
+        <source>Packet Too Big</source>
+        <translation>الحزمة كبيرة جدًا</translation>
+    </message>
+    <message>
+        <source>Hop Limit Exceeded in Transit</source>
+        <translation>تم تجاوز حد القفزات أثناء النقل</translation>
+    </message>
+    <message>
+        <source>Erroneous Header Field</source>
+        <translation>حقل رأس خاطئ</translation>
+    </message>
+    <message>
+        <source>Unrecognized Next Header</source>
+        <translation>الرأس التالي غير معروف</translation>
+    </message>
+    <message>
+        <source>Unrecognized IPv6 Option</source>
+        <translation>خيار IPv6 غير معروف</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Query</source>
+        <translation>استعلام مستمع البث المتعدد</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report</source>
+        <translation>تقرير مستمع البث المتعدد</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Done</source>
+        <translation>انتهاء مستمع البث المتعدد</translation>
+    </message>
+    <message>
+        <source>Neighbor Solicitation</source>
+        <translation>طلب الجار</translation>
+    </message>
+    <message>
+        <source>Neighbor Advertisement</source>
+        <translation>إعلان الجار</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report v2</source>
+        <translation>تقرير مستمع البث المتعدد v2</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>مخصص</translation>
     </message>
 </context>
 <context>

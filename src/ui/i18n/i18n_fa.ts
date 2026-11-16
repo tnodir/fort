@@ -848,6 +848,14 @@
         <translation>برابر با پورت راه دور</translation>
     </message>
     <message>
+        <source>ICMP Type:</source>
+        <translation>نوع ICMP:</translation>
+    </message>
+    <message>
+        <source>ICMP Code:</source>
+        <translation>کد ICMP:</translation>
+    </message>
+    <message>
         <source>Options:</source>
         <translation>گزینه‌ها:</translation>
     </message>
@@ -1161,6 +1169,14 @@
     <message>
         <source>Application is already running!</source>
         <translation>برنامه از قبل در حال اجراست!</translation>
+    </message>
+    <message>
+        <source>The Driver isn&apos;t started: Memory Integrity (HVCI) is enabled!</source>
+        <translation>درایور شروع نشده است: یکپارچگی حافظه (HVCI) فعال است!</translation>
+    </message>
+    <message>
+        <source>Turn off the Memory Integrity in Windows Security: Device Security &gt; Core Isolation, then restart the computer.</source>
+        <translation>یکپارچگی حافظه را در امنیت Windows خاموش کنید: امنیت دستگاه &gt; جداسازی هسته، سپس رایانه را راه‌اندازی مجدد کنید.</translation>
     </message>
     <message>
         <source>Install the Windows Service now?</source>
@@ -1687,6 +1703,161 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Select Hosts Zones</source>
         <translation>انتخاب مناطق میزبان‌ها</translation>
+    </message>
+</context>
+<context>
+    <name>IcmpSelector</name>
+    <message>
+        <source>Echo Reply</source>
+        <translation>پاسخ اکو</translation>
+    </message>
+    <message>
+        <source>Destination Unreachable</source>
+        <translation>مقصد در دسترس نیست</translation>
+    </message>
+    <message>
+        <source>Network Unreachable</source>
+        <translation>شبکه در دسترس نیست</translation>
+    </message>
+    <message>
+        <source>Host Unreachable</source>
+        <translation>میزبان در دسترس نیست</translation>
+    </message>
+    <message>
+        <source>Protocol Unreachable</source>
+        <translation>پروتکل در دسترس نیست</translation>
+    </message>
+    <message>
+        <source>Port Unreachable</source>
+        <translation>پورت در دسترس نیست</translation>
+    </message>
+    <message>
+        <source>Fragmentation Needed</source>
+        <translation>تکه‌تکه‌سازی لازم است</translation>
+    </message>
+    <message>
+        <source>Source Route Failed</source>
+        <translation>مسیر مبدأ ناموفق</translation>
+    </message>
+    <message>
+        <source>Administratively Prohibited</source>
+        <translation>ممنوع از نظر مدیریتی</translation>
+    </message>
+    <message>
+        <source>Redirect</source>
+        <translation>تغییر مسیر</translation>
+    </message>
+    <message>
+        <source>Redirect for Network</source>
+        <translation>تغییر مسیر برای شبکه</translation>
+    </message>
+    <message>
+        <source>Redirect for Host</source>
+        <translation>تغییر مسیر برای میزبان</translation>
+    </message>
+    <message>
+        <source>Echo Request</source>
+        <translation>درخواست اکو</translation>
+    </message>
+    <message>
+        <source>Router Advertisement</source>
+        <translation>اعلان مسیریاب</translation>
+    </message>
+    <message>
+        <source>Router Solicitation</source>
+        <translation>درخواست مسیریاب</translation>
+    </message>
+    <message>
+        <source>Time Exceeded</source>
+        <translation>زمان تمام شد</translation>
+    </message>
+    <message>
+        <source>TTL Exceeded in Transit</source>
+        <translation>TTL در مسیر تمام شد</translation>
+    </message>
+    <message>
+        <source>Fragment Reassembly Time Exceeded</source>
+        <translation>زمان بازسازی قطعات تمام شد</translation>
+    </message>
+    <message>
+        <source>Parameter Problem</source>
+        <translation>مشکل پارامتر</translation>
+    </message>
+    <message>
+        <source>Pointer Indicates the Error</source>
+        <translation>اشاره‌گر خطا را نشان می‌دهد</translation>
+    </message>
+    <message>
+        <source>Missing a Required Option</source>
+        <translation>گزینه لازم وجود ندارد</translation>
+    </message>
+    <message>
+        <source>Bad Length</source>
+        <translation>طول نادرست</translation>
+    </message>
+    <message>
+        <source>Timestamp Request</source>
+        <translation>درخواست مهر زمانی</translation>
+    </message>
+    <message>
+        <source>Timestamp Reply</source>
+        <translation>پاسخ مهر زمانی</translation>
+    </message>
+    <message>
+        <source>No Route</source>
+        <translation>مسیری وجود ندارد</translation>
+    </message>
+    <message>
+        <source>Address Unreachable</source>
+        <translation>آدرس در دسترس نیست</translation>
+    </message>
+    <message>
+        <source>Packet Too Big</source>
+        <translation>بسته بیش از حد بزرگ است</translation>
+    </message>
+    <message>
+        <source>Hop Limit Exceeded in Transit</source>
+        <translation>حد گام‌ها در مسیر تمام شد</translation>
+    </message>
+    <message>
+        <source>Erroneous Header Field</source>
+        <translation>فیلد سرآیند نادرست</translation>
+    </message>
+    <message>
+        <source>Unrecognized Next Header</source>
+        <translation>سرآیند بعدی ناشناخته</translation>
+    </message>
+    <message>
+        <source>Unrecognized IPv6 Option</source>
+        <translation>گزینه IPv6 ناشناخته</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Query</source>
+        <translation>پرس‌وجوی شنونده چندپخشی</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report</source>
+        <translation>گزارش شنونده چندپخشی</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Done</source>
+        <translation>پایان شنونده چندپخشی</translation>
+    </message>
+    <message>
+        <source>Neighbor Solicitation</source>
+        <translation>درخواست همسایه</translation>
+    </message>
+    <message>
+        <source>Neighbor Advertisement</source>
+        <translation>اعلان همسایه</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report v2</source>
+        <translation>گزارش شنونده چندپخشی v2</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>سفارشی</translation>
     </message>
 </context>
 <context>

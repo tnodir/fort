@@ -848,6 +848,14 @@
         <translation>Równy zdalnemu portowi</translation>
     </message>
     <message>
+        <source>ICMP Type:</source>
+        <translation>Typ ICMP:</translation>
+    </message>
+    <message>
+        <source>ICMP Code:</source>
+        <translation>Kod ICMP:</translation>
+    </message>
+    <message>
         <source>Options:</source>
         <translation>Opcje:</translation>
     </message>
@@ -1161,6 +1169,14 @@
     <message>
         <source>Application is already running!</source>
         <translation>Aplikacja jest już uruchomiona!</translation>
+    </message>
+    <message>
+        <source>The Driver isn&apos;t started: Memory Integrity (HVCI) is enabled!</source>
+        <translation>Sterownik nie jest uruchomiony: włączona jest integralność pamięci (HVCI)!</translation>
+    </message>
+    <message>
+        <source>Turn off the Memory Integrity in Windows Security: Device Security &gt; Core Isolation, then restart the computer.</source>
+        <translation>Wyłącz integralność pamięci w Zabezpieczeniach systemu Windows: Zabezpieczenia urządzenia &gt; Izolacja rdzenia, a następnie uruchom ponownie komputer.</translation>
     </message>
     <message>
         <source>Install the Windows Service now?</source>
@@ -1687,6 +1703,161 @@ Program jest włączony tylko wtedy, gdy DOWOLNA z jego grup wyłącznych jest w
     <message>
         <source>Select Hosts Zones</source>
         <translation>Wybierz strefy hostów</translation>
+    </message>
+</context>
+<context>
+    <name>IcmpSelector</name>
+    <message>
+        <source>Echo Reply</source>
+        <translation>Odpowiedź echo</translation>
+    </message>
+    <message>
+        <source>Destination Unreachable</source>
+        <translation>Miejsce docelowe nieosiągalne</translation>
+    </message>
+    <message>
+        <source>Network Unreachable</source>
+        <translation>Sieć nieosiągalna</translation>
+    </message>
+    <message>
+        <source>Host Unreachable</source>
+        <translation>Host nieosiągalny</translation>
+    </message>
+    <message>
+        <source>Protocol Unreachable</source>
+        <translation>Protokół nieosiągalny</translation>
+    </message>
+    <message>
+        <source>Port Unreachable</source>
+        <translation>Port nieosiągalny</translation>
+    </message>
+    <message>
+        <source>Fragmentation Needed</source>
+        <translation>Wymagana fragmentacja</translation>
+    </message>
+    <message>
+        <source>Source Route Failed</source>
+        <translation>Błąd trasy źródłowej</translation>
+    </message>
+    <message>
+        <source>Administratively Prohibited</source>
+        <translation>Zabronione administracyjnie</translation>
+    </message>
+    <message>
+        <source>Redirect</source>
+        <translation>Przekierowanie</translation>
+    </message>
+    <message>
+        <source>Redirect for Network</source>
+        <translation>Przekierowanie dla sieci</translation>
+    </message>
+    <message>
+        <source>Redirect for Host</source>
+        <translation>Przekierowanie dla hosta</translation>
+    </message>
+    <message>
+        <source>Echo Request</source>
+        <translation>Żądanie echo</translation>
+    </message>
+    <message>
+        <source>Router Advertisement</source>
+        <translation>Ogłoszenie routera</translation>
+    </message>
+    <message>
+        <source>Router Solicitation</source>
+        <translation>Zapytanie routera</translation>
+    </message>
+    <message>
+        <source>Time Exceeded</source>
+        <translation>Przekroczono czas</translation>
+    </message>
+    <message>
+        <source>TTL Exceeded in Transit</source>
+        <translation>Przekroczono TTL w tranzycie</translation>
+    </message>
+    <message>
+        <source>Fragment Reassembly Time Exceeded</source>
+        <translation>Przekroczono czas składania fragmentów</translation>
+    </message>
+    <message>
+        <source>Parameter Problem</source>
+        <translation>Problem z parametrem</translation>
+    </message>
+    <message>
+        <source>Pointer Indicates the Error</source>
+        <translation>Wskaźnik wskazuje błąd</translation>
+    </message>
+    <message>
+        <source>Missing a Required Option</source>
+        <translation>Brak wymaganej opcji</translation>
+    </message>
+    <message>
+        <source>Bad Length</source>
+        <translation>Nieprawidłowa długość</translation>
+    </message>
+    <message>
+        <source>Timestamp Request</source>
+        <translation>Żądanie znacznika czasu</translation>
+    </message>
+    <message>
+        <source>Timestamp Reply</source>
+        <translation>Odpowiedź ze znacznikiem czasu</translation>
+    </message>
+    <message>
+        <source>No Route</source>
+        <translation>Brak trasy</translation>
+    </message>
+    <message>
+        <source>Address Unreachable</source>
+        <translation>Adres nieosiągalny</translation>
+    </message>
+    <message>
+        <source>Packet Too Big</source>
+        <translation>Pakiet za duży</translation>
+    </message>
+    <message>
+        <source>Hop Limit Exceeded in Transit</source>
+        <translation>Przekroczono limit przeskoków w tranzycie</translation>
+    </message>
+    <message>
+        <source>Erroneous Header Field</source>
+        <translation>Błędne pole nagłówka</translation>
+    </message>
+    <message>
+        <source>Unrecognized Next Header</source>
+        <translation>Nierozpoznany następny nagłówek</translation>
+    </message>
+    <message>
+        <source>Unrecognized IPv6 Option</source>
+        <translation>Nierozpoznana opcja IPv6</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Query</source>
+        <translation>Zapytanie odbiorcy multicast</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report</source>
+        <translation>Raport odbiorcy multicast</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Done</source>
+        <translation>Zakończenie odbioru multicast</translation>
+    </message>
+    <message>
+        <source>Neighbor Solicitation</source>
+        <translation>Zapytanie sąsiada</translation>
+    </message>
+    <message>
+        <source>Neighbor Advertisement</source>
+        <translation>Ogłoszenie sąsiada</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report v2</source>
+        <translation>Raport odbiorcy multicast v2</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Własne</translation>
     </message>
 </context>
 <context>

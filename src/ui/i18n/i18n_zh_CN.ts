@@ -848,6 +848,14 @@
         <translation>等于远程端口</translation>
     </message>
     <message>
+        <source>ICMP Type:</source>
+        <translation>ICMP 类型：</translation>
+    </message>
+    <message>
+        <source>ICMP Code:</source>
+        <translation>ICMP 代码：</translation>
+    </message>
+    <message>
         <source>Options:</source>
         <translation>选项：</translation>
     </message>
@@ -1161,6 +1169,14 @@
     <message>
         <source>Application is already running!</source>
         <translation>应用程序已在运行！</translation>
+    </message>
+    <message>
+        <source>The Driver isn&apos;t started: Memory Integrity (HVCI) is enabled!</source>
+        <translation>驱动未启动：内存完整性（HVCI）已启用！</translation>
+    </message>
+    <message>
+        <source>Turn off the Memory Integrity in Windows Security: Device Security &gt; Core Isolation, then restart the computer.</source>
+        <translation>请在 Windows 安全中心关闭内存完整性：设备安全性 &gt; 内核隔离，然后重启计算机。</translation>
     </message>
     <message>
         <source>Install the Windows Service now?</source>
@@ -1687,6 +1703,161 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Select Hosts Zones</source>
         <translation>选择主机区域</translation>
+    </message>
+</context>
+<context>
+    <name>IcmpSelector</name>
+    <message>
+        <source>Echo Reply</source>
+        <translation>回显应答</translation>
+    </message>
+    <message>
+        <source>Destination Unreachable</source>
+        <translation>目标不可达</translation>
+    </message>
+    <message>
+        <source>Network Unreachable</source>
+        <translation>网络不可达</translation>
+    </message>
+    <message>
+        <source>Host Unreachable</source>
+        <translation>主机不可达</translation>
+    </message>
+    <message>
+        <source>Protocol Unreachable</source>
+        <translation>协议不可达</translation>
+    </message>
+    <message>
+        <source>Port Unreachable</source>
+        <translation>端口不可达</translation>
+    </message>
+    <message>
+        <source>Fragmentation Needed</source>
+        <translation>需要分片</translation>
+    </message>
+    <message>
+        <source>Source Route Failed</source>
+        <translation>源路由失败</translation>
+    </message>
+    <message>
+        <source>Administratively Prohibited</source>
+        <translation>被管理策略禁止</translation>
+    </message>
+    <message>
+        <source>Redirect</source>
+        <translation>重定向</translation>
+    </message>
+    <message>
+        <source>Redirect for Network</source>
+        <translation>网络重定向</translation>
+    </message>
+    <message>
+        <source>Redirect for Host</source>
+        <translation>主机重定向</translation>
+    </message>
+    <message>
+        <source>Echo Request</source>
+        <translation>回显请求</translation>
+    </message>
+    <message>
+        <source>Router Advertisement</source>
+        <translation>路由器通告</translation>
+    </message>
+    <message>
+        <source>Router Solicitation</source>
+        <translation>路由器请求</translation>
+    </message>
+    <message>
+        <source>Time Exceeded</source>
+        <translation>超时</translation>
+    </message>
+    <message>
+        <source>TTL Exceeded in Transit</source>
+        <translation>传输中 TTL 超时</translation>
+    </message>
+    <message>
+        <source>Fragment Reassembly Time Exceeded</source>
+        <translation>分片重组超时</translation>
+    </message>
+    <message>
+        <source>Parameter Problem</source>
+        <translation>参数问题</translation>
+    </message>
+    <message>
+        <source>Pointer Indicates the Error</source>
+        <translation>指针指示错误位置</translation>
+    </message>
+    <message>
+        <source>Missing a Required Option</source>
+        <translation>缺少必需选项</translation>
+    </message>
+    <message>
+        <source>Bad Length</source>
+        <translation>长度错误</translation>
+    </message>
+    <message>
+        <source>Timestamp Request</source>
+        <translation>时间戳请求</translation>
+    </message>
+    <message>
+        <source>Timestamp Reply</source>
+        <translation>时间戳应答</translation>
+    </message>
+    <message>
+        <source>No Route</source>
+        <translation>无路由</translation>
+    </message>
+    <message>
+        <source>Address Unreachable</source>
+        <translation>地址不可达</translation>
+    </message>
+    <message>
+        <source>Packet Too Big</source>
+        <translation>数据包过大</translation>
+    </message>
+    <message>
+        <source>Hop Limit Exceeded in Transit</source>
+        <translation>传输中跳数限制超出</translation>
+    </message>
+    <message>
+        <source>Erroneous Header Field</source>
+        <translation>头部字段错误</translation>
+    </message>
+    <message>
+        <source>Unrecognized Next Header</source>
+        <translation>无法识别的下一个头部</translation>
+    </message>
+    <message>
+        <source>Unrecognized IPv6 Option</source>
+        <translation>无法识别的 IPv6 选项</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Query</source>
+        <translation>组播侦听器查询</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report</source>
+        <translation>组播侦听器报告</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Done</source>
+        <translation>组播侦听器完成</translation>
+    </message>
+    <message>
+        <source>Neighbor Solicitation</source>
+        <translation>邻居请求</translation>
+    </message>
+    <message>
+        <source>Neighbor Advertisement</source>
+        <translation>邻居通告</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report v2</source>
+        <translation>组播侦听器报告 v2</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>自定义</translation>
     </message>
 </context>
 <context>

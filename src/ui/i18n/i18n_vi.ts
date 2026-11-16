@@ -848,6 +848,14 @@
         <translation>Bằng với cổng từ xa</translation>
     </message>
     <message>
+        <source>ICMP Type:</source>
+        <translation>Loại ICMP:</translation>
+    </message>
+    <message>
+        <source>ICMP Code:</source>
+        <translation>Mã ICMP:</translation>
+    </message>
+    <message>
         <source>Options:</source>
         <translation>Tùy chọn:</translation>
     </message>
@@ -1161,6 +1169,14 @@
     <message>
         <source>Application is already running!</source>
         <translation>Ứng dụng đang chạy!</translation>
+    </message>
+    <message>
+        <source>The Driver isn&apos;t started: Memory Integrity (HVCI) is enabled!</source>
+        <translation>Trình điều khiển chưa được khởi động: Tính toàn vẹn bộ nhớ (HVCI) đang bật!</translation>
+    </message>
+    <message>
+        <source>Turn off the Memory Integrity in Windows Security: Device Security &gt; Core Isolation, then restart the computer.</source>
+        <translation>Hãy tắt Tính toàn vẹn bộ nhớ trong Bảo mật Windows: Bảo mật thiết bị &gt; Cách ly lõi, rồi khởi động lại máy tính.</translation>
     </message>
     <message>
         <source>Install the Windows Service now?</source>
@@ -1687,6 +1703,161 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
     <message>
         <source>Select Hosts Zones</source>
         <translation>Chọn các vùng tên máy</translation>
+    </message>
+</context>
+<context>
+    <name>IcmpSelector</name>
+    <message>
+        <source>Echo Reply</source>
+        <translation>Phản hồi echo</translation>
+    </message>
+    <message>
+        <source>Destination Unreachable</source>
+        <translation>Không thể truy cập đích</translation>
+    </message>
+    <message>
+        <source>Network Unreachable</source>
+        <translation>Không thể truy cập mạng</translation>
+    </message>
+    <message>
+        <source>Host Unreachable</source>
+        <translation>Không thể truy cập máy chủ</translation>
+    </message>
+    <message>
+        <source>Protocol Unreachable</source>
+        <translation>Không thể truy cập giao thức</translation>
+    </message>
+    <message>
+        <source>Port Unreachable</source>
+        <translation>Không thể truy cập cổng</translation>
+    </message>
+    <message>
+        <source>Fragmentation Needed</source>
+        <translation>Cần phân mảnh</translation>
+    </message>
+    <message>
+        <source>Source Route Failed</source>
+        <translation>Tuyến nguồn thất bại</translation>
+    </message>
+    <message>
+        <source>Administratively Prohibited</source>
+        <translation>Bị cấm bởi quản trị</translation>
+    </message>
+    <message>
+        <source>Redirect</source>
+        <translation>Chuyển hướng</translation>
+    </message>
+    <message>
+        <source>Redirect for Network</source>
+        <translation>Chuyển hướng cho mạng</translation>
+    </message>
+    <message>
+        <source>Redirect for Host</source>
+        <translation>Chuyển hướng cho máy chủ</translation>
+    </message>
+    <message>
+        <source>Echo Request</source>
+        <translation>Yêu cầu echo</translation>
+    </message>
+    <message>
+        <source>Router Advertisement</source>
+        <translation>Thông báo bộ định tuyến</translation>
+    </message>
+    <message>
+        <source>Router Solicitation</source>
+        <translation>Yêu cầu bộ định tuyến</translation>
+    </message>
+    <message>
+        <source>Time Exceeded</source>
+        <translation>Vượt quá thời gian</translation>
+    </message>
+    <message>
+        <source>TTL Exceeded in Transit</source>
+        <translation>Vượt quá TTL khi truyền</translation>
+    </message>
+    <message>
+        <source>Fragment Reassembly Time Exceeded</source>
+        <translation>Vượt quá thời gian ghép lại các mảnh</translation>
+    </message>
+    <message>
+        <source>Parameter Problem</source>
+        <translation>Sự cố tham số</translation>
+    </message>
+    <message>
+        <source>Pointer Indicates the Error</source>
+        <translation>Con trỏ chỉ ra lỗi</translation>
+    </message>
+    <message>
+        <source>Missing a Required Option</source>
+        <translation>Thiếu tùy chọn bắt buộc</translation>
+    </message>
+    <message>
+        <source>Bad Length</source>
+        <translation>Độ dài sai</translation>
+    </message>
+    <message>
+        <source>Timestamp Request</source>
+        <translation>Yêu cầu dấu thời gian</translation>
+    </message>
+    <message>
+        <source>Timestamp Reply</source>
+        <translation>Phản hồi dấu thời gian</translation>
+    </message>
+    <message>
+        <source>No Route</source>
+        <translation>Không có tuyến</translation>
+    </message>
+    <message>
+        <source>Address Unreachable</source>
+        <translation>Không thể truy cập địa chỉ</translation>
+    </message>
+    <message>
+        <source>Packet Too Big</source>
+        <translation>Gói quá lớn</translation>
+    </message>
+    <message>
+        <source>Hop Limit Exceeded in Transit</source>
+        <translation>Vượt quá giới hạn bước nhảy khi truyền</translation>
+    </message>
+    <message>
+        <source>Erroneous Header Field</source>
+        <translation>Trường tiêu đề sai</translation>
+    </message>
+    <message>
+        <source>Unrecognized Next Header</source>
+        <translation>Tiêu đề kế tiếp không được nhận dạng</translation>
+    </message>
+    <message>
+        <source>Unrecognized IPv6 Option</source>
+        <translation>Tùy chọn IPv6 không được nhận dạng</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Query</source>
+        <translation>Truy vấn trình nghe multicast</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report</source>
+        <translation>Báo cáo trình nghe multicast</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Done</source>
+        <translation>Trình nghe multicast kết thúc</translation>
+    </message>
+    <message>
+        <source>Neighbor Solicitation</source>
+        <translation>Yêu cầu hàng xóm</translation>
+    </message>
+    <message>
+        <source>Neighbor Advertisement</source>
+        <translation>Thông báo hàng xóm</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report v2</source>
+        <translation>Báo cáo trình nghe multicast v2</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Tùy chỉnh</translation>
     </message>
 </context>
 <context>

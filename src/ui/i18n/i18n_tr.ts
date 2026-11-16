@@ -848,6 +848,14 @@
         <translation>Uzak Port&apos;a eşit</translation>
     </message>
     <message>
+        <source>ICMP Type:</source>
+        <translation>ICMP Türü:</translation>
+    </message>
+    <message>
+        <source>ICMP Code:</source>
+        <translation>ICMP Kodu:</translation>
+    </message>
+    <message>
         <source>Options:</source>
         <translation>Seçenekler:</translation>
     </message>
@@ -1161,6 +1169,14 @@
     <message>
         <source>Application is already running!</source>
         <translation>Uygulama Zaten Çalışıyor! </translation>
+    </message>
+    <message>
+        <source>The Driver isn&apos;t started: Memory Integrity (HVCI) is enabled!</source>
+        <translation>Sürücü başlatılmadı: Bellek Bütünlüğü (HVCI) etkin!</translation>
+    </message>
+    <message>
+        <source>Turn off the Memory Integrity in Windows Security: Device Security &gt; Core Isolation, then restart the computer.</source>
+        <translation>Windows Güvenliği&apos;nde Bellek Bütünlüğü&apos;nü kapatın: Cihaz Güvenliği &gt; Çekirdek Yalıtımı, ardından bilgisayarı yeniden başlatın.</translation>
     </message>
     <message>
         <source>Install the Windows Service now?</source>
@@ -1687,6 +1703,161 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
     <message>
         <source>Select Hosts Zones</source>
         <translation>Host Bölgelerini Seç</translation>
+    </message>
+</context>
+<context>
+    <name>IcmpSelector</name>
+    <message>
+        <source>Echo Reply</source>
+        <translation>Yankı Yanıtı</translation>
+    </message>
+    <message>
+        <source>Destination Unreachable</source>
+        <translation>Hedef Ulaşılamıyor</translation>
+    </message>
+    <message>
+        <source>Network Unreachable</source>
+        <translation>Ağ Ulaşılamıyor</translation>
+    </message>
+    <message>
+        <source>Host Unreachable</source>
+        <translation>Ana Bilgisayar Ulaşılamıyor</translation>
+    </message>
+    <message>
+        <source>Protocol Unreachable</source>
+        <translation>Protokol Ulaşılamıyor</translation>
+    </message>
+    <message>
+        <source>Port Unreachable</source>
+        <translation>Port Ulaşılamıyor</translation>
+    </message>
+    <message>
+        <source>Fragmentation Needed</source>
+        <translation>Parçalama Gerekli</translation>
+    </message>
+    <message>
+        <source>Source Route Failed</source>
+        <translation>Kaynak Yolu Başarısız</translation>
+    </message>
+    <message>
+        <source>Administratively Prohibited</source>
+        <translation>Yönetimsel Olarak Yasak</translation>
+    </message>
+    <message>
+        <source>Redirect</source>
+        <translation>Yeniden Yönlendirme</translation>
+    </message>
+    <message>
+        <source>Redirect for Network</source>
+        <translation>Ağ İçin Yeniden Yönlendirme</translation>
+    </message>
+    <message>
+        <source>Redirect for Host</source>
+        <translation>Ana Bilgisayar İçin Yeniden Yönlendirme</translation>
+    </message>
+    <message>
+        <source>Echo Request</source>
+        <translation>Yankı İsteği</translation>
+    </message>
+    <message>
+        <source>Router Advertisement</source>
+        <translation>Yönlendirici Duyurusu</translation>
+    </message>
+    <message>
+        <source>Router Solicitation</source>
+        <translation>Yönlendirici Talebi</translation>
+    </message>
+    <message>
+        <source>Time Exceeded</source>
+        <translation>Süre Aşıldı</translation>
+    </message>
+    <message>
+        <source>TTL Exceeded in Transit</source>
+        <translation>Aktarımda TTL Aşıldı</translation>
+    </message>
+    <message>
+        <source>Fragment Reassembly Time Exceeded</source>
+        <translation>Parça Birleştirme Süresi Aşıldı</translation>
+    </message>
+    <message>
+        <source>Parameter Problem</source>
+        <translation>Parametre Sorunu</translation>
+    </message>
+    <message>
+        <source>Pointer Indicates the Error</source>
+        <translation>İşaretçi Hatayı Gösteriyor</translation>
+    </message>
+    <message>
+        <source>Missing a Required Option</source>
+        <translation>Gerekli Seçenek Eksik</translation>
+    </message>
+    <message>
+        <source>Bad Length</source>
+        <translation>Hatalı Uzunluk</translation>
+    </message>
+    <message>
+        <source>Timestamp Request</source>
+        <translation>Zaman Damgası İsteği</translation>
+    </message>
+    <message>
+        <source>Timestamp Reply</source>
+        <translation>Zaman Damgası Yanıtı</translation>
+    </message>
+    <message>
+        <source>No Route</source>
+        <translation>Yol Yok</translation>
+    </message>
+    <message>
+        <source>Address Unreachable</source>
+        <translation>Adres Ulaşılamıyor</translation>
+    </message>
+    <message>
+        <source>Packet Too Big</source>
+        <translation>Paket Çok Büyük</translation>
+    </message>
+    <message>
+        <source>Hop Limit Exceeded in Transit</source>
+        <translation>Aktarımda Atlama Sınırı Aşıldı</translation>
+    </message>
+    <message>
+        <source>Erroneous Header Field</source>
+        <translation>Hatalı Başlık Alanı</translation>
+    </message>
+    <message>
+        <source>Unrecognized Next Header</source>
+        <translation>Tanınmayan Sonraki Başlık</translation>
+    </message>
+    <message>
+        <source>Unrecognized IPv6 Option</source>
+        <translation>Tanınmayan IPv6 Seçeneği</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Query</source>
+        <translation>Çok Noktaya Yayın Dinleyici Sorgusu</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report</source>
+        <translation>Çok Noktaya Yayın Dinleyici Raporu</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Done</source>
+        <translation>Çok Noktaya Yayın Dinleyici Bitti</translation>
+    </message>
+    <message>
+        <source>Neighbor Solicitation</source>
+        <translation>Komşu Talebi</translation>
+    </message>
+    <message>
+        <source>Neighbor Advertisement</source>
+        <translation>Komşu Duyurusu</translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report v2</source>
+        <translation>Çok Noktaya Yayın Dinleyici Raporu v2</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Özel</translation>
     </message>
 </context>
 <context>

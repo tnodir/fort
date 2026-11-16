@@ -848,6 +848,14 @@
         <translation></translation>
     </message>
     <message>
+        <source>ICMP Type:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>ICMP Code:</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Options:</source>
         <translation></translation>
     </message>
@@ -1160,6 +1168,14 @@
     <name>FortManager</name>
     <message>
         <source>Application is already running!</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The Driver isn&apos;t started: Memory Integrity (HVCI) is enabled!</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Turn off the Memory Integrity in Windows Security: Device Security &gt; Core Isolation, then restart the computer.</source>
         <translation></translation>
     </message>
     <message>
@@ -1685,6 +1701,161 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <name>HostZonesSelector</name>
     <message>
         <source>Select Hosts Zones</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>IcmpSelector</name>
+    <message>
+        <source>Echo Reply</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Destination Unreachable</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Network Unreachable</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Host Unreachable</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Protocol Unreachable</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Port Unreachable</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Fragmentation Needed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Source Route Failed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Administratively Prohibited</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Redirect</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Redirect for Network</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Redirect for Host</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Echo Request</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Router Advertisement</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Router Solicitation</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Time Exceeded</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>TTL Exceeded in Transit</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Fragment Reassembly Time Exceeded</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Parameter Problem</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Pointer Indicates the Error</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Missing a Required Option</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Bad Length</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Timestamp Request</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Timestamp Reply</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>No Route</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Address Unreachable</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Packet Too Big</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Hop Limit Exceeded in Transit</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Erroneous Header Field</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Unrecognized Next Header</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Unrecognized IPv6 Option</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Multicast Listener Query</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Multicast Listener Done</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Neighbor Solicitation</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Neighbor Advertisement</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Multicast Listener Report v2</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Custom</source>
         <translation></translation>
     </message>
 </context>
