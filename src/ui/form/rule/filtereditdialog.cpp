@@ -39,7 +39,7 @@ const QStringList directionNames = {
 };
 
 // By the Protocol check box's index
-const QStringList protocolNames = { "TCP", "UDP" };
+const QStringList protocolNames = { "TCP", "UDP", "ICMP", "ICMPv6" };
 
 // By the Area check box's index
 const QStringList areaNames = { "Localhost", "LAN", "Internet" };
@@ -307,6 +307,31 @@ QLayout *FilterEditDialog::setupFormLayout()
 
     layout->addRow(ControlUtil::createHSeparator());
 
+    setupDirectionProtocolRows(layout);
+
+    layout->addRow(ControlUtil::createHSeparator());
+
+    setupRemoteRows(layout);
+
+    layout->addRow(ControlUtil::createHSeparator());
+
+    setupLocalRows(layout);
+
+    layout->addRow(ControlUtil::createHSeparator());
+
+    // Options
+    auto optionsLayout = setupOptionsLayout();
+
+    layout->addRow("Options:", optionsLayout);
+    m_labelOptions = ControlUtil::formRowLabel(layout, optionsLayout);
+
+    layout->addRow(ControlUtil::createHSeparator());
+
+    return layout;
+}
+
+void FilterEditDialog::setupDirectionProtocolRows(QFormLayout *layout)
+{
     // Direction
     m_btDirectionNot = createNotButton();
 
@@ -328,14 +353,22 @@ QLayout *FilterEditDialog::setupFormLayout()
     m_cbProtocolUdp = createFieldCheckBox();
     m_cbProtocolUdp->setText("UDP");
 
+    m_cbProtocolIcmp = createFieldCheckBox();
+    m_cbProtocolIcmp->setText("ICMP");
+
+    m_cbProtocolIcmp6 = createFieldCheckBox();
+    m_cbProtocolIcmp6->setText("ICMPv6");
+
     m_editProtocols = createValuesEdit();
-    m_editProtocols->setPlaceholderText("ICMP, ICMPv6, 47, 50-51");
+    m_editProtocols->setPlaceholderText("IGMP, 47, 50-51");
 
-    m_labelProtocols = addWidgetsRow(layout,
-            "Protocol:", { m_btProtocolsNot, m_cbProtocolTcp, m_cbProtocolUdp, m_editProtocols });
+    m_labelProtocols = addWidgetsRow(layout, "Protocol:",
+            { m_btProtocolsNot, m_cbProtocolTcp, m_cbProtocolUdp, m_cbProtocolIcmp,
+                    m_cbProtocolIcmp6, m_editProtocols });
+}
 
-    layout->addRow(ControlUtil::createHSeparator());
-
+void FilterEditDialog::setupRemoteRows(QFormLayout *layout)
+{
     // Area
     m_btAreasNot = createNotButton();
     m_cbAreaLocalhost = createFieldCheckBox();
@@ -369,9 +402,10 @@ QLayout *FilterEditDialog::setupFormLayout()
 
     m_labelRemotePorts =
             addWidgetsRow(layout, "Remote Port:", { m_btRemotePortsNot, m_editRemotePorts });
+}
 
-    layout->addRow(ControlUtil::createHSeparator());
-
+void FilterEditDialog::setupLocalRows(QFormLayout *layout)
+{
     // Local IP
     m_btLocalIpsNot = createNotButton();
     m_editLocalIps = createValuesEdit();
@@ -387,18 +421,6 @@ QLayout *FilterEditDialog::setupFormLayout()
 
     m_labelLocalPorts = addWidgetsRow(
             layout, "Local Port:", { m_btLocalPortsNot, m_editLocalPorts, m_btLocalPortsEqual });
-
-    layout->addRow(ControlUtil::createHSeparator());
-
-    // Options
-    auto optionsLayout = setupOptionsLayout();
-
-    layout->addRow("Options:", optionsLayout);
-    m_labelOptions = ControlUtil::formRowLabel(layout, optionsLayout);
-
-    layout->addRow(ControlUtil::createHSeparator());
-
-    return layout;
 }
 
 QLayout *FilterEditDialog::setupActionsLayout()
@@ -693,10 +715,10 @@ void FilterEditDialog::setDirectionFilter(const RuleFilter *filter)
 
 QList<QCheckBox *> FilterEditDialog::protocolCheckBoxes() const
 {
-    return { m_cbProtocolTcp, m_cbProtocolUdp };
+    return { m_cbProtocolTcp, m_cbProtocolUdp, m_cbProtocolIcmp, m_cbProtocolIcmp6 };
 }
 
-// The check boxes' protocols and the edit's ones, e.g. "TCP, ICMP"
+// The check boxes' protocols and the edit's ones, e.g. "TCP, ICMP, 47"
 QString FilterEditDialog::protocolValues() const
 {
     QStringList values = { checkedNames(protocolCheckBoxes(), protocolNames),

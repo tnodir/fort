@@ -43,6 +43,9 @@ private:
     void setupUi();
     QLayout *setupMainLayout();
     QLayout *setupFormLayout();
+    void setupDirectionProtocolRows(QFormLayout *layout);
+    void setupRemoteRows(QFormLayout *layout);
+    void setupLocalRows(QFormLayout *layout);
     QLayout *setupActionsLayout();
     QRadioButton *createActionButton(int actionTypeId, Qt::Key key);
     QCheckBox *createFieldCheckBox();
@@ -103,6 +106,8 @@ private:
     QToolButton *m_btProtocolsNot = nullptr;
     QCheckBox *m_cbProtocolTcp = nullptr;
     QCheckBox *m_cbProtocolUdp = nullptr;
+    QCheckBox *m_cbProtocolIcmp = nullptr;
+    QCheckBox *m_cbProtocolIcmp6 = nullptr;
     LineEdit *m_editProtocols = nullptr;
     QLabel *m_labelAreas = nullptr;
     QToolButton *m_btAreasNot = nullptr;
