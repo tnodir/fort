@@ -44,6 +44,10 @@ quint32 hostIpsTtl(quint32 ttl)
     return qMin(ttl, quint32(INT_MAX)) + ttlMargin;
 }
 
+HostZonesSource hostZonesSource()
+{
+    return taskManager()->taskInfoZoneDownloader()->hostZonesSource();
+}
 }
 
 DnsManager::DnsManager(QObject *parent) : QObject(parent)
@@ -160,10 +164,13 @@ void DnsManager::setupBlockZones(quint32 zonesMask)
 
     m_blockZonesMask = zonesMask;
 
+    if (!isStarted())
+        return;
+
+    updateBlockZonesFailed(hostZonesSource());
+
     // The names' cached answers, found or not, bypass the forwarder
-    if (isStarted()) {
-        flushResolverCache();
-    }
+    flushResolverCache();
 }
 
 // The failed start is retried on the options' change
@@ -257,6 +264,13 @@ void DnsManager::onNrptChecked(bool received)
 
 DnsForwarderStatus DnsManager::receivingStatus() const
 {
+    if (m_blockZonesFailed) {
+        return {
+            .status = DnsForwarderStatus::StatusBlockZonesError,
+            .errorMessage = m_zonesError,
+        };
+    }
+
     if (m_zonesError.isEmpty())
         return { .status = DnsForwarderStatus::StatusStarted };
 
@@ -264,13 +278,38 @@ DnsForwarderStatus DnsManager::receivingStatus() const
 }
 
 // Shown while the system's queries are received: else their error is shown
+void DnsManager::updateReceivingStatus()
+{
+    if (m_status.isReceiving()) {
+        setStatus(receivingStatus());
+    }
+}
+
 void DnsManager::setZonesError(const QString &errorMessage)
 {
     m_zonesError = errorMessage;
 
-    if (m_status.isReceiving()) {
-        setStatus(receivingStatus());
+    updateReceivingStatus();
+}
+
+// An enabled Block Zone having its cache file, but no names in the DB, after the DB's open or the
+// sync failed (e.g. the cache file being rewritten by its download); the sync's end updates it
+void DnsManager::updateBlockZonesFailed(const HostZonesSource &source)
+{
+    if (m_zonesSyncing)
+        return;
+
+    const bool failed = hasZonesToFill(source, source.enabledMask & m_blockZonesMask);
+    if (m_blockZonesFailed == failed)
+        return;
+
+    m_blockZonesFailed = failed;
+
+    if (failed) {
+        qCWarning(LC) << "Block Zones' names aren't loaded: the queries fail";
     }
+
+    updateReceivingStatus();
 }
 
 DnsForwarderStatus::Status DnsManager::openResolver(const QStringList &servers)
@@ -303,6 +342,8 @@ void DnsManager::loadHosts()
         syncZones();
     } else {
         m_zonesError = m_hostZonesDb.errorMessage();
+
+        updateBlockZonesFailed(hostZonesSource());
     }
 
     updateHostRefs();
@@ -318,6 +359,7 @@ void DnsManager::unloadHosts()
     m_hostFiltersMatcher = {};
 
     m_zonesError.clear();
+    m_blockZonesFailed = false;
 }
 
 void DnsManager::openZonesSync()
@@ -343,17 +385,20 @@ void DnsManager::closeZonesSync()
     m_filledZonesMask = 0;
 }
 
+// The DB failed to open isn't opened again till the forwarder's restart
 void DnsManager::loadZones()
 {
     if (m_hostZonesDb.isOpened()) {
         syncZones();
+    } else {
+        updateBlockZonesFailed(hostZonesSource());
     }
 }
 
 // The worker writes the names by its own connection: the matches meanwhile read the last commit
 void DnsManager::syncZones()
 {
-    const HostZonesSource source = taskManager()->taskInfoZoneDownloader()->hostZonesSource();
+    const HostZonesSource source = hostZonesSource();
 
     updateFilledZonesMask(source);
 
@@ -361,7 +406,7 @@ void DnsManager::syncZones()
     updateZonesEnabledMask(source.enabledMask);
 
     // The names of a Zone filled anew aren't matched till the commit: its queries wait for it
-    const bool fillZones = hasZonesToFill(source);
+    const bool fillZones = hasZonesToFill(source, source.enabledMask);
 
     if (m_zonesSyncing) {
         m_zonesSyncPending = true;
@@ -400,10 +445,11 @@ void DnsManager::onZonesSynced(bool changed, const QString &errorMessage)
 
 void DnsManager::finishZonesSync()
 {
-    const HostZonesSource source = taskManager()->taskInfoZoneDownloader()->hostZonesSource();
+    const HostZonesSource source = hostZonesSource();
 
     updateFilledZonesMask(source);
     updateZonesEnabledMask(source.enabledMask);
+    updateBlockZonesFailed(source);
 
     setQueriesPaused(false);
 
@@ -451,10 +497,10 @@ quint32 DnsManager::actualZonesMask(const HostZonesSource &source) const
     return zonesMask;
 }
 
-// The enabled Zones having their cache files, but no names in the DB
-bool DnsManager::hasZonesToFill(const HostZonesSource &source) const
+// The Zones of the mask having their cache files, but no names in the DB
+bool DnsManager::hasZonesToFill(const HostZonesSource &source, quint32 zonesMask) const
 {
-    const quint32 unfilledMask = source.enabledMask & ~m_filledZonesMask;
+    const quint32 unfilledMask = zonesMask & ~m_filledZonesMask;
     if (unfilledMask == 0)
         return false;
 
@@ -614,6 +660,11 @@ void DnsManager::processQuery(const DnsClient &client, const QByteArray &data)
 
 void DnsManager::processAnswer(const DnsRequest &request, const DnsAnswer &answer)
 {
+    if (m_blockZonesFailed) {
+        sendRcode(request, ARES_RCODE_SERVFAIL);
+        return;
+    }
+
     // The Zones and host() filters may be changed since the query.
     HostMatch match;
     if (matchAnswer(request.query, answer, match)) {
@@ -646,6 +697,10 @@ quint8 DnsManager::checkQuery(const DnsRequest &request)
         return ARES_RCODE_NXDOMAIN;
 
     if (checkLoopQuery(request))
+        return ARES_RCODE_SERVFAIL;
+
+    // The names to block aren't known
+    if (m_blockZonesFailed)
         return ARES_RCODE_SERVFAIL;
 
     const QString &name = query.name();

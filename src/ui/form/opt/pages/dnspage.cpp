@@ -311,6 +311,10 @@ QString DnsPage::forwarderWarningText(const DnsForwarderStatus &status)
 
 QString DnsPage::forwarderErrorText(const DnsForwarderStatus &status)
 {
+    if (status.isReceiving()) {
+        return zonesErrorText(status);
+    }
+
     switch (status.status) {
     case DnsForwarderStatus::StatusNrptError:
         return nrptErrorText(tr("the rule of the Name Resolution Policy Table can't be added"));
@@ -327,13 +331,35 @@ QString DnsPage::forwarderErrorText(const DnsForwarderStatus &status)
     case DnsForwarderStatus::StatusListenError:
         return tr("The DNS Forwarder isn't started: can't listen on the port 53: %1")
                 .arg(status.errorMessage);
+    default:
+        return {};
+    }
+}
+
+// The errors of the forwarder receiving the system's queries
+QString DnsPage::zonesErrorText(const DnsForwarderStatus &status)
+{
+    switch (status.status) {
     case DnsForwarderStatus::StatusZonesError:
         return tr("The DNS Forwarder doesn't match the Hosts Zones' names or matches the outdated "
                   "ones: their database can't be opened or written: %1")
                 .arg(status.errorMessage);
+    case DnsForwarderStatus::StatusBlockZonesError:
+        return blockZonesErrorText(status.errorMessage);
     default:
         return {};
     }
+}
+
+// The cache file being rewritten by the Zone's download has no error message
+QString DnsPage::blockZonesErrorText(const QString &errorMessage)
+{
+    const QString text = tr("The DNS Forwarder doesn't resolve the names: the names of the enabled "
+                            "Block Zones aren't loaded");
+    if (errorMessage.isEmpty())
+        return text;
+
+    return text + ": " + errorMessage;
 }
 
 QString DnsPage::nrptErrorText(const QString &cause)

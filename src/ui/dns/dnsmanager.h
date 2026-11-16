@@ -29,12 +29,17 @@ struct DnsForwarderStatus
         StatusInvalidServers, // not started: the resolver can't take the servers
         StatusListenError, // not started: the port 53 can't be listened, e.g. it's busy
         StatusZonesError, // started, but the Hosts Zones' names can't be opened or written
+        StatusBlockZonesError, // started, but no name is resolved: a Block Zone isn't loaded
     };
 
     bool isError() const { return status >= StatusNrptError; }
 
     // The system's queries are sent to it
-    bool isReceiving() const { return status == StatusStarted || status == StatusZonesError; }
+    bool isReceiving() const
+    {
+        return status == StatusStarted || status == StatusZonesError
+                || status == StatusBlockZonesError;
+    }
 
     bool operator==(const DnsForwarderStatus &o) const = default;
 
@@ -97,7 +102,9 @@ private:
     void onNrptChecked(bool received);
 
     DnsForwarderStatus receivingStatus() const;
+    void updateReceivingStatus();
     void setZonesError(const QString &errorMessage);
+    void updateBlockZonesFailed(const HostZonesSource &source);
 
     DnsForwarderStatus::Status openResolver(const QStringList &servers);
     void closeResolver();
@@ -116,7 +123,7 @@ private:
     void updateZonesEnabledMask(quint32 enabledMask);
     void updateFilledZonesMask(const HostZonesSource &source);
     quint32 actualZonesMask(const HostZonesSource &source) const;
-    bool hasZonesToFill(const HostZonesSource &source) const;
+    bool hasZonesToFill(const HostZonesSource &source, quint32 zonesMask) const;
 
     void setQueriesPaused(bool paused);
 
@@ -145,6 +152,9 @@ private:
 
 private:
     bool m_loopLogged = false;
+
+    // An enabled Block Zone's names failed to be loaded: the queries fail
+    bool m_blockZonesFailed = false;
 
     bool m_zonesSyncing = false;
     bool m_zonesSyncPending = false;

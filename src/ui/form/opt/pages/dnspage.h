@@ -47,6 +47,8 @@ private:
 
     static QString forwarderWarningText(const DnsForwarderStatus &status);
     static QString forwarderErrorText(const DnsForwarderStatus &status);
+    static QString zonesErrorText(const DnsForwarderStatus &status);
+    static QString blockZonesErrorText(const QString &errorMessage);
     static QString nrptErrorText(const QString &cause);
     static QString serverResultText(const DnsServerResult &result);
     static QString serverStatusText(const DnsServerResult &result);
