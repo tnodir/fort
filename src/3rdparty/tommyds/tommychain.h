@@ -1,40 +1,16 @@
-/*
- * Copyright (c) 2010, Andrea Mazzoleni. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
+// SPDX-License-Identifier: BSD-2-Clause
+// Copyright (C) 2010 Andrea Mazzoleni
 
 /** \file
  * Chain of nodes.
- * A chain of nodes is an abstraction used to implements complex list operations
+ * A chain of nodes is an abstraction used to implement complex list operations
  * like sorting.
  *
  * Do not use this directly. Use lists instead.
  */
 
-#ifndef __TOMMYCHAIN_H
-#define __TOMMYCHAIN_H
+#ifndef TOMMY_CHAIN_H
+#define TOMMY_CHAIN_H
 
 #include "tommytypes.h"
 
@@ -44,7 +20,7 @@
 /**
  * Chain of nodes.
  * A chain of nodes is a sequence of nodes with the following properties:
- * - It contains at least one node. A chains of zero nodes cannot exist.
+ * - It contains at least one node. A chain of zero nodes cannot exist.
  * - The next field of the tail is of *undefined* value.
  * - The prev field of the head is of *undefined* value.
  * - All the other inner prev and next fields are correctly set.
@@ -56,6 +32,10 @@ typedef struct tommy_chain_struct {
 
 /**
  * Splices a chain in the middle of another chain.
+ * \param first_before Node before the splice point.
+ * \param first_after Node after the splice point.
+ * \param second_head Head of the chain to splice in.
+ * \param second_tail Tail of the chain to splice in.
  */
 tommy_inline void tommy_chain_splice(tommy_node* first_before, tommy_node* first_after, tommy_node* second_head, tommy_node* second_tail)
 {
@@ -69,7 +49,9 @@ tommy_inline void tommy_chain_splice(tommy_node* first_before, tommy_node* first
 }
 
 /**
- * Concats two chains.
+ * Concatenates two chains.
+ * \param first_tail Tail of the first chain.
+ * \param second_head Head of the second chain.
  */
 tommy_inline void tommy_chain_concat(tommy_node* first_tail, tommy_node* second_head)
 {
@@ -82,29 +64,40 @@ tommy_inline void tommy_chain_concat(tommy_node* first_tail, tommy_node* second_
 
 /**
  * Merges two chains.
+ * \param first First chain (will contain the result).
+ * \param second Second chain (consumed by the merge; its descriptor is not cleared
+ * and must not be used as an independent chain afterward).
+ * \param cmp Comparison function.
  */
-tommy_inline void tommy_chain_merge(tommy_chain* first, tommy_chain* second, tommy_compare_func* cmp)
+tommy_inline void tommy_chain_merge(tommy_chain* tommy_restrict first, tommy_chain* tommy_restrict second, tommy_compare_func* cmp)
 {
-	tommy_node* first_i = first->head;
+	/*
+	 * comparators must not change the chains, so cache these endpoints across calls.
+	 * also caching first_tail caused register spills with GCC and Clang on x86-64.
+	 */
+	tommy_node* first_head = first->head;
+	tommy_node* second_tail = second->tail;
+	tommy_node* first_i = first_head;
 	tommy_node* second_i = second->head;
 
 	/* merge */
 	while (1) {
 		if (cmp(first_i->data, second_i->data) > 0) {
 			tommy_node* next = second_i->next;
-			if (first_i == first->head) {
+			if (first_i == first_head) {
 				tommy_chain_concat(second_i, first_i);
-				first->head = second_i;
+				first_head = second_i;
+				first->head = first_head;
 			} else {
 				tommy_chain_splice(first_i->prev, first_i, second_i, second_i);
 			}
-			if (second_i == second->tail)
+			if (second_i == second_tail)
 				break;
 			second_i = next;
 		} else {
 			if (first_i == first->tail) {
 				tommy_chain_concat(first_i, second_i);
-				first->tail = second->tail;
+				first->tail = second_tail;
 				break;
 			}
 			first_i = first_i->next;
@@ -113,10 +106,36 @@ tommy_inline void tommy_chain_merge(tommy_chain* first, tommy_chain* second, tom
 }
 
 /**
- * Merges two chains managing special degenerated cases.
- * It's funtionally equivalent at tommy_chain_merge() but faster with already ordered chains.
+ * Merges two chains containing one node each.
+ * \param first First singleton chain (will contain the result).
+ * \param second Second singleton chain (consumed by the merge; its descriptor is not cleared
+ * and must not be used as an independent chain afterward).
+ * \param cmp Comparison function.
  */
-tommy_inline void tommy_chain_merge_degenerated(tommy_chain* first, tommy_chain* second, tommy_compare_func* cmp)
+tommy_inline void tommy_chain_merge_singleton(tommy_chain* tommy_restrict first, tommy_chain* tommy_restrict second, tommy_compare_func* cmp)
+{
+	tommy_node* first_node = first->head;
+	tommy_node* second_node = second->head;
+
+	/* keep equal elements in their original order for a stable sort */
+	if (cmp(first_node->data, second_node->data) <= 0) {
+		tommy_chain_concat(first_node, second_node);
+		first->tail = second_node;
+	} else {
+		tommy_chain_concat(second_node, first_node);
+		first->head = second_node;
+	}
+}
+
+/**
+ * Merges two chains managing special degenerate cases.
+ * It's functionally equivalent to tommy_chain_merge() but faster with already ordered chains.
+ * \param first First chain (will contain the result).
+ * \param second Second chain (consumed by the merge; its descriptor is not cleared
+ * and must not be used as an independent chain afterward).
+ * \param cmp Comparison function.
+ */
+tommy_inline void tommy_chain_merge_degenerated(tommy_chain* tommy_restrict first, tommy_chain* tommy_restrict second, tommy_compare_func* cmp)
 {
 	/* identify the condition first <= second */
 	if (cmp(first->tail->data, second->head->data) <= 0) {
@@ -138,50 +157,58 @@ tommy_inline void tommy_chain_merge_degenerated(tommy_chain* first, tommy_chain*
 
 /**
  * Sorts a chain.
- * It's a stable merge sort using power of 2 buckets, with O(N*log(N)) complexity,
- * similar at the one used in the SGI STL libraries and in the Linux Kernel,
- * but faster on degenerated cases like already ordered lists.
+ * It's a stable merge sort using power of 2 buckets, with O(n log n) complexity,
+ * similar to the one used in the SGI STL libraries and in the Linux Kernel,
+ * but faster on degenerate cases like already ordered lists.
  *
  * SGI STL stl_list.h
  * http://www.sgi.com/tech/stl/stl_list.h
  *
  * Linux Kernel lib/list_sort.c
  * http://lxr.linux.no/#linux+v2.6.36/lib/list_sort.c
+ *
+ * \param chain The chain.
+ * \param cmp Comparison function.
  */
 tommy_inline void tommy_chain_mergesort(tommy_chain* chain, tommy_compare_func* cmp)
 {
 	/*
 	 * Bit buckets of chains.
-	 * Each bucket contains 2^i nodes or it's empty.
-	 * The chain at address TOMMY_BIT_MAX is an independet variable operating as "carry".
+	 * Each bucket contains 2^(i+1) nodes or it's empty.
+	 * The bucket containing an unpaired final node has one node less.
+	 * The chain at address TOMMY_BIT_MAX is an independent variable operating as "carry".
 	 * We keep it in the same "bit" vector to avoid reports from the valgrind tool sgcheck.
 	 */
 	tommy_chain bit[TOMMY_SIZE_BIT + 1];
 
-	/**
+	/*
 	 * Value stored inside the bit bucket.
-	 * It's used to know which bucket is empty of full.
+	 * It's used to know which bucket is empty or full.
 	 */
-	tommy_size_t counter;
+	tommy_size_t counter = 0;
 	tommy_node* node = chain->head;
 	tommy_node* tail = chain->tail;
-	tommy_size_t mask;
-	tommy_size_t i;
 
-	counter = 0;
 	while (1) {
-		tommy_node* next;
-		tommy_chain* last;
-
 		/* carry bit to add */
-		last = &bit[TOMMY_SIZE_BIT];
+		tommy_chain* last = &bit[TOMMY_SIZE_BIT];
 		bit[TOMMY_SIZE_BIT].head = node;
 		bit[TOMMY_SIZE_BIT].tail = node;
-		next = node->next;
+		tommy_node* next = node->next;
+
+		/* start with a sorted pair to halve the number of bucket insertions */
+		if (node != tail) {
+			node = next;
+			/* save the next input node before merging can change the links */
+			next = node->next;
+			tommy_chain second = { node, node };
+			tommy_chain_merge_singleton(last, &second, cmp);
+		}
 
 		/* add the bit, propagating the carry */
-		i = 0;
-		mask = counter;
+		tommy_size_t i = 0;
+		tommy_size_t mask = counter;
+
 		while ((mask & 1) != 0) {
 			tommy_chain_merge_degenerated(&bit[i], last, cmp);
 			mask >>= 1;
@@ -201,8 +228,8 @@ tommy_inline void tommy_chain_mergesort(tommy_chain* chain, tommy_compare_func* 
 	}
 
 	/* merge the buckets */
-	i = tommy_ctz(counter);
-	mask = counter >> i;
+	tommy_size_t i = tommy_ctz(counter);
+	tommy_size_t mask = counter >> i;
 	while (mask != 1) {
 		mask >>= 1;
 		if (mask & 1)

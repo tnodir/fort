@@ -247,7 +247,7 @@ static NTSTATUS fort_conf_ref_exe_del_path_locked(
     /* Delete from exe map */
     tommy_hashdyn_remove_existing(&conf_ref->exe_map, (tommy_hashdyn_node *) node);
 
-    tommy_list_insert_tail_check(&conf_ref->free_nodes, (tommy_node *) node);
+    fort_tommy_list_insert_tail(&conf_ref->free_nodes, (tommy_node *) node);
 
     return STATUS_SUCCESS;
 }

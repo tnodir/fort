@@ -397,7 +397,7 @@ static void fort_pstree_proc_del(PFORT_PSTREE ps_tree, PFORT_PSNODE proc)
     /* Delete from procs map */
     tommy_hashdyn_remove_existing(&ps_tree->procs_map, (tommy_hashdyn_node *) proc);
 
-    tommy_list_insert_tail_check(&ps_tree->free_procs, (tommy_node *) proc);
+    fort_tommy_list_insert_tail(&ps_tree->free_procs, (tommy_node *) proc);
 }
 
 static PFORT_PSNODE fort_pstree_find_proc_hash(

@@ -91,11 +91,16 @@ static PFORT_STAT_PROC fort_stat_proc_add(PFORT_STAT stat, UINT32 process_id)
     return proc;
 }
 
-static void fort_stat_proc_unlog(PVOID proc_node)
+static void fort_stat_proc_unlog(PFORT_STAT_PROC proc)
 {
-    PFORT_STAT_PROC proc = proc_node;
-
     proc->proc_stat = FALSE;
+}
+
+static void fort_stat_proc_unlog_node(PVOID arg, PVOID proc_node)
+{
+    UNUSED(arg);
+
+    fort_stat_proc_unlog(proc_node);
 }
 
 inline static void fort_stat_proc_inc(PFORT_STAT_PROC proc)
@@ -441,7 +446,7 @@ FORT_API void fort_stat_close_flows(PFORT_STAT stat, BOOL wait_all)
     while (InterlockedAdd(&stat->flow_closing_count, 0) > 0) {
         KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
         {
-            tommy_hashdyn_foreach_node_arg(&stat->flows_map, &fort_flow_context_remove, stat);
+            fort_tommy_hashdyn_foreach_node_arg(&stat->flows_map, &fort_flow_context_remove, stat);
         }
         KeReleaseInStackQueuedSpinLock(&lock_queue);
 
@@ -484,7 +489,7 @@ FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat)
     fort_stat_traf_flush(stat, /*proc_count=*/FORT_PROC_COUNT_MAX, /*out=*/NULL);
 
     /* Clear the processes' logged flag */
-    tommy_hashdyn_foreach_node(&stat->procs_map, &fort_stat_proc_unlog);
+    fort_tommy_hashdyn_foreach_node_arg(&stat->procs_map, &fort_stat_proc_unlog_node, NULL);
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }

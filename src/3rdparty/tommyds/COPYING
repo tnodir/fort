@@ -1,0 +1,12 @@
+The TommyDS project is provided under:
+
+	SPDX-License-Identifier: BSD-2-Clause
+
+Being under the terms of the BSD 2 Clause version according with:
+
+	LICENSES/BSD-2-Clause
+
+All contributions to the TommyDS project are subject to this COPYING file.
+
+The a5hash32 and a5hash implementations in tommyds/tommyhash.c are provided
+under the MIT license, according to LICENSES/MIT.
