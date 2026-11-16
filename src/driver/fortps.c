@@ -368,12 +368,7 @@ static PFORT_PSNODE fort_pstree_proc_new(PFORT_PSTREE ps_tree, tommy_key_t pid_h
     if (proc_node != NULL) {
         tommy_list_remove_existing(&ps_tree->free_procs, proc_node);
     } else {
-        tommy_arrayof *procs = &ps_tree->procs;
-        const tommy_size_t index = tommy_arrayof_size(procs);
-
-        tommy_arrayof_grow(procs, index + 1);
-
-        proc_node = tommy_arrayof_ref(procs, index);
+        proc_node = tommy_arrayof_insert_tail(&ps_tree->procs);
     }
 
     tommy_hashdyn_insert(&ps_tree->procs_map, proc_node, /*ps_name=*/NULL, pid_hash);

@@ -16,20 +16,16 @@ typedef struct fort_conf_exe_node
 
 typedef const FORT_CONF_EXE_NODE *PCFORT_CONF_EXE_NODE;
 
+static int fort_conf_ref_exe_cmp(const void *path, const void *app_entry)
+{
+    return !fort_conf_app_exe_equal(app_entry, path);
+}
+
 static PFORT_CONF_EXE_NODE fort_conf_ref_exe_find_node(
         PFORT_CONF_REF conf_ref, PCFORT_APP_PATH path, tommy_key_t path_hash)
 {
-    PFORT_CONF_EXE_NODE node =
-            (PFORT_CONF_EXE_NODE) tommy_hashdyn_bucket(&conf_ref->exe_map, path_hash);
-
-    while (node != NULL) {
-        if (fort_conf_app_exe_equal(node->app_entry, path))
-            return node;
-
-        node = node->next;
-    }
-
-    return NULL;
+    return (PFORT_CONF_EXE_NODE) tommy_hashdyn_find(
+            &conf_ref->exe_map, &fort_conf_ref_exe_cmp, path, path_hash);
 }
 
 FORT_API FORT_CONF_APP_FIND_RESULT fort_conf_exe_find(
@@ -61,22 +57,15 @@ static void fort_conf_ref_exe_new_path(
 {
     PFORT_CONF conf = &conf_ref->conf;
 
-    tommy_arrayof *exe_nodes = &conf_ref->exe_nodes;
-    tommy_hashdyn *exe_map = &conf_ref->exe_map;
-
     tommy_hashdyn_node *exe_node = tommy_list_tail(&conf_ref->free_nodes);
 
     if (exe_node != NULL) {
         tommy_list_remove_existing(&conf_ref->free_nodes, exe_node);
     } else {
-        const tommy_size_t index = tommy_arrayof_size(exe_nodes);
-
-        tommy_arrayof_grow(exe_nodes, index + 1);
-
-        exe_node = tommy_arrayof_ref(exe_nodes, index);
+        exe_node = tommy_arrayof_insert_tail(&conf_ref->exe_nodes);
     }
 
-    tommy_hashdyn_insert(exe_map, exe_node, entry, path_hash);
+    tommy_hashdyn_insert(&conf_ref->exe_map, exe_node, entry, path_hash);
 
     ++conf->exe_apps_n;
 }
@@ -211,6 +200,9 @@ static void fort_conf_ref_exe_fill(PFORT_CONF_REF conf_ref, PCFORT_CONF conf)
     const char *app_entries = (const char *) (conf->data + conf->exe_apps_off);
 
     const int count = conf->exe_apps_n;
+
+    tommy_arrayof_reserve(&conf_ref->exe_nodes, count);
+    tommy_hashdyn_reserve(&conf_ref->exe_map, count);
 
     for (int i = 0; i < count; ++i) {
         PCFORT_APP_ENTRY entry = (PCFORT_APP_ENTRY) app_entries;

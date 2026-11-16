@@ -70,11 +70,8 @@ static PFORT_STAT_PROC fort_stat_proc_add(PFORT_STAT stat, UINT32 process_id)
         if (size + 1 >= FORT_PROC_COUNT_MAX)
             return NULL;
 
-        /* TODO: tommy_arrayof_grow(): check calloc()'s result for NULL */
-        if (tommy_arrayof_grow(&stat->procs, size + 1), 0)
-            return NULL;
-
-        proc = tommy_arrayof_ref(&stat->procs, size);
+        /* TODO: tommy_arrayof_insert_tail(): check calloc()'s result for NULL */
+        proc = tommy_arrayof_insert_tail(&stat->procs);
 
         proc->proc_index = (UINT16) size;
     }
@@ -286,13 +283,8 @@ static PFORT_FLOW fort_flow_new(PFORT_STAT stat, UINT64 flow_id, const tommy_key
         flow = stat->flow_free;
         stat->flow_free = flow->next;
     } else {
-        const tommy_size_t size = tommy_arrayof_size(&stat->flows);
-
-        /* TODO: tommy_arrayof_grow(): check calloc()'s result for NULL */
-        if (tommy_arrayof_grow(&stat->flows, size + 1), 0)
-            return NULL;
-
-        flow = tommy_arrayof_ref(&stat->flows, size);
+        /* TODO: tommy_arrayof_insert_tail(): check calloc()'s result for NULL */
+        flow = tommy_arrayof_insert_tail(&stat->flows);
     }
 
     tommy_hashdyn_insert(&stat->flows_map, (tommy_hashdyn_node *) flow, NULL, flow_hash);
