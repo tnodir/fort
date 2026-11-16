@@ -360,30 +360,32 @@ void OptionsPage::setupTimedOptions()
 {
     const auto timedOptionSecondsList = SpinCombo::makeValuesList(timedOptionSecondsValues);
 
-    m_lscFilterOffSeconds = ControlUtil::createSpinCombo(ini().filterOffSeconds(), 0,
-            timedOptionSecondsMax, timedOptionSecondsList, {}, [&](int value) {
-                if (ini().filterOffSeconds() != value) {
-                    ini().setFilterOffSeconds(value);
-                    ctrl()->setIniEdited();
-                }
-            });
-
-    m_lscAutoLearnSeconds = ControlUtil::createSpinCombo(ini().autoLearnSeconds(), 0,
-            timedOptionSecondsMax, timedOptionSecondsList, {}, [&](int value) {
-                if (ini().autoLearnSeconds() != value) {
-                    ini().setAutoLearnSeconds(value);
-                    ctrl()->setIniEdited();
-                }
-            });
-
-    m_lscAskToConnectSeconds =
-            ControlUtil::createSpinCombo(conf().askToConnectSeconds(), 1, askToConnectSecondsMax,
-                    SpinCombo::makeValuesList(askToConnectSecondsValues), {}, [&](int value) {
-                        if (conf().askToConnectSeconds() != value) {
-                            conf().setAskToConnectSeconds(value);
-                            ctrl()->setFlagsEdited();
+    m_lscFilterOffSeconds =
+            ControlUtil::createSpinCombo({ ini().filterOffSeconds(), 0, timedOptionSecondsMax },
+                    timedOptionSecondsList, {}, [&](int value) {
+                        if (ini().filterOffSeconds() != value) {
+                            ini().setFilterOffSeconds(value);
+                            ctrl()->setIniEdited();
                         }
                     });
+
+    m_lscAutoLearnSeconds =
+            ControlUtil::createSpinCombo({ ini().autoLearnSeconds(), 0, timedOptionSecondsMax },
+                    timedOptionSecondsList, {}, [&](int value) {
+                        if (ini().autoLearnSeconds() != value) {
+                            ini().setAutoLearnSeconds(value);
+                            ctrl()->setIniEdited();
+                        }
+                    });
+
+    m_lscAskToConnectSeconds = ControlUtil::createSpinCombo(
+            { conf().askToConnectSeconds(), 1, askToConnectSecondsMax },
+            SpinCombo::makeValuesList(askToConnectSecondsValues), {}, [&](int value) {
+                if (conf().askToConnectSeconds() != value) {
+                    conf().setAskToConnectSeconds(value);
+                    ctrl()->setFlagsEdited();
+                }
+            });
 }
 
 void OptionsPage::setupProtectionBox()

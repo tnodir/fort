@@ -356,23 +356,23 @@ void GraphPage::setupGraphShowCheckboxes()
 void GraphPage::setupGraphOptions()
 {
     m_graphOpacity =
-            ControlUtil::createSpin(iniUser().graphWindowOpacity(), 0, 100, " %", [&](int v) {
+            ControlUtil::createSpin({ iniUser().graphWindowOpacity(), 0, 100 }, " %", [&](int v) {
                 if (iniUser().graphWindowOpacity() != v) {
                     iniUser().setGraphWindowOpacity(v);
                     ctrl()->setIniUserEdited();
                 }
             });
 
-    m_graphHoverOpacity =
-            ControlUtil::createSpin(iniUser().graphWindowHoverOpacity(), 0, 100, " %", [&](int v) {
+    m_graphHoverOpacity = ControlUtil::createSpin(
+            { iniUser().graphWindowHoverOpacity(), 0, 100 }, " %", [&](int v) {
                 if (iniUser().graphWindowHoverOpacity() != v) {
                     iniUser().setGraphWindowHoverOpacity(v);
                     ctrl()->setIniUserEdited();
                 }
             });
 
-    m_graphTickLabelSize =
-            ControlUtil::createSpin(iniUser().graphWindowTickLabelSize(), 1, 99, {}, [&](int v) {
+    m_graphTickLabelSize = ControlUtil::createSpin(
+            { iniUser().graphWindowTickLabelSize(), 1, 99 }, {}, [&](int v) {
                 if (iniUser().graphWindowTickLabelSize() != v) {
                     iniUser().setGraphWindowTickLabelSize(v);
                     ctrl()->setIniUserEdited();
@@ -380,7 +380,7 @@ void GraphPage::setupGraphOptions()
             });
 
     m_graphBarWidth =
-            ControlUtil::createSpin(iniUser().graphWindowBarWidth(), 1, 99, " px", [&](int v) {
+            ControlUtil::createSpin({ iniUser().graphWindowBarWidth(), 1, 99 }, " px", [&](int v) {
                 if (iniUser().graphWindowBarWidth() != v) {
                     iniUser().setGraphWindowBarWidth(v);
                     ctrl()->setIniUserEdited();
@@ -388,7 +388,7 @@ void GraphPage::setupGraphOptions()
             });
 
     m_graphMaxSeconds =
-            ControlUtil::createSpin(iniUser().graphWindowMaxSeconds(), 0, 9999, {}, [&](int v) {
+            ControlUtil::createSpin({ iniUser().graphWindowMaxSeconds(), 0, 9999 }, {}, [&](int v) {
                 if (iniUser().graphWindowMaxSeconds() != v) {
                     iniUser().setGraphWindowMaxSeconds(v);
                     ctrl()->setIniUserEdited();
@@ -410,13 +410,14 @@ void GraphPage::setupGraphFixedSpeed()
     }
 
     const auto speedValuesList = SpinCombo::makeValuesList(speedValues);
-    m_graphFixedSpeed = ControlUtil::createSpinCombo(iniUser().graphWindowFixedSpeed(), 0, 9999999,
-            speedValuesList, " Kb/s", [&](int value) {
-                if (iniUser().graphWindowFixedSpeed() != value) {
-                    iniUser().setGraphWindowFixedSpeed(value);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_graphFixedSpeed =
+            ControlUtil::createSpinCombo({ iniUser().graphWindowFixedSpeed(), 0, 9999999 },
+                    speedValuesList, " Kb/s", [&](int value) {
+                        if (iniUser().graphWindowFixedSpeed() != value) {
+                            iniUser().setGraphWindowFixedSpeed(value);
+                            ctrl()->setIniUserEdited();
+                        }
+                    });
     m_graphFixedSpeed->setNames(speedNames);
 }
 
@@ -632,7 +633,7 @@ void GraphPage::setupGeometryControls()
 LabelSpin *GraphPage::createGeometrySpin(int value, int min)
 {
     return ControlUtil::createSpin(
-            value, min, 99999, " px", [&](int /*v*/) { onGeometryEdited(); });
+            { value, min, 99999 }, " px", [&](int /*v*/) { onGeometryEdited(); });
 }
 
 void GraphPage::onGeometryEdited()

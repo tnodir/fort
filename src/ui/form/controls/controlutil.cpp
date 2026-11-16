@@ -35,6 +35,16 @@
 
 namespace {
 
+void setupSpinBox(QSpinBox *spinBox, const ControlUtil::SpinValue &v, const QString &suffix,
+        const std::function<void(int)> &onValueChanged)
+{
+    spinBox->setRange(v.min, v.max);
+    spinBox->setSuffix(suffix);
+    spinBox->setValue(v.value);
+
+    QObject::connect(spinBox, QOverload<int>::of(&QSpinBox::valueChanged), onValueChanged);
+}
+
 inline constexpr int opacityAnimationDuration = 160; // as the line edits' Clear button
 
 // The animation leads to the full transparency
@@ -477,33 +487,23 @@ QWidget *ControlUtil::wrapToScrollArea(QWidget *content, bool isBgTransparent)
     return c;
 }
 
-LabelSpinCombo *ControlUtil::createSpinCombo(int v, int min, int max, const QVector<int> &values,
+LabelSpinCombo *ControlUtil::createSpinCombo(const SpinValue &v, const QVector<int> &values,
         const QString &suffix, const std::function<void(int)> &onValueChanged)
 {
     auto c = new LabelSpinCombo();
     c->setValues(values);
 
-    auto spinBox = c->spinBox();
-    spinBox->setRange(min, max);
-    spinBox->setSuffix(suffix);
-    spinBox->setValue(v);
-
-    c->connect(c->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onValueChanged);
+    setupSpinBox(c->spinBox(), v, suffix, onValueChanged);
 
     return c;
 }
 
-LabelSpin *ControlUtil::createSpin(int v, int min, int max, const QString &suffix,
-        const std::function<void(int)> &onValueChanged)
+LabelSpin *ControlUtil::createSpin(
+        const SpinValue &v, const QString &suffix, const std::function<void(int)> &onValueChanged)
 {
     auto c = new LabelSpin();
 
-    auto spinBox = c->spinBox();
-    spinBox->setRange(min, max);
-    spinBox->setSuffix(suffix);
-    spinBox->setValue(v);
-
-    c->connect(c->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onValueChanged);
+    setupSpinBox(c->spinBox(), v, suffix, onValueChanged);
 
     return c;
 }

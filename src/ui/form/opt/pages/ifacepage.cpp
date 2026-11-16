@@ -593,15 +593,16 @@ void IfacePage::refreshFontSelector()
 
 void IfacePage::setupListIconSize()
 {
-    m_listIconSize = ControlUtil::createSpin(iniUser().listIconSize(), 16, 48, " px", [&](int v) {
-        if (iniUser().listIconSize() != v) {
-            setListIconSizeEdited(true);
-            iniUser().setListIconSize(v);
-            ctrl()->setIniUserEdited();
+    m_listIconSize =
+            ControlUtil::createSpin({ iniUser().listIconSize(), 16, 48 }, " px", [&](int v) {
+                if (iniUser().listIconSize() != v) {
+                    setListIconSizeEdited(true);
+                    iniUser().setListIconSize(v);
+                    ctrl()->setIniUserEdited();
 
-            WindowManager::updateListIconSize(iniUser());
-        }
-    });
+                    WindowManager::updateListIconSize(iniUser());
+                }
+            });
 
     m_listIconSize->spinBox()->setFixedWidth(70);
 }

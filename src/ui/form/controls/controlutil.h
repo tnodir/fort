@@ -28,6 +28,14 @@ class LabelSpinCombo;
 class ControlUtil
 {
 public:
+    // A spin box's value and its range
+    struct SpinValue
+    {
+        int value = 0;
+        int min = 0;
+        int max = 0;
+    };
+
     static QCheckBox *createCheckBox(const QString &iconPath = {});
     static QCheckBox *createCheckBox(
             bool checked, const std::function<void(bool checked)> &onToggled);
@@ -125,9 +133,9 @@ public:
     static QLayout *createScrollLayout(QLayout *content, bool isBgTransparent = true);
     static QWidget *wrapToScrollArea(QWidget *content, bool isBgTransparent = true);
 
-    static LabelSpinCombo *createSpinCombo(int v, int min, int max, const QVector<int> &values,
+    static LabelSpinCombo *createSpinCombo(const SpinValue &v, const QVector<int> &values,
             const QString &suffix, const std::function<void(int value)> &onValueChanged);
-    static LabelSpin *createSpin(int v, int min, int max, const QString &suffix,
+    static LabelSpin *createSpin(const SpinValue &v, const QString &suffix,
             const std::function<void(int value)> &onValueChanged);
     static LabelDoubleSpin *createDoubleSpin(double v, double min, double max,
             const QString &suffix, const std::function<void(double value)> &onValueChanged);

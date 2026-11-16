@@ -277,8 +277,8 @@ void StatisticsPage::setupActivePeriod()
 void StatisticsPage::setupMonthStart()
 {
     const auto dayList = SpinCombo::makeValuesList(dayValues);
-    m_lscMonthStart =
-            ControlUtil::createSpinCombo(ini().monthStart(), 1, 31, dayList, {}, [&](int value) {
+    m_lscMonthStart = ControlUtil::createSpinCombo(
+            { ini().monthStart(), 1, 31 }, dayList, {}, [&](int value) {
                 if (ini().monthStart() != value) {
                     ini().setMonthStart(value);
                     ctrl()->setIniEdited();
@@ -291,7 +291,7 @@ void StatisticsPage::setupTrafKeep()
 {
     const auto trafKeepDayList = SpinCombo::makeValuesList(trafKeepDayValues);
     m_lscTrafHourKeepDays = ControlUtil::createSpinCombo(
-            ini().trafHourKeepDays(), -1, 9999, trafKeepDayList, {}, [&](int value) {
+            { ini().trafHourKeepDays(), -1, 9999 }, trafKeepDayList, {}, [&](int value) {
                 if (ini().trafHourKeepDays() != value) {
                     ini().setTrafHourKeepDays(value);
                     ctrl()->setIniEdited();
@@ -299,7 +299,7 @@ void StatisticsPage::setupTrafKeep()
             });
 
     m_lscTrafDayKeepDays = ControlUtil::createSpinCombo(
-            ini().trafDayKeepDays(), -1, 9999, trafKeepDayList, {}, [&](int value) {
+            { ini().trafDayKeepDays(), -1, 9999 }, trafKeepDayList, {}, [&](int value) {
                 if (ini().trafDayKeepDays() != value) {
                     ini().setTrafDayKeepDays(value);
                     ctrl()->setIniEdited();
@@ -308,7 +308,7 @@ void StatisticsPage::setupTrafKeep()
 
     const auto trafKeepMonthList = SpinCombo::makeValuesList(trafKeepMonthValues);
     m_lscTrafMonthKeepMonths = ControlUtil::createSpinCombo(
-            ini().trafMonthKeepMonths(), -1, 9999, trafKeepMonthList, {}, [&](int value) {
+            { ini().trafMonthKeepMonths(), -1, 9999 }, trafKeepMonthList, {}, [&](int value) {
                 if (ini().trafMonthKeepMonths() != value) {
                     ini().setTrafMonthKeepMonths(value);
                     ctrl()->setIniEdited();
@@ -320,7 +320,7 @@ void StatisticsPage::setupQuota()
 {
     const auto quotaList = SpinCombo::makeValuesList(quotaValues);
     m_lscQuotaDayMb = ControlUtil::createSpinCombo(
-            ini().quotaDayMb(), 0, 1024 * 1024, quotaList, " MiB", [&](int value) {
+            { ini().quotaDayMb(), 0, 1024 * 1024 }, quotaList, " MiB", [&](int value) {
                 if (ini().quotaDayMb() != value) {
                     ini().setQuotaDayMb(value);
                     ctrl()->setIniEdited();
@@ -328,7 +328,7 @@ void StatisticsPage::setupQuota()
             });
 
     m_lscQuotaMonthMb = ControlUtil::createSpinCombo(
-            ini().quotaMonthMb(), 0, 1024 * 1024, quotaList, " MiB", [&](int value) {
+            { ini().quotaMonthMb(), 0, 1024 * 1024 }, quotaList, " MiB", [&](int value) {
                 if (ini().quotaMonthMb() != value) {
                     ini().setQuotaMonthMb(value);
                     ctrl()->setIniEdited();
@@ -396,7 +396,7 @@ void StatisticsPage::setupLogConn()
     // Connections Keep Count
     const auto logConnKeepCountList = SpinCombo::makeValuesList(logIpKeepCountValues);
     m_lscConnKeepCount = ControlUtil::createSpinCombo(
-            ini().connKeepCount(), 0, 999999999, logConnKeepCountList, {}, [&](int value) {
+            { ini().connKeepCount(), 0, 999999999 }, logConnKeepCountList, {}, [&](int value) {
                 if (ini().connKeepCount() != value) {
                     ini().setConnKeepCount(value);
                     ctrl()->setIniEdited();
