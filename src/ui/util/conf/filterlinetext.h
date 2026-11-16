@@ -23,6 +23,9 @@ public:
     // local value equals the remote one)
     void addFilter(qint8 type, const QString &values, bool isNot = false, bool isEqual = false);
 
+    // Adds the ICMP's type or code filter, e.g. "ICMP_Type(8)": the local or remote port's values
+    void addIcmpFilter(bool isCode, const QString &values, bool isNot = false);
+
     // Adds the connection's filters to match it, in the order of FilterEditDialog's fields: the
     // direction, protocol, remote host (by the DNS Client's answer), IP and port, local IP and port
     void addConnAddresses(const Conn &conn);
@@ -31,6 +34,7 @@ public:
     static bool isValuesLines(QStringView values);
 
 private:
+    void addNamedFilter(const char *name, const QString &values, bool isNot, bool isEqual);
     void addPort(qint8 type, quint16 port);
 
 private:

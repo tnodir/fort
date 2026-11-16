@@ -3,6 +3,7 @@
 #include <QButtonGroup>
 #include <QCheckBox>
 #include <QFormLayout>
+#include <QFrame>
 #include <QGroupBox>
 #include <QLabel>
 #include <QPushButton>
@@ -15,6 +16,7 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
+#include <form/controls/selector/icmpselector.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/connlistmodel.h>
@@ -96,6 +98,11 @@ bool filterIsNot(const RuleFilter *filter)
 void addEditFilter(FilterLineText &line, qint8 type, QToolButton *btNot, LineEdit *edit)
 {
     line.addFilter(type, edit->text().trimmed(), btNot->isChecked());
+}
+
+void addIcmpEditFilter(FilterLineText &line, bool isCode, QToolButton *btNot, LineEdit *edit)
+{
+    line.addIcmpFilter(isCode, edit->text().trimmed(), btNot->isChecked());
 }
 
 void setEditFilter(QToolButton *btNot, LineEdit *edit, const RuleFilter *filter)
@@ -221,6 +228,11 @@ void FilterEditDialog::retranslateUi()
     m_editLocalPorts->setPlaceholderText(anyText);
     m_btLocalPortsEqual->setToolTip(tr("Equal to the Remote Port"));
 
+    m_labelIcmpTypes->setText(tr("ICMP Type:"));
+    m_icmpTypes->lineEdit()->setPlaceholderText(anyText + ": 0, 8, 13-14");
+    m_labelIcmpCodes->setText(tr("ICMP Code:"));
+    m_icmpCodes->lineEdit()->setPlaceholderText(anyText + ": 0-3");
+
     m_labelOptions->setText(tr("Options:"));
     m_cbOptionLog->setText(tr("Log"));
     m_cbOptionLog->setToolTip(tr("Collect the connection, even if the Rule doesn't"));
@@ -245,7 +257,8 @@ void FilterEditDialog::retranslateNotButtons()
     const QString toolTip = tr("All, except these");
 
     for (QToolButton *bt : { m_btDirectionNot, m_btProtocolsNot, m_btAreasNot, m_btHostsNot,
-                 m_btRemoteIpsNot, m_btRemotePortsNot, m_btLocalIpsNot, m_btLocalPortsNot }) {
+                 m_btRemoteIpsNot, m_btRemotePortsNot, m_btLocalIpsNot, m_btLocalPortsNot,
+                 m_btIcmpTypesNot, m_btIcmpCodesNot }) {
         bt->setToolTip(toolTip);
     }
 }
@@ -318,6 +331,12 @@ QLayout *FilterEditDialog::setupFormLayout()
     setupLocalRows(layout);
 
     layout->addRow(ControlUtil::createHSeparator());
+
+    // The ICMP's rows instead of the ports' ones
+    setupIcmpRows(layout);
+
+    m_separatorIcmp = ControlUtil::createHSeparator();
+    layout->addRow(m_separatorIcmp);
 
     // Options
     auto optionsLayout = setupOptionsLayout();
@@ -423,6 +442,28 @@ void FilterEditDialog::setupLocalRows(QFormLayout *layout)
             layout, "Local Port:", { m_btLocalPortsNot, m_editLocalPorts, m_btLocalPortsEqual });
 }
 
+void FilterEditDialog::setupIcmpRows(QFormLayout *layout)
+{
+    // ICMP Type
+    m_btIcmpTypesNot = createNotButton();
+    m_icmpTypes = new IcmpSelector();
+
+    connect(m_icmpTypes, &EditCombo::edited, this, &FilterEditDialog::updateTextByFields);
+
+    m_labelIcmpTypes = addWidgetsRow(layout, "ICMP Type:", { m_btIcmpTypesNot, m_icmpTypes });
+
+    // ICMP Code
+    m_btIcmpCodesNot = createNotButton();
+    m_icmpCodes = new IcmpSelector();
+
+    connect(m_icmpCodes, &EditCombo::edited, this, &FilterEditDialog::updateTextByFields);
+
+    // The codes are of the type selected
+    connect(m_icmpTypes, &EditCombo::itemSelected, m_icmpCodes->lineEdit(), &LineEdit::clear);
+
+    m_labelIcmpCodes = addWidgetsRow(layout, "ICMP Code:", { m_btIcmpCodesNot, m_icmpCodes });
+}
+
 QLayout *FilterEditDialog::setupActionsLayout()
 {
     m_buttonGroupAction = new QButtonGroup(this);
@@ -510,16 +551,18 @@ PlainTextEdit *FilterEditDialog::createValuesArea()
     return c;
 }
 
-// The nullptr widget is a stretch
+// The nullptr widget is a stretch; the row's widgets are in a field widget, which can be hidden
 QLabel *FilterEditDialog::addWidgetsRow(
         QFormLayout *layout, const QString &labelText, const QList<QWidget *> &widgets)
 {
     auto rowLayout = ControlUtil::createHLayoutByWidgets(widgets, /*margin=*/0);
     rowLayout->setSpacing(4);
 
-    layout->addRow(labelText, rowLayout);
+    auto field = ControlUtil::wrapToWidget(rowLayout);
 
-    return ControlUtil::formRowLabel(layout, rowLayout);
+    layout->addRow(labelText, field);
+
+    return ControlUtil::formRowLabel(layout, field);
 }
 
 // The area is below the row's widgets, only it grows vertically
@@ -601,9 +644,38 @@ QLayout *FilterEditDialog::setupButtons()
 
 void FilterEditDialog::updateTextByFields()
 {
+    updateIcmpRows();
+
     m_editText->setText(filterText());
 
     updateClearButtons();
+}
+
+void FilterEditDialog::updateIcmpRows()
+{
+    const bool isIcmp = isIcmpProtocols();
+
+    for (QLabel *label : { m_labelRemotePorts, m_labelLocalPorts }) {
+        ControlUtil::setFormRowVisible(label, !isIcmp);
+    }
+
+    for (QLabel *label : { m_labelIcmpTypes, m_labelIcmpCodes }) {
+        ControlUtil::setFormRowVisible(label, isIcmp);
+    }
+
+    m_separatorIcmp->setVisible(isIcmp);
+
+    updateIcmpSelectors();
+}
+
+// The types' names by the checked protocols, the codes' ones by the type
+void FilterEditDialog::updateIcmpSelectors()
+{
+    const bool isIcmp = m_cbProtocolIcmp->isChecked();
+    const bool isIcmp6 = m_cbProtocolIcmp6->isChecked();
+
+    m_icmpTypes->setTypes(isIcmp, isIcmp6);
+    m_icmpCodes->setCodes(isIcmp, isIcmp6, m_icmpTypes->value());
 }
 
 void FilterEditDialog::updateClearButtons()
@@ -623,7 +695,12 @@ QString FilterEditDialog::filterText() const
             m_btAreasNot->isChecked());
     addAreaFilter(line, FORT_RULE_FILTER_TYPE_HOST, m_btHostsNot, m_editHosts);
     addAreaFilter(line, FORT_RULE_FILTER_TYPE_ADDRESS, m_btRemoteIpsNot, m_editRemoteIps);
-    addEditFilter(line, FORT_RULE_FILTER_TYPE_PORT, m_btRemotePortsNot, m_editRemotePorts);
+
+    const bool isIcmp = isIcmpProtocols();
+
+    if (!isIcmp) {
+        addEditFilter(line, FORT_RULE_FILTER_TYPE_PORT, m_btRemotePortsNot, m_editRemotePorts);
+    }
 
     if (m_btLocalIpsEqual->isChecked()) {
         addEqualFilter(line, FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS, m_btLocalIpsNot);
@@ -631,10 +708,10 @@ QString FilterEditDialog::filterText() const
         addEditFilter(line, FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS, m_btLocalIpsNot, m_editLocalIps);
     }
 
-    if (m_btLocalPortsEqual->isChecked()) {
-        addEqualFilter(line, FORT_RULE_FILTER_TYPE_LOCAL_PORT, m_btLocalPortsNot);
+    if (isIcmp) {
+        addIcmpFilters(line);
     } else {
-        addEditFilter(line, FORT_RULE_FILTER_TYPE_LOCAL_PORT, m_btLocalPortsNot, m_editLocalPorts);
+        addLocalPortFilter(line);
     }
 
     line.addFilter(FORT_RULE_FILTER_TYPE_OPTION, checkedNames(optionCheckBoxes(), optionNames));
@@ -644,6 +721,21 @@ QString FilterEditDialog::filterText() const
             ActionRange::actionTypeName(quint8(m_buttonGroupAction->checkedId())));
 
     return line.text();
+}
+
+void FilterEditDialog::addLocalPortFilter(FilterLineText &line) const
+{
+    if (m_btLocalPortsEqual->isChecked()) {
+        addEqualFilter(line, FORT_RULE_FILTER_TYPE_LOCAL_PORT, m_btLocalPortsNot);
+    } else {
+        addEditFilter(line, FORT_RULE_FILTER_TYPE_LOCAL_PORT, m_btLocalPortsNot, m_editLocalPorts);
+    }
+}
+
+void FilterEditDialog::addIcmpFilters(FilterLineText &line) const
+{
+    addIcmpEditFilter(line, /*isCode=*/false, m_btIcmpTypesNot, m_icmpTypes->lineEdit());
+    addIcmpEditFilter(line, /*isCode=*/true, m_btIcmpCodesNot, m_icmpCodes->lineEdit());
 }
 
 void FilterEditDialog::pasteText()
@@ -675,14 +767,23 @@ void FilterEditDialog::setFilterLine(const FilterLineText &lineText)
     setAreasFilter(line.filter(FORT_RULE_FILTER_TYPE_AREA));
     setAreaFilter(m_btHostsNot, m_editHosts, line.filter(FORT_RULE_FILTER_TYPE_HOST));
     setAreaFilter(m_btRemoteIpsNot, m_editRemoteIps, line.filter(FORT_RULE_FILTER_TYPE_ADDRESS));
-    setEditFilter(m_btRemotePortsNot, m_editRemotePorts, line.filter(FORT_RULE_FILTER_TYPE_PORT));
+
+    // The ports' values are the ICMP's type and code in their fields
+    const bool isIcmp = isIcmpProtocols();
+    const RuleFilter *portFilter = line.filter(FORT_RULE_FILTER_TYPE_PORT);
+    const RuleFilter *localPortFilter = line.filter(FORT_RULE_FILTER_TYPE_LOCAL_PORT);
+
+    setEditFilter(m_btRemotePortsNot, m_editRemotePorts, isIcmp ? nullptr : portFilter);
     setEqualEditFilter(m_btLocalIpsNot, m_btLocalIpsEqual, m_editLocalIps,
             line.filter(FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS));
     setEqualEditFilter(m_btLocalPortsNot, m_btLocalPortsEqual, m_editLocalPorts,
-            line.filter(FORT_RULE_FILTER_TYPE_LOCAL_PORT));
+            isIcmp ? nullptr : localPortFilter);
+    setEditFilter(m_btIcmpTypesNot, m_icmpTypes->lineEdit(), isIcmp ? localPortFilter : nullptr);
+    setEditFilter(m_btIcmpCodesNot, m_icmpCodes->lineEdit(), isIcmp ? portFilter : nullptr);
 
     setOptionFilter(line.filter(FORT_RULE_FILTER_TYPE_OPTION));
 
+    updateIcmpRows();
     updateClearButtons();
 }
 
@@ -737,6 +838,21 @@ void FilterEditDialog::setProtocolFilter(const RuleFilter *filter)
             setCheckedNames(protocolCheckBoxes(), protocolNames, FilterLine::values(filter));
 
     m_editProtocols->setStartText(otherValues.join(", "));
+}
+
+// Only ICMP or ICMPv6 is checked: their type's and code's fields are shown instead of the ports'
+bool FilterEditDialog::isIcmpProtocols() const
+{
+    if (m_btProtocolsNot->isChecked())
+        return false;
+
+    if (!m_editProtocols->text().trimmed().isEmpty())
+        return false;
+
+    const bool isIcmp = m_cbProtocolIcmp->isChecked() || m_cbProtocolIcmp6->isChecked();
+    const bool isPorts = m_cbProtocolTcp->isChecked() || m_cbProtocolUdp->isChecked();
+
+    return isIcmp && !isPorts;
 }
 
 QList<QCheckBox *> FilterEditDialog::areasCheckBoxes() const

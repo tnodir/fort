@@ -15,6 +15,10 @@ const char *const filterNames[] = { "IP", "Port", "Local_IP", "Local_Port", "Pro
 
 static_assert(std::size(filterNames) == FORT_RULE_FILTER_TYPE_PORT_TCP, "Filter names mismatch");
 
+// The ICMP's type and code are the local and remote ports' values
+inline constexpr char icmpTypeFilterName[] = "ICMP_Type";
+inline constexpr char icmpCodeFilterName[] = "ICMP_Code";
+
 // e.g. "(80, 443)"; the values' lines with comments are on their own lines
 QString valuesSection(const QString &values)
 {
@@ -36,24 +40,14 @@ FilterLineText::FilterLineText(const Conn &conn)
 
 void FilterLineText::addFilter(qint8 type, const QString &values, bool isNot, bool isEqual)
 {
-    if (values.isEmpty() && !isEqual)
-        return;
+    addNamedFilter(filterNames[type], values, isNot, isEqual);
+}
 
-    if (!m_text.isEmpty()) {
-        m_text += ':';
-    }
+void FilterLineText::addIcmpFilter(bool isCode, const QString &values, bool isNot)
+{
+    const char *name = isCode ? icmpCodeFilterName : icmpTypeFilterName;
 
-    // e.g. "IP(1.1.1.1)", "!Port(80, 443)", "!=Local_IP"
-    if (isNot) {
-        m_text += '!';
-    }
-    if (isEqual) {
-        m_text += '=';
-    }
-
-    m_text += QLatin1String(filterNames[type]);
-
-    m_text += valuesSection(values);
+    addNamedFilter(name, values, isNot, /*isEqual=*/false);
 }
 
 void FilterLineText::addConnAddresses(const Conn &conn)
@@ -72,6 +66,29 @@ void FilterLineText::addConnAddresses(const Conn &conn)
 bool FilterLineText::isValuesLines(QStringView values)
 {
     return values.contains('\n') || values.contains('#');
+}
+
+void FilterLineText::addNamedFilter(
+        const char *name, const QString &values, bool isNot, bool isEqual)
+{
+    if (values.isEmpty() && !isEqual)
+        return;
+
+    if (!m_text.isEmpty()) {
+        m_text += ':';
+    }
+
+    // e.g. "IP(1.1.1.1)", "!Port(80, 443)", "!=Local_IP"
+    if (isNot) {
+        m_text += '!';
+    }
+    if (isEqual) {
+        m_text += '=';
+    }
+
+    m_text += QLatin1String(name);
+
+    m_text += valuesSection(values);
 }
 
 void FilterLineText::addPort(qint8 type, quint16 port)

@@ -557,6 +557,12 @@ QLabel *ControlUtil::formRowLabel(QFormLayout *formLayout, QLayout *field)
     return formRowLabelField(formLayout->labelForField(field));
 }
 
+void ControlUtil::setFormRowVisible(QLabel *label, bool visible)
+{
+    label->setVisible(visible);
+    label->buddy()->setVisible(visible);
+}
+
 QPushButton *ControlUtil::createMenuButton()
 {
     return new MenuButton();

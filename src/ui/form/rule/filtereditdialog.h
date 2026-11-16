@@ -8,12 +8,14 @@
 QT_FORWARD_DECLARE_CLASS(QButtonGroup)
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QFormLayout)
+QT_FORWARD_DECLARE_CLASS(QFrame)
 QT_FORWARD_DECLARE_CLASS(QGroupBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QRadioButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
+class IcmpSelector;
 class LineEdit;
 class PlainTextEdit;
 class RuleFilter;
@@ -46,6 +48,7 @@ private:
     void setupDirectionProtocolRows(QFormLayout *layout);
     void setupRemoteRows(QFormLayout *layout);
     void setupLocalRows(QFormLayout *layout);
+    void setupIcmpRows(QFormLayout *layout);
     QLayout *setupActionsLayout();
     QRadioButton *createActionButton(int actionTypeId, Qt::Key key);
     QCheckBox *createFieldCheckBox();
@@ -62,9 +65,13 @@ private:
     QLayout *setupButtons();
 
     void updateTextByFields();
+    void updateIcmpRows();
+    void updateIcmpSelectors();
     void updateClearButtons();
 
     QString filterText() const;
+    void addLocalPortFilter(FilterLineText &line) const;
+    void addIcmpFilters(FilterLineText &line) const;
     void pasteText();
     void setFilterLine(const FilterLineText &lineText);
     void setActionFilter(const RuleFilter *filter);
@@ -75,6 +82,7 @@ private:
     QList<QCheckBox *> protocolCheckBoxes() const;
     QString protocolValues() const;
     void setProtocolFilter(const RuleFilter *filter);
+    bool isIcmpProtocols() const;
 
     QList<QCheckBox *> areasCheckBoxes() const;
     void setAreasFilter(const RuleFilter *filter);
@@ -133,6 +141,13 @@ private:
     QToolButton *m_btLocalPortsNot = nullptr;
     LineEdit *m_editLocalPorts = nullptr;
     QToolButton *m_btLocalPortsEqual = nullptr;
+    QLabel *m_labelIcmpTypes = nullptr;
+    QToolButton *m_btIcmpTypesNot = nullptr;
+    IcmpSelector *m_icmpTypes = nullptr;
+    QLabel *m_labelIcmpCodes = nullptr;
+    QToolButton *m_btIcmpCodesNot = nullptr;
+    IcmpSelector *m_icmpCodes = nullptr;
+    QFrame *m_separatorIcmp = nullptr;
     QLabel *m_labelOptions = nullptr;
     QCheckBox *m_cbOptionLog = nullptr;
     QCheckBox *m_cbOptionNoLog = nullptr;

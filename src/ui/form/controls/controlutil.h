@@ -139,6 +139,9 @@ public:
     static QLabel *formRowLabel(QFormLayout *formLayout, QWidget *field);
     static QLabel *formRowLabel(QFormLayout *formLayout, QLayout *field);
 
+    // The row added by its label's text and a field widget, the label's buddy
+    static void setFormRowVisible(QLabel *label, bool visible);
+
     static QPushButton *createMenuButton();
     static QToolButton *createOptionsButton(int tabIndex = 0);
     static QToolButton *createStatisticsButton();
