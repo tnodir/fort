@@ -25,6 +25,7 @@
 #include <dns/dnsserverstest.h>
 #include <dns/dnsutil.h>
 #include <dns/hostzonesdb.h>
+#include <dns/hostzonesfill.h>
 #include <dns/hostzonessync.h>
 #include <task/taskinfozonedownloader.h>
 #include <util/fileutil.h>
@@ -600,6 +601,87 @@ TEST_F(DnsTest, hostZonesSync)
 
     ASSERT_TRUE(changed);
     ASSERT_EQ(db.zonesMask(), 0b001);
+}
+
+TEST_F(DnsTest, hostZonesFill)
+{
+    Q_INIT_RESOURCE(dns_migrations);
+
+    QTemporaryDir dir;
+    ASSERT_TRUE(dir.isValid());
+
+    const QString cachePath = dir.filePath("1.bin");
+    ASSERT_TRUE(FileUtil::writeFileData(cachePath, "names"));
+
+    const auto zoneSource = [&](const QString &checksum) -> HostZonesSource {
+        return {
+            .hostsMask = 0b001,
+            .enabledMask = 0b001,
+            .zones = { { .zoneId = 1, .binChecksum = checksum, .cacheFilePath = cachePath } },
+        };
+    };
+
+    HostRange oldRange;
+    ASSERT_TRUE(oldRange.fromText("old.example.com"));
+
+    HostRange newRange;
+    ASSERT_TRUE(newRange.fromText("new.example.com"));
+
+    HostZonesDb db(dir.filePath("hosts.db"));
+    ASSERT_TRUE(db.open());
+    ASSERT_TRUE(db.setZone(1, "c1", oldRange));
+
+    HostZonesFill fill(db);
+
+    // The names of the Zone's cache file
+    ASSERT_TRUE(fill.update(zoneSource("c1")));
+    ASSERT_EQ(fill.filledMask(), 0b001);
+    ASSERT_EQ(db.match(u"old.example.com", 0b001), 0b001);
+
+    // The updated Zone's old names till the new ones are written
+    ASSERT_FALSE(fill.update(zoneSource("c2")));
+    ASSERT_FALSE(fill.hasZonesToFill(zoneSource("c2"), 0b001));
+    ASSERT_EQ(db.match(u"old.example.com", 0b001), 0b001);
+
+    // The removed Zone's names, its id reused by another Zone
+    fill.removeZone(1);
+    ASSERT_EQ(db.enabledMask(), 0);
+
+    ASSERT_FALSE(fill.update(zoneSource("c3")));
+    ASSERT_EQ(fill.filledMask(), 0);
+    ASSERT_TRUE(fill.hasZonesToFill(zoneSource("c3"), 0b001));
+
+    // The new Zone's names
+    ASSERT_TRUE(db.setZone(1, "c3", newRange));
+
+    ASSERT_TRUE(fill.update(zoneSource("c3")));
+    ASSERT_EQ(db.match(u"new.example.com", 0b001), 0b001);
+    ASSERT_EQ(db.match(u"old.example.com", 0b001), 0);
+
+    // The forwarder's restart: the Zone removed meanwhile, its id reused
+    db.close();
+    fill.clear();
+    ASSERT_TRUE(db.open());
+
+    ASSERT_FALSE(fill.update(zoneSource("c4")));
+    ASSERT_EQ(fill.filledMask(), 0);
+    ASSERT_TRUE(fill.hasZonesToFill(zoneSource("c4"), 0b001));
+
+    // No cache file to fill from
+    HostZonesSource noFileSource = zoneSource("c4");
+    noFileSource.zones[0].cacheFilePath = dir.filePath("2.bin");
+    ASSERT_FALSE(fill.hasZonesToFill(noFileSource, 0b001));
+
+    // The Zone's names of the cache file again
+    ASSERT_TRUE(fill.update(zoneSource("c3")));
+    ASSERT_EQ(fill.filledMask(), 0b001);
+
+    // The Zone isn't a Hosts one anymore, then is one of another cache file
+    ASSERT_TRUE(fill.update({}));
+    ASSERT_EQ(fill.filledMask(), 0);
+
+    ASSERT_FALSE(fill.update(zoneSource("c5")));
+    ASSERT_EQ(fill.filledMask(), 0);
 }
 
 TEST_F(DnsTest, hostZonesOpenError)
