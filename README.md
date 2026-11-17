@@ -22,6 +22,7 @@ Fort is an effective firewall designed for Windows 7 and later versions, offerin
   - Groups of programs, switchable from the tray or by Time Periods
   - Per-program download/upload Speed Limits
   - Blocklists via "Zones", auto-updated from URLs
+  - DNS Forwarder with DNS-over-HTTPS upstream support; filter connections by wildcard host names
   - Connections log, traffic statistics and bandwidth graph
   - Password protection and command-line management
 
