@@ -1,5 +1,18 @@
 Fort Firewall ChangeLog
 
+v3.21.0, 2026-11-17:
+- UI: Add the DNS Forwarder (Options: DNS): The Service resolves the system's DNS queries by the upstream servers (plain DNS or DNS over HTTPS) and blocks the Block Zones' host names (#28).
+- UI: Zones: Add the Hosts type (hosts files and host lists with subdomains); Add the OISD Big, StevenBlack and NetAPI Honeypot sources.
+- UI: Rules: Add the host() filter by the host names resolved by the DNS Forwarder.
+- UI: Network Filter: Add the Host field; Add the ICMP and ICMPv6 protocols with the Type and Code fields.
+- UI: Connections: Show and search the host names of the DNS Client's answers (#685).
+- UI: Edit Rule, Edit Zone: Add the Usages tab.
+- UI: Control: Add "dns test|report" and "zone add|del" commands.
+- UI: The Service starts the driver unless HVCI (Memory Integrity) is running, and warns about it.
+- Driver: Add the host() rule filter; Block the DNS ports of other programs.
+- Driver: Update tommyds to 4.0
+- Installer: Remove the HVCI check.
+
 v3.20.9, 2026-11-07:
 - UI: Edit Program: Add the Rules tab: a list of Rules instead of the single Rule.
 - UI: Edit Program: Set the icon from a .exe file; Link a Service to the Services window.
