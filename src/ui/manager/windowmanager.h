@@ -19,7 +19,7 @@ class GraphWindow;
 class GroupsWindow;
 class HomeWindow;
 class IniUser;
-class MainWindow;
+class NativeWindow;
 class OptionsWindow;
 class ProgramAlertWindow;
 class ProgramEditDialog;
@@ -48,7 +48,7 @@ public:
 
     TaskbarButton &taskbarButton() { return m_taskbarButton; }
 
-    MainWindow *mainWindow() const { return m_mainWindow; }
+    NativeWindow *nativeWindow() const { return m_nativeWindow; }
     TrayIcon *trayIcon() const { return m_trayIcon; }
 
     static bool hasForm(WindowCode code);
@@ -197,8 +197,8 @@ private:
     void setupAppPalette();
     static void refreshAppPalette();
 
-    void setupMainWindow();
-    void closeMainWindow();
+    void setupNativeWindow();
+    void closeNativeWindow();
 
     void setupConfManager();
     void setupByIniUser();
@@ -227,7 +227,7 @@ private:
 
     TaskbarButton m_taskbarButton;
 
-    MainWindow *m_mainWindow = nullptr;
+    NativeWindow *m_nativeWindow = nullptr;
     TrayIcon *m_trayIcon = nullptr;
 
     mutable std::array<FormPointer, WindowCount> m_forms = {

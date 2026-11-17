@@ -10,7 +10,7 @@
 
 #include <conf/confmanager.h>
 #include <form/conn/connectionswindow.h>
-#include <form/controls/mainwindow.h>
+#include <form/controls/nativewindow.h>
 #include <form/controls/tableview.h>
 #include <form/controls/treeview.h>
 #include <form/dialog/dialogutil.h>
@@ -184,7 +184,7 @@ void WindowManager::setUp()
     // The "-stylesheet" argument has priority over the option
     g_isArgStyleSheet = !qApp->styleSheet().isEmpty();
 
-    setupMainWindow();
+    setupNativeWindow();
     setupConfManager();
 
     qApp->installEventFilter(this);
@@ -242,36 +242,36 @@ void WindowManager::refreshAppPalette()
     QApplication::setPalette(palette);
 }
 
-void WindowManager::setupMainWindow()
+void WindowManager::setupNativeWindow()
 {
-    m_mainWindow = new MainWindow();
+    m_nativeWindow = new NativeWindow();
 
     // Font
-    m_mainWindow->setFont(defaultFont());
+    m_nativeWindow->setFont(defaultFont());
 
     // Register Native events
     auto nativeEventFilter = Fort::dependency<NativeEventFilter>();
 
-    nativeEventFilter->registerSessionNotification(mainWindow()->winId());
+    nativeEventFilter->registerSessionNotification(nativeWindow()->winId());
 
     connect(nativeEventFilter, &NativeEventFilter::sessionLocked, this,
             [&] { settings()->resetCheckedPassword(FortSettings::UnlockSession); });
 }
 
-void WindowManager::closeMainWindow()
+void WindowManager::closeNativeWindow()
 {
-    if (!mainWindow())
+    if (!nativeWindow())
         return;
 
     // Unregister Native events
     auto nativeEventFilter = Fort::nativeEventFilter();
 
     nativeEventFilter->unregisterHotKeys();
-    nativeEventFilter->unregisterSessionNotification(mainWindow()->winId());
+    nativeEventFilter->unregisterSessionNotification(nativeWindow()->winId());
 
     // Delete later
-    m_mainWindow->deleteLater();
-    m_mainWindow = nullptr;
+    m_nativeWindow->deleteLater();
+    m_nativeWindow = nullptr;
 }
 
 void WindowManager::setupConfManager()
@@ -553,7 +553,7 @@ void WindowManager::closeAll()
     closeAllWindows();
 
     closeTrayIcon();
-    closeMainWindow();
+    closeNativeWindow();
 }
 
 void WindowManager::quitApp()

@@ -15,7 +15,7 @@
 #include <driver/drivermanager.h>
 #include <form/controls/clickablemenu.h>
 #include <form/controls/controlutil.h>
-#include <form/controls/mainwindow.h>
+#include <form/controls/nativewindow.h>
 #include <form/form_types.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
@@ -485,7 +485,7 @@ void TrayIcon::setupUi()
 
 void TrayIcon::setupTrayMenu()
 {
-    m_menu = new ClickableMenu(windowManager()->mainWindow());
+    m_menu = new ClickableMenu(windowManager()->nativeWindow());
 
     connect(m_menu, &QMenu::aboutToShow, this, [&] {
         if (WindowManager::activateModalWidget()) {

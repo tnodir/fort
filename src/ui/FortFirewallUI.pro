@@ -97,9 +97,9 @@ SOURCES += \
     form/controls/labelspincombo.cpp \
     form/controls/lineedit.cpp \
     form/controls/listview.cpp \
-    form/controls/mainwindow.cpp \
     form/controls/menubutton.cpp \
     form/controls/menuwidget.cpp \
+    form/controls/nativewindow.cpp \
     form/controls/optionsbutton.cpp \
     form/controls/plaintextedit.cpp \
     form/controls/progressitemdelegate.cpp \
@@ -454,9 +454,9 @@ HEADERS += \
     form/controls/labelspincombo.h \
     form/controls/lineedit.h \
     form/controls/listview.h \
-    form/controls/mainwindow.h \
     form/controls/menubutton.h \
     form/controls/menuwidget.h \
+    form/controls/nativewindow.h \
     form/controls/optionsbutton.h \
     form/controls/plaintextedit.h \
     form/controls/progressitemdelegate.h \
