@@ -34,7 +34,7 @@ cd %TARGET_PATH%
 	-no-feature-columnview -no-feature-commandlinkbutton ^
 	-no-feature-concatenatetablesproxymodel ^
 	-no-feature-concurrent -no-feature-datawidgetmapper -no-feature-dial ^
-	-no-feature-dockwidget -no-feature-filesystemwatcher -no-feature-inputdialog ^
+	-no-feature-filesystemwatcher -no-feature-inputdialog ^
 	-no-feature-hijricalendar -no-feature-identityproxymodel ^
 	-no-feature-islamiccivilcalendar -no-feature-jalalicalendar ^
 	-no-feature-itemmodeltester -no-feature-lcdnumber -no-feature-listwidget ^
