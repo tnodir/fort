@@ -16,6 +16,7 @@
 #include <conf/firewallconf.h>
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/headerbuttons.h>
 #include <form/controls/tableview.h>
 #include <form/filtersim/filtersimwindow.h>
 #include <form/opt/pages/optmainpage.h>
@@ -313,14 +314,8 @@ QLayout *ConnectionsWindow::setupHeader()
     // Collected Connections
     setupLogConnIcons();
 
-    // Options button
-    m_btOptions = ControlUtil::createOptionsButton(OptMainPage::TabStatistics);
-
-    // Statistics button
-    m_btStatistics = ControlUtil::createStatisticsButton();
-
-    // Menu button
-    m_btMenu = ControlUtil::createMenuButton();
+    // Header buttons
+    m_headerButtons = new HeaderButtons(OptMainPage::TabStatistics);
 
     const auto editSeparator = ControlUtil::createVSeparator();
     const auto clearAllSeparator = ControlUtil::createVSeparator();
@@ -337,9 +332,7 @@ QLayout *ConnectionsWindow::setupHeader()
     layout->addWidget(m_btListOptions);
     layout->addWidget(listOptionsSeparator);
     layout->addWidget(m_logConnIcons);
-    layout->addWidget(m_btOptions);
-    layout->addWidget(m_btStatistics);
-    layout->addWidget(m_btMenu);
+    layout->addWidget(m_headerButtons);
 
     m_headerLayout = layout;
 

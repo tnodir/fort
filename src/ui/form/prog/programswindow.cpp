@@ -19,6 +19,7 @@
 #include <form/conn/appconnswindow.h>
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/headerbuttons.h>
 #include <form/controls/pushbutton.h>
 #include <form/controls/selector/groupsselector.h>
 #include <form/controls/tableview.h>
@@ -242,14 +243,8 @@ QLayout *ProgramsWindow::setupHeader()
     // Sort States
     auto sortStatesLayout = setupSortStatesLayout();
 
-    // Options button
-    m_btOptions = ControlUtil::createOptionsButton();
-
-    // Statistics button
-    m_btStatistics = ControlUtil::createStatisticsButton();
-
-    // Menu button
-    m_btMenu = ControlUtil::createMenuButton();
+    // Header buttons
+    m_headerButtons = new HeaderButtons();
 
     auto layout = new QHBoxLayout();
     layout->addWidget(m_btEdit);
@@ -261,9 +256,7 @@ QLayout *ProgramsWindow::setupHeader()
     layout->addWidget(ControlUtil::createVSeparator());
     layout->addLayout(sortStatesLayout);
     layout->addStretch();
-    layout->addWidget(m_btOptions);
-    layout->addWidget(m_btStatistics);
-    layout->addWidget(m_btMenu);
+    layout->addWidget(m_headerButtons);
 
     return layout;
 }

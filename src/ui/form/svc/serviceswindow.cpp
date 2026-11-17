@@ -13,6 +13,7 @@
 
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/headerbuttons.h>
 #include <form/controls/tableview.h>
 #include <form/opt/optionscontroller.h>
 #include <fortglobal.h>
@@ -213,19 +214,12 @@ QLayout *ServicesWindow::setupHeader()
     // Search field
     setupEditSearch();
 
-    // Options button
-    m_btOptions = ControlUtil::createOptionsButton();
+    // Header buttons
+    m_headerButtons = new HeaderButtons();
 
-    // Statistics button
-    m_btStatistics = ControlUtil::createStatisticsButton();
-
-    // Menu button
-    m_btMenu = ControlUtil::createMenuButton();
-
-    auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_btEdit, ControlUtil::createVSeparator(), m_btTrack, m_btRevert, m_btRestart,
-                    ControlUtil::createVSeparator(), m_btRefresh, ControlUtil::createVSeparator(),
-                    m_editSearch, /*stretch*/ nullptr, m_btOptions, m_btStatistics, m_btMenu });
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, ControlUtil::createVSeparator(),
+            m_btTrack, m_btRevert, m_btRestart, ControlUtil::createVSeparator(), m_btRefresh,
+            ControlUtil::createVSeparator(), m_editSearch, /*stretch*/ nullptr, m_headerButtons });
 
     return layout;
 }

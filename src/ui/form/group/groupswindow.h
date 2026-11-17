@@ -5,6 +5,7 @@
 
 class GroupEditDialog;
 class GroupsController;
+class HeaderButtons;
 class TableView;
 
 struct GroupRow;
@@ -57,9 +58,7 @@ private:
     QAction *m_actAddGroup = nullptr;
     QAction *m_actEditGroup = nullptr;
     QAction *m_actRemoveGroup = nullptr;
-    QToolButton *m_btOptions = nullptr;
-    QToolButton *m_btStatistics = nullptr;
-    QPushButton *m_btMenu = nullptr;
+    HeaderButtons *m_headerButtons = nullptr;
     TableView *m_groupListView = nullptr;
 
     GroupEditDialog *m_formGroupEdit = nullptr;

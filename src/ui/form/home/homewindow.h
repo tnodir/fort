@@ -3,6 +3,7 @@
 
 #include <form/controls/formwindow.h>
 
+class HeaderButtons;
 class HomeController;
 class HomeMainPage;
 
@@ -52,9 +53,7 @@ private:
     HomeMainPage *m_mainPage = nullptr;
     QToolButton *m_btPasswordLock = nullptr;
     QToolButton *m_btPasswordUnlock = nullptr;
-    QToolButton *m_btOptions = nullptr;
-    QToolButton *m_btStatistics = nullptr;
-    QPushButton *m_btMenu = nullptr;
+    HeaderButtons *m_headerButtons = nullptr;
 
     QToolButton *m_btProfile = nullptr;
     QToolButton *m_btLogs = nullptr;

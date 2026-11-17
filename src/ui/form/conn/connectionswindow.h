@@ -13,6 +13,7 @@ QT_FORWARD_DECLARE_CLASS(QHeaderView)
 class AppInfoRow;
 class ConnSearchModel;
 class ConnectionsController;
+class HeaderButtons;
 class TableView;
 
 struct ConnRow;
@@ -133,9 +134,7 @@ private:
     QLabel *m_iconLogAllowedConn = nullptr;
     QLabel *m_iconLogBlockedConn = nullptr;
     QLabel *m_iconLogAlertedConn = nullptr;
-    QToolButton *m_btOptions = nullptr;
-    QToolButton *m_btStatistics = nullptr;
-    QPushButton *m_btMenu = nullptr;
+    HeaderButtons *m_headerButtons = nullptr;
     TableView *m_connListView = nullptr;
     AppInfoRow *m_appInfoRow = nullptr;
 

@@ -9,6 +9,7 @@
 
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/headerbuttons.h>
 #include <form/controls/progressitemdelegate.h>
 #include <form/controls/tableview.h>
 #include <fortglobal.h>
@@ -149,17 +150,11 @@ QLayout *SpeedLimitsWindow::setupHeader()
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setMenu(editMenu);
 
-    // Options button
-    m_btOptions = ControlUtil::createOptionsButton();
+    // Header buttons
+    m_headerButtons = new HeaderButtons();
 
-    // Statistics button
-    m_btStatistics = ControlUtil::createStatisticsButton();
-
-    // Menu button
-    m_btMenu = ControlUtil::createMenuButton();
-
-    auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_btEdit, /*stretch*/ nullptr, m_btOptions, m_btStatistics, m_btMenu });
+    auto layout =
+            ControlUtil::createHLayoutByWidgets({ m_btEdit, /*stretch*/ nullptr, m_headerButtons });
 
     return layout;
 }

@@ -3,6 +3,7 @@
 
 #include <form/controls/formwindow.h>
 
+class HeaderButtons;
 class TableView;
 class TimePeriodEditDialog;
 class TimePeriodsController;
@@ -55,9 +56,7 @@ private:
     QAction *m_actAddTimePeriod = nullptr;
     QAction *m_actEditTimePeriod = nullptr;
     QAction *m_actRemoveTimePeriod = nullptr;
-    QToolButton *m_btOptions = nullptr;
-    QToolButton *m_btStatistics = nullptr;
-    QPushButton *m_btMenu = nullptr;
+    HeaderButtons *m_headerButtons = nullptr;
     TableView *m_timePeriodListView = nullptr;
 
     TimePeriodEditDialog *m_formTimePeriodEdit = nullptr;

@@ -18,6 +18,7 @@
 #include <conf/confmanager.h>
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/headerbuttons.h>
 #include <form/controls/tableview.h>
 #include <form/opt/pages/optmainpage.h>
 #include <fortglobal.h>
@@ -201,19 +202,13 @@ QLayout *TrafficWindow::setupHeader()
     setupRefresh();
     setupTrafUnits();
 
-    // Options button
-    m_btOptions = ControlUtil::createOptionsButton(OptMainPage::TabStatistics);
-
-    // Statistics button
-    m_btStatistics = ControlUtil::createStatisticsButton();
-
-    // Menu button
-    m_btMenu = ControlUtil::createMenuButton();
+    // Header buttons
+    m_headerButtons = new HeaderButtons(OptMainPage::TabStatistics);
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, ControlUtil::createVSeparator(),
             m_editSearch, ControlUtil::createVSeparator(), m_btRefresh,
             /*stretch*/ nullptr, m_traphUnits, m_comboTrafUnit, ControlUtil::createVSeparator(),
-            m_btOptions, m_btStatistics, m_btMenu });
+            m_headerButtons });
 
     return layout;
 }

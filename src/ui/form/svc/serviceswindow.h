@@ -7,6 +7,7 @@ QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
+class HeaderButtons;
 class ServiceInfo;
 class ServiceListModel;
 class ServicesController;
@@ -67,9 +68,7 @@ private:
     QToolButton *m_btRestart = nullptr;
     QToolButton *m_btRefresh = nullptr;
     QLineEdit *m_editSearch = nullptr;
-    QToolButton *m_btOptions = nullptr;
-    QToolButton *m_btStatistics = nullptr;
-    QPushButton *m_btMenu = nullptr;
+    HeaderButtons *m_headerButtons = nullptr;
     TableView *m_serviceListView = nullptr;
 };
 

@@ -3,6 +3,7 @@
 
 #include <form/controls/formwindow.h>
 
+class HeaderButtons;
 class TableView;
 class Zone;
 class ZoneEditDialog;
@@ -61,9 +62,7 @@ private:
     QAction *m_actRemoveZone = nullptr;
     QToolButton *m_btSaveAsText = nullptr;
     QToolButton *m_btUpdateZones = nullptr;
-    QToolButton *m_btOptions = nullptr;
-    QToolButton *m_btStatistics = nullptr;
-    QPushButton *m_btMenu = nullptr;
+    HeaderButtons *m_headerButtons = nullptr;
     TableView *m_zoneListView = nullptr;
 
     ZoneEditDialog *m_formZoneEdit = nullptr;

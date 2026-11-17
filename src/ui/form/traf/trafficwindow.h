@@ -11,6 +11,7 @@ QT_FORWARD_DECLARE_CLASS(QTableView)
 
 class AppInfoRow;
 class AppStatModel;
+class HeaderButtons;
 class TableView;
 class TrafListModel;
 class TrafficController;
@@ -94,9 +95,7 @@ private:
     QToolButton *m_btRefresh = nullptr;
     QLabel *m_traphUnits = nullptr;
     QComboBox *m_comboTrafUnit = nullptr;
-    QToolButton *m_btOptions = nullptr;
-    QToolButton *m_btStatistics = nullptr;
-    QPushButton *m_btMenu = nullptr;
+    HeaderButtons *m_headerButtons = nullptr;
     QSplitter *m_splitter = nullptr;
     TableView *m_appListView = nullptr;
     QTabBar *m_tabBar = nullptr;

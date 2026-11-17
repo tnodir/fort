@@ -4,6 +4,7 @@
 #include <conf/rule.h>
 #include <form/controls/formwindow.h>
 
+class HeaderButtons;
 class RuleEditDialog;
 class RuleListModel;
 class RulesController;
@@ -92,9 +93,7 @@ private:
     QAction *m_actRemoveRule = nullptr;
     QAction *m_actAddDefaultPresetRules = nullptr;
     QLineEdit *m_editSearch = nullptr;
-    QToolButton *m_btOptions = nullptr;
-    QToolButton *m_btStatistics = nullptr;
-    QPushButton *m_btMenu = nullptr;
+    HeaderButtons *m_headerButtons = nullptr;
     TreeView *m_ruleListView = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;

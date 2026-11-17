@@ -10,6 +10,7 @@ QT_FORWARD_DECLARE_CLASS(QMenu)
 class AppInfoRow;
 class AppListModel;
 class GroupsSelector;
+class HeaderButtons;
 class ProgramEditController;
 class ProgramEditDialog;
 class ProgramsController;
@@ -152,9 +153,7 @@ private:
     QToolButton *m_btSortBlocked = nullptr;
     QToolButton *m_btSortAsked = nullptr;
     QToolButton *m_btSortAlerted = nullptr;
-    QToolButton *m_btOptions = nullptr;
-    QToolButton *m_btStatistics = nullptr;
-    QPushButton *m_btMenu = nullptr;
+    HeaderButtons *m_headerButtons = nullptr;
     TableView *m_appListView = nullptr;
     AppInfoRow *m_appInfoRow = nullptr;
 

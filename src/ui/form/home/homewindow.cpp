@@ -9,6 +9,7 @@
 
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/headerbuttons.h>
 #include <form/dialog/splashscreen.h>
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
@@ -101,7 +102,7 @@ void HomeWindow::onActivationChanged(bool isActive)
 {
     if (isActive && iniUser().homeWindowAutoShowMenu()) {
         if (isActiveWindow()) {
-            m_btMenu->showMenu();
+            m_headerButtons->menuButton()->showMenu();
         }
     }
 }
@@ -178,9 +179,7 @@ QWidget *HomeWindow::setupHeader()
     layout->addStretch();
     layout->addWidget(m_btPasswordLock);
     layout->addWidget(m_btPasswordUnlock);
-    layout->addWidget(m_btOptions);
-    layout->addWidget(m_btStatistics);
-    layout->addWidget(m_btMenu);
+    layout->addWidget(m_headerButtons);
 
     QPalette palette;
     palette.setColor(QPalette::Window, QColor(0x26, 0x26, 0x26));
@@ -200,14 +199,8 @@ void HomeWindow::setupHeaderButtons()
     // Password Unlock button
     setupPasswordButtons();
 
-    // Options button
-    m_btOptions = ControlUtil::createOptionsButton();
-
-    // Statistics button
-    m_btStatistics = ControlUtil::createStatisticsButton();
-
-    // Menu button
-    m_btMenu = ControlUtil::createMenuButton();
+    // Header buttons
+    m_headerButtons = new HeaderButtons();
 }
 
 void HomeWindow::setupPasswordButtons()

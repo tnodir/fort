@@ -11,6 +11,7 @@
 
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/headerbuttons.h>
 #include <form/controls/treeview.h>
 #include <form/dialog/dialogutil.h>
 #include <fortglobal.h>
@@ -188,17 +189,11 @@ QLayout *RulesWindow::setupHeader()
     // Search field
     setupEditSearch();
 
-    // Options button
-    m_btOptions = ControlUtil::createOptionsButton();
-
-    // Statistics button
-    m_btStatistics = ControlUtil::createStatisticsButton();
-
-    // Menu button
-    m_btMenu = ControlUtil::createMenuButton();
+    // Header buttons
+    m_headerButtons = new HeaderButtons();
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, ControlUtil::createVSeparator(),
-            m_editSearch, /*stretch*/ nullptr, m_btOptions, m_btStatistics, m_btMenu });
+            m_editSearch, /*stretch*/ nullptr, m_headerButtons });
 
     return layout;
 }

@@ -8,6 +8,7 @@
 
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/headerbuttons.h>
 #include <form/controls/tableview.h>
 #include <form/dialog/dialogutil.h>
 #include <fortglobal.h>
@@ -158,18 +159,12 @@ QLayout *ZonesWindow::setupHeader()
     // Run Task
     setupTaskRun();
 
-    // Options button
-    m_btOptions = ControlUtil::createOptionsButton();
-
-    // Statistics button
-    m_btStatistics = ControlUtil::createStatisticsButton();
-
-    // Menu button
-    m_btMenu = ControlUtil::createMenuButton();
+    // Header buttons
+    m_headerButtons = new HeaderButtons();
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, ControlUtil::createVSeparator(),
             m_btSaveAsText, ControlUtil::createVSeparator(), m_btUpdateZones,
-            /*stretch*/ nullptr, m_btOptions, m_btStatistics, m_btMenu });
+            /*stretch*/ nullptr, m_headerButtons });
 
     return layout;
 }

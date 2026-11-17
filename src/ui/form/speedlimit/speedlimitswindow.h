@@ -5,6 +5,7 @@
 
 QT_FORWARD_DECLARE_CLASS(QTimer)
 
+class HeaderButtons;
 class SpeedLimitEditDialog;
 class SpeedLimitsController;
 class TableView;
@@ -60,9 +61,7 @@ private:
     QAction *m_actAddSpeedLimit = nullptr;
     QAction *m_actEditSpeedLimit = nullptr;
     QAction *m_actRemoveSpeedLimit = nullptr;
-    QToolButton *m_btOptions = nullptr;
-    QToolButton *m_btStatistics = nullptr;
-    QPushButton *m_btMenu = nullptr;
+    HeaderButtons *m_headerButtons = nullptr;
     TableView *m_speedLimitListView = nullptr;
 
     QTimer *m_statusTimer = nullptr;
