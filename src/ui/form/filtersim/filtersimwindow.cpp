@@ -179,7 +179,12 @@ FilterSimWindow::FilterSimWindow(QWidget *parent) :
     setupUi();
     setupController();
 
-    setupFormWindow(iniUser(), IniUser::filterSimWindowGroup());
+    setupFormWindow(iniUser());
+}
+
+QString FilterSimWindow::iniGroup() const
+{
+    return IniUser::filterSimWindowGroup();
 }
 
 void FilterSimWindow::initialize(const FilterSimConn &simConn)
@@ -202,20 +207,14 @@ void FilterSimWindow::initialize(const FilterSimConn &simConn)
 
 void FilterSimWindow::saveWindowState(bool /*wasVisible*/)
 {
-    auto &iniUser = Fort::iniUser();
-
-    iniUser.setFilterSimWindowGeometry(stateWatcher()->geometry());
-    iniUser.setFilterSimWindowMaximized(stateWatcher()->maximized());
+    saveIniWindowGeometry();
 
     confManager()->saveIniUser();
 }
 
 void FilterSimWindow::restoreWindowState()
 {
-    const auto &iniUser = Fort::iniUser();
-
-    stateWatcher()->restore(this, QSize(600, 500), iniUser.filterSimWindowGeometry(),
-            iniUser.filterSimWindowMaximized());
+    restoreIniWindowGeometry(QSize(600, 500));
 }
 
 void FilterSimWindow::setupController()

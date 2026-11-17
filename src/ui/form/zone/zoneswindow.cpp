@@ -44,15 +44,19 @@ ZonesWindow::ZonesWindow(QWidget *parent) : FormWindow(parent), m_ctrl(new Zones
     setupUi();
     setupController();
 
-    setupFormWindow(iniUser(), IniUser::zoneWindowGroup());
+    setupFormWindow(iniUser());
+}
+
+QString ZonesWindow::iniGroup() const
+{
+    return IniUser::zoneWindowGroup();
 }
 
 void ZonesWindow::saveWindowState(bool /*wasVisible*/)
 {
     auto &iniUser = Fort::iniUser();
 
-    iniUser.setZoneWindowGeometry(stateWatcher()->geometry());
-    iniUser.setZoneWindowMaximized(stateWatcher()->maximized());
+    saveIniWindowGeometry();
 
     auto header = m_zoneListView->horizontalHeader();
     iniUser.setZonesHeader(header->saveState());
@@ -65,8 +69,7 @@ void ZonesWindow::restoreWindowState()
 {
     const auto &iniUser = Fort::iniUser();
 
-    stateWatcher()->restore(
-            this, QSize(900, 400), iniUser.zoneWindowGeometry(), iniUser.zoneWindowMaximized());
+    restoreIniWindowGeometry(QSize(900, 400));
 
     if (iniUser.zonesHeaderVersion() == ZONES_HEADER_VERSION) {
         auto header = m_zoneListView->horizontalHeader();

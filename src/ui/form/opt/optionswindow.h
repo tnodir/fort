@@ -16,6 +16,7 @@ public:
     WindowCode windowCode() const override { return WindowOptions; }
     QString windowIconPath() const override { return ":/icons/cog.png"; }
     QString helpSection() const override;
+    QString iniGroup() const override;
 
     OptionsController *ctrl() const { return m_ctrl; }
 

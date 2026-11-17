@@ -19,6 +19,7 @@ public:
     WindowCode windowCode() const override { return WindowGroups; }
     QString windowIconPath() const override { return ":/icons/application_double.png"; }
     QString helpSection() const override { return "groups"; }
+    QString iniGroup() const override;
 
     GroupsController *ctrl() const { return m_ctrl; }
 

@@ -37,7 +37,12 @@ RulesWindow::RulesWindow(quint8 selectRuleTypes, QWidget *parent, Qt::WindowFlag
     setupUi();
     setupController();
 
-    setupFormWindow(iniUser(), IniUser::ruleWindowGroup());
+    setupFormWindow(iniUser());
+}
+
+QString RulesWindow::iniGroup() const
+{
+    return IniUser::ruleWindowGroup();
 }
 
 RuleListModel *RulesWindow::ruleListModel() const
@@ -49,8 +54,7 @@ void RulesWindow::saveWindowState(bool /*wasVisible*/)
 {
     auto &iniUser = Fort::iniUser();
 
-    iniUser.setRuleWindowGeometry(stateWatcher()->geometry());
-    iniUser.setRuleWindowMaximized(stateWatcher()->maximized());
+    saveIniWindowGeometry();
 
     auto header = m_ruleListView->header();
     iniUser.setRulesHeader(header->saveState());
@@ -68,8 +72,7 @@ void RulesWindow::restoreWindowState()
 {
     const auto &iniUser = Fort::iniUser();
 
-    stateWatcher()->restore(
-            this, QSize(500, 600), iniUser.ruleWindowGeometry(), iniUser.ruleWindowMaximized());
+    restoreIniWindowGeometry(QSize(500, 600));
 
     if (iniUser.rulesHeaderVersion() == RULES_HEADER_VERSION) {
         auto header = m_ruleListView->header();

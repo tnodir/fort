@@ -19,6 +19,7 @@ public:
     WindowCode windowCode() const override { return WindowTimePeriods; }
     QString windowIconPath() const override { return ":/icons/clock.png"; }
     QString helpSection() const override { return "time-periods"; }
+    QString iniGroup() const override;
 
     TimePeriodsController *ctrl() const { return m_ctrl; }
 

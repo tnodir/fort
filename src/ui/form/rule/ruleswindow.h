@@ -22,6 +22,7 @@ public:
     WindowCode windowCode() const override { return WindowRules; }
     QString windowIconPath() const override { return ":/icons/script.png"; }
     QString helpSection() const override { return "rules"; }
+    QString iniGroup() const override;
 
     // Bits of Rule::ruleTypeBit()
     quint8 selectRuleTypes() const { return m_selectRuleTypes; }

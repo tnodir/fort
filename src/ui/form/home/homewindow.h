@@ -15,6 +15,7 @@ public:
 
     WindowCode windowCode() const override { return WindowHome; }
     QString helpSection() const override { return "my-fort-window"; }
+    QString iniGroup() const override;
 
     HomeController *ctrl() const { return m_ctrl; }
 

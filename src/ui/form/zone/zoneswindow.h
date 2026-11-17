@@ -18,6 +18,7 @@ public:
     WindowCode windowCode() const override { return WindowZones; }
     QString windowIconPath() const override { return ":/icons/ip_class.png"; }
     QString helpSection() const override { return "zones"; }
+    QString iniGroup() const override;
 
     ZonesController *ctrl() const { return m_ctrl; }
 

@@ -62,7 +62,7 @@ GraphWindow::GraphWindow(QWidget *parent) : FormWindow(parent)
     setupFlagsAndColors();
     setupTimer();
 
-    setupFormWindow(iniUser(), IniUser::graphWindowGroup());
+    setupFormWindow(iniUser());
 
     connect(confManager(), &ConfManager::iniUserChanged, this, &GraphWindow::updateWindowGeometry);
 
@@ -71,6 +71,11 @@ GraphWindow::GraphWindow(QWidget *parent) : FormWindow(parent)
     });
 
     connect(statManager(), &StatManager::trafficAdded, this, &GraphWindow::addTraffic);
+}
+
+QString GraphWindow::iniGroup() const
+{
+    return IniUser::graphWindowGroup();
 }
 
 bool GraphWindow::deleteOnClose() const

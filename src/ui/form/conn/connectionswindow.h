@@ -27,6 +27,8 @@ public:
     WindowCode windowCode() const override { return WindowConnections; }
     QString windowIconPath() const override { return ":/icons/connect.png"; }
     QString helpSection() const override { return "connections"; }
+    /* The window's ini group: its state and List Options */
+    QString iniGroup() const override;
 
     ConnectionsController *ctrl() const { return m_ctrl; }
     ConnSearchModel *connListModel() const { return m_connListModel; }
@@ -45,10 +47,6 @@ protected:
 
     void initialize();
 
-    /* The window's ini group: its state and List Options */
-    virtual QString iniGroup() const;
-
-    void restoreIniWindowGeometry(const QSize &defaultSize);
     void restoreIniConnListHeader();
 
     void hideEditing();

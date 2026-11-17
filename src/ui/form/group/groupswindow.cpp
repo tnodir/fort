@@ -36,15 +36,19 @@ GroupsWindow::GroupsWindow(QWidget *parent) : FormWindow(parent), m_ctrl(new Gro
     setupUi();
     setupController();
 
-    setupFormWindow(iniUser(), IniUser::groupWindowGroup());
+    setupFormWindow(iniUser());
+}
+
+QString GroupsWindow::iniGroup() const
+{
+    return IniUser::groupWindowGroup();
 }
 
 void GroupsWindow::saveWindowState(bool /*wasVisible*/)
 {
     auto &iniUser = Fort::iniUser();
 
-    iniUser.setGroupWindowGeometry(stateWatcher()->geometry());
-    iniUser.setGroupWindowMaximized(stateWatcher()->maximized());
+    saveIniWindowGeometry();
 
     auto header = m_groupListView->horizontalHeader();
     iniUser.setGroupsHeader(header->saveState());
@@ -57,8 +61,7 @@ void GroupsWindow::restoreWindowState()
 {
     const auto &iniUser = Fort::iniUser();
 
-    stateWatcher()->restore(
-            this, QSize(500, 600), iniUser.groupWindowGeometry(), iniUser.groupWindowMaximized());
+    restoreIniWindowGeometry(QSize(500, 600));
 
     if (iniUser.groupsHeaderVersion() == GROUPS_HEADER_VERSION) {
         auto header = m_groupListView->horizontalHeader();

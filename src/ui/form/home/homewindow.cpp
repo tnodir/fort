@@ -42,18 +42,22 @@ HomeWindow::HomeWindow(QWidget *parent) : FormWindow(parent), m_ctrl(new HomeCon
     setupUi();
     setupController();
 
-    setupFormWindow(iniUser(), IniUser::homeWindowGroup());
+    setupFormWindow(iniUser());
 
     connect(this, &HomeWindow::activationChanged, this, &HomeWindow::onActivationChanged,
             Qt::QueuedConnection); // queued to properly show the menu after window opening
+}
+
+QString HomeWindow::iniGroup() const
+{
+    return IniUser::homeWindowGroup();
 }
 
 void HomeWindow::saveWindowState(bool /*wasVisible*/)
 {
     auto &iniUser = Fort::iniUser();
 
-    iniUser.setHomeWindowGeometry(stateWatcher()->geometry());
-    iniUser.setHomeWindowMaximized(stateWatcher()->maximized());
+    saveIniWindowGeometry();
 
     emit ctrl()->afterSaveWindowState(iniUser);
 
@@ -64,8 +68,7 @@ void HomeWindow::restoreWindowState()
 {
     auto &iniUser = Fort::iniUser();
 
-    stateWatcher()->restore(
-            this, QSize(600, 500), iniUser.homeWindowGeometry(), iniUser.homeWindowMaximized());
+    restoreIniWindowGeometry(QSize(600, 500));
 
     emit ctrl()->afterRestoreWindowState(iniUser);
 }

@@ -78,7 +78,7 @@ ConnectionsWindow::ConnectionsWindow(QWidget *parent) :
 {
     initialize();
 
-    setupFormWindow(iniUser(), IniUser::connWindowGroup());
+    setupFormWindow(iniUser());
 }
 
 ConnectionsWindow::ConnectionsWindow(
@@ -92,13 +92,17 @@ ConnectionsWindow::ConnectionsWindow(
     setupController();
 }
 
+QString ConnectionsWindow::iniGroup() const
+{
+    return IniUser::connWindowGroup();
+}
+
 void ConnectionsWindow::saveWindowState(bool /*wasVisible*/)
 {
     auto &iniUser = Fort::iniUser();
     const auto group = iniGroup();
 
-    iniUser.setWindowGeometry(group, stateWatcher()->geometry());
-    iniUser.setWindowMaximized(group, stateWatcher()->maximized());
+    saveIniWindowGeometry();
 
     auto header = m_connListView->horizontalHeader();
     iniUser.setWindowConnListHeader(group, header->saveState());
@@ -121,20 +125,6 @@ void ConnectionsWindow::initialize()
     connListModel()->initialize();
 
     emit ctrl()->retranslateUi();
-}
-
-QString ConnectionsWindow::iniGroup() const
-{
-    return IniUser::connWindowGroup();
-}
-
-void ConnectionsWindow::restoreIniWindowGeometry(const QSize &defaultSize)
-{
-    const auto &iniUser = Fort::iniUser();
-    const auto group = iniGroup();
-
-    stateWatcher()->restore(
-            this, defaultSize, iniUser.windowGeometry(group), iniUser.windowMaximized(group));
 }
 
 void ConnectionsWindow::restoreIniConnListHeader()

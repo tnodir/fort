@@ -27,6 +27,7 @@ public:
     WindowCode windowCode() const override { return WindowTraffic; }
     QString windowIconPath() const override { return ":/icons/chart_bar.png"; }
     QString helpSection() const override { return "traffic"; }
+    QString iniGroup() const override;
 
     TrafficController *ctrl() const { return m_ctrl; }
     AppStatModel *appStatModel() const { return m_appStatModel; }

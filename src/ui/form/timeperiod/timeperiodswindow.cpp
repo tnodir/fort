@@ -34,15 +34,19 @@ TimePeriodsWindow::TimePeriodsWindow(QWidget *parent) :
     setupUi();
     setupController();
 
-    setupFormWindow(iniUser(), IniUser::timePeriodWindowGroup());
+    setupFormWindow(iniUser());
+}
+
+QString TimePeriodsWindow::iniGroup() const
+{
+    return IniUser::timePeriodWindowGroup();
 }
 
 void TimePeriodsWindow::saveWindowState(bool /*wasVisible*/)
 {
     auto &iniUser = Fort::iniUser();
 
-    iniUser.setTimePeriodWindowGeometry(stateWatcher()->geometry());
-    iniUser.setTimePeriodWindowMaximized(stateWatcher()->maximized());
+    saveIniWindowGeometry();
 
     auto header = m_timePeriodListView->horizontalHeader();
     iniUser.setTimePeriodsHeader(header->saveState());
@@ -55,8 +59,7 @@ void TimePeriodsWindow::restoreWindowState()
 {
     const auto &iniUser = Fort::iniUser();
 
-    stateWatcher()->restore(this, QSize(700, 500), iniUser.timePeriodWindowGeometry(),
-            iniUser.timePeriodWindowMaximized());
+    restoreIniWindowGeometry(QSize(700, 500));
 
     if (iniUser.timePeriodsHeaderVersion() == TIME_PERIODS_HEADER_VERSION) {
         auto header = m_timePeriodListView->horizontalHeader();

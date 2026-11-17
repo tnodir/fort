@@ -21,6 +21,7 @@ public:
     WindowCode windowCode() const override { return WindowSpeedLimits; }
     QString windowIconPath() const override { return ":/icons/speedometer.png"; }
     QString helpSection() const override { return "speed-limits"; }
+    QString iniGroup() const override;
 
     SpeedLimitsController *ctrl() const { return m_ctrl; }
 

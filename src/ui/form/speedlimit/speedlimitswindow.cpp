@@ -38,15 +38,19 @@ SpeedLimitsWindow::SpeedLimitsWindow(QWidget *parent) :
     setupUi();
     setupController();
 
-    setupFormWindow(iniUser(), IniUser::speedLimitWindowGroup());
+    setupFormWindow(iniUser());
+}
+
+QString SpeedLimitsWindow::iniGroup() const
+{
+    return IniUser::speedLimitWindowGroup();
 }
 
 void SpeedLimitsWindow::saveWindowState(bool /*wasVisible*/)
 {
     auto &iniUser = Fort::iniUser();
 
-    iniUser.setSpeedLimitWindowGeometry(stateWatcher()->geometry());
-    iniUser.setSpeedLimitWindowMaximized(stateWatcher()->maximized());
+    saveIniWindowGeometry();
 
     auto header = m_speedLimitListView->horizontalHeader();
     iniUser.setSpeedLimitsHeader(header->saveState());
@@ -59,8 +63,7 @@ void SpeedLimitsWindow::restoreWindowState()
 {
     const auto &iniUser = Fort::iniUser();
 
-    stateWatcher()->restore(this, QSize(700, 600), iniUser.speedLimitWindowGeometry(),
-            iniUser.speedLimitWindowMaximized());
+    restoreIniWindowGeometry(QSize(700, 600));
 
     if (iniUser.speedLimitsHeaderVersion() == SPEED_LIMITS_HEADER_VERSION) {
         auto header = m_speedLimitListView->horizontalHeader();

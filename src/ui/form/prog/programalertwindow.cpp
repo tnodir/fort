@@ -61,11 +61,16 @@ ProgramAlertWindow::ProgramAlertWindow(QWidget *parent) : ProgramEditDialog(pare
 {
     setupUi();
 
-    setupFormWindow(iniUser(), IniUser::progAlertWindowGroup());
+    setupFormWindow(iniUser());
 
     initialize();
 
     connect(confAppManager(), &ConfAppManager::appDeleted, this, &ProgramAlertWindow::onAppDeleted);
+}
+
+QString ProgramAlertWindow::iniGroup() const
+{
+    return IniUser::progAlertWindowGroup();
 }
 
 bool ProgramAlertWindow::hasAlertApp()
@@ -87,20 +92,14 @@ void ProgramAlertWindow::initialize()
 
 void ProgramAlertWindow::saveWindowState(bool /*wasVisible*/)
 {
-    auto &iniUser = Fort::iniUser();
-
-    iniUser.setProgAlertWindowGeometry(stateWatcher()->geometry());
-    iniUser.setProgAlertWindowMaximized(stateWatcher()->maximized());
+    saveIniWindowGeometry();
 
     confManager()->saveIniUser();
 }
 
 void ProgramAlertWindow::restoreWindowState()
 {
-    const auto &iniUser = Fort::iniUser();
-
-    stateWatcher()->restore(this, QSize(500, 400), iniUser.progAlertWindowGeometry(),
-            iniUser.progAlertWindowMaximized());
+    restoreIniWindowGeometry(QSize(500, 400));
 }
 
 void ProgramAlertWindow::closeOnSave()

@@ -17,6 +17,7 @@ public:
 
     WindowCode windowCode() const override { return WindowGraph; }
     QString helpSection() const override { return "traffic-graph"; }
+    QString iniGroup() const override;
     bool deleteOnClose() const override;
 
     void saveWindowState(bool wasVisible) override;

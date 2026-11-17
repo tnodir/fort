@@ -47,12 +47,30 @@ void FormWindow::shrinkToContentsLater()
     QMetaObject::invokeMethod(this, &FormWindow::shrinkToContents, Qt::QueuedConnection);
 }
 
-void FormWindow::setupFormWindow(IniUser &iniUser, const QString &iniGroup)
+void FormWindow::setupFormWindow(IniUser &iniUser, const QString &captureIniGroup)
 {
     setupWindowIcon(iniUser);
 
     setupStateWatcher();
-    setupWindowCapture(iniUser, iniGroup);
+    setupWindowCapture(iniUser, !captureIniGroup.isEmpty() ? captureIniGroup : iniGroup());
+}
+
+void FormWindow::saveIniWindowGeometry()
+{
+    auto &iniUser = Fort::iniUser();
+    const auto group = iniGroup();
+
+    iniUser.setWindowGeometry(group, stateWatcher()->geometry());
+    iniUser.setWindowMaximized(group, stateWatcher()->maximized());
+}
+
+void FormWindow::restoreIniWindowGeometry(const QSize &defaultSize)
+{
+    const auto &iniUser = Fort::iniUser();
+    const auto group = iniGroup();
+
+    stateWatcher()->restore(
+            this, defaultSize, iniUser.windowGeometry(group), iniUser.windowMaximized(group));
 }
 
 void FormWindow::setupWindowIcon(IniUser &iniUser)

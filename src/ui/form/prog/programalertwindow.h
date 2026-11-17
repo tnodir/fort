@@ -15,6 +15,7 @@ public:
     WindowCode windowCode() const override { return WindowProgramAlert; }
     QString windowIconPath() const override { return ":/icons/error.png"; }
     QString helpSection() const override { return "alerts"; }
+    QString iniGroup() const override;
 
     static bool hasAlertApp();
 

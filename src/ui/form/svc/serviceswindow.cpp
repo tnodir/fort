@@ -43,7 +43,12 @@ ServicesWindow::ServicesWindow(QWidget *parent) :
     setupUi();
     setupController();
 
-    setupFormWindow(iniUser(), IniUser::serviceWindowGroup());
+    setupFormWindow(iniUser());
+}
+
+QString ServicesWindow::iniGroup() const
+{
+    return IniUser::serviceWindowGroup();
 }
 
 ServiceListModel *ServicesWindow::serviceListModel() const
@@ -65,8 +70,7 @@ void ServicesWindow::saveWindowState(bool /*wasVisible*/)
 {
     auto &iniUser = Fort::iniUser();
 
-    iniUser.setServiceWindowGeometry(stateWatcher()->geometry());
-    iniUser.setServiceWindowMaximized(stateWatcher()->maximized());
+    saveIniWindowGeometry();
 
     auto header = m_serviceListView->horizontalHeader();
     iniUser.setServicesHeader(header->saveState());
@@ -79,8 +83,7 @@ void ServicesWindow::restoreWindowState()
 {
     const auto &iniUser = Fort::iniUser();
 
-    stateWatcher()->restore(this, QSize(800, 600), iniUser.serviceWindowGeometry(),
-            iniUser.serviceWindowMaximized());
+    restoreIniWindowGeometry(QSize(800, 600));
 
     if (iniUser.servicesHeaderVersion() == SERVICES_HEADER_VERSION) {
         auto header = m_serviceListView->horizontalHeader();

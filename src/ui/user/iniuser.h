@@ -139,12 +139,6 @@ public:
 
     static QString homeWindowGroup() { return "homeWindow"; }
 
-    QRect homeWindowGeometry() const { return value("homeWindow/geometry").toRect(); }
-    void setHomeWindowGeometry(const QRect &v) { setValue("homeWindow/geometry", v); }
-
-    bool homeWindowMaximized() const { return valueBool("homeWindow/maximized"); }
-    void setHomeWindowMaximized(bool on) { setValue("homeWindow/maximized", on); }
-
     bool homeWindowAutoShowWindow() const { return valueBool("homeWindow/autoShowWindow", true); }
     void setHomeWindowAutoShowWindow(bool v) { setValue("homeWindow/autoShowWindow", v, true); }
 
@@ -152,12 +146,6 @@ public:
     void setHomeWindowAutoShowMenu(bool v) { setValue("homeWindow/autoShowMenu", v); }
 
     static QString progWindowGroup() { return "progWindow"; }
-
-    QRect progWindowGeometry() const { return value("progWindow/geometry").toRect(); }
-    void setProgWindowGeometry(const QRect &v) { setValue("progWindow/geometry", v); }
-
-    bool progWindowMaximized() const { return valueBool("progWindow/maximized"); }
-    void setProgWindowMaximized(bool on) { setValue("progWindow/maximized", on); }
 
     bool progAppsSortDesc() const { return valueBool("progWindow/appsSortDesc"); }
     void setProgSortDesc(bool v) { setValue("progWindow/appsSortDesc", v); }
@@ -181,12 +169,6 @@ public:
     void setProgWindowSortState(int v) { setValue("progWindow/sortState", v); }
 
     static QString progAlertWindowGroup() { return "progAlertWindow"; }
-
-    QRect progAlertWindowGeometry() const { return value("progAlertWindow/geometry").toRect(); }
-    void setProgAlertWindowGeometry(const QRect &v) { setValue("progAlertWindow/geometry", v); }
-
-    bool progAlertWindowMaximized() const { return valueBool("progAlertWindow/maximized"); }
-    void setProgAlertWindowMaximized(bool on) { setValue("progAlertWindow/maximized", on); }
 
     static QString progConnWindowGroup() { return "progConnWindow"; }
     static QString progPendingConnWindowGroup() { return "progPendingConnWindow"; }
@@ -266,22 +248,10 @@ public:
 
     static QString optWindowGroup() { return "optWindow"; }
 
-    QRect optWindowGeometry() const { return value("optWindow/geometry").toRect(); }
-    void setOptWindowGeometry(const QRect &v) { setValue("optWindow/geometry", v); }
-
-    bool optWindowMaximized() const { return valueBool("optWindow/maximized"); }
-    void setOptWindowMaximized(bool on) { setValue("optWindow/maximized", on); }
-
     QByteArray optWindowAddrSplit() const { return valueByteArray("optWindow/addrSplit"); }
     void setOptWindowAddrSplit(const QByteArray &v) { setValue("optWindow/addrSplit", v); }
 
     static QString ruleWindowGroup() { return "ruleWindow"; }
-
-    QRect ruleWindowGeometry() const { return value("ruleWindow/geometry").toRect(); }
-    void setRuleWindowGeometry(const QRect &v) { setValue("ruleWindow/geometry", v); }
-
-    bool ruleWindowMaximized() const { return valueBool("ruleWindow/maximized"); }
-    void setRuleWindowMaximized(bool on) { setValue("ruleWindow/maximized", on); }
 
     int rulesHeaderVersion() const { return valueInt("ruleWindow/rulesHeaderVersion"); }
     void setRulesHeaderVersion(int v) { setValue("ruleWindow/rulesHeaderVersion", v); }
@@ -294,12 +264,6 @@ public:
 
     static QString groupWindowGroup() { return "groupWindow"; }
 
-    QRect groupWindowGeometry() const { return value("groupWindow/geometry").toRect(); }
-    void setGroupWindowGeometry(const QRect &v) { setValue("groupWindow/geometry", v); }
-
-    bool groupWindowMaximized() const { return valueBool("groupWindow/maximized"); }
-    void setGroupWindowMaximized(bool on) { setValue("groupWindow/maximized", on); }
-
     int groupsHeaderVersion() const { return valueInt("groupWindow/groupsHeaderVersion"); }
     void setGroupsHeaderVersion(int v) { setValue("groupWindow/groupsHeaderVersion", v); }
 
@@ -307,12 +271,6 @@ public:
     void setGroupsHeader(const QByteArray &v) { setValue("groupWindow/groupsHeader", v); }
 
     static QString speedLimitWindowGroup() { return "speedLimitWindow"; }
-
-    QRect speedLimitWindowGeometry() const { return value("speedLimitWindow/geometry").toRect(); }
-    void setSpeedLimitWindowGeometry(const QRect &v) { setValue("speedLimitWindow/geometry", v); }
-
-    bool speedLimitWindowMaximized() const { return valueBool("speedLimitWindow/maximized"); }
-    void setSpeedLimitWindowMaximized(bool on) { setValue("speedLimitWindow/maximized", on); }
 
     int speedLimitsHeaderVersion() const
     {
@@ -334,12 +292,6 @@ public:
 
     static QString timePeriodWindowGroup() { return "timePeriodWindow"; }
 
-    QRect timePeriodWindowGeometry() const { return value("timePeriodWindow/geometry").toRect(); }
-    void setTimePeriodWindowGeometry(const QRect &v) { setValue("timePeriodWindow/geometry", v); }
-
-    bool timePeriodWindowMaximized() const { return valueBool("timePeriodWindow/maximized"); }
-    void setTimePeriodWindowMaximized(bool on) { setValue("timePeriodWindow/maximized", on); }
-
     int timePeriodsHeaderVersion() const
     {
         return valueInt("timePeriodWindow/timePeriodsHeaderVersion");
@@ -360,12 +312,6 @@ public:
 
     static QString serviceWindowGroup() { return "serviceWindow"; }
 
-    QRect serviceWindowGeometry() const { return value("serviceWindow/geometry").toRect(); }
-    void setServiceWindowGeometry(const QRect &v) { setValue("serviceWindow/geometry", v); }
-
-    bool serviceWindowMaximized() const { return valueBool("serviceWindow/maximized"); }
-    void setServiceWindowMaximized(bool on) { setValue("serviceWindow/maximized", on); }
-
     int servicesHeaderVersion() const { return valueInt("serviceWindow/servicesHeaderVersion"); }
     void setServicesHeaderVersion(int v) { setValue("serviceWindow/servicesHeaderVersion", v); }
 
@@ -374,12 +320,6 @@ public:
 
     static QString zoneWindowGroup() { return "zoneWindow"; }
 
-    QRect zoneWindowGeometry() const { return value("zoneWindow/geometry").toRect(); }
-    void setZoneWindowGeometry(const QRect &v) { setValue("zoneWindow/geometry", v); }
-
-    bool zoneWindowMaximized() const { return valueBool("zoneWindow/maximized"); }
-    void setZoneWindowMaximized(bool on) { setValue("zoneWindow/maximized", on); }
-
     int zonesHeaderVersion() const { return valueInt("zoneWindow/zonesHeaderVersion"); }
     void setZonesHeaderVersion(int v) { setValue("zoneWindow/zonesHeaderVersion", v); }
 
@@ -387,12 +327,6 @@ public:
     void setZonesHeader(const QByteArray &v) { setValue("zoneWindow/zonesHeader", v); }
 
     static QString filterSimWindowGroup() { return "filterSimWindow"; }
-
-    QRect filterSimWindowGeometry() const { return value("filterSimWindow/geometry").toRect(); }
-    void setFilterSimWindowGeometry(const QRect &v) { setValue("filterSimWindow/geometry", v); }
-
-    bool filterSimWindowMaximized() const { return valueBool("filterSimWindow/maximized"); }
-    void setFilterSimWindowMaximized(bool on) { setValue("filterSimWindow/maximized", on); }
 
     static QString graphWindowGroup() { return "graphWindow"; }
 
@@ -648,12 +582,6 @@ public:
     void setGraphWindowShowOut(bool on) { setValue("graphWindow/showOut", on); }
 
     static QString statWindowGroup() { return "statWindow"; }
-
-    QRect statWindowGeometry() const { return value("statWindow/geometry").toRect(); }
-    void setStatWindowGeometry(const QRect &v) { setValue("statWindow/geometry", v); }
-
-    bool statWindowMaximized() const { return valueBool("statWindow/maximized"); }
-    void setStatWindowMaximized(bool on) { setValue("statWindow/maximized", on); }
 
     static QString statTrafTabIndexKey() { return "statWindow/trafTabIndex"; }
     int statTrafTabIndex() const { return valueInt(statTrafTabIndexKey()); }

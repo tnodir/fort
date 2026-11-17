@@ -31,6 +31,7 @@ public:
     virtual WindowCode windowCode() const { return WindowNone; }
     virtual QString windowIconPath() const { return {}; }
     virtual QString helpSection() const { return {}; }
+    virtual QString iniGroup() const { return {}; }
 
     virtual bool deleteOnClose() const { return true; }
 
@@ -51,7 +52,11 @@ signals:
     void aboutToDelete();
 
 protected:
-    void setupFormWindow(IniUser &iniUser, const QString &iniGroup);
+    // The capture option is of the captureIniGroup, by default of the window's ini group
+    void setupFormWindow(IniUser &iniUser, const QString &captureIniGroup = {});
+
+    void saveIniWindowGeometry();
+    void restoreIniWindowGeometry(const QSize &defaultSize);
 
 private:
     void setupWindowIcon(IniUser &iniUser);

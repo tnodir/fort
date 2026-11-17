@@ -71,7 +71,12 @@ ProgramsWindow::ProgramsWindow(QWidget *parent) :
     setupUi();
     setupController();
 
-    setupFormWindow(iniUser(), IniUser::progWindowGroup());
+    setupFormWindow(iniUser());
+}
+
+QString ProgramsWindow::iniGroup() const
+{
+    return IniUser::progWindowGroup();
 }
 
 AppListModel *ProgramsWindow::appListModel() const
@@ -83,8 +88,7 @@ void ProgramsWindow::saveWindowState(bool /*wasVisible*/)
 {
     auto &iniUser = Fort::iniUser();
 
-    iniUser.setProgWindowGeometry(stateWatcher()->geometry());
-    iniUser.setProgWindowMaximized(stateWatcher()->maximized());
+    saveIniWindowGeometry();
 
     // Apps header
     {
@@ -100,8 +104,7 @@ void ProgramsWindow::restoreWindowState()
 {
     const auto &iniUser = Fort::iniUser();
 
-    stateWatcher()->restore(
-            this, QSize(1024, 768), iniUser.progWindowGeometry(), iniUser.progWindowMaximized());
+    restoreIniWindowGeometry(QSize(1024, 768));
 
     // Apps header
     if (iniUser.progAppsHeaderVersion() == APPS_HEADER_VERSION) {

@@ -51,7 +51,12 @@ TrafficWindow::TrafficWindow(QWidget *parent) :
 
     setupController();
 
-    setupFormWindow(iniUser(), IniUser::statWindowGroup());
+    setupFormWindow(iniUser());
+}
+
+QString TrafficWindow::iniGroup() const
+{
+    return IniUser::statWindowGroup();
 }
 
 void TrafficWindow::selectTrafTab(int index)
@@ -63,8 +68,7 @@ void TrafficWindow::saveWindowState(bool /*wasVisible*/)
 {
     auto &iniUser = Fort::iniUser();
 
-    iniUser.setStatWindowGeometry(stateWatcher()->geometry());
-    iniUser.setStatWindowMaximized(stateWatcher()->maximized());
+    saveIniWindowGeometry();
 
     // App List
     {
@@ -82,8 +86,7 @@ void TrafficWindow::restoreWindowState()
 {
     const auto &iniUser = Fort::iniUser();
 
-    stateWatcher()->restore(
-            this, QSize(1024, 768), iniUser.statWindowGeometry(), iniUser.statWindowMaximized());
+    restoreIniWindowGeometry(QSize(1024, 768));
 
     // App List
     if (iniUser.statAppListHeaderVersion() == APP_LIST_HEADER_VERSION) {

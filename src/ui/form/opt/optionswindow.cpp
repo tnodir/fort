@@ -21,9 +21,14 @@ OptionsWindow::OptionsWindow(QWidget *parent) :
     setupUi();
     setupController();
 
-    setupFormWindow(iniUser(), IniUser::optWindowGroup());
+    setupFormWindow(iniUser());
 
     connect(this, &OptionsWindow::aboutToDelete, this, &OptionsWindow::cancelChanges);
+}
+
+QString OptionsWindow::iniGroup() const
+{
+    return IniUser::optWindowGroup();
 }
 
 QString OptionsWindow::helpSection() const
@@ -40,8 +45,7 @@ void OptionsWindow::saveWindowState(bool /*wasVisible*/)
 {
     auto &iniUser = Fort::iniUser();
 
-    iniUser.setOptWindowGeometry(stateWatcher()->geometry());
-    iniUser.setOptWindowMaximized(stateWatcher()->maximized());
+    saveIniWindowGeometry();
 
     emit ctrl()->afterSaveWindowState(iniUser);
 
@@ -52,8 +56,7 @@ void OptionsWindow::restoreWindowState()
 {
     auto &iniUser = Fort::iniUser();
 
-    stateWatcher()->restore(
-            this, QSize(1024, 768), iniUser.optWindowGeometry(), iniUser.optWindowMaximized());
+    restoreIniWindowGeometry(QSize(1024, 768));
 
     emit ctrl()->afterRestoreWindowState(iniUser);
 }
