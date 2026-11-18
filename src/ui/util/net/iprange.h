@@ -7,7 +7,6 @@
 
 using ip4_t = quint32;
 
-using ip4range_map_t = QMap<ip4_t, ip4_t>;
 using ip4_arr_t = QVector<ip4_t>;
 
 using Ip4Pair = ValuePair<ip4_t>;
@@ -86,11 +85,10 @@ private:
         ErrorBadRange,
     };
 
-    IpRange::ParseError parseIpLine(
-            const QStringView line, ip4range_map_t &ip4RangeMap, int &pair4Size);
+    IpRange::ParseError parseIpLine(const QStringView line, RangeMap<ip4_t> &ip4RangeMap);
 
     IpRange::ParseError parseIp4Address(const QStringView ip, const QStringView mask,
-            ip4range_map_t &ip4RangeMap, int &pair4Size, char maskSep);
+            RangeMap<ip4_t> &ip4RangeMap, char maskSep);
 
     IpRange::ParseError parseIp4AddressMask(
             const QStringView mask, ip4_t &from, ip4_t &to, char maskSep);

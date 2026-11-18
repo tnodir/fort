@@ -52,17 +52,22 @@ protected:
     void appendErrorDetails(const QString &errorDetails);
 
     template<typename T>
-    struct FillRangeArraysArgs
+    struct RangeMap
     {
-        const QMap<T, T> &rangeMap;
-        QVector<T> &valuesArray;
-        QVector<T> &pairFromArray;
-        QVector<T> &pairToArray;
-        int pairSize;
+        void insert(T from, T to);
+
+        int pairSize = 0;
+        QMap<T, T> map;
     };
 
     template<typename T>
-    static void insertRange(QMap<T, T> &rangeMap, T from, T to);
+    struct FillRangeArraysArgs
+    {
+        const RangeMap<T> &rangeMap;
+        QVector<T> &valuesArray;
+        QVector<T> &pairFromArray;
+        QVector<T> &pairToArray;
+    };
 
     template<typename T>
     static void fillRangeArrays(const FillRangeArraysArgs<T> &fra);
@@ -74,32 +79,38 @@ private:
 };
 
 template<typename T>
-void ValueRange::insertRange(QMap<T, T> &rangeMap, T from, T to)
+void ValueRange::RangeMap<T>::insert(T from, T to)
 {
     // keep the widest range with the same start
-    auto it = rangeMap.find(from);
-    if (it == rangeMap.end()) {
-        rangeMap.insert(from, to);
+    auto it = map.find(from);
+    if (it == map.end()) {
+        map.insert(from, to);
     } else if (to > it.value()) {
         it.value() = to;
+    }
+
+    if (from != to) {
+        ++pairSize;
     }
 }
 
 template<typename T>
 static void ValueRange::fillRangeArrays(const FillRangeArraysArgs<T> &fra)
 {
-    if (fra.rangeMap.isEmpty())
+    const RangeMap<T> &rangeMap = fra.rangeMap;
+
+    if (rangeMap.map.isEmpty())
         return;
 
-    const int mapSize = fra.rangeMap.size();
-    fra.valuesArray.reserve(mapSize - fra.pairSize);
-    fra.pairFromArray.reserve(fra.pairSize);
-    fra.pairToArray.reserve(fra.pairSize);
+    const int mapSize = rangeMap.map.size();
+    fra.valuesArray.reserve(mapSize - rangeMap.pairSize);
+    fra.pairFromArray.reserve(rangeMap.pairSize);
+    fra.pairToArray.reserve(rangeMap.pairSize);
 
     ValuePair<T> prevPair;
     int prevIndex = -1;
 
-    for (const auto &[from, to] : QtCompat::keyValueRange(fra.rangeMap)) {
+    for (const auto &[from, to] : QtCompat::keyValueRange(rangeMap.map)) {
         const ValuePair<T> v { from, to };
 
         // try to merge colliding addresses (v.from > prevPair.from, so v.from - 1 can't overflow)

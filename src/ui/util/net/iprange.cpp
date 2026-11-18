@@ -130,8 +130,7 @@ bool IpRange::fromList(const StringViewList &list, bool sort)
 {
     clear();
 
-    ip4range_map_t ip4RangeMap;
-    int pair4Size = 0;
+    RangeMap<ip4_t> ip4RangeMap;
 
     int lineNo = 0;
     for (const auto &line : list) {
@@ -141,7 +140,7 @@ bool IpRange::fromList(const StringViewList &list, bool sort)
         if (lineTrimmed.isEmpty() || lineTrimmed.startsWith('#')) // commented line
             continue;
 
-        if (parseIpLine(line, ip4RangeMap, pair4Size) != ErrorOk) {
+        if (parseIpLine(line, ip4RangeMap) != ErrorOk) {
             appendErrorDetails(QString("line='%1'").arg(line));
             setErrorLineNo(lineNo);
             return false;
@@ -153,7 +152,6 @@ bool IpRange::fromList(const StringViewList &list, bool sort)
             .valuesArray = m_ip4Array,
             .pairFromArray = m_pair4FromArray,
             .pairToArray = m_pair4ToArray,
-            .pairSize = pair4Size,
     });
 
     if (sort) {
@@ -164,8 +162,7 @@ bool IpRange::fromList(const StringViewList &list, bool sort)
     return true;
 }
 
-IpRange::ParseError IpRange::parseIpLine(
-        const QStringView line, ip4range_map_t &ip4RangeMap, int &pair4Size)
+IpRange::ParseError IpRange::parseIpLine(const QStringView line, RangeMap<ip4_t> &ip4RangeMap)
 {
     static const QRegularExpression ipRe(R"(^\[?([A-Fa-f\d:.]+)\]?\s*([\/-]?)\s*(\S*))");
 
@@ -189,11 +186,11 @@ IpRange::ParseError IpRange::parseIpLine(
     const bool isIPv6 = ip.contains(':');
 
     return isIPv6 ? parseIp6Address(ip, mask, maskSep)
-                  : parseIp4Address(ip, mask, ip4RangeMap, pair4Size, maskSep);
+                  : parseIp4Address(ip, mask, ip4RangeMap, maskSep);
 }
 
-IpRange::ParseError IpRange::parseIp4Address(const QStringView ip, const QStringView mask,
-        ip4range_map_t &ip4RangeMap, int &pair4Size, char maskSep)
+IpRange::ParseError IpRange::parseIp4Address(
+        const QStringView ip, const QStringView mask, RangeMap<ip4_t> &ip4RangeMap, char maskSep)
 {
     ip4_t from, to = 0;
 
@@ -209,11 +206,7 @@ IpRange::ParseError IpRange::parseIp4Address(const QStringView ip, const QString
     if (err != ErrorOk)
         return err;
 
-    insertRange(ip4RangeMap, from, to);
-
-    if (from != to) {
-        ++pair4Size;
-    }
+    ip4RangeMap.insert(from, to);
 
     return ErrorOk;
 }

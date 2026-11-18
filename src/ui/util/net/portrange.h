@@ -7,7 +7,6 @@
 
 using port_t = quint16;
 
-using portrange_map_t = QMap<port_t, port_t>;
 using port_arr_t = QVector<port_t>;
 
 using PortPair = ValuePair<port_t>;
@@ -61,11 +60,10 @@ private:
         ErrorBadPort,
     };
 
-    PortRange::ParseError parsePortLine(
-            const QStringView line, portrange_map_t &portRangeMap, int &pairSize);
+    PortRange::ParseError parsePortLine(const QStringView line, RangeMap<port_t> &portRangeMap);
 
-    PortRange::ParseError parsePortRange(const QStringView port, const QStringView port2,
-            portrange_map_t &portRangeMap, int &pairSize);
+    PortRange::ParseError parsePortRange(
+            const QStringView port, const QStringView port2, RangeMap<port_t> &portRangeMap);
 
     bool parsePortNumber(const QStringView port, port_t &v);
 

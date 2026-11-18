@@ -51,8 +51,7 @@ bool PortRange::fromList(const StringViewList &list, bool /*sort*/)
 {
     clear();
 
-    portrange_map_t portRangeMap;
-    int pairSize = 0;
+    RangeMap<port_t> portRangeMap;
 
     int lineNo = 0;
     for (const auto &line : list) {
@@ -62,7 +61,7 @@ bool PortRange::fromList(const StringViewList &list, bool /*sort*/)
         if (lineTrimmed.isEmpty() || lineTrimmed.startsWith('#')) // commented line
             continue;
 
-        if (parsePortLine(line, portRangeMap, pairSize) != ErrorOk) {
+        if (parsePortLine(line, portRangeMap) != ErrorOk) {
             appendErrorDetails(QString("line='%1'").arg(line));
             setErrorLineNo(lineNo);
             return false;
@@ -74,14 +73,13 @@ bool PortRange::fromList(const StringViewList &list, bool /*sort*/)
             .valuesArray = m_portArray,
             .pairFromArray = m_pairFromArray,
             .pairToArray = m_pairToArray,
-            .pairSize = pairSize,
     });
 
     return true;
 }
 
 PortRange::ParseError PortRange::parsePortLine(
-        const QStringView line, portrange_map_t &portRangeMap, int &pairSize)
+        const QStringView line, RangeMap<port_t> &portRangeMap)
 {
     static const QRegularExpression portRe(R"(^([\d\w]+)\s*(-?)\s*(\S*))");
 
@@ -101,11 +99,11 @@ PortRange::ParseError PortRange::parsePortLine(
         return ErrorBadRangeFormat;
     }
 
-    return parsePortRange(port, port2, portRangeMap, pairSize);
+    return parsePortRange(port, port2, portRangeMap);
 }
 
-PortRange::ParseError PortRange::parsePortRange(const QStringView port, const QStringView port2,
-        portrange_map_t &portRangeMap, int &pairSize)
+PortRange::ParseError PortRange::parsePortRange(
+        const QStringView port, const QStringView port2, RangeMap<port_t> &portRangeMap)
 {
     port_t from = 0, to = 0;
 
@@ -116,11 +114,7 @@ PortRange::ParseError PortRange::parsePortRange(const QStringView port, const QS
         to = from;
     }
 
-    insertRange(portRangeMap, from, to);
-
-    if (from != to) {
-        ++pairSize;
-    }
+    portRangeMap.insert(from, to);
 
     return ErrorOk;
 }

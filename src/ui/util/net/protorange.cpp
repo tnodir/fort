@@ -51,8 +51,7 @@ bool ProtoRange::fromList(const StringViewList &list, bool /*sort*/)
 {
     clear();
 
-    protorange_map_t protoRangeMap;
-    int pairSize = 0;
+    RangeMap<proto_t> protoRangeMap;
 
     int lineNo = 0;
     for (const auto &line : list) {
@@ -62,7 +61,7 @@ bool ProtoRange::fromList(const StringViewList &list, bool /*sort*/)
         if (lineTrimmed.isEmpty() || lineTrimmed.startsWith('#')) // commented line
             continue;
 
-        if (parseProtoLine(line, protoRangeMap, pairSize) != ErrorOk) {
+        if (parseProtoLine(line, protoRangeMap) != ErrorOk) {
             appendErrorDetails(QString("line='%1'").arg(line));
             setErrorLineNo(lineNo);
             return false;
@@ -74,14 +73,13 @@ bool ProtoRange::fromList(const StringViewList &list, bool /*sort*/)
             .valuesArray = m_protoArray,
             .pairFromArray = m_pairFromArray,
             .pairToArray = m_pairToArray,
-            .pairSize = pairSize,
     });
 
     return true;
 }
 
 ProtoRange::ParseError ProtoRange::parseProtoLine(
-        const QStringView line, protorange_map_t &protoRangeMap, int &pairSize)
+        const QStringView line, RangeMap<proto_t> &protoRangeMap)
 {
     static const QRegularExpression protoRe(R"(^([\d\w+.]+)\s*(-?)\s*(\S*))");
 
@@ -101,11 +99,11 @@ ProtoRange::ParseError ProtoRange::parseProtoLine(
         return ErrorBadRangeFormat;
     }
 
-    return parseProtoRange(proto, proto2, protoRangeMap, pairSize);
+    return parseProtoRange(proto, proto2, protoRangeMap);
 }
 
-ProtoRange::ParseError ProtoRange::parseProtoRange(const QStringView proto,
-        const QStringView proto2, protorange_map_t &protoRangeMap, int &pairSize)
+ProtoRange::ParseError ProtoRange::parseProtoRange(
+        const QStringView proto, const QStringView proto2, RangeMap<proto_t> &protoRangeMap)
 {
     proto_t from = 0, to = 0;
 
@@ -116,11 +114,7 @@ ProtoRange::ParseError ProtoRange::parseProtoRange(const QStringView proto,
         to = from;
     }
 
-    insertRange(protoRangeMap, from, to);
-
-    if (from != to) {
-        ++pairSize;
-    }
+    protoRangeMap.insert(from, to);
 
     return ErrorOk;
 }

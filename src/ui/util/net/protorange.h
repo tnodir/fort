@@ -7,7 +7,6 @@
 
 using proto_t = quint8;
 
-using protorange_map_t = QMap<proto_t, proto_t>;
 using proto_arr_t = QVector<proto_t>;
 
 using ProtoPair = ValuePair<proto_t>;
@@ -58,11 +57,10 @@ private:
         ErrorBadProto,
     };
 
-    ProtoRange::ParseError parseProtoLine(
-            const QStringView line, protorange_map_t &protoRangeMap, int &pairSize);
+    ProtoRange::ParseError parseProtoLine(const QStringView line, RangeMap<proto_t> &protoRangeMap);
 
-    ProtoRange::ParseError parseProtoRange(const QStringView proto, const QStringView proto2,
-            protorange_map_t &protoRangeMap, int &pairSize);
+    ProtoRange::ParseError parseProtoRange(
+            const QStringView proto, const QStringView proto2, RangeMap<proto_t> &protoRangeMap);
 
     bool parseProtoNumber(const QStringView proto, proto_t &v);
 
