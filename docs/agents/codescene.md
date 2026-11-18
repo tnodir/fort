@@ -9,6 +9,7 @@ python scripts/codescene/cc-check.py src/driver/fortdev.c   :: given files
 ```
 
 - Run it from the repository's root after editing C/C++ and before committing. The options `-C`, `-A`, `-L`, `-B`, `-M`, `-F` set the allowed maxima (by default 8, 4, 1, 1, 69, 999).
+- A function's issue disabled by CodeScene's directive in a `//` comment right above it (`// @CodeScene(disable:"Excess Number of Function Arguments")`, `@CodeScene(disable-all)`) isn't listed, only counted in the summary. Add one only where the code can't follow the rule (e.g. the WFP callouts' fixed signatures) and the user agreed.
 - It checks whole files, so a changed file's old issues and duplicated pairs are listed too: tell them apart from the change's new ones, and fix only the new ones (the old ones in a commit of their own, when asked).
 - `--changed` also runs `check-if-braces.py HEAD`: an `if` among the changed lines whose body isn't a simple jump and has no braces (Conventions). Without arguments it checks the lines the branch added (`master...HEAD`). A new `if` among a function's existing braceless ones follows them (e.g. `dataDisplayAction()` in `applistmodeldata.cpp`): its report is expected.
 - The scripts check only these rules: still read the new lines against the other Conventions.

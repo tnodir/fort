@@ -43,6 +43,11 @@ logbuffer.cpp @b43f0a485 (write/readEntryApp/ProcNew, readEntryProcKill/FlowClos
 e.g.: fort_prov_init_packet_filters/_discard_filters (tokens 0.99, identifiers 0.31: the lists of
 different GUIDs), fort_device_control_pending/_allowpending (tokens 0.93), LogBuffer::readEntryTime/
 readEntryProcKill (tokens 0.88), fort_callout_install_ale/_packet (6 lines of code).
+
+CodeScene's directives in the "//" comment lines right above a function disable its rules for
+the function: @CodeScene(disable:"Excess Number of Function Arguments") one rule (several
+disable:"..." in turn), @CodeScene(disable-all) all of them. The issues they disable are counted
+apart; Duplicated Function Blocks and the file's lines aren't disabled by them.
 """
 
 import argparse
@@ -80,6 +85,20 @@ sizeof const static inline void int unsigned char struct typedef enum union""".s
 DUP_MIN_NLOC = 10
 DUP_MIN_TOKENS_RATIO = 0.96
 DUP_MIN_IDS_RATIO = 0.4
+
+DIRECTIVE_RE = re.compile(r"@CodeScene\(([^)]*)\)")
+
+DISABLE_RE = re.compile(r"disable:\s*\"([^\"]+)\"")
+
+DISABLE_ALL = "disable-all"
+
+RULE_NAMES = {
+    "cc": "Complex Method",
+    "args": "Excess Number of Function Arguments",
+    "logical": "Complex Conditional",
+    "bumps": "Bumpy Road Ahead",
+    "method_lines": "Large Method",
+}
 
 
 def blank_static_asserts(code):
@@ -236,27 +255,60 @@ def func_bumps(body):
 
 
 def check_func(path, func, lines, limits):
+    """Yields (the rule's key of RULE_NAMES, the issue's text)."""
     body = func_body(func, lines)
     where = f"{path}:{func.start_line}: {func.name}"
 
     cc = func_cc(func, body)
     if cc > limits.cc:
-        yield f"{where}: cc = {cc}"
+        yield "cc", f"{where}: cc = {cc}"
 
     if func.parameter_count > limits.args:
-        yield f"{where}: arguments = {func.parameter_count}"
+        yield "args", f"{where}: arguments = {func.parameter_count}"
 
     for line_off, cond in branch_conditions(body):
         ops = len(LOGICAL_RE.findall(cond))
         if ops > limits.logical:
-            yield f"{path}:{func.start_line + line_off}: {func.name}: conditional's && and || = {ops}"
+            yield "logical", (f"{path}:{func.start_line + line_off}: {func.name}:"
+                              f" conditional's && and || = {ops}")
 
     bumps = func_bumps(body)
     if bumps > limits.bumps:
-        yield f"{where}: bumps = {bumps}"
+        yield "bumps", f"{where}: bumps = {bumps}"
 
     if func.nloc > limits.method_lines:
-        yield f"{where}: lines of code = {func.nloc}"
+        yield "method_lines", f"{where}: lines of code = {func.nloc}"
+
+
+def disabled_rules(func, code_lines):
+    """Returns the rules' names disabled by the directives right above the function."""
+    rules = set()
+
+    i = func.start_line - 2
+    while i >= 0 and code_lines[i].lstrip().startswith("//"):
+        for args in DIRECTIVE_RE.findall(code_lines[i]):
+            rules.update(DISABLE_RE.findall(args))
+            if DISABLE_ALL in args:
+                rules.add(DISABLE_ALL)
+        i -= 1
+
+    return rules
+
+
+def report_func(path, func, lines, code_lines, limits):
+    """Prints the function's issues; returns (reported, disabled) counts."""
+    disabled = disabled_rules(func, code_lines)
+
+    reported = disabled_count = 0
+    for rule, issue in check_func(path, func, lines, limits):
+        if DISABLE_ALL in disabled or RULE_NAMES[rule] in disabled:
+            disabled_count += 1
+            continue
+
+        print(issue)
+        reported += 1
+
+    return reported, disabled_count
 
 
 def generalize_literals(code):
@@ -326,23 +378,24 @@ def check_file(path, limits):
 
     info = lizard.analyze_file.analyze_source_code(path, code)
 
+    code_lines = code.splitlines()
     lines = blank_comments_strings(code).splitlines()
     literal_lines = generalize_literals(code).splitlines()
 
-    count = 0
+    count = disabled = 0
     if info.nloc > limits.file_lines:
         print(f"{path}: file lines of code = {info.nloc}")
         count += 1
 
     for func in info.function_list:
-        for issue in check_func(path, func, lines, limits):
-            print(issue)
-            count += 1
+        reported, func_disabled = report_func(path, func, lines, code_lines, limits)
+        count += reported
+        disabled += func_disabled
 
     for issue in check_duplicates(path, info.function_list, lines, literal_lines):
         print(issue)
         count += 1
-    return count
+    return count, disabled
 
 
 def main():
@@ -363,7 +416,9 @@ def main():
 
     files = limits.files + (changed_files() if limits.changed else [])
 
-    count = sum(check_file(path, limits) for path in files)
+    results = [check_file(path, limits) for path in files]
+    count = sum(reported for reported, _ in results)
+    disabled = sum(func_disabled for _, func_disabled in results)
 
     # The convention: an `if` returning a computed expression has braces
     if limits.changed:
@@ -380,7 +435,8 @@ def main():
           f" conditional's && and || > {limits.logical}, bumps > {limits.bumps},"
           f" function's lines > {limits.method_lines}, file's lines > {limits.file_lines},"
           f" duplicated functions)"
-          f" in {len(files)} file(s)")
+          f" in {len(files)} file(s)"
+          + (f"; {disabled} disabled by @CodeScene directives" if disabled else ""))
     return 1 if count else 0
 
 
