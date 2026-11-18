@@ -43,7 +43,7 @@ void validateDriver(Device &device)
     confBuf.writeVersion();
     ASSERT_FALSE(confBuf.buffer().isEmpty());
 
-    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlValidate(), confBuf.data()));
+    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlValidate(), confBuf.buffer()));
 }
 
 void setConf(Device &device)
@@ -70,7 +70,7 @@ void setConf(Device &device)
     ASSERT_TRUE(confBuf.writeConf(conf, nullptr, &envManager));
 
     auto confData = confBuf.buffer();
-    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlSetConf(), confData.data(), confData.size()));
+    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlSetConf(), confData));
 }
 
 void printLogs(LogBuffer &buf)
@@ -111,8 +111,7 @@ TEST_F(LogReaderTest, logRead)
     for (;;) {
         qsizetype nr = 0;
         QByteArray &array = buf.array();
-        ASSERT_TRUE(device.ioctl(
-                DriverCommon::ioctlGetLog(), nullptr, 0, array.data(), array.size(), &nr));
+        ASSERT_TRUE(device.ioctl(DriverCommon::ioctlGetLog(), {}, array, &nr));
         buf.reset(nr);
         printLogs(buf);
     }

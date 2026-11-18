@@ -217,8 +217,7 @@ bool DriverManager::ioctlData(quint32 code, QByteArray &inBuf, QByteArray &outBu
 
     qsizetype retSize = 0;
 
-    const bool ok = device().ioctl(
-            code, inBuf.data(), inBuf.size(), outBuf.data(), outBuf.size(), &retSize);
+    const bool ok = device().ioctl(code, inBuf, outBuf, &retSize);
 
     if (wasCancelled) {
         driverWorker()->continueAsyncIo();

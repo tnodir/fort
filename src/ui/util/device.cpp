@@ -46,12 +46,13 @@ bool Device::cancelIo()
     return CancelIoEx(m_handle, nullptr);
 }
 
-bool Device::ioctl(quint32 code, char *in, int inSize, char *out, int outSize, qsizetype *retSize)
+bool Device::ioctl(quint32 code, const IoBuffer &in, const IoBuffer &out, qsizetype *retSize)
 {
     LPOVERLAPPED overlapped = isOverlapped() ? (LPOVERLAPPED) m_buffer.data() : nullptr;
 
     DWORD size = 0; // lpBytesReturned cannot be nullptr on Win7
-    const bool ok = DeviceIoControl(m_handle, code, in, inSize, out, outSize, &size, overlapped);
+    const bool ok = DeviceIoControl(
+            m_handle, code, in.data, in.size, out.data, out.size, &size, overlapped);
 
     if (retSize) {
         *retSize = size;

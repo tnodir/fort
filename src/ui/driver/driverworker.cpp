@@ -112,8 +112,7 @@ void DriverWorker::readLog()
     QByteArray &array = m_logBuffer->array();
     qsizetype nr = 0;
 
-    const bool success = device().ioctl(
-            DriverCommon::ioctlGetLog(), nullptr, 0, array.data(), array.size(), &nr);
+    const bool success = device().ioctl(DriverCommon::ioctlGetLog(), {}, array, &nr);
 
     quint32 errorCode = 0;
 

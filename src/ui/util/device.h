@@ -1,6 +1,7 @@
 #ifndef DEVICE_H
 #define DEVICE_H
 
+#include <QByteArray>
 #include <QObject>
 #include <QVarLengthArray>
 
@@ -19,6 +20,15 @@ public:
     Q_ENUM(OpenFlag)
     Q_DECLARE_FLAGS(OpenFlags, OpenFlag)
 
+    struct IoBuffer
+    {
+        IoBuffer() = default;
+        IoBuffer(QByteArray &array) : size(int(array.size())), data(array.data()) { }
+
+        int size = 0;
+        char *data = nullptr;
+    };
+
     explicit Device();
     virtual ~Device();
     CLASS_DELETE_COPY_MOVE(Device)
@@ -33,8 +43,8 @@ public slots:
 
     bool cancelIo();
 
-    bool ioctl(quint32 code, char *in = nullptr, int inSize = 0, char *out = nullptr,
-            int outSize = 0, qsizetype *retSize = nullptr);
+    bool ioctl(quint32 code, const IoBuffer &in = {}, const IoBuffer &out = {},
+            qsizetype *retSize = nullptr);
 
     void initOverlapped(void *eventHandle = nullptr);
 
