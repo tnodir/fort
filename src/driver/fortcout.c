@@ -76,13 +76,13 @@ typedef struct fort_callout_register_args
 typedef const FORT_CALLOUT_REGISTER_ARGS *PCFORT_CALLOUT_REGISTER_ARGS;
 
 static const FORT_CALLOUT_REGISTER_ARGS g_calloutArgs[FORT_STAT_CALLOUT_IDS_COUNT] = {
-    [FORT_STAT_CONNECT4_ID] = { .classifyFn = &fort_callout_connect_v4,
+    [FORT_STAT_CONNECT4_ID] = { .classifyFn = &fort_callout_ale_classify,
             .key = &FORT_GUID_CALLOUT_CONNECT_V4 },
-    [FORT_STAT_CONNECT6_ID] = { .classifyFn = &fort_callout_connect_v6,
+    [FORT_STAT_CONNECT6_ID] = { .classifyFn = &fort_callout_ale_classify,
             .key = &FORT_GUID_CALLOUT_CONNECT_V6 },
-    [FORT_STAT_ACCEPT4_ID] = { .classifyFn = &fort_callout_accept_v4,
+    [FORT_STAT_ACCEPT4_ID] = { .classifyFn = &fort_callout_ale_classify,
             .key = &FORT_GUID_CALLOUT_ACCEPT_V4 },
-    [FORT_STAT_ACCEPT6_ID] = { .classifyFn = &fort_callout_accept_v6,
+    [FORT_STAT_ACCEPT6_ID] = { .classifyFn = &fort_callout_ale_classify,
             .key = &FORT_GUID_CALLOUT_ACCEPT_V6 },
     [FORT_STAT_IN_TRANSPORT4_ID] = { FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
             &fort_callout_transport_classify_in, &fort_callout_flow_delete,
