@@ -25,7 +25,13 @@ QString makeFtsFilterMatch(const QString &filter)
     if (words.isEmpty())
         return {};
 
-    return words.join("* ") + '*';
+    // Quote the words as FTS5 strings: "-", ":", "(" etc. are its syntax
+    QStringList list;
+    for (QString word : words) {
+        list << ('"' + word.replace('"', "\"\"") + "\"*");
+    }
+
+    return list.join(' ');
 }
 
 }
