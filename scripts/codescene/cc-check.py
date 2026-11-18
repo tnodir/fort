@@ -52,10 +52,12 @@ apart; Duplicated Function Blocks and the file's lines aren't disabled by them.
 
 import argparse
 import difflib
+import itertools
 import os
 import re
 import subprocess
 import sys
+from typing import NamedTuple
 
 import lizard
 
@@ -99,6 +101,16 @@ RULE_NAMES = {
     "bumps": "Bumpy Road Ahead",
     "method_lines": "Large Method",
 }
+
+
+class SourceFile(NamedTuple):
+    """The file's lines: as is, with the comments and literals blanked (blank_comments_strings()),
+    with the comments blanked and the literals generalized (generalize_literals())."""
+
+    path: str
+    code_lines: list
+    lines: list
+    literal_lines: list
 
 
 def blank_static_asserts(code):
@@ -165,12 +177,9 @@ class StatementParser:
         depth = 0
         while self.peek() is not None:
             tok = self.next()
-            if tok == open_tok:
-                depth += 1
-            elif tok == close_tok:
-                depth -= 1
-                if depth == 0:
-                    return
+            depth += (tok == open_tok) - (tok == close_tok)
+            if tok == close_tok and depth == 0:
+                return
 
     def statement(self):
         """Returns (is control statement or contains one, the bodies' "contains one" flags)."""
@@ -254,9 +263,10 @@ def func_bumps(body):
     return bumps
 
 
-def check_func(path, func, lines, limits):
+def check_func(src, func, limits):
     """Yields (the rule's key of RULE_NAMES, the issue's text)."""
-    body = func_body(func, lines)
+    path = src.path
+    body = func_body(func, src.lines)
     where = f"{path}:{func.start_line}: {func.name}"
 
     cc = func_cc(func, body)
@@ -295,12 +305,12 @@ def disabled_rules(func, code_lines):
     return rules
 
 
-def report_func(path, func, lines, code_lines, limits):
+def report_func(src, func, limits):
     """Prints the function's issues; returns (reported, disabled) counts."""
-    disabled = disabled_rules(func, code_lines)
+    disabled = disabled_rules(func, src.code_lines)
 
     reported = disabled_count = 0
-    for rule, issue in check_func(path, func, lines, limits):
+    for rule, issue in check_func(src, func, limits):
         if DISABLE_ALL in disabled or RULE_NAMES[rule] in disabled:
             disabled_count += 1
             continue
@@ -327,16 +337,16 @@ def is_identifier(tok):
     return tok[0].isalpha() or tok[0] == "_"
 
 
-def dup_signature(func, lines, literal_lines):
+def dup_signature(src, func):
     """Returns (generalized tokens, identifiers) of the function's body from its "{"."""
-    start = func_body(func, lines).find("{")
+    start = func_body(func, src.lines).find("{")
     if start < 0:
         return None
 
     if func.nloc < DUP_MIN_NLOC:
         return None
 
-    body = func_body(func, literal_lines)[start:]
+    body = func_body(func, src.literal_lines)[start:]
 
     raw_tokens = DUP_TOKEN_RE.findall(body)
 
@@ -351,25 +361,32 @@ def dup_signature(func, lines, literal_lines):
     return tokens, {tok for tok in raw_tokens if is_identifier(tok)}
 
 
-def check_duplicates(path, funcs, lines, literal_lines):
-    sigs = []
-    for func in funcs:
-        sig = dup_signature(func, lines, literal_lines)
-        if sig:
-            sigs.append((func, sig))
+def duplicate_issue(path, first, second):
+    """Returns the issue's text, if the (function, signature) pairs are duplicates, else None."""
+    func, (tokens, ids) = first
+    other, (other_tokens, other_ids) = second
 
-    for i, (func, (tokens, ids)) in enumerate(sigs):
-        for other, (other_tokens, other_ids) in sigs[i + 1 :]:
-            ids_ratio = len(ids & other_ids) / len(ids | other_ids)
-            if ids_ratio < DUP_MIN_IDS_RATIO:
-                continue
+    ids_ratio = len(ids & other_ids) / len(ids | other_ids)
+    if ids_ratio < DUP_MIN_IDS_RATIO:
+        return None
 
-            tokens_ratio = difflib.SequenceMatcher(
-                    None, tokens, other_tokens, autojunk=False).ratio()
-            if tokens_ratio >= DUP_MIN_TOKENS_RATIO:
-                yield (f"{path}:{func.start_line}: {func.name}: duplicates {other.name}"
-                       f" (line {other.start_line}; tokens {tokens_ratio:.2f},"
-                       f" identifiers {ids_ratio:.2f})")
+    tokens_ratio = difflib.SequenceMatcher(None, tokens, other_tokens, autojunk=False).ratio()
+    if tokens_ratio < DUP_MIN_TOKENS_RATIO:
+        return None
+
+    return (f"{path}:{func.start_line}: {func.name}: duplicates {other.name}"
+            f" (line {other.start_line}; tokens {tokens_ratio:.2f},"
+            f" identifiers {ids_ratio:.2f})")
+
+
+def check_duplicates(src, funcs):
+    sigs = [(func, dup_signature(src, func)) for func in funcs]
+    sigs = [(func, sig) for func, sig in sigs if sig]
+
+    for first, second in itertools.combinations(sigs, 2):
+        issue = duplicate_issue(src.path, first, second)
+        if issue:
+            yield issue
 
 
 def check_file(path, limits):
@@ -378,9 +395,8 @@ def check_file(path, limits):
 
     info = lizard.analyze_file.analyze_source_code(path, code)
 
-    code_lines = code.splitlines()
-    lines = blank_comments_strings(code).splitlines()
-    literal_lines = generalize_literals(code).splitlines()
+    src = SourceFile(path, code.splitlines(), blank_comments_strings(code).splitlines(),
+                     generalize_literals(code).splitlines())
 
     count = disabled = 0
     if info.nloc > limits.file_lines:
@@ -388,11 +404,11 @@ def check_file(path, limits):
         count += 1
 
     for func in info.function_list:
-        reported, func_disabled = report_func(path, func, lines, code_lines, limits)
+        reported, func_disabled = report_func(src, func, limits)
         count += reported
         disabled += func_disabled
 
-    for issue in check_duplicates(path, info.function_list, lines, literal_lines):
+    for issue in check_duplicates(src, info.function_list):
         print(issue)
         count += 1
     return count, disabled
