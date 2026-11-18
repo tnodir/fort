@@ -11,7 +11,8 @@ import re
 import subprocess
 import sys
 
-SOURCE_EXTS = ('.c', '.h', '.cpp')
+# Only the sources: other files (e.g. the installer's .isl) aren't in UTF-8
+SOURCE_PATHS = ['*.c', '*.h', '*.cpp']
 
 HUNK = re.compile(r'@@ -\S+ \+(\d+)(?:,(\d+))? @@')
 
@@ -38,7 +39,8 @@ def diff_added_lines(repo, base):
     """The added lines' numbers by the files' paths"""
     added = {}
     cur = None
-    for line in run_git(['diff', '-U0', '--no-color', base], repo).splitlines():
+    diff = run_git(['diff', '-U0', '--no-color', base, '--'] + SOURCE_PATHS, repo)
+    for line in diff.splitlines():
         if line.startswith('+++ b/'):
             cur = line[6:].strip()
             added[cur] = set()
@@ -53,7 +55,7 @@ def diff_added_lines(repo, base):
 
 def untracked_added_lines(repo):
     """All the lines of the untracked files are added"""
-    untracked = run_git(['ls-files', '--others', '--exclude-standard'], repo)
+    untracked = run_git(['ls-files', '--others', '--exclude-standard', '--'] + SOURCE_PATHS, repo)
     return {f: range(1, sys.maxsize) for f in untracked.splitlines()}
 
 
@@ -137,8 +139,7 @@ def main():
     base = sys.argv[1] if len(sys.argv) > 1 else 'master...HEAD'
 
     added = added_lines(repo, base)
-    found = sum(check_file(repo, f, nums) for f, nums in added.items()
-                if f.endswith(SOURCE_EXTS))
+    found = sum(check_file(repo, f, nums) for f, nums in added.items())
     print('found:', found)
 
 
