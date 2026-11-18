@@ -43,6 +43,8 @@ private:
     void setupPasswordButtons();
     QLayout *setupDialogButtons();
 
+    void updatePasswordButtons();
+
 private:
     HomeController *m_ctrl = nullptr;
 

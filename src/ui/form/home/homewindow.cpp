@@ -186,6 +186,9 @@ QWidget *HomeWindow::setupHeader()
     frame->setAutoFillBackground(true);
     frame->setPalette(palette);
 
+    // After the Password buttons are in the frame: a parentless widget shown is a window
+    updatePasswordButtons();
+
     return frame;
 }
 
@@ -215,14 +218,8 @@ void HomeWindow::setupPasswordButtons()
             m_btPasswordUnlock, &QToolButton::clicked, this,
             [&] { windowManager()->checkPassword(WindowHome); }, Qt::QueuedConnection);
 
-    const auto refreshPasswordButtons = [&] {
-        m_btPasswordLock->setVisible(settings()->hasPassword() && !ctrl()->passwordLocked());
-        m_btPasswordUnlock->setVisible(ctrl()->passwordLocked());
-    };
-
-    refreshPasswordButtons();
-
-    connect(ctrl(), &HomeController::passwordLockedChanged, this, refreshPasswordButtons);
+    connect(ctrl(), &HomeController::passwordLockedChanged, this,
+            &HomeWindow::updatePasswordButtons);
 }
 
 QLayout *HomeWindow::setupDialogButtons()
@@ -247,4 +244,10 @@ QLayout *HomeWindow::setupDialogButtons()
     layout->setContentsMargins(6, 4, 6, 4);
 
     return layout;
+}
+
+void HomeWindow::updatePasswordButtons()
+{
+    m_btPasswordLock->setVisible(settings()->hasPassword() && !ctrl()->passwordLocked());
+    m_btPasswordUnlock->setVisible(ctrl()->passwordLocked());
 }

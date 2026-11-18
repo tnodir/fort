@@ -82,6 +82,7 @@ private:
     void updateApplyChild();
     void updateAppIcon();
     void updateQuickAction();
+    void updateScheduleVisible(bool checked);
 
     void selectTimedMenuAction(int index);
 

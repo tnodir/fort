@@ -106,6 +106,10 @@ void DnsPage::setupUi()
     layout->addStretch();
 
     this->setLayout(layout);
+
+    // After the warnings are in the layout: a parentless widget shown is a window
+    updateMixedServersWarning(ini().dnsServers());
+    updateForwarderErrorWarning();
 }
 
 void DnsPage::setupForwarderBox()
@@ -208,8 +212,6 @@ void DnsPage::setupMixedServersWarning()
     m_labelMixedServers = ControlUtil::createLabel();
 
     m_mixedServersWarning = createWarning(m_labelMixedServers);
-
-    updateMixedServersWarning(ini().dnsServers());
 }
 
 void DnsPage::setupTestResults()
@@ -246,8 +248,6 @@ void DnsPage::setupForwarderErrorWarning()
         connect(dnsManager, &DnsManager::statusChanged, this,
                 &DnsPage::updateForwarderErrorWarning);
     }
-
-    updateForwarderErrorWarning();
 }
 
 void DnsPage::onBlockZonesEdited()

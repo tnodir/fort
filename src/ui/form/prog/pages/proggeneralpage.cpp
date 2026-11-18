@@ -323,6 +323,9 @@ void ProgGeneralPage::setupUi()
     layout->addLayout(scheduleLayout);
 
     this->setLayout(layout);
+
+    // After the Schedule's controls are in the layout: a parentless widget shown is a window
+    updateScheduleVisible(m_cbSchedule->isChecked());
 }
 
 QLayout *ProgGeneralPage::setupFormLayout()
@@ -563,21 +566,7 @@ void ProgGeneralPage::setupCbSchedule()
 {
     m_cbSchedule = ControlUtil::createCheckBox(":/icons/time.png");
 
-    const auto refreshScheduleEnabled = [&](bool checked) {
-        m_comboScheduleAction->setVisible(checked);
-        m_comboScheduleType->setVisible(checked);
-
-        m_scScheduleIn->setVisible(checked && m_scScheduleIn->isEnabled());
-        m_dteScheduleAt->setVisible(checked && m_dteScheduleAt->isEnabled());
-
-        m_btQuickAction->setVisible(!checked);
-        m_btTimedAction->setVisible(!checked);
-        m_btTimedRemove->setVisible(!checked);
-    };
-
-    refreshScheduleEnabled(false);
-
-    connect(m_cbSchedule, &QCheckBox::toggled, this, refreshScheduleEnabled);
+    connect(m_cbSchedule, &QCheckBox::toggled, this, &ProgGeneralPage::updateScheduleVisible);
 }
 
 void ProgGeneralPage::setupComboScheduleType()
@@ -748,6 +737,19 @@ void ProgGeneralPage::updateQuickAction()
     m_btQuickAction->setText(rb->text());
 
     m_btTimedAction->setIcon(rb->icon());
+}
+
+void ProgGeneralPage::updateScheduleVisible(bool checked)
+{
+    m_comboScheduleAction->setVisible(checked);
+    m_comboScheduleType->setVisible(checked);
+
+    m_scScheduleIn->setVisible(checked && m_scScheduleIn->isEnabled());
+    m_dteScheduleAt->setVisible(checked && m_dteScheduleAt->isEnabled());
+
+    m_btQuickAction->setVisible(!checked);
+    m_btTimedAction->setVisible(!checked);
+    m_btTimedRemove->setVisible(!checked);
 }
 
 void ProgGeneralPage::selectTimedMenuAction(int index)

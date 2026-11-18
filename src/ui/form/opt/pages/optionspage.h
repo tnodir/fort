@@ -53,6 +53,7 @@ private:
     void changeBlockTraffic(int index);
     void changeFilterMode(int index);
     void updateTrafficFlags();
+    void updatePasswordLock();
 
 private:
     bool m_passwordEdited : 1 = false;

@@ -436,6 +436,9 @@ void OptionsPage::setupProtectionBox()
 
     m_gbProtection = new QGroupBox();
     m_gbProtection->setLayout(layout);
+
+    // After the Password Lock button is in the box: a parentless widget shown is a window
+    updatePasswordLock();
 }
 
 QLayout *OptionsPage::setupPasswordLayout()
@@ -483,16 +486,8 @@ void OptionsPage::setupPasswordLock()
         m_btPasswordLock->hide();
     });
 
-    const auto refreshPasswordLock = [&] {
-        m_btPasswordLock->setVisible(Fort::settings()->hasPassword()
-                && Fort::settings()->passwordUnlockType() > FortSettings::UnlockWindow);
-
-        retranslatePasswordLock();
-    };
-
-    refreshPasswordLock();
-
-    connect(Fort::settings(), &FortSettings::passwordCheckedChanged, this, refreshPasswordLock);
+    connect(Fort::settings(), &FortSettings::passwordCheckedChanged, this,
+            &OptionsPage::updatePasswordLock);
 }
 
 void OptionsPage::setupProgBox()
@@ -634,4 +629,12 @@ void OptionsPage::updateTrafficFlags()
 
     // The default duration ends with the initial Auto-Learn
     m_lscAutoLearnSeconds->spinBox()->setValue(ini().autoLearnSeconds());
+}
+
+void OptionsPage::updatePasswordLock()
+{
+    m_btPasswordLock->setVisible(Fort::settings()->hasPassword()
+            && Fort::settings()->passwordUnlockType() > FortSettings::UnlockWindow);
+
+    retranslatePasswordLock();
 }

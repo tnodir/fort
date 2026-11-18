@@ -471,7 +471,11 @@ QLayout *FilterEditDialog::setupActionsLayout()
     // By the button's id: FORT_RULE_FILTER_ACTION_*, 0 - the Rule's action
     m_rbRuleAction = createActionButton(/*actionTypeId=*/0, Qt::Key_R);
     m_rbRuleAction->setIcon(IconCache::icon(":/icons/script.png"));
-    m_rbRuleAction->setVisible(isRuleFilter());
+
+    // Only a Rule's filter has it: a parentless widget shown is a window
+    if (!isRuleFilter()) {
+        m_rbRuleAction->hide();
+    }
 
     m_rbAllow = createActionButton(FORT_RULE_FILTER_ACTION_ALLOW, Qt::Key_A);
     m_rbBlock = createActionButton(FORT_RULE_FILTER_ACTION_BLOCK, Qt::Key_B);

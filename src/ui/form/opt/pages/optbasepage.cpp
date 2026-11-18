@@ -41,7 +41,11 @@ QWidget *OptBasePage::createWarning(QLabel *label)
 QWidget *OptBasePage::createNoServiceWarning(QLabel *label)
 {
     auto w = createWarning(label);
-    w->setVisible(!Fort::settings()->hasService());
+
+    // Shown with its parent: a parentless widget shown is a window
+    if (Fort::settings()->hasService()) {
+        w->hide();
+    }
 
     return w;
 }
