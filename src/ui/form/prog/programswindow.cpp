@@ -209,6 +209,9 @@ void ProgramsWindow::setupUi()
 
     this->setLayout(layout);
 
+    // After the Sort States' buttons are in the layout: a parentless widget shown is a window
+    updateSortStateCounts();
+
     // Accept File Drops
     setAcceptDrops(true);
 
@@ -235,7 +238,6 @@ QLayout *ProgramsWindow::setupHeader()
 
     // Sort States
     auto sortStatesLayout = setupSortStatesLayout();
-    updateSortStateCounts();
 
     // Options button
     m_btOptions = ControlUtil::createOptionsButton();
