@@ -29,7 +29,7 @@ public:
     explicit FormWindow(QWidget *parent = nullptr, Qt::WindowFlags f = {});
 
     virtual WindowCode windowCode() const { return WindowNone; }
-    virtual QString windowOverlayIconPath() const { return {}; }
+    virtual QString windowIconPath() const { return {}; }
     virtual QString helpSection() const { return {}; }
 
     virtual bool deleteOnClose() const { return true; }

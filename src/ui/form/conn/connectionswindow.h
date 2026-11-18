@@ -25,7 +25,7 @@ public:
     explicit ConnectionsWindow(QWidget *parent = nullptr);
 
     WindowCode windowCode() const override { return WindowConnections; }
-    QString windowOverlayIconPath() const override { return ":/icons/connect.png"; }
+    QString windowIconPath() const override { return ":/icons/connect.png"; }
     QString helpSection() const override { return "connections"; }
 
     ConnectionsController *ctrl() const { return m_ctrl; }

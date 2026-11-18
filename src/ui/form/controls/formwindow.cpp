@@ -58,7 +58,7 @@ void FormWindow::setupFormWindow(IniUser &iniUser, const QString &iniGroup)
 void FormWindow::setupWindowIcon(IniUser &iniUser)
 {
     const auto refreshWindowIcon = [&](const QString &iconPath) {
-        this->setWindowIcon(GuiUtil::overlayIcon(iconPath, windowOverlayIconPath()));
+        this->setWindowIcon(GuiUtil::overlayIcon(iconPath, windowIconPath()));
     };
 
     QString iconPath;

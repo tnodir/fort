@@ -14,7 +14,7 @@ public:
     explicit OptionsWindow(QWidget *parent = nullptr);
 
     WindowCode windowCode() const override { return WindowOptions; }
-    QString windowOverlayIconPath() const override { return ":/icons/cog.png"; }
+    QString windowIconPath() const override { return ":/icons/cog.png"; }
     QString helpSection() const override;
 
     OptionsController *ctrl() const { return m_ctrl; }

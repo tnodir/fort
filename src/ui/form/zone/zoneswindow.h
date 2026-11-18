@@ -16,7 +16,7 @@ public:
     explicit ZonesWindow(QWidget *parent = nullptr);
 
     WindowCode windowCode() const override { return WindowZones; }
-    QString windowOverlayIconPath() const override { return ":/icons/ip_class.png"; }
+    QString windowIconPath() const override { return ":/icons/ip_class.png"; }
     QString helpSection() const override { return "zones"; }
 
     ZonesController *ctrl() const { return m_ctrl; }

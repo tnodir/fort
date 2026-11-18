@@ -17,7 +17,7 @@ public:
     explicit GroupsWindow(QWidget *parent = nullptr);
 
     WindowCode windowCode() const override { return WindowGroups; }
-    QString windowOverlayIconPath() const override { return ":/icons/application_double.png"; }
+    QString windowIconPath() const override { return ":/icons/application_double.png"; }
     QString helpSection() const override { return "groups"; }
 
     GroupsController *ctrl() const { return m_ctrl; }

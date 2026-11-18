@@ -20,7 +20,7 @@ public:
             quint8 selectRuleTypes = 0, QWidget *parent = nullptr, Qt::WindowFlags f = {});
 
     WindowCode windowCode() const override { return WindowRules; }
-    QString windowOverlayIconPath() const override { return ":/icons/script.png"; }
+    QString windowIconPath() const override { return ":/icons/script.png"; }
     QString helpSection() const override { return "rules"; }
 
     // Bits of Rule::ruleTypeBit()

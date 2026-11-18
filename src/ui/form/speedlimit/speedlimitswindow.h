@@ -19,7 +19,7 @@ public:
     explicit SpeedLimitsWindow(QWidget *parent = nullptr);
 
     WindowCode windowCode() const override { return WindowSpeedLimits; }
-    QString windowOverlayIconPath() const override { return ":/icons/speedometer.png"; }
+    QString windowIconPath() const override { return ":/icons/speedometer.png"; }
     QString helpSection() const override { return "speed-limits"; }
 
     SpeedLimitsController *ctrl() const { return m_ctrl; }
