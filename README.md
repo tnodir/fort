@@ -6,8 +6,8 @@
 </p>
 
 [![Release](https://img.shields.io/github/release/tnodir/fort.svg)](https://github.com/tnodir/fort/releases/latest)
-[![CodeScene Code Health](https://codescene.io/projects/5344/status-badges/code-health)](https://codescene.io/projects/5344)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=tnodir_fort&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=tnodir_fort)
+[![CodeScene Code Health](https://codescene.io/projects/5344/status-badges/code-health)](https://codescene.io/projects/5344)
 
 Fort is an effective firewall designed for Windows 7 and later versions, offering both simplicity and robustness.
 
@@ -45,6 +45,7 @@ Fort is an effective firewall designed for Windows 7 and later versions, offerin
   - [Functionality overview](https://github.com/tnodir/fort/wiki/Functionality-overview)
   - [Rules](https://github.com/tnodir/fort/wiki/Rules)
   - [Frequently Asked Questions (FAQ)](https://github.com/tnodir/fort/wiki/FAQ)
+  - [Translation](https://github.com/tnodir/fort/wiki/Translation)
   - [Building](https://github.com/tnodir/fort/wiki/Building)
 
 ## Support
