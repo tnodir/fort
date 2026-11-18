@@ -237,7 +237,9 @@ IpRange::ParseError IpRange::parseIp4AddressMaskFull(const QStringView mask, Ip4
 
     if (range.from > range.to) {
         setErrorMessage(tr("Bad range"));
-        setErrorDetails(QString("IPv4 from='%1' to='%2'").arg(range.from, range.to));
+        setErrorDetails(QString("IPv4 from='%1' to='%2'")
+                        .arg(NetFormatUtil::ip4ToText(range.from),
+                                NetFormatUtil::ip4ToText(range.to)));
         return ErrorBadRange;
     }
 
