@@ -316,6 +316,14 @@ IpRange::ParseError IpRange::parseIp6AddressMaskFull(
         return ErrorBadAddress2;
     }
 
+    if (compareLessIp6(range.to, range.from)) {
+        setErrorMessage(tr("Bad range"));
+        setErrorDetails(QString("IPv6 from='%1' to='%2'")
+                        .arg(NetFormatUtil::ip6ToText(range.from),
+                                NetFormatUtil::ip6ToText(range.to)));
+        return ErrorBadRange;
+    }
+
     hasMask = true;
 
     return ErrorOk;

@@ -190,6 +190,7 @@ TEST_F(NetUtilTest, ip6Ranges)
 
     ASSERT_FALSE(ipRange.fromText("::1/129"));
     ASSERT_FALSE(ipRange.fromText("::1/-16"));
+    ASSERT_FALSE(ipRange.fromText("::20 - ::18"));
     ASSERT_EQ(ipRange.errorLineNo(), 1);
 
     ASSERT_TRUE(ipRange.fromText("::1/128"));
