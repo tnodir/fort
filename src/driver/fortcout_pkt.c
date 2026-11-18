@@ -27,6 +27,11 @@ inline static UINT32 fort_packet_data_size(const FWPS_INCOMING_METADATA_VALUES0 
     return dataSize;
 }
 
+inline static BOOL fort_packet_layer_is_inbound(UINT16 layerId)
+{
+    return layerId == FWPS_LAYER_INBOUND_TRANSPORT_V4 || layerId == FWPS_LAYER_INBOUND_TRANSPORT_V6;
+}
+
 inline static BOOL fort_packet_layer_is_ipv6(UINT16 layerId)
 {
     return layerId == FWPS_LAYER_INBOUND_TRANSPORT_V6
@@ -83,14 +88,16 @@ static void fort_callout_transport_classify_stat(
     }
 }
 
-static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
+// @CodeScene(disable:"Excess Number of Function Arguments")
+FORT_API void NTAPI fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
-        BOOL inbound)
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
     FORT_CHECK_STACK(FORT_CALLOUT_TRANSPORT_CLASSIFY);
 
     const PNET_BUFFER_LIST netBufList = layerData;
+    const UINT16 layerId = inFixedValues->layerId;
+    const BOOL inbound = fort_packet_layer_is_inbound(layerId);
 
     FORT_CALLOUT_ARG ca = {
         .inFixedValues = inFixedValues,
@@ -101,7 +108,7 @@ static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixed
         .flowContext = flowContext,
         .dataSize = fort_packet_data_size(inMetaValues, netBufList, inbound),
         .inbound = inbound,
-        .isIPv6 = fort_packet_layer_is_ipv6(inFixedValues->layerId),
+        .isIPv6 = fort_packet_layer_is_ipv6(layerId),
     };
 
     if (fort_callout_transport_classify_shaper(classifyOut, &ca))
@@ -110,22 +117,6 @@ static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixed
     fort_callout_transport_classify_stat(classifyOut, &ca);
 
     fort_callout_classify_continue(classifyOut); /* continue */
-}
-
-FORT_API void NTAPI fort_callout_transport_classify_in(const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
-{
-    fort_callout_transport_classify(inFixedValues, inMetaValues, layerData, filter, flowContext,
-            classifyOut, /*inbound=*/TRUE);
-}
-
-FORT_API void NTAPI fort_callout_transport_classify_out(const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
-{
-    fort_callout_transport_classify(inFixedValues, inMetaValues, layerData, filter, flowContext,
-            classifyOut, /*inbound=*/FALSE);
 }
 
 FORT_API void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, UINT64 flowContext)
@@ -146,16 +137,32 @@ FORT_API void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, U
     fort_flow_delete(&fort_device()->stat, flowContext);
 }
 
-static void fort_callout_discard_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
+inline static UCHAR fort_callout_discard_flags_index(UINT16 layerId)
+{
+    switch (layerId) {
+    case FWPS_LAYER_INBOUND_TRANSPORT_V4_DISCARD:
+        return FWPS_FIELD_INBOUND_TRANSPORT_V4_FLAGS;
+    case FWPS_LAYER_INBOUND_TRANSPORT_V6_DISCARD:
+        return FWPS_FIELD_INBOUND_TRANSPORT_V6_FLAGS;
+    case FWPS_LAYER_INBOUND_IPPACKET_V4_DISCARD:
+        return FWPS_FIELD_INBOUND_IPPACKET_V4_FLAGS;
+    default:
+        return FWPS_FIELD_INBOUND_IPPACKET_V6_FLAGS;
+    }
+}
+
+// @CodeScene(disable:"Excess Number of Function Arguments")
+FORT_API void NTAPI fort_callout_discard_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
-        UCHAR flagsIndex)
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
     UNUSED(inMetaValues);
     UNUSED(layerData);
     UNUSED(flowContext);
 
     FORT_CHECK_STACK(FORT_CALLOUT_DISCARD_CLASSIFY);
+
+    const UCHAR flagsIndex = fort_callout_discard_flags_index(inFixedValues->layerId);
 
     const UINT32 classify_flags = inFixedValues->incomingValue[flagsIndex].value.uint32;
     const BOOL is_loopback = (classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0;
@@ -165,36 +172,4 @@ static void fort_callout_discard_classify(const FWPS_INCOMING_VALUES0 *inFixedVa
     } else {
         fort_callout_classify_block(classifyOut); /* block */
     }
-}
-
-FORT_API void NTAPI fort_callout_transport_discard_in_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
-{
-    fort_callout_discard_classify(inFixedValues, inMetaValues, layerData, filter, flowContext,
-            classifyOut, FWPS_FIELD_INBOUND_TRANSPORT_V4_FLAGS);
-}
-
-FORT_API void NTAPI fort_callout_transport_discard_in_v6(const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
-{
-    fort_callout_discard_classify(inFixedValues, inMetaValues, layerData, filter, flowContext,
-            classifyOut, FWPS_FIELD_INBOUND_TRANSPORT_V6_FLAGS);
-}
-
-FORT_API void NTAPI fort_callout_ippacket_discard_in_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
-{
-    fort_callout_discard_classify(inFixedValues, inMetaValues, layerData, filter, flowContext,
-            classifyOut, FWPS_FIELD_INBOUND_IPPACKET_V4_FLAGS);
-}
-
-FORT_API void NTAPI fort_callout_ippacket_discard_in_v6(const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
-{
-    fort_callout_discard_classify(inFixedValues, inMetaValues, layerData, filter, flowContext,
-            classifyOut, FWPS_FIELD_INBOUND_IPPACKET_V6_FLAGS);
 }
