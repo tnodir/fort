@@ -13,6 +13,7 @@ public:
 private:
     void setupUi();
 
+    void addCheckBox(QAction *action);
     void addMenu(QMenu *menu);
 };
 

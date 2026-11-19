@@ -26,6 +26,8 @@ public:
     QAction *homeAction() const { return m_homeAction; }
     QMenu *optionsMenu() const { return m_optionsMenu; }
     QMenu *statisticsMenu() const { return m_statisticsMenu; }
+    QAction *filterEnabledAction() const { return m_filterEnabledAction; }
+    QAction *snoozeAlertsAction() const { return m_snoozeAlertsAction; }
     QMenu *blockTrafficMenu() const { return m_blockTrafficMenu; }
     QMenu *filterModeMenu() const { return m_filterModeMenu; }
     QAction *quitAction() const { return m_quitAction; }

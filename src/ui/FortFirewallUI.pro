@@ -82,6 +82,7 @@ SOURCES += \
     form/conn/apppendingconnswindow.cpp \
     form/conn/connectionscontroller.cpp \
     form/conn/connectionswindow.cpp \
+    form/controls/actioncheckbox.cpp \
     form/controls/appinforow.cpp \
     form/controls/checkspincombo.cpp \
     form/controls/clickablemenu.cpp \
@@ -447,6 +448,7 @@ HEADERS += \
     form/conn/apppendingconnswindow.h \
     form/conn/connectionscontroller.h \
     form/conn/connectionswindow.h \
+    form/controls/actioncheckbox.h \
     form/controls/appinforow.h \
     form/controls/checkspincombo.h \
     form/controls/clickablemenu.h \
