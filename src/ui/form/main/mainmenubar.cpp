@@ -30,6 +30,9 @@ void MainMenuBar::retranslateUi()
     m_toolsMenu->setTitle(tr("Tools"));
     m_actReviewAlerts->setText(tr("Review Alerts"));
 
+    m_windowMenu->setTitle(tr("Window"));
+    m_actResetLayout->setText(tr("Reset Layout"));
+
     m_helpMenu->setTitle(tr("Help"));
     m_actHelp->setText(HomeLinks::text(HomeLinks::LinkHelp));
     for (int i = 0; i < m_linkActions.size(); ++i) {
@@ -42,6 +45,7 @@ void MainMenuBar::setupUi()
 {
     setupFileMenu();
     setupToolsMenu();
+    setupWindowMenu();
     setupHelpMenu();
 }
 
@@ -75,6 +79,15 @@ void MainMenuBar::setupToolsMenu()
     m_actReviewAlerts = m_toolsMenu->addAction(IconCache::icon(":/icons/error.png"), QString());
     connect(m_actReviewAlerts, &QAction::triggered, windowManager(),
             [] { windowManager()->showProgramAlertWindow(); });
+}
+
+void MainMenuBar::setupWindowMenu()
+{
+    m_windowMenu = addMenu(QString());
+
+    m_actResetLayout =
+            m_windowMenu->addAction(IconCache::icon(":/icons/arrow_refresh_small.png"), QString());
+    connect(m_actResetLayout, &QAction::triggered, m_mainWindow, &MainWindow::resetDocksLayout);
 }
 
 void MainMenuBar::setupHelpMenu()

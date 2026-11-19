@@ -178,6 +178,34 @@ void MainWindow::removeDock(PanelDock *dock)
     updateHint();
 }
 
+void MainWindow::resetDocksLayout()
+{
+    const auto docks = this->docks();
+    if (docks.isEmpty())
+        return;
+
+    // The current tab stays current
+    const auto shownDock = currentDock();
+    const auto firstDock = docks.first();
+
+    for (PanelDock *dock : docks) {
+        m_dockHost->removeDockWidget(dock);
+    }
+
+    for (PanelDock *dock : docks) {
+        m_dockHost->addDockWidget(Qt::LeftDockWidgetArea, dock);
+        dock->show();
+
+        if (dock != firstDock) {
+            m_dockHost->tabifyDockWidget(firstDock, dock);
+        }
+    }
+
+    if (shownDock) {
+        shownDock->raise();
+    }
+}
+
 QStringList MainWindow::dockGroups() const
 {
     QStringList list;

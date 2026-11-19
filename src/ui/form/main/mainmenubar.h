@@ -18,6 +18,7 @@ private:
     void setupUi();
     void setupFileMenu();
     void setupToolsMenu();
+    void setupWindowMenu();
     void setupHelpMenu();
 
     void updateFileMenu();
@@ -30,6 +31,8 @@ private:
     QAction *m_actUnlock = nullptr;
     QMenu *m_toolsMenu = nullptr;
     QAction *m_actReviewAlerts = nullptr;
+    QMenu *m_windowMenu = nullptr;
+    QAction *m_actResetLayout = nullptr;
     QMenu *m_helpMenu = nullptr;
     QAction *m_actHelp = nullptr;
     QList<QAction *> m_linkActions;

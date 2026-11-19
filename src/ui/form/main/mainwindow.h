@@ -31,6 +31,9 @@ public:
     PanelDock *addDock(FormWindow *w);
     void removeDock(PanelDock *dock);
 
+    // The docks as tabs of one group, as they are added
+    void resetDocksLayout();
+
 protected:
     bool closeOnEscape() const override { return false; }
 
