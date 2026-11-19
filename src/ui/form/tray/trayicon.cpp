@@ -256,11 +256,23 @@ int selectedActionIndex(QMenu *menu)
     return menu->actions().indexOf(menu->defaultAction());
 }
 
+void updateMenuToolTip(QMenu *menu)
+{
+    const auto a = menu->defaultAction();
+    if (!a)
+        return;
+
+    menu->menuAction()->setToolTip(a->toolTip());
+}
+
 void selectMenuAction(QMenu *menu, const QStringList &iconPaths, int index)
 {
     menu->setDefaultAction(menu->actions().at(index));
 
     menu->setIcon(IconCache::icon(iconPaths.at(index)));
+
+    // The Main window's tool bar shows it on the menu's button
+    updateMenuToolTip(menu);
 }
 
 bool checkAlertFilterMode(const FirewallConf &conf, const IniUser &iniUser)
@@ -471,9 +483,11 @@ void TrayIcon::retranslateUi()
 
     m_blockTrafficMenu->setTitle(tr("Block Traffic"));
     ControlUtil::setActionTexts(m_blockTrafficMenu->actions(), FirewallConf::blockTrafficNames());
+    updateMenuToolTip(m_blockTrafficMenu);
 
     m_filterModeMenu->setTitle(tr("Filter Mode"));
     ControlUtil::setActionTexts(m_filterModeMenu->actions(), FirewallConf::filterModeNames());
+    updateMenuToolTip(m_filterModeMenu);
 
     m_quitAction->setText(tr("Quit"));
 }

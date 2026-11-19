@@ -16,6 +16,7 @@
 #include <user/iniuser.h>
 
 #include "mainmenubar.h"
+#include "maintoolbar.h"
 #include "paneldock.h"
 
 using namespace Fort;
@@ -253,6 +254,7 @@ QWidget *MainWindow::setupHeader()
     layout->setColumnStretch(0, 1);
 
     layout->addWidget(new MainMenuBar(this), 0, 0);
+    layout->addWidget(new MainToolBar(), 1, 0);
     layout->addWidget(logo, 0, 1, 2, 1);
 
     return ControlUtil::wrapToWidget(layout);
