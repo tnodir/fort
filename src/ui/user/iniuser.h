@@ -140,6 +140,12 @@ public:
 
     static QString mainWindowGroup() { return "mainWindow"; }
 
+    QStringList mainWindowDocks() const { return value("mainWindow/docks").toStringList(); }
+    void setMainWindowDocks(const QStringList &v) { setValue("mainWindow/docks", v); }
+
+    QByteArray mainWindowDocksState() const { return valueByteArray("mainWindow/docksState"); }
+    void setMainWindowDocksState(const QByteArray &v) { setValue("mainWindow/docksState", v); }
+
     static QString homeWindowGroup() { return "homeWindow"; }
 
     bool homeWindowAutoShowWindow() const { return valueBool("homeWindow/autoShowWindow", true); }

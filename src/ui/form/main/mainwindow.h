@@ -35,6 +35,10 @@ protected:
     bool closeOnEscape() const override { return false; }
 
 private:
+    QStringList dockGroups() const;
+
+    void restoreDocks();
+
     void retranslateUi();
 
     void setupUi();

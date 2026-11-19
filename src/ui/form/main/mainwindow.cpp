@@ -17,6 +17,53 @@
 
 using namespace Fort;
 
+namespace {
+
+inline constexpr int DOCKS_STATE_VERSION = 1;
+
+struct DockWindow
+{
+    WindowCode code;
+    QString (*iniGroup)();
+};
+
+// The saved docks are found by their windows' ini groups
+inline constexpr DockWindow dockWindows[] = {
+    { WindowPrograms, &IniUser::progWindowGroup },
+    { WindowRules, &IniUser::ruleWindowGroup },
+    { WindowZones, &IniUser::zoneWindowGroup },
+    { WindowGroups, &IniUser::groupWindowGroup },
+    { WindowSpeedLimits, &IniUser::speedLimitWindowGroup },
+    { WindowTimePeriods, &IniUser::timePeriodWindowGroup },
+    { WindowServices, &IniUser::serviceWindowGroup },
+    { WindowConnections, &IniUser::connWindowGroup },
+    { WindowTraffic, &IniUser::statWindowGroup },
+};
+
+constexpr quint32 dockWindowsMask()
+{
+    quint32 mask = 0;
+    for (const auto &dockWindow : dockWindows) {
+        mask |= dockWindow.code;
+    }
+    return mask;
+}
+
+static_assert(dockWindowsMask() == WindowDockable, "dockWindows[] must list the WindowDockable");
+
+WindowCode dockWindowCode(const QString &iniGroup)
+{
+    for (const auto &dockWindow : dockWindows) {
+        if (dockWindow.iniGroup() == iniGroup) {
+            return dockWindow.code;
+        }
+    }
+
+    return WindowNone;
+}
+
+}
+
 MainWindow::MainWindow(QWidget *parent) : FormWindow(parent)
 {
     setupUi();
@@ -26,6 +73,9 @@ MainWindow::MainWindow(QWidget *parent) : FormWindow(parent)
     retranslateUi();
 
     setupFormWindow(iniUser());
+
+    // After the window is shown: the docked windows are shown in it
+    QMetaObject::invokeMethod(this, &MainWindow::restoreDocks, Qt::QueuedConnection);
 }
 
 QString MainWindow::helpSection() const
@@ -43,7 +93,12 @@ QString MainWindow::iniGroup() const
 
 void MainWindow::saveWindowState(bool /*wasVisible*/)
 {
+    auto &iniUser = Fort::iniUser();
+
     saveIniWindowGeometry();
+
+    iniUser.setMainWindowDocks(dockGroups());
+    iniUser.setMainWindowDocksState(m_dockHost->saveState(DOCKS_STATE_VERSION));
 
     confManager()->saveIniUser();
 }
@@ -117,6 +172,43 @@ void MainWindow::removeDock(PanelDock *dock)
     dock->deleteLater();
 
     updateHint();
+}
+
+QStringList MainWindow::dockGroups() const
+{
+    QStringList list;
+
+    const auto docks = this->docks();
+    for (PanelDock *dock : docks) {
+        list.append(dock->objectName());
+    }
+
+    return list;
+}
+
+void MainWindow::restoreDocks()
+{
+    if (!isVisible())
+        return;
+
+    const auto &iniUser = Fort::iniUser();
+
+    // The window shown on request stays current
+    const auto shownDocks = docks();
+
+    const QStringList groups = iniUser.mainWindowDocks();
+    for (const QString &group : groups) {
+        const WindowCode code = dockWindowCode(group);
+        if (code != WindowNone) {
+            windowManager()->showWindowByCode(code, /*activate=*/false);
+        }
+    }
+
+    m_dockHost->restoreState(iniUser.mainWindowDocksState(), DOCKS_STATE_VERSION);
+
+    for (PanelDock *dock : shownDocks) {
+        dock->raise();
+    }
 }
 
 void MainWindow::retranslateUi()
