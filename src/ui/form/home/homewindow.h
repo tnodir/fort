@@ -32,8 +32,6 @@ protected slots:
 private slots:
     void onActivationChanged(bool isActive);
 
-    void onLinkClicked();
-
 private:
     void setupController();
 
@@ -55,11 +53,7 @@ private:
     QToolButton *m_btPasswordUnlock = nullptr;
     HeaderButtons *m_headerButtons = nullptr;
 
-    QToolButton *m_btProfile = nullptr;
-    QToolButton *m_btLogs = nullptr;
-    QToolButton *m_btServiceLogs = nullptr;
-    QToolButton *m_btReleases = nullptr;
-    QToolButton *m_btHelp = nullptr;
+    QList<QToolButton *> m_linkButtons;
 };
 
 #endif // HOMEWINDOW_H

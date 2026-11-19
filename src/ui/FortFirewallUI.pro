@@ -146,6 +146,7 @@ SOURCES += \
     form/group/groupscontroller.cpp \
     form/group/groupswindow.cpp \
     form/home/homecontroller.cpp \
+    form/home/homelinks.cpp \
     form/home/homewindow.cpp \
     form/home/pages/aboutpage.cpp \
     form/home/pages/homebasepage.cpp \
@@ -509,6 +510,7 @@ HEADERS += \
     form/group/groupscontroller.h \
     form/group/groupswindow.h \
     form/home/homecontroller.h \
+    form/home/homelinks.h \
     form/home/homewindow.h \
     form/home/pages/aboutpage.h \
     form/home/pages/homebasepage.h \

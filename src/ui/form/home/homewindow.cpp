@@ -5,8 +5,6 @@
 #include <QToolButton>
 #include <QVBoxLayout>
 
-#include <fort_version.h>
-
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/headerbuttons.h>
@@ -18,25 +16,13 @@
 #include <user/iniuser.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
-#include <util/osutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "homecontroller.h"
+#include "homelinks.h"
 #include "pages/homemainpage.h"
 
 using namespace Fort;
-
-namespace {
-
-QToolButton *createFlatToolButton(const QString &iconPath, const QString &linkPath)
-{
-    auto c = ControlUtil::createFlatToolButton(iconPath);
-    c->setWindowFilePath(linkPath);
-    c->setToolTip(linkPath);
-    return c;
-}
-
-}
 
 HomeWindow::HomeWindow(QWidget *parent) : FormWindow(parent), m_ctrl(new HomeController(this))
 {
@@ -107,14 +93,6 @@ void HomeWindow::onActivationChanged(bool isActive)
     }
 }
 
-void HomeWindow::onLinkClicked()
-{
-    auto button = qobject_cast<QAbstractButton *>(sender());
-    if (button) {
-        OsUtil::openUrlOrFolder(button->windowFilePath());
-    }
-}
-
 void HomeWindow::retranslateUi()
 {
     this->unsetLocale();
@@ -122,11 +100,9 @@ void HomeWindow::retranslateUi()
     m_btPasswordLock->setText(tr("Lock"));
     m_btPasswordUnlock->setText(tr("Unlock"));
 
-    m_btProfile->setText(tr("Profile"));
-    m_btLogs->setText(tr("Logs"));
-    m_btServiceLogs->setText(tr("Service Logs"));
-    m_btReleases->setText(tr("Releases"));
-    m_btHelp->setText(tr("Help"));
+    for (int i = 0; i < HomeLinks::LinkCount; ++i) {
+        m_linkButtons[i]->setText(HomeLinks::text(HomeLinks::Link(i)));
+    }
 
     this->setWindowTitle(tr("My Fort"));
 }
@@ -221,24 +197,25 @@ void HomeWindow::setupPasswordButtons()
 
 QLayout *HomeWindow::setupDialogButtons()
 {
-    m_btProfile = createFlatToolButton(":/icons/folder.png", settings()->profilePath());
-    m_btLogs = createFlatToolButton(":/icons/folder.png", settings()->logsPath());
-    m_btServiceLogs = createFlatToolButton(":/icons/folder.png", settings()->profileLogsPath());
-    m_btReleases = createFlatToolButton(":/icons/github.png", APP_UPDATES_URL);
-    m_btHelp = createFlatToolButton(":/icons/help.png", APP_WIKI_URL);
-
-    m_btServiceLogs->setVisible(
-            settings()->hasService() && settings()->profileLogsPath() != settings()->logsPath());
-
-    connect(m_btProfile, &QAbstractButton::clicked, this, &HomeWindow::onLinkClicked);
-    connect(m_btLogs, &QAbstractButton::clicked, this, &HomeWindow::onLinkClicked);
-    connect(m_btServiceLogs, &QAbstractButton::clicked, this, &HomeWindow::onLinkClicked);
-    connect(m_btReleases, &QAbstractButton::clicked, this, &HomeWindow::onLinkClicked);
-    connect(m_btHelp, &QAbstractButton::clicked, this, &HomeWindow::onLinkClicked);
-
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_btProfile, m_btLogs, m_btServiceLogs,
-            m_btReleases, m_btHelp, /*stretch*/ nullptr });
+    auto layout = ControlUtil::createHLayout();
     layout->setContentsMargins(6, 4, 6, 4);
+
+    for (int i = 0; i < HomeLinks::LinkCount; ++i) {
+        const auto link = HomeLinks::Link(i);
+
+        auto c = ControlUtil::createFlatToolButton(
+                HomeLinks::iconPath(link), [=] { HomeLinks::open(link); });
+        c->setToolTip(HomeLinks::path(link));
+
+        if (!HomeLinks::isVisible(link)) {
+            c->hide();
+        }
+
+        m_linkButtons.append(c);
+        layout->addWidget(c);
+    }
+
+    layout->addStretch();
 
     return layout;
 }
