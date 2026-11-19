@@ -290,15 +290,19 @@ QToolButton *ControlUtil::createIconToolButton(
 QToolButton *ControlUtil::createCheckableIconToolButton(
         const QString &iconPath, const QString &checkedIconPath)
 {
-    auto c = createIconToolButton(iconPath);
+    auto c = createIconToolButton(QString());
     c->setCheckable(true);
-
-    // The button draws the icon's On state, when it's checked
-    QIcon icon = c->icon();
-    icon.addFile(checkedIconPath, {}, QIcon::Normal, QIcon::On);
-    c->setIcon(icon);
+    c->setIcon(checkableIcon(iconPath, checkedIconPath));
 
     return c;
+}
+
+QIcon ControlUtil::checkableIcon(const QString &iconPath, const QString &checkedIconPath)
+{
+    // A button or menu draws the icon's On state, when it's checked
+    QIcon icon = IconCache::icon(iconPath);
+    icon.addFile(checkedIconPath, {}, QIcon::Normal, QIcon::On);
+    return icon;
 }
 
 QToolButton *ControlUtil::createClearButton(const std::function<void()> &onClicked)

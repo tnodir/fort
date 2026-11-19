@@ -12,6 +12,7 @@ QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QFormLayout)
 QT_FORWARD_DECLARE_CLASS(QFrame)
+QT_FORWARD_DECLARE_CLASS(QIcon)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QLayout)
 QT_FORWARD_DECLARE_CLASS(QLineEdit)
@@ -76,6 +77,7 @@ public:
             const QString &iconPath, const std::function<void()> &onClicked);
     static QToolButton *createCheckableIconToolButton(
             const QString &iconPath, const QString &checkedIconPath);
+    static QIcon checkableIcon(const QString &iconPath, const QString &checkedIconPath);
 
     // As the line edits' Clear button
     static QToolButton *createClearButton(const std::function<void()> &onClicked);
