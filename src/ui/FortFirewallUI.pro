@@ -150,6 +150,7 @@ SOURCES += \
     form/home/pages/homebasepage.cpp \
     form/home/pages/homemainpage.cpp \
     form/home/pages/homepage.cpp \
+    form/main/mainwindow.cpp \
     form/opt/optionscontroller.cpp \
     form/opt/optionswindow.cpp \
     form/opt/pages/addresses/addressesarea.cpp \
@@ -510,6 +511,7 @@ HEADERS += \
     form/home/pages/homebasepage.h \
     form/home/pages/homemainpage.h \
     form/home/pages/homepage.h \
+    form/main/mainwindow.h \
     form/opt/optionscontroller.h \
     form/opt/optionswindow.h \
     form/opt/pages/addresses/addressesarea.h \

@@ -5,6 +5,7 @@
 
 namespace HotKey {
 
+const char *const main = "main";
 const char *const home = "home";
 const char *const programs = "programs";
 const char *const options = "options";
@@ -136,6 +137,8 @@ public:
 
     bool confirmQuit() const { return valueBool("confirm/quit", true); }
     void setConfirmQuit(bool v) { setValue("confirm/quit", v, true); }
+
+    static QString mainWindowGroup() { return "mainWindow"; }
 
     static QString homeWindowGroup() { return "homeWindow"; }
 

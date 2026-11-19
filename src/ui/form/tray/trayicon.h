@@ -139,6 +139,7 @@ private:
     TrayController *m_ctrl = nullptr;
 
     QMenu *m_menu = nullptr;
+    QAction *m_mainAction = nullptr;
     QAction *m_homeAction = nullptr;
     QAction *m_programsAction = nullptr;
     QAction *m_programsOrAlertAction = nullptr;

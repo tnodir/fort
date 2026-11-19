@@ -255,6 +255,7 @@ void IfacePage::retranslateComboHotKey()
 {
     // Sync with TrayIcon::retranslateUi() & HotKey::list[]
     QStringList list = {
+        TrayIcon::tr("Main Window"),
         TrayIcon::tr("My Fort"),
         TrayIcon::tr("Programs"),
         TrayIcon::tr("Options"),
@@ -317,6 +318,7 @@ void IfacePage::retranslateComboTrayAction()
 
     // Sync with TrayIcon::ActionType
     const QStringList list = {
+        tr("Show Main Window"),
         tr("Show My Fort"),
         tr("Show Programs"),
         tr("Show Programs Or Alert Window"),

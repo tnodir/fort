@@ -62,6 +62,7 @@ const QString eventDoubleClick = QStringLiteral("doubleClick");
 const QString eventMiddleClick = QStringLiteral("middleClick");
 const QString eventRightClick = QStringLiteral("rightClick");
 
+const QString actionShowMain = QStringLiteral("Main");
 const QString actionShowHome = QStringLiteral("Home");
 const QString actionShowPrograms = QStringLiteral("Programs");
 const QString actionShowProgramsOrAlert = QStringLiteral("ProgramsOrAlert");
@@ -99,6 +100,7 @@ QString clickNameByType(tray::ClickType clickType)
 QString actionNameByType(tray::ActionType actionType)
 {
     static const QString actionNames[] = {
+        actionShowMain,
         actionShowHome,
         actionShowPrograms,
         actionShowProgramsOrAlert,
@@ -124,7 +126,8 @@ QString actionNameByType(tray::ActionType actionType)
 tray::ActionType actionTypeByName(const QString &name)
 {
     static const QHash<QString, tray::ActionType> actionTypeNamesMap = {
-        { actionShowHome, tray::ActionShowHome }, { actionShowPrograms, tray::ActionShowPrograms },
+        { actionShowMain, tray::ActionShowMain }, { actionShowHome, tray::ActionShowHome },
+        { actionShowPrograms, tray::ActionShowPrograms },
         { actionShowProgramsOrAlert, tray::ActionShowProgramsOrAlert },
         { actionShowOptions, tray::ActionShowOptions },
         { actionShowTraffic, tray::ActionShowTraffic },
@@ -446,6 +449,7 @@ void TrayIcon::setupController()
 
 void TrayIcon::retranslateUi()
 {
+    m_mainAction->setText(tr("Main Window"));
     m_homeAction->setText(tr("My Fort"));
     m_programsAction->setText(tr("Programs"));
     m_optionsMenu->setTitle(tr("Options"));
@@ -509,6 +513,10 @@ void TrayIcon::setupTrayMenu()
 
 void TrayIcon::setupTrayMenuTopActions()
 {
+    m_mainAction = addAction(
+            m_menu, { ":/icons/computer.png", this, SLOT(onShowWindowAction()), WindowMain });
+    addHotKey(m_mainAction, HotKey::main);
+
     m_homeAction =
             addAction(m_menu, { ":/icons/fort.png", this, SLOT(onShowWindowAction()), WindowHome });
     addHotKey(m_homeAction, HotKey::home);
@@ -1015,6 +1023,7 @@ QAction *TrayIcon::clickActionFromIni(tray::ClickType clickType) const
 QAction *TrayIcon::clickActionByType(tray::ActionType actionType) const
 {
     QAction *const actions[] = {
+        m_mainAction,
         m_homeAction,
         m_programsAction,
         m_programsOrAlertAction,

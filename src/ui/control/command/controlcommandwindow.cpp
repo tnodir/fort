@@ -19,6 +19,7 @@ struct WindowShow
 
 // As by the "home show" and "graph show": the home window exposed, the graph not activated
 inline constexpr WindowShow windowShows[] = {
+    { .code = WindowMain, .name = "main" },
     { .expose = true, .code = WindowHome, .name = "home" },
     { .code = WindowPrograms, .name = "programs" },
     { .code = WindowOptions, .name = "options" },

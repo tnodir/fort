@@ -167,7 +167,9 @@ void WidgetWindow::keyPressEvent(QKeyEvent *event)
         emit defaultKeyPressed();
     } break;
     case Qt::Key_Escape: {
-        close();
+        if (closeOnEscape()) {
+            close();
+        }
     } break;
     }
 }

@@ -37,6 +37,8 @@ protected slots:
     virtual bool checkAboutToClose() { return true; }
 
 protected:
+    virtual bool closeOnEscape() const { return isWindow(); }
+
     void moveEvent(QMoveEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
 

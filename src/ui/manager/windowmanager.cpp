@@ -20,6 +20,7 @@
 #include <form/graph/graphwindow.h>
 #include <form/group/groupswindow.h>
 #include <form/home/homewindow.h>
+#include <form/main/mainwindow.h>
 #include <form/opt/optionswindow.h>
 #include <form/prog/programalertwindow.h>
 #include <form/prog/programswindow.h>
@@ -79,10 +80,7 @@ WindowManager::WindowManager(QObject *parent) : QObject(parent) { }
 
 bool WindowManager::hasForm(WindowCode code)
 {
-    constexpr quint32 windowForms =
-            (WindowHome | WindowPrograms | WindowProgramAlert | WindowServices | WindowOptions
-                    | WindowRules | WindowTraffic | WindowConnections | WindowZones | WindowGroups
-                    | WindowSpeedLimits | WindowTimePeriods | WindowFilterSim | WindowGraph);
+    constexpr quint32 windowForms = (1u << WindowCount) - 1;
 
     return (code & windowForms) != 0;
 }
@@ -105,6 +103,11 @@ FormWindow *WindowManager::windowByCode(WindowCode code) const
 {
     const auto &form = formByCode(code);
     return form.window();
+}
+
+MainWindow *WindowManager::mainWindow() const
+{
+    return static_cast<MainWindow *>(windowByCode(WindowMain));
 }
 
 HomeWindow *WindowManager::homeWindow() const
@@ -203,6 +206,10 @@ void WindowManager::initialize()
         m_trayIcon = new TrayIcon(this);
     }
 
+    // The splash screen's showing processes the queued events (e.g. an alert asking the password):
+    // show the tray icon before
+    setupByIniUser();
+
     const auto &ini = Fort::iniUser();
 
     if (ini.splashWindowVisible() && !settings()->noSplash()) {
@@ -212,8 +219,6 @@ void WindowManager::initialize()
     if (ini.graphWindowVisible()) {
         showGraphWindow();
     }
-
-    setupByIniUser();
 }
 
 QFont WindowManager::defaultFont()

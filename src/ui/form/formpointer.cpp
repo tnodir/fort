@@ -5,6 +5,7 @@
 #include <form/graph/graphwindow.h>
 #include <form/group/groupswindow.h>
 #include <form/home/homewindow.h>
+#include <form/main/mainwindow.h>
 #include <form/opt/optionswindow.h>
 #include <form/prog/programalertwindow.h>
 #include <form/prog/programswindow.h>
@@ -31,6 +32,7 @@ FormWindow *createWindow()
 using createWindow_func = FormWindow *(*)(void);
 
 static const createWindow_func createWindow_funcList[] = {
+    &createWindow<MainWindow>,
     &createWindow<HomeWindow>,
     &createWindow<ProgramsWindow>,
     &createWindow<ProgramAlertWindow>,

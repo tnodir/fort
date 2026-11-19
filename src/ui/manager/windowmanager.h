@@ -19,6 +19,7 @@ class GraphWindow;
 class GroupsWindow;
 class HomeWindow;
 class IniUser;
+class MainWindow;
 class NativeWindow;
 class OptionsWindow;
 class ProgramAlertWindow;
@@ -55,6 +56,7 @@ public:
     FormPointer &formByCode(WindowCode code) const;
     FormWindow *windowByCode(WindowCode code) const;
 
+    MainWindow *mainWindow() const;
     HomeWindow *homeWindow() const;
     ProgramsWindow *progWindow() const;
     ProgramAlertWindow *progAlertWindow() const;
@@ -231,6 +233,7 @@ private:
     TrayIcon *m_trayIcon = nullptr;
 
     mutable std::array<FormPointer, WindowCount> m_forms = {
+        FormPointer(WindowMain),
         FormPointer(WindowHome),
         FormPointer(WindowPrograms),
         FormPointer(WindowProgramAlert),
