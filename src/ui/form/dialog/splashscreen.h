@@ -3,18 +3,12 @@
 
 #include <QSplashScreen>
 
-QT_FORWARD_DECLARE_CLASS(QLabel)
-
 class SplashScreen : public QSplashScreen
 {
     Q_OBJECT
 
 public:
     explicit SplashScreen();
-
-    static QLayout *createLogoLayout();
-    static QLayout *createLogoIconLayout();
-    static QLayout *createLogoTextLayout();
 
 public slots:
     void showFading();

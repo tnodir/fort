@@ -10,7 +10,7 @@
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/headerbuttons.h>
-#include <form/dialog/splashscreen.h>
+#include <form/controls/logowidget.h>
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
@@ -166,8 +166,8 @@ void HomeWindow::setupUi()
 
 QWidget *HomeWindow::setupHeader()
 {
-    // Logo Layout
-    auto logoLayout = SplashScreen::createLogoLayout();
+    // Logo
+    auto logo = new LogoWidget();
 
     // Buttons
     setupHeaderButtons();
@@ -175,7 +175,7 @@ QWidget *HomeWindow::setupHeader()
     auto layout = new QHBoxLayout();
     layout->setContentsMargins(10, 0, 6, 0);
 
-    layout->addLayout(logoLayout);
+    layout->addWidget(logo);
     layout->addStretch();
     layout->addWidget(m_btPasswordLock);
     layout->addWidget(m_btPasswordUnlock);
@@ -183,6 +183,7 @@ QWidget *HomeWindow::setupHeader()
 
     QPalette palette;
     palette.setColor(QPalette::Window, QColor(0x26, 0x26, 0x26));
+    palette.setColor(QPalette::WindowText, Qt::white);
 
     auto frame = ControlUtil::wrapToWidget(layout);
     frame->setAutoFillBackground(true);

@@ -1,15 +1,12 @@
 #include "splashscreen.h"
 
-#include <QGuiApplication>
 #include <QHBoxLayout>
-#include <QIcon>
-#include <QLabel>
 #include <QPropertyAnimation>
 #include <QTimer>
 
 #include <form/controls/controlutil.h>
+#include <form/controls/logowidget.h>
 #include <manager/windowmanager.h>
-#include <util/iconcache.h>
 
 namespace {
 
@@ -65,6 +62,7 @@ void SplashScreen::setupUi()
     // Background Color
     QPalette palette;
     palette.setColor(QPalette::Window, QColor(0x26, 0x26, 0x26));
+    palette.setColor(QPalette::WindowText, Qt::white);
 
     this->setAutoFillBackground(true);
     this->setPalette(palette);
@@ -81,80 +79,12 @@ void SplashScreen::setupUi()
 
 QLayout *SplashScreen::setupMainLayout()
 {
-    auto logoLayout = createLogoLayout();
+    auto logo = new LogoWidget();
 
     auto layout = ControlUtil::createHLayout(/*margin=*/10);
 
     layout->addStretch();
-    layout->addLayout(logoLayout);
-    layout->addStretch();
-
-    return layout;
-}
-
-QLayout *SplashScreen::createLogoLayout()
-{
-    // Logo image
-    auto logoIconLayout = createLogoIconLayout();
-
-    // Logo text
-    auto logoTextLayout = createLogoTextLayout();
-
-    auto layout = ControlUtil::createHLayout(/*margin=*/6);
-    layout->setSpacing(10);
-
-    layout->addLayout(logoIconLayout);
-    layout->addLayout(logoTextLayout);
-
-    return layout;
-}
-
-QLayout *SplashScreen::createLogoIconLayout()
-{
-    const QSize logoSize(48, 48);
-
-    auto iconLogo = ControlUtil::createIconLabel(":/icons/fort-96.png", logoSize);
-
-    // Layout
-    auto layout = ControlUtil::createVLayout();
-    layout->setSpacing(0);
-
-    layout->addStretch();
-    layout->addSpacing(1);
-    layout->addWidget(iconLogo);
-    layout->addStretch();
-
-    return layout;
-}
-
-QLayout *SplashScreen::createLogoTextLayout()
-{
-    QPalette palette;
-    palette.setColor(QPalette::WindowText, Qt::white);
-
-    QFont font("Franklin Gothic", 22, QFont::Bold);
-
-    // Label
-    auto label = ControlUtil::createLabel(QGuiApplication::applicationName());
-    label->setPalette(palette);
-    label->setFont(font);
-
-    // Sub-label
-    font.setPointSize(10);
-    font.setWeight(QFont::DemiBold);
-
-    auto subLabel = ControlUtil::createLabel("- keeping you secure -");
-    subLabel->setPalette(palette);
-    subLabel->setFont(font);
-
-    // Layout
-    auto layout = ControlUtil::createVLayout();
-    layout->setSpacing(0);
-
-    layout->addStretch();
-    layout->addWidget(label, 0, Qt::AlignHCenter);
-    layout->addWidget(subLabel, 0, Qt::AlignHCenter);
-    layout->addSpacing(3);
+    layout->addWidget(logo);
     layout->addStretch();
 
     return layout;
