@@ -532,14 +532,36 @@ void WindowManager::switchWindowByCode(WindowCode code)
     }
 }
 
+bool WindowManager::dockWindowByCode(WindowCode code)
+{
+    auto &form = formByCode(code);
+    return form.moveToDock();
+}
+
+bool WindowManager::undockWindowByCode(WindowCode code, const std::optional<QPoint> &pos)
+{
+    auto &form = formByCode(code);
+    return form.moveToWindow(pos);
+}
+
+void WindowManager::closeDockedWindows()
+{
+    for (int i = 0; i < WindowCount; ++i) {
+        auto &form = m_forms[i];
+        if (form.dock()) {
+            form.close();
+        }
+    }
+}
+
 void WindowManager::saveAllWindowStates()
 {
     for (int i = 0; i < WindowCount; ++i) {
-        const auto w = m_forms[i].window();
-        if (!w || !w->isVisible())
+        const auto &form = m_forms[i];
+        if (!form.isShown())
             continue;
 
-        w->saveWindowState(/*wasVisible=*/true);
+        form.window()->saveWindowState(/*wasVisible=*/true);
     }
 }
 

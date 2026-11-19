@@ -25,6 +25,8 @@ public:
     QString helpSection() const override { return "rules"; }
     QString iniGroup() const override;
 
+    bool isDockable() const override;
+
     // Bits of Rule::ruleTypeBit()
     quint8 selectRuleTypes() const { return m_selectRuleTypes; }
     bool isOpenSelectRule() const { return selectRuleTypes() != 0; }

@@ -23,6 +23,8 @@ private slots:
     void onVisibilityChanged();
 
 private:
+    WidgetWindow *senderWindow() const;
+
     void handleWindowPositionChange(WidgetWindow *window);
     void handleWindowSizeChange(WidgetWindow *window);
     void handleWindowVisibilityChange(WidgetWindow *window);

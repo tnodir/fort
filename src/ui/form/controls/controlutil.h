@@ -66,6 +66,7 @@ public:
     static QToolButton *createToolButton(
             const QString &iconPath, const std::function<void()> &onClicked);
 
+    static void setToolButtonFlat(QToolButton *c);
     static QToolButton *createFlatToolButton(const QString &iconPath);
     static QToolButton *createFlatToolButton(
             const QString &iconPath, const std::function<void()> &onClicked);
@@ -157,8 +158,8 @@ public:
     static void deleteOnClose(QWidget *w);
 
     // F1 opens the User Guide's section
-    static void setupHelpShortcut(QWidget *w, const QString &helpSection);
-    static void setupHelpShortcut(QWidget *w, const std::function<QString()> &getHelpSection);
+    static QAction *setupHelpShortcut(QWidget *w, const QString &helpSection);
+    static QAction *setupHelpShortcut(QWidget *w, const std::function<QString()> &getHelpSection);
 
     // Fades in/out as the line edits' Clear button
     static void setVisibleAnimated(QWidget *w, bool visible);

@@ -17,23 +17,31 @@ void WidgetWindowStateWatcher::install(WidgetWindow *window)
 
 void WidgetWindowStateWatcher::onPositionChanged()
 {
-    auto window = qobject_cast<WidgetWindow *>(sender());
-
-    handleWindowPositionChange(window);
+    if (auto window = senderWindow()) {
+        handleWindowPositionChange(window);
+    }
 }
 
 void WidgetWindowStateWatcher::onSizeChanged()
 {
-    auto window = qobject_cast<WidgetWindow *>(sender());
-
-    handleWindowSizeChange(window);
+    if (auto window = senderWindow()) {
+        handleWindowSizeChange(window);
+    }
 }
 
 void WidgetWindowStateWatcher::onVisibilityChanged()
 {
+    if (auto window = senderWindow()) {
+        handleWindowVisibilityChange(window);
+    }
+}
+
+// A docked window's geometry isn't a window's one
+WidgetWindow *WidgetWindowStateWatcher::senderWindow() const
+{
     auto window = qobject_cast<WidgetWindow *>(sender());
 
-    handleWindowVisibilityChange(window);
+    return window->isWindow() ? window : nullptr;
 }
 
 void WidgetWindowStateWatcher::handleWindowPositionChange(WidgetWindow *window)

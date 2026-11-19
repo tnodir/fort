@@ -4,6 +4,8 @@
 #include <QLayout>
 
 #include <form/controls/controlutil.h>
+#include <form/controls/headerbuttons.h>
+#include <form/controls/windowmenubutton.h>
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -16,7 +18,7 @@ using namespace Fort;
 FormWindow::FormWindow(QWidget *parent, Qt::WindowFlags f) :
     WidgetWindow(parent, f), m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
-    ControlUtil::setupHelpShortcut(this, [this] { return helpSection(); });
+    m_helpAction = ControlUtil::setupHelpShortcut(this, [this] { return helpSection(); });
 }
 
 void FormWindow::setExcludeFromCapture(bool v)
@@ -54,6 +56,7 @@ void FormWindow::setupFormWindow(IniUser &iniUser, const QString &captureIniGrou
 
     if (isDockable()) {
         setupActionShortcuts();
+        setupWindowMenuButton();
     }
 
     setupStateWatcher();
@@ -76,6 +79,15 @@ void FormWindow::restoreIniWindowGeometry(const QSize &defaultSize)
 
     stateWatcher()->restore(
             this, defaultSize, iniUser.windowGeometry(group), iniUser.windowMaximized(group));
+}
+
+void FormWindow::changeEvent(QEvent *event)
+{
+    WidgetWindow::changeEvent(event);
+
+    if (event->type() == QEvent::ParentChange && isDockable()) {
+        updateDocked();
+    }
 }
 
 void FormWindow::setupWindowIcon(IniUser &iniUser)
@@ -113,6 +125,47 @@ void FormWindow::setupActionShortcuts()
 
         a->setShortcutContext(Qt::WidgetWithChildrenShortcut);
         addAction(a);
+    }
+}
+
+void FormWindow::setupWindowMenuButton()
+{
+    m_headerButtons = findChild<HeaderButtons *>();
+    if (!m_headerButtons)
+        return;
+
+    auto btWindowMenu = m_headerButtons->windowMenuButton();
+    btWindowMenu->setFormWindow(this);
+    btWindowMenu->setVisible(true);
+}
+
+void FormWindow::updateDocked()
+{
+    const bool docked = isDocked();
+
+    // The Main window's Help action shows the docked window's help
+    m_helpAction->setEnabled(!docked);
+
+    // The Main window's menu has them
+    if (m_headerButtons) {
+        m_headerButtons->setVisible(!docked);
+    }
+
+    updateDockedMinimumSize(docked);
+}
+
+void FormWindow::updateDockedMinimumSize(bool docked)
+{
+    // The dock host doesn't move a dock to a place where the docks' minimum sizes don't fit: a
+    // docked window has only its contents' minimum size
+    if (docked) {
+        if (!m_windowMinimumSize.isValid()) {
+            m_windowMinimumSize = minimumSize();
+        }
+        setMinimumSize(0, 0);
+    } else if (m_windowMinimumSize.isValid()) {
+        setMinimumSize(m_windowMinimumSize);
+        m_windowMinimumSize = QSize();
     }
 }
 

@@ -5,6 +5,8 @@
 
 QT_FORWARD_DECLARE_CLASS(QMainWindow)
 
+class PanelDock;
+
 class MainWindow : public FormWindow
 {
     Q_OBJECT
@@ -19,6 +21,16 @@ public:
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
 
+    void onWindowClosed() override;
+
+    QList<PanelDock *> docks() const;
+
+    // The dock with the focus
+    PanelDock *currentDock() const;
+
+    PanelDock *addDock(FormWindow *w);
+    void removeDock(PanelDock *dock);
+
 protected:
     bool closeOnEscape() const override { return false; }
 
@@ -27,6 +39,8 @@ private:
 
     void setupUi();
     void setupDockHost();
+
+    void updateHint();
 
 private:
     QLabel *m_labelHint = nullptr;

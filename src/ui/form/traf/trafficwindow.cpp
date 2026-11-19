@@ -204,11 +204,11 @@ QLayout *TrafficWindow::setupHeader()
 
     // Header buttons
     m_headerButtons = new HeaderButtons(OptMainPage::TabStatistics);
+    m_headerButtons->setSeparatorVisible(true);
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, ControlUtil::createVSeparator(),
             m_editSearch, ControlUtil::createVSeparator(), m_btRefresh,
-            /*stretch*/ nullptr, m_traphUnits, m_comboTrafUnit, ControlUtil::createVSeparator(),
-            m_headerButtons });
+            /*stretch*/ nullptr, m_traphUnits, m_comboTrafUnit, m_headerButtons });
 
     return layout;
 }

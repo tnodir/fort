@@ -1,5 +1,6 @@
 #include "controlutil.h"
 
+#include <QAction>
 #include <QCheckBox>
 #include <QFormLayout>
 #include <QGraphicsOpacityEffect>
@@ -8,7 +9,6 @@
 #include <QPropertyAnimation>
 #include <QPushButton>
 #include <QScrollArea>
-#include <QShortcut>
 #include <QStandardItemModel>
 #include <QStyle>
 #include <QToolButton>
@@ -247,13 +247,18 @@ QToolButton *ControlUtil::createToolButton(
     return c;
 }
 
+void ControlUtil::setToolButtonFlat(QToolButton *c)
+{
+    c->setCursor(Qt::PointingHandCursor);
+    c->setAutoRaise(true);
+    c->setFocusPolicy(Qt::TabFocus);
+}
+
 QToolButton *ControlUtil::createFlatToolButton(const QString &iconPath)
 {
     auto c = createToolButton(iconPath);
     c->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    c->setCursor(Qt::PointingHandCursor);
-    c->setAutoRaise(true);
-    c->setFocusPolicy(Qt::TabFocus);
+    setToolButtonFlat(c);
     return c;
 }
 
@@ -583,17 +588,21 @@ void ControlUtil::deleteOnClose(QWidget *w)
     w->setAttribute(Qt::WA_DeleteOnClose);
 }
 
-void ControlUtil::setupHelpShortcut(QWidget *w, const QString &helpSection)
+QAction *ControlUtil::setupHelpShortcut(QWidget *w, const QString &helpSection)
 {
-    setupHelpShortcut(w, [=] { return helpSection; });
+    return setupHelpShortcut(w, [=] { return helpSection; });
 }
 
-void ControlUtil::setupHelpShortcut(QWidget *w, const std::function<QString()> &getHelpSection)
+QAction *ControlUtil::setupHelpShortcut(QWidget *w, const std::function<QString()> &getHelpSection)
 {
-    auto shortcut = new QShortcut(QKeySequence::HelpContents, w);
+    auto a = new QAction(w);
+    a->setShortcut(QKeySequence::HelpContents);
 
-    QObject::connect(
-            shortcut, &QShortcut::activated, w, [=] { OsUtil::openUserGuide(getHelpSection()); });
+    QObject::connect(a, &QAction::triggered, w, [=] { OsUtil::openUserGuide(getHelpSection()); });
+
+    w->addAction(a);
+
+    return a;
 }
 
 void ControlUtil::setVisibleAnimated(QWidget *w, bool visible)

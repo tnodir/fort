@@ -128,6 +128,7 @@ SOURCES += \
     form/controls/toolbutton.cpp \
     form/controls/treeitemdelegate.cpp \
     form/controls/treeview.cpp \
+    form/controls/windowmenubutton.cpp \
     form/dialog/dialogutil.cpp \
     form/dialog/passworddialog.cpp \
     form/dialog/splashscreen.cpp \
@@ -151,6 +152,7 @@ SOURCES += \
     form/home/pages/homemainpage.cpp \
     form/home/pages/homepage.cpp \
     form/main/mainwindow.cpp \
+    form/main/paneldock.cpp \
     form/opt/optionscontroller.cpp \
     form/opt/optionswindow.cpp \
     form/opt/pages/addresses/addressesarea.cpp \
@@ -488,6 +490,7 @@ HEADERS += \
     form/controls/toolbutton.h \
     form/controls/treeitemdelegate.h \
     form/controls/treeview.h \
+    form/controls/windowmenubutton.h \
     form/dialog/dialogutil.h \
     form/dialog/passworddialog.h \
     form/dialog/splashscreen.h \
@@ -512,6 +515,7 @@ HEADERS += \
     form/home/pages/homemainpage.h \
     form/home/pages/homepage.h \
     form/main/mainwindow.h \
+    form/main/paneldock.h \
     form/opt/optionscontroller.h \
     form/opt/optionswindow.h \
     form/opt/pages/addresses/addressesarea.h \

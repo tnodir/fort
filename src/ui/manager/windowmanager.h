@@ -155,6 +155,10 @@ public slots:
     bool closeWindowByCode(WindowCode code);
     void switchWindowByCode(WindowCode code);
 
+    bool dockWindowByCode(WindowCode code);
+    bool undockWindowByCode(WindowCode code, const std::optional<QPoint> &pos = std::nullopt);
+    void closeDockedWindows();
+
     void saveAllWindowStates();
     void closeAllWindows(bool isAppQuitting = false);
 

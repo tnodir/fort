@@ -37,6 +37,7 @@ protected slots:
     virtual bool checkAboutToClose() { return true; }
 
 protected:
+    /* A docked window's Escape key goes to its Main window */
     virtual bool closeOnEscape() const { return isWindow(); }
 
     void moveEvent(QMoveEvent *event) override;

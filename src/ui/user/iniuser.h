@@ -188,6 +188,9 @@ public:
     bool windowMaximized(const QString &group) const { return valueBool(group + "/maximized"); }
     void setWindowMaximized(const QString &group, bool on) { setValue(group + "/maximized", on); }
 
+    bool windowDocked(const QString &group) const { return valueBool(group + "/docked"); }
+    void setWindowDocked(const QString &group, bool on) { setValue(group + "/docked", on); }
+
     int windowConnListHeaderVersion(const QString &group) const
     {
         return valueInt(group + "/connListHeaderVersion");

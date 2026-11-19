@@ -4,6 +4,7 @@
 #include <form/form_types.h>
 #include <util/window/widgetwindow.h>
 
+QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QActionGroup)
 QT_FORWARD_DECLARE_CLASS(QBoxLayout)
 QT_FORWARD_DECLARE_CLASS(QButtonGroup)
@@ -18,6 +19,7 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QRadioButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
+class HeaderButtons;
 class IniUser;
 class WidgetWindowStateWatcher;
 
@@ -34,6 +36,7 @@ public:
     virtual QString iniGroup() const { return {}; }
 
     virtual bool isDockable() const { return (windowCode() & WindowDockable) != 0; }
+    bool isDocked() const { return !isWindow(); }
 
     virtual bool deleteOnClose() const { return true; }
 
@@ -41,6 +44,9 @@ public:
     void setExcludeFromCapture(bool v);
 
     WidgetWindowStateWatcher *stateWatcher() const { return m_stateWatcher; }
+
+    // F1 opens the helpSection()
+    QAction *helpAction() const { return m_helpAction; }
 
     void shrinkToContents();
     void shrinkToContentsLater();
@@ -60,10 +66,16 @@ protected:
     void saveIniWindowGeometry();
     void restoreIniWindowGeometry(const QSize &defaultSize);
 
+    void changeEvent(QEvent *event) override;
+
 private:
     void setupWindowIcon(IniUser &iniUser);
 
     void setupActionShortcuts();
+    void setupWindowMenuButton();
+
+    void updateDocked();
+    void updateDockedMinimumSize(bool docked);
 
     void setupStateWatcher();
     void setupWindowCapture(IniUser &iniUser, const QString &iniGroup);
@@ -72,6 +84,10 @@ private:
     bool m_excludeFromCapture : 1 = false;
 
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
+    HeaderButtons *m_headerButtons = nullptr;
+    QAction *m_helpAction = nullptr;
+
+    QSize m_windowMinimumSize;
 };
 
 #endif // FORMWINDOW_H

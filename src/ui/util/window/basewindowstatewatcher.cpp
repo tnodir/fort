@@ -4,6 +4,10 @@ BaseWindowStateWatcher::BaseWindowStateWatcher(QObject *parent) : QObject(parent
 
 QRect BaseWindowStateWatcher::geometry() const
 {
+    // Null for a window never shown, e.g. a docked one
+    if (!m_size.isValid())
+        return {};
+
     return { m_pos, m_size };
 }
 

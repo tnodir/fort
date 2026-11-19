@@ -46,6 +46,11 @@ QString RulesWindow::iniGroup() const
     return IniUser::ruleWindowGroup();
 }
 
+bool RulesWindow::isDockable() const
+{
+    return !isOpenSelectRule() && FormWindow::isDockable();
+}
+
 RuleListModel *RulesWindow::ruleListModel() const
 {
     return ctrl()->ruleListModel();

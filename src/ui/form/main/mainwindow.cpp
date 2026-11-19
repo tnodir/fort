@@ -13,6 +13,8 @@
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
 
+#include "paneldock.h"
+
 using namespace Fort;
 
 MainWindow::MainWindow(QWidget *parent) : FormWindow(parent)
@@ -28,7 +30,10 @@ MainWindow::MainWindow(QWidget *parent) : FormWindow(parent)
 
 QString MainWindow::helpSection() const
 {
-    return "main-window";
+    // The docked window's, which has the focus
+    const auto dock = currentDock();
+
+    return dock ? dock->formWindow()->helpSection() : "main-window";
 }
 
 QString MainWindow::iniGroup() const
@@ -46,6 +51,72 @@ void MainWindow::saveWindowState(bool /*wasVisible*/)
 void MainWindow::restoreWindowState()
 {
     restoreIniWindowGeometry(QSize(1024, 768));
+}
+
+void MainWindow::onWindowClosed()
+{
+    windowManager()->closeDockedWindows();
+}
+
+QList<PanelDock *> MainWindow::docks() const
+{
+    QList<PanelDock *> list;
+
+    // The removed docks are deleted later
+    const auto docks = m_dockHost->findChildren<PanelDock *>(QString(), Qt::FindDirectChildrenOnly);
+    for (PanelDock *dock : docks) {
+        if (dock->formWindow()) {
+            list.append(dock);
+        }
+    }
+
+    return list;
+}
+
+PanelDock *MainWindow::currentDock() const
+{
+    const auto w = focusWidget();
+    if (!w)
+        return nullptr;
+
+    const auto docks = this->docks();
+    for (PanelDock *dock : docks) {
+        if (dock->isAncestorOf(w))
+            return dock;
+    }
+
+    return nullptr;
+}
+
+PanelDock *MainWindow::addDock(FormWindow *w)
+{
+    // As a tab of the current dock or of the last one
+    const auto docks = this->docks();
+    auto tabDock = currentDock();
+    if (!tabDock && !docks.isEmpty()) {
+        tabDock = docks.last();
+    }
+
+    auto dock = new PanelDock(w, m_dockHost);
+    m_dockHost->addDockWidget(Qt::LeftDockWidgetArea, dock);
+
+    if (tabDock) {
+        m_dockHost->tabifyDockWidget(tabDock, dock);
+    }
+
+    updateHint();
+
+    return dock;
+}
+
+void MainWindow::removeDock(PanelDock *dock)
+{
+    m_dockHost->removeDockWidget(dock);
+
+    dock->takeFormWindow();
+    dock->deleteLater();
+
+    updateHint();
 }
 
 void MainWindow::retranslateUi()
@@ -89,4 +160,9 @@ void MainWindow::setupDockHost()
     m_dockHost->setTabPosition(Qt::AllDockWidgetAreas, QTabWidget::North);
 
     m_dockHost->setCentralWidget(m_labelHint);
+}
+
+void MainWindow::updateHint()
+{
+    m_labelHint->setVisible(docks().isEmpty());
 }

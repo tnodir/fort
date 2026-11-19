@@ -316,10 +316,10 @@ QLayout *ConnectionsWindow::setupHeader()
 
     // Header buttons
     m_headerButtons = new HeaderButtons(OptMainPage::TabStatistics);
+    m_headerButtons->setSeparatorVisible(true);
 
     const auto editSeparator = ControlUtil::createVSeparator();
     const auto clearAllSeparator = ControlUtil::createVSeparator();
-    const auto listOptionsSeparator = ControlUtil::createVSeparator();
 
     m_editWidgets = { m_btEdit, editSeparator, m_btClearAll, clearAllSeparator };
 
@@ -330,7 +330,6 @@ QLayout *ConnectionsWindow::setupHeader()
     layout->addWidget(m_editSearch);
     layout->addStretch();
     layout->addWidget(m_btListOptions);
-    layout->addWidget(listOptionsSeparator);
     layout->addWidget(m_logConnIcons);
     layout->addWidget(m_headerButtons);
 
@@ -440,8 +439,11 @@ void ConnectionsWindow::setupLogConnIcons()
             ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_BLOCK), iconSize);
     m_iconLogAlertedConn = ControlUtil::createIconLabel(":/icons/error.png", iconSize);
 
+    // The separator from the List Options is hidden with the icons
     auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_iconLogAllowedConn, m_iconLogBlockedConn, m_iconLogAlertedConn }, /*margin=*/0);
+            { ControlUtil::createVSeparator(), m_iconLogAllowedConn, m_iconLogBlockedConn,
+                    m_iconLogAlertedConn },
+            /*margin=*/0);
 
     m_logConnIcons = ControlUtil::wrapToWidget(layout);
 }
