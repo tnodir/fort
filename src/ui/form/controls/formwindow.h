@@ -33,6 +33,8 @@ public:
     virtual QString helpSection() const { return {}; }
     virtual QString iniGroup() const { return {}; }
 
+    virtual bool isDockable() const { return (windowCode() & WindowDockable) != 0; }
+
     virtual bool deleteOnClose() const { return true; }
 
     bool excludeFromCapture() const { return m_excludeFromCapture; }
@@ -60,6 +62,8 @@ protected:
 
 private:
     void setupWindowIcon(IniUser &iniUser);
+
+    void setupActionShortcuts();
 
     void setupStateWatcher();
     void setupWindowCapture(IniUser &iniUser, const QString &iniGroup);

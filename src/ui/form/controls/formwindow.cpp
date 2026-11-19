@@ -1,5 +1,6 @@
 #include "formwindow.h"
 
+#include <QAction>
 #include <QLayout>
 
 #include <form/controls/controlutil.h>
@@ -51,6 +52,10 @@ void FormWindow::setupFormWindow(IniUser &iniUser, const QString &captureIniGrou
 {
     setupWindowIcon(iniUser);
 
+    if (isDockable()) {
+        setupActionShortcuts();
+    }
+
     setupStateWatcher();
     setupWindowCapture(iniUser, !captureIniGroup.isEmpty() ? captureIniGroup : iniGroup());
 }
@@ -96,6 +101,19 @@ void FormWindow::setupWindowIcon(IniUser &iniUser)
     QMetaObject::invokeMethod(
             this, [&] { windowManager()->taskbarButton().setWindowBadge(windowHandle()); },
             Qt::QueuedConnection);
+}
+
+void FormWindow::setupActionShortcuts()
+{
+    // Each of the docked windows' same shortcuts works in its window only
+    const auto actions = findChildren<QAction *>();
+    for (QAction *a : actions) {
+        if (a->shortcut().isEmpty())
+            continue;
+
+        a->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+        addAction(a);
+    }
 }
 
 void FormWindow::setupStateWatcher()

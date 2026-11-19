@@ -27,4 +27,8 @@ constexpr quint32 WindowPasswordProtected = (WindowPrograms | WindowProgramAlert
         | WindowOptions | WindowRules | WindowTraffic | WindowConnections | WindowZones
         | WindowGroups | WindowSpeedLimits | WindowTimePeriods | WindowFilterSim);
 
+/* The windows, which can be docked into the Main window */
+constexpr quint32 WindowDockable = (WindowPrograms | WindowServices | WindowRules | WindowTraffic
+        | WindowConnections | WindowZones | WindowGroups | WindowSpeedLimits | WindowTimePeriods);
+
 #endif // FORM_TYPES_H
