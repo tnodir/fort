@@ -27,6 +27,8 @@ private:
     void retranslateUi();
 
     void onDockTriggered();
+    void onHelpTriggered();
+    void onCloseTriggered();
 
 private:
     bool m_docked = false;
@@ -34,6 +36,8 @@ private:
     FormWindow *m_formWindow = nullptr;
 
     QAction *m_actDock = nullptr;
+    QAction *m_actHelp = nullptr;
+    QAction *m_actClose = nullptr;
 };
 
 #endif // WINDOWMENUBUTTON_H

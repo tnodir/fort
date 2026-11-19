@@ -3,10 +3,12 @@
 #include <QMenu>
 #include <QStyleOptionToolButton>
 
+#include <form/home/homelinks.h>
 #include <fortglobal.h>
 #include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
 #include <util/iconcache.h>
+#include <util/osutil.h>
 
 #include "controlutil.h"
 #include "formwindow.h"
@@ -55,7 +57,16 @@ void WindowMenuButton::setupMenu()
 
     m_actDock = menu->addAction(QString());
 
+    menu->addSeparator();
+
+    m_actHelp =
+            menu->addAction(IconCache::icon(HomeLinks::iconPath(HomeLinks::LinkHelp)), QString());
+
+    m_actClose = menu->addAction(ControlUtil::clearIcon(this), QString());
+
     connect(m_actDock, &QAction::triggered, this, &WindowMenuButton::onDockTriggered);
+    connect(m_actHelp, &QAction::triggered, this, &WindowMenuButton::onHelpTriggered);
+    connect(m_actClose, &QAction::triggered, this, &WindowMenuButton::onCloseTriggered);
 
     setPopupMode(QToolButton::InstantPopup);
     setMenu(menu);
@@ -66,6 +77,8 @@ void WindowMenuButton::retranslateUi()
     setToolTip(tr("Window Menu"));
 
     m_actDock->setText(m_docked ? tr("Undock from Main Window") : tr("Dock to Main Window"));
+    m_actHelp->setText(tr("Help"));
+    m_actClose->setText(tr("Close"));
 }
 
 void WindowMenuButton::onDockTriggered()
@@ -79,4 +92,14 @@ void WindowMenuButton::onDockTriggered()
     } else {
         windowManager->dockWindowByCode(code);
     }
+}
+
+void WindowMenuButton::onHelpTriggered()
+{
+    OsUtil::openUserGuide(m_formWindow->helpSection());
+}
+
+void WindowMenuButton::onCloseTriggered()
+{
+    windowManager()->closeWindowByCode(m_formWindow->windowCode());
 }

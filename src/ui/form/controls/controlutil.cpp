@@ -304,8 +304,13 @@ QToolButton *ControlUtil::createCheckableIconToolButton(
 QToolButton *ControlUtil::createClearButton(const std::function<void()> &onClicked)
 {
     auto c = createIconToolButton(QString(), onClicked);
-    c->setIcon(c->style()->standardIcon(QStyle::SP_LineEditClearButton));
+    c->setIcon(clearIcon(c));
     return c;
+}
+
+QIcon ControlUtil::clearIcon(const QWidget *w)
+{
+    return w->style()->standardIcon(QStyle::SP_LineEditClearButton);
 }
 
 QToolButton *ControlUtil::createSplitterButton(

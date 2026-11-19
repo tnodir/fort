@@ -79,6 +79,7 @@ public:
 
     // As the line edits' Clear button
     static QToolButton *createClearButton(const std::function<void()> &onClicked);
+    static QIcon clearIcon(const QWidget *w);
 
     static QToolButton *createSplitterButton(
             const QString &iconPath, const std::function<void()> &onClicked);
