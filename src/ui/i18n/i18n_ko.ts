@@ -1535,6 +1535,29 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>HomeLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>프로필</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>로그</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>서비스 로그</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>출시</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>도움말</translation>
+    </message>
+</context>
+<context>
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
@@ -1665,26 +1688,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Unlock</source>
         <translation>잠금해제</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>로그</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>프로필</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>출시</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>도움말</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>서비스 로그</translation>
     </message>
 </context>
 <context>
@@ -2019,6 +2022,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>오른쪽 클릭</translation>
     </message>
     <message>
+        <source>Show Main Window</source>
+        <translation>메인 창 표시</translation>
+    </message>
+    <message>
         <source>Show My Fort</source>
         <translation>내 Fort 표시</translation>
     </message>
@@ -2179,6 +2186,54 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Select dark color for %1</source>
         <translation>%1의 어두운 색상 선택</translation>
+    </message>
+</context>
+<context>
+    <name>MainMenuBar</name>
+    <message>
+        <source>File</source>
+        <translation>파일</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>잠금</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>잠금해제</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>도구</translation>
+    </message>
+    <message>
+        <source>Review Alerts</source>
+        <translation>경고 검토</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation>창</translation>
+    </message>
+    <message>
+        <source>Reset Layout</source>
+        <translation>레이아웃 재설정</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>도움말</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>정보</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>Open a panel from the tool bar&apos;s menus.
+Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+        <translation>도구 모음의 메뉴에서 패널을 여세요.
+또는 창 자체 메뉴의 &quot;메인 창에 도킹&quot; 항목으로 창을 여기로 옮기세요.</translation>
     </message>
 </context>
 <context>
@@ -2541,6 +2596,13 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Options</source>
         <translation>옵션</translation>
+    </message>
+</context>
+<context>
+    <name>PanelDock</name>
+    <message>
+        <source>Close</source>
+        <translation>닫기</translation>
     </message>
 </context>
 <context>
@@ -4312,6 +4374,10 @@ Packet loss: %2</source>
         <translation>트래픽</translation>
     </message>
     <message>
+        <source>Main Window</source>
+        <translation>메인 창</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>연결</translation>
     </message>
@@ -4362,6 +4428,29 @@ Packet loss: %2</source>
     <message>
         <source>Restart Required</source>
         <translation>재시작 필요</translation>
+    </message>
+</context>
+<context>
+    <name>WindowMenuButton</name>
+    <message>
+        <source>Window Menu</source>
+        <translation>창 메뉴</translation>
+    </message>
+    <message>
+        <source>Dock to Main Window</source>
+        <translation>메인 창에 도킹</translation>
+    </message>
+    <message>
+        <source>Undock from Main Window</source>
+        <translation>메인 창에서 도킹 해제</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>도움말</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>닫기</translation>
     </message>
 </context>
 <context>

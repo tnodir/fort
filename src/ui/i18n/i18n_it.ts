@@ -1535,6 +1535,29 @@ Un programma è abilitato solo se QUALSIASI suo gruppo esclusivo è abilitato op
     </message>
 </context>
 <context>
+    <name>HomeLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>Profilo</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Registri</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>Dati di servizio</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Rilasci</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Aiuto</translation>
+    </message>
+</context>
+<context>
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
@@ -1665,26 +1688,6 @@ Un programma è abilitato solo se QUALSIASI suo gruppo esclusivo è abilitato op
     <message>
         <source>Unlock</source>
         <translation>Sblocca</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>Registri</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>Profilo</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Rilasci</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Aiuto</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>Dati di servizio</translation>
     </message>
 </context>
 <context>
@@ -2019,6 +2022,10 @@ Un programma è abilitato solo se QUALSIASI suo gruppo esclusivo è abilitato op
         <translation>Clic destro</translation>
     </message>
     <message>
+        <source>Show Main Window</source>
+        <translation>Mostra finestra principale</translation>
+    </message>
+    <message>
         <source>Show My Fort</source>
         <translation>Mostra Il mio forte</translation>
     </message>
@@ -2179,6 +2186,54 @@ Un programma è abilitato solo se QUALSIASI suo gruppo esclusivo è abilitato op
     <message>
         <source>Select dark color for %1</source>
         <translation>Seleziona colore scuro per %1</translation>
+    </message>
+</context>
+<context>
+    <name>MainMenuBar</name>
+    <message>
+        <source>File</source>
+        <translation>File</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>Blocca</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>Sblocca</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>Strumenti</translation>
+    </message>
+    <message>
+        <source>Review Alerts</source>
+        <translation>Rivedi allerte</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation>Finestra</translation>
+    </message>
+    <message>
+        <source>Reset Layout</source>
+        <translation>Reimposta layout</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Aiuto</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>Info</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>Open a panel from the tool bar&apos;s menus.
+Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+        <translation>Apri un pannello dai menu della barra degli strumenti.
+O sposta qui una finestra con la voce &quot;Aggancia alla finestra principale&quot; del suo menu.</translation>
     </message>
 </context>
 <context>
@@ -2541,6 +2596,13 @@ Assicurati di avere un nuovo backup.</translation>
     <message>
         <source>Options</source>
         <translation>Opzioni</translation>
+    </message>
+</context>
+<context>
+    <name>PanelDock</name>
+    <message>
+        <source>Close</source>
+        <translation>Chiudi</translation>
     </message>
 </context>
 <context>
@@ -4312,6 +4374,10 @@ Perdita pacchetti: %2</translation>
         <translation>Traffico</translation>
     </message>
     <message>
+        <source>Main Window</source>
+        <translation>Finestra principale</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>Collegamenti</translation>
     </message>
@@ -4362,6 +4428,29 @@ Perdita pacchetti: %2</translation>
     <message>
         <source>Restart Required</source>
         <translation>Riavvio richiesto</translation>
+    </message>
+</context>
+<context>
+    <name>WindowMenuButton</name>
+    <message>
+        <source>Window Menu</source>
+        <translation>Menu della finestra</translation>
+    </message>
+    <message>
+        <source>Dock to Main Window</source>
+        <translation>Aggancia alla finestra principale</translation>
+    </message>
+    <message>
+        <source>Undock from Main Window</source>
+        <translation>Sgancia dalla finestra principale</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Aiuto</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Chiudi</translation>
     </message>
 </context>
 <context>

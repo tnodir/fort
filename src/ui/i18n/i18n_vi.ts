@@ -1535,6 +1535,29 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
     </message>
 </context>
 <context>
+    <name>HomeLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>Hồ sơ</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Nhật ký</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>Nhật ký dịch vụ</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Phát hành</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Trợ giúp</translation>
+    </message>
+</context>
+<context>
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
@@ -1665,26 +1688,6 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
     <message>
         <source>Unlock</source>
         <translation>Mở khóa</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>Nhật ký</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>Hồ sơ</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Phát hành</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Trợ giúp</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>Nhật ký dịch vụ</translation>
     </message>
 </context>
 <context>
@@ -2019,6 +2022,10 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
         <translation>Nhấp chuột phải</translation>
     </message>
     <message>
+        <source>Show Main Window</source>
+        <translation>Hiển thị cửa sổ chính</translation>
+    </message>
+    <message>
         <source>Show My Fort</source>
         <translation>Hiển thị Fort của tôi</translation>
     </message>
@@ -2179,6 +2186,54 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
     <message>
         <source>Select dark color for %1</source>
         <translation>Chọn màu tối cho %1</translation>
+    </message>
+</context>
+<context>
+    <name>MainMenuBar</name>
+    <message>
+        <source>File</source>
+        <translation>Tệp</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>Khóa</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>Mở khóa</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>Công cụ</translation>
+    </message>
+    <message>
+        <source>Review Alerts</source>
+        <translation>Xem lại cảnh báo</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation>Cửa sổ</translation>
+    </message>
+    <message>
+        <source>Reset Layout</source>
+        <translation>Đặt lại bố cục</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Trợ giúp</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>Giới thiệu</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>Open a panel from the tool bar&apos;s menus.
+Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+        <translation>Mở một bảng từ các menu của thanh công cụ.
+Hoặc chuyển một cửa sổ vào đây bằng mục &quot;Gắn vào cửa sổ chính&quot; trong menu của nó.</translation>
     </message>
 </context>
 <context>
@@ -2541,6 +2596,13 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
     <message>
         <source>Options</source>
         <translation>Tùy chọn</translation>
+    </message>
+</context>
+<context>
+    <name>PanelDock</name>
+    <message>
+        <source>Close</source>
+        <translation>Đóng</translation>
     </message>
 </context>
 <context>
@@ -4312,6 +4374,10 @@ Mất gói tin: %2</translation>
         <translation>Lưu lượng</translation>
     </message>
     <message>
+        <source>Main Window</source>
+        <translation>Cửa sổ chính</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>Kết nối</translation>
     </message>
@@ -4362,6 +4428,29 @@ Mất gói tin: %2</translation>
     <message>
         <source>Restart Required</source>
         <translation>Yêu cầu khởi động lại</translation>
+    </message>
+</context>
+<context>
+    <name>WindowMenuButton</name>
+    <message>
+        <source>Window Menu</source>
+        <translation>Menu cửa sổ</translation>
+    </message>
+    <message>
+        <source>Dock to Main Window</source>
+        <translation>Gắn vào cửa sổ chính</translation>
+    </message>
+    <message>
+        <source>Undock from Main Window</source>
+        <translation>Tách khỏi cửa sổ chính</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Trợ giúp</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Đóng</translation>
     </message>
 </context>
 <context>

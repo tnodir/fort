@@ -1535,6 +1535,29 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
     </message>
 </context>
 <context>
+    <name>HomeLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>Profil</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Dnevniki</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>Dnevniki storitev</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Izdaje</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Pomoč</translation>
+    </message>
+</context>
+<context>
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
@@ -1665,26 +1688,6 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
     <message>
         <source>Unlock</source>
         <translation>Odkleni</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>Dnevniki</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>Profil</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Izdaje</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Pomoč</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>Dnevniki storitev</translation>
     </message>
 </context>
 <context>
@@ -2019,6 +2022,10 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
         <translation>Desni klik</translation>
     </message>
     <message>
+        <source>Show Main Window</source>
+        <translation>Prikaži glavno okno</translation>
+    </message>
+    <message>
         <source>Show My Fort</source>
         <translation>Prikaži Mojo trdnjavo</translation>
     </message>
@@ -2179,6 +2186,54 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
     <message>
         <source>Select dark color for %1</source>
         <translation>Izberite temno barvo za %1</translation>
+    </message>
+</context>
+<context>
+    <name>MainMenuBar</name>
+    <message>
+        <source>File</source>
+        <translation>Datoteka</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>Zakleni</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>Odkleni</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>Orodja</translation>
+    </message>
+    <message>
+        <source>Review Alerts</source>
+        <translation>Pregled opozoril</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation>Okno</translation>
+    </message>
+    <message>
+        <source>Reset Layout</source>
+        <translation>Ponastavi postavitev</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Pomoč</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>Vizitka</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>Open a panel from the tool bar&apos;s menus.
+Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+        <translation>Odprite podokno iz menijev orodne vrstice.
+Ali premaknite okno sem z elementom &quot;Zasidraj v glavno okno&quot; njegovega menija.</translation>
     </message>
 </context>
 <context>
@@ -2541,6 +2596,13 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>Options</source>
         <translation>Možnosti</translation>
+    </message>
+</context>
+<context>
+    <name>PanelDock</name>
+    <message>
+        <source>Close</source>
+        <translation>Zapri</translation>
     </message>
 </context>
 <context>
@@ -4312,6 +4374,10 @@ Izguba paketov: %2</translation>
         <translation>Promet</translation>
     </message>
     <message>
+        <source>Main Window</source>
+        <translation>Glavno okno</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>Povezave</translation>
     </message>
@@ -4362,6 +4428,29 @@ Izguba paketov: %2</translation>
     <message>
         <source>Restart Required</source>
         <translation>Potreben je ponovni zagon</translation>
+    </message>
+</context>
+<context>
+    <name>WindowMenuButton</name>
+    <message>
+        <source>Window Menu</source>
+        <translation>Meni okna</translation>
+    </message>
+    <message>
+        <source>Dock to Main Window</source>
+        <translation>Zasidraj v glavno okno</translation>
+    </message>
+    <message>
+        <source>Undock from Main Window</source>
+        <translation>Odsidraj iz glavnega okna</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Pomoč</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Zapri</translation>
     </message>
 </context>
 <context>

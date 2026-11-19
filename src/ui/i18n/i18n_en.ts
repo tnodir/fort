@@ -1534,6 +1534,29 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>HomeLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
@@ -1663,26 +1686,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Unlock</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
         <translation></translation>
     </message>
 </context>
@@ -2018,6 +2021,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation></translation>
     </message>
     <message>
+        <source>Show Main Window</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Show My Fort</source>
         <translation></translation>
     </message>
@@ -2177,6 +2184,53 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Select dark color for %1</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>MainMenuBar</name>
+    <message>
+        <source>File</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Review Alerts</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Reset Layout</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>Open a panel from the tool bar&apos;s menus.
+Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
         <translation></translation>
     </message>
 </context>
@@ -2537,6 +2591,13 @@ Make sure that you have a fresh backup.</source>
     <name>OptionsWindow</name>
     <message>
         <source>Options</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>PanelDock</name>
+    <message>
+        <source>Close</source>
         <translation></translation>
     </message>
 </context>
@@ -4300,6 +4361,10 @@ Packet loss: %2</source>
         <translation></translation>
     </message>
     <message>
+        <source>Main Window</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation></translation>
     </message>
@@ -4349,6 +4414,29 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Restart Required</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>WindowMenuButton</name>
+    <message>
+        <source>Window Menu</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Dock to Main Window</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Undock from Main Window</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Close</source>
         <translation></translation>
     </message>
 </context>

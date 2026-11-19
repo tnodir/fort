@@ -1535,6 +1535,29 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
     </message>
 </context>
 <context>
+    <name>HomeLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>Profil</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Jurnale</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>Jurnalele serviciului</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Versiuni</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Ajutor</translation>
+    </message>
+</context>
+<context>
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
@@ -1665,26 +1688,6 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
     <message>
         <source>Unlock</source>
         <translation>Descuie</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>Jurnale</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>Profil</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Versiuni</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Ajutor</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>Jurnalele serviciului</translation>
     </message>
 </context>
 <context>
@@ -2019,6 +2022,10 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
         <translation>Clic dreapta</translation>
     </message>
     <message>
+        <source>Show Main Window</source>
+        <translation>Afișează fereastra principală</translation>
+    </message>
+    <message>
         <source>Show My Fort</source>
         <translation>Afișează Fortul meu</translation>
     </message>
@@ -2179,6 +2186,54 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
     <message>
         <source>Select dark color for %1</source>
         <translation>Selectați culoarea întunecată pentru %1</translation>
+    </message>
+</context>
+<context>
+    <name>MainMenuBar</name>
+    <message>
+        <source>File</source>
+        <translation>Fișier</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>Încuie</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>Descuie</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>Instrumente</translation>
+    </message>
+    <message>
+        <source>Review Alerts</source>
+        <translation>Revizuiește alertele</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation>Fereastră</translation>
+    </message>
+    <message>
+        <source>Reset Layout</source>
+        <translation>Resetează aspectul</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Ajutor</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>Despre</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>Open a panel from the tool bar&apos;s menus.
+Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+        <translation>Deschideți un panou din meniurile barei de instrumente.
+Sau mutați aici o fereastră cu elementul &quot;Andochează în fereastra principală&quot; din meniul său.</translation>
     </message>
 </context>
 <context>
@@ -2541,6 +2596,13 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
     <message>
         <source>Options</source>
         <translation>Opțiuni</translation>
+    </message>
+</context>
+<context>
+    <name>PanelDock</name>
+    <message>
+        <source>Close</source>
+        <translation>Închide</translation>
     </message>
 </context>
 <context>
@@ -4312,6 +4374,10 @@ Pierdere de pachete: %2</translation>
         <translation>Trafic</translation>
     </message>
     <message>
+        <source>Main Window</source>
+        <translation>Fereastra principală</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>Conexiuni</translation>
     </message>
@@ -4362,6 +4428,29 @@ Pierdere de pachete: %2</translation>
     <message>
         <source>Restart Required</source>
         <translation>Repornire necesară</translation>
+    </message>
+</context>
+<context>
+    <name>WindowMenuButton</name>
+    <message>
+        <source>Window Menu</source>
+        <translation>Meniul ferestrei</translation>
+    </message>
+    <message>
+        <source>Dock to Main Window</source>
+        <translation>Andochează în fereastra principală</translation>
+    </message>
+    <message>
+        <source>Undock from Main Window</source>
+        <translation>Detașează din fereastra principală</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Ajutor</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Închide</translation>
     </message>
 </context>
 <context>

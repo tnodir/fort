@@ -1535,6 +1535,29 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>HomeLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>ملفات التفضيلات</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>السجل</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>سجلات الخدمة</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>الإصدارات</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>مساعدة</translation>
+    </message>
+</context>
+<context>
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
@@ -1665,26 +1688,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Unlock</source>
         <translation>فك القفل</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>السجل</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>ملفات التفضيلات</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>الإصدارات</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>مساعدة</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>سجلات الخدمة</translation>
     </message>
 </context>
 <context>
@@ -2019,6 +2022,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>نقرة بالزر الأيمن</translation>
     </message>
     <message>
+        <source>Show Main Window</source>
+        <translation>عرض النافذة الرئيسية</translation>
+    </message>
+    <message>
         <source>Show My Fort</source>
         <translation>عرض نافذة My Fort</translation>
     </message>
@@ -2179,6 +2186,54 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Select dark color for %1</source>
         <translation>حدد اللون الغامق ل %1</translation>
+    </message>
+</context>
+<context>
+    <name>MainMenuBar</name>
+    <message>
+        <source>File</source>
+        <translation>ملف</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>إقفال</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>فك القفل</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>أدوات</translation>
+    </message>
+    <message>
+        <source>Review Alerts</source>
+        <translation>عرض التحذير</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation>النافذة</translation>
+    </message>
+    <message>
+        <source>Reset Layout</source>
+        <translation>إعادة ضبط التخطيط</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>مساعدة</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>معلومات</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>Open a panel from the tool bar&apos;s menus.
+Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+        <translation>افتح لوحة من قوائم شريط الأدوات.
+أو انقل نافذة إلى هنا بعنصر قائمتها &quot;إرساء في النافذة الرئيسية&quot;.</translation>
     </message>
 </context>
 <context>
@@ -2541,6 +2596,13 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Options</source>
         <translation>الخيارات</translation>
+    </message>
+</context>
+<context>
+    <name>PanelDock</name>
+    <message>
+        <source>Close</source>
+        <translation>إغلاق</translation>
     </message>
 </context>
 <context>
@@ -4312,6 +4374,10 @@ Packet loss: %2</source>
         <translation>حركة الشبكة</translation>
     </message>
     <message>
+        <source>Main Window</source>
+        <translation>النافذة الرئيسية</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>الاتصالات</translation>
     </message>
@@ -4362,6 +4428,29 @@ Packet loss: %2</source>
     <message>
         <source>Restart Required</source>
         <translation>يجب إعادة التشغيل.</translation>
+    </message>
+</context>
+<context>
+    <name>WindowMenuButton</name>
+    <message>
+        <source>Window Menu</source>
+        <translation>قائمة النافذة</translation>
+    </message>
+    <message>
+        <source>Dock to Main Window</source>
+        <translation>إرساء في النافذة الرئيسية</translation>
+    </message>
+    <message>
+        <source>Undock from Main Window</source>
+        <translation>فك الإرساء من النافذة الرئيسية</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>مساعدة</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>إغلاق</translation>
     </message>
 </context>
 <context>

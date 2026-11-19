@@ -1535,6 +1535,29 @@ Program jest włączony tylko wtedy, gdy DOWOLNA z jego grup wyłącznych jest w
     </message>
 </context>
 <context>
+    <name>HomeLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>Profil</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Dzienniki</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>Logi usługi</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Wydania</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Pomoc</translation>
+    </message>
+</context>
+<context>
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
@@ -1665,26 +1688,6 @@ Program jest włączony tylko wtedy, gdy DOWOLNA z jego grup wyłącznych jest w
     <message>
         <source>Unlock</source>
         <translation>Odblokuj</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>Dzienniki</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>Profil</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Wydania</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Pomoc</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>Logi usługi</translation>
     </message>
 </context>
 <context>
@@ -2019,6 +2022,10 @@ Program jest włączony tylko wtedy, gdy DOWOLNA z jego grup wyłącznych jest w
         <translation>Prawe kliknięcie</translation>
     </message>
     <message>
+        <source>Show Main Window</source>
+        <translation>Pokaż okno główne</translation>
+    </message>
+    <message>
         <source>Show My Fort</source>
         <translation>Pokaż Mój Fort</translation>
     </message>
@@ -2179,6 +2186,54 @@ Program jest włączony tylko wtedy, gdy DOWOLNA z jego grup wyłącznych jest w
     <message>
         <source>Select dark color for %1</source>
         <translation>Wybierz ciemny kolor dla %1</translation>
+    </message>
+</context>
+<context>
+    <name>MainMenuBar</name>
+    <message>
+        <source>File</source>
+        <translation>Plik</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>Zablokuj</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>Odblokuj</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>Narzędzia</translation>
+    </message>
+    <message>
+        <source>Review Alerts</source>
+        <translation>Przeglądaj alerty</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation>Okno</translation>
+    </message>
+    <message>
+        <source>Reset Layout</source>
+        <translation>Resetuj układ</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Pomoc</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>O programie</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>Open a panel from the tool bar&apos;s menus.
+Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+        <translation>Otwórz panel z menu paska narzędzi.
+Lub przenieś tu okno pozycją &quot;Zadokuj w oknie głównym&quot; jego menu.</translation>
     </message>
 </context>
 <context>
@@ -2541,6 +2596,13 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
     <message>
         <source>Options</source>
         <translation>Opcje</translation>
+    </message>
+</context>
+<context>
+    <name>PanelDock</name>
+    <message>
+        <source>Close</source>
+        <translation>Zamknij</translation>
     </message>
 </context>
 <context>
@@ -4312,6 +4374,10 @@ Utrata pakietów: %2</translation>
         <translation>Ruch</translation>
     </message>
     <message>
+        <source>Main Window</source>
+        <translation>Okno główne</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>Połączenia</translation>
     </message>
@@ -4362,6 +4428,29 @@ Utrata pakietów: %2</translation>
     <message>
         <source>Restart Required</source>
         <translation>Wymagane ponowne uruchomienie</translation>
+    </message>
+</context>
+<context>
+    <name>WindowMenuButton</name>
+    <message>
+        <source>Window Menu</source>
+        <translation>Menu okna</translation>
+    </message>
+    <message>
+        <source>Dock to Main Window</source>
+        <translation>Zadokuj w oknie głównym</translation>
+    </message>
+    <message>
+        <source>Undock from Main Window</source>
+        <translation>Oddokuj z okna głównego</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Pomoc</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Zamknij</translation>
     </message>
 </context>
 <context>

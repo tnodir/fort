@@ -1535,6 +1535,29 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>HomeLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>プロファイル</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>ログ</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>サービス ログ</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>リリース</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>ヘルプ</translation>
+    </message>
+</context>
+<context>
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
@@ -1665,26 +1688,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Unlock</source>
         <translation>ロック解除</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>ログ</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>プロファイル</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>リリース</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>ヘルプ</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>サービス ログ</translation>
     </message>
 </context>
 <context>
@@ -2019,6 +2022,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>右クリック</translation>
     </message>
     <message>
+        <source>Show Main Window</source>
+        <translation>メインウィンドウを表示</translation>
+    </message>
+    <message>
         <source>Show My Fort</source>
         <translation>My Fort を表示</translation>
     </message>
@@ -2179,6 +2186,54 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Select dark color for %1</source>
         <translation>%1 の暗い色を選択</translation>
+    </message>
+</context>
+<context>
+    <name>MainMenuBar</name>
+    <message>
+        <source>File</source>
+        <translation>ファイル</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>ロック</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>ロック解除</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>ツール</translation>
+    </message>
+    <message>
+        <source>Review Alerts</source>
+        <translation>警告の確認</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation>ウィンドウ</translation>
+    </message>
+    <message>
+        <source>Reset Layout</source>
+        <translation>レイアウトをリセット</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>ヘルプ</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>Fort Firewall について</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>Open a panel from the tool bar&apos;s menus.
+Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+        <translation>ツールバーのメニューからパネルを開きます。
+または、ウィンドウ自身のメニューの&quot;メインウィンドウにドッキング&quot;項目でここに移動します。</translation>
     </message>
 </context>
 <context>
@@ -2541,6 +2596,13 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Options</source>
         <translation>オプション</translation>
+    </message>
+</context>
+<context>
+    <name>PanelDock</name>
+    <message>
+        <source>Close</source>
+        <translation>閉じる</translation>
     </message>
 </context>
 <context>
@@ -4312,6 +4374,10 @@ Packet loss: %2</source>
         <translation>トラフィック</translation>
     </message>
     <message>
+        <source>Main Window</source>
+        <translation>メインウィンドウ</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>接続</translation>
     </message>
@@ -4362,6 +4428,29 @@ Packet loss: %2</source>
     <message>
         <source>Restart Required</source>
         <translation>再起動が必要です</translation>
+    </message>
+</context>
+<context>
+    <name>WindowMenuButton</name>
+    <message>
+        <source>Window Menu</source>
+        <translation>ウィンドウメニュー</translation>
+    </message>
+    <message>
+        <source>Dock to Main Window</source>
+        <translation>メインウィンドウにドッキング</translation>
+    </message>
+    <message>
+        <source>Undock from Main Window</source>
+        <translation>メインウィンドウからドッキング解除</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>ヘルプ</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>閉じる</translation>
     </message>
 </context>
 <context>

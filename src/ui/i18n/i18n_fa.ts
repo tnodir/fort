@@ -1535,6 +1535,29 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>HomeLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>پروفایل</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>گزارش‌ها</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>گزارش‌های سرویس</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>انتشارها</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>راهنما</translation>
+    </message>
+</context>
+<context>
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
@@ -1665,26 +1688,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Unlock</source>
         <translation>باز کردن قفل</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>گزارش‌ها</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>پروفایل</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>انتشارها</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>راهنما</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>گزارش‌های سرویس</translation>
     </message>
 </context>
 <context>
@@ -2019,6 +2022,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>کلیک راست</translation>
     </message>
     <message>
+        <source>Show Main Window</source>
+        <translation>نمایش پنجره اصلی</translation>
+    </message>
+    <message>
         <source>Show My Fort</source>
         <translation>نمایش Fort من</translation>
     </message>
@@ -2179,6 +2186,54 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Select dark color for %1</source>
         <translation>انتخاب رنگ تیره برای %1</translation>
+    </message>
+</context>
+<context>
+    <name>MainMenuBar</name>
+    <message>
+        <source>File</source>
+        <translation>فایل</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>قفل</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>باز کردن قفل</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>ابزارها</translation>
+    </message>
+    <message>
+        <source>Review Alerts</source>
+        <translation>بررسی هشدارها</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation>پنجره</translation>
+    </message>
+    <message>
+        <source>Reset Layout</source>
+        <translation>بازنشانی چیدمان</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>راهنما</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>درباره</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>Open a panel from the tool bar&apos;s menus.
+Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+        <translation>یک پنل را از منوهای نوار ابزار باز کنید.
+یا پنجره‌ای را با گزینه &quot;الحاق به پنجره اصلی&quot; منوی آن به اینجا منتقل کنید.</translation>
     </message>
 </context>
 <context>
@@ -2541,6 +2596,13 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Options</source>
         <translation>تنظیمات</translation>
+    </message>
+</context>
+<context>
+    <name>PanelDock</name>
+    <message>
+        <source>Close</source>
+        <translation>بستن</translation>
     </message>
 </context>
 <context>
@@ -4312,6 +4374,10 @@ Packet loss: %2</source>
         <translation>ترافیک</translation>
     </message>
     <message>
+        <source>Main Window</source>
+        <translation>پنجره اصلی</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>اتصال‌ها</translation>
     </message>
@@ -4362,6 +4428,29 @@ Packet loss: %2</source>
     <message>
         <source>Restart Required</source>
         <translation>راه‌اندازی مجدد لازم است</translation>
+    </message>
+</context>
+<context>
+    <name>WindowMenuButton</name>
+    <message>
+        <source>Window Menu</source>
+        <translation>منوی پنجره</translation>
+    </message>
+    <message>
+        <source>Dock to Main Window</source>
+        <translation>الحاق به پنجره اصلی</translation>
+    </message>
+    <message>
+        <source>Undock from Main Window</source>
+        <translation>جدا کردن از پنجره اصلی</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>راهنما</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>بستن</translation>
     </message>
 </context>
 <context>

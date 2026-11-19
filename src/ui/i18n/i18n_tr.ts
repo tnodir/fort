@@ -1535,6 +1535,29 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
     </message>
 </context>
 <context>
+    <name>HomeLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>Profil</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Günlükler</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>Hizmet Günlükleri</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Sürümler</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Yardım</translation>
+    </message>
+</context>
+<context>
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
@@ -1665,26 +1688,6 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
     <message>
         <source>Unlock</source>
         <translation>Kilidi Aç</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>Günlükler</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>Profil</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Sürümler</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Yardım</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>Hizmet Günlükleri</translation>
     </message>
 </context>
 <context>
@@ -2019,6 +2022,10 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
         <translation>Sağ Tıklama</translation>
     </message>
     <message>
+        <source>Show Main Window</source>
+        <translation>Ana Pencereyi Göster</translation>
+    </message>
+    <message>
         <source>Show My Fort</source>
         <translation>Fort&apos;u Göster</translation>
     </message>
@@ -2179,6 +2186,54 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
     <message>
         <source>Select dark color for %1</source>
         <translation>%1 İçin Koyu Renk Seç </translation>
+    </message>
+</context>
+<context>
+    <name>MainMenuBar</name>
+    <message>
+        <source>File</source>
+        <translation>Dosya</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>Kilitle</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>Kilidi Aç</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>Araçlar</translation>
+    </message>
+    <message>
+        <source>Review Alerts</source>
+        <translation>Uyarıları İncele</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation>Pencere</translation>
+    </message>
+    <message>
+        <source>Reset Layout</source>
+        <translation>Düzeni Sıfırla</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Yardım</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>Hakkında</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>Open a panel from the tool bar&apos;s menus.
+Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+        <translation>Araç çubuğunun menülerinden bir panel açın.
+Veya bir pencereyi menüsündeki &quot;Ana Pencereye Yerleştir&quot; öğesiyle buraya taşıyın.</translation>
     </message>
 </context>
 <context>
@@ -2541,6 +2596,13 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     <message>
         <source>Options</source>
         <translation>Ayarlar</translation>
+    </message>
+</context>
+<context>
+    <name>PanelDock</name>
+    <message>
+        <source>Close</source>
+        <translation>Kapat</translation>
     </message>
 </context>
 <context>
@@ -4311,6 +4373,10 @@ Paket kaybı: %2</translation>
         <translation>Trafik</translation>
     </message>
     <message>
+        <source>Main Window</source>
+        <translation>Ana Pencere</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>Bağlantılar</translation>
     </message>
@@ -4361,6 +4427,29 @@ Paket kaybı: %2</translation>
     <message>
         <source>Restart Required</source>
         <translation>Yeniden Başlatma Gerekli</translation>
+    </message>
+</context>
+<context>
+    <name>WindowMenuButton</name>
+    <message>
+        <source>Window Menu</source>
+        <translation>Pencere Menüsü</translation>
+    </message>
+    <message>
+        <source>Dock to Main Window</source>
+        <translation>Ana Pencereye Yerleştir</translation>
+    </message>
+    <message>
+        <source>Undock from Main Window</source>
+        <translation>Ana Pencereden Ayır</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Yardım</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Kapat</translation>
     </message>
 </context>
 <context>

@@ -1535,6 +1535,29 @@ Un programa está activado solo si CUALQUIERA de sus grupos exclusivos está act
     </message>
 </context>
 <context>
+    <name>HomeLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>Perfil</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Registros</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>Registros de servicio</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Lanzamientos</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Ayuda</translation>
+    </message>
+</context>
+<context>
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
@@ -1665,26 +1688,6 @@ Un programa está activado solo si CUALQUIERA de sus grupos exclusivos está act
     <message>
         <source>Unlock</source>
         <translation>Desbloquear</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>Registros</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>Perfil</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Lanzamientos</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Ayuda</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>Registros de servicio</translation>
     </message>
 </context>
 <context>
@@ -2019,6 +2022,10 @@ Un programa está activado solo si CUALQUIERA de sus grupos exclusivos está act
         <translation>Clic Derecho</translation>
     </message>
     <message>
+        <source>Show Main Window</source>
+        <translation>Mostrar ventana principal</translation>
+    </message>
+    <message>
         <source>Show My Fort</source>
         <translation>Mostrar My Fort</translation>
     </message>
@@ -2179,6 +2186,54 @@ Un programa está activado solo si CUALQUIERA de sus grupos exclusivos está act
     <message>
         <source>Select dark color for %1</source>
         <translation>Seleccionar color oscuro para %1</translation>
+    </message>
+</context>
+<context>
+    <name>MainMenuBar</name>
+    <message>
+        <source>File</source>
+        <translation>Archivo</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>Bloquear</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>Desbloquear</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>Herramientas</translation>
+    </message>
+    <message>
+        <source>Review Alerts</source>
+        <translation>Revisar alertas</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation>Ventana</translation>
+    </message>
+    <message>
+        <source>Reset Layout</source>
+        <translation>Restablecer diseño</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Ayuda</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>Acerca de</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>Open a panel from the tool bar&apos;s menus.
+Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+        <translation>Abra un panel desde los menús de la barra de herramientas.
+O mueva aquí una ventana con el elemento &quot;Acoplar a la ventana principal&quot; de su menú.</translation>
     </message>
 </context>
 <context>
@@ -2541,6 +2596,13 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     <message>
         <source>Options</source>
         <translation>Opciones</translation>
+    </message>
+</context>
+<context>
+    <name>PanelDock</name>
+    <message>
+        <source>Close</source>
+        <translation>Cerrar</translation>
     </message>
 </context>
 <context>
@@ -4315,6 +4377,10 @@ Paquetes perdidos: %2</translation>
         <translation>Tráfico</translation>
     </message>
     <message>
+        <source>Main Window</source>
+        <translation>Ventana principal</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>Conexiones</translation>
     </message>
@@ -4365,6 +4431,29 @@ Paquetes perdidos: %2</translation>
     <message>
         <source>Restart Required</source>
         <translation>Es necesario reiniciar</translation>
+    </message>
+</context>
+<context>
+    <name>WindowMenuButton</name>
+    <message>
+        <source>Window Menu</source>
+        <translation>Menú de la ventana</translation>
+    </message>
+    <message>
+        <source>Dock to Main Window</source>
+        <translation>Acoplar a la ventana principal</translation>
+    </message>
+    <message>
+        <source>Undock from Main Window</source>
+        <translation>Desacoplar de la ventana principal</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Ayuda</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Cerrar</translation>
     </message>
 </context>
 <context>

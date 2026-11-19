@@ -1535,6 +1535,29 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>HomeLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>Профиль</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Логи</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>Логи службы</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Релизы</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Справка</translation>
+    </message>
+</context>
+<context>
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
@@ -1665,26 +1688,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Unlock</source>
         <translation>Разблокировать</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>Логи</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>Профиль</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Релизы</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Справка</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>Логи службы</translation>
     </message>
 </context>
 <context>
@@ -2019,6 +2022,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>Щелчок правой кнопкой</translation>
     </message>
     <message>
+        <source>Show Main Window</source>
+        <translation>Показать Главное окно</translation>
+    </message>
+    <message>
         <source>Show My Fort</source>
         <translation>Показать Мой Форт</translation>
     </message>
@@ -2179,6 +2186,54 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Select dark color for %1</source>
         <translation>Выберите тёмный цвет для %1</translation>
+    </message>
+</context>
+<context>
+    <name>MainMenuBar</name>
+    <message>
+        <source>File</source>
+        <translation>Файл</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>Заблокировать</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>Разблокировать</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>Инструменты</translation>
+    </message>
+    <message>
+        <source>Review Alerts</source>
+        <translation>Просмотр оповещений</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation>Окно</translation>
+    </message>
+    <message>
+        <source>Reset Layout</source>
+        <translation>Сбросить расположение</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Справка</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>О программе</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>Open a panel from the tool bar&apos;s menus.
+Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+        <translation>Откройте панель через меню на панели инструментов.
+Или переместите сюда окно пунктом его меню &quot;Встроить в главное окно&quot;.</translation>
     </message>
 </context>
 <context>
@@ -2541,6 +2596,13 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Options</source>
         <translation>Опции</translation>
+    </message>
+</context>
+<context>
+    <name>PanelDock</name>
+    <message>
+        <source>Close</source>
+        <translation>Закрыть</translation>
     </message>
 </context>
 <context>
@@ -4312,6 +4374,10 @@ Packet loss: %2</source>
         <translation>Трафик</translation>
     </message>
     <message>
+        <source>Main Window</source>
+        <translation>Главное окно</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>Соединения</translation>
     </message>
@@ -4362,6 +4428,29 @@ Packet loss: %2</source>
     <message>
         <source>Restart Required</source>
         <translation>Требуется перезапуск</translation>
+    </message>
+</context>
+<context>
+    <name>WindowMenuButton</name>
+    <message>
+        <source>Window Menu</source>
+        <translation>Меню окна</translation>
+    </message>
+    <message>
+        <source>Dock to Main Window</source>
+        <translation>Встроить в главное окно</translation>
+    </message>
+    <message>
+        <source>Undock from Main Window</source>
+        <translation>Вынести из главного окна</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Справка</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Закрыть</translation>
     </message>
 </context>
 <context>

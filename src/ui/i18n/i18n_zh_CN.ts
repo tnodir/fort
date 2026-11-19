@@ -1535,6 +1535,29 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>HomeLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>配置文件</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>日志</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>服务日志</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>版本发布</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>帮助</translation>
+    </message>
+</context>
+<context>
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
@@ -1665,26 +1688,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Unlock</source>
         <translation>解锁​​​​</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>日志</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>配置文件</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>版本发布</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>帮助</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>服务日志</translation>
     </message>
 </context>
 <context>
@@ -2019,6 +2022,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>右键点击</translation>
     </message>
     <message>
+        <source>Show Main Window</source>
+        <translation>显示主窗口</translation>
+    </message>
+    <message>
         <source>Show My Fort</source>
         <translation>显示我的堡垒</translation>
     </message>
@@ -2179,6 +2186,54 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Select dark color for %1</source>
         <translation>为 %1 选择深色</translation>
+    </message>
+</context>
+<context>
+    <name>MainMenuBar</name>
+    <message>
+        <source>File</source>
+        <translation>文件</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>锁定</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>解锁​​​​</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>工具</translation>
+    </message>
+    <message>
+        <source>Review Alerts</source>
+        <translation>查看提示</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation>窗口</translation>
+    </message>
+    <message>
+        <source>Reset Layout</source>
+        <translation>重置布局</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>帮助</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>关于</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>Open a panel from the tool bar&apos;s menus.
+Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+        <translation>从工具栏的菜单打开面板。
+或者通过窗口自身菜单中的&quot;停靠到主窗口&quot;项将窗口移到此处。</translation>
     </message>
 </context>
 <context>
@@ -2541,6 +2596,13 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Options</source>
         <translation>选项</translation>
+    </message>
+</context>
+<context>
+    <name>PanelDock</name>
+    <message>
+        <source>Close</source>
+        <translation>关闭</translation>
     </message>
 </context>
 <context>
@@ -4312,6 +4374,10 @@ Packet loss: %2</source>
         <translation>数据流量</translation>
     </message>
     <message>
+        <source>Main Window</source>
+        <translation>主窗口</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>连接</translation>
     </message>
@@ -4362,6 +4428,29 @@ Packet loss: %2</source>
     <message>
         <source>Restart Required</source>
         <translation>需要重启</translation>
+    </message>
+</context>
+<context>
+    <name>WindowMenuButton</name>
+    <message>
+        <source>Window Menu</source>
+        <translation>窗口菜单</translation>
+    </message>
+    <message>
+        <source>Dock to Main Window</source>
+        <translation>停靠到主窗口</translation>
+    </message>
+    <message>
+        <source>Undock from Main Window</source>
+        <translation>从主窗口取消停靠</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>帮助</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>关闭</translation>
     </message>
 </context>
 <context>
