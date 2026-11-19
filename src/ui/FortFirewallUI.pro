@@ -152,6 +152,7 @@ SOURCES += \
     form/home/pages/homebasepage.cpp \
     form/home/pages/homemainpage.cpp \
     form/home/pages/homepage.cpp \
+    form/main/mainmenubar.cpp \
     form/main/mainwindow.cpp \
     form/main/paneldock.cpp \
     form/opt/optionscontroller.cpp \
@@ -516,6 +517,7 @@ HEADERS += \
     form/home/pages/homebasepage.h \
     form/home/pages/homemainpage.h \
     form/home/pages/homepage.h \
+    form/main/mainmenubar.h \
     form/main/mainwindow.h \
     form/main/paneldock.h \
     form/opt/optionscontroller.h \

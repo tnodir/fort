@@ -42,6 +42,7 @@ private:
     void retranslateUi();
 
     void setupUi();
+    QWidget *setupHeader();
     void setupDockHost();
 
     void updateHint();

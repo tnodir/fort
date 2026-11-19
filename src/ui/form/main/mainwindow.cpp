@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include <QApplication>
+#include <QGridLayout>
 #include <QLabel>
 #include <QMainWindow>
 #include <QTabWidget>
@@ -8,11 +9,13 @@
 
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/logowidget.h>
 #include <fortglobal.h>
 #include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
 
+#include "mainmenubar.h"
 #include "paneldock.h"
 
 using namespace Fort;
@@ -226,6 +229,7 @@ void MainWindow::setupUi()
     setupDockHost();
 
     auto layout = ControlUtil::createVLayout(/*margin=*/0);
+    layout->setMenuBar(setupHeader());
     layout->addWidget(m_dockHost);
 
     this->setLayout(layout);
@@ -235,6 +239,23 @@ void MainWindow::setupUi()
 
     // Size
     this->setMinimumSize(500, 400);
+}
+
+QWidget *MainWindow::setupHeader()
+{
+    auto logo = new LogoWidget(/*compact=*/true);
+    logo->setContentsMargins(0, 0, 6, 0);
+
+    // The logo beside the menu bar and the tool bar
+    auto layout = new QGridLayout();
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+    layout->setColumnStretch(0, 1);
+
+    layout->addWidget(new MainMenuBar(this), 0, 0);
+    layout->addWidget(logo, 0, 1, 2, 1);
+
+    return ControlUtil::wrapToWidget(layout);
 }
 
 void MainWindow::setupDockHost()

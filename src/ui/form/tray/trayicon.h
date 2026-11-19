@@ -23,8 +23,10 @@ public:
     QString iconPath() const { return m_iconPath; }
 
     QMenu *menu() const { return m_menu; }
+    QAction *homeAction() const { return m_homeAction; }
     QMenu *optionsMenu() const { return m_optionsMenu; }
     QMenu *statisticsMenu() const { return m_statisticsMenu; }
+    QAction *quitAction() const { return m_quitAction; }
 
     TrayController *ctrl() const { return m_ctrl; }
 
