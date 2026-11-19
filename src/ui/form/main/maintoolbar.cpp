@@ -4,6 +4,7 @@
 #include <QToolButton>
 
 #include <form/controls/actioncheckbox.h>
+#include <form/controls/headerbuttons.h>
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -27,6 +28,11 @@ void MainToolBar::setupUi()
 
     addMenu(trayIcon->blockTrafficMenu());
     addMenu(trayIcon->filterModeMenu());
+
+    auto headerButtons = new HeaderButtons();
+    headerButtons->setSeparatorVisible(true);
+
+    addWidget(headerButtons);
 }
 
 void MainToolBar::addCheckBox(QAction *action)
