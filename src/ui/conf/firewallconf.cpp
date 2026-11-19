@@ -126,7 +126,7 @@ QStringList FirewallConf::blockTrafficNames()
 
 QStringList FirewallConf::blockTrafficIconPaths()
 {
-    return { QString(), ":/icons/hostname.png", ":/icons/global_telecom.png",
+    return { ":/icons/bullet_green.png", ":/icons/hostname.png", ":/icons/global_telecom.png",
         ":/icons/computer.png", ":/icons/cross.png" };
 }
 
