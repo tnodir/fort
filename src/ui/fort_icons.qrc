@@ -35,6 +35,8 @@
     <file>icons/disconnect.png</file>
     <file>icons/disk.png</file>
     <file>icons/dns.png</file>
+    <file>icons/do_disturb.png</file>
+    <file>icons/do_not_disturb.png</file>
     <file>icons/document_tree.png</file>
     <file>icons/download.png</file>
     <file>icons/error.png</file>

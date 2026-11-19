@@ -564,6 +564,8 @@ void TrayIcon::setupTrayMenuTopActions()
     m_snoozeAlertsAction = addAction(m_menu,
             { QString(), this, SLOT(switchTrayFlag(bool)), tray::ActionSwitchSnoozeAlerts,
                     /*checkable=*/true });
+    m_snoozeAlertsAction->setIcon(
+            ControlUtil::checkableIcon(":/icons/do_disturb.png", ":/icons/do_not_disturb.png"));
     addHotKey(m_snoozeAlertsAction, HotKey::snoozeAlerts);
 
     m_blockTrafficMenu = addSelectMenu(blockTrafficIniKeys, FirewallConf::blockTrafficIconPaths());
