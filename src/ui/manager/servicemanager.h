@@ -17,15 +17,13 @@ public:
 
     void setUp() override;
 
-    bool controlEnabled() const { return m_controlEnabled; }
+    bool controlEnabled() const { return m_controlEnabled.loadRelaxed() != 0; }
     void setControlEnabled(bool v);
 
     bool stopDriverRequested() const { return m_stopDriverRequested; }
 
     bool acceptStop() const override { return controlEnabled(); }
     bool acceptPauseContinue() const override { return controlEnabled(); }
-
-    void initialize(qintptr hstatus) override;
 
     const wchar_t *serviceName() const override;
 
@@ -46,8 +44,9 @@ private:
     void setupByConfIni();
 
 private:
-    bool m_controlEnabled = false;
     bool m_stopDriverRequested = false;
+
+    QAtomicInt m_controlEnabled = 0; // read by the control handler's thread
 };
 
 #endif // SERVICEMANAGER_H

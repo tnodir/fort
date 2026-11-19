@@ -12,11 +12,14 @@ public:
     virtual bool acceptStop() const { return true; }
     virtual bool acceptPauseContinue() const { return true; }
 
-    virtual void initialize(qintptr hstatus);
-
     virtual const wchar_t *serviceName() const = 0;
 
     virtual void processControl(quint32 code, quint32 eventType) = 0;
+
+    // Reports the pending start: the initialization follows
+    void initialize(qintptr hstatus);
+    void reportStartPending();
+    void reportRunning();
 
 protected:
     void setupAcceptedControls();

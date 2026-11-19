@@ -1,5 +1,7 @@
 #include "serviceworker.h"
 
+#include <QSemaphore>
+
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
@@ -9,7 +11,12 @@
 
 namespace {
 
+inline constexpr int startCheckPointPeriod = 1000;
+
 ServiceManagerIface *g_manager = nullptr;
+
+QSemaphore g_connected;
+QSemaphore g_started;
 
 DWORD WINAPI serviceCtrlHandler(
         DWORD code, DWORD eventType, LPVOID /*eventData*/, LPVOID /*context*/)
@@ -17,6 +24,16 @@ DWORD WINAPI serviceCtrlHandler(
     g_manager->processControl(code, eventType);
 
     return NO_ERROR;
+}
+
+void waitStarted()
+{
+    // A pending service without the check points is considered hung
+    while (!g_started.tryAcquire(1, startCheckPointPeriod)) {
+        g_manager->reportStartPending();
+    }
+
+    g_manager->reportRunning();
 }
 
 void WINAPI serviceMain(DWORD argc, wchar_t *argv[])
@@ -30,6 +47,12 @@ void WINAPI serviceMain(DWORD argc, wchar_t *argv[])
     if (hstatus) {
         g_manager->initialize(qintptr(hstatus));
     }
+
+    g_connected.release();
+
+    if (hstatus) {
+        waitStarted();
+    }
 }
 
 DWORD WINAPI serviceStart(void *arg)
@@ -41,7 +64,12 @@ DWORD WINAPI serviceStart(void *arg)
     wchar_t name[2] = { 0 }; // ignored for SERVICE_WIN32_OWN_PROCESS
     SERVICE_TABLE_ENTRY table[] = { { name, serviceMain }, { nullptr, nullptr } };
 
-    return !StartServiceCtrlDispatcher(table);
+    if (StartServiceCtrlDispatcher(table))
+        return 0;
+
+    g_connected.release(); // not started by the Service Control Manager
+
+    return 1;
 }
 
 }
@@ -52,6 +80,14 @@ void ServiceWorker::run(ServiceManagerIface *manager)
     g_manager = manager;
 
     DWORD id;
-    const HANDLE hThr = CreateThread(nullptr, 8192, serviceStart, nullptr, 0, &id);
+    const HANDLE hThr = CreateThread(nullptr, 0, serviceStart, nullptr, 0, &id);
     CloseHandle(hThr);
+
+    // The status handle must be ready, when the initialization reports the running service
+    g_connected.acquire();
+}
+
+void ServiceWorker::setStarted()
+{
+    g_started.release();
 }

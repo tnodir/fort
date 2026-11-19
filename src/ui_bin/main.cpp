@@ -147,10 +147,17 @@ int main(int argc, char *argv[])
     if (!fortManager.checkRunningInstance(settings.isService(), settings.isLaunch()))
         return FortErrorInstance;
 
+    if (settings.isService()) {
+        // Connect to the Service Control Manager before the long initialization
+        ioc.setService(new ServiceManager());
+
+        ServiceWorker::run(Fort::serviceManager());
+    }
+
     fortManager.initialize();
 
     if (settings.isService()) {
-        ServiceWorker::run(Fort::serviceManager());
+        ServiceWorker::setStarted();
     } else {
         Fort::windowManager()->initialize();
     }

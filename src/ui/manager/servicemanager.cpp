@@ -130,18 +130,13 @@ void ServiceManager::setUp()
 
 void ServiceManager::setControlEnabled(bool v)
 {
-    if (m_controlEnabled == v)
+    if (controlEnabled() == v)
         return;
 
-    m_controlEnabled = v;
+    m_controlEnabled.storeRelaxed(v);
 
     setupAcceptedControls();
     reportStatus();
-}
-
-void ServiceManager::initialize(qintptr hstatus)
-{
-    ServiceManagerIface::initialize(hstatus);
 }
 
 void ServiceManager::setupControlManager()

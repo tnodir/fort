@@ -154,7 +154,6 @@ inline void setupServices(IocContainer *ioc, const FortSettings *settings)
         ioc->setService<WindowManager>(new WindowManagerFake());
 
         // For Service only
-        ioc->setService(new ServiceManager());
         ioc->setService(new DnsManager());
     } else {
         ioc->setService(new WindowManager());
