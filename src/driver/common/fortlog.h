@@ -39,10 +39,25 @@
     (FORT_LOG_CONN_INHERIT_PATH_OFFSET(path_len, isIPv6)                                           \
             + FORT_ALIGN_SIZE(inherit_path_len, FORT_LOG_ALIGN))
 
-#define FORT_LOG_PROC_NEW_HEADER_SIZE (3 * sizeof(UINT32))
+#define FORT_LOG_PROC_NEW_HEADER_SIZE (4 * sizeof(UINT32))
 
-#define FORT_LOG_PROC_NEW_SIZE(path_len)                                                           \
-    FORT_ALIGN_SIZE(FORT_LOG_PROC_NEW_HEADER_SIZE + (path_len), FORT_LOG_ALIGN)
+/* The inherited process's name follows the aligned path */
+#define FORT_LOG_PROC_NEW_INHERIT_PATH_OFFSET(path_len)                                            \
+    (FORT_LOG_PROC_NEW_HEADER_SIZE + FORT_ALIGN_SIZE(path_len, FORT_LOG_ALIGN))
+
+#define FORT_LOG_PROC_NEW_SIZE(path_len, inherit_path_len)                                         \
+    (FORT_LOG_PROC_NEW_INHERIT_PATH_OFFSET(path_len)                                               \
+            + FORT_ALIGN_SIZE(inherit_path_len, FORT_LOG_ALIGN))
+
+typedef struct fort_log_proc_new_header
+{
+    UINT16 path_len;
+    UINT16 inherit_path_len;
+    UINT32 app_id;
+    UINT32 process_id;
+} FORT_LOG_PROC_NEW_HEADER, *PFORT_LOG_PROC_NEW_HEADER;
+
+typedef const FORT_LOG_PROC_NEW_HEADER *PCFORT_LOG_PROC_NEW_HEADER;
 
 #define FORT_LOG_STAT_HEADER_SIZE (sizeof(UINT32))
 
@@ -82,12 +97,12 @@ FORT_API void fort_log_conn_write(
 FORT_API void fort_log_conn_header_read(
         const char *p, PFORT_CONF_META_CONN conn, UINT16 *path_len, UINT16 *inherit_path_len);
 
-FORT_API void fort_log_proc_new_header_write(char *p, UINT32 app_id, UINT32 pid, UINT16 path_len);
+FORT_API void fort_log_proc_new_header_write(char *p, PCFORT_LOG_PROC_NEW_HEADER header);
 
-FORT_API void fort_log_proc_new_write(char *p, UINT32 app_id, UINT32 pid, PCFORT_APP_PATH path);
+FORT_API void fort_log_proc_new_write(
+        char *p, PCFORT_CONF_META_CONN conn, PCFORT_APP_PATH path, PCFORT_APP_PATH inherit_path);
 
-FORT_API void fort_log_proc_new_header_read(
-        const char *p, UINT32 *app_id, UINT32 *pid, UINT16 *path_len);
+FORT_API void fort_log_proc_new_header_read(const char *p, PFORT_LOG_PROC_NEW_HEADER header);
 
 FORT_API void fort_log_stat_traf_header_write(char *p, UINT16 proc_count);
 

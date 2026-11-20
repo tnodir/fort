@@ -15,6 +15,9 @@
 
 namespace {
 
+inline constexpr QStringView childPath = u"C:\\ch.exe";
+inline constexpr QStringView parentPath = u"C:\\parent.exe";
+
 ip_addr_t makeIp6(int v)
 {
     ip_addr_t ip;
@@ -205,8 +208,8 @@ TEST_F(LogBufferTest, blockedIp6WriteRead)
 
 TEST_F(LogBufferTest, inheritedConnWriteRead)
 {
-    const QString path("C:\\ch.exe");
-    const QString inheritPath("C:\\parent.exe");
+    const QString path = childPath.toString();
+    const QString inheritPath = parentPath.toString();
 
     const int pathLen = path.size() * int(sizeof(wchar_t));
     const int inheritPathLen = inheritPath.size() * int(sizeof(wchar_t));
@@ -304,6 +307,31 @@ TEST_F(LogBufferTest, flowClosedWriteRead)
     ASSERT_EQ(buf.offset(), buf.top());
 }
 
+namespace {
+
+// The inherited process's name of every second record, of different sizes
+QString procNewInheritPath(int i)
+{
+    return (i % 2 != 0) ? parentPath.left(parentPath.size() - i).toString() : QString();
+}
+
+}
+
+TEST_F(LogBufferTest, procNewSize)
+{
+    const QString path = childPath.toString();
+    const QString inheritPath = parentPath.toString();
+
+    const int pathLen = path.size() * int(sizeof(wchar_t));
+    const int inheritPathLen = inheritPath.size() * int(sizeof(wchar_t));
+    ASSERT_EQ(pathLen % 4, 2); // the inherited path is aligned after it
+
+    ASSERT_EQ(DriverCommon::logProcNewInheritPathOffset(pathLen),
+            DriverCommon::logProcNewHeaderSize() + (pathLen + 2));
+    ASSERT_EQ(DriverCommon::logProcNewSize(pathLen, inheritPathLen),
+            DriverCommon::logProcNewHeaderSize() + (pathLen + 2) + (inheritPathLen + 2));
+}
+
 TEST_F(LogBufferTest, procNewWriteRead)
 {
     const QString path("C:\\test\\app.exe");
@@ -321,6 +349,7 @@ TEST_F(LogBufferTest, procNewWriteRead)
 
         LogEntryProcNew procNewEntry(i + 11, path.left(i + 1));
         procNewEntry.setAppId(i + 21);
+        procNewEntry.setInheritKernelPath(procNewInheritPath(i));
         buf.writeEntryProcNew(&procNewEntry);
     }
 
@@ -340,6 +369,7 @@ TEST_F(LogBufferTest, procNewWriteRead)
         ASSERT_EQ(procNewEntry.pid(), i + 11);
         ASSERT_EQ(procNewEntry.appId(), i + 21);
         ASSERT_EQ(procNewEntry.kernelPath(), path.left(i + 1));
+        ASSERT_EQ(procNewEntry.inheritKernelPath(), procNewInheritPath(i));
     }
 
     ASSERT_EQ(buf.offset(), buf.top());

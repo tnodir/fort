@@ -6,6 +6,7 @@
 
 #include <common/fortcmnutl.h>
 #include <common/fortconf.h>
+#include <common/fortlog.h>
 
 #include <conf/speedlimit.h>
 
@@ -35,13 +36,6 @@ struct LogAppHeader
     bool blocked = false;
     bool alerted = false;
     quint16 pathLen = 0;
-    quint32 pid = 0;
-};
-
-struct LogProcNewHeader
-{
-    quint16 pathLen = 0;
-    quint32 appId = 0;
     quint32 pid = 0;
 };
 
@@ -90,7 +84,8 @@ quint32 logConnInheritPathOffset(quint16 pathLen, bool isIPv6 = false);
 quint32 logConnSize(quint16 pathLen, quint16 inheritPathLen, bool isIPv6 = false);
 
 quint32 logProcNewHeaderSize();
-quint32 logProcNewSize(quint16 pathLen);
+quint32 logProcNewInheritPathOffset(quint16 pathLen);
+quint32 logProcNewSize(quint16 pathLen, quint16 inheritPathLen);
 
 quint32 logStatHeaderSize();
 quint32 logStatTrafSize(quint16 procCount);
@@ -112,8 +107,8 @@ void logConnHeaderWrite(
 void logConnHeaderRead(
         const char *input, PFORT_CONF_META_CONN conn, quint16 *pathLen, quint16 *inheritPathLen);
 
-void logProcNewHeaderWrite(char *output, quint32 appId, quint32 pid, quint16 pathLen);
-LogProcNewHeader logProcNewHeaderRead(const char *input);
+void logProcNewHeaderWrite(char *output, const FORT_LOG_PROC_NEW_HEADER &header);
+FORT_LOG_PROC_NEW_HEADER logProcNewHeaderRead(const char *input);
 
 void logStatTrafHeaderRead(const char *input, quint16 *procCount);
 

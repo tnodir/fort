@@ -21,10 +21,16 @@ public:
 
     QString path() const;
 
+    QString inheritKernelPath() const { return m_inheritKernelPath; }
+    void setInheritKernelPath(const QString &v) { m_inheritKernelPath = v; }
+
+    QString inheritPath() const;
+
 private:
     quint32 m_appId = 0;
     quint32 m_pid = 0;
     QString m_kernelPath;
+    QString m_inheritKernelPath;
 };
 
 #endif // LOGENTRYPROCNEW_H

@@ -343,9 +343,14 @@ quint32 logProcNewHeaderSize()
     return FORT_LOG_PROC_NEW_HEADER_SIZE;
 }
 
-quint32 logProcNewSize(quint16 pathLen)
+quint32 logProcNewInheritPathOffset(quint16 pathLen)
 {
-    return FORT_LOG_PROC_NEW_SIZE(pathLen);
+    return FORT_LOG_PROC_NEW_INHERIT_PATH_OFFSET(pathLen);
+}
+
+quint32 logProcNewSize(quint16 pathLen, quint16 inheritPathLen)
+{
+    return FORT_LOG_PROC_NEW_SIZE(pathLen, inheritPathLen);
 }
 
 quint32 logStatHeaderSize()
@@ -417,16 +422,16 @@ void logConnHeaderRead(
     fort_log_conn_header_read(input, conn, pathLen, inheritPathLen);
 }
 
-void logProcNewHeaderWrite(char *output, quint32 appId, quint32 pid, quint16 pathLen)
+void logProcNewHeaderWrite(char *output, const FORT_LOG_PROC_NEW_HEADER &header)
 {
-    fort_log_proc_new_header_write(output, appId, pid, pathLen);
+    fort_log_proc_new_header_write(output, &header);
 }
 
-LogProcNewHeader logProcNewHeaderRead(const char *input)
+FORT_LOG_PROC_NEW_HEADER logProcNewHeaderRead(const char *input)
 {
-    LogProcNewHeader header;
+    FORT_LOG_PROC_NEW_HEADER header;
 
-    fort_log_proc_new_header_read(input, &header.appId, &header.pid, &header.pathLen);
+    fort_log_proc_new_header_read(input, &header);
 
     return header;
 }

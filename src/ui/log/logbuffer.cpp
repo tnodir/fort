@@ -231,10 +231,22 @@ void LogBuffer::writeEntryProcNew(const LogEntryProcNew *logEntry)
     const QString path = logEntry->kernelPath();
     const quint16 pathLen = pathSize(path);
 
-    char *output = appendEntry(DriverCommon::logProcNewSize(pathLen));
+    const QString inheritPath = logEntry->inheritKernelPath();
+    const quint16 inheritPathLen = pathSize(inheritPath);
 
-    DriverCommon::logProcNewHeaderWrite(output, logEntry->appId(), logEntry->pid(), pathLen);
+    char *output = appendEntry(DriverCommon::logProcNewSize(pathLen, inheritPathLen));
+
+    const FORT_LOG_PROC_NEW_HEADER header = {
+        .path_len = pathLen,
+        .inherit_path_len = inheritPathLen,
+        .app_id = logEntry->appId(),
+        .process_id = logEntry->pid(),
+    };
+
+    DriverCommon::logProcNewHeaderWrite(output, header);
+
     writePath(output + DriverCommon::logProcNewHeaderSize(), path);
+    writePath(output + DriverCommon::logProcNewInheritPathOffset(pathLen), inheritPath);
 }
 
 void LogBuffer::readEntryProcNew(LogEntryProcNew *logEntry)
@@ -243,11 +255,17 @@ void LogBuffer::readEntryProcNew(LogEntryProcNew *logEntry)
 
     const auto header = DriverCommon::logProcNewHeaderRead(input);
 
-    logEntry->setAppId(header.appId);
-    logEntry->setPid(header.pid);
-    logEntry->setKernelPath(readPath(input + DriverCommon::logProcNewHeaderSize(), header.pathLen));
+    const QString path = readPath(input + DriverCommon::logProcNewHeaderSize(), header.path_len);
+    const QString inheritPath =
+            readPath(input + DriverCommon::logProcNewInheritPathOffset(header.path_len),
+                    header.inherit_path_len);
 
-    skipEntry(DriverCommon::logProcNewSize(header.pathLen));
+    logEntry->setAppId(header.app_id);
+    logEntry->setPid(header.process_id);
+    logEntry->setKernelPath(path);
+    logEntry->setInheritKernelPath(inheritPath);
+
+    skipEntry(DriverCommon::logProcNewSize(header.path_len, header.inherit_path_len));
 }
 
 void LogBuffer::readEntryStatTraf(LogEntryStatTraf *logEntry)

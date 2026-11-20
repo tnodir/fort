@@ -249,7 +249,7 @@ inline static UINT32 fort_buffer_conn_write_len(PCFORT_CONF_META_CONN conn, cons
     case FORT_BUFFER_CONN_WRITE_CONN:
         return FORT_LOG_CONN_SIZE(path_len, inherit_path_len, conn->isIPv6);
     case FORT_BUFFER_CONN_WRITE_PROC_NEW:
-        return FORT_LOG_PROC_NEW_SIZE(path_len);
+        return FORT_LOG_PROC_NEW_SIZE(path_len, inherit_path_len);
     default:
         return 0;
     }
@@ -282,7 +282,7 @@ FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN
                 fort_log_conn_write(out, conn, &log_path, &inherit_path);
             } break;
             case FORT_BUFFER_CONN_WRITE_PROC_NEW: {
-                fort_log_proc_new_write(out, conn->app.data.app_id, conn->process_id, &log_path);
+                fort_log_proc_new_write(out, conn, &log_path, &inherit_path);
             } break;
             }
         }
