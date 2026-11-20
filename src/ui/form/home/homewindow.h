@@ -5,7 +5,6 @@
 
 class HeaderButtons;
 class HomeController;
-class HomeMainPage;
 
 class HomeWindow : public FormWindow
 {
@@ -45,7 +44,6 @@ private:
 private:
     HomeController *m_ctrl = nullptr;
 
-    HomeMainPage *m_mainPage = nullptr;
     QToolButton *m_btPasswordLock = nullptr;
     QToolButton *m_btPasswordUnlock = nullptr;
     HeaderButtons *m_headerButtons = nullptr;

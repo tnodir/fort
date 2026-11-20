@@ -154,6 +154,8 @@ public:
     bool homeWindowAutoShowMenu() const { return valueBool("homeWindow/autoShowMenu"); }
     void setHomeWindowAutoShowMenu(bool v) { setValue("homeWindow/autoShowMenu", v); }
 
+    static QString installationWindowGroup() { return "installationWindow"; }
+
     static QString progWindowGroup() { return "progWindow"; }
 
     bool progAppsSortDesc() const { return valueBool("progWindow/appsSortDesc"); }

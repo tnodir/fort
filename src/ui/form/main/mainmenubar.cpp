@@ -31,6 +31,7 @@ void MainMenuBar::retranslateUi()
 
     m_toolsMenu->setTitle(tr("Tools"));
     m_actReviewAlerts->setText(tr("Review Alerts"));
+    m_actInstallation->setText(tr("Installation"));
 
     m_windowMenu->setTitle(tr("Window"));
     m_actResetLayout->setText(tr("Reset Layout"));
@@ -82,6 +83,13 @@ void MainMenuBar::setupToolsMenu()
     m_actReviewAlerts = m_toolsMenu->addAction(IconCache::icon(":/icons/error.png"), QString());
     connect(m_actReviewAlerts, &QAction::triggered, windowManager(),
             [] { windowManager()->showProgramAlertWindow(); });
+
+    m_toolsMenu->addSeparator();
+
+    m_actInstallation =
+            m_toolsMenu->addAction(IconCache::icon(":/icons/server_components.png"), QString());
+    connect(m_actInstallation, &QAction::triggered, windowManager(),
+            &WindowManager::showInstallationWindow);
 }
 
 void MainMenuBar::setupWindowMenu()

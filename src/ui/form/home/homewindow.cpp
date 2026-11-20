@@ -20,7 +20,6 @@
 
 #include "homecontroller.h"
 #include "homelinks.h"
-#include "pages/homemainpage.h"
 
 using namespace Fort;
 
@@ -118,9 +117,7 @@ void HomeWindow::setupUi()
     auto header = setupHeader();
     layout->addWidget(header);
 
-    // Main page
-    m_mainPage = new HomeMainPage(ctrl());
-    layout->addWidget(m_mainPage, 1);
+    layout->addStretch();
 
     // Dialog buttons
     auto buttonsLayout = setupDialogButtons();

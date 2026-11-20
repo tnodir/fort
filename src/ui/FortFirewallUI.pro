@@ -150,9 +150,7 @@ SOURCES += \
     form/home/homecontroller.cpp \
     form/home/homelinks.cpp \
     form/home/homewindow.cpp \
-    form/home/pages/homebasepage.cpp \
-    form/home/pages/homemainpage.cpp \
-    form/home/pages/homepage.cpp \
+    form/install/installationwindow.cpp \
     form/main/mainmenubar.cpp \
     form/main/maintoolbar.cpp \
     form/main/mainwindow.cpp \
@@ -518,9 +516,7 @@ HEADERS += \
     form/home/homecontroller.h \
     form/home/homelinks.h \
     form/home/homewindow.h \
-    form/home/pages/homebasepage.h \
-    form/home/pages/homemainpage.h \
-    form/home/pages/homepage.h \
+    form/install/installationwindow.h \
     form/main/mainmenubar.h \
     form/main/maintoolbar.h \
     form/main/mainwindow.h \

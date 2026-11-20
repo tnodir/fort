@@ -1,21 +1,29 @@
-#ifndef HOMEPAGE_H
-#define HOMEPAGE_H
+#ifndef INSTALLATIONWINDOW_H
+#define INSTALLATIONWINDOW_H
 
-#include "homebasepage.h"
+#include <form/controls/formwindow.h>
 
-class HomePage : public HomeBasePage
+QT_FORWARD_DECLARE_CLASS(QGroupBox)
+
+class InstallationWindow : public FormWindow
 {
     Q_OBJECT
 
 public:
-    explicit HomePage(HomeController *ctrl = nullptr, QWidget *parent = nullptr);
+    explicit InstallationWindow(QWidget *parent = nullptr);
+
+    WindowCode windowCode() const override { return WindowInstallation; }
+    QString windowIconPath() const override { return ":/icons/server_components.png"; }
+    QString helpSection() const override { return "installation-window"; }
+    QString iniGroup() const override;
 
     bool hasService() const { return m_hasService; }
 
-protected slots:
-    void onRetranslateUi() override;
+    void saveWindowState(bool wasVisible) override;
+    void restoreWindowState() override;
 
 private:
+    void retranslateUi();
     void retranslateDriverMessage();
     void retranslateServiceMessage();
     void retranslatePortableMessage();
@@ -71,4 +79,4 @@ private:
     QComboBox *m_comboAutoRun = nullptr;
 };
 
-#endif // HOMEPAGE_H
+#endif // INSTALLATIONWINDOW_H

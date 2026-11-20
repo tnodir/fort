@@ -5,6 +5,7 @@
 #include <form/graph/graphwindow.h>
 #include <form/group/groupswindow.h>
 #include <form/home/homewindow.h>
+#include <form/install/installationwindow.h>
 #include <form/main/mainwindow.h>
 #include <form/main/paneldock.h>
 #include <form/opt/optionswindow.h>
@@ -51,6 +52,7 @@ static const createWindow_func createWindow_funcList[] = {
     &createWindow<TimePeriodsWindow>,
     &createWindow<FilterSimWindow>,
     &createWindow<GraphWindow>,
+    &createWindow<InstallationWindow>,
     &createWindow<UpdatesWindow>,
 };
 

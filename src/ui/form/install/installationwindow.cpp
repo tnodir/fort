@@ -1,19 +1,23 @@
-#include "homepage.h"
+#include "installationwindow.h"
 
 #include <QCheckBox>
 #include <QComboBox>
 #include <QGroupBox>
 #include <QLabel>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QVBoxLayout>
 
+#include <conf/confmanager.h>
 #include <driver/drivermanager.h>
 #include <form/controls/controlutil.h>
-#include <form/home/homecontroller.h>
+#include <form/controls/passwordlockframe.h>
 #include <fortglobal.h>
 #include <fortmanager.h>
 #include <fortsettings.h>
+#include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
+#include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/startuputil.h>
@@ -61,13 +65,38 @@ QLayout *createMessageLabelLayout(QLabel *icon, QLabel *label)
 
 }
 
-HomePage::HomePage(HomeController *ctrl, QWidget *parent) : HomeBasePage(ctrl, parent)
+InstallationWindow::InstallationWindow(QWidget *parent) : FormWindow(parent)
 {
     setupUi();
+
+    connect(translationManager(), &TranslationManager::languageChanged, this,
+            &InstallationWindow::retranslateUi);
+    retranslateUi();
+
+    setupFormWindow(iniUser());
 }
 
-void HomePage::onRetranslateUi()
+QString InstallationWindow::iniGroup() const
 {
+    return IniUser::installationWindowGroup();
+}
+
+void InstallationWindow::saveWindowState(bool /*wasVisible*/)
+{
+    saveIniWindowGeometry();
+
+    confManager()->saveIniUser();
+}
+
+void InstallationWindow::restoreWindowState()
+{
+    restoreIniWindowGeometry(QSize(450, 500));
+}
+
+void InstallationWindow::retranslateUi()
+{
+    this->unsetLocale();
+
     m_gbDriver->setTitle(tr("Driver"));
     m_gbService->setTitle(tr("Windows Service"));
     m_gbPortable->setTitle(tr("Portable"));
@@ -89,9 +118,11 @@ void HomePage::onRetranslateUi()
     m_cbSoundsPanel->setText(tr("Control Panel: Sounds integration"));
     m_labelAutoRun->setText(tr("Auto-run:"));
     retranslateComboAutoRun();
+
+    this->setWindowTitle(tr("Installation"));
 }
 
-void HomePage::retranslateDriverMessage()
+void InstallationWindow::retranslateDriverMessage()
 {
     const auto text = driverManager()->isDeviceError()
             ? driverManager()->errorMessage()
@@ -101,19 +132,19 @@ void HomePage::retranslateDriverMessage()
     m_labelDriverMessage->setText(text);
 }
 
-void HomePage::retranslateServiceMessage()
+void InstallationWindow::retranslateServiceMessage()
 {
     const auto text = hasService() ? tr("Service Installed") : tr("Service Not Installed");
 
     m_labelServiceMessage->setText(text);
 }
 
-void HomePage::retranslatePortableMessage()
+void InstallationWindow::retranslatePortableMessage()
 {
     m_labelPortableMessage->setText(tr("Portable Installed"));
 }
 
-void HomePage::retranslateComboAutoRun()
+void InstallationWindow::retranslateComboAutoRun()
 {
     const QStringList list = { tr("Disabled"), tr("For current user"), tr("For all users") };
 
@@ -139,21 +170,33 @@ void HomePage::retranslateComboAutoRun()
             m_comboAutoRun, /*enabled=*/false, StartupUtil::StartupAllUsers);
 }
 
-void HomePage::setupUi()
+void InstallationWindow::setupUi()
 {
     // Column
     auto colLayout = setupColumn();
 
+    auto frameLayout = new QHBoxLayout();
+    frameLayout->addStretch();
+    frameLayout->addLayout(colLayout);
+    frameLayout->addStretch();
+
+    auto frame = new PasswordLockFrame();
+    frame->setLayout(frameLayout);
+
     // Main layout
-    auto layout = new QHBoxLayout();
-    layout->addStretch();
-    layout->addLayout(colLayout);
-    layout->addStretch();
+    auto layout = ControlUtil::createVLayout();
+    layout->addWidget(ControlUtil::wrapToScrollArea(frame));
 
     this->setLayout(layout);
+
+    // Font
+    this->setFont(WindowManager::defaultFont());
+
+    // Size
+    this->setMinimumSize(300, 200);
 }
 
-QLayout *HomePage::setupColumn()
+QLayout *InstallationWindow::setupColumn()
 {
     // Driver Group Box
     setupDriverBox();
@@ -178,7 +221,7 @@ QLayout *HomePage::setupColumn()
     return layout;
 }
 
-void HomePage::setupDriverBox()
+void InstallationWindow::setupDriverBox()
 {
     // Label Row
     auto labelLayout = setupDriverLabelLayout();
@@ -193,7 +236,7 @@ void HomePage::setupDriverBox()
     layout->addLayout(buttonsLayout);
 }
 
-QLayout *HomePage::setupDriverLabelLayout()
+QLayout *InstallationWindow::setupDriverLabelLayout()
 {
     // Icon
     setupDriverIcon();
@@ -204,7 +247,7 @@ QLayout *HomePage::setupDriverLabelLayout()
     return createMessageLabelLayout(m_iconDriver, m_labelDriverMessage);
 }
 
-void HomePage::setupDriverIcon()
+void InstallationWindow::setupDriverIcon()
 {
     m_iconDriver = ControlUtil::createIconLabel(":/icons/server_components.png", iconSize);
 
@@ -216,10 +259,10 @@ void HomePage::setupDriverIcon()
 
     connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this, refreshDriverInfo);
     connect(driverManager(), &DriverManager::errorCodeChanged, this,
-            &HomePage::retranslateDriverMessage);
+            &InstallationWindow::retranslateDriverMessage);
 }
 
-QLayout *HomePage::setupDriverButtonsLayout()
+QLayout *InstallationWindow::setupDriverButtonsLayout()
 {
     m_btInstallDriver = ControlUtil::createButton(QString(), [&] {
         windowManager()->showConfirmBox(
@@ -242,7 +285,7 @@ QLayout *HomePage::setupDriverButtonsLayout()
     return layout;
 }
 
-void HomePage::setupServiceBox()
+void InstallationWindow::setupServiceBox()
 {
     // Label Row
     auto labelLayout = setupServiceLabelLayout();
@@ -257,7 +300,7 @@ void HomePage::setupServiceBox()
     layout->addLayout(buttonsLayout);
 }
 
-QLayout *HomePage::setupServiceLabelLayout()
+QLayout *InstallationWindow::setupServiceLabelLayout()
 {
     // Icon
     m_iconService = ControlUtil::createIconLabel(":/icons/widgets.png", iconSize);
@@ -268,7 +311,7 @@ QLayout *HomePage::setupServiceLabelLayout()
     return createMessageLabelLayout(m_iconService, m_labelServiceMessage);
 }
 
-QLayout *HomePage::setupServiceButtonsLayout()
+QLayout *InstallationWindow::setupServiceButtonsLayout()
 {
     auto layout = new QHBoxLayout();
     layout->setSpacing(10);
@@ -292,7 +335,7 @@ QLayout *HomePage::setupServiceButtonsLayout()
     return layout;
 }
 
-void HomePage::setupPortableBox()
+void InstallationWindow::setupPortableBox()
 {
     // Label Row
     auto labelLayout = setupPortableLabelLayout();
@@ -307,7 +350,7 @@ void HomePage::setupPortableBox()
     layout->addLayout(buttonsLayout);
 }
 
-QLayout *HomePage::setupPortableLabelLayout()
+QLayout *InstallationWindow::setupPortableLabelLayout()
 {
     // Icon
     m_iconPortable = ControlUtil::createIconLabel(":/icons/luggage_brown.png", iconSize);
@@ -318,7 +361,7 @@ QLayout *HomePage::setupPortableLabelLayout()
     return createMessageLabelLayout(m_iconPortable, m_labelPortableMessage);
 }
 
-QLayout *HomePage::setupPortableButtonsLayout()
+QLayout *InstallationWindow::setupPortableButtonsLayout()
 {
     m_btUninstallPortable = ControlUtil::createButton(QString(), [&] {
         windowManager()->showConfirmBox(
@@ -341,7 +384,7 @@ QLayout *HomePage::setupPortableButtonsLayout()
     return layout;
 }
 
-void HomePage::setupIntegrationBox()
+void InstallationWindow::setupIntegrationBox()
 {
     auto integrationLayout = setupIntegrationLayout();
 
@@ -351,7 +394,7 @@ void HomePage::setupIntegrationBox()
     layout->addLayout(integrationLayout);
 }
 
-QLayout *HomePage::setupIntegrationLayout()
+QLayout *InstallationWindow::setupIntegrationLayout()
 {
     m_cbExplorerMenu = ControlUtil::createCheckBox(StartupUtil::isExplorerIntegrated(),
             [&](bool checked) { StartupUtil::setExplorerIntegrated(checked); });
@@ -370,7 +413,7 @@ QLayout *HomePage::setupIntegrationLayout()
     return layout;
 }
 
-QLayout *HomePage::setupAutoRunLayout()
+QLayout *InstallationWindow::setupAutoRunLayout()
 {
     m_labelAutoRun = ControlUtil::createLabel();
 
@@ -381,7 +424,7 @@ QLayout *HomePage::setupAutoRunLayout()
     return ControlUtil::createRowLayout(m_labelAutoRun, m_comboAutoRun);
 }
 
-void HomePage::updateIsUserAdmin()
+void InstallationWindow::updateIsUserAdmin()
 {
     if (settings()->isUserAdmin())
         return;
@@ -392,7 +435,7 @@ void HomePage::updateIsUserAdmin()
     m_btUninstallPortable->setEnabled(false);
 }
 
-void HomePage::updateIsPortable()
+void InstallationWindow::updateIsPortable()
 {
     if (settings()->isPortable())
         return;
@@ -400,7 +443,7 @@ void HomePage::updateIsPortable()
     m_gbPortable->setVisible(false);
 }
 
-void HomePage::updateHasService()
+void InstallationWindow::updateHasService()
 {
     m_hasService = StartupUtil::isServiceInstalled();
 
@@ -411,7 +454,7 @@ void HomePage::updateHasService()
     m_btRemoveService->setVisible(hasService());
 }
 
-void HomePage::setServiceInstalled(bool install)
+void InstallationWindow::setServiceInstalled(bool install)
 {
     if (!fortManager()->setServiceInstalled(install))
         return;

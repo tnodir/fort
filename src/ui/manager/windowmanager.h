@@ -147,6 +147,8 @@ public slots:
         return setWindowVisibleByCode(WindowGraph, visibleOrSwitch, /*activate=*/false);
     }
 
+    bool showInstallationWindow() { return showWindowByCode(WindowInstallation); }
+
     bool showUpdatesWindow() { return showWindowByCode(WindowUpdates); }
 
     void showAboutBox();
@@ -255,6 +257,7 @@ private:
         FormPointer(WindowTimePeriods),
         FormPointer(WindowFilterSim),
         FormPointer(WindowGraph),
+        FormPointer(WindowInstallation),
         FormPointer(WindowUpdates),
     };
 };
