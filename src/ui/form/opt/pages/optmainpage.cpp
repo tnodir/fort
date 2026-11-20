@@ -49,11 +49,6 @@ void OptMainPage::onRetranslateUi()
     m_tabWidget->setTabText(TabGraph, tr("Traffic Graph"));
     m_tabWidget->setTabText(TabSchedule, tr("Schedule"));
 
-    m_btBackup->setText(tr("Backup"));
-    m_actExport->setText(tr("Export"));
-    m_actImport->setText(tr("Import"));
-    m_actImportApps->setText(tr("Import new programs"));
-
     m_btDefault->setText(tr("Default"));
     m_actDefaultAll->setText(tr("Reset to default all options"));
     m_actDefaultTab->setText(tr("Reset to default current tab"));
@@ -123,7 +118,6 @@ void OptMainPage::setupTabBar()
 
 QLayout *OptMainPage::setupButtonsLayout()
 {
-    setupBackup();
     setupDefault();
 
     m_btOk = new QPushButton();
@@ -137,7 +131,6 @@ QLayout *OptMainPage::setupButtonsLayout()
     setupApplyCancelButtons();
 
     auto layout = new QHBoxLayout();
-    layout->addWidget(m_btBackup);
     layout->addWidget(m_btDefault);
     layout->addStretch();
     layout->addWidget(m_btOk);
@@ -145,23 +138,6 @@ QLayout *OptMainPage::setupButtonsLayout()
     layout->addWidget(m_btCancel);
 
     return layout;
-}
-
-void OptMainPage::setupBackup()
-{
-    auto menu = ControlUtil::createMenu(this);
-
-    m_actExport = menu->addAction(IconCache::icon(":/icons/disk.png"), QString());
-    m_actImport = menu->addAction(IconCache::icon(":/icons/folder.png"), QString());
-    m_actImportApps = menu->addAction(IconCache::icon(":/icons/application.png"), QString());
-
-    connect(m_actExport, &QAction::triggered, ctrl(), &OptionsController::exportBackup);
-    connect(m_actImport, &QAction::triggered, ctrl(), &OptionsController::confirmImportBackup);
-    connect(m_actImportApps, &QAction::triggered, ctrl(),
-            &OptionsController::confirmImportAppsBackup);
-
-    m_btBackup = new QPushButton();
-    m_btBackup->setMenu(menu);
 }
 
 void OptMainPage::setupDefault()

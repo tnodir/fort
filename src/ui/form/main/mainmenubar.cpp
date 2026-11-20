@@ -7,6 +7,7 @@
 #include <manager/windowmanager.h>
 #include <util/iconcache.h>
 
+#include "backupcontroller.h"
 #include "mainwindow.h"
 
 using namespace Fort;
@@ -24,6 +25,11 @@ void MainMenuBar::retranslateUi()
 {
     m_fileMenu->setTitle(tr("File"));
 
+    m_backupMenu->setTitle(tr("Backup"));
+    m_actExport->setText(tr("Export"));
+    m_actImport->setText(tr("Import"));
+    m_actImportApps->setText(tr("Import new programs"));
+
     m_toolsMenu->setTitle(tr("Tools"));
     m_actReviewAlerts->setText(tr("Review Alerts"));
 
@@ -38,6 +44,11 @@ void MainMenuBar::retranslateUi()
     }
     m_actCheckUpdates->setText(tr("Check for Updates"));
     m_actAbout->setText(tr("About"));
+}
+
+void MainMenuBar::setLocked(bool locked)
+{
+    m_backupMenu->setEnabled(!locked);
 }
 
 void MainMenuBar::setupUi()
@@ -59,7 +70,27 @@ void MainMenuBar::setupFileMenu()
 
     m_fileMenu->addSeparator();
 
+    setupBackupMenu();
+
+    m_fileMenu->addSeparator();
+
     m_fileMenu->addAction(trayIcon->quitAction());
+}
+
+void MainMenuBar::setupBackupMenu()
+{
+    m_backupMenu = m_fileMenu->addMenu(IconCache::icon(":/icons/save_as.png"), QString());
+
+    m_actExport = m_backupMenu->addAction(IconCache::icon(":/icons/disk.png"), QString());
+    m_actImport = m_backupMenu->addAction(IconCache::icon(":/icons/folder.png"), QString());
+    m_actImportApps =
+            m_backupMenu->addAction(IconCache::icon(":/icons/application.png"), QString());
+
+    auto ctrl = new BackupController(this);
+
+    connect(m_actExport, &QAction::triggered, ctrl, &BackupController::exportBackup);
+    connect(m_actImport, &QAction::triggered, ctrl, &BackupController::confirmImportBackup);
+    connect(m_actImportApps, &QAction::triggered, ctrl, &BackupController::confirmImportAppsBackup);
 }
 
 void MainMenuBar::setupToolsMenu()

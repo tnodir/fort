@@ -50,11 +50,6 @@ public slots:
     void saveChanges() { save(/*closeOnSuccess=*/true); }
     void applyChanges() { save(/*closeOnSuccess=*/false); }
 
-    void exportBackup();
-    void importBackup(bool onlyNewApps = false);
-    void confirmImportBackup();
-    void confirmImportAppsBackup();
-
     void closeWindow();
 
 private:

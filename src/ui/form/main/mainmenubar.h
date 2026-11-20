@@ -12,11 +12,15 @@ class MainMenuBar : public QMenuBar
 public:
     explicit MainMenuBar(MainWindow *mainWindow);
 
+    // The Backup is disabled while the password is required
+    void setLocked(bool locked);
+
 private:
     void retranslateUi();
 
     void setupUi();
     void setupFileMenu();
+    void setupBackupMenu();
     void setupToolsMenu();
     void setupWindowMenu();
     void setupHelpMenu();
@@ -25,6 +29,10 @@ private:
     MainWindow *m_mainWindow = nullptr;
 
     QMenu *m_fileMenu = nullptr;
+    QMenu *m_backupMenu = nullptr;
+    QAction *m_actExport = nullptr;
+    QAction *m_actImport = nullptr;
+    QAction *m_actImportApps = nullptr;
     QMenu *m_toolsMenu = nullptr;
     QAction *m_actReviewAlerts = nullptr;
     QMenu *m_windowMenu = nullptr;

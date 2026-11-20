@@ -149,6 +149,7 @@ SOURCES += \
     form/group/groupscontroller.cpp \
     form/group/groupswindow.cpp \
     form/install/installationwindow.cpp \
+    form/main/backupcontroller.cpp \
     form/main/mainmenubar.cpp \
     form/main/maintoolbar.cpp \
     form/main/mainwindow.cpp \
@@ -513,6 +514,7 @@ HEADERS += \
     form/group/groupscontroller.h \
     form/group/groupswindow.h \
     form/install/installationwindow.h \
+    form/main/backupcontroller.h \
     form/main/mainmenubar.h \
     form/main/maintoolbar.h \
     form/main/mainwindow.h \

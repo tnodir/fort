@@ -6,6 +6,7 @@
 QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QMainWindow)
 
+class MainMenuBar;
 class PanelDock;
 
 class MainWindow : public FormWindow
@@ -63,6 +64,7 @@ private:
 private:
     QAction *m_actLock = nullptr;
     QAction *m_actUnlock = nullptr;
+    MainMenuBar *m_menuBar = nullptr;
     QLabel *m_labelHint = nullptr;
     QMainWindow *m_dockHost = nullptr;
 };

@@ -285,6 +285,8 @@ void MainWindow::updateLocked()
 
     // The docked windows are restored without the password: nothing can be done with them
     m_dockHost->setEnabled(!passwordLocked);
+
+    m_menuBar->setLocked(passwordLocked);
 }
 
 void MainWindow::updateLockToolTip()
@@ -350,7 +352,9 @@ QWidget *MainWindow::setupHeader()
 
     auto toolBar = new MainToolBar(this);
 
-    layout->addWidget(new MainMenuBar(this), 0, 0);
+    m_menuBar = new MainMenuBar(this);
+
+    layout->addWidget(m_menuBar, 0, 0);
     layout->addWidget(toolBar, 1, 0);
     layout->addWidget(logo, 0, 1, 2, 1);
 
