@@ -2,33 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ko_KR" sourcelanguage="en_US">
 <context>
-    <name>AboutPage</name>
-    <message>
-        <source>New Version</source>
-        <translation>새 버전</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>다운로드</translation>
-    </message>
-    <message>
-        <source>Check for update</source>
-        <translation>업데이트 확인</translation>
-    </message>
-    <message>
-        <source>No Update</source>
-        <translation>업데이트 없음</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>설치</translation>
-    </message>
-    <message>
-        <source>Current Version</source>
-        <translation>현재 버전</translation>
-    </message>
-</context>
-<context>
     <name>ActionRange</name>
     <message>
         <source>Allow</source>
@@ -94,6 +67,29 @@
     <message>
         <source>Open Folder</source>
         <translation>폴더 열기</translation>
+    </message>
+</context>
+<context>
+    <name>AppLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>프로필</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>로그</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>서비스 로그</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>출시</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>도움말</translation>
     </message>
 </context>
 <context>
@@ -258,6 +254,45 @@
     <message>
         <source>Upload</source>
         <translation>업로드</translation>
+    </message>
+</context>
+<context>
+    <name>BackupController</name>
+    <message>
+        <source>Export Backup</source>
+        <translation>백업 내보내기</translation>
+    </message>
+    <message>
+        <source>Backup Exported Successfully</source>
+        <translation>백업 내보내기 성공</translation>
+    </message>
+    <message>
+        <source>Cannot Export Backup</source>
+        <translation>백업을 내보낼 수 없음</translation>
+    </message>
+    <message>
+        <source>Import Backup</source>
+        <translation>백업 가져오기</translation>
+    </message>
+    <message>
+        <source>Backup Imported Successfully</source>
+        <translation>백업 가져오기 성공</translation>
+    </message>
+    <message>
+        <source>Cannot Import Backup</source>
+        <translation>백업을 가져올 수 없음</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>가져오기에 성공하면 모든 옵션과 프로그램이 교체됩니다. 계속하시겠습니까?
+
+새 백업이 있는지 확인합니다.</translation>
+    </message>
+    <message>
+        <source>Only new Programs will be added after successful import. Continue?</source>
+        <translation>가져오기가 성공하면 새 프로그램만 추가됩니다. 계속하시겠습니까?</translation>
     </message>
 </context>
 <context>
@@ -1535,162 +1570,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
-    <name>HomeLinks</name>
-    <message>
-        <source>Profile</source>
-        <translation>프로필</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>로그</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>서비스 로그</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>출시</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>도움말</translation>
-    </message>
-</context>
-<context>
-    <name>HomeMainPage</name>
-    <message>
-        <source>My Fort</source>
-        <translation>내 Fort</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation>정보</translation>
-    </message>
-</context>
-<context>
-    <name>HomePage</name>
-    <message>
-        <source>Driver</source>
-        <translation>드라이버</translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>재설치</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>제거</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>드라이버를 다시 설치하시겠습니까?</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>드라이버를 제거하시겠습니까?</translation>
-    </message>
-    <message>
-        <source>Portable</source>
-        <translation>휴대용</translation>
-    </message>
-    <message>
-        <source>Uninstall</source>
-        <translation>설치 제거</translation>
-    </message>
-    <message>
-        <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation>Fort Firewall을 제거하시겠습니까?</translation>
-    </message>
-    <message>
-        <source>Windows Service</source>
-        <translation>Windows 서비스</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>설치</translation>
-    </message>
-    <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>Fort Firewall을 백그라운드에서 서비스로 실행</translation>
-    </message>
-    <message>
-        <source>Driver Installed</source>
-        <translation>드라이버가 설치됨</translation>
-    </message>
-    <message>
-        <source>Driver Not Installed</source>
-        <translation>드라이버가 설치되지 않음</translation>
-    </message>
-    <message>
-        <source>Service Installed</source>
-        <translation>서비스 설치됨</translation>
-    </message>
-    <message>
-        <source>Service Not Installed</source>
-        <translation>서비스가 설치되지 않음</translation>
-    </message>
-    <message>
-        <source>Are you sure to install the Service?</source>
-        <translation>서비스를 설치하시겠습니까?</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Service?</source>
-        <translation>서비스를 제거하시겠습니까?</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>Windows Service 설치가 변경됨.</translation>
-    </message>
-    <message>
-        <source>Integration</source>
-        <translation>통합</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>Windows 탐색기와 통합</translation>
-    </message>
-    <message>
-        <source>Control Panel: Sounds integration</source>
-        <translation>제어판: 소리 통합</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>자동-실행:</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>비활성화</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>현재 사용자용</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>모든 사용자용</translation>
-    </message>
-    <message>
-        <source>Portable Installed</source>
-        <translation>포터블 설치됨</translation>
-    </message>
-</context>
-<context>
-    <name>HomeWindow</name>
-    <message>
-        <source>My Fort</source>
-        <translation>내 Fort</translation>
-    </message>
-    <message>
-        <source>Lock</source>
-        <translation>잠금</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>잠금해제</translation>
-    </message>
-</context>
-<context>
     <name>HostRange</name>
     <message>
         <source>Bad host name</source>
@@ -1930,14 +1809,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>바로가기:</translation>
     </message>
     <message>
-        <source>Auto-Show Menu</source>
-        <translation>자동 표시 메뉴</translation>
-    </message>
-    <message>
-        <source>Show the menu, when the window is activated</source>
-        <translation>창이 활성화될 때 메뉴 표시</translation>
-    </message>
-    <message>
         <source>Show Splash screen on startup</source>
         <translation>시작 시 스플래시 화면 표시</translation>
     </message>
@@ -2020,10 +1891,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Right Click</source>
         <translation>오른쪽 클릭</translation>
-    </message>
-    <message>
-        <source>Show Main Window</source>
-        <translation>메인 창 표시</translation>
     </message>
     <message>
         <source>Show My Fort</source>
@@ -2155,6 +2022,124 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>InstallationButton</name>
+    <message>
+        <source>Installation</source>
+        <translation>설치</translation>
+    </message>
+</context>
+<context>
+    <name>InstallationWindow</name>
+    <message>
+        <source>Driver</source>
+        <translation>드라이버</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>재설치</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>제거</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>드라이버를 다시 설치하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>드라이버를 제거하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Portable</source>
+        <translation>휴대용</translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation>설치 제거</translation>
+    </message>
+    <message>
+        <source>Are you sure to uninstall the Fort Firewall?</source>
+        <translation>Fort Firewall을 제거하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>Windows 서비스</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>설치</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>Fort Firewall을 백그라운드에서 서비스로 실행</translation>
+    </message>
+    <message>
+        <source>Installation</source>
+        <translation>설치</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation>드라이버가 설치됨</translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation>드라이버가 설치되지 않음</translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation>서비스 설치됨</translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation>서비스가 설치되지 않음</translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation>서비스를 설치하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation>서비스를 제거하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>Windows Service 설치가 변경됨.</translation>
+    </message>
+    <message>
+        <source>Integration</source>
+        <translation>통합</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Windows 탐색기와 통합</translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation>제어판: 소리 통합</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>자동-실행:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>비활성화</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>현재 사용자용</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>모든 사용자용</translation>
+    </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation>포터블 설치됨</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Bad format</source>
@@ -2195,14 +2180,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>파일</translation>
     </message>
     <message>
-        <source>Lock</source>
-        <translation>잠금</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>잠금해제</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>도구</translation>
     </message>
@@ -2211,8 +2188,28 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>경고 검토</translation>
     </message>
     <message>
+        <source>Installation</source>
+        <translation>설치</translation>
+    </message>
+    <message>
         <source>Window</source>
         <translation>창</translation>
+    </message>
+    <message>
+        <source>Backup</source>
+        <translation>백업</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>내보내기</translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation>가져오기</translation>
+    </message>
+    <message>
+        <source>Import new programs</source>
+        <translation>새 프로그램 가져오기</translation>
     </message>
     <message>
         <source>Reset Layout</source>
@@ -2223,17 +2220,33 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>도움말</translation>
     </message>
     <message>
+        <source>Check for Updates</source>
+        <translation>업데이트 확인</translation>
+    </message>
+    <message>
         <source>About</source>
-        <translation>정보</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
+        <source>No Password</source>
+        <translation>암호 없음</translation>
+    </message>
+    <message>
         <source>Open a panel from the tool bar&apos;s menus.
-Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</source>
         <translation>도구 모음의 메뉴에서 패널을 여세요.
-또는 창 자체 메뉴의 &quot;메인 창에 도킹&quot; 항목으로 창을 여기로 옮기세요.</translation>
+또는 창 자체 메뉴의 &quot;내 Fort에 도킹&quot; 항목으로 창을 여기로 옮기세요.</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>잠금</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>잠금해제</translation>
     </message>
 </context>
 <context>
@@ -2282,18 +2295,6 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
         <translation>트래픽 그래프</translation>
     </message>
     <message>
-        <source>Backup</source>
-        <translation>백업</translation>
-    </message>
-    <message>
-        <source>Export</source>
-        <translation>내보내기</translation>
-    </message>
-    <message>
-        <source>Import</source>
-        <translation>가져오기</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>기본값</translation>
     </message>
@@ -2309,10 +2310,6 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
         <source>Interface</source>
         <translation>인터페이스</translation>
     </message>
-    <message>
-        <source>Import new programs</source>
-        <translation>새 프로그램 가져오기</translation>
-    </message>
 </context>
 <context>
     <name>OptionsButton</name>
@@ -2324,44 +2321,8 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
 <context>
     <name>OptionsController</name>
     <message>
-        <source>Export Backup</source>
-        <translation>백업 내보내기</translation>
-    </message>
-    <message>
-        <source>Backup Exported Successfully</source>
-        <translation>백업 내보내기 성공</translation>
-    </message>
-    <message>
-        <source>Cannot Export Backup</source>
-        <translation>백업을 내보낼 수 없음</translation>
-    </message>
-    <message>
-        <source>Import Backup</source>
-        <translation>백업 가져오기</translation>
-    </message>
-    <message>
-        <source>Backup Imported Successfully</source>
-        <translation>백업 가져오기 성공</translation>
-    </message>
-    <message>
-        <source>Cannot Import Backup</source>
-        <translation>백업을 가져올 수 없음</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>옵션을 저장할 수 없습니다</translation>
-    </message>
-    <message>
-        <source>All Options and Programs will be replaced after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>가져오기에 성공하면 모든 옵션과 프로그램이 교체됩니다. 계속하시겠습니까?
-
-새 백업이 있는지 확인합니다.</translation>
-    </message>
-    <message>
-        <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation>가져오기가 성공하면 새 프로그램만 추가됩니다. 계속하시겠습니까?</translation>
     </message>
 </context>
 <context>
@@ -4374,12 +4335,39 @@ Packet loss: %2</source>
         <translation>트래픽</translation>
     </message>
     <message>
-        <source>Main Window</source>
-        <translation>메인 창</translation>
-    </message>
-    <message>
         <source>Connections</source>
         <translation>연결</translation>
+    </message>
+</context>
+<context>
+    <name>UpdatesWindow</name>
+    <message>
+        <source>New Version</source>
+        <translation>새 버전</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>다운로드</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>업데이트</translation>
+    </message>
+    <message>
+        <source>No Update</source>
+        <translation>업데이트 없음</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>설치</translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation>업데이트 확인</translation>
+    </message>
+    <message>
+        <source>Current Version</source>
+        <translation>현재 버전</translation>
     </message>
 </context>
 <context>
@@ -4422,6 +4410,10 @@ Packet loss: %2</source>
 <context>
     <name>WindowManager</name>
     <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Restart Now?</source>
         <translation>지금 재시작?</translation>
     </message>
@@ -4437,12 +4429,12 @@ Packet loss: %2</source>
         <translation>창 메뉴</translation>
     </message>
     <message>
-        <source>Dock to Main Window</source>
-        <translation>메인 창에 도킹</translation>
+        <source>Undock from My Fort</source>
+        <translation>내 Fort에서 도킹 해제</translation>
     </message>
     <message>
-        <source>Undock from Main Window</source>
-        <translation>메인 창에서 도킹 해제</translation>
+        <source>Dock to My Fort</source>
+        <translation>내 Fort에 도킹</translation>
     </message>
     <message>
         <source>Help</source>

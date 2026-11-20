@@ -2,33 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU" sourcelanguage="en_US">
 <context>
-    <name>AboutPage</name>
-    <message>
-        <source>New Version</source>
-        <translation>Новая версия</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>Загрузка</translation>
-    </message>
-    <message>
-        <source>Check for update</source>
-        <translation>Проверить обновление</translation>
-    </message>
-    <message>
-        <source>No Update</source>
-        <translation>Нет обновления</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>Установить</translation>
-    </message>
-    <message>
-        <source>Current Version</source>
-        <translation>Текущая версия</translation>
-    </message>
-</context>
-<context>
     <name>ActionRange</name>
     <message>
         <source>Allow</source>
@@ -94,6 +67,29 @@
     <message>
         <source>Open Folder</source>
         <translation>Открыть папку</translation>
+    </message>
+</context>
+<context>
+    <name>AppLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>Профиль</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Логи</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>Логи службы</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Релизы</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Справка</translation>
     </message>
 </context>
 <context>
@@ -258,6 +254,45 @@
     <message>
         <source>Upload</source>
         <translation>Отдача</translation>
+    </message>
+</context>
+<context>
+    <name>BackupController</name>
+    <message>
+        <source>Export Backup</source>
+        <translation>Экспорт резервной копии</translation>
+    </message>
+    <message>
+        <source>Backup Exported Successfully</source>
+        <translation>Резервная копия успешно экспортирована</translation>
+    </message>
+    <message>
+        <source>Cannot Export Backup</source>
+        <translation>Невозможно экспортировать резервную копию</translation>
+    </message>
+    <message>
+        <source>Import Backup</source>
+        <translation>Импорт резервной копии</translation>
+    </message>
+    <message>
+        <source>Backup Imported Successfully</source>
+        <translation>Резервная копия успешно импортирована</translation>
+    </message>
+    <message>
+        <source>Cannot Import Backup</source>
+        <translation>Невозможно импортировать резервную копию</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>Все опции и программы будут заменены после успешного импорта. Продолжить?
+
+Убедитесь, что у вас есть свежая резервная копия.</translation>
+    </message>
+    <message>
+        <source>Only new Programs will be added after successful import. Continue?</source>
+        <translation>После успешного импорта будут добавлены только новые программы. Продолжить?</translation>
     </message>
 </context>
 <context>
@@ -1535,162 +1570,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
-    <name>HomeLinks</name>
-    <message>
-        <source>Profile</source>
-        <translation>Профиль</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>Логи</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>Логи службы</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Релизы</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Справка</translation>
-    </message>
-</context>
-<context>
-    <name>HomeMainPage</name>
-    <message>
-        <source>My Fort</source>
-        <translation>Мой Форт</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation>О программе</translation>
-    </message>
-</context>
-<context>
-    <name>HomePage</name>
-    <message>
-        <source>Driver</source>
-        <translation>Драйвер</translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>Переустановить</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Удалить</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>Переустановить драйвер?</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>Удалить драйвер?</translation>
-    </message>
-    <message>
-        <source>Portable</source>
-        <translation>Портативный</translation>
-    </message>
-    <message>
-        <source>Uninstall</source>
-        <translation>Деинсталлировать</translation>
-    </message>
-    <message>
-        <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation>Деинсталлировать Fort Firewall?</translation>
-    </message>
-    <message>
-        <source>Windows Service</source>
-        <translation>Служба Windows</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>Установить</translation>
-    </message>
-    <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>Запускать Fort Firewall как Службу в фоне</translation>
-    </message>
-    <message>
-        <source>Driver Installed</source>
-        <translation>Драйвер установлен</translation>
-    </message>
-    <message>
-        <source>Driver Not Installed</source>
-        <translation>Драйвер не установлен</translation>
-    </message>
-    <message>
-        <source>Service Installed</source>
-        <translation>Служба установлена</translation>
-    </message>
-    <message>
-        <source>Service Not Installed</source>
-        <translation>Служба не установлена</translation>
-    </message>
-    <message>
-        <source>Are you sure to install the Service?</source>
-        <translation>Установить службу?</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Service?</source>
-        <translation>Удалить службу?</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>Установка Службы Windows изменена.</translation>
-    </message>
-    <message>
-        <source>Integration</source>
-        <translation>Интеграция</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>Интеграция с Windows Explorer</translation>
-    </message>
-    <message>
-        <source>Control Panel: Sounds integration</source>
-        <translation>Интеграция с Панелью Управления: Звуки</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Автозапуск:</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Отключено</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Для текущего пользователя</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Для всех пользователей</translation>
-    </message>
-    <message>
-        <source>Portable Installed</source>
-        <translation>Портативно установлена</translation>
-    </message>
-</context>
-<context>
-    <name>HomeWindow</name>
-    <message>
-        <source>My Fort</source>
-        <translation>Мой Форт</translation>
-    </message>
-    <message>
-        <source>Lock</source>
-        <translation>Заблокировать</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>Разблокировать</translation>
-    </message>
-</context>
-<context>
     <name>HostRange</name>
     <message>
         <source>Bad host name</source>
@@ -1930,14 +1809,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>Комбинация клавиш:</translation>
     </message>
     <message>
-        <source>Auto-Show Menu</source>
-        <translation>Автопоказ Меню</translation>
-    </message>
-    <message>
-        <source>Show the menu, when the window is activated</source>
-        <translation>Показывать меню при активации окна</translation>
-    </message>
-    <message>
         <source>Show Splash screen on startup</source>
         <translation>Показ Заставки при старте</translation>
     </message>
@@ -2020,10 +1891,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Right Click</source>
         <translation>Щелчок правой кнопкой</translation>
-    </message>
-    <message>
-        <source>Show Main Window</source>
-        <translation>Показать Главное окно</translation>
     </message>
     <message>
         <source>Show My Fort</source>
@@ -2155,6 +2022,124 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>InstallationButton</name>
+    <message>
+        <source>Installation</source>
+        <translation>Установка</translation>
+    </message>
+</context>
+<context>
+    <name>InstallationWindow</name>
+    <message>
+        <source>Driver</source>
+        <translation>Драйвер</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>Переустановить</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>Переустановить драйвер?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>Удалить драйвер?</translation>
+    </message>
+    <message>
+        <source>Portable</source>
+        <translation>Портативный</translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation>Деинсталлировать</translation>
+    </message>
+    <message>
+        <source>Are you sure to uninstall the Fort Firewall?</source>
+        <translation>Деинсталлировать Fort Firewall?</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>Служба Windows</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>Установить</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>Запускать Fort Firewall как Службу в фоне</translation>
+    </message>
+    <message>
+        <source>Installation</source>
+        <translation>Установка</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation>Драйвер установлен</translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation>Драйвер не установлен</translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation>Служба установлена</translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation>Служба не установлена</translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation>Установить службу?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation>Удалить службу?</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>Установка Службы Windows изменена.</translation>
+    </message>
+    <message>
+        <source>Integration</source>
+        <translation>Интеграция</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Интеграция с Windows Explorer</translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation>Интеграция с Панелью Управления: Звуки</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Автозапуск:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Отключено</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Для текущего пользователя</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Для всех пользователей</translation>
+    </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation>Портативно установлена</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Bad format</source>
@@ -2195,14 +2180,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>Файл</translation>
     </message>
     <message>
-        <source>Lock</source>
-        <translation>Заблокировать</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>Разблокировать</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>Инструменты</translation>
     </message>
@@ -2211,8 +2188,28 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>Просмотр оповещений</translation>
     </message>
     <message>
+        <source>Installation</source>
+        <translation>Установка</translation>
+    </message>
+    <message>
         <source>Window</source>
         <translation>Окно</translation>
+    </message>
+    <message>
+        <source>Backup</source>
+        <translation>Резервная копия</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>Экспорт</translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation>Импорт</translation>
+    </message>
+    <message>
+        <source>Import new programs</source>
+        <translation>Импорт новых программ</translation>
     </message>
     <message>
         <source>Reset Layout</source>
@@ -2223,17 +2220,33 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>Справка</translation>
     </message>
     <message>
+        <source>Check for Updates</source>
+        <translation>Проверить обновления</translation>
+    </message>
+    <message>
         <source>About</source>
-        <translation>О программе</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
+        <source>No Password</source>
+        <translation>Нет пароля</translation>
+    </message>
+    <message>
         <source>Open a panel from the tool bar&apos;s menus.
-Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</source>
         <translation>Откройте панель через меню на панели инструментов.
-Или переместите сюда окно пунктом его меню &quot;Встроить в главное окно&quot;.</translation>
+Или переместите сюда окно пунктом его меню &quot;Встроить в Мой Форт&quot;.</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>Заблокировать</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>Разблокировать</translation>
     </message>
 </context>
 <context>
@@ -2282,18 +2295,6 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
         <translation>График трафика</translation>
     </message>
     <message>
-        <source>Backup</source>
-        <translation>Резервная копия</translation>
-    </message>
-    <message>
-        <source>Export</source>
-        <translation>Экспорт</translation>
-    </message>
-    <message>
-        <source>Import</source>
-        <translation>Импорт</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>По умолчанию</translation>
     </message>
@@ -2309,10 +2310,6 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
         <source>Interface</source>
         <translation>Интерфейс</translation>
     </message>
-    <message>
-        <source>Import new programs</source>
-        <translation>Импорт новых программ</translation>
-    </message>
 </context>
 <context>
     <name>OptionsButton</name>
@@ -2324,44 +2321,8 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
 <context>
     <name>OptionsController</name>
     <message>
-        <source>Export Backup</source>
-        <translation>Экспорт резервной копии</translation>
-    </message>
-    <message>
-        <source>Backup Exported Successfully</source>
-        <translation>Резервная копия успешно экспортирована</translation>
-    </message>
-    <message>
-        <source>Cannot Export Backup</source>
-        <translation>Невозможно экспортировать резервную копию</translation>
-    </message>
-    <message>
-        <source>Import Backup</source>
-        <translation>Импорт резервной копии</translation>
-    </message>
-    <message>
-        <source>Backup Imported Successfully</source>
-        <translation>Резервная копия успешно импортирована</translation>
-    </message>
-    <message>
-        <source>Cannot Import Backup</source>
-        <translation>Невозможно импортировать резервную копию</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>Невозможно сохранить опции</translation>
-    </message>
-    <message>
-        <source>All Options and Programs will be replaced after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>Все опции и программы будут заменены после успешного импорта. Продолжить?
-
-Убедитесь, что у вас есть свежая резервная копия.</translation>
-    </message>
-    <message>
-        <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation>После успешного импорта будут добавлены только новые программы. Продолжить?</translation>
     </message>
 </context>
 <context>
@@ -4374,12 +4335,39 @@ Packet loss: %2</source>
         <translation>Трафик</translation>
     </message>
     <message>
-        <source>Main Window</source>
-        <translation>Главное окно</translation>
-    </message>
-    <message>
         <source>Connections</source>
         <translation>Соединения</translation>
+    </message>
+</context>
+<context>
+    <name>UpdatesWindow</name>
+    <message>
+        <source>New Version</source>
+        <translation>Новая версия</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Загрузка</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>Обновления</translation>
+    </message>
+    <message>
+        <source>No Update</source>
+        <translation>Нет обновления</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>Установить</translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation>Проверить обновления</translation>
+    </message>
+    <message>
+        <source>Current Version</source>
+        <translation>Текущая версия</translation>
     </message>
 </context>
 <context>
@@ -4422,6 +4410,10 @@ Packet loss: %2</source>
 <context>
     <name>WindowManager</name>
     <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Restart Now?</source>
         <translation>Перезапустить сейчас?</translation>
     </message>
@@ -4437,12 +4429,12 @@ Packet loss: %2</source>
         <translation>Меню окна</translation>
     </message>
     <message>
-        <source>Dock to Main Window</source>
-        <translation>Встроить в главное окно</translation>
+        <source>Undock from My Fort</source>
+        <translation>Вынести из Моего Форта</translation>
     </message>
     <message>
-        <source>Undock from Main Window</source>
-        <translation>Вынести из главного окна</translation>
+        <source>Dock to My Fort</source>
+        <translation>Встроить в Мой Форт</translation>
     </message>
     <message>
         <source>Help</source>

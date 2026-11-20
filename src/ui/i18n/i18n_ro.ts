@@ -2,33 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ro_RO" sourcelanguage="en_US">
 <context>
-    <name>AboutPage</name>
-    <message>
-        <source>New Version</source>
-        <translation>Versiune nouă</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>Descarcă</translation>
-    </message>
-    <message>
-        <source>Check for update</source>
-        <translation>Verifică actualizările</translation>
-    </message>
-    <message>
-        <source>No Update</source>
-        <translation>Nicio actualizare</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>Instalează</translation>
-    </message>
-    <message>
-        <source>Current Version</source>
-        <translation>Versiunea curentă</translation>
-    </message>
-</context>
-<context>
     <name>ActionRange</name>
     <message>
         <source>Allow</source>
@@ -94,6 +67,29 @@
     <message>
         <source>Open Folder</source>
         <translation>Deschide dosarul</translation>
+    </message>
+</context>
+<context>
+    <name>AppLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>Profil</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Jurnale</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>Jurnalele serviciului</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Versiuni</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Ajutor</translation>
     </message>
 </context>
 <context>
@@ -258,6 +254,45 @@
     <message>
         <source>Upload</source>
         <translation>Încărcare</translation>
+    </message>
+</context>
+<context>
+    <name>BackupController</name>
+    <message>
+        <source>Export Backup</source>
+        <translation>Exportă copia de rezervă</translation>
+    </message>
+    <message>
+        <source>Backup Exported Successfully</source>
+        <translation>Copia de rezervă a fost exportată cu succes</translation>
+    </message>
+    <message>
+        <source>Cannot Export Backup</source>
+        <translation>Copia de rezervă nu poate fi exportată</translation>
+    </message>
+    <message>
+        <source>Import Backup</source>
+        <translation>Importă copia de rezervă</translation>
+    </message>
+    <message>
+        <source>Backup Imported Successfully</source>
+        <translation>Copia de rezervă a fost importată cu succes</translation>
+    </message>
+    <message>
+        <source>Cannot Import Backup</source>
+        <translation>Copia de rezervă nu poate fi importată</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>Toate opțiunile și programele vor fi înlocuite după importul reușit. Continuați?
+
+Asigurați-vă că aveți o copie de rezervă recentă.</translation>
+    </message>
+    <message>
+        <source>Only new Programs will be added after successful import. Continue?</source>
+        <translation>Doar programele noi vor fi adăugate după importul reușit. Continuați?</translation>
     </message>
 </context>
 <context>
@@ -1535,162 +1570,6 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
     </message>
 </context>
 <context>
-    <name>HomeLinks</name>
-    <message>
-        <source>Profile</source>
-        <translation>Profil</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>Jurnale</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>Jurnalele serviciului</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Versiuni</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Ajutor</translation>
-    </message>
-</context>
-<context>
-    <name>HomeMainPage</name>
-    <message>
-        <source>My Fort</source>
-        <translation>Fortul meu</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation>Despre</translation>
-    </message>
-</context>
-<context>
-    <name>HomePage</name>
-    <message>
-        <source>Driver</source>
-        <translation>Driver</translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>Reinstalează</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Elimină</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>Sigur doriți să reinstalați driverul?</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>Sigur doriți să eliminați driverul?</translation>
-    </message>
-    <message>
-        <source>Portable</source>
-        <translation>Portabil</translation>
-    </message>
-    <message>
-        <source>Uninstall</source>
-        <translation>Dezinstalează</translation>
-    </message>
-    <message>
-        <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation>Sigur doriți să dezinstalați Fort Firewall?</translation>
-    </message>
-    <message>
-        <source>Windows Service</source>
-        <translation>Serviciu Windows</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>Instalează</translation>
-    </message>
-    <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>Rulează Fort Firewall ca serviciu în fundal</translation>
-    </message>
-    <message>
-        <source>Driver Installed</source>
-        <translation>Driver instalat</translation>
-    </message>
-    <message>
-        <source>Driver Not Installed</source>
-        <translation>Driver neinstalat</translation>
-    </message>
-    <message>
-        <source>Service Installed</source>
-        <translation>Serviciu instalat</translation>
-    </message>
-    <message>
-        <source>Service Not Installed</source>
-        <translation>Serviciu neinstalat</translation>
-    </message>
-    <message>
-        <source>Are you sure to install the Service?</source>
-        <translation>Sigur doriți să instalați serviciul?</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Service?</source>
-        <translation>Sigur doriți să eliminați serviciul?</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>Instalarea serviciului Windows s-a modificat.</translation>
-    </message>
-    <message>
-        <source>Integration</source>
-        <translation>Integrare</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>Integrare cu Windows Explorer</translation>
-    </message>
-    <message>
-        <source>Control Panel: Sounds integration</source>
-        <translation>Panou de control: integrare cu Sunete</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Pornire automată:</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Dezactivat</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Pentru utilizatorul curent</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Pentru toți utilizatorii</translation>
-    </message>
-    <message>
-        <source>Portable Installed</source>
-        <translation>Portabil instalat</translation>
-    </message>
-</context>
-<context>
-    <name>HomeWindow</name>
-    <message>
-        <source>My Fort</source>
-        <translation>Fortul meu</translation>
-    </message>
-    <message>
-        <source>Lock</source>
-        <translation>Încuie</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>Descuie</translation>
-    </message>
-</context>
-<context>
     <name>HostRange</name>
     <message>
         <source>Bad host name</source>
@@ -1930,14 +1809,6 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
         <translation>Comandă rapidă:</translation>
     </message>
     <message>
-        <source>Auto-Show Menu</source>
-        <translation>Afișează automat meniul</translation>
-    </message>
-    <message>
-        <source>Show the menu, when the window is activated</source>
-        <translation>Afișează meniul când fereastra este activată</translation>
-    </message>
-    <message>
         <source>Show Splash screen on startup</source>
         <translation>Afișează ecranul de pornire la lansare</translation>
     </message>
@@ -2020,10 +1891,6 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
     <message>
         <source>Right Click</source>
         <translation>Clic dreapta</translation>
-    </message>
-    <message>
-        <source>Show Main Window</source>
-        <translation>Afișează fereastra principală</translation>
     </message>
     <message>
         <source>Show My Fort</source>
@@ -2155,6 +2022,124 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
     </message>
 </context>
 <context>
+    <name>InstallationButton</name>
+    <message>
+        <source>Installation</source>
+        <translation>Instalare</translation>
+    </message>
+</context>
+<context>
+    <name>InstallationWindow</name>
+    <message>
+        <source>Driver</source>
+        <translation>Driver</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>Reinstalează</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Elimină</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>Sigur doriți să reinstalați driverul?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>Sigur doriți să eliminați driverul?</translation>
+    </message>
+    <message>
+        <source>Portable</source>
+        <translation>Portabil</translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation>Dezinstalează</translation>
+    </message>
+    <message>
+        <source>Are you sure to uninstall the Fort Firewall?</source>
+        <translation>Sigur doriți să dezinstalați Fort Firewall?</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>Serviciu Windows</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>Instalează</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>Rulează Fort Firewall ca serviciu în fundal</translation>
+    </message>
+    <message>
+        <source>Installation</source>
+        <translation>Instalare</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation>Driver instalat</translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation>Driver neinstalat</translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation>Serviciu instalat</translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation>Serviciu neinstalat</translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation>Sigur doriți să instalați serviciul?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation>Sigur doriți să eliminați serviciul?</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>Instalarea serviciului Windows s-a modificat.</translation>
+    </message>
+    <message>
+        <source>Integration</source>
+        <translation>Integrare</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Integrare cu Windows Explorer</translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation>Panou de control: integrare cu Sunete</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Pornire automată:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Dezactivat</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Pentru utilizatorul curent</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Pentru toți utilizatorii</translation>
+    </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation>Portabil instalat</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Bad format</source>
@@ -2195,14 +2180,6 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
         <translation>Fișier</translation>
     </message>
     <message>
-        <source>Lock</source>
-        <translation>Încuie</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>Descuie</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>Instrumente</translation>
     </message>
@@ -2211,8 +2188,28 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
         <translation>Revizuiește alertele</translation>
     </message>
     <message>
+        <source>Installation</source>
+        <translation>Instalare</translation>
+    </message>
+    <message>
         <source>Window</source>
         <translation>Fereastră</translation>
+    </message>
+    <message>
+        <source>Backup</source>
+        <translation>Copie de rezervă</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>Exportă</translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation>Importă</translation>
+    </message>
+    <message>
+        <source>Import new programs</source>
+        <translation>Importă programele noi</translation>
     </message>
     <message>
         <source>Reset Layout</source>
@@ -2223,17 +2220,33 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
         <translation>Ajutor</translation>
     </message>
     <message>
+        <source>Check for Updates</source>
+        <translation>Verifică actualizările</translation>
+    </message>
+    <message>
         <source>About</source>
-        <translation>Despre</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
+        <source>No Password</source>
+        <translation>Fără parolă</translation>
+    </message>
+    <message>
         <source>Open a panel from the tool bar&apos;s menus.
-Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</source>
         <translation>Deschideți un panou din meniurile barei de instrumente.
-Sau mutați aici o fereastră cu elementul &quot;Andochează în fereastra principală&quot; din meniul său.</translation>
+Sau mutați aici o fereastră cu elementul &quot;Andochează în Fortul meu&quot; din meniul său.</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>Încuie</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>Descuie</translation>
     </message>
 </context>
 <context>
@@ -2282,18 +2295,6 @@ Sau mutați aici o fereastră cu elementul &quot;Andochează în fereastra princ
         <translation>Grafic de trafic</translation>
     </message>
     <message>
-        <source>Backup</source>
-        <translation>Copie de rezervă</translation>
-    </message>
-    <message>
-        <source>Export</source>
-        <translation>Exportă</translation>
-    </message>
-    <message>
-        <source>Import</source>
-        <translation>Importă</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>Implicit</translation>
     </message>
@@ -2309,10 +2310,6 @@ Sau mutați aici o fereastră cu elementul &quot;Andochează în fereastra princ
         <source>Interface</source>
         <translation>Interfață</translation>
     </message>
-    <message>
-        <source>Import new programs</source>
-        <translation>Importă programele noi</translation>
-    </message>
 </context>
 <context>
     <name>OptionsButton</name>
@@ -2324,44 +2321,8 @@ Sau mutați aici o fereastră cu elementul &quot;Andochează în fereastra princ
 <context>
     <name>OptionsController</name>
     <message>
-        <source>Export Backup</source>
-        <translation>Exportă copia de rezervă</translation>
-    </message>
-    <message>
-        <source>Backup Exported Successfully</source>
-        <translation>Copia de rezervă a fost exportată cu succes</translation>
-    </message>
-    <message>
-        <source>Cannot Export Backup</source>
-        <translation>Copia de rezervă nu poate fi exportată</translation>
-    </message>
-    <message>
-        <source>Import Backup</source>
-        <translation>Importă copia de rezervă</translation>
-    </message>
-    <message>
-        <source>Backup Imported Successfully</source>
-        <translation>Copia de rezervă a fost importată cu succes</translation>
-    </message>
-    <message>
-        <source>Cannot Import Backup</source>
-        <translation>Copia de rezervă nu poate fi importată</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>Opțiunile nu pot fi salvate</translation>
-    </message>
-    <message>
-        <source>All Options and Programs will be replaced after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>Toate opțiunile și programele vor fi înlocuite după importul reușit. Continuați?
-
-Asigurați-vă că aveți o copie de rezervă recentă.</translation>
-    </message>
-    <message>
-        <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation>Doar programele noi vor fi adăugate după importul reușit. Continuați?</translation>
     </message>
 </context>
 <context>
@@ -4374,12 +4335,39 @@ Pierdere de pachete: %2</translation>
         <translation>Trafic</translation>
     </message>
     <message>
-        <source>Main Window</source>
-        <translation>Fereastra principală</translation>
-    </message>
-    <message>
         <source>Connections</source>
         <translation>Conexiuni</translation>
+    </message>
+</context>
+<context>
+    <name>UpdatesWindow</name>
+    <message>
+        <source>New Version</source>
+        <translation>Versiune nouă</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Descarcă</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>Actualizări</translation>
+    </message>
+    <message>
+        <source>No Update</source>
+        <translation>Nicio actualizare</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>Instalează</translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation>Verifică actualizările</translation>
+    </message>
+    <message>
+        <source>Current Version</source>
+        <translation>Versiunea curentă</translation>
     </message>
 </context>
 <context>
@@ -4422,6 +4410,10 @@ Pierdere de pachete: %2</translation>
 <context>
     <name>WindowManager</name>
     <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Restart Now?</source>
         <translation>Reporniți acum?</translation>
     </message>
@@ -4437,12 +4429,12 @@ Pierdere de pachete: %2</translation>
         <translation>Meniul ferestrei</translation>
     </message>
     <message>
-        <source>Dock to Main Window</source>
-        <translation>Andochează în fereastra principală</translation>
+        <source>Undock from My Fort</source>
+        <translation>Detașează din Fortul meu</translation>
     </message>
     <message>
-        <source>Undock from Main Window</source>
-        <translation>Detașează din fereastra principală</translation>
+        <source>Dock to My Fort</source>
+        <translation>Andochează în Fortul meu</translation>
     </message>
     <message>
         <source>Help</source>

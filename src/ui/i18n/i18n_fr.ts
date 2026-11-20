@@ -2,33 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_US">
 <context>
-    <name>AboutPage</name>
-    <message>
-        <source>New Version</source>
-        <translation>Nouvelle Version</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>Télécharger</translation>
-    </message>
-    <message>
-        <source>Check for update</source>
-        <translation>Vérifier les mises à jour</translation>
-    </message>
-    <message>
-        <source>No Update</source>
-        <translation>Aucune mise à jour</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>Installer</translation>
-    </message>
-    <message>
-        <source>Current Version</source>
-        <translation>Version actuelle</translation>
-    </message>
-</context>
-<context>
     <name>ActionRange</name>
     <message>
         <source>Allow</source>
@@ -94,6 +67,29 @@
     <message>
         <source>Open Folder</source>
         <translation>Ouvrir dossier</translation>
+    </message>
+</context>
+<context>
+    <name>AppLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>Profil</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Journaux</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>Journaux de service</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Communiqués</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Aide</translation>
     </message>
 </context>
 <context>
@@ -258,6 +254,45 @@
     <message>
         <source>Upload</source>
         <translation>Chargement</translation>
+    </message>
+</context>
+<context>
+    <name>BackupController</name>
+    <message>
+        <source>Export Backup</source>
+        <translation>Exporter la sauvegarde</translation>
+    </message>
+    <message>
+        <source>Backup Exported Successfully</source>
+        <translation>Sauvegarde exportée avec succès</translation>
+    </message>
+    <message>
+        <source>Cannot Export Backup</source>
+        <translation>Impossible d&apos;exporter la sauvegarde</translation>
+    </message>
+    <message>
+        <source>Import Backup</source>
+        <translation>Importer la sauvegarde</translation>
+    </message>
+    <message>
+        <source>Backup Imported Successfully</source>
+        <translation>Sauvegarde importée avec succès</translation>
+    </message>
+    <message>
+        <source>Cannot Import Backup</source>
+        <translation>Impossible d&apos;importer la sauvegarde</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>Toutes les options et tous les programmes seront remplacés après l&apos;importation réussie. Continuer?
+
+Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
+    </message>
+    <message>
+        <source>Only new Programs will be added after successful import. Continue?</source>
+        <translation>Seuls les nouveaux programmes seront ajoutés après l&apos;importation réussie. Continuer ?</translation>
     </message>
 </context>
 <context>
@@ -1535,162 +1570,6 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
     </message>
 </context>
 <context>
-    <name>HomeLinks</name>
-    <message>
-        <source>Profile</source>
-        <translation>Profil</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>Journaux</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>Journaux de service</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Communiqués</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Aide</translation>
-    </message>
-</context>
-<context>
-    <name>HomeMainPage</name>
-    <message>
-        <source>My Fort</source>
-        <translation>Mon Fort</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation>À propos de</translation>
-    </message>
-</context>
-<context>
-    <name>HomePage</name>
-    <message>
-        <source>Driver</source>
-        <translation>Pilote</translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>Réinstaller</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Retirer</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>Êtes-vous sûr de réinstaller le pilote?</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>Êtes-vous sûr de vouloir supprimer le pilote?</translation>
-    </message>
-    <message>
-        <source>Portable</source>
-        <translation>Portable</translation>
-    </message>
-    <message>
-        <source>Uninstall</source>
-        <translation>Désinstaller</translation>
-    </message>
-    <message>
-        <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation>Êtes-vous sûr de désinstaller Fort Firewall ?</translation>
-    </message>
-    <message>
-        <source>Windows Service</source>
-        <translation>Service Windows</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>Installer</translation>
-    </message>
-    <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>Exécutez Fort Firewall en tant que service en arrière-plan</translation>
-    </message>
-    <message>
-        <source>Driver Installed</source>
-        <translation>Pilote installé</translation>
-    </message>
-    <message>
-        <source>Driver Not Installed</source>
-        <translation>Pilote non installé</translation>
-    </message>
-    <message>
-        <source>Service Installed</source>
-        <translation>Service installé</translation>
-    </message>
-    <message>
-        <source>Service Not Installed</source>
-        <translation>Service non installé</translation>
-    </message>
-    <message>
-        <source>Are you sure to install the Service?</source>
-        <translation>Êtes-vous sûr d&apos;installer le Service ?</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Service?</source>
-        <translation>Êtes-vous sûr de retirer le service ?</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>Installation du service Windows changée.</translation>
-    </message>
-    <message>
-        <source>Integration</source>
-        <translation>Intégration</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>Intégration de l&apos;Explorateur Windows</translation>
-    </message>
-    <message>
-        <source>Control Panel: Sounds integration</source>
-        <translation>Panneau de configuration : Intégration des sons</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Exécution automatique:</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Désactivé</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Pour l&apos;utilisateur actuel</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Pour tout utilisateurs</translation>
-    </message>
-    <message>
-        <source>Portable Installed</source>
-        <translation>Portable installé</translation>
-    </message>
-</context>
-<context>
-    <name>HomeWindow</name>
-    <message>
-        <source>My Fort</source>
-        <translation>Mon Fort</translation>
-    </message>
-    <message>
-        <source>Lock</source>
-        <translation>Verrouillé</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>Déverrouiller</translation>
-    </message>
-</context>
-<context>
     <name>HostRange</name>
     <message>
         <source>Bad host name</source>
@@ -1930,14 +1809,6 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
         <translation>Raccourci:</translation>
     </message>
     <message>
-        <source>Auto-Show Menu</source>
-        <translation>Affichage automatique du menu</translation>
-    </message>
-    <message>
-        <source>Show the menu, when the window is activated</source>
-        <translation>Afficher le menu lorsque la fenêtre est activée</translation>
-    </message>
-    <message>
         <source>Show Splash screen on startup</source>
         <translation>Afficher l&apos;écran d&apos;accueil au démarrage</translation>
     </message>
@@ -2020,10 +1891,6 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
     <message>
         <source>Right Click</source>
         <translation>Clic Droit</translation>
-    </message>
-    <message>
-        <source>Show Main Window</source>
-        <translation>Afficher la fenêtre principale</translation>
     </message>
     <message>
         <source>Show My Fort</source>
@@ -2155,6 +2022,124 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
     </message>
 </context>
 <context>
+    <name>InstallationButton</name>
+    <message>
+        <source>Installation</source>
+        <translation>Installation</translation>
+    </message>
+</context>
+<context>
+    <name>InstallationWindow</name>
+    <message>
+        <source>Driver</source>
+        <translation>Pilote</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>Réinstaller</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Retirer</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>Êtes-vous sûr de réinstaller le pilote?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>Êtes-vous sûr de vouloir supprimer le pilote?</translation>
+    </message>
+    <message>
+        <source>Portable</source>
+        <translation>Portable</translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation>Désinstaller</translation>
+    </message>
+    <message>
+        <source>Are you sure to uninstall the Fort Firewall?</source>
+        <translation>Êtes-vous sûr de désinstaller Fort Firewall ?</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>Service Windows</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>Installer</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>Exécutez Fort Firewall en tant que service en arrière-plan</translation>
+    </message>
+    <message>
+        <source>Installation</source>
+        <translation>Installation</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation>Pilote installé</translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation>Pilote non installé</translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation>Service installé</translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation>Service non installé</translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation>Êtes-vous sûr d&apos;installer le Service ?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation>Êtes-vous sûr de retirer le service ?</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>Installation du service Windows changée.</translation>
+    </message>
+    <message>
+        <source>Integration</source>
+        <translation>Intégration</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Intégration de l&apos;Explorateur Windows</translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation>Panneau de configuration : Intégration des sons</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Exécution automatique:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Désactivé</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Pour l&apos;utilisateur actuel</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Pour tout utilisateurs</translation>
+    </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation>Portable installé</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Bad format</source>
@@ -2195,14 +2180,6 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
         <translation>Fichier</translation>
     </message>
     <message>
-        <source>Lock</source>
-        <translation>Verrouillé</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>Déverrouiller</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>Outils</translation>
     </message>
@@ -2211,8 +2188,28 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
         <translation>Revoir les alertes</translation>
     </message>
     <message>
+        <source>Installation</source>
+        <translation>Installation</translation>
+    </message>
+    <message>
         <source>Window</source>
         <translation>Fenêtre</translation>
+    </message>
+    <message>
+        <source>Backup</source>
+        <translation>Sauvegarder</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>Exporter</translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation>Importer</translation>
+    </message>
+    <message>
+        <source>Import new programs</source>
+        <translation>Importer de nouveaux programmes</translation>
     </message>
     <message>
         <source>Reset Layout</source>
@@ -2223,17 +2220,33 @@ Un programme n&apos;est activé que si l&apos;un de ses groupes exclusifs est ac
         <translation>Aide</translation>
     </message>
     <message>
+        <source>Check for Updates</source>
+        <translation>Vérifier les mises à jour</translation>
+    </message>
+    <message>
         <source>About</source>
-        <translation>À propos de</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
+        <source>No Password</source>
+        <translation>Pas de mot de passe</translation>
+    </message>
+    <message>
         <source>Open a panel from the tool bar&apos;s menus.
-Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</source>
         <translation>Ouvrez un panneau depuis les menus de la barre d&apos;outils.
-Ou déplacez une fenêtre ici avec l&apos;élément &quot;Ancrer dans la fenêtre principale&quot; de son menu.</translation>
+Ou déplacez une fenêtre ici avec l&apos;élément &quot;Ancrer dans Mon Fort&quot; de son menu.</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>Verrouillé</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>Déverrouiller</translation>
     </message>
 </context>
 <context>
@@ -2282,18 +2295,6 @@ Ou déplacez une fenêtre ici avec l&apos;élément &quot;Ancrer dans la fenêtr
         <translation>Graphique du trafic</translation>
     </message>
     <message>
-        <source>Backup</source>
-        <translation>Sauvegarder</translation>
-    </message>
-    <message>
-        <source>Export</source>
-        <translation>Exporter</translation>
-    </message>
-    <message>
-        <source>Import</source>
-        <translation>Importer</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>Par défaut</translation>
     </message>
@@ -2309,10 +2310,6 @@ Ou déplacez une fenêtre ici avec l&apos;élément &quot;Ancrer dans la fenêtr
         <source>Interface</source>
         <translation>Interface</translation>
     </message>
-    <message>
-        <source>Import new programs</source>
-        <translation>Importer de nouveaux programmes</translation>
-    </message>
 </context>
 <context>
     <name>OptionsButton</name>
@@ -2324,44 +2321,8 @@ Ou déplacez une fenêtre ici avec l&apos;élément &quot;Ancrer dans la fenêtr
 <context>
     <name>OptionsController</name>
     <message>
-        <source>Export Backup</source>
-        <translation>Exporter la sauvegarde</translation>
-    </message>
-    <message>
-        <source>Backup Exported Successfully</source>
-        <translation>Sauvegarde exportée avec succès</translation>
-    </message>
-    <message>
-        <source>Cannot Export Backup</source>
-        <translation>Impossible d&apos;exporter la sauvegarde</translation>
-    </message>
-    <message>
-        <source>Import Backup</source>
-        <translation>Importer la sauvegarde</translation>
-    </message>
-    <message>
-        <source>Backup Imported Successfully</source>
-        <translation>Sauvegarde importée avec succès</translation>
-    </message>
-    <message>
-        <source>Cannot Import Backup</source>
-        <translation>Impossible d&apos;importer la sauvegarde</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>Impossible d&apos;enregistrer les options</translation>
-    </message>
-    <message>
-        <source>All Options and Programs will be replaced after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>Toutes les options et tous les programmes seront remplacés après l&apos;importation réussie. Continuer?
-
-Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
-    </message>
-    <message>
-        <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation>Seuls les nouveaux programmes seront ajoutés après l&apos;importation réussie. Continuer ?</translation>
     </message>
 </context>
 <context>
@@ -4374,12 +4335,39 @@ Perte de paquets : %2</translation>
         <translation>Trafic</translation>
     </message>
     <message>
-        <source>Main Window</source>
-        <translation>Fenêtre principale</translation>
-    </message>
-    <message>
         <source>Connections</source>
         <translation>Connexions</translation>
+    </message>
+</context>
+<context>
+    <name>UpdatesWindow</name>
+    <message>
+        <source>New Version</source>
+        <translation>Nouvelle Version</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Télécharger</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>Mises à jour</translation>
+    </message>
+    <message>
+        <source>No Update</source>
+        <translation>Aucune mise à jour</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>Installer</translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation>Vérifier les mises à jour</translation>
+    </message>
+    <message>
+        <source>Current Version</source>
+        <translation>Version actuelle</translation>
     </message>
 </context>
 <context>
@@ -4422,6 +4410,10 @@ Perte de paquets : %2</translation>
 <context>
     <name>WindowManager</name>
     <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Restart Now?</source>
         <translation>Redémarrer maintenant?</translation>
     </message>
@@ -4437,12 +4429,12 @@ Perte de paquets : %2</translation>
         <translation>Menu de la fenêtre</translation>
     </message>
     <message>
-        <source>Dock to Main Window</source>
-        <translation>Ancrer dans la fenêtre principale</translation>
+        <source>Undock from My Fort</source>
+        <translation>Détacher de Mon Fort</translation>
     </message>
     <message>
-        <source>Undock from Main Window</source>
-        <translation>Détacher de la fenêtre principale</translation>
+        <source>Dock to My Fort</source>
+        <translation>Ancrer dans Mon Fort</translation>
     </message>
     <message>
         <source>Help</source>

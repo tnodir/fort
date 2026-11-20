@@ -2,33 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fa_FA" sourcelanguage="en_US">
 <context>
-    <name>AboutPage</name>
-    <message>
-        <source>New Version</source>
-        <translation>نسخه جدید</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>دانلود</translation>
-    </message>
-    <message>
-        <source>Check for update</source>
-        <translation>بررسی به‌روزرسانی</translation>
-    </message>
-    <message>
-        <source>No Update</source>
-        <translation>به‌روزرسانی وجود ندارد</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>نصب</translation>
-    </message>
-    <message>
-        <source>Current Version</source>
-        <translation>نسخه فعلی</translation>
-    </message>
-</context>
-<context>
     <name>ActionRange</name>
     <message>
         <source>Allow</source>
@@ -94,6 +67,29 @@
     <message>
         <source>Open Folder</source>
         <translation>باز کردن پوشه</translation>
+    </message>
+</context>
+<context>
+    <name>AppLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>پروفایل</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>گزارش‌ها</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>گزارش‌های سرویس</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>انتشارها</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>راهنما</translation>
     </message>
 </context>
 <context>
@@ -258,6 +254,45 @@
     <message>
         <source>Upload</source>
         <translation>ارسال</translation>
+    </message>
+</context>
+<context>
+    <name>BackupController</name>
+    <message>
+        <source>Export Backup</source>
+        <translation>صدور نسخه پشتیبان</translation>
+    </message>
+    <message>
+        <source>Backup Exported Successfully</source>
+        <translation>نسخه پشتیبان با موفقیت صادر شد</translation>
+    </message>
+    <message>
+        <source>Cannot Export Backup</source>
+        <translation>صدور نسخه پشتیبان ممکن نیست</translation>
+    </message>
+    <message>
+        <source>Import Backup</source>
+        <translation>وارد کردن نسخه پشتیبان</translation>
+    </message>
+    <message>
+        <source>Backup Imported Successfully</source>
+        <translation>نسخه پشتیبان با موفقیت وارد شد</translation>
+    </message>
+    <message>
+        <source>Cannot Import Backup</source>
+        <translation>وارد کردن نسخه پشتیبان ممکن نیست</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>پس از وارد کردن موفق، همه گزینه‌ها و برنامه‌ها جایگزین خواهند شد. ادامه می‌دهید؟
+
+مطمئن شوید که یک نسخه پشتیبان تازه دارید.</translation>
+    </message>
+    <message>
+        <source>Only new Programs will be added after successful import. Continue?</source>
+        <translation>پس از وارد کردن موفق، فقط برنامه‌های جدید افزوده خواهند شد. ادامه می‌دهید؟</translation>
     </message>
 </context>
 <context>
@@ -1535,162 +1570,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
-    <name>HomeLinks</name>
-    <message>
-        <source>Profile</source>
-        <translation>پروفایل</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>گزارش‌ها</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>گزارش‌های سرویس</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>انتشارها</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>راهنما</translation>
-    </message>
-</context>
-<context>
-    <name>HomeMainPage</name>
-    <message>
-        <source>My Fort</source>
-        <translation>Fort من</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation>درباره</translation>
-    </message>
-</context>
-<context>
-    <name>HomePage</name>
-    <message>
-        <source>Driver</source>
-        <translation>درایور</translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>نصب مجدد</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>حذف</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>آیا از نصب مجدد درایور اطمینان دارید؟</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>آیا از حذف درایور اطمینان دارید؟</translation>
-    </message>
-    <message>
-        <source>Portable</source>
-        <translation>قابل حمل</translation>
-    </message>
-    <message>
-        <source>Uninstall</source>
-        <translation>حذف نصب</translation>
-    </message>
-    <message>
-        <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation>آیا از حذف نصب Fort Firewall اطمینان دارید؟</translation>
-    </message>
-    <message>
-        <source>Windows Service</source>
-        <translation>سرویس ویندوز</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>نصب</translation>
-    </message>
-    <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>اجرای Fort Firewall به‌عنوان سرویس در پس‌زمینه</translation>
-    </message>
-    <message>
-        <source>Driver Installed</source>
-        <translation>درایور نصب شده است</translation>
-    </message>
-    <message>
-        <source>Driver Not Installed</source>
-        <translation>درایور نصب نشده است</translation>
-    </message>
-    <message>
-        <source>Service Installed</source>
-        <translation>سرویس نصب شده است</translation>
-    </message>
-    <message>
-        <source>Service Not Installed</source>
-        <translation>سرویس نصب نشده است</translation>
-    </message>
-    <message>
-        <source>Are you sure to install the Service?</source>
-        <translation>آیا از نصب سرویس اطمینان دارید؟</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Service?</source>
-        <translation>آیا از حذف سرویس اطمینان دارید؟</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>نصب سرویس ویندوز تغییر کرد.</translation>
-    </message>
-    <message>
-        <source>Integration</source>
-        <translation>یکپارچه‌سازی</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>یکپارچه‌سازی با اکسپلورر ویندوز</translation>
-    </message>
-    <message>
-        <source>Control Panel: Sounds integration</source>
-        <translation>کنترل پنل: یکپارچه‌سازی با صداها</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>اجرای خودکار:</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>غیرفعال</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>برای کاربر فعلی</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>برای همه کاربران</translation>
-    </message>
-    <message>
-        <source>Portable Installed</source>
-        <translation>نسخه قابل حمل نصب شده است</translation>
-    </message>
-</context>
-<context>
-    <name>HomeWindow</name>
-    <message>
-        <source>My Fort</source>
-        <translation>Fort من</translation>
-    </message>
-    <message>
-        <source>Lock</source>
-        <translation>قفل</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>باز کردن قفل</translation>
-    </message>
-</context>
-<context>
     <name>HostRange</name>
     <message>
         <source>Bad host name</source>
@@ -1930,14 +1809,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>میانبر:</translation>
     </message>
     <message>
-        <source>Auto-Show Menu</source>
-        <translation>نمایش خودکار منو</translation>
-    </message>
-    <message>
-        <source>Show the menu, when the window is activated</source>
-        <translation>نمایش منو هنگام فعال شدن پنجره</translation>
-    </message>
-    <message>
         <source>Show Splash screen on startup</source>
         <translation>نمایش صفحه آغازین هنگام راه‌اندازی</translation>
     </message>
@@ -2020,10 +1891,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Right Click</source>
         <translation>کلیک راست</translation>
-    </message>
-    <message>
-        <source>Show Main Window</source>
-        <translation>نمایش پنجره اصلی</translation>
     </message>
     <message>
         <source>Show My Fort</source>
@@ -2155,6 +2022,124 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>InstallationButton</name>
+    <message>
+        <source>Installation</source>
+        <translation>نصب</translation>
+    </message>
+</context>
+<context>
+    <name>InstallationWindow</name>
+    <message>
+        <source>Driver</source>
+        <translation>درایور</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>نصب مجدد</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>حذف</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>آیا از نصب مجدد درایور اطمینان دارید؟</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>آیا از حذف درایور اطمینان دارید؟</translation>
+    </message>
+    <message>
+        <source>Portable</source>
+        <translation>قابل حمل</translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation>حذف نصب</translation>
+    </message>
+    <message>
+        <source>Are you sure to uninstall the Fort Firewall?</source>
+        <translation>آیا از حذف نصب Fort Firewall اطمینان دارید؟</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>سرویس ویندوز</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>نصب</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>اجرای Fort Firewall به‌عنوان سرویس در پس‌زمینه</translation>
+    </message>
+    <message>
+        <source>Installation</source>
+        <translation>نصب</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation>درایور نصب شده است</translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation>درایور نصب نشده است</translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation>سرویس نصب شده است</translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation>سرویس نصب نشده است</translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation>آیا از نصب سرویس اطمینان دارید؟</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation>آیا از حذف سرویس اطمینان دارید؟</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>نصب سرویس ویندوز تغییر کرد.</translation>
+    </message>
+    <message>
+        <source>Integration</source>
+        <translation>یکپارچه‌سازی</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>یکپارچه‌سازی با اکسپلورر ویندوز</translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation>کنترل پنل: یکپارچه‌سازی با صداها</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>اجرای خودکار:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>غیرفعال</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>برای کاربر فعلی</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>برای همه کاربران</translation>
+    </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation>نسخه قابل حمل نصب شده است</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Bad format</source>
@@ -2195,14 +2180,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>فایل</translation>
     </message>
     <message>
-        <source>Lock</source>
-        <translation>قفل</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>باز کردن قفل</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>ابزارها</translation>
     </message>
@@ -2211,8 +2188,28 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>بررسی هشدارها</translation>
     </message>
     <message>
+        <source>Installation</source>
+        <translation>نصب</translation>
+    </message>
+    <message>
         <source>Window</source>
         <translation>پنجره</translation>
+    </message>
+    <message>
+        <source>Backup</source>
+        <translation>پشتیبان‌گیری</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>صدور</translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation>وارد کردن</translation>
+    </message>
+    <message>
+        <source>Import new programs</source>
+        <translation>وارد کردن برنامه‌های جدید</translation>
     </message>
     <message>
         <source>Reset Layout</source>
@@ -2223,17 +2220,33 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>راهنما</translation>
     </message>
     <message>
+        <source>Check for Updates</source>
+        <translation>بررسی به‌روزرسانی‌ها</translation>
+    </message>
+    <message>
         <source>About</source>
-        <translation>درباره</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
+        <source>No Password</source>
+        <translation>بدون گذرواژه</translation>
+    </message>
+    <message>
         <source>Open a panel from the tool bar&apos;s menus.
-Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</source>
         <translation>یک پنل را از منوهای نوار ابزار باز کنید.
-یا پنجره‌ای را با گزینه &quot;الحاق به پنجره اصلی&quot; منوی آن به اینجا منتقل کنید.</translation>
+یا پنجره‌ای را با گزینه &quot;الحاق به Fort من&quot; منوی آن به اینجا منتقل کنید.</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>قفل</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>باز کردن قفل</translation>
     </message>
 </context>
 <context>
@@ -2282,18 +2295,6 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
         <translation>نمودار ترافیک</translation>
     </message>
     <message>
-        <source>Backup</source>
-        <translation>پشتیبان‌گیری</translation>
-    </message>
-    <message>
-        <source>Export</source>
-        <translation>صدور</translation>
-    </message>
-    <message>
-        <source>Import</source>
-        <translation>وارد کردن</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>پیش‌فرض</translation>
     </message>
@@ -2309,10 +2310,6 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
         <source>Interface</source>
         <translation>رابط کاربری</translation>
     </message>
-    <message>
-        <source>Import new programs</source>
-        <translation>وارد کردن برنامه‌های جدید</translation>
-    </message>
 </context>
 <context>
     <name>OptionsButton</name>
@@ -2324,44 +2321,8 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
 <context>
     <name>OptionsController</name>
     <message>
-        <source>Export Backup</source>
-        <translation>صدور نسخه پشتیبان</translation>
-    </message>
-    <message>
-        <source>Backup Exported Successfully</source>
-        <translation>نسخه پشتیبان با موفقیت صادر شد</translation>
-    </message>
-    <message>
-        <source>Cannot Export Backup</source>
-        <translation>صدور نسخه پشتیبان ممکن نیست</translation>
-    </message>
-    <message>
-        <source>Import Backup</source>
-        <translation>وارد کردن نسخه پشتیبان</translation>
-    </message>
-    <message>
-        <source>Backup Imported Successfully</source>
-        <translation>نسخه پشتیبان با موفقیت وارد شد</translation>
-    </message>
-    <message>
-        <source>Cannot Import Backup</source>
-        <translation>وارد کردن نسخه پشتیبان ممکن نیست</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>ذخیره گزینه‌ها ممکن نیست</translation>
-    </message>
-    <message>
-        <source>All Options and Programs will be replaced after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>پس از وارد کردن موفق، همه گزینه‌ها و برنامه‌ها جایگزین خواهند شد. ادامه می‌دهید؟
-
-مطمئن شوید که یک نسخه پشتیبان تازه دارید.</translation>
-    </message>
-    <message>
-        <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation>پس از وارد کردن موفق، فقط برنامه‌های جدید افزوده خواهند شد. ادامه می‌دهید؟</translation>
     </message>
 </context>
 <context>
@@ -4374,12 +4335,39 @@ Packet loss: %2</source>
         <translation>ترافیک</translation>
     </message>
     <message>
-        <source>Main Window</source>
-        <translation>پنجره اصلی</translation>
-    </message>
-    <message>
         <source>Connections</source>
         <translation>اتصال‌ها</translation>
+    </message>
+</context>
+<context>
+    <name>UpdatesWindow</name>
+    <message>
+        <source>New Version</source>
+        <translation>نسخه جدید</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>دانلود</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>به‌روزرسانی‌ها</translation>
+    </message>
+    <message>
+        <source>No Update</source>
+        <translation>به‌روزرسانی وجود ندارد</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>نصب</translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation>بررسی به‌روزرسانی‌ها</translation>
+    </message>
+    <message>
+        <source>Current Version</source>
+        <translation>نسخه فعلی</translation>
     </message>
 </context>
 <context>
@@ -4422,6 +4410,10 @@ Packet loss: %2</source>
 <context>
     <name>WindowManager</name>
     <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Restart Now?</source>
         <translation>اکنون راه‌اندازی مجدد شود؟</translation>
     </message>
@@ -4437,12 +4429,12 @@ Packet loss: %2</source>
         <translation>منوی پنجره</translation>
     </message>
     <message>
-        <source>Dock to Main Window</source>
-        <translation>الحاق به پنجره اصلی</translation>
+        <source>Undock from My Fort</source>
+        <translation>جدا کردن از Fort من</translation>
     </message>
     <message>
-        <source>Undock from Main Window</source>
-        <translation>جدا کردن از پنجره اصلی</translation>
+        <source>Dock to My Fort</source>
+        <translation>الحاق به Fort من</translation>
     </message>
     <message>
         <source>Help</source>

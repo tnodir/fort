@@ -2,33 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="vi_VN">
 <context>
-    <name>AboutPage</name>
-    <message>
-        <source>New Version</source>
-        <translation>Phiên bản mới</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>Tải xuống</translation>
-    </message>
-    <message>
-        <source>Check for update</source>
-        <translation>Kiểm tra bản cập nhật</translation>
-    </message>
-    <message>
-        <source>No Update</source>
-        <translation>Không có bản cập nhật</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>Cài đặt</translation>
-    </message>
-    <message>
-        <source>Current Version</source>
-        <translation>Phiên bản hiện tại</translation>
-    </message>
-</context>
-<context>
     <name>ActionRange</name>
     <message>
         <source>Allow</source>
@@ -94,6 +67,29 @@
     <message>
         <source>Open Folder</source>
         <translation>Mở thư mục</translation>
+    </message>
+</context>
+<context>
+    <name>AppLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>Hồ sơ</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Nhật ký</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>Nhật ký dịch vụ</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Phát hành</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Trợ giúp</translation>
     </message>
 </context>
 <context>
@@ -258,6 +254,45 @@
     <message>
         <source>Upload</source>
         <translation>Tải lên</translation>
+    </message>
+</context>
+<context>
+    <name>BackupController</name>
+    <message>
+        <source>Export Backup</source>
+        <translation>Xuất bản sao lưu</translation>
+    </message>
+    <message>
+        <source>Backup Exported Successfully</source>
+        <translation>Xuất bản sao lưu thành công</translation>
+    </message>
+    <message>
+        <source>Cannot Export Backup</source>
+        <translation>Không thể xuất bản sao lưu</translation>
+    </message>
+    <message>
+        <source>Import Backup</source>
+        <translation>Nhập bản sao lưu</translation>
+    </message>
+    <message>
+        <source>Backup Imported Successfully</source>
+        <translation>Nhập bản sao lưu thành công</translation>
+    </message>
+    <message>
+        <source>Cannot Import Backup</source>
+        <translation>Không thể nhập bản sao lưu</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>Tất cả Tùy chọn và Chương trình sẽ bị thay thế sau khi nhập thành công. Tiếp tục?
+
+Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation>
+    </message>
+    <message>
+        <source>Only new Programs will be added after successful import. Continue?</source>
+        <translation>Chỉ các Chương trình mới sẽ được thêm vào sau khi nhập thành công. Tiếp tục?</translation>
     </message>
 </context>
 <context>
@@ -1535,162 +1570,6 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
     </message>
 </context>
 <context>
-    <name>HomeLinks</name>
-    <message>
-        <source>Profile</source>
-        <translation>Hồ sơ</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>Nhật ký</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>Nhật ký dịch vụ</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Phát hành</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Trợ giúp</translation>
-    </message>
-</context>
-<context>
-    <name>HomeMainPage</name>
-    <message>
-        <source>My Fort</source>
-        <translation>Fort của tôi</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation>Giới thiệu</translation>
-    </message>
-</context>
-<context>
-    <name>HomePage</name>
-    <message>
-        <source>Driver</source>
-        <translation>Trình điều khiển</translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>Cài đặt lại</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Gỡ bỏ</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>Bạn có chắc chắn muốn cài đặt lại Trình điều khiển không?</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>Bạn có chắc chắn muốn gỡ bỏ Trình điều khiển không?</translation>
-    </message>
-    <message>
-        <source>Portable</source>
-        <translation>Di động (Portable)</translation>
-    </message>
-    <message>
-        <source>Uninstall</source>
-        <translation>Gỡ cài đặt</translation>
-    </message>
-    <message>
-        <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation>Bạn có chắc chắn muốn gỡ cài đặt Fort Firewall không?</translation>
-    </message>
-    <message>
-        <source>Windows Service</source>
-        <translation>Dịch vụ Windows</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>Cài đặt</translation>
-    </message>
-    <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>Chạy Fort Firewall như một Dịch vụ chạy ngầm</translation>
-    </message>
-    <message>
-        <source>Driver Installed</source>
-        <translation>Đã cài đặt Trình điều khiển</translation>
-    </message>
-    <message>
-        <source>Driver Not Installed</source>
-        <translation>Chưa cài đặt Trình điều khiển</translation>
-    </message>
-    <message>
-        <source>Service Installed</source>
-        <translation>Đã cài đặt Dịch vụ</translation>
-    </message>
-    <message>
-        <source>Service Not Installed</source>
-        <translation>Chưa cài đặt Dịch vụ</translation>
-    </message>
-    <message>
-        <source>Are you sure to install the Service?</source>
-        <translation>Bạn có chắc chắn muốn cài đặt Dịch vụ không?</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Service?</source>
-        <translation>Bạn có chắc chắn muốn gỡ bỏ Dịch vụ không?</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>Cài đặt Dịch vụ Windows đã thay đổi.</translation>
-    </message>
-    <message>
-        <source>Integration</source>
-        <translation>Tích hợp</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>Tích hợp Windows Explorer</translation>
-    </message>
-    <message>
-        <source>Control Panel: Sounds integration</source>
-        <translation>Control Panel: Tích hợp âm thanh</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Tự động chạy:</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Đã tắt</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Cho người dùng hiện tại</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Cho tất cả người dùng</translation>
-    </message>
-    <message>
-        <source>Portable Installed</source>
-        <translation>Đã cài đặt bản di động (Portable)</translation>
-    </message>
-</context>
-<context>
-    <name>HomeWindow</name>
-    <message>
-        <source>My Fort</source>
-        <translation>Fort của tôi</translation>
-    </message>
-    <message>
-        <source>Lock</source>
-        <translation>Khóa</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>Mở khóa</translation>
-    </message>
-</context>
-<context>
     <name>HostRange</name>
     <message>
         <source>Bad host name</source>
@@ -1930,14 +1809,6 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
         <translation>Lối tắt:</translation>
     </message>
     <message>
-        <source>Auto-Show Menu</source>
-        <translation>Tự động hiển thị menu</translation>
-    </message>
-    <message>
-        <source>Show the menu, when the window is activated</source>
-        <translation>Hiện menu khi cửa sổ được kích hoạt</translation>
-    </message>
-    <message>
         <source>Show Splash screen on startup</source>
         <translation>Hiển thị màn hình chờ khi khởi động</translation>
     </message>
@@ -2020,10 +1891,6 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
     <message>
         <source>Right Click</source>
         <translation>Nhấp chuột phải</translation>
-    </message>
-    <message>
-        <source>Show Main Window</source>
-        <translation>Hiển thị cửa sổ chính</translation>
     </message>
     <message>
         <source>Show My Fort</source>
@@ -2155,6 +2022,124 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
     </message>
 </context>
 <context>
+    <name>InstallationButton</name>
+    <message>
+        <source>Installation</source>
+        <translation>Cài đặt</translation>
+    </message>
+</context>
+<context>
+    <name>InstallationWindow</name>
+    <message>
+        <source>Driver</source>
+        <translation>Trình điều khiển</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>Cài đặt lại</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Gỡ bỏ</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>Bạn có chắc chắn muốn cài đặt lại Trình điều khiển không?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>Bạn có chắc chắn muốn gỡ bỏ Trình điều khiển không?</translation>
+    </message>
+    <message>
+        <source>Portable</source>
+        <translation>Di động (Portable)</translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation>Gỡ cài đặt</translation>
+    </message>
+    <message>
+        <source>Are you sure to uninstall the Fort Firewall?</source>
+        <translation>Bạn có chắc chắn muốn gỡ cài đặt Fort Firewall không?</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>Dịch vụ Windows</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>Cài đặt</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>Chạy Fort Firewall như một Dịch vụ chạy ngầm</translation>
+    </message>
+    <message>
+        <source>Installation</source>
+        <translation>Cài đặt</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation>Đã cài đặt Trình điều khiển</translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation>Chưa cài đặt Trình điều khiển</translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation>Đã cài đặt Dịch vụ</translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation>Chưa cài đặt Dịch vụ</translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation>Bạn có chắc chắn muốn cài đặt Dịch vụ không?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation>Bạn có chắc chắn muốn gỡ bỏ Dịch vụ không?</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>Cài đặt Dịch vụ Windows đã thay đổi.</translation>
+    </message>
+    <message>
+        <source>Integration</source>
+        <translation>Tích hợp</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Tích hợp Windows Explorer</translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation>Control Panel: Tích hợp âm thanh</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Tự động chạy:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Đã tắt</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Cho người dùng hiện tại</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Cho tất cả người dùng</translation>
+    </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation>Đã cài đặt bản di động (Portable)</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Bad format</source>
@@ -2195,14 +2180,6 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
         <translation>Tệp</translation>
     </message>
     <message>
-        <source>Lock</source>
-        <translation>Khóa</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>Mở khóa</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>Công cụ</translation>
     </message>
@@ -2211,8 +2188,28 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
         <translation>Xem lại cảnh báo</translation>
     </message>
     <message>
+        <source>Installation</source>
+        <translation>Cài đặt</translation>
+    </message>
+    <message>
         <source>Window</source>
         <translation>Cửa sổ</translation>
+    </message>
+    <message>
+        <source>Backup</source>
+        <translation>Sao lưu</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>Xuất</translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation>Nhập</translation>
+    </message>
+    <message>
+        <source>Import new programs</source>
+        <translation>Nhập các chương trình mới</translation>
     </message>
     <message>
         <source>Reset Layout</source>
@@ -2223,17 +2220,33 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
         <translation>Trợ giúp</translation>
     </message>
     <message>
+        <source>Check for Updates</source>
+        <translation>Kiểm tra bản cập nhật</translation>
+    </message>
+    <message>
         <source>About</source>
-        <translation>Giới thiệu</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
+        <source>No Password</source>
+        <translation>Không có mật khẩu</translation>
+    </message>
+    <message>
         <source>Open a panel from the tool bar&apos;s menus.
-Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</source>
         <translation>Mở một bảng từ các menu của thanh công cụ.
-Hoặc chuyển một cửa sổ vào đây bằng mục &quot;Gắn vào cửa sổ chính&quot; trong menu của nó.</translation>
+Hoặc chuyển một cửa sổ vào đây bằng mục &quot;Gắn vào Fort của tôi&quot; trong menu của nó.</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>Khóa</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>Mở khóa</translation>
     </message>
 </context>
 <context>
@@ -2282,18 +2295,6 @@ Hoặc chuyển một cửa sổ vào đây bằng mục &quot;Gắn vào cửa 
         <translation>Biểu đồ lưu lượng</translation>
     </message>
     <message>
-        <source>Backup</source>
-        <translation>Sao lưu</translation>
-    </message>
-    <message>
-        <source>Export</source>
-        <translation>Xuất</translation>
-    </message>
-    <message>
-        <source>Import</source>
-        <translation>Nhập</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>Mặc định</translation>
     </message>
@@ -2309,10 +2310,6 @@ Hoặc chuyển một cửa sổ vào đây bằng mục &quot;Gắn vào cửa 
         <source>Interface</source>
         <translation>Giao diện</translation>
     </message>
-    <message>
-        <source>Import new programs</source>
-        <translation>Nhập các chương trình mới</translation>
-    </message>
 </context>
 <context>
     <name>OptionsButton</name>
@@ -2324,44 +2321,8 @@ Hoặc chuyển một cửa sổ vào đây bằng mục &quot;Gắn vào cửa 
 <context>
     <name>OptionsController</name>
     <message>
-        <source>Export Backup</source>
-        <translation>Xuất bản sao lưu</translation>
-    </message>
-    <message>
-        <source>Backup Exported Successfully</source>
-        <translation>Xuất bản sao lưu thành công</translation>
-    </message>
-    <message>
-        <source>Cannot Export Backup</source>
-        <translation>Không thể xuất bản sao lưu</translation>
-    </message>
-    <message>
-        <source>Import Backup</source>
-        <translation>Nhập bản sao lưu</translation>
-    </message>
-    <message>
-        <source>Backup Imported Successfully</source>
-        <translation>Nhập bản sao lưu thành công</translation>
-    </message>
-    <message>
-        <source>Cannot Import Backup</source>
-        <translation>Không thể nhập bản sao lưu</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>Không thể lưu các tùy chọn</translation>
-    </message>
-    <message>
-        <source>All Options and Programs will be replaced after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>Tất cả Tùy chọn và Chương trình sẽ bị thay thế sau khi nhập thành công. Tiếp tục?
-
-Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation>
-    </message>
-    <message>
-        <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation>Chỉ các Chương trình mới sẽ được thêm vào sau khi nhập thành công. Tiếp tục?</translation>
     </message>
 </context>
 <context>
@@ -4374,12 +4335,39 @@ Mất gói tin: %2</translation>
         <translation>Lưu lượng</translation>
     </message>
     <message>
-        <source>Main Window</source>
-        <translation>Cửa sổ chính</translation>
-    </message>
-    <message>
         <source>Connections</source>
         <translation>Kết nối</translation>
+    </message>
+</context>
+<context>
+    <name>UpdatesWindow</name>
+    <message>
+        <source>New Version</source>
+        <translation>Phiên bản mới</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Tải xuống</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>Cập nhật</translation>
+    </message>
+    <message>
+        <source>No Update</source>
+        <translation>Không có bản cập nhật</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>Cài đặt</translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation>Kiểm tra bản cập nhật</translation>
+    </message>
+    <message>
+        <source>Current Version</source>
+        <translation>Phiên bản hiện tại</translation>
     </message>
 </context>
 <context>
@@ -4422,6 +4410,10 @@ Mất gói tin: %2</translation>
 <context>
     <name>WindowManager</name>
     <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Restart Now?</source>
         <translation>Khởi động lại ngay bây giờ?</translation>
     </message>
@@ -4437,12 +4429,12 @@ Mất gói tin: %2</translation>
         <translation>Menu cửa sổ</translation>
     </message>
     <message>
-        <source>Dock to Main Window</source>
-        <translation>Gắn vào cửa sổ chính</translation>
+        <source>Undock from My Fort</source>
+        <translation>Tách khỏi Fort của tôi</translation>
     </message>
     <message>
-        <source>Undock from Main Window</source>
-        <translation>Tách khỏi cửa sổ chính</translation>
+        <source>Dock to My Fort</source>
+        <translation>Gắn vào Fort của tôi</translation>
     </message>
     <message>
         <source>Help</source>

@@ -2,33 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN" sourcelanguage="en_US">
 <context>
-    <name>AboutPage</name>
-    <message>
-        <source>New Version</source>
-        <translation>新版本</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>下载</translation>
-    </message>
-    <message>
-        <source>Check for update</source>
-        <translation>检查更新</translation>
-    </message>
-    <message>
-        <source>No Update</source>
-        <translation>无更新</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>安装</translation>
-    </message>
-    <message>
-        <source>Current Version</source>
-        <translation>当前版本</translation>
-    </message>
-</context>
-<context>
     <name>ActionRange</name>
     <message>
         <source>Allow</source>
@@ -94,6 +67,29 @@
     <message>
         <source>Open Folder</source>
         <translation>打开文件夹</translation>
+    </message>
+</context>
+<context>
+    <name>AppLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>配置文件</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>日志</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>服务日志</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>版本发布</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>帮助</translation>
     </message>
 </context>
 <context>
@@ -258,6 +254,45 @@
     <message>
         <source>Upload</source>
         <translation>上传</translation>
+    </message>
+</context>
+<context>
+    <name>BackupController</name>
+    <message>
+        <source>Export Backup</source>
+        <translation>导出备份</translation>
+    </message>
+    <message>
+        <source>Backup Exported Successfully</source>
+        <translation>备份导出成功</translation>
+    </message>
+    <message>
+        <source>Cannot Export Backup</source>
+        <translation>无法导出备份</translation>
+    </message>
+    <message>
+        <source>Import Backup</source>
+        <translation>导入备份</translation>
+    </message>
+    <message>
+        <source>Backup Imported Successfully</source>
+        <translation>备份导入成功</translation>
+    </message>
+    <message>
+        <source>Cannot Import Backup</source>
+        <translation>无法导入备份</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>所有选项和应用程序都将在成功导入后被替换。是否继续？
+
+请确保您有进行完整的备份。</translation>
+    </message>
+    <message>
+        <source>Only new Programs will be added after successful import. Continue?</source>
+        <translation>导入成功后才会添加新的应用程序。是否继续？</translation>
     </message>
 </context>
 <context>
@@ -1535,162 +1570,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
-    <name>HomeLinks</name>
-    <message>
-        <source>Profile</source>
-        <translation>配置文件</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>日志</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>服务日志</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>版本发布</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>帮助</translation>
-    </message>
-</context>
-<context>
-    <name>HomeMainPage</name>
-    <message>
-        <source>My Fort</source>
-        <translation>我的堡垒</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation>关于</translation>
-    </message>
-</context>
-<context>
-    <name>HomePage</name>
-    <message>
-        <source>Driver</source>
-        <translation>驱动</translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>重新安装</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>删除</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>您确定要重新安装驱动程序吗？</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>您确定要删除驱动程序吗？</translation>
-    </message>
-    <message>
-        <source>Portable</source>
-        <translation>便携版</translation>
-    </message>
-    <message>
-        <source>Uninstall</source>
-        <translation>卸载</translation>
-    </message>
-    <message>
-        <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation>您确定要卸载堡垒防火墙吗？</translation>
-    </message>
-    <message>
-        <source>Windows Service</source>
-        <translation>添加 Windows 服务</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>安装</translation>
-    </message>
-    <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>在后台以服务的方式运行堡垒防火墙</translation>
-    </message>
-    <message>
-        <source>Driver Installed</source>
-        <translation>驱动已安装</translation>
-    </message>
-    <message>
-        <source>Driver Not Installed</source>
-        <translation>驱动未安装</translation>
-    </message>
-    <message>
-        <source>Service Installed</source>
-        <translation>服务已安装</translation>
-    </message>
-    <message>
-        <source>Service Not Installed</source>
-        <translation>服务未安装</translation>
-    </message>
-    <message>
-        <source>Are you sure to install the Service?</source>
-        <translation>您确定要安装服务吗？</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Service?</source>
-        <translation>您确定要删除服务吗？</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>Windows 服务安装已更改。</translation>
-    </message>
-    <message>
-        <source>Integration</source>
-        <translation>集成</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>Windows 资源管理器集成</translation>
-    </message>
-    <message>
-        <source>Control Panel: Sounds integration</source>
-        <translation>控制面板：声音集成</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>自动运行：</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>已禁用</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>对于当前用户</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>对于所有用户</translation>
-    </message>
-    <message>
-        <source>Portable Installed</source>
-        <translation>便携版已安装</translation>
-    </message>
-</context>
-<context>
-    <name>HomeWindow</name>
-    <message>
-        <source>My Fort</source>
-        <translation>我的堡垒</translation>
-    </message>
-    <message>
-        <source>Lock</source>
-        <translation>锁定</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>解锁​​​​</translation>
-    </message>
-</context>
-<context>
     <name>HostRange</name>
     <message>
         <source>Bad host name</source>
@@ -1930,14 +1809,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>快捷键：</translation>
     </message>
     <message>
-        <source>Auto-Show Menu</source>
-        <translation>自动显示菜单</translation>
-    </message>
-    <message>
-        <source>Show the menu, when the window is activated</source>
-        <translation>窗口激活时显示菜单</translation>
-    </message>
-    <message>
         <source>Show Splash screen on startup</source>
         <translation>启动时显示欢迎界面</translation>
     </message>
@@ -2020,10 +1891,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Right Click</source>
         <translation>右键点击</translation>
-    </message>
-    <message>
-        <source>Show Main Window</source>
-        <translation>显示主窗口</translation>
     </message>
     <message>
         <source>Show My Fort</source>
@@ -2155,6 +2022,124 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>InstallationButton</name>
+    <message>
+        <source>Installation</source>
+        <translation>安装</translation>
+    </message>
+</context>
+<context>
+    <name>InstallationWindow</name>
+    <message>
+        <source>Driver</source>
+        <translation>驱动</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>重新安装</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>您确定要重新安装驱动程序吗？</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>您确定要删除驱动程序吗？</translation>
+    </message>
+    <message>
+        <source>Portable</source>
+        <translation>便携版</translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation>卸载</translation>
+    </message>
+    <message>
+        <source>Are you sure to uninstall the Fort Firewall?</source>
+        <translation>您确定要卸载堡垒防火墙吗？</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>添加 Windows 服务</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>安装</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>在后台以服务的方式运行堡垒防火墙</translation>
+    </message>
+    <message>
+        <source>Installation</source>
+        <translation>安装</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation>驱动已安装</translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation>驱动未安装</translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation>服务已安装</translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation>服务未安装</translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation>您确定要安装服务吗？</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation>您确定要删除服务吗？</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>Windows 服务安装已更改。</translation>
+    </message>
+    <message>
+        <source>Integration</source>
+        <translation>集成</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Windows 资源管理器集成</translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation>控制面板：声音集成</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>自动运行：</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>已禁用</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>对于当前用户</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>对于所有用户</translation>
+    </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation>便携版已安装</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Bad format</source>
@@ -2195,14 +2180,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>文件</translation>
     </message>
     <message>
-        <source>Lock</source>
-        <translation>锁定</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>解锁​​​​</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>工具</translation>
     </message>
@@ -2211,8 +2188,28 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>查看提示</translation>
     </message>
     <message>
+        <source>Installation</source>
+        <translation>安装</translation>
+    </message>
+    <message>
         <source>Window</source>
         <translation>窗口</translation>
+    </message>
+    <message>
+        <source>Backup</source>
+        <translation>备份</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>导出</translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation>导入</translation>
+    </message>
+    <message>
+        <source>Import new programs</source>
+        <translation>导入新应用程序</translation>
     </message>
     <message>
         <source>Reset Layout</source>
@@ -2223,17 +2220,33 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>帮助</translation>
     </message>
     <message>
+        <source>Check for Updates</source>
+        <translation>检查更新</translation>
+    </message>
+    <message>
         <source>About</source>
-        <translation>关于</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
+        <source>No Password</source>
+        <translation>无密码</translation>
+    </message>
+    <message>
         <source>Open a panel from the tool bar&apos;s menus.
-Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</source>
         <translation>从工具栏的菜单打开面板。
-或者通过窗口自身菜单中的&quot;停靠到主窗口&quot;项将窗口移到此处。</translation>
+或者通过窗口自身菜单中的&quot;停靠到我的堡垒&quot;项将窗口移到此处。</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>锁定</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>解锁​​​​</translation>
     </message>
 </context>
 <context>
@@ -2282,18 +2295,6 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
         <translation>流量图</translation>
     </message>
     <message>
-        <source>Backup</source>
-        <translation>备份</translation>
-    </message>
-    <message>
-        <source>Export</source>
-        <translation>导出</translation>
-    </message>
-    <message>
-        <source>Import</source>
-        <translation>导入</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>默认</translation>
     </message>
@@ -2309,10 +2310,6 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
         <source>Interface</source>
         <translation>界面</translation>
     </message>
-    <message>
-        <source>Import new programs</source>
-        <translation>导入新应用程序</translation>
-    </message>
 </context>
 <context>
     <name>OptionsButton</name>
@@ -2324,44 +2321,8 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
 <context>
     <name>OptionsController</name>
     <message>
-        <source>Export Backup</source>
-        <translation>导出备份</translation>
-    </message>
-    <message>
-        <source>Backup Exported Successfully</source>
-        <translation>备份导出成功</translation>
-    </message>
-    <message>
-        <source>Cannot Export Backup</source>
-        <translation>无法导出备份</translation>
-    </message>
-    <message>
-        <source>Import Backup</source>
-        <translation>导入备份</translation>
-    </message>
-    <message>
-        <source>Backup Imported Successfully</source>
-        <translation>备份导入成功</translation>
-    </message>
-    <message>
-        <source>Cannot Import Backup</source>
-        <translation>无法导入备份</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>无法保存选项</translation>
-    </message>
-    <message>
-        <source>All Options and Programs will be replaced after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>所有选项和应用程序都将在成功导入后被替换。是否继续？
-
-请确保您有进行完整的备份。</translation>
-    </message>
-    <message>
-        <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation>导入成功后才会添加新的应用程序。是否继续？</translation>
     </message>
 </context>
 <context>
@@ -4374,12 +4335,39 @@ Packet loss: %2</source>
         <translation>数据流量</translation>
     </message>
     <message>
-        <source>Main Window</source>
-        <translation>主窗口</translation>
-    </message>
-    <message>
         <source>Connections</source>
         <translation>连接</translation>
+    </message>
+</context>
+<context>
+    <name>UpdatesWindow</name>
+    <message>
+        <source>New Version</source>
+        <translation>新版本</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>下载</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>更新</translation>
+    </message>
+    <message>
+        <source>No Update</source>
+        <translation>无更新</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>安装</translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation>检查更新</translation>
+    </message>
+    <message>
+        <source>Current Version</source>
+        <translation>当前版本</translation>
     </message>
 </context>
 <context>
@@ -4422,6 +4410,10 @@ Packet loss: %2</source>
 <context>
     <name>WindowManager</name>
     <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Restart Now?</source>
         <translation>立即重启？</translation>
     </message>
@@ -4437,12 +4429,12 @@ Packet loss: %2</source>
         <translation>窗口菜单</translation>
     </message>
     <message>
-        <source>Dock to Main Window</source>
-        <translation>停靠到主窗口</translation>
+        <source>Undock from My Fort</source>
+        <translation>从我的堡垒取消停靠</translation>
     </message>
     <message>
-        <source>Undock from Main Window</source>
-        <translation>从主窗口取消停靠</translation>
+        <source>Dock to My Fort</source>
+        <translation>停靠到我的堡垒</translation>
     </message>
     <message>
         <source>Help</source>

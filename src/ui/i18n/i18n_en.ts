@@ -2,33 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_US">
 <context>
-    <name>AboutPage</name>
-    <message>
-        <source>New Version</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Check for update</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>No Update</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Current Version</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
     <name>ActionRange</name>
     <message>
         <source>Allow</source>
@@ -93,6 +66,29 @@
     </message>
     <message>
         <source>Open Folder</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>AppLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Help</source>
         <translation></translation>
     </message>
 </context>
@@ -257,6 +253,43 @@
     </message>
     <message>
         <source>Upload</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>BackupController</name>
+    <message>
+        <source>Export Backup</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Backup Exported Successfully</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cannot Export Backup</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Import Backup</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Backup Imported Successfully</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cannot Import Backup</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Only new Programs will be added after successful import. Continue?</source>
         <translation></translation>
     </message>
 </context>
@@ -1534,162 +1567,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
-    <name>HomeLinks</name>
-    <message>
-        <source>Profile</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>HomeMainPage</name>
-    <message>
-        <source>My Fort</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>HomePage</name>
-    <message>
-        <source>Driver</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Portable</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Uninstall</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Windows Service</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Driver Installed</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Driver Not Installed</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Service Installed</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Service Not Installed</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Are you sure to install the Service?</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Service?</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Integration</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Control Panel: Sounds integration</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Portable Installed</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>HomeWindow</name>
-    <message>
-        <source>My Fort</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Lock</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
     <name>HostRange</name>
     <message>
         <source>Bad host name</source>
@@ -1929,14 +1806,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation></translation>
     </message>
     <message>
-        <source>Auto-Show Menu</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Show the menu, when the window is activated</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Show Splash screen on startup</source>
         <translation></translation>
     </message>
@@ -2018,10 +1887,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Right Click</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Show Main Window</source>
         <translation></translation>
     </message>
     <message>
@@ -2154,6 +2019,124 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>InstallationButton</name>
+    <message>
+        <source>Installation</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>InstallationWindow</name>
+    <message>
+        <source>Driver</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Portable</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to uninstall the Fort Firewall?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Installation</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Integration</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Bad format</source>
@@ -2194,14 +2177,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation></translation>
     </message>
     <message>
-        <source>Lock</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation></translation>
     </message>
@@ -2210,7 +2185,27 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation></translation>
     </message>
     <message>
+        <source>Installation</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Window</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Backup</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Import new programs</source>
         <translation></translation>
     </message>
     <message>
@@ -2222,6 +2217,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation></translation>
     </message>
     <message>
+        <source>Check for Updates</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>About</source>
         <translation></translation>
     </message>
@@ -2229,8 +2228,20 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
 <context>
     <name>MainWindow</name>
     <message>
+        <source>No Password</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Open a panel from the tool bar&apos;s menus.
-Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Unlock</source>
         <translation></translation>
     </message>
 </context>
@@ -2280,18 +2291,6 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
         <translation></translation>
     </message>
     <message>
-        <source>Backup</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Export</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Import</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation></translation>
     </message>
@@ -2307,10 +2306,6 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
         <source>Interface</source>
         <translation></translation>
     </message>
-    <message>
-        <source>Import new programs</source>
-        <translation></translation>
-    </message>
 </context>
 <context>
     <name>OptionsButton</name>
@@ -2322,41 +2317,7 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
 <context>
     <name>OptionsController</name>
     <message>
-        <source>Export Backup</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Backup Exported Successfully</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Cannot Export Backup</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Import Backup</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Backup Imported Successfully</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Cannot Import Backup</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>All Options and Programs will be replaced after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Only new Programs will be added after successful import. Continue?</source>
         <translation></translation>
     </message>
 </context>
@@ -4361,11 +4322,38 @@ Packet loss: %2</source>
         <translation></translation>
     </message>
     <message>
-        <source>Main Window</source>
+        <source>Connections</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>UpdatesWindow</name>
+    <message>
+        <source>New Version</source>
         <translation></translation>
     </message>
     <message>
-        <source>Connections</source>
+        <source>Download</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>No Update</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Current Version</source>
         <translation></translation>
     </message>
 </context>
@@ -4409,6 +4397,10 @@ Packet loss: %2</source>
 <context>
     <name>WindowManager</name>
     <message>
+        <source>About</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Restart Now?</source>
         <translation></translation>
     </message>
@@ -4424,11 +4416,11 @@ Packet loss: %2</source>
         <translation></translation>
     </message>
     <message>
-        <source>Dock to Main Window</source>
+        <source>Undock from My Fort</source>
         <translation></translation>
     </message>
     <message>
-        <source>Undock from Main Window</source>
+        <source>Dock to My Fort</source>
         <translation></translation>
     </message>
     <message>

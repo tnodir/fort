@@ -2,33 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ja_JP">
 <context>
-    <name>AboutPage</name>
-    <message>
-        <source>New Version</source>
-        <translation>新バージョン</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>ダウンロード</translation>
-    </message>
-    <message>
-        <source>Check for update</source>
-        <translation>更新の確認</translation>
-    </message>
-    <message>
-        <source>No Update</source>
-        <translation>更新はありません</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>インストール</translation>
-    </message>
-    <message>
-        <source>Current Version</source>
-        <translation>使用中のバージョン</translation>
-    </message>
-</context>
-<context>
     <name>ActionRange</name>
     <message>
         <source>Allow</source>
@@ -94,6 +67,29 @@
     <message>
         <source>Open Folder</source>
         <translation>フォルダーを開く</translation>
+    </message>
+</context>
+<context>
+    <name>AppLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>プロファイル</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>ログ</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>サービス ログ</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>リリース</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>ヘルプ</translation>
     </message>
 </context>
 <context>
@@ -258,6 +254,45 @@
     <message>
         <source>Upload</source>
         <translation>アップロード</translation>
+    </message>
+</context>
+<context>
+    <name>BackupController</name>
+    <message>
+        <source>Export Backup</source>
+        <translation>バックアップのエクスポート</translation>
+    </message>
+    <message>
+        <source>Backup Exported Successfully</source>
+        <translation>バックアップのエクスポートに成功</translation>
+    </message>
+    <message>
+        <source>Cannot Export Backup</source>
+        <translation>バックアップをエクスポートできません</translation>
+    </message>
+    <message>
+        <source>Import Backup</source>
+        <translation>バックアップのインポート</translation>
+    </message>
+    <message>
+        <source>Backup Imported Successfully</source>
+        <translation>バックアップのインポートに成功</translation>
+    </message>
+    <message>
+        <source>Cannot Import Backup</source>
+        <translation>バックアップをインポートできません</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>インポートが成功すると、すべてのオプションとプログラムが置き換えられます。続行しますか?
+
+最新のバックアップがあることを確認してください。</translation>
+    </message>
+    <message>
+        <source>Only new Programs will be added after successful import. Continue?</source>
+        <translation>インポートが成功すると、新しいプログラムのみが追加されます。続行しますか?</translation>
     </message>
 </context>
 <context>
@@ -1535,162 +1570,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
-    <name>HomeLinks</name>
-    <message>
-        <source>Profile</source>
-        <translation>プロファイル</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>ログ</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>サービス ログ</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>リリース</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>ヘルプ</translation>
-    </message>
-</context>
-<context>
-    <name>HomeMainPage</name>
-    <message>
-        <source>My Fort</source>
-        <translation>My Fort</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation>Fort Firewall について</translation>
-    </message>
-</context>
-<context>
-    <name>HomePage</name>
-    <message>
-        <source>Driver</source>
-        <translation>ドライバー</translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>再インストール</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>削除</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>ドライバーを再インストールしますか?</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>ドライバーを削除しますか?</translation>
-    </message>
-    <message>
-        <source>Portable</source>
-        <translation>ポータブル</translation>
-    </message>
-    <message>
-        <source>Uninstall</source>
-        <translation>アンインストール</translation>
-    </message>
-    <message>
-        <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation>Fort Firewall をアンインストールしますか?</translation>
-    </message>
-    <message>
-        <source>Windows Service</source>
-        <translation>Windows サービス</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>インストール</translation>
-    </message>
-    <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>Fort Firewallをサービスとしてバックグラウンドで実行する</translation>
-    </message>
-    <message>
-        <source>Driver Installed</source>
-        <translation>ドライバーがインストールされました</translation>
-    </message>
-    <message>
-        <source>Driver Not Installed</source>
-        <translation>ドライバーがインストールされていません</translation>
-    </message>
-    <message>
-        <source>Service Installed</source>
-        <translation>サービスがインストールされました</translation>
-    </message>
-    <message>
-        <source>Service Not Installed</source>
-        <translation>サービスがインストールされていません</translation>
-    </message>
-    <message>
-        <source>Are you sure to install the Service?</source>
-        <translation>サービスをインストールしますか?</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Service?</source>
-        <translation>サービスを削除しますか?</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>Windows サービスのインストールが変更されました。</translation>
-    </message>
-    <message>
-        <source>Integration</source>
-        <translation>統合</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>Windowsエクスプローラーへ統合</translation>
-    </message>
-    <message>
-        <source>Control Panel: Sounds integration</source>
-        <translation>コントロールパネル : サウンド統合</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>自動実行 :</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>無効</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>現在のユーザー</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>すべてのユーザー</translation>
-    </message>
-    <message>
-        <source>Portable Installed</source>
-        <translation>ポータブル</translation>
-    </message>
-</context>
-<context>
-    <name>HomeWindow</name>
-    <message>
-        <source>My Fort</source>
-        <translation>My Fort</translation>
-    </message>
-    <message>
-        <source>Lock</source>
-        <translation>ロック</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>ロック解除</translation>
-    </message>
-</context>
-<context>
     <name>HostRange</name>
     <message>
         <source>Bad host name</source>
@@ -1930,14 +1809,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>ショートカット :</translation>
     </message>
     <message>
-        <source>Auto-Show Menu</source>
-        <translation>自動表示メニュー</translation>
-    </message>
-    <message>
-        <source>Show the menu, when the window is activated</source>
-        <translation>ウィンドウがアクティブになったときにメニューを表示</translation>
-    </message>
-    <message>
         <source>Show Splash screen on startup</source>
         <translation>起動時にスプラッシュ画面を表示する</translation>
     </message>
@@ -2020,10 +1891,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Right Click</source>
         <translation>右クリック</translation>
-    </message>
-    <message>
-        <source>Show Main Window</source>
-        <translation>メインウィンドウを表示</translation>
     </message>
     <message>
         <source>Show My Fort</source>
@@ -2155,6 +2022,124 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>InstallationButton</name>
+    <message>
+        <source>Installation</source>
+        <translation>インストール</translation>
+    </message>
+</context>
+<context>
+    <name>InstallationWindow</name>
+    <message>
+        <source>Driver</source>
+        <translation>ドライバー</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>再インストール</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>削除</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>ドライバーを再インストールしますか?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>ドライバーを削除しますか?</translation>
+    </message>
+    <message>
+        <source>Portable</source>
+        <translation>ポータブル</translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation>アンインストール</translation>
+    </message>
+    <message>
+        <source>Are you sure to uninstall the Fort Firewall?</source>
+        <translation>Fort Firewall をアンインストールしますか?</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>Windows サービス</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>インストール</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>Fort Firewallをサービスとしてバックグラウンドで実行する</translation>
+    </message>
+    <message>
+        <source>Installation</source>
+        <translation>インストール</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation>ドライバーがインストールされました</translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation>ドライバーがインストールされていません</translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation>サービスがインストールされました</translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation>サービスがインストールされていません</translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation>サービスをインストールしますか?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation>サービスを削除しますか?</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>Windows サービスのインストールが変更されました。</translation>
+    </message>
+    <message>
+        <source>Integration</source>
+        <translation>統合</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Windowsエクスプローラーへ統合</translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation>コントロールパネル : サウンド統合</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>自動実行 :</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>無効</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>現在のユーザー</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>すべてのユーザー</translation>
+    </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation>ポータブル</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Bad format</source>
@@ -2195,14 +2180,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>ファイル</translation>
     </message>
     <message>
-        <source>Lock</source>
-        <translation>ロック</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>ロック解除</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>ツール</translation>
     </message>
@@ -2211,8 +2188,28 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>警告の確認</translation>
     </message>
     <message>
+        <source>Installation</source>
+        <translation>インストール</translation>
+    </message>
+    <message>
         <source>Window</source>
         <translation>ウィンドウ</translation>
+    </message>
+    <message>
+        <source>Backup</source>
+        <translation>バックアップ</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>エクスポート</translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation>インポート</translation>
+    </message>
+    <message>
+        <source>Import new programs</source>
+        <translation>新しいプログラムをインポート</translation>
     </message>
     <message>
         <source>Reset Layout</source>
@@ -2223,17 +2220,33 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>ヘルプ</translation>
     </message>
     <message>
+        <source>Check for Updates</source>
+        <translation>更新の確認</translation>
+    </message>
+    <message>
         <source>About</source>
-        <translation>Fort Firewall について</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
+        <source>No Password</source>
+        <translation>パスワードなし</translation>
+    </message>
+    <message>
         <source>Open a panel from the tool bar&apos;s menus.
-Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</source>
         <translation>ツールバーのメニューからパネルを開きます。
-または、ウィンドウ自身のメニューの&quot;メインウィンドウにドッキング&quot;項目でここに移動します。</translation>
+または、ウィンドウ自身のメニューの&quot;My Fort にドッキング&quot;項目でここに移動します。</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>ロック</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>ロック解除</translation>
     </message>
 </context>
 <context>
@@ -2282,18 +2295,6 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
         <translation>トラフィック グラフ</translation>
     </message>
     <message>
-        <source>Backup</source>
-        <translation>バックアップ</translation>
-    </message>
-    <message>
-        <source>Export</source>
-        <translation>エクスポート</translation>
-    </message>
-    <message>
-        <source>Import</source>
-        <translation>インポート</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>デフォルト</translation>
     </message>
@@ -2309,10 +2310,6 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
         <source>Interface</source>
         <translation>インターフェース</translation>
     </message>
-    <message>
-        <source>Import new programs</source>
-        <translation>新しいプログラムをインポート</translation>
-    </message>
 </context>
 <context>
     <name>OptionsButton</name>
@@ -2324,44 +2321,8 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
 <context>
     <name>OptionsController</name>
     <message>
-        <source>Export Backup</source>
-        <translation>バックアップのエクスポート</translation>
-    </message>
-    <message>
-        <source>Backup Exported Successfully</source>
-        <translation>バックアップのエクスポートに成功</translation>
-    </message>
-    <message>
-        <source>Cannot Export Backup</source>
-        <translation>バックアップをエクスポートできません</translation>
-    </message>
-    <message>
-        <source>Import Backup</source>
-        <translation>バックアップのインポート</translation>
-    </message>
-    <message>
-        <source>Backup Imported Successfully</source>
-        <translation>バックアップのインポートに成功</translation>
-    </message>
-    <message>
-        <source>Cannot Import Backup</source>
-        <translation>バックアップをインポートできません</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>オプションを保存できません</translation>
-    </message>
-    <message>
-        <source>All Options and Programs will be replaced after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>インポートが成功すると、すべてのオプションとプログラムが置き換えられます。続行しますか?
-
-最新のバックアップがあることを確認してください。</translation>
-    </message>
-    <message>
-        <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation>インポートが成功すると、新しいプログラムのみが追加されます。続行しますか?</translation>
     </message>
 </context>
 <context>
@@ -4374,12 +4335,39 @@ Packet loss: %2</source>
         <translation>トラフィック</translation>
     </message>
     <message>
-        <source>Main Window</source>
-        <translation>メインウィンドウ</translation>
-    </message>
-    <message>
         <source>Connections</source>
         <translation>接続</translation>
+    </message>
+</context>
+<context>
+    <name>UpdatesWindow</name>
+    <message>
+        <source>New Version</source>
+        <translation>新バージョン</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>ダウンロード</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>更新</translation>
+    </message>
+    <message>
+        <source>No Update</source>
+        <translation>更新はありません</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>インストール</translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation>更新の確認</translation>
+    </message>
+    <message>
+        <source>Current Version</source>
+        <translation>使用中のバージョン</translation>
     </message>
 </context>
 <context>
@@ -4422,6 +4410,10 @@ Packet loss: %2</source>
 <context>
     <name>WindowManager</name>
     <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Restart Now?</source>
         <translation>今すぐ再起動しますか?</translation>
     </message>
@@ -4437,12 +4429,12 @@ Packet loss: %2</source>
         <translation>ウィンドウメニュー</translation>
     </message>
     <message>
-        <source>Dock to Main Window</source>
-        <translation>メインウィンドウにドッキング</translation>
+        <source>Undock from My Fort</source>
+        <translation>My Fort からドッキング解除</translation>
     </message>
     <message>
-        <source>Undock from Main Window</source>
-        <translation>メインウィンドウからドッキング解除</translation>
+        <source>Dock to My Fort</source>
+        <translation>My Fort にドッキング</translation>
     </message>
     <message>
         <source>Help</source>

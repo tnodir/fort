@@ -2,33 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="tr_TR" sourcelanguage="en_US">
 <context>
-    <name>AboutPage</name>
-    <message>
-        <source>New Version</source>
-        <translation>Yeni Sürüm</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>İndir</translation>
-    </message>
-    <message>
-        <source>Check for update</source>
-        <translation>Güncellemeyi Kontrol Et </translation>
-    </message>
-    <message>
-        <source>No Update</source>
-        <translation>Güncelleme Yok</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>Yükle</translation>
-    </message>
-    <message>
-        <source>Current Version</source>
-        <translation>Mevcut Versiyon</translation>
-    </message>
-</context>
-<context>
     <name>ActionRange</name>
     <message>
         <source>Allow</source>
@@ -94,6 +67,29 @@
     <message>
         <source>Open Folder</source>
         <translation>Klasörü Aç</translation>
+    </message>
+</context>
+<context>
+    <name>AppLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>Profil</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Günlükler</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>Hizmet Günlükleri</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Sürümler</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Yardım</translation>
     </message>
 </context>
 <context>
@@ -258,6 +254,45 @@
     <message>
         <source>Upload</source>
         <translation>Yükle</translation>
+    </message>
+</context>
+<context>
+    <name>BackupController</name>
+    <message>
+        <source>Export Backup</source>
+        <translation>Yedeği Dışa Aktar</translation>
+    </message>
+    <message>
+        <source>Backup Exported Successfully</source>
+        <translation>Yedek Başarıyla Dışa Aktarıldı</translation>
+    </message>
+    <message>
+        <source>Cannot Export Backup</source>
+        <translation>Yedekleme Dışa Aktarılamıyor</translation>
+    </message>
+    <message>
+        <source>Import Backup</source>
+        <translation>Yedeği İçe Aktar</translation>
+    </message>
+    <message>
+        <source>Backup Imported Successfully</source>
+        <translation>Yedekleme Başarıyla İçe Aktarıldı </translation>
+    </message>
+    <message>
+        <source>Cannot Import Backup</source>
+        <translation>Yedekleme İçe Aktarılamıyor</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>Başarılı içe aktarma işleminden sonra tüm Ayarlar ve Programlar değiştirilecektir. Devam edilsin mi? 
+
+Yeni bir yedeğin olduğundan emin ol.</translation>
+    </message>
+    <message>
+        <source>Only new Programs will be added after successful import. Continue?</source>
+        <translation>Yalnızca yeni programlar başarılı içe aktarma işleminden sonra eklenecektir. Devam edilsin mi?</translation>
     </message>
 </context>
 <context>
@@ -1535,162 +1570,6 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
     </message>
 </context>
 <context>
-    <name>HomeLinks</name>
-    <message>
-        <source>Profile</source>
-        <translation>Profil</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>Günlükler</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>Hizmet Günlükleri</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Sürümler</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Yardım</translation>
-    </message>
-</context>
-<context>
-    <name>HomeMainPage</name>
-    <message>
-        <source>My Fort</source>
-        <translation>Fort</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation>Hakkında</translation>
-    </message>
-</context>
-<context>
-    <name>HomePage</name>
-    <message>
-        <source>Driver</source>
-        <translation>Sürücü</translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>Yeniden Yükle</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Kaldır</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>Sürücüyü yeniden yüklemek istediğinden emin misin?</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>Sürücüyü kaldırmak istediğinden emin misin?</translation>
-    </message>
-    <message>
-        <source>Portable</source>
-        <translation>Taşınabilir</translation>
-    </message>
-    <message>
-        <source>Uninstall</source>
-        <translation>Kaldır</translation>
-    </message>
-    <message>
-        <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation>Fort Firewall&apos;u kaldırmak istediğinden emin misin?</translation>
-    </message>
-    <message>
-        <source>Windows Service</source>
-        <translation>Windows Hizmeti</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>Yükle</translation>
-    </message>
-    <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>Fort Firewall&apos;u Arka Planda Bir Hizmet Olarak Çalıştır</translation>
-    </message>
-    <message>
-        <source>Driver Installed</source>
-        <translation>Sürücü Yüklendi</translation>
-    </message>
-    <message>
-        <source>Driver Not Installed</source>
-        <translation>Sürücü Yüklenmedi</translation>
-    </message>
-    <message>
-        <source>Service Installed</source>
-        <translation>Hizmet Yüklendi</translation>
-    </message>
-    <message>
-        <source>Service Not Installed</source>
-        <translation>Hizmet Yüklenmedi</translation>
-    </message>
-    <message>
-        <source>Are you sure to install the Service?</source>
-        <translation>Servisi yüklemek istediğinden emin misin?</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Service?</source>
-        <translation>Servisi kaldırmak istediğinden emin misin?</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>Windows Hizmeti Kurulumu Değiştirildi.</translation>
-    </message>
-    <message>
-        <source>Integration</source>
-        <translation>Bütünleştir</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>Windows Explorer Entegrasyonu</translation>
-    </message>
-    <message>
-        <source>Control Panel: Sounds integration</source>
-        <translation>Kontrol Paneli: Ses Entegrasyonu</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Otomatik Başlat:</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Devre Dışı</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Geçerli Kullanıcı İçin </translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Tüm Kullanıcılar İçin</translation>
-    </message>
-    <message>
-        <source>Portable Installed</source>
-        <translation>Taşınabilir Kuruldu</translation>
-    </message>
-</context>
-<context>
-    <name>HomeWindow</name>
-    <message>
-        <source>My Fort</source>
-        <translation>Fort</translation>
-    </message>
-    <message>
-        <source>Lock</source>
-        <translation>Kilitle</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>Kilidi Aç</translation>
-    </message>
-</context>
-<context>
     <name>HostRange</name>
     <message>
         <source>Bad host name</source>
@@ -1930,14 +1809,6 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
         <translation>Kısayol:</translation>
     </message>
     <message>
-        <source>Auto-Show Menu</source>
-        <translation>Menüyü Otomatik Göster</translation>
-    </message>
-    <message>
-        <source>Show the menu, when the window is activated</source>
-        <translation>Pencere etkinleştirildiğinde menüyü göster</translation>
-    </message>
-    <message>
         <source>Show Splash screen on startup</source>
         <translation>Başlangıçta Açılış Ekranını Göster</translation>
     </message>
@@ -2020,10 +1891,6 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
     <message>
         <source>Right Click</source>
         <translation>Sağ Tıklama</translation>
-    </message>
-    <message>
-        <source>Show Main Window</source>
-        <translation>Ana Pencereyi Göster</translation>
     </message>
     <message>
         <source>Show My Fort</source>
@@ -2155,6 +2022,124 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
     </message>
 </context>
 <context>
+    <name>InstallationButton</name>
+    <message>
+        <source>Installation</source>
+        <translation>Kurulum</translation>
+    </message>
+</context>
+<context>
+    <name>InstallationWindow</name>
+    <message>
+        <source>Driver</source>
+        <translation>Sürücü</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>Yeniden Yükle</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Kaldır</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>Sürücüyü yeniden yüklemek istediğinden emin misin?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>Sürücüyü kaldırmak istediğinden emin misin?</translation>
+    </message>
+    <message>
+        <source>Portable</source>
+        <translation>Taşınabilir</translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation>Kaldır</translation>
+    </message>
+    <message>
+        <source>Are you sure to uninstall the Fort Firewall?</source>
+        <translation>Fort Firewall&apos;u kaldırmak istediğinden emin misin?</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>Windows Hizmeti</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>Yükle</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>Fort Firewall&apos;u Arka Planda Bir Hizmet Olarak Çalıştır</translation>
+    </message>
+    <message>
+        <source>Installation</source>
+        <translation>Kurulum</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation>Sürücü Yüklendi</translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation>Sürücü Yüklenmedi</translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation>Hizmet Yüklendi</translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation>Hizmet Yüklenmedi</translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation>Servisi yüklemek istediğinden emin misin?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation>Servisi kaldırmak istediğinden emin misin?</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>Windows Hizmeti Kurulumu Değiştirildi.</translation>
+    </message>
+    <message>
+        <source>Integration</source>
+        <translation>Bütünleştir</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Windows Explorer Entegrasyonu</translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation>Kontrol Paneli: Ses Entegrasyonu</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Otomatik Başlat:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Devre Dışı</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Geçerli Kullanıcı İçin </translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Tüm Kullanıcılar İçin</translation>
+    </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation>Taşınabilir Kuruldu</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Bad format</source>
@@ -2195,14 +2180,6 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
         <translation>Dosya</translation>
     </message>
     <message>
-        <source>Lock</source>
-        <translation>Kilitle</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>Kilidi Aç</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>Araçlar</translation>
     </message>
@@ -2211,8 +2188,28 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
         <translation>Uyarıları İncele</translation>
     </message>
     <message>
+        <source>Installation</source>
+        <translation>Kurulum</translation>
+    </message>
+    <message>
         <source>Window</source>
         <translation>Pencere</translation>
+    </message>
+    <message>
+        <source>Backup</source>
+        <translation>Yedekle</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>Dışa Aktar</translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation>İçe Aktar</translation>
+    </message>
+    <message>
+        <source>Import new programs</source>
+        <translation>Yeni Programları İçe Aktar </translation>
     </message>
     <message>
         <source>Reset Layout</source>
@@ -2223,17 +2220,33 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
         <translation>Yardım</translation>
     </message>
     <message>
+        <source>Check for Updates</source>
+        <translation>Güncellemeleri Kontrol Et</translation>
+    </message>
+    <message>
         <source>About</source>
-        <translation>Hakkında</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
+        <source>No Password</source>
+        <translation>Parola yok</translation>
+    </message>
+    <message>
         <source>Open a panel from the tool bar&apos;s menus.
-Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</source>
         <translation>Araç çubuğunun menülerinden bir panel açın.
-Veya bir pencereyi menüsündeki &quot;Ana Pencereye Yerleştir&quot; öğesiyle buraya taşıyın.</translation>
+Veya bir pencereyi menüsündeki &quot;Fort&apos;a Yerleştir&quot; öğesiyle buraya taşıyın.</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>Kilitle</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>Kilidi Aç</translation>
     </message>
 </context>
 <context>
@@ -2282,18 +2295,6 @@ Veya bir pencereyi menüsündeki &quot;Ana Pencereye Yerleştir&quot; öğesiyle
         <translation>Trafik Tablosu</translation>
     </message>
     <message>
-        <source>Backup</source>
-        <translation>Yedekle</translation>
-    </message>
-    <message>
-        <source>Export</source>
-        <translation>Dışa Aktar</translation>
-    </message>
-    <message>
-        <source>Import</source>
-        <translation>İçe Aktar</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>Varsayılan</translation>
     </message>
@@ -2309,10 +2310,6 @@ Veya bir pencereyi menüsündeki &quot;Ana Pencereye Yerleştir&quot; öğesiyle
         <source>Interface</source>
         <translation>Arayüz</translation>
     </message>
-    <message>
-        <source>Import new programs</source>
-        <translation>Yeni Programları İçe Aktar </translation>
-    </message>
 </context>
 <context>
     <name>OptionsButton</name>
@@ -2324,44 +2321,8 @@ Veya bir pencereyi menüsündeki &quot;Ana Pencereye Yerleştir&quot; öğesiyle
 <context>
     <name>OptionsController</name>
     <message>
-        <source>Export Backup</source>
-        <translation>Yedeği Dışa Aktar</translation>
-    </message>
-    <message>
-        <source>Backup Exported Successfully</source>
-        <translation>Yedek Başarıyla Dışa Aktarıldı</translation>
-    </message>
-    <message>
-        <source>Cannot Export Backup</source>
-        <translation>Yedekleme Dışa Aktarılamıyor</translation>
-    </message>
-    <message>
-        <source>Import Backup</source>
-        <translation>Yedeği İçe Aktar</translation>
-    </message>
-    <message>
-        <source>Backup Imported Successfully</source>
-        <translation>Yedekleme Başarıyla İçe Aktarıldı </translation>
-    </message>
-    <message>
-        <source>Cannot Import Backup</source>
-        <translation>Yedekleme İçe Aktarılamıyor</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>Ayarlar Kaydedilemiyor</translation>
-    </message>
-    <message>
-        <source>All Options and Programs will be replaced after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>Başarılı içe aktarma işleminden sonra tüm Ayarlar ve Programlar değiştirilecektir. Devam edilsin mi? 
-
-Yeni bir yedeğin olduğundan emin ol.</translation>
-    </message>
-    <message>
-        <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation>Yalnızca yeni programlar başarılı içe aktarma işleminden sonra eklenecektir. Devam edilsin mi?</translation>
     </message>
 </context>
 <context>
@@ -4373,12 +4334,39 @@ Paket kaybı: %2</translation>
         <translation>Trafik</translation>
     </message>
     <message>
-        <source>Main Window</source>
-        <translation>Ana Pencere</translation>
-    </message>
-    <message>
         <source>Connections</source>
         <translation>Bağlantılar</translation>
+    </message>
+</context>
+<context>
+    <name>UpdatesWindow</name>
+    <message>
+        <source>New Version</source>
+        <translation>Yeni Sürüm</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>İndir</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>Güncellemeler</translation>
+    </message>
+    <message>
+        <source>No Update</source>
+        <translation>Güncelleme Yok</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>Yükle</translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation>Güncellemeleri Kontrol Et</translation>
+    </message>
+    <message>
+        <source>Current Version</source>
+        <translation>Mevcut Versiyon</translation>
     </message>
 </context>
 <context>
@@ -4421,6 +4409,10 @@ Paket kaybı: %2</translation>
 <context>
     <name>WindowManager</name>
     <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Restart Now?</source>
         <translation>Yeniden Başlatılsın Mı?</translation>
     </message>
@@ -4436,12 +4428,12 @@ Paket kaybı: %2</translation>
         <translation>Pencere Menüsü</translation>
     </message>
     <message>
-        <source>Dock to Main Window</source>
-        <translation>Ana Pencereye Yerleştir</translation>
+        <source>Undock from My Fort</source>
+        <translation>Fort&apos;tan Ayır</translation>
     </message>
     <message>
-        <source>Undock from Main Window</source>
-        <translation>Ana Pencereden Ayır</translation>
+        <source>Dock to My Fort</source>
+        <translation>Fort&apos;a Yerleştir</translation>
     </message>
     <message>
         <source>Help</source>

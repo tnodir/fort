@@ -2,33 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ar_SA" sourcelanguage="en_US">
 <context>
-    <name>AboutPage</name>
-    <message>
-        <source>New Version</source>
-        <translation>إصدار جديد</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>تنزيل</translation>
-    </message>
-    <message>
-        <source>Check for update</source>
-        <translation>فحص التحديثات</translation>
-    </message>
-    <message>
-        <source>No Update</source>
-        <translation>ليست هناك تحديثات</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>تثبيت</translation>
-    </message>
-    <message>
-        <source>Current Version</source>
-        <translation>النسخة الحالية</translation>
-    </message>
-</context>
-<context>
     <name>ActionRange</name>
     <message>
         <source>Allow</source>
@@ -94,6 +67,29 @@
     <message>
         <source>Open Folder</source>
         <translation>فتح المجلد</translation>
+    </message>
+</context>
+<context>
+    <name>AppLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>ملفات التفضيلات</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>السجل</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>سجلات الخدمة</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>الإصدارات</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>مساعدة</translation>
     </message>
 </context>
 <context>
@@ -258,6 +254,45 @@
     <message>
         <source>Upload</source>
         <translation>الرفع</translation>
+    </message>
+</context>
+<context>
+    <name>BackupController</name>
+    <message>
+        <source>Export Backup</source>
+        <translation>تصدير النسخ الاحتياطية</translation>
+    </message>
+    <message>
+        <source>Backup Exported Successfully</source>
+        <translation>تم تصدير النسخ الاحتياطية بنجاح</translation>
+    </message>
+    <message>
+        <source>Cannot Export Backup</source>
+        <translation>لايكمن تصدير النسخ الاحتياطية</translation>
+    </message>
+    <message>
+        <source>Import Backup</source>
+        <translation>استيراد النسخ الاحتياطية</translation>
+    </message>
+    <message>
+        <source>Backup Imported Successfully</source>
+        <translation>تم استيراد النسخ الاحتياطية بنجاح</translation>
+    </message>
+    <message>
+        <source>Cannot Import Backup</source>
+        <translation>لايمكن استيراد النسخ الاحتياطية</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>جميع الخيارات والبرامج ستستبدل بعد الاستيراد الناجح. هل ترغب في المتابعة؟
+
+تأكد من أنك قد قمت بعمل نسخة احتياطية جديدة.</translation>
+    </message>
+    <message>
+        <source>Only new Programs will be added after successful import. Continue?</source>
+        <translation>سيتم إضافة برامج جديدة فقط بعد الاستيراد بنجاح. هل تريد المتابعة؟</translation>
     </message>
 </context>
 <context>
@@ -1535,162 +1570,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
-    <name>HomeLinks</name>
-    <message>
-        <source>Profile</source>
-        <translation>ملفات التفضيلات</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>السجل</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>سجلات الخدمة</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>الإصدارات</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>مساعدة</translation>
-    </message>
-</context>
-<context>
-    <name>HomeMainPage</name>
-    <message>
-        <source>My Fort</source>
-        <translation>Fort الخاص بي</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation>معلومات</translation>
-    </message>
-</context>
-<context>
-    <name>HomePage</name>
-    <message>
-        <source>Driver</source>
-        <translation>التعريفات</translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>إعادة تثبيت</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>إزالة</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>هل تريد إعادة تثبيت التعريفات؟</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>هل تريد إزالة التعريفات؟</translation>
-    </message>
-    <message>
-        <source>Portable</source>
-        <translation>قابل للنقل</translation>
-    </message>
-    <message>
-        <source>Uninstall</source>
-        <translation>إزالة</translation>
-    </message>
-    <message>
-        <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation>هل تريد إزالة Fort الجدار الناري؟</translation>
-    </message>
-    <message>
-        <source>Windows Service</source>
-        <translation>تفعيل خدمة نظام Windows</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>تثبيت</translation>
-    </message>
-    <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>تشغيل Fort Firewall كخدمة تعمل في الخلفية</translation>
-    </message>
-    <message>
-        <source>Driver Installed</source>
-        <translation>تم تثبيت التعريفات</translation>
-    </message>
-    <message>
-        <source>Driver Not Installed</source>
-        <translation>التعريفات غير مثبتة</translation>
-    </message>
-    <message>
-        <source>Service Installed</source>
-        <translation>تم تثبيت الخدمة</translation>
-    </message>
-    <message>
-        <source>Service Not Installed</source>
-        <translation>الخدمة غير مثبتة</translation>
-    </message>
-    <message>
-        <source>Are you sure to install the Service?</source>
-        <translation>سيتم تثبيت الخدمة، هل أنت متأكد؟</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Service?</source>
-        <translation>سيتم إزالة الخدمة، هل أنت متأكد؟</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>تم تغيير وضع تثبيت خدمة الوندوز.</translation>
-    </message>
-    <message>
-        <source>Integration</source>
-        <translation>التكامل</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>الاندماج مع مسكتشف Windows</translation>
-    </message>
-    <message>
-        <source>Control Panel: Sounds integration</source>
-        <translation>لوحة التحكم: دمج الأصوات</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>التشغيل التلقائي:</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>معطل</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>للمستخدم الحالي فقط</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>لكل المستخدمين</translation>
-    </message>
-    <message>
-        <source>Portable Installed</source>
-        <translation>قابل للنقل، مثبّت</translation>
-    </message>
-</context>
-<context>
-    <name>HomeWindow</name>
-    <message>
-        <source>My Fort</source>
-        <translation>Fort الخاص بي</translation>
-    </message>
-    <message>
-        <source>Lock</source>
-        <translation>إقفال</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>فك القفل</translation>
-    </message>
-</context>
-<context>
     <name>HostRange</name>
     <message>
         <source>Bad host name</source>
@@ -1930,14 +1809,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>الاختصار:</translation>
     </message>
     <message>
-        <source>Auto-Show Menu</source>
-        <translation>عرض القائمة تلقائيًا</translation>
-    </message>
-    <message>
-        <source>Show the menu, when the window is activated</source>
-        <translation>إظهار القائمة عند تنشيط النافذة</translation>
-    </message>
-    <message>
         <source>Show Splash screen on startup</source>
         <translation>عرض شعار البرنامج عند التشغيل</translation>
     </message>
@@ -2020,10 +1891,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     <message>
         <source>Right Click</source>
         <translation>نقرة بالزر الأيمن</translation>
-    </message>
-    <message>
-        <source>Show Main Window</source>
-        <translation>عرض النافذة الرئيسية</translation>
     </message>
     <message>
         <source>Show My Fort</source>
@@ -2155,6 +2022,124 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
 </context>
 <context>
+    <name>InstallationButton</name>
+    <message>
+        <source>Installation</source>
+        <translation>التثبيت</translation>
+    </message>
+</context>
+<context>
+    <name>InstallationWindow</name>
+    <message>
+        <source>Driver</source>
+        <translation>التعريفات</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>إعادة تثبيت</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>إزالة</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>هل تريد إعادة تثبيت التعريفات؟</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>هل تريد إزالة التعريفات؟</translation>
+    </message>
+    <message>
+        <source>Portable</source>
+        <translation>قابل للنقل</translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation>إزالة</translation>
+    </message>
+    <message>
+        <source>Are you sure to uninstall the Fort Firewall?</source>
+        <translation>هل تريد إزالة Fort الجدار الناري؟</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>تفعيل خدمة نظام Windows</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>تثبيت</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>تشغيل Fort Firewall كخدمة تعمل في الخلفية</translation>
+    </message>
+    <message>
+        <source>Installation</source>
+        <translation>التثبيت</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation>تم تثبيت التعريفات</translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation>التعريفات غير مثبتة</translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation>تم تثبيت الخدمة</translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation>الخدمة غير مثبتة</translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation>سيتم تثبيت الخدمة، هل أنت متأكد؟</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation>سيتم إزالة الخدمة، هل أنت متأكد؟</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>تم تغيير وضع تثبيت خدمة الوندوز.</translation>
+    </message>
+    <message>
+        <source>Integration</source>
+        <translation>التكامل</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>الاندماج مع مسكتشف Windows</translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation>لوحة التحكم: دمج الأصوات</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>التشغيل التلقائي:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>معطل</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>للمستخدم الحالي فقط</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>لكل المستخدمين</translation>
+    </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation>قابل للنقل، مثبّت</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Bad format</source>
@@ -2195,14 +2180,6 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>ملف</translation>
     </message>
     <message>
-        <source>Lock</source>
-        <translation>إقفال</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>فك القفل</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>أدوات</translation>
     </message>
@@ -2211,8 +2188,28 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>عرض التحذير</translation>
     </message>
     <message>
+        <source>Installation</source>
+        <translation>التثبيت</translation>
+    </message>
+    <message>
         <source>Window</source>
         <translation>النافذة</translation>
+    </message>
+    <message>
+        <source>Backup</source>
+        <translation>نسخ احتياطية</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>تصدير</translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation>استيراد</translation>
+    </message>
+    <message>
+        <source>Import new programs</source>
+        <translation>استورد برامج جديدة</translation>
     </message>
     <message>
         <source>Reset Layout</source>
@@ -2223,17 +2220,33 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>مساعدة</translation>
     </message>
     <message>
+        <source>Check for Updates</source>
+        <translation>فحص التحديثات</translation>
+    </message>
+    <message>
         <source>About</source>
-        <translation>معلومات</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
+        <source>No Password</source>
+        <translation>بدون كلمة مرور</translation>
+    </message>
+    <message>
         <source>Open a panel from the tool bar&apos;s menus.
-Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</source>
         <translation>افتح لوحة من قوائم شريط الأدوات.
-أو انقل نافذة إلى هنا بعنصر قائمتها &quot;إرساء في النافذة الرئيسية&quot;.</translation>
+أو انقل نافذة إلى هنا بعنصر قائمتها &quot;إرساء في Fort الخاص بي&quot;.</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>إقفال</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>فك القفل</translation>
     </message>
 </context>
 <context>
@@ -2282,18 +2295,6 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
         <translation>مخطط حركة البيانات</translation>
     </message>
     <message>
-        <source>Backup</source>
-        <translation>نسخ احتياطية</translation>
-    </message>
-    <message>
-        <source>Export</source>
-        <translation>تصدير</translation>
-    </message>
-    <message>
-        <source>Import</source>
-        <translation>استيراد</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>الافتراضي</translation>
     </message>
@@ -2309,10 +2310,6 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
         <source>Interface</source>
         <translation>الواجهة</translation>
     </message>
-    <message>
-        <source>Import new programs</source>
-        <translation>استورد برامج جديدة</translation>
-    </message>
 </context>
 <context>
     <name>OptionsButton</name>
@@ -2324,44 +2321,8 @@ Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</
 <context>
     <name>OptionsController</name>
     <message>
-        <source>Export Backup</source>
-        <translation>تصدير النسخ الاحتياطية</translation>
-    </message>
-    <message>
-        <source>Backup Exported Successfully</source>
-        <translation>تم تصدير النسخ الاحتياطية بنجاح</translation>
-    </message>
-    <message>
-        <source>Cannot Export Backup</source>
-        <translation>لايكمن تصدير النسخ الاحتياطية</translation>
-    </message>
-    <message>
-        <source>Import Backup</source>
-        <translation>استيراد النسخ الاحتياطية</translation>
-    </message>
-    <message>
-        <source>Backup Imported Successfully</source>
-        <translation>تم استيراد النسخ الاحتياطية بنجاح</translation>
-    </message>
-    <message>
-        <source>Cannot Import Backup</source>
-        <translation>لايمكن استيراد النسخ الاحتياطية</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>لا يمكن حفظ الإعدادات</translation>
-    </message>
-    <message>
-        <source>All Options and Programs will be replaced after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>جميع الخيارات والبرامج ستستبدل بعد الاستيراد الناجح. هل ترغب في المتابعة؟
-
-تأكد من أنك قد قمت بعمل نسخة احتياطية جديدة.</translation>
-    </message>
-    <message>
-        <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation>سيتم إضافة برامج جديدة فقط بعد الاستيراد بنجاح. هل تريد المتابعة؟</translation>
     </message>
 </context>
 <context>
@@ -4374,12 +4335,39 @@ Packet loss: %2</source>
         <translation>حركة الشبكة</translation>
     </message>
     <message>
-        <source>Main Window</source>
-        <translation>النافذة الرئيسية</translation>
-    </message>
-    <message>
         <source>Connections</source>
         <translation>الاتصالات</translation>
+    </message>
+</context>
+<context>
+    <name>UpdatesWindow</name>
+    <message>
+        <source>New Version</source>
+        <translation>إصدار جديد</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>تنزيل</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>التحديثات</translation>
+    </message>
+    <message>
+        <source>No Update</source>
+        <translation>ليست هناك تحديثات</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>تثبيت</translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation>فحص التحديثات</translation>
+    </message>
+    <message>
+        <source>Current Version</source>
+        <translation>النسخة الحالية</translation>
     </message>
 </context>
 <context>
@@ -4422,6 +4410,10 @@ Packet loss: %2</source>
 <context>
     <name>WindowManager</name>
     <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Restart Now?</source>
         <translation>هل تريد إعادة التشغيل الآن؟</translation>
     </message>
@@ -4437,12 +4429,12 @@ Packet loss: %2</source>
         <translation>قائمة النافذة</translation>
     </message>
     <message>
-        <source>Dock to Main Window</source>
-        <translation>إرساء في النافذة الرئيسية</translation>
+        <source>Undock from My Fort</source>
+        <translation>فك الإرساء من Fort الخاص بي</translation>
     </message>
     <message>
-        <source>Undock from Main Window</source>
-        <translation>فك الإرساء من النافذة الرئيسية</translation>
+        <source>Dock to My Fort</source>
+        <translation>إرساء في Fort الخاص بي</translation>
     </message>
     <message>
         <source>Help</source>

@@ -2,33 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="sl_SI" sourcelanguage="en_US">
 <context>
-    <name>AboutPage</name>
-    <message>
-        <source>New Version</source>
-        <translation>Nova različica</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>Prenesi</translation>
-    </message>
-    <message>
-        <source>Check for update</source>
-        <translation>Preveri obstoj posodobitev</translation>
-    </message>
-    <message>
-        <source>No Update</source>
-        <translation>Ni posodobitev</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>Namesti</translation>
-    </message>
-    <message>
-        <source>Current Version</source>
-        <translation>Trenutna različica</translation>
-    </message>
-</context>
-<context>
     <name>ActionRange</name>
     <message>
         <source>Allow</source>
@@ -94,6 +67,29 @@
     <message>
         <source>Open Folder</source>
         <translation>Odpri mapo</translation>
+    </message>
+</context>
+<context>
+    <name>AppLinks</name>
+    <message>
+        <source>Profile</source>
+        <translation>Profil</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Dnevniki</translation>
+    </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>Dnevniki storitev</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Izdaje</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Pomoč</translation>
     </message>
 </context>
 <context>
@@ -258,6 +254,45 @@
     <message>
         <source>Upload</source>
         <translation>Nalaganje</translation>
+    </message>
+</context>
+<context>
+    <name>BackupController</name>
+    <message>
+        <source>Export Backup</source>
+        <translation>Izvozi varnostno kopijo</translation>
+    </message>
+    <message>
+        <source>Backup Exported Successfully</source>
+        <translation>Varnostna kopija je uspešno izvožena</translation>
+    </message>
+    <message>
+        <source>Cannot Export Backup</source>
+        <translation>Ni mogoče zvoziti varnostno kopijo</translation>
+    </message>
+    <message>
+        <source>Import Backup</source>
+        <translation>Uvozi varnostno kopijo</translation>
+    </message>
+    <message>
+        <source>Backup Imported Successfully</source>
+        <translation>Varnostna kopija je uspešno uvožena</translation>
+    </message>
+    <message>
+        <source>Cannot Import Backup</source>
+        <translation>Ni mogoče uvoziti varnostno kopijo</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>Vse možnosti in programi bodo po uspešnem uvozu zamenjani. Želite nadaljevati?
+
+Prepričajte se, da imate svežo varnostno kopijo.</translation>
+    </message>
+    <message>
+        <source>Only new Programs will be added after successful import. Continue?</source>
+        <translation>Po uspešnem uvozu bodo dodani samo novi programi. Nadaljevati?</translation>
     </message>
 </context>
 <context>
@@ -1535,162 +1570,6 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
     </message>
 </context>
 <context>
-    <name>HomeLinks</name>
-    <message>
-        <source>Profile</source>
-        <translation>Profil</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>Dnevniki</translation>
-    </message>
-    <message>
-        <source>Service Logs</source>
-        <translation>Dnevniki storitev</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Izdaje</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Pomoč</translation>
-    </message>
-</context>
-<context>
-    <name>HomeMainPage</name>
-    <message>
-        <source>My Fort</source>
-        <translation>Moja trdnjava</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation>Vizitka</translation>
-    </message>
-</context>
-<context>
-    <name>HomePage</name>
-    <message>
-        <source>Driver</source>
-        <translation>Gonilnik</translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>Znova namesti</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Odstrani</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>Ali ste prepričani, da želite znova namestiti gonilnik?</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>Ali ste prepričani, da želite izbrisati gonilnik?</translation>
-    </message>
-    <message>
-        <source>Portable</source>
-        <translation>Prenosljiv</translation>
-    </message>
-    <message>
-        <source>Uninstall</source>
-        <translation>Odstrani</translation>
-    </message>
-    <message>
-        <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation>Ali ste prepričani, da želite odstraniti Fort Firewall?</translation>
-    </message>
-    <message>
-        <source>Windows Service</source>
-        <translation>Windows storitev</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>Namesti</translation>
-    </message>
-    <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>Zaženi &apos;Fort Firewall&apos; kot storitev v ozadju</translation>
-    </message>
-    <message>
-        <source>Driver Installed</source>
-        <translation>Gonilnik nameščen</translation>
-    </message>
-    <message>
-        <source>Driver Not Installed</source>
-        <translation>Gonilnik ni nameščen</translation>
-    </message>
-    <message>
-        <source>Service Installed</source>
-        <translation>Nameščena storitev</translation>
-    </message>
-    <message>
-        <source>Service Not Installed</source>
-        <translation>Storitev ni nameščena</translation>
-    </message>
-    <message>
-        <source>Are you sure to install the Service?</source>
-        <translation>Ali ste prepričani, da želite namestiti storitev?</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Service?</source>
-        <translation>Ali ste prepričani, da želite odstraniti storitev?</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>Namestitev storitve Windows je spremenjena.</translation>
-    </message>
-    <message>
-        <source>Integration</source>
-        <translation>Integracija</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>Vključitev Windows Raziskovalca</translation>
-    </message>
-    <message>
-        <source>Control Panel: Sounds integration</source>
-        <translation>Integracija z nadzorno ploščo: Zvoki</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Samodejno zaženi:</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Onemogočeno</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Za trenutnega uporabnika</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Za vse uporabnike</translation>
-    </message>
-    <message>
-        <source>Portable Installed</source>
-        <translation>Prenosni nameščeni</translation>
-    </message>
-</context>
-<context>
-    <name>HomeWindow</name>
-    <message>
-        <source>My Fort</source>
-        <translation>Moja trdnjava</translation>
-    </message>
-    <message>
-        <source>Lock</source>
-        <translation>Zakleni</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>Odkleni</translation>
-    </message>
-</context>
-<context>
     <name>HostRange</name>
     <message>
         <source>Bad host name</source>
@@ -1930,14 +1809,6 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
         <translation>Bližnjica:</translation>
     </message>
     <message>
-        <source>Auto-Show Menu</source>
-        <translation>Meni &apos;Samodejno prikaži&apos;</translation>
-    </message>
-    <message>
-        <source>Show the menu, when the window is activated</source>
-        <translation>Pokaži meni, ko se okno aktivira</translation>
-    </message>
-    <message>
         <source>Show Splash screen on startup</source>
         <translation>Prikaži začetni zaslon ob zagonu</translation>
     </message>
@@ -2020,10 +1891,6 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
     <message>
         <source>Right Click</source>
         <translation>Desni klik</translation>
-    </message>
-    <message>
-        <source>Show Main Window</source>
-        <translation>Prikaži glavno okno</translation>
     </message>
     <message>
         <source>Show My Fort</source>
@@ -2155,6 +2022,124 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
     </message>
 </context>
 <context>
+    <name>InstallationButton</name>
+    <message>
+        <source>Installation</source>
+        <translation>Namestitev</translation>
+    </message>
+</context>
+<context>
+    <name>InstallationWindow</name>
+    <message>
+        <source>Driver</source>
+        <translation>Gonilnik</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>Znova namesti</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Odstrani</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>Ali ste prepričani, da želite znova namestiti gonilnik?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>Ali ste prepričani, da želite izbrisati gonilnik?</translation>
+    </message>
+    <message>
+        <source>Portable</source>
+        <translation>Prenosljiv</translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation>Odstrani</translation>
+    </message>
+    <message>
+        <source>Are you sure to uninstall the Fort Firewall?</source>
+        <translation>Ali ste prepričani, da želite odstraniti Fort Firewall?</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>Windows storitev</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>Namesti</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>Zaženi &apos;Fort Firewall&apos; kot storitev v ozadju</translation>
+    </message>
+    <message>
+        <source>Installation</source>
+        <translation>Namestitev</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation>Gonilnik nameščen</translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation>Gonilnik ni nameščen</translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation>Nameščena storitev</translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation>Storitev ni nameščena</translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation>Ali ste prepričani, da želite namestiti storitev?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation>Ali ste prepričani, da želite odstraniti storitev?</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>Namestitev storitve Windows je spremenjena.</translation>
+    </message>
+    <message>
+        <source>Integration</source>
+        <translation>Integracija</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Vključitev Windows Raziskovalca</translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation>Integracija z nadzorno ploščo: Zvoki</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Samodejno zaženi:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Onemogočeno</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Za trenutnega uporabnika</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Za vse uporabnike</translation>
+    </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation>Prenosni nameščeni</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Bad format</source>
@@ -2195,14 +2180,6 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
         <translation>Datoteka</translation>
     </message>
     <message>
-        <source>Lock</source>
-        <translation>Zakleni</translation>
-    </message>
-    <message>
-        <source>Unlock</source>
-        <translation>Odkleni</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>Orodja</translation>
     </message>
@@ -2211,8 +2188,28 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
         <translation>Pregled opozoril</translation>
     </message>
     <message>
+        <source>Installation</source>
+        <translation>Namestitev</translation>
+    </message>
+    <message>
         <source>Window</source>
         <translation>Okno</translation>
+    </message>
+    <message>
+        <source>Backup</source>
+        <translation>Varnostna kopija</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>Izvozi</translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation>Uvozi</translation>
+    </message>
+    <message>
+        <source>Import new programs</source>
+        <translation>Uvozite nove programe</translation>
     </message>
     <message>
         <source>Reset Layout</source>
@@ -2223,17 +2220,33 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
         <translation>Pomoč</translation>
     </message>
     <message>
+        <source>Check for Updates</source>
+        <translation>Preveri obstoj posodobitev</translation>
+    </message>
+    <message>
         <source>About</source>
-        <translation>Vizitka</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
+        <source>No Password</source>
+        <translation>Brez gesla</translation>
+    </message>
+    <message>
         <source>Open a panel from the tool bar&apos;s menus.
-Or move a window here by its menu&apos;s &quot;Dock to Main Window&quot; item.</source>
+Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</source>
         <translation>Odprite podokno iz menijev orodne vrstice.
-Ali premaknite okno sem z elementom &quot;Zasidraj v glavno okno&quot; njegovega menija.</translation>
+Ali premaknite okno sem z elementom &quot;Zasidraj v Mojo trdnjavo&quot; njegovega menija.</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>Zakleni</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>Odkleni</translation>
     </message>
 </context>
 <context>
@@ -2282,18 +2295,6 @@ Ali premaknite okno sem z elementom &quot;Zasidraj v glavno okno&quot; njegovega
         <translation>Graf prometa</translation>
     </message>
     <message>
-        <source>Backup</source>
-        <translation>Varnostna kopija</translation>
-    </message>
-    <message>
-        <source>Export</source>
-        <translation>Izvozi</translation>
-    </message>
-    <message>
-        <source>Import</source>
-        <translation>Uvozi</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>Privzeto</translation>
     </message>
@@ -2309,10 +2310,6 @@ Ali premaknite okno sem z elementom &quot;Zasidraj v glavno okno&quot; njegovega
         <source>Interface</source>
         <translation>Vmesnik</translation>
     </message>
-    <message>
-        <source>Import new programs</source>
-        <translation>Uvozite nove programe</translation>
-    </message>
 </context>
 <context>
     <name>OptionsButton</name>
@@ -2324,44 +2321,8 @@ Ali premaknite okno sem z elementom &quot;Zasidraj v glavno okno&quot; njegovega
 <context>
     <name>OptionsController</name>
     <message>
-        <source>Export Backup</source>
-        <translation>Izvozi varnostno kopijo</translation>
-    </message>
-    <message>
-        <source>Backup Exported Successfully</source>
-        <translation>Varnostna kopija je uspešno izvožena</translation>
-    </message>
-    <message>
-        <source>Cannot Export Backup</source>
-        <translation>Ni mogoče zvoziti varnostno kopijo</translation>
-    </message>
-    <message>
-        <source>Import Backup</source>
-        <translation>Uvozi varnostno kopijo</translation>
-    </message>
-    <message>
-        <source>Backup Imported Successfully</source>
-        <translation>Varnostna kopija je uspešno uvožena</translation>
-    </message>
-    <message>
-        <source>Cannot Import Backup</source>
-        <translation>Ni mogoče uvoziti varnostno kopijo</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>Možnosti ni mogoče shraniti</translation>
-    </message>
-    <message>
-        <source>All Options and Programs will be replaced after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>Vse možnosti in programi bodo po uspešnem uvozu zamenjani. Želite nadaljevati?
-
-Prepričajte se, da imate svežo varnostno kopijo.</translation>
-    </message>
-    <message>
-        <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation>Po uspešnem uvozu bodo dodani samo novi programi. Nadaljevati?</translation>
     </message>
 </context>
 <context>
@@ -4374,12 +4335,39 @@ Izguba paketov: %2</translation>
         <translation>Promet</translation>
     </message>
     <message>
-        <source>Main Window</source>
-        <translation>Glavno okno</translation>
-    </message>
-    <message>
         <source>Connections</source>
         <translation>Povezave</translation>
+    </message>
+</context>
+<context>
+    <name>UpdatesWindow</name>
+    <message>
+        <source>New Version</source>
+        <translation>Nova različica</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Prenesi</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>Posodobitve</translation>
+    </message>
+    <message>
+        <source>No Update</source>
+        <translation>Ni posodobitev</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>Namesti</translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation>Preveri obstoj posodobitev</translation>
+    </message>
+    <message>
+        <source>Current Version</source>
+        <translation>Trenutna različica</translation>
     </message>
 </context>
 <context>
@@ -4422,6 +4410,10 @@ Izguba paketov: %2</translation>
 <context>
     <name>WindowManager</name>
     <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Restart Now?</source>
         <translation>Želite zdaj znova zagnati?</translation>
     </message>
@@ -4437,12 +4429,12 @@ Izguba paketov: %2</translation>
         <translation>Meni okna</translation>
     </message>
     <message>
-        <source>Dock to Main Window</source>
-        <translation>Zasidraj v glavno okno</translation>
+        <source>Undock from My Fort</source>
+        <translation>Odsidraj iz Moje trdnjave</translation>
     </message>
     <message>
-        <source>Undock from Main Window</source>
-        <translation>Odsidraj iz glavnega okna</translation>
+        <source>Dock to My Fort</source>
+        <translation>Zasidraj v Mojo trdnjavo</translation>
     </message>
     <message>
         <source>Help</source>
