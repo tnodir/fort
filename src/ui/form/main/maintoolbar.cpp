@@ -5,6 +5,7 @@
 
 #include <form/controls/actioncheckbox.h>
 #include <form/controls/headerbuttons.h>
+#include <form/controls/installationbutton.h>
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -29,10 +30,13 @@ void MainToolBar::setupUi()
     addMenu(trayIcon->blockTrafficMenu());
     addMenu(trayIcon->filterModeMenu());
 
-    auto headerButtons = new HeaderButtons();
-    headerButtons->setSeparatorVisible(true);
+    addSeparator();
 
-    addWidget(headerButtons);
+    addWidget(new InstallationButton());
+
+    m_headerButtons = new HeaderButtons();
+
+    addWidget(m_headerButtons);
 }
 
 void MainToolBar::addCheckBox(QAction *action)

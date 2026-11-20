@@ -4,12 +4,15 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QMainWindow>
+#include <QPushButton>
 #include <QTabWidget>
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/headerbuttons.h>
 #include <form/controls/logowidget.h>
+#include <form/tray/trayicon.h>
 #include <fortglobal.h>
 #include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
@@ -80,6 +83,9 @@ MainWindow::MainWindow(QWidget *parent) : FormWindow(parent)
 
     // After the window is shown: the docked windows are shown in it
     QMetaObject::invokeMethod(this, &MainWindow::restoreDocks, Qt::QueuedConnection);
+
+    connect(this, &MainWindow::activationChanged, this, &MainWindow::onActivationChanged,
+            Qt::QueuedConnection); // queued to properly show the menu after window opening
 }
 
 QString MainWindow::helpSection() const
@@ -115,6 +121,34 @@ void MainWindow::restoreWindowState()
 void MainWindow::onWindowClosed()
 {
     windowManager()->closeDockedWindows();
+}
+
+bool MainWindow::checkAboutToClose()
+{
+    if (!iniUser().mainWindowAutoShowWindow())
+        return true;
+
+    auto windowManager = Fort::windowManager();
+    auto trayIcon = windowManager->trayIcon();
+
+    if (trayIcon->isVisible())
+        return true;
+
+    if (windowManager->isAppQuitting())
+        return true;
+
+    emit windowManager->requestQuit();
+
+    return false;
+}
+
+void MainWindow::onActivationChanged(bool isActive)
+{
+    if (isActive && iniUser().mainWindowAutoShowMenu()) {
+        if (isActiveWindow()) {
+            m_toolBar->headerButtons()->menuButton()->showMenu();
+        }
+    }
 }
 
 QList<PanelDock *> MainWindow::docks() const
@@ -248,7 +282,7 @@ void MainWindow::retranslateUi()
     this->unsetLocale();
 
     m_labelHint->setText(tr("Open a panel from the tool bar's menus.\n"
-                            "Or move a window here by its menu's \"Dock to Main Window\" item."));
+                            "Or move a window here by its menu's \"Dock to My Fort\" item."));
 
     this->setWindowTitle(QApplication::applicationDisplayName());
 }
@@ -281,8 +315,10 @@ QWidget *MainWindow::setupHeader()
     layout->setSpacing(0);
     layout->setColumnStretch(0, 1);
 
+    m_toolBar = new MainToolBar();
+
     layout->addWidget(new MainMenuBar(this), 0, 0);
-    layout->addWidget(new MainToolBar(), 1, 0);
+    layout->addWidget(m_toolBar, 1, 0);
     layout->addWidget(logo, 0, 1, 2, 1);
 
     return ControlUtil::wrapToWidget(layout);

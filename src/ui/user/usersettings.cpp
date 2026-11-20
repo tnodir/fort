@@ -72,6 +72,14 @@ void UserSettings::migrateIniOnLoad()
         setCacheValue("connWindow/showHostNames", iniValue("statWindow/showHostNames"));
         setCacheValue("hotKey/traffic", iniValue("hotKey/statistics"));
     }
+
+    // COMPAT: v3.21.1: My Fort window ~> Main window
+    if (version < 0x032101) {
+        // The cached value of the "homeWindow/autoShowMenu" may be migrated from older versions
+        setCacheValue("mainWindow/autoShowWindow", iniValue("homeWindow/autoShowWindow"));
+        setCacheValue("mainWindow/autoShowMenu", iniValue("homeWindow/autoShowMenu"));
+        setCacheValue("hotKey/main", iniValue("hotKey/home"));
+    }
 }
 
 void UserSettings::migrateIniOnWrite()
@@ -121,6 +129,15 @@ void UserSettings::migrateIniOnWrite()
         ini()->setValue("connWindow/autoScroll", cacheValue("connWindow/autoScroll"));
         ini()->setValue("connWindow/showHostNames", cacheValue("connWindow/showHostNames"));
         ini()->setValue("hotKey/traffic", cacheValue("hotKey/traffic"));
+    }
+
+    // COMPAT: v3.21.1: My Fort window ~> Main window
+    if (version < 0x032101) {
+        removeIniKey("homeWindow");
+        removeIniKey("hotKey/home");
+        ini()->setValue("mainWindow/autoShowWindow", cacheValue("mainWindow/autoShowWindow"));
+        ini()->setValue("mainWindow/autoShowMenu", cacheValue("mainWindow/autoShowMenu"));
+        ini()->setValue("hotKey/main", cacheValue("hotKey/main"));
     }
 }
 

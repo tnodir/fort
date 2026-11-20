@@ -4,7 +4,6 @@
 #include <form/filtersim/filtersimwindow.h>
 #include <form/graph/graphwindow.h>
 #include <form/group/groupswindow.h>
-#include <form/home/homewindow.h>
 #include <form/install/installationwindow.h>
 #include <form/main/mainwindow.h>
 #include <form/main/paneldock.h>
@@ -38,7 +37,6 @@ using createWindow_func = FormWindow *(*)(void);
 
 static const createWindow_func createWindow_funcList[] = {
     &createWindow<MainWindow>,
-    &createWindow<HomeWindow>,
     &createWindow<ProgramsWindow>,
     &createWindow<ProgramAlertWindow>,
     &createWindow<ServicesWindow>,

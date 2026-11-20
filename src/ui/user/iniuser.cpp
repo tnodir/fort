@@ -6,7 +6,6 @@ namespace HotKey {
 
 const char *const list[] = {
     main,
-    home,
     programs,
     options,
     rules,

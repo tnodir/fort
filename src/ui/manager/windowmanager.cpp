@@ -19,7 +19,6 @@
 #include <form/filtersim/filtersimwindow.h>
 #include <form/graph/graphwindow.h>
 #include <form/group/groupswindow.h>
-#include <form/home/homewindow.h>
 #include <form/main/mainwindow.h>
 #include <form/opt/optionswindow.h>
 #include <form/prog/programalertwindow.h>
@@ -110,11 +109,6 @@ FormWindow *WindowManager::windowByCode(WindowCode code) const
 MainWindow *WindowManager::mainWindow() const
 {
     return static_cast<MainWindow *>(windowByCode(WindowMain));
-}
-
-HomeWindow *WindowManager::homeWindow() const
-{
-    return static_cast<HomeWindow *>(windowByCode(WindowHome));
 }
 
 ProgramsWindow *WindowManager::progWindow() const
@@ -391,8 +385,8 @@ void WindowManager::updateTrayIconVisibility(const IniUser &ini)
     } else {
         closeTrayIcon();
 
-        if (ini.homeWindowAutoShowWindow() && !homeWindow()) {
-            showHomeWindow();
+        if (ini.mainWindowAutoShowWindow() && !mainWindow()) {
+            showMainWindow();
         }
     }
 }
@@ -437,9 +431,9 @@ void WindowManager::showSplashScreen()
     splash->showFading();
 }
 
-bool WindowManager::exposeHomeWindow()
+bool WindowManager::exposeMainWindow()
 {
-    return showHomeWindow(/*expose=*/true);
+    return showMainWindow(/*expose=*/true);
 }
 
 void WindowManager::showAboutBox()

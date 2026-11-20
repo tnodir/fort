@@ -71,7 +71,7 @@ private:
     void refreshEditShortcut();
     QLayout *setupComboHotKeyLayout();
     QLayout *setupEditShortcutLayout();
-    void setupHomeBox();
+    void setupMainBox();
     void setupProgBox();
     QLayout *setupAlertLayout();
     void setupAlertModes();
@@ -96,7 +96,7 @@ private:
 
     QGroupBox *m_gbGlobal = nullptr;
     QGroupBox *m_gbHotKeys = nullptr;
-    QGroupBox *m_gbHome = nullptr;
+    QGroupBox *m_gbMain = nullptr;
     QGroupBox *m_gbProg = nullptr;
     QGroupBox *m_gbTray = nullptr;
     QGroupBox *m_gbConfirmations = nullptr;
@@ -123,8 +123,8 @@ private:
     QLabel *m_labelShortcut = nullptr;
     QKeySequenceEdit *m_editShortcut = nullptr;
 
-    QCheckBox *m_cbHomeAutoShowWindow = nullptr;
-    QCheckBox *m_cbHomeAutoShowMenu = nullptr;
+    QCheckBox *m_cbMainAutoShowWindow = nullptr;
+    QCheckBox *m_cbMainAutoShowMenu = nullptr;
     QCheckBox *m_cbSplashVisible = nullptr;
     QCheckBox *m_cbUpdateWindowIcons = nullptr;
 

@@ -13,7 +13,7 @@ const QLoggingCategory LC("rpc.window");
 
 WindowManagerFake::WindowManagerFake(QObject *parent) : WindowManager(parent) { }
 
-bool WindowManagerFake::exposeHomeWindow()
+bool WindowManagerFake::exposeMainWindow()
 {
     return false;
 }

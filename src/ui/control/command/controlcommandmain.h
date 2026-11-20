@@ -1,9 +1,9 @@
-#ifndef CONTROLCOMMANDHOME_H
-#define CONTROLCOMMANDHOME_H
+#ifndef CONTROLCOMMANDMAIN_H
+#define CONTROLCOMMANDMAIN_H
 
 #include "controlcommandbase.h"
 
-class ControlCommandHome : public ControlCommandBase
+class ControlCommandMain : public ControlCommandBase
 {
 public:
     bool processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r) const override;
@@ -11,4 +11,4 @@ public:
     bool needsWindows(const QVariantList & /*args*/) const override { return true; }
 };
 
-#endif // CONTROLCOMMANDHOME_H
+#endif // CONTROLCOMMANDMAIN_H

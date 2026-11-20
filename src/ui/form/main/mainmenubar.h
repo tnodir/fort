@@ -31,8 +31,8 @@ private:
     QAction *m_actUnlock = nullptr;
     QMenu *m_toolsMenu = nullptr;
     QAction *m_actReviewAlerts = nullptr;
-    QAction *m_actInstallation = nullptr;
     QMenu *m_windowMenu = nullptr;
+    QAction *m_actInstallation = nullptr;
     QAction *m_actResetLayout = nullptr;
     QMenu *m_helpMenu = nullptr;
     QAction *m_actHelp = nullptr;

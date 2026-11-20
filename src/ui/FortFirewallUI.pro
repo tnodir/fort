@@ -49,7 +49,7 @@ SOURCES += \
     control/command/controlcommandfiltermode.cpp \
     control/command/controlcommandgraph.cpp \
     control/command/controlcommandgroup.cpp \
-    control/command/controlcommandhome.cpp \
+    control/command/controlcommandmain.cpp \
     control/command/controlcommandmanager.cpp \
     control/command/controlcommandpending.cpp \
     control/command/controlcommandperiod.cpp \
@@ -94,6 +94,7 @@ SOURCES += \
     form/controls/focusablemenu.cpp \
     form/controls/formwindow.cpp \
     form/controls/headerbuttons.cpp \
+    form/controls/installationbutton.cpp \
     form/controls/labelcolor.cpp \
     form/controls/labeldoublespin.cpp \
     form/controls/labelspin.cpp \
@@ -148,8 +149,6 @@ SOURCES += \
     form/group/groupeditdialog.cpp \
     form/group/groupscontroller.cpp \
     form/group/groupswindow.cpp \
-    form/home/homecontroller.cpp \
-    form/home/homewindow.cpp \
     form/install/installationwindow.cpp \
     form/main/mainmenubar.cpp \
     form/main/maintoolbar.cpp \
@@ -413,7 +412,7 @@ HEADERS += \
     control/command/controlcommandfiltermode.h \
     control/command/controlcommandgraph.h \
     control/command/controlcommandgroup.h \
-    control/command/controlcommandhome.h \
+    control/command/controlcommandmain.h \
     control/command/controlcommandmanager.h \
     control/command/controlcommandpending.h \
     control/command/controlcommandperiod.h \
@@ -459,6 +458,7 @@ HEADERS += \
     form/controls/focusablemenu.h \
     form/controls/formwindow.h \
     form/controls/headerbuttons.h \
+    form/controls/installationbutton.h \
     form/controls/labelcolor.h \
     form/controls/labeldoublespin.h \
     form/controls/labelspin.h \
@@ -514,8 +514,6 @@ HEADERS += \
     form/group/groupeditdialog.h \
     form/group/groupscontroller.h \
     form/group/groupswindow.h \
-    form/home/homecontroller.h \
-    form/home/homewindow.h \
     form/install/installationwindow.h \
     form/main/mainmenubar.h \
     form/main/maintoolbar.h \

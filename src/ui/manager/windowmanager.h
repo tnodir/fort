@@ -17,7 +17,6 @@ class FormWindow;
 class FortSettings;
 class GraphWindow;
 class GroupsWindow;
-class HomeWindow;
 class IniUser;
 class MainWindow;
 class NativeWindow;
@@ -57,7 +56,6 @@ public:
     FormWindow *windowByCode(WindowCode code) const;
 
     MainWindow *mainWindow() const;
-    HomeWindow *homeWindow() const;
     ProgramsWindow *progWindow() const;
     ProgramAlertWindow *progAlertWindow() const;
     RulesWindow *rulesWindow() const;
@@ -98,12 +96,12 @@ public slots:
 
     void showSplashScreen();
 
-    bool showHomeWindow(bool expose = false)
+    bool showMainWindow(bool expose = false)
     {
-        return showWindowByCode(WindowHome, /*activate=*/true, expose);
+        return showWindowByCode(WindowMain, /*activate=*/true, expose);
     }
 
-    virtual bool exposeHomeWindow();
+    virtual bool exposeMainWindow();
 
     bool showProgramsWindow() { return showWindowByCode(WindowPrograms); }
     bool closeProgramsWindow() { return closeWindowByCode(WindowPrograms); }
@@ -243,7 +241,6 @@ private:
 
     mutable std::array<FormPointer, WindowCount> m_forms = {
         FormPointer(WindowMain),
-        FormPointer(WindowHome),
         FormPointer(WindowPrograms),
         FormPointer(WindowProgramAlert),
         FormPointer(WindowServices),

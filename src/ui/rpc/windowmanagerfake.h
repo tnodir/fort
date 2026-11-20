@@ -16,7 +16,7 @@ public:
     void initialize() override { }
 
 public slots:
-    bool exposeHomeWindow() override;
+    bool exposeMainWindow() override;
 
     bool showProgramEditForm(const QString &appPath) override;
 

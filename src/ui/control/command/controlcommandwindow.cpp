@@ -17,10 +17,10 @@ struct WindowShow
     const char *name;
 };
 
-// As by the "home show" and "graph show": the home window exposed, the graph not activated
+// As by the "home show" and "graph show": the main window exposed, the graph not activated
 inline constexpr WindowShow windowShows[] = {
-    { .code = WindowMain, .name = "main" },
-    { .expose = true, .code = WindowHome, .name = "home" },
+    { .expose = true, .code = WindowMain, .name = "main" },
+    { .expose = true, .code = WindowMain, .name = "home" }, // COMPAT: v3.21.1
     { .code = WindowPrograms, .name = "programs" },
     { .code = WindowOptions, .name = "options" },
     { .code = WindowRules, .name = "rules" },

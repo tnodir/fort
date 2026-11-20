@@ -16,7 +16,6 @@ enum ClickType : qint8 {
 enum ActionType : qint8 {
     ActionNone = -1,
     ActionShowMain = 0,
-    ActionShowHome,
     ActionShowPrograms,
     ActionShowProgramsOrAlert,
     ActionShowOptions,

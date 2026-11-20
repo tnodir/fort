@@ -9,7 +9,7 @@ namespace Control {
 static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(CommandNone),
 
-    CASE_STRING(CommandHome),
+    CASE_STRING(CommandMain),
     CASE_STRING(CommandGraph),
     CASE_STRING(CommandFilter),
     CASE_STRING(CommandFilterMode),
@@ -189,7 +189,7 @@ const char *const rpcManagerString(RpcManager rpcManager)
 static const RpcManager g_commandManagers[] = {
     Rpc_NoneManager, // CommandNone = 0,
 
-    Rpc_NoneManager, // CommandHome,
+    Rpc_NoneManager, // CommandMain,
     Rpc_NoneManager, // CommandGraph,
     Rpc_NoneManager, // CommandFilter,
     Rpc_NoneManager, // CommandFilterMode,
@@ -344,7 +344,7 @@ RpcManager managerByCommand(Command cmd)
 static const qint8 g_commandValidations[] = {
     0, // CommandNone = 0,
 
-    0, // CommandHome,
+    0, // CommandMain,
     0, // CommandGraph,
     0, // CommandFilter,
     0, // CommandFilterMode,

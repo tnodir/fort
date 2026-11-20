@@ -6,7 +6,6 @@
 namespace HotKey {
 
 const char *const main = "main";
-const char *const home = "home";
 const char *const programs = "programs";
 const char *const options = "options";
 const char *const rules = "rules";
@@ -146,13 +145,11 @@ public:
     QByteArray mainWindowDocksState() const { return valueByteArray("mainWindow/docksState"); }
     void setMainWindowDocksState(const QByteArray &v) { setValue("mainWindow/docksState", v); }
 
-    static QString homeWindowGroup() { return "homeWindow"; }
+    bool mainWindowAutoShowWindow() const { return valueBool("mainWindow/autoShowWindow", true); }
+    void setMainWindowAutoShowWindow(bool v) { setValue("mainWindow/autoShowWindow", v, true); }
 
-    bool homeWindowAutoShowWindow() const { return valueBool("homeWindow/autoShowWindow", true); }
-    void setHomeWindowAutoShowWindow(bool v) { setValue("homeWindow/autoShowWindow", v, true); }
-
-    bool homeWindowAutoShowMenu() const { return valueBool("homeWindow/autoShowMenu"); }
-    void setHomeWindowAutoShowMenu(bool v) { setValue("homeWindow/autoShowMenu", v); }
+    bool mainWindowAutoShowMenu() const { return valueBool("mainWindow/autoShowMenu"); }
+    void setMainWindowAutoShowMenu(bool v) { setValue("mainWindow/autoShowMenu", v); }
 
     static QString installationWindowGroup() { return "installationWindow"; }
 

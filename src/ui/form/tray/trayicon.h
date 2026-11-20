@@ -23,7 +23,6 @@ public:
     QString iconPath() const { return m_iconPath; }
 
     QMenu *menu() const { return m_menu; }
-    QAction *homeAction() const { return m_homeAction; }
     QMenu *optionsMenu() const { return m_optionsMenu; }
     QMenu *statisticsMenu() const { return m_statisticsMenu; }
     QAction *filterEnabledAction() const { return m_filterEnabledAction; }
@@ -146,7 +145,6 @@ private:
 
     QMenu *m_menu = nullptr;
     QAction *m_mainAction = nullptr;
-    QAction *m_homeAction = nullptr;
     QAction *m_programsAction = nullptr;
     QAction *m_programsOrAlertAction = nullptr;
     QMenu *m_optionsMenu = nullptr;

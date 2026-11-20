@@ -16,7 +16,7 @@
 #include "controlcommandfiltermode.h"
 #include "controlcommandgraph.h"
 #include "controlcommandgroup.h"
-#include "controlcommandhome.h"
+#include "controlcommandmain.h"
 #include "controlcommandpending.h"
 #include "controlcommandperiod.h"
 #include "controlcommandprog.h"
@@ -30,7 +30,7 @@
 
 namespace {
 
-inline constexpr ControlCommandHome commandHome;
+inline constexpr ControlCommandMain commandMain;
 inline constexpr ControlCommandGraph commandGraph;
 inline constexpr ControlCommandFilter commandFilter;
 inline constexpr ControlCommandFilterMode commandFilterMode;
@@ -53,7 +53,7 @@ inline constexpr ControlCommandWindow commandWindow;
 inline constexpr ControlCommandRpc commandRpc;
 
 inline constexpr const ControlCommandBase *commandList[] = {
-    &commandHome, // Control::CommandHome,
+    &commandMain, // Control::CommandMain,
     &commandGraph, // Control::CommandGraph,
     &commandFilter, // Control::CommandFilter,
     &commandFilterMode, // Control::CommandFilterMode,
@@ -77,7 +77,7 @@ inline constexpr const ControlCommandBase *commandList[] = {
 const ControlCommandBase *commandByType(Control::Command command)
 {
     return RpcManager::getProcessFunc<const ControlCommandBase>(
-            command, commandList, Control::CommandHome, Control::CommandWindow, &commandRpc);
+            command, commandList, Control::CommandMain, Control::CommandWindow, &commandRpc);
 }
 
 bool checkCommandWindows(

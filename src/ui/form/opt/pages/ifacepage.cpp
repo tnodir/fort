@@ -74,8 +74,8 @@ void IfacePage::onResetToDefault()
     }
     refreshEditShortcut();
 
-    m_cbHomeAutoShowWindow->setChecked(true);
-    m_cbHomeAutoShowMenu->setChecked(false);
+    m_cbMainAutoShowWindow->setChecked(true);
+    m_cbMainAutoShowMenu->setChecked(false);
     m_cbSplashVisible->setChecked(true);
     m_cbUpdateWindowIcons->setChecked(false);
 
@@ -152,7 +152,7 @@ void IfacePage::onRetranslateUi()
 {
     m_gbGlobal->setTitle(tr("Global"));
     m_gbHotKeys->setTitle(tr("Hot Keys"));
-    m_gbHome->setTitle(tr("My Fort"));
+    m_gbMain->setTitle(tr("My Fort"));
     m_gbProg->setTitle(tr("Programs"));
     m_gbTray->setTitle(tr("Tray"));
     m_gbConfirmations->setTitle(tr("Action Confirmations"));
@@ -179,10 +179,10 @@ void IfacePage::onRetranslateUi()
     retranslateComboHotKey();
     refreshEditShortcut();
 
-    m_cbHomeAutoShowWindow->setText(tr("Auto-Show Window"));
-    m_cbHomeAutoShowWindow->setToolTip(tr("Auto-Show Window, when Tray Icon is hidden"));
-    m_cbHomeAutoShowMenu->setText(tr("Auto-Show Menu"));
-    m_cbHomeAutoShowMenu->setToolTip(tr("Show the menu, when the window is activated"));
+    m_cbMainAutoShowWindow->setText(tr("Auto-Show Window"));
+    m_cbMainAutoShowWindow->setToolTip(tr("Auto-Show Window, when Tray Icon is hidden"));
+    m_cbMainAutoShowMenu->setText(tr("Auto-Show Menu"));
+    m_cbMainAutoShowMenu->setToolTip(tr("Show the menu, when the window is activated"));
     m_cbSplashVisible->setText(tr("Show Splash screen on startup"));
     m_cbUpdateWindowIcons->setText(tr("Show the current state in the windows' icons"));
     m_cbUpdateWindowIcons->setToolTip(
@@ -255,7 +255,6 @@ void IfacePage::retranslateComboHotKey()
 {
     // Sync with TrayIcon::retranslateUi() & HotKey::list[]
     QStringList list = {
-        TrayIcon::tr("Main Window"),
         TrayIcon::tr("My Fort"),
         TrayIcon::tr("Programs"),
         TrayIcon::tr("Options"),
@@ -318,7 +317,6 @@ void IfacePage::retranslateComboTrayAction()
 
     // Sync with TrayIcon::ActionType
     const QStringList list = {
-        tr("Show Main Window"),
         tr("Show My Fort"),
         tr("Show Programs"),
         tr("Show Programs Or Alert Window"),
@@ -363,11 +361,11 @@ QLayout *IfacePage::setupColumn1()
     // Hot Keys Group Box
     setupHotKeysBox();
 
-    // Home Group Box
-    setupHomeBox();
+    // Main Group Box
+    setupMainBox();
 
     auto layout = ControlUtil::createVLayoutByWidgets(
-            { m_gbGlobal, m_gbHotKeys, m_gbHome, /*stretch*/ nullptr });
+            { m_gbGlobal, m_gbHotKeys, m_gbMain, /*stretch*/ nullptr });
     layout->setSpacing(10);
 
     return layout;
@@ -682,17 +680,17 @@ QLayout *IfacePage::setupEditShortcutLayout()
     return ControlUtil::createRowLayout(m_labelShortcut, m_editShortcut);
 }
 
-void IfacePage::setupHomeBox()
+void IfacePage::setupMainBox()
 {
-    m_cbHomeAutoShowWindow =
-            ControlUtil::createCheckBox(iniUser().homeWindowAutoShowWindow(), [&](bool checked) {
-                iniUser().setHomeWindowAutoShowWindow(checked);
+    m_cbMainAutoShowWindow =
+            ControlUtil::createCheckBox(iniUser().mainWindowAutoShowWindow(), [&](bool checked) {
+                iniUser().setMainWindowAutoShowWindow(checked);
                 ctrl()->setIniUserEdited();
             });
 
-    m_cbHomeAutoShowMenu =
-            ControlUtil::createCheckBox(iniUser().homeWindowAutoShowMenu(), [&](bool checked) {
-                iniUser().setHomeWindowAutoShowMenu(checked);
+    m_cbMainAutoShowMenu =
+            ControlUtil::createCheckBox(iniUser().mainWindowAutoShowMenu(), [&](bool checked) {
+                iniUser().setMainWindowAutoShowMenu(checked);
                 ctrl()->setIniUserEdited();
             });
 
@@ -709,13 +707,13 @@ void IfacePage::setupHomeBox()
             });
 
     auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbHomeAutoShowWindow);
-    layout->addWidget(m_cbHomeAutoShowMenu);
+    layout->addWidget(m_cbMainAutoShowWindow);
+    layout->addWidget(m_cbMainAutoShowMenu);
     layout->addWidget(m_cbSplashVisible);
     layout->addWidget(m_cbUpdateWindowIcons);
 
-    m_gbHome = new QGroupBox();
-    m_gbHome->setLayout(layout);
+    m_gbMain = new QGroupBox();
+    m_gbMain->setLayout(layout);
 }
 
 void IfacePage::setupProgBox()

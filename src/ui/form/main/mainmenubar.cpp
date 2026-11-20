@@ -1,7 +1,5 @@
 #include "mainmenubar.h"
 
-#include <QApplication>
-
 #include <form/controls/applinks.h>
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
@@ -31,9 +29,9 @@ void MainMenuBar::retranslateUi()
 
     m_toolsMenu->setTitle(tr("Tools"));
     m_actReviewAlerts->setText(tr("Review Alerts"));
-    m_actInstallation->setText(tr("Installation"));
 
     m_windowMenu->setTitle(tr("Window"));
+    m_actInstallation->setText(tr("Installation"));
     m_actResetLayout->setText(tr("Reset Layout"));
 
     m_helpMenu->setTitle(tr("Help"));
@@ -42,7 +40,7 @@ void MainMenuBar::retranslateUi()
         m_linkActions[i]->setText(AppLinks::text(AppLinks::Link(i)));
     }
     m_actCheckUpdates->setText(tr("Check for Updates"));
-    m_actAbout->setText(tr("About %1").arg(QApplication::applicationDisplayName()));
+    m_actAbout->setText(tr("About"));
 }
 
 void MainMenuBar::setupUi()
@@ -58,8 +56,6 @@ void MainMenuBar::setupFileMenu()
     const auto trayIcon = windowManager()->trayIcon();
 
     m_fileMenu = addMenu(QString());
-
-    m_fileMenu->addAction(trayIcon->homeAction());
 
     m_actLock = m_fileMenu->addAction(IconCache::icon(":/icons/lock.png"), QString());
     connect(m_actLock, &QAction::triggered, windowManager(), &WindowManager::resetCheckedPassword);
@@ -83,18 +79,18 @@ void MainMenuBar::setupToolsMenu()
     m_actReviewAlerts = m_toolsMenu->addAction(IconCache::icon(":/icons/error.png"), QString());
     connect(m_actReviewAlerts, &QAction::triggered, windowManager(),
             [] { windowManager()->showProgramAlertWindow(); });
-
-    m_toolsMenu->addSeparator();
-
-    m_actInstallation =
-            m_toolsMenu->addAction(IconCache::icon(":/icons/server_components.png"), QString());
-    connect(m_actInstallation, &QAction::triggered, windowManager(),
-            &WindowManager::showInstallationWindow);
 }
 
 void MainMenuBar::setupWindowMenu()
 {
     m_windowMenu = addMenu(QString());
+
+    m_actInstallation =
+            m_windowMenu->addAction(IconCache::icon(":/icons/server_components.png"), QString());
+    connect(m_actInstallation, &QAction::triggered, windowManager(),
+            &WindowManager::showInstallationWindow);
+
+    m_windowMenu->addSeparator();
 
     m_actResetLayout =
             m_windowMenu->addAction(IconCache::icon(":/icons/arrow_refresh_small.png"), QString());

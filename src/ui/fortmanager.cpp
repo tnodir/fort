@@ -204,7 +204,7 @@ bool FortManager::checkRunningInstance(bool isService, bool isLaunch)
     if (isService) {
         qCWarning(LC) << "Quit due Service is already running!";
     } else if (!isLaunch) {
-        if (!controlManager()->postCommand(Control::CommandHome, { "show" })) {
+        if (!controlManager()->postCommand(Control::CommandMain, { "show" })) {
             QMessageBox::warning(nullptr, QString(), tr("Application is already running!"));
         }
     }

@@ -75,7 +75,7 @@ void WindowMenuButton::retranslateUi()
 {
     setToolTip(tr("Window Menu"));
 
-    m_actDock->setText(m_docked ? tr("Undock from Main Window") : tr("Dock to Main Window"));
+    m_actDock->setText(m_docked ? tr("Undock from My Fort") : tr("Dock to My Fort"));
     m_actHelp->setText(tr("Help"));
     m_actClose->setText(tr("Close"));
 }
