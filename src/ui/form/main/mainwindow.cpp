@@ -10,7 +10,6 @@
 
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
-#include <form/controls/headerbuttons.h>
 #include <form/controls/logowidget.h>
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
@@ -83,9 +82,6 @@ MainWindow::MainWindow(QWidget *parent) : FormWindow(parent)
 
     // After the window is shown: the docked windows are shown in it
     QMetaObject::invokeMethod(this, &MainWindow::restoreDocks, Qt::QueuedConnection);
-
-    connect(this, &MainWindow::activationChanged, this, &MainWindow::onActivationChanged,
-            Qt::QueuedConnection); // queued to properly show the menu after window opening
 }
 
 QString MainWindow::helpSection() const
@@ -140,15 +136,6 @@ bool MainWindow::checkAboutToClose()
     emit windowManager->requestQuit();
 
     return false;
-}
-
-void MainWindow::onActivationChanged(bool isActive)
-{
-    if (isActive && iniUser().mainWindowAutoShowMenu()) {
-        if (isActiveWindow()) {
-            m_toolBar->headerButtons()->menuButton()->showMenu();
-        }
-    }
 }
 
 QList<PanelDock *> MainWindow::docks() const
@@ -315,10 +302,10 @@ QWidget *MainWindow::setupHeader()
     layout->setSpacing(0);
     layout->setColumnStretch(0, 1);
 
-    m_toolBar = new MainToolBar();
+    auto toolBar = new MainToolBar();
 
     layout->addWidget(new MainMenuBar(this), 0, 0);
-    layout->addWidget(m_toolBar, 1, 0);
+    layout->addWidget(toolBar, 1, 0);
     layout->addWidget(logo, 0, 1, 2, 1);
 
     return ControlUtil::wrapToWidget(layout);

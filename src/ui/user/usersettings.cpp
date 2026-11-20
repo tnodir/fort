@@ -58,11 +58,6 @@ void UserSettings::migrateIniOnLoad()
         setCacheValue("prog/notifyMessage", ini()->value("tray/alertMessage"));
     }
 
-    // COMPAT: v3.13.6
-    if (version < 0x031306) {
-        setCacheValue("homeWindow/autoShowMenu", ini()->value("home/autoShowMenu"));
-    }
-
     // COMPAT: v3.20.1: Statistics window ~> Traffic & Connections windows
     if (version < 0x032001) {
         // The cached values of the "statWindow" keys may be migrated from older versions
@@ -75,9 +70,7 @@ void UserSettings::migrateIniOnLoad()
 
     // COMPAT: v3.21.1: My Fort window ~> Main window
     if (version < 0x032101) {
-        // The cached value of the "homeWindow/autoShowMenu" may be migrated from older versions
         setCacheValue("mainWindow/autoShowWindow", iniValue("homeWindow/autoShowWindow"));
-        setCacheValue("mainWindow/autoShowMenu", iniValue("homeWindow/autoShowMenu"));
         setCacheValue("hotKey/main", iniValue("hotKey/home"));
     }
 }
@@ -113,7 +106,6 @@ void UserSettings::migrateIniOnWrite()
     // COMPAT: v3.13.6
     if (version < 0x031306) {
         removeIniKey("home/autoShowMenu");
-        ini()->setValue("homeWindow/autoShowMenu", cacheValue("homeWindow/autoShowMenu"));
     }
 
     // COMPAT: v3.20.1: Statistics window ~> Traffic & Connections windows
@@ -136,7 +128,6 @@ void UserSettings::migrateIniOnWrite()
         removeIniKey("homeWindow");
         removeIniKey("hotKey/home");
         ini()->setValue("mainWindow/autoShowWindow", cacheValue("mainWindow/autoShowWindow"));
-        ini()->setValue("mainWindow/autoShowMenu", cacheValue("mainWindow/autoShowMenu"));
         ini()->setValue("hotKey/main", cacheValue("hotKey/main"));
     }
 }

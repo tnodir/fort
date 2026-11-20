@@ -148,9 +148,6 @@ public:
     bool mainWindowAutoShowWindow() const { return valueBool("mainWindow/autoShowWindow", true); }
     void setMainWindowAutoShowWindow(bool v) { setValue("mainWindow/autoShowWindow", v, true); }
 
-    bool mainWindowAutoShowMenu() const { return valueBool("mainWindow/autoShowMenu"); }
-    void setMainWindowAutoShowMenu(bool v) { setValue("mainWindow/autoShowMenu", v); }
-
     static QString installationWindowGroup() { return "installationWindow"; }
 
     static QString progWindowGroup() { return "progWindow"; }

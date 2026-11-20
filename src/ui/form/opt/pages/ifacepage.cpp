@@ -75,7 +75,6 @@ void IfacePage::onResetToDefault()
     refreshEditShortcut();
 
     m_cbMainAutoShowWindow->setChecked(true);
-    m_cbMainAutoShowMenu->setChecked(false);
     m_cbSplashVisible->setChecked(true);
     m_cbUpdateWindowIcons->setChecked(false);
 
@@ -181,8 +180,6 @@ void IfacePage::onRetranslateUi()
 
     m_cbMainAutoShowWindow->setText(tr("Auto-Show Window"));
     m_cbMainAutoShowWindow->setToolTip(tr("Auto-Show Window, when Tray Icon is hidden"));
-    m_cbMainAutoShowMenu->setText(tr("Auto-Show Menu"));
-    m_cbMainAutoShowMenu->setToolTip(tr("Show the menu, when the window is activated"));
     m_cbSplashVisible->setText(tr("Show Splash screen on startup"));
     m_cbUpdateWindowIcons->setText(tr("Show the current state in the windows' icons"));
     m_cbUpdateWindowIcons->setToolTip(
@@ -688,12 +685,6 @@ void IfacePage::setupMainBox()
                 ctrl()->setIniUserEdited();
             });
 
-    m_cbMainAutoShowMenu =
-            ControlUtil::createCheckBox(iniUser().mainWindowAutoShowMenu(), [&](bool checked) {
-                iniUser().setMainWindowAutoShowMenu(checked);
-                ctrl()->setIniUserEdited();
-            });
-
     m_cbSplashVisible =
             ControlUtil::createCheckBox(iniUser().splashWindowVisible(), [&](bool checked) {
                 iniUser().setSplashWindowVisible(checked);
@@ -708,7 +699,6 @@ void IfacePage::setupMainBox()
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbMainAutoShowWindow);
-    layout->addWidget(m_cbMainAutoShowMenu);
     layout->addWidget(m_cbSplashVisible);
     layout->addWidget(m_cbUpdateWindowIcons);
 

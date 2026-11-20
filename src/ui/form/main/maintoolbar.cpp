@@ -33,10 +33,7 @@ void MainToolBar::setupUi()
     addSeparator();
 
     addWidget(new InstallationButton());
-
-    m_headerButtons = new HeaderButtons();
-
-    addWidget(m_headerButtons);
+    addWidget(new HeaderButtons());
 }
 
 void MainToolBar::addCheckBox(QAction *action)

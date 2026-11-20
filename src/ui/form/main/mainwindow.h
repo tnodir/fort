@@ -5,7 +5,6 @@
 
 QT_FORWARD_DECLARE_CLASS(QMainWindow)
 
-class MainToolBar;
 class PanelDock;
 
 class MainWindow : public FormWindow
@@ -41,9 +40,6 @@ protected:
 protected slots:
     bool checkAboutToClose() override;
 
-private slots:
-    void onActivationChanged(bool isActive);
-
 private:
     QStringList dockGroups() const;
 
@@ -59,7 +55,6 @@ private:
 
 private:
     QLabel *m_labelHint = nullptr;
-    MainToolBar *m_toolBar = nullptr;
     QMainWindow *m_dockHost = nullptr;
 };
 

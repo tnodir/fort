@@ -124,7 +124,6 @@ private:
     QKeySequenceEdit *m_editShortcut = nullptr;
 
     QCheckBox *m_cbMainAutoShowWindow = nullptr;
-    QCheckBox *m_cbMainAutoShowMenu = nullptr;
     QCheckBox *m_cbSplashVisible = nullptr;
     QCheckBox *m_cbUpdateWindowIcons = nullptr;
 
