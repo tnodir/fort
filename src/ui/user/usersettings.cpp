@@ -51,18 +51,7 @@ void UserSettings::migrateIniOnLoad()
 
     Settings::migrateIniOnLoad();
 
-    // COMPAT: v3.4.0: .ini ~> .user.ini
-    if (version < 0x030400) {
-        setCacheValue("statWindow/trafUnit", ini()->value("stat/trafUnit"));
-        setCacheValue("statWindow/trafSplit", ini()->value("optWindow/statSplit"));
-        setCacheValue("statWindow/geometry", ini()->value("connWindow/geometry"));
-        setCacheValue("statWindow/connListHeader", ini()->value("connWindow/connListHeader"));
-        setCacheValue("statWindow/connListHeaderVersion",
-                ini()->value("connWindow/connListHeaderVersion"));
-        setCacheValue("statWindow/autoScroll", ini()->value("connWindow/autoScroll"));
-        setCacheValue("statWindow/showHostNames", ini()->value("connWindow/showHostNames"));
-        setCacheValue("statWindow/maximized", ini()->value("connWindow/maximized"));
-    }
+    migrateUserIniOnLoad(version);
 
     // COMPAT: v3.9.11
     if (version < 0x030911) {
@@ -93,26 +82,7 @@ void UserSettings::migrateIniOnWrite()
 
     Settings::migrateIniOnWrite();
 
-    // COMPAT: v3.4.0: .ini ~> .user.ini
-    if (version < 0x030400) {
-        removeIniKey("base/debug");
-        removeIniKey("base/console");
-        removeIniKey("base/passwordHash");
-        removeIniKey("confFlags");
-        removeIniKey("stat");
-        removeIniKey("quota");
-        removeIniKey("optWindow/statSplit");
-        removeIniKey("connWindow");
-        ini()->setValue("statWindow/geometry", cacheValue("statWindow/geometry"));
-        ini()->setValue("statWindow/trafUnit", cacheValue("statWindow/trafUnit"));
-        ini()->setValue("statWindow/trafSplit", cacheValue("statWindow/trafSplit"));
-        ini()->setValue("statWindow/connListHeader", cacheValue("statWindow/connListHeader"));
-        ini()->setValue(
-                "statWindow/connListHeaderVersion", cacheValue("statWindow/connListHeaderVersion"));
-        ini()->setValue("statWindow/autoScroll", cacheValue("statWindow/autoScroll"));
-        ini()->setValue("statWindow/showHostNames", cacheValue("statWindow/showHostNames"));
-        ini()->setValue("statWindow/maximized", cacheValue("statWindow/maximized"));
-    }
+    migrateUserIniOnWrite(version);
 
     // COMPAT: v3.6.2: Remove "Dark Mode"
     if (version < 0x030602) {
@@ -152,4 +122,46 @@ void UserSettings::migrateIniOnWrite()
         ini()->setValue("connWindow/showHostNames", cacheValue("connWindow/showHostNames"));
         ini()->setValue("hotKey/traffic", cacheValue("hotKey/traffic"));
     }
+}
+
+// COMPAT: v3.4.0: .ini ~> .user.ini
+void UserSettings::migrateUserIniOnLoad(int version)
+{
+    if (version >= 0x030400)
+        return;
+
+    setCacheValue("statWindow/trafUnit", ini()->value("stat/trafUnit"));
+    setCacheValue("statWindow/trafSplit", ini()->value("optWindow/statSplit"));
+    setCacheValue("statWindow/geometry", ini()->value("connWindow/geometry"));
+    setCacheValue("statWindow/connListHeader", ini()->value("connWindow/connListHeader"));
+    setCacheValue(
+            "statWindow/connListHeaderVersion", ini()->value("connWindow/connListHeaderVersion"));
+    setCacheValue("statWindow/autoScroll", ini()->value("connWindow/autoScroll"));
+    setCacheValue("statWindow/showHostNames", ini()->value("connWindow/showHostNames"));
+    setCacheValue("statWindow/maximized", ini()->value("connWindow/maximized"));
+}
+
+// COMPAT: v3.4.0: .ini ~> .user.ini
+void UserSettings::migrateUserIniOnWrite(int version)
+{
+    if (version >= 0x030400)
+        return;
+
+    removeIniKey("base/debug");
+    removeIniKey("base/console");
+    removeIniKey("base/passwordHash");
+    removeIniKey("confFlags");
+    removeIniKey("stat");
+    removeIniKey("quota");
+    removeIniKey("optWindow/statSplit");
+    removeIniKey("connWindow");
+    ini()->setValue("statWindow/geometry", cacheValue("statWindow/geometry"));
+    ini()->setValue("statWindow/trafUnit", cacheValue("statWindow/trafUnit"));
+    ini()->setValue("statWindow/trafSplit", cacheValue("statWindow/trafSplit"));
+    ini()->setValue("statWindow/connListHeader", cacheValue("statWindow/connListHeader"));
+    ini()->setValue(
+            "statWindow/connListHeaderVersion", cacheValue("statWindow/connListHeaderVersion"));
+    ini()->setValue("statWindow/autoScroll", cacheValue("statWindow/autoScroll"));
+    ini()->setValue("statWindow/showHostNames", cacheValue("statWindow/showHostNames"));
+    ini()->setValue("statWindow/maximized", cacheValue("statWindow/maximized"));
 }

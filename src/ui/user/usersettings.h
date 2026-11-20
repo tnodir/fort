@@ -26,6 +26,9 @@ protected:
     void migrateIniOnWrite() override;
 
 private:
+    void migrateUserIniOnLoad(int version);
+    void migrateUserIniOnWrite(int version);
+
     IniUser m_iniUser;
 };
 
