@@ -103,6 +103,23 @@ bool FormPointer::show(bool activate, bool expose)
     return true;
 }
 
+bool FormPointer::restoreDocked()
+{
+    if (!window()) {
+        initialize();
+    }
+
+    if (!isIniDocked())
+        return false;
+
+    if (!showDocked(/*activate=*/false, /*expose=*/false))
+        return false;
+
+    Fort::windowManager()->windowOpened(code());
+
+    return true;
+}
+
 bool FormPointer::close(bool isAppQuitting)
 {
     auto w = this->window();

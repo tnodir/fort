@@ -9,7 +9,6 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
-#include <form/controls/passwordlockframe.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
 #include <manager/autoupdatemanager.h>
@@ -82,15 +81,9 @@ void UpdatesWindow::setupUi()
     setupNewVersionUpdate();
     setupAutoUpdate();
 
-    auto frameLayout = new QVBoxLayout();
-    frameLayout->addWidget(m_gbNewVersion);
-    frameLayout->addStretch();
-
-    auto frame = new PasswordLockFrame();
-    frame->setLayout(frameLayout);
-
-    auto layout = ControlUtil::createVLayout();
-    layout->addWidget(frame);
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_gbNewVersion);
+    layout->addStretch();
 
     this->setLayout(layout);
 

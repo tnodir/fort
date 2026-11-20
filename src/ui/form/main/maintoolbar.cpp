@@ -10,14 +10,16 @@
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
 
+#include "mainwindow.h"
+
 using namespace Fort;
 
-MainToolBar::MainToolBar(QWidget *parent) : QToolBar(parent)
+MainToolBar::MainToolBar(MainWindow *mainWindow) : QToolBar(mainWindow)
 {
-    setupUi();
+    setupUi(mainWindow);
 }
 
-void MainToolBar::setupUi()
+void MainToolBar::setupUi(MainWindow *mainWindow)
 {
     const auto trayIcon = windowManager()->trayIcon();
 
@@ -32,8 +34,14 @@ void MainToolBar::setupUi()
 
     addSeparator();
 
+    addAction(mainWindow->lockAction());
+    addAction(mainWindow->unlockAction());
+
     addWidget(new InstallationButton());
-    addWidget(new HeaderButtons());
+
+    auto headerButtons = new HeaderButtons();
+    headerButtons->setSeparatorVisible(true);
+    addWidget(headerButtons);
 }
 
 void MainToolBar::addCheckBox(QAction *action)

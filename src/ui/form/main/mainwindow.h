@@ -3,6 +3,7 @@
 
 #include <form/controls/formwindow.h>
 
+QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QMainWindow)
 
 class PanelDock;
@@ -17,6 +18,9 @@ public:
     WindowCode windowCode() const override { return WindowMain; }
     QString helpSection() const override;
     QString iniGroup() const override;
+
+    QAction *lockAction() const { return m_actLock; }
+    QAction *unlockAction() const { return m_actUnlock; }
 
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
@@ -44,16 +48,21 @@ private:
     QStringList dockGroups() const;
 
     void restoreDocks();
+    void updateLocked();
+    void updateLockToolTip();
 
     void retranslateUi();
 
     void setupUi();
+    void setupLockActions();
     QWidget *setupHeader();
     void setupDockHost();
 
     void updateHint();
 
 private:
+    QAction *m_actLock = nullptr;
+    QAction *m_actUnlock = nullptr;
     QLabel *m_labelHint = nullptr;
     QMainWindow *m_dockHost = nullptr;
 };

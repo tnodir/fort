@@ -21,14 +21,10 @@ private:
     void setupWindowMenu();
     void setupHelpMenu();
 
-    void updateFileMenu();
-
 private:
     MainWindow *m_mainWindow = nullptr;
 
     QMenu *m_fileMenu = nullptr;
-    QAction *m_actLock = nullptr;
-    QAction *m_actUnlock = nullptr;
     QMenu *m_toolsMenu = nullptr;
     QAction *m_actReviewAlerts = nullptr;
     QMenu *m_windowMenu = nullptr;

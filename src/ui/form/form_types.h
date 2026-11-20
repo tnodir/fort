@@ -25,9 +25,14 @@ enum WindowCode {
     WindowPasswordDialog = (1 << 16),
 };
 
-constexpr quint32 WindowPasswordProtected = (WindowMain | WindowPrograms | WindowProgramAlert
-        | WindowServices | WindowOptions | WindowRules | WindowTraffic | WindowConnections
-        | WindowZones | WindowGroups | WindowSpeedLimits | WindowTimePeriods | WindowFilterSim);
+constexpr quint32 WindowPasswordProtected =
+        (WindowPrograms | WindowProgramAlert | WindowServices | WindowOptions | WindowRules
+                | WindowTraffic | WindowConnections | WindowZones | WindowGroups | WindowSpeedLimits
+                | WindowTimePeriods | WindowFilterSim | WindowInstallation | WindowUpdates);
+
+/* The windows, which keep the password unlocked while they are open: the Main window is shown
+ * without the password, its docked windows are disabled while the password is required */
+constexpr quint32 WindowPasswordUnlocking = (WindowMain | WindowPasswordProtected);
 
 /* The windows, which can be docked into the Main window */
 constexpr quint32 WindowDockable = (WindowPrograms | WindowServices | WindowRules | WindowTraffic

@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+#include <QAction>
 #include <QApplication>
 #include <QGridLayout>
 #include <QLabel>
@@ -13,9 +14,11 @@
 #include <form/controls/logowidget.h>
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
+#include <fortsettings.h>
 #include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
+#include <util/iconcache.h>
 
 #include "mainmenubar.h"
 #include "maintoolbar.h"
@@ -79,6 +82,10 @@ MainWindow::MainWindow(QWidget *parent) : FormWindow(parent)
     retranslateUi();
 
     setupFormWindow(iniUser());
+
+    connect(confManager(), &ConfManager::iniChanged, this, &MainWindow::updateLocked);
+    connect(settings(), &FortSettings::passwordCheckedChanged, this, &MainWindow::updateLocked);
+    updateLocked();
 
     // After the window is shown: the docked windows are shown in it
     QMetaObject::invokeMethod(this, &MainWindow::restoreDocks, Qt::QueuedConnection);
@@ -253,7 +260,7 @@ void MainWindow::restoreDocks()
     for (const QString &group : groups) {
         const WindowCode code = dockWindowCode(group);
         if (code != WindowNone) {
-            windowManager()->showWindowByCode(code, /*activate=*/false);
+            windowManager()->restoreDockedWindowByCode(code);
         }
     }
 
@@ -264,6 +271,28 @@ void MainWindow::restoreDocks()
     }
 }
 
+void MainWindow::updateLocked()
+{
+    const auto settings = Fort::settings();
+
+    const bool passwordLocked = settings->isPasswordRequired();
+
+    m_actLock->setVisible(!passwordLocked);
+    m_actLock->setEnabled(settings->hasPassword());
+    m_actUnlock->setVisible(passwordLocked);
+
+    updateLockToolTip();
+
+    // The docked windows are restored without the password: nothing can be done with them
+    m_dockHost->setEnabled(!passwordLocked);
+}
+
+void MainWindow::updateLockToolTip()
+{
+    // Without it the tool tip is the action's text
+    m_actLock->setToolTip(m_actLock->isEnabled() ? QString() : tr("No Password"));
+}
+
 void MainWindow::retranslateUi()
 {
     this->unsetLocale();
@@ -271,11 +300,17 @@ void MainWindow::retranslateUi()
     m_labelHint->setText(tr("Open a panel from the tool bar's menus.\n"
                             "Or move a window here by its menu's \"Dock to My Fort\" item."));
 
+    m_actLock->setText(tr("Lock"));
+    m_actUnlock->setText(tr("Unlock"));
+
+    updateLockToolTip();
+
     this->setWindowTitle(QApplication::applicationDisplayName());
 }
 
 void MainWindow::setupUi()
 {
+    setupLockActions();
     setupDockHost();
 
     auto layout = ControlUtil::createVLayout(/*margin=*/0);
@@ -291,6 +326,17 @@ void MainWindow::setupUi()
     this->setMinimumSize(500, 400);
 }
 
+void MainWindow::setupLockActions()
+{
+    m_actLock = new QAction(IconCache::icon(":/icons/lock.png"), QString(), this);
+    connect(m_actLock, &QAction::triggered, windowManager(), &WindowManager::resetCheckedPassword);
+
+    m_actUnlock = new QAction(IconCache::icon(":/icons/lock_open.png"), QString(), this);
+    connect(
+            m_actUnlock, &QAction::triggered, this,
+            [] { windowManager()->checkPassword(WindowMain); }, Qt::QueuedConnection);
+}
+
 QWidget *MainWindow::setupHeader()
 {
     auto logo = new LogoWidget(/*compact=*/true);
@@ -302,7 +348,7 @@ QWidget *MainWindow::setupHeader()
     layout->setSpacing(0);
     layout->setColumnStretch(0, 1);
 
-    auto toolBar = new MainToolBar();
+    auto toolBar = new MainToolBar(this);
 
     layout->addWidget(new MainMenuBar(this), 0, 0);
     layout->addWidget(toolBar, 1, 0);

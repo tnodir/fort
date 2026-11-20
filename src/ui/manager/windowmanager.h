@@ -158,6 +158,9 @@ public slots:
     bool closeWindowByCode(WindowCode code);
     void switchWindowByCode(WindowCode code);
 
+    // Shows the docked window in the Main window without the password: it is disabled there
+    bool restoreDockedWindowByCode(WindowCode code);
+
     bool dockWindowByCode(WindowCode code);
     bool undockWindowByCode(WindowCode code, const std::optional<QPoint> &pos = std::nullopt);
     void closeDockedWindows();
@@ -219,6 +222,8 @@ private:
     void quitApp();
 
     bool checkPasswordDialog(WindowCode code, FortSettings *settings);
+
+    void onPasswordCheckedChanged();
 
     void windowOpened(WindowCode code);
     bool isAnyWindowOpen(quint32 codes) const;

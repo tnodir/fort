@@ -25,6 +25,7 @@ public:
     FormWindow *initialize();
 
     bool show(bool activate = true, bool expose = false);
+    bool restoreDocked();
     bool close(bool isAppQuitting = false);
 
     bool moveToDock();

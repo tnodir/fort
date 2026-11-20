@@ -91,6 +91,15 @@ bool showWindowTab(ProcessCommandResult &r, const WindowShow &windowShow, const 
     return windowManager()->showOptionsWindowTab(tabIndex);
 }
 
+bool checkShowPassword(ProcessCommandResult &r, const WindowShow &windowShow)
+{
+    // The Main window is shown without the password
+    if (windowShow.code == WindowMain)
+        return true;
+
+    return ControlCommandUtil::checkCommandActionPassword(r, /*action=*/0);
+}
+
 bool showWindow(ProcessCommandResult &r, const QVariantList &args)
 {
     const QString name = args.value(1).toString();
@@ -100,6 +109,9 @@ bool showWindow(ProcessCommandResult &r, const QVariantList &args)
         r.errorMessage = "Invalid <name>: " + name;
         return false;
     }
+
+    if (!checkShowPassword(r, *windowShow))
+        return false;
 
     if (args.size() > 2)
         return showWindowTab(r, *windowShow, args[2].toString());
@@ -118,9 +130,6 @@ bool ControlCommandWindow::processCommand(
                 + "; <tab> of options: " + optionsTabNames().join('|') + " or its index";
         return false;
     }
-
-    if (!ControlCommandUtil::checkCommandActionPassword(r, /*action=*/0))
-        return false;
 
     return showWindow(r, p.args);
 }

@@ -11,7 +11,6 @@
 #include <conf/confmanager.h>
 #include <driver/drivermanager.h>
 #include <form/controls/controlutil.h>
-#include <form/controls/passwordlockframe.h>
 #include <fortglobal.h>
 #include <fortmanager.h>
 #include <fortsettings.h>
@@ -180,12 +179,9 @@ void InstallationWindow::setupUi()
     frameLayout->addLayout(colLayout);
     frameLayout->addStretch();
 
-    auto frame = new PasswordLockFrame();
-    frame->setLayout(frameLayout);
-
     // Main layout
     auto layout = ControlUtil::createVLayout();
-    layout->addWidget(ControlUtil::wrapToScrollArea(frame));
+    layout->addWidget(ControlUtil::wrapToScrollArea(ControlUtil::wrapToWidget(frameLayout)));
 
     this->setLayout(layout);
 

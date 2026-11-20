@@ -189,6 +189,9 @@ void WindowManager::setUp()
     qApp->installEventFilter(this);
 
     connect(qApp, &QCoreApplication::aboutToQuit, this, &WindowManager::quitApp);
+
+    connect(settings(), &FortSettings::passwordCheckedChanged, this,
+            &WindowManager::onPasswordCheckedChanged);
 }
 
 void WindowManager::tearDown()
@@ -542,6 +545,12 @@ void WindowManager::switchWindowByCode(WindowCode code)
     }
 }
 
+bool WindowManager::restoreDockedWindowByCode(WindowCode code)
+{
+    auto &form = formByCode(code);
+    return form.restoreDocked();
+}
+
 bool WindowManager::dockWindowByCode(WindowCode code)
 {
     auto &form = formByCode(code);
@@ -763,10 +772,21 @@ bool WindowManager::checkPasswordDialog(WindowCode code, FortSettings *settings)
     return true;
 }
 
+void WindowManager::onPasswordCheckedChanged()
+{
+    // The windows opened while the password was required are unlocked now
+    if (!settings()->isPasswordRequired()) {
+        m_unlockedWindows |= (m_openedWindows & WindowPasswordUnlocking);
+    }
+}
+
 void WindowManager::windowOpened(WindowCode code)
 {
     m_openedWindows |= code;
-    m_unlockedWindows |= (code & WindowPasswordProtected);
+
+    if (!settings()->isPasswordRequired()) {
+        m_unlockedWindows |= (code & WindowPasswordUnlocking);
+    }
 
     emit windowVisibilityChanged(code, /*isVisible=*/true);
 }

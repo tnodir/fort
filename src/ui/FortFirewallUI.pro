@@ -106,7 +106,6 @@ SOURCES += \
     form/controls/menuwidget.cpp \
     form/controls/nativewindow.cpp \
     form/controls/optionsbutton.cpp \
-    form/controls/passwordlockframe.cpp \
     form/controls/plaintextedit.cpp \
     form/controls/progressitemdelegate.cpp \
     form/controls/pushbutton.cpp \
@@ -470,7 +469,6 @@ HEADERS += \
     form/controls/menuwidget.h \
     form/controls/nativewindow.h \
     form/controls/optionsbutton.h \
-    form/controls/passwordlockframe.h \
     form/controls/plaintextedit.h \
     form/controls/progressitemdelegate.h \
     form/controls/pushbutton.h \

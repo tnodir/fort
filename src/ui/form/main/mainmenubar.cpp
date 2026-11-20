@@ -3,7 +3,6 @@
 #include <form/controls/applinks.h>
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
-#include <fortsettings.h>
 #include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
 #include <util/iconcache.h>
@@ -24,8 +23,6 @@ MainMenuBar::MainMenuBar(MainWindow *mainWindow) : QMenuBar(mainWindow), m_mainW
 void MainMenuBar::retranslateUi()
 {
     m_fileMenu->setTitle(tr("File"));
-    m_actLock->setText(tr("Lock"));
-    m_actUnlock->setText(tr("Unlock"));
 
     m_toolsMenu->setTitle(tr("Tools"));
     m_actReviewAlerts->setText(tr("Review Alerts"));
@@ -57,19 +54,12 @@ void MainMenuBar::setupFileMenu()
 
     m_fileMenu = addMenu(QString());
 
-    m_actLock = m_fileMenu->addAction(IconCache::icon(":/icons/lock.png"), QString());
-    connect(m_actLock, &QAction::triggered, windowManager(), &WindowManager::resetCheckedPassword);
-
-    m_actUnlock = m_fileMenu->addAction(IconCache::icon(":/icons/lock_open.png"), QString());
-    connect(
-            m_actUnlock, &QAction::triggered, this,
-            [] { windowManager()->checkPassword(WindowMain); }, Qt::QueuedConnection);
+    m_fileMenu->addAction(m_mainWindow->lockAction());
+    m_fileMenu->addAction(m_mainWindow->unlockAction());
 
     m_fileMenu->addSeparator();
 
     m_fileMenu->addAction(trayIcon->quitAction());
-
-    connect(m_fileMenu, &QMenu::aboutToShow, this, &MainMenuBar::updateFileMenu);
 }
 
 void MainMenuBar::setupToolsMenu()
@@ -129,14 +119,4 @@ void MainMenuBar::setupHelpMenu()
 
     m_actAbout = m_helpMenu->addAction(IconCache::icon(":/icons/information.png"), QString());
     connect(m_actAbout, &QAction::triggered, windowManager(), &WindowManager::showAboutBox);
-}
-
-void MainMenuBar::updateFileMenu()
-{
-    const auto settings = Fort::settings();
-
-    const bool passwordLocked = settings->isPasswordRequired();
-
-    m_actLock->setVisible(settings->hasPassword() && !passwordLocked);
-    m_actUnlock->setVisible(passwordLocked);
 }

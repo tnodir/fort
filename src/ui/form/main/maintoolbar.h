@@ -3,15 +3,17 @@
 
 #include <QToolBar>
 
+class MainWindow;
+
 class MainToolBar : public QToolBar
 {
     Q_OBJECT
 
 public:
-    explicit MainToolBar(QWidget *parent = nullptr);
+    explicit MainToolBar(MainWindow *mainWindow);
 
 private:
-    void setupUi();
+    void setupUi(MainWindow *mainWindow);
 
     void addCheckBox(QAction *action);
     void addMenu(QMenu *menu);
