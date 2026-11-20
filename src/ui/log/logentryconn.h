@@ -34,6 +34,10 @@ public:
     bool appAsked() const { return m_appAsked; }
     void setAppAsked(bool v) { m_appAsked = v; }
 
+    // The process is logged: the paths are of its Process New entry
+    bool procLogged() const { return m_procLogged; }
+    void setProcLogged(bool v) { m_procLogged = v; }
+
     // The remote host's name is by the DNS Client's answer to the process
     bool remoteHostOfProcess() const { return m_remoteHostOfProcess; }
     void setRemoteHostOfProcess(bool v) { m_remoteHostOfProcess = v; }
@@ -106,6 +110,7 @@ private:
     bool m_loopback : 1 = false;
     bool m_inherited : 1 = false;
     bool m_appAsked : 1 = false;
+    bool m_procLogged : 1 = false;
     bool m_remoteHostOfProcess : 1 = false;
     quint8 m_reason = 0;
     quint8 m_ipProto = 0;

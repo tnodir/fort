@@ -130,7 +130,18 @@ TEST_F(StatTest, dbWriteRead)
     quint32 index = 0;
     for (const QString &appPath : appPaths) {
         LogEntryProcNew entry(++index * 10, appPath);
+        entry.setInheritKernelPath(index == procCount ? appPaths[0] : QString());
         statManager.logProcNew(entry);
+    }
+
+    // The processes' paths by their Process New entries
+    {
+        const auto process = statManager.loggedProcess(procCount * 10);
+        ASSERT_TRUE(process);
+        ASSERT_EQ(process->kernelPath, appPaths[procCount - 1]);
+        ASSERT_EQ(process->inheritKernelPath, appPaths[0]);
+
+        ASSERT_FALSE(statManager.loggedProcess(1));
     }
 
     debugProcNew(statManager.sqliteDb());

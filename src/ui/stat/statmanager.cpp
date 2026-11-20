@@ -224,25 +224,25 @@ bool StatManager::setupDb()
 
 void StatManager::logClear()
 {
-    m_appPidPathMap.clear();
+    m_loggedProcessMap.clear();
 }
 
-void StatManager::addLoggedProcessId(const QString &appPath, const LogEntryProcNew &entry)
+void StatManager::addLoggedProcess(const QString &appPath, const LogEntryProcNew &entry)
 {
     const quint32 pid = entry.pid();
 
     // The exited process's ID may be reused by a new process with another path
-    m_appPidPathMap.insert(pid, appPath);
+    m_loggedProcessMap.insert(pid,
+            {
+                    .path = appPath,
+                    .kernelPath = entry.kernelPath(),
+                    .inheritKernelPath = entry.inheritKernelPath(),
+            });
 }
 
-void StatManager::removeLoggedProcessId(quint32 pid)
+void StatManager::removeLoggedProcess(quint32 pid)
 {
-    m_appPidPathMap.remove(pid);
-}
-
-QString StatManager::getLoggedProcessIdPath(quint32 pid)
-{
-    return m_appPidPathMap.value(pid);
+    m_loggedProcessMap.remove(pid);
 }
 
 void StatManager::addCachedAppId(const QString &appPath, qint64 appId)
@@ -269,9 +269,18 @@ bool StatManager::logProcNew(const LogEntryProcNew &entry, qint64 unixTime)
 {
     const QString appPath = entry.path();
 
-    addLoggedProcessId(appPath, entry);
+    addLoggedProcess(appPath, entry);
 
     return getOrCreateCachedAppId(appPath, entry.appId(), unixTime) != INVALID_APP_ID;
+}
+
+std::optional<StatManager::LoggedProcess> StatManager::loggedProcess(quint32 pid) const
+{
+    const auto it = m_loggedProcessMap.constFind(pid);
+    if (it == m_loggedProcessMap.constEnd())
+        return {};
+
+    return *it;
 }
 
 bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
@@ -321,7 +330,7 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
         logTrafBytes(log, pid, { inBytes, outBytes });
 
         if (inactive) {
-            removeLoggedProcessId(pid);
+            removeLoggedProcess(pid);
         }
     }
 
@@ -487,18 +496,18 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
 
 void StatManager::logTrafBytes(TrafLog &log, quint32 pid, const TrafBytes &bytes)
 {
-    const QString appPath = getLoggedProcessIdPath(pid);
+    const auto process = loggedProcess(pid);
 
-    if (Q_UNLIKELY(appPath.isEmpty())) {
+    if (Q_UNLIKELY(!process)) {
         qCCritical(LC) << "UI & Driver's states mismatch! Expected processes:"
-                       << m_appPidPathMap.keys() << "Got:" << pid;
+                       << m_loggedProcessMap.keys() << "Got:" << pid;
         return;
     }
 
     if (bytes.inBytes == 0 && bytes.outBytes == 0)
         return;
 
-    const qint64 appId = getOrCreateCachedAppId(appPath, /*confAppId=*/0, log.unixTime);
+    const qint64 appId = getOrCreateCachedAppId(process->path, /*confAppId=*/0, log.unixTime);
     Q_ASSERT(appId != INVALID_APP_ID);
 
     if (log.logStat) {

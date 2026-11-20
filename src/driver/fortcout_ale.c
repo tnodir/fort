@@ -161,7 +161,7 @@ static FORT_APP_DATA fort_callout_ale_conf_app_data(
     return conn->app.data;
 }
 
-inline static void fort_callout_ale_associate_flow_log(
+inline static BOOL fort_callout_ale_associate_flow_log(
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_META_CONN conn)
 {
     const NTSTATUS status = fort_buffer_conn_write(
@@ -170,15 +170,33 @@ inline static void fort_callout_ale_associate_flow_log(
     /* Log the process again by its next flow */
     if (!NT_SUCCESS(status)) {
         fort_flow_proc_unlog(&fort_device()->stat, conn->process_id);
+        return FALSE;
+    }
+
+    fort_flow_proc_written(&fort_device()->stat, conn);
+    return TRUE;
+}
+
+/* Is the process's PROC_NEW in the log before the connection's CONN? */
+inline static BOOL fort_callout_ale_associate_flow_proc_logged(PFORT_CALLOUT_ALE_EXTRA cx,
+        PFORT_CONF_META_CONN conn, const FORT_FLOW_PROC_LOG_TYPE proc_log)
+{
+    switch (proc_log) {
+    case FORT_FLOW_PROC_LOG_NEW:
+        return fort_callout_ale_associate_flow_log(cx, conn);
+    case FORT_FLOW_PROC_LOG_WRITTEN:
+        return TRUE;
+    default:
+        return FALSE; /* another connection logs it */
     }
 }
 
 inline static BOOL fort_callout_ale_associate_flow(
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_META_CONN conn)
 {
-    BOOL proc_logged = FALSE;
+    FORT_FLOW_ASSOC assoc = { 0 };
 
-    const NTSTATUS status = fort_flow_associate(&fort_device()->stat, conn, &proc_logged);
+    const NTSTATUS status = fort_flow_associate(&fort_device()->stat, conn, &assoc);
 
     if (status == FORT_STATUS_FLOW_SKIP)
         return FALSE; /* the stat is closed or not yet enabled */
@@ -193,9 +211,12 @@ inline static BOOL fort_callout_ale_associate_flow(
         return TRUE; /* block (Error) */
     }
 
-    if (!proc_logged) {
-        fort_callout_ale_associate_flow_log(cx, conn);
-    }
+    /* The flow's CONN is logged once, not on each reauthorization */
+    conn->act.conn_nolog |= (UCHAR) assoc.conn_logged;
+    conn->flow_logging = (UINT16) !assoc.conn_logged;
+
+    conn->proc_logged =
+            (UINT16) fort_callout_ale_associate_flow_proc_logged(cx, conn, assoc.proc_log);
 
     return FALSE;
 }
@@ -505,6 +526,14 @@ inline static void fort_callout_ale_classify_boot_action(
     }
 }
 
+inline static void fort_callout_ale_log_conn_pending_unlogged(PCFORT_CONF_META_CONN conn)
+{
+    /* The not logged pending connection isn't shown to the user: block it by the worker */
+    if (fort_pending_conn_unlogged(&fort_device()->pending, conn)) {
+        fort_worker_queue(&fort_device()->worker, FORT_WORKER_PENDING);
+    }
+}
+
 inline static void fort_callout_ale_log_conn(PFORT_CALLOUT_ALE_EXTRA cx)
 {
     PCFORT_CONF_META_CONN conn = &cx->conn;
@@ -512,12 +541,21 @@ inline static void fort_callout_ale_log_conn(PFORT_CALLOUT_ALE_EXTRA cx)
     const NTSTATUS status = fort_buffer_conn_write(
             &fort_device()->buffer, conn, &cx->irp_info, FORT_BUFFER_CONN_WRITE_CONN);
 
-    if (NT_SUCCESS(status) || conn->reason != FORT_CONN_REASON_ASK_PENDING)
+    if (NT_SUCCESS(status))
         return;
 
-    /* The not logged pending connection isn't shown to the user: block it by the worker */
-    if (fort_pending_conn_unlogged(&fort_device()->pending, conn)) {
-        fort_worker_queue(&fort_device()->worker, FORT_WORKER_PENDING);
+    if (conn->flow_logging) {
+        /* Log the flow's connection by its next reauthorization */
+        fort_flow_conn_unlog(&fort_device()->stat, conn->flow_id);
+    } else if (conn->reason == FORT_CONN_REASON_ASK_PENDING) {
+        fort_callout_ale_log_conn_pending_unlogged(conn);
+    }
+}
+
+inline static void fort_callout_ale_reauth_blocked(PCFORT_CONF_META_CONN conn)
+{
+    if (conn->is_reauth && conn->act.blocked) {
+        fort_flow_reauth_blocked(&fort_device()->stat, conn->flow_id);
     }
 }
 
@@ -545,6 +583,8 @@ inline static void fort_callout_ale_check_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALL
     if (!fort_conf_conn_flags_filtered(&filter, conn)) {
         fort_callout_ale_check_app(ca, cx, conf_ref, &filter);
     }
+
+    fort_callout_ale_reauth_blocked(conn);
 
     /* Log the connection */
     if (fort_callout_ale_log_conn_check(ca, conn, conf_ref, conf_flags)) {

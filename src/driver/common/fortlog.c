@@ -65,14 +65,20 @@ FORT_API void fort_log_app_header_read(
     *pid = *up;
 }
 
+inline static UINT32 fort_log_conn_proc_flags(PCFORT_CONF_META_CONN conn)
+{
+    return (conn->inherited ? FORT_LOG_CONN_INHERITED : 0)
+            | (conn->app_asked ? FORT_LOG_CONN_APP_ASKED : 0)
+            | (conn->proc_logged ? FORT_LOG_CONN_PROC_PATH : 0);
+}
+
 inline static UINT32 fort_log_conn_flags(PCFORT_CONF_META_CONN conn)
 {
     return (conn->isIPv6 ? FORT_LOG_CONN_IP6 : 0) | (conn->inbound ? FORT_LOG_CONN_INBOUND : 0)
             | (conn->is_loopback ? FORT_LOG_CONN_LOOPBACK : 0)
-            | (conn->inherited ? FORT_LOG_CONN_INHERITED : 0)
             | (conn->act.conn_alert ? FORT_LOG_CONN_ALERTED : 0)
             | (conn->act.terminated ? FORT_LOG_CONN_TERMINATED : 0)
-            | (conn->app_asked ? FORT_LOG_CONN_APP_ASKED : 0);
+            | fort_log_conn_proc_flags(conn);
 }
 
 FORT_API void fort_log_conn_header_write(
@@ -129,6 +135,7 @@ FORT_API void fort_log_conn_header_read(
     conn->act.conn_alert = (v & FORT_LOG_CONN_ALERTED) != 0;
     conn->act.terminated = (v & FORT_LOG_CONN_TERMINATED) != 0;
     conn->app_asked = (v & FORT_LOG_CONN_APP_ASKED) != 0;
+    conn->proc_logged = (v & FORT_LOG_CONN_PROC_PATH) != 0;
 
     v = *up++;
     conn->reason = (UCHAR) v;

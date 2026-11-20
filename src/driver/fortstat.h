@@ -38,6 +38,7 @@ typedef struct fort_stat_proc
     UINT16 log_stat : 1;
     UINT16 active : 1;
     UINT16 named : 1; /* PROC_NEW is logged with a ps name */
+    UINT16 proc_written : 1; /* PROC_NEW is written to the log */
 
     UINT32 refcount;
 
@@ -53,13 +54,14 @@ typedef struct fort_stat_proc
 #define FORT_FLOW_IP6               0x20
 #define FORT_FLOW_INBOUND           0x40
 #define FORT_FLOW_ACTIVE            0x80
+#define FORT_FLOW_CONN_LOGGED       0x0100 /* the flow's CONN is logged */
 
 typedef struct fort_flow_opt
 {
     union {
         struct
         {
-            UCHAR volatile flags;
+            UINT16 volatile flags;
             UINT16 proc_index;
         };
 
@@ -95,6 +97,18 @@ typedef struct fort_flow
 } FORT_FLOW, *PFORT_FLOW;
 
 typedef const FORT_FLOW *PCFORT_FLOW;
+
+typedef enum FORT_FLOW_PROC_LOG_TYPE {
+    FORT_FLOW_PROC_LOG_PENDING = 0, /* another connection logs the PROC_NEW */
+    FORT_FLOW_PROC_LOG_NEW, /* the connection logs the process's PROC_NEW */
+    FORT_FLOW_PROC_LOG_WRITTEN, /* the PROC_NEW is written to the log */
+} FORT_FLOW_PROC_LOG_TYPE;
+
+typedef struct fort_flow_assoc
+{
+    BOOL conn_logged; /* the reauthorized flow's CONN is logged */
+    FORT_FLOW_PROC_LOG_TYPE proc_log;
+} FORT_FLOW_ASSOC, *PFORT_FLOW_ASSOC;
 
 #define FORT_STAT_LOG                 0x01
 #define FORT_STAT_SYSTEM_TIME_CHANGED 0x02
@@ -150,9 +164,9 @@ FORT_API UCHAR fort_stat_flags_set(PFORT_STAT stat, UCHAR flags, BOOL on);
 
 FORT_API UCHAR fort_stat_flags(PFORT_STAT stat);
 
-FORT_API UCHAR fort_flow_flags_set(PFORT_FLOW flow, UCHAR flags, BOOL on);
+FORT_API UINT16 fort_flow_flags_set(PFORT_FLOW flow, UINT16 flags, BOOL on);
 
-FORT_API UCHAR fort_flow_flags(PFORT_FLOW flow);
+FORT_API UINT16 fort_flow_flags(PFORT_FLOW flow);
 
 FORT_API void fort_stat_open(PFORT_STAT stat);
 
@@ -163,7 +177,7 @@ FORT_API void fort_stat_close(PFORT_STAT stat);
 FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat);
 
 FORT_API NTSTATUS fort_flow_associate(
-        PFORT_STAT stat, PCFORT_CONF_META_CONN conn, BOOL *proc_logged);
+        PFORT_STAT stat, PCFORT_CONF_META_CONN conn, PFORT_FLOW_ASSOC assoc);
 
 /* The closing flow allowed once by the user */
 FORT_API BOOL fort_flow_ask_allowed_id(PFORT_STAT stat, UINT64 flowContext, UINT64 *flow_id);
@@ -171,7 +185,15 @@ FORT_API BOOL fort_flow_ask_allowed_id(PFORT_STAT stat, UINT64 flowContext, UINT
 /* The flow allowed once by the user */
 FORT_API BOOL fort_flow_ask_allowed(PFORT_STAT stat, UINT64 flow_id);
 
+FORT_API void fort_flow_proc_written(PFORT_STAT stat, PCFORT_CONF_META_CONN conn);
+
 FORT_API void fort_flow_proc_unlog(PFORT_STAT stat, UINT32 process_id);
+
+/* The flow's CONN isn't written: log it by the next reauthorization */
+FORT_API void fort_flow_conn_unlog(PFORT_STAT stat, UINT64 flow_id);
+
+/* The flow's reauthorization is blocked: log its CONN by the next allowed one, ask it again */
+FORT_API void fort_flow_reauth_blocked(PFORT_STAT stat, UINT64 flow_id);
 
 FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext);
 

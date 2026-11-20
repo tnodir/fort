@@ -84,6 +84,7 @@ static PFORT_STAT_PROC fort_stat_proc_add(PFORT_STAT stat, UINT32 process_id)
     proc->log_stat = TRUE;
     proc->active = FALSE;
     proc->named = FALSE;
+    proc->proc_written = FALSE;
     proc->refcount = 0;
 
     return proc;
@@ -99,6 +100,22 @@ static void fort_stat_proc_unlog_node(PVOID arg, PVOID proc_node)
     UNUSED(arg);
 
     fort_stat_proc_unlog(proc_node);
+}
+
+/* Is the process's PROC_NEW logged with the connection's ps name? */
+inline static BOOL fort_stat_proc_log_taken(const FORT_STAT_PROC *proc, PCFORT_CONF_META_CONN conn)
+{
+    return proc->proc_stat && proc->named == (conn->ps_name != NULL);
+}
+
+static void fort_stat_proc_written_node(PVOID conn, PVOID proc_node)
+{
+    PFORT_STAT_PROC proc = proc_node;
+
+    /* Not taken again by a connection of another ps name */
+    if (fort_stat_proc_log_taken(proc, conn)) {
+        proc->proc_written = TRUE;
+    }
 }
 
 inline static void fort_stat_proc_inc(PFORT_STAT_PROC proc)
@@ -137,14 +154,23 @@ inline static UINT32 fort_stat_callout_id(
     return stat->callout_ids[calloutIdType];
 }
 
-FORT_API UCHAR fort_flow_flags_set(PFORT_FLOW flow, UCHAR flags, BOOL on)
+FORT_API UINT16 fort_flow_flags_set(PFORT_FLOW flow, UINT16 flags, BOOL on)
 {
-    return on ? InterlockedOr8(&flow->opt.flags, flags) : InterlockedAnd8(&flow->opt.flags, ~flags);
+    SHORT volatile *flow_flags = (SHORT volatile *) &flow->opt.flags;
+
+    return on ? InterlockedOr16(flow_flags, flags) : InterlockedAnd16(flow_flags, ~flags);
 }
 
-FORT_API UCHAR fort_flow_flags(PFORT_FLOW flow)
+FORT_API UINT16 fort_flow_flags(PFORT_FLOW flow)
 {
     return fort_flow_flags_set(flow, 0, TRUE);
+}
+
+static void fort_flow_conn_unlog_node(PVOID arg, PVOID flow_node)
+{
+    UNUSED(arg);
+
+    fort_flow_flags_set(flow_node, FORT_FLOW_CONN_LOGGED, FALSE);
 }
 
 typedef struct fort_flow_context_transport_opt
@@ -227,7 +253,7 @@ static void fort_flow_context_remove(PVOID stat_arg, PVOID flow_node)
 
     const UINT64 flow_id = flow->flow_id;
 
-    const UCHAR flow_flags = fort_flow_flags(flow);
+    const UINT16 flow_flags = fort_flow_flags(flow);
     const BOOL isIPv6 = (flow_flags & FORT_FLOW_IP6);
 
     /* Don't abort the flow on the next closing pass */
@@ -312,7 +338,7 @@ inline static UCHAR fort_flow_speed_limit_flags(const FORT_SPEED_LIMIT_IDS speed
             | (speed_limits.out_limit_id != 0 ? FORT_FLOW_SPEED_LIMIT_OUT : 0);
 }
 
-inline static void fort_flow_opt_set(PCFORT_FLOW_ADD_ARG faa)
+inline static void fort_flow_opt_set(PCFORT_FLOW_ADD_ARG faa, UINT16 old_flags)
 {
     PFORT_FLOW flow = faa->flow;
     PCFORT_CONF_META_CONN conn = faa->conn;
@@ -323,7 +349,9 @@ inline static void fort_flow_opt_set(PCFORT_FLOW_ADD_ARG faa)
 
     flow->opt.flags = speed_limit | (conn->ip_proto == IPPROTO_TCP ? FORT_FLOW_TCP : 0)
             | (conn->isIPv6 ? FORT_FLOW_IP6 : 0) | (conn->inbound ? FORT_FLOW_INBOUND : 0)
-            | (conn->reason == FORT_CONN_REASON_ASK_ALLOWED ? FORT_FLOW_ASK_ALLOWED : 0);
+            | (conn->reason == FORT_CONN_REASON_ASK_ALLOWED ? FORT_FLOW_ASK_ALLOWED : 0)
+            | (old_flags & FORT_FLOW_ASK_ALLOWED) /* till its blocked reauthorization */
+            | FORT_FLOW_CONN_LOGGED;
 
     flow->opt.proc_index = faa->proc->proc_index;
 
@@ -341,7 +369,7 @@ inline static NTSTATUS fort_flow_add_new(PFORT_STAT stat, PFORT_FLOW_ADD_ARG faa
     faa->flow = flow;
 
     /* The flow's options are used by the classify callouts after the context's association */
-    fort_flow_opt_set(faa);
+    fort_flow_opt_set(faa, /*old_flags=*/0);
 
     NTSTATUS status = fort_flow_context_set(stat, flow, conn->isIPv6);
     if (!NT_SUCCESS(status)) {
@@ -358,7 +386,7 @@ inline static NTSTATUS fort_flow_add_new(PFORT_STAT stat, PFORT_FLOW_ADD_ARG faa
 }
 
 inline static NTSTATUS fort_flow_add_old(
-        PCFORT_CONF_META_CONN conn, PFORT_STAT_PROC proc, PFORT_FLOW_ADD_ARG faa)
+        PCFORT_CONF_META_CONN conn, PFORT_STAT_PROC proc, PFORT_FLOW_ADD_ARG faa, UINT16 old_flags)
 {
     /* The reauthorized flow keeps its process's reference:
      * WFP takes the process ID from the socket's endpoint,
@@ -376,12 +404,13 @@ inline static NTSTATUS fort_flow_add_old(
         faa->flow->old_speed_limits = speed_limits;
     }
 
-    fort_flow_opt_set(faa);
+    fort_flow_opt_set(faa, old_flags);
 
     return STATUS_SUCCESS;
 }
 
-static NTSTATUS fort_flow_add(PFORT_STAT stat, PCFORT_CONF_META_CONN conn, PFORT_STAT_PROC proc)
+static NTSTATUS fort_flow_add(
+        PFORT_STAT stat, PCFORT_CONF_META_CONN conn, PFORT_STAT_PROC proc, PFORT_FLOW_ASSOC assoc)
 {
     const UINT64 flow_id = conn->flow_id;
 
@@ -395,7 +424,12 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, PCFORT_CONF_META_CONN conn, PFORT
     };
 
     if (faa.flow != NULL) {
-        return fort_flow_add_old(conn, proc, &faa);
+        /* Before fort_flow_opt_set() sets them */
+        const UINT16 old_flags = fort_flow_flags(faa.flow);
+
+        assoc->conn_logged = (old_flags & FORT_FLOW_CONN_LOGGED) != 0;
+
+        return fort_flow_add_old(conn, proc, &faa, old_flags);
     }
 
     const NTSTATUS status = fort_flow_add_new(stat, &faa);
@@ -484,6 +518,9 @@ FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat)
     /* Clear the processes' logged flag */
     fort_tommy_hashdyn_foreach_node_arg(&stat->procs_map, &fort_stat_proc_unlog_node, NULL);
 
+    /* Clear the flows' logged flag */
+    fort_tommy_hashdyn_foreach_node_arg(&stat->flows_map, &fort_flow_conn_unlog_node, NULL);
+
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
@@ -509,20 +546,26 @@ static NTSTATUS fort_flow_associate_proc(
     return STATUS_SUCCESS;
 }
 
-/* Is the process's PROC_NEW logged with the connection's ps name? */
-inline static BOOL fort_flow_associate_proc_logged(PFORT_STAT_PROC proc, PCFORT_CONF_META_CONN conn)
+/* Takes the logging of the process's PROC_NEW with the connection's ps name */
+inline static FORT_FLOW_PROC_LOG_TYPE fort_flow_associate_proc_log(
+        PFORT_STAT_PROC proc, PCFORT_CONF_META_CONN conn)
 {
-    const BOOL named = (conn->ps_name != NULL);
-    const BOOL logged = proc->proc_stat && proc->named == named;
+    /* The PROC_NEW being written isn't followed by another one: they may be logged reordered */
+    if (proc->proc_stat && !proc->proc_written)
+        return FORT_FLOW_PROC_LOG_PENDING;
+
+    if (fort_stat_proc_log_taken(proc, conn))
+        return FORT_FLOW_PROC_LOG_WRITTEN;
 
     proc->proc_stat = TRUE;
-    proc->named = (UINT16) named;
+    proc->proc_written = FALSE;
+    proc->named = (UINT16) (conn->ps_name != NULL);
 
-    return logged;
+    return FORT_FLOW_PROC_LOG_NEW;
 }
 
 FORT_API NTSTATUS fort_flow_associate(
-        PFORT_STAT stat, PCFORT_CONF_META_CONN conn, BOOL *proc_logged)
+        PFORT_STAT stat, PCFORT_CONF_META_CONN conn, PFORT_FLOW_ASSOC assoc)
 {
     NTSTATUS status;
 
@@ -535,10 +578,10 @@ FORT_API NTSTATUS fort_flow_associate(
 
     /* Add flow */
     if (NT_SUCCESS(status)) {
-        status = fort_flow_add(stat, conn, proc);
+        status = fort_flow_add(stat, conn, proc, assoc);
 
         if (NT_SUCCESS(status)) {
-            *proc_logged = fort_flow_associate_proc_logged(proc, conn);
+            assoc->proc_log = fort_flow_associate_proc_log(proc, conn);
 
             /* The not found (e.g. new) app's traffic is collected too */
             const FORT_APP_FLAGS app_flags = conn->app.data.flags;
@@ -554,26 +597,35 @@ FORT_API NTSTATUS fort_flow_associate(
     return status;
 }
 
-FORT_API BOOL fort_flow_ask_allowed(PFORT_STAT stat, UINT64 flow_id)
+/* Returns the flow's old flags, 0 for a deleted flow */
+static UINT16 fort_flow_id_flags_set(PFORT_STAT stat, UINT64 flow_id, UINT16 flags, BOOL on)
 {
     const tommy_key_t flow_hash = fort_flow_hash(flow_id);
 
-    BOOL allowed = FALSE;
+    UINT16 old_flags = 0;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
     {
         PFORT_FLOW flow = fort_flow_get(stat, flow_id, flow_hash);
         if (flow != NULL) {
-            allowed = (flow->opt.flags & FORT_FLOW_ASK_ALLOWED) != 0;
+            old_flags = fort_flow_flags_set(flow, flags, on);
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
-    return allowed;
+    return old_flags;
 }
 
-FORT_API void fort_flow_proc_unlog(PFORT_STAT stat, UINT32 process_id)
+FORT_API BOOL fort_flow_ask_allowed(PFORT_STAT stat, UINT64 flow_id)
+{
+    const UINT16 flow_flags = fort_flow_id_flags_set(stat, flow_id, 0, TRUE);
+
+    return (flow_flags & FORT_FLOW_ASK_ALLOWED) != 0;
+}
+
+static void fort_flow_proc_update(
+        PFORT_STAT stat, UINT32 process_id, tommy_foreach_arg_func *proc_func, PVOID arg)
 {
     const tommy_key_t pid_hash = fort_stat_proc_hash(process_id);
 
@@ -582,10 +634,30 @@ FORT_API void fort_flow_proc_unlog(PFORT_STAT stat, UINT32 process_id)
     {
         PFORT_STAT_PROC proc = fort_stat_proc_get(stat, process_id, pid_hash);
         if (proc != NULL) {
-            fort_stat_proc_unlog(proc);
+            proc_func(arg, proc);
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
+}
+
+FORT_API void fort_flow_proc_written(PFORT_STAT stat, PCFORT_CONF_META_CONN conn)
+{
+    fort_flow_proc_update(stat, conn->process_id, &fort_stat_proc_written_node, (PVOID) conn);
+}
+
+FORT_API void fort_flow_proc_unlog(PFORT_STAT stat, UINT32 process_id)
+{
+    fort_flow_proc_update(stat, process_id, &fort_stat_proc_unlog_node, /*arg=*/NULL);
+}
+
+FORT_API void fort_flow_conn_unlog(PFORT_STAT stat, UINT64 flow_id)
+{
+    fort_flow_id_flags_set(stat, flow_id, FORT_FLOW_CONN_LOGGED, FALSE);
+}
+
+FORT_API void fort_flow_reauth_blocked(PFORT_STAT stat, UINT64 flow_id)
+{
+    fort_flow_id_flags_set(stat, flow_id, FORT_FLOW_CONN_LOGGED | FORT_FLOW_ASK_ALLOWED, FALSE);
 }
 
 static BOOL fort_flow_delete_closing(PFORT_STAT stat, PFORT_FLOW flow)

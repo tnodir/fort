@@ -53,7 +53,78 @@ static void test_buf_overflow(void)
     printf("test_buf_overflow: OK\n");
 }
 
+typedef struct test_buf_path_lens
+{
+    UINT16 path_len;
+    UINT16 inherit_path_len;
+} TEST_BUF_PATH_LENS;
+
+/* Writes the connection's entry, returns its paths' lengths read back */
+static TEST_BUF_PATH_LENS test_buf_conn_write_read(PFORT_CONF_META_CONN conn,
+        const FORT_BUFFER_CONN_WRITE_TYPE log_type, PFORT_CONF_META_CONN read_conn)
+{
+    FORT_BUFFER buf = { 0 };
+    fort_buffer_open(&buf);
+
+    FORT_IRP_INFO irp_info = { .irp = NULL };
+    assert(fort_buffer_conn_write(&buf, conn, &irp_info, log_type) == STATUS_SUCCESS);
+
+    static CHAR read_buf[FORT_BUFFER_SIZE];
+    assert(fort_buffer_xmove(&buf, &irp_info, read_buf, sizeof(read_buf)) == STATUS_SUCCESS);
+
+    TEST_BUF_PATH_LENS lens = { 0 };
+
+    if (log_type == FORT_BUFFER_CONN_WRITE_CONN) {
+        fort_log_conn_header_read(read_buf, read_conn, &lens.path_len, &lens.inherit_path_len);
+    } else {
+        FORT_LOG_PROC_NEW_HEADER header;
+        fort_log_proc_new_header_read(read_buf, &header);
+
+        lens.path_len = header.path_len;
+        lens.inherit_path_len = header.inherit_path_len;
+    }
+
+    fort_buffer_close(&buf);
+
+    return lens;
+}
+
+static void test_buf_conn_proc_path(void)
+{
+    const FORT_APP_PATH path = { .len = 4, .buffer = L"ab" };
+    const FORT_APP_PATH real_path = { .len = 6, .buffer = L"abc" };
+
+    FORT_CONF_META_CONN conn = {
+        .inherited = TRUE,
+        .path = path,
+        .real_path = real_path,
+    };
+    FORT_CONF_META_CONN read_conn = { 0 };
+    TEST_BUF_PATH_LENS lens;
+
+    /* The CONN of a not logged process has the paths */
+    lens = test_buf_conn_write_read(&conn, FORT_BUFFER_CONN_WRITE_CONN, &read_conn);
+    assert(lens.path_len == real_path.len);
+    assert(lens.inherit_path_len == path.len);
+    assert(!read_conn.proc_logged);
+
+    /* The CONN of a logged process goes without the paths */
+    conn.proc_logged = TRUE;
+    lens = test_buf_conn_write_read(&conn, FORT_BUFFER_CONN_WRITE_CONN, &read_conn);
+    assert(lens.path_len == 0);
+    assert(lens.inherit_path_len == 0);
+    assert(read_conn.proc_logged);
+
+    /* The PROC_NEW has the paths */
+    lens = test_buf_conn_write_read(&conn, FORT_BUFFER_CONN_WRITE_PROC_NEW, &read_conn);
+    assert(lens.path_len == real_path.len);
+    assert(lens.inherit_path_len == path.len);
+
+    printf("test_buf_conn_proc_path: OK\n");
+}
+
 static void tst_buf_main(void)
 {
     test_buf_overflow();
+    test_buf_conn_proc_path();
 }

@@ -8,6 +8,7 @@
 
 class LogBuffer;
 class LogEntry;
+class LogEntryConn;
 
 struct ProcessIpKey;
 
@@ -51,6 +52,7 @@ private:
     bool processLogEntry(LogBuffer *logBuffer, FortLogType logType);
     bool processLogEntryApp(LogBuffer *logBuffer);
     bool processLogEntryConn(LogBuffer *logBuffer);
+    bool fillConnProcPaths(LogEntryConn &connEntry) const;
     bool processLogEntryProcNew(LogBuffer *logBuffer);
     bool processLogEntryStatTraf(LogBuffer *logBuffer);
     bool processLogEntryTime(LogBuffer *logBuffer);

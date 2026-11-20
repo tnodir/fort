@@ -206,6 +206,9 @@ bool LogManager::processLogEntryConn(LogBuffer *logBuffer)
     LogEntryConn connEntry;
     logBuffer->readEntryConn(&connEntry);
 
+    if (connEntry.procLogged() && !fillConnProcPaths(connEntry))
+        return true; // skip the connection of an unknown process
+
     connEntry.setConnTime(currentUnixTime());
     const auto hostName = dnsClientManager()->connHostName(connEntry.remoteIpKey());
     connEntry.setRemoteHostOfProcess(hostName.ofProcess);
@@ -220,6 +223,23 @@ bool LogManager::processLogEntryConn(LogBuffer *logBuffer)
             confAppManager()->addAlertedApp(connEntry.appId());
         }
     }
+
+    return true;
+}
+
+bool LogManager::fillConnProcPaths(LogEntryConn &connEntry) const
+{
+    const quint32 pid = connEntry.pid();
+
+    const auto process = statManager()->loggedProcess(pid);
+    if (Q_UNLIKELY(!process)) {
+        qCCritical(LC) << "UI & Driver's states mismatch! Unknown process of the connection:"
+                       << pid;
+        return false;
+    }
+
+    connEntry.setKernelPath(process->kernelPath);
+    connEntry.setInheritKernelPath(process->inheritKernelPath);
 
     return true;
 }

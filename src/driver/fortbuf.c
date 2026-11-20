@@ -222,19 +222,36 @@ inline static FORT_APP_PATH fort_buffer_log_path(FORT_APP_PATH log_path)
     return log_path;
 }
 
+inline static FORT_APP_PATH fort_buffer_empty_path(void)
+{
+    const FORT_APP_PATH empty_path = { 0 };
+    return empty_path;
+}
+
+/* The CONN of a logged process goes without the paths: they are of its PROC_NEW */
+inline static BOOL fort_buffer_conn_paths_of_proc(
+        PCFORT_CONF_META_CONN conn, const FORT_BUFFER_CONN_WRITE_TYPE log_type)
+{
+    return log_type == FORT_BUFFER_CONN_WRITE_CONN && conn->proc_logged;
+}
+
 inline static FORT_APP_PATH fort_buffer_conn_write_path(
         PCFORT_CONF_META_CONN conn, const FORT_BUFFER_CONN_WRITE_TYPE log_type)
 {
+    if (fort_buffer_conn_paths_of_proc(conn, log_type)) {
+        return fort_buffer_empty_path();
+    }
+
     return fort_buffer_log_path(
             (log_type == FORT_BUFFER_CONN_WRITE_APP) ? conn->path : conn->real_path);
 }
 
 /* The inherited process's name, by which the connection's app is found */
-inline static FORT_APP_PATH fort_buffer_conn_write_inherit_path(PCFORT_CONF_META_CONN conn)
+inline static FORT_APP_PATH fort_buffer_conn_write_inherit_path(
+        PCFORT_CONF_META_CONN conn, const FORT_BUFFER_CONN_WRITE_TYPE log_type)
 {
-    if (!conn->inherited) {
-        const FORT_APP_PATH empty_path = { 0 };
-        return empty_path;
+    if (!conn->inherited || fort_buffer_conn_paths_of_proc(conn, log_type)) {
+        return fort_buffer_empty_path();
     }
 
     return fort_buffer_log_path(conn->path);
@@ -261,7 +278,7 @@ FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN
     NTSTATUS status;
 
     const FORT_APP_PATH log_path = fort_buffer_conn_write_path(conn, log_type);
-    const FORT_APP_PATH inherit_path = fort_buffer_conn_write_inherit_path(conn);
+    const FORT_APP_PATH inherit_path = fort_buffer_conn_write_inherit_path(conn, log_type);
 
     const UINT32 len = fort_buffer_conn_write_len(conn, log_path.len, inherit_path.len, log_type);
     if (len == 0)

@@ -935,7 +935,7 @@ FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper, PFORT_CALLOUT_ARG 
 
     PFORT_FLOW flow = (PFORT_FLOW) ca->flowContext;
 
-    const UCHAR flow_flags = fort_flow_flags(flow);
+    const UINT16 flow_flags = fort_flow_flags(flow);
     const UCHAR speed_limit = ca->inbound ? FORT_FLOW_SPEED_LIMIT_IN : FORT_FLOW_SPEED_LIMIT_OUT;
 
     if ((flow_flags & speed_limit) == 0)

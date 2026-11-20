@@ -6,6 +6,8 @@
 #include <QStringList>
 #include <QVector>
 
+#include <optional>
+
 #include <sqlite/sqliteutilbase.h>
 
 #include <util/classhelpers.h>
@@ -21,6 +23,14 @@ class StatManager : public QObject, public IocService, public SqliteUtilBase
     Q_OBJECT
 
 public:
+    // The process's paths by its Process New entry
+    struct LoggedProcess
+    {
+        QString path;
+        QString kernelPath;
+        QString inheritKernelPath;
+    };
+
     explicit StatManager(const QString &filePath, QObject *parent = nullptr, quint32 openFlags = 0);
     CLASS_DELETE_COPY_MOVE(StatManager)
 
@@ -32,6 +42,8 @@ public:
 
     bool logProcNew(const LogEntryProcNew &entry, qint64 unixTime = 0);
     bool logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime = 0);
+
+    std::optional<LoggedProcess> loggedProcess(quint32 pid) const;
 
     virtual bool deleteStatApp(qint64 appId);
 
@@ -79,9 +91,8 @@ private:
 
     void logClear();
 
-    void addLoggedProcessId(const QString &appPath, const LogEntryProcNew &entry);
-    void removeLoggedProcessId(quint32 pid);
-    QString getLoggedProcessIdPath(quint32 pid);
+    void addLoggedProcess(const QString &appPath, const LogEntryProcNew &entry);
+    void removeLoggedProcess(quint32 pid);
 
     void addCachedAppId(const QString &appPath, qint64 appId);
     qint64 getCachedAppId(const QString &appPath) const;
@@ -114,7 +125,7 @@ private:
 
     SqliteDbPtr m_sqliteDb;
 
-    QHash<quint32, QString> m_appPidPathMap; // pid => appPath
+    QHash<quint32, LoggedProcess> m_loggedProcessMap; // pid => process
     QHash<QString, qint64> m_appPathIdCache; // appPath => appId
 };
 

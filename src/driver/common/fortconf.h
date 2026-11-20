@@ -511,7 +511,8 @@ typedef struct fort_conf_meta_conn
     UINT16 ignore : 1;
     UINT16 ask_to_connect : 1;
     UINT16 app_asked : 1; /* asked by the App's data, else by a Rule */
-    UINT16 reserved : 2; /* not used */
+    UINT16 proc_logged : 1; /* the process's PROC_NEW is logged */
+    UINT16 flow_logging : 1; /* the CONN logs the flow */
 
     FORT_CONF_CONN_ACTIONS act;
 
