@@ -176,9 +176,9 @@ inline static void fort_callout_ale_associate_flow_log(
 inline static BOOL fort_callout_ale_associate_flow(
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_META_CONN conn)
 {
-    BOOL proc_stat = FALSE;
+    BOOL proc_logged = FALSE;
 
-    const NTSTATUS status = fort_flow_associate(&fort_device()->stat, conn, &proc_stat);
+    const NTSTATUS status = fort_flow_associate(&fort_device()->stat, conn, &proc_logged);
 
     if (status == FORT_STATUS_FLOW_SKIP)
         return FALSE; /* the stat is closed or not yet enabled */
@@ -193,7 +193,7 @@ inline static BOOL fort_callout_ale_associate_flow(
         return TRUE; /* block (Error) */
     }
 
-    if (!proc_stat) {
+    if (!proc_logged) {
         fort_callout_ale_associate_flow_log(cx, conn);
     }
 

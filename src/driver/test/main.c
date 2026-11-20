@@ -6,6 +6,7 @@
 #include "tst_conf.c"
 #include "tst_host.c"
 #include "tst_pcb.c"
+#include "tst_stat.c"
 #include "tst_utl.c"
 
 int main(int argc, char *argv[])
@@ -18,6 +19,7 @@ int main(int argc, char *argv[])
     tst_buf_main();
     tst_conf_main();
     tst_host_main();
+    tst_stat_main();
 
     return 0;
 }

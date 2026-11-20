@@ -37,6 +37,7 @@ typedef struct fort_stat_proc
     UINT16 proc_stat : 1;
     UINT16 log_stat : 1;
     UINT16 active : 1;
+    UINT16 named : 1; /* PROC_NEW is logged with a ps name */
 
     UINT32 refcount;
 
@@ -161,7 +162,8 @@ FORT_API void fort_stat_close(PFORT_STAT stat);
 
 FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat);
 
-FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, PCFORT_CONF_META_CONN conn, BOOL *proc_stat);
+FORT_API NTSTATUS fort_flow_associate(
+        PFORT_STAT stat, PCFORT_CONF_META_CONN conn, BOOL *proc_logged);
 
 /* The closing flow allowed once by the user */
 FORT_API BOOL fort_flow_ask_allowed_id(PFORT_STAT stat, UINT64 flowContext, UINT64 *flow_id);

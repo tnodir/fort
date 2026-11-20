@@ -83,6 +83,7 @@ static PFORT_STAT_PROC fort_stat_proc_add(PFORT_STAT stat, UINT32 process_id)
     proc->proc_stat = FALSE;
     proc->log_stat = TRUE;
     proc->active = FALSE;
+    proc->named = FALSE;
     proc->refcount = 0;
 
     return proc;
@@ -508,7 +509,20 @@ static NTSTATUS fort_flow_associate_proc(
     return STATUS_SUCCESS;
 }
 
-FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, PCFORT_CONF_META_CONN conn, BOOL *proc_stat)
+/* Is the process's PROC_NEW logged with the connection's ps name? */
+inline static BOOL fort_flow_associate_proc_logged(PFORT_STAT_PROC proc, PCFORT_CONF_META_CONN conn)
+{
+    const BOOL named = (conn->ps_name != NULL);
+    const BOOL logged = proc->proc_stat && proc->named == named;
+
+    proc->proc_stat = TRUE;
+    proc->named = (UINT16) named;
+
+    return logged;
+}
+
+FORT_API NTSTATUS fort_flow_associate(
+        PFORT_STAT stat, PCFORT_CONF_META_CONN conn, BOOL *proc_logged)
 {
     NTSTATUS status;
 
@@ -524,8 +538,7 @@ FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, PCFORT_CONF_META_CONN con
         status = fort_flow_add(stat, conn, proc);
 
         if (NT_SUCCESS(status)) {
-            *proc_stat = proc->proc_stat;
-            proc->proc_stat = TRUE;
+            *proc_logged = fort_flow_associate_proc_logged(proc, conn);
 
             /* The not found (e.g. new) app's traffic is collected too */
             const FORT_APP_FLAGS app_flags = conn->app.data.flags;
