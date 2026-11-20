@@ -61,6 +61,15 @@
 //
 #define FORT_BUFFER_OOM                  ((NTSTATUS)0xC001000AL)
 
+//
+// MessageId: FORT_BUFFER_OVERFLOW
+//
+// MessageText:
+//
+// Buffer overflow: the logs aren't read.
+//
+#define FORT_BUFFER_OVERFLOW             ((NTSTATUS)0xC001000BL)
+
 /* Callout */
 //
 // MessageId: FORT_CALLOUT_FLOW_ASSOC_ERROR

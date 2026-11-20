@@ -22,6 +22,8 @@ typedef struct fort_buffer_data
 
 typedef struct fort_buffer
 {
+    BOOLEAN overflow_traced; /* the overflow is traced once, till the client reads the logs */
+
     PFORT_BUFFER_DATA data_head;
     PFORT_BUFFER_DATA data_tail; /* last is current */
     PFORT_BUFFER_DATA data_free;

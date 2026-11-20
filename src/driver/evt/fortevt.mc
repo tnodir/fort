@@ -32,6 +32,11 @@ Language=English
 Buffer OOM.
 .
 
+MessageId=11 Facility=Buffer Severity=Error SymbolicName=FORT_BUFFER_OVERFLOW
+Language=English
+Buffer overflow: the logs aren't read.
+.
+
 
 ;/* Callout */
 MessageId=20 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_FLOW_ASSOC_ERROR
