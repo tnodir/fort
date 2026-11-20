@@ -104,6 +104,7 @@ SOURCES += \
     form/controls/menuwidget.cpp \
     form/controls/nativewindow.cpp \
     form/controls/optionsbutton.cpp \
+    form/controls/passwordlockframe.cpp \
     form/controls/plaintextedit.cpp \
     form/controls/progressitemdelegate.cpp \
     form/controls/pushbutton.cpp \
@@ -149,7 +150,6 @@ SOURCES += \
     form/home/homecontroller.cpp \
     form/home/homelinks.cpp \
     form/home/homewindow.cpp \
-    form/home/pages/aboutpage.cpp \
     form/home/pages/homebasepage.cpp \
     form/home/pages/homemainpage.cpp \
     form/home/pages/homepage.cpp \
@@ -198,6 +198,7 @@ SOURCES += \
     form/traf/trafficwindow.cpp \
     form/tray/traycontroller.cpp \
     form/tray/trayicon.cpp \
+    form/update/updateswindow.cpp \
     form/usage/usagesview.cpp \
     form/zone/zoneeditdialog.cpp \
     form/zone/zonescontroller.cpp \
@@ -470,6 +471,7 @@ HEADERS += \
     form/controls/menuwidget.h \
     form/controls/nativewindow.h \
     form/controls/optionsbutton.h \
+    form/controls/passwordlockframe.h \
     form/controls/plaintextedit.h \
     form/controls/progressitemdelegate.h \
     form/controls/pushbutton.h \
@@ -516,7 +518,6 @@ HEADERS += \
     form/home/homecontroller.h \
     form/home/homelinks.h \
     form/home/homewindow.h \
-    form/home/pages/aboutpage.h \
     form/home/pages/homebasepage.h \
     form/home/pages/homemainpage.h \
     form/home/pages/homepage.h \
@@ -566,6 +567,7 @@ HEADERS += \
     form/tray/traycontroller.h \
     form/tray/trayicon.h \
     form/tray/trayicon_types.h \
+    form/update/updateswindow.h \
     form/usage/usagesview.h \
     form/zone/zoneeditdialog.h \
     form/zone/zonescontroller.h \

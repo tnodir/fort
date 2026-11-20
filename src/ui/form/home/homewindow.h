@@ -23,9 +23,6 @@ public:
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
 
-public slots:
-    void selectAboutTab();
-
 protected slots:
     bool checkAboutToClose() override;
 

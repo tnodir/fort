@@ -104,7 +104,6 @@ public slots:
     }
 
     virtual bool exposeHomeWindow();
-    void showHomeWindowAbout();
 
     bool showProgramsWindow() { return showWindowByCode(WindowPrograms); }
     bool closeProgramsWindow() { return closeWindowByCode(WindowPrograms); }
@@ -147,6 +146,10 @@ public slots:
     {
         return setWindowVisibleByCode(WindowGraph, visibleOrSwitch, /*activate=*/false);
     }
+
+    bool showUpdatesWindow() { return showWindowByCode(WindowUpdates); }
+
+    void showAboutBox();
 
     virtual bool setWindowVisibleByCode(
             WindowCode code, const QVariant &visibleOrSwitch = {}, bool activate = true);
@@ -252,6 +255,7 @@ private:
         FormPointer(WindowTimePeriods),
         FormPointer(WindowFilterSim),
         FormPointer(WindowGraph),
+        FormPointer(WindowUpdates),
     };
 };
 

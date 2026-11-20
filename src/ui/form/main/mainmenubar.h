@@ -36,6 +36,7 @@ private:
     QMenu *m_helpMenu = nullptr;
     QAction *m_actHelp = nullptr;
     QList<QAction *> m_linkActions;
+    QAction *m_actCheckUpdates = nullptr;
     QAction *m_actAbout = nullptr;
 };
 

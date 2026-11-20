@@ -683,7 +683,7 @@ void FortManager::setupTaskManager()
 
         switch (taskType) {
         case TaskInfo::UpdateChecker: {
-            windowManager->showHomeWindowAbout();
+            windowManager->showUpdatesWindow();
         } break;
         case TaskInfo::ZoneDownloader: {
             windowManager->showZonesWindow();

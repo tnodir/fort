@@ -342,6 +342,8 @@ public:
 
     static QString graphWindowGroup() { return "graphWindow"; }
 
+    static QString updatesWindowGroup() { return "updatesWindow"; }
+
     constexpr bool graphWindowHideOnCloseDefault() const { return false; }
     bool graphWindowHideOnClose() const { return valueBool("graphWindow/hideOnClose"); }
     void setGraphWindowHideOnClose(bool on) { setValue("graphWindow/hideOnClose", on); }

@@ -1,21 +1,30 @@
-#ifndef ABOUTPAGE_H
-#define ABOUTPAGE_H
+#ifndef UPDATESWINDOW_H
+#define UPDATESWINDOW_H
 
 #include <QDateTime>
 
-#include "homebasepage.h"
+#include <form/controls/formwindow.h>
 
-class AboutPage : public HomeBasePage
+QT_FORWARD_DECLARE_CLASS(QGroupBox)
+QT_FORWARD_DECLARE_CLASS(QProgressBar)
+
+class UpdatesWindow : public FormWindow
 {
     Q_OBJECT
 
 public:
-    explicit AboutPage(HomeController *ctrl = nullptr, QWidget *parent = nullptr);
+    explicit UpdatesWindow(QWidget *parent = nullptr);
 
-protected slots:
-    void onRetranslateUi() override;
+    WindowCode windowCode() const override { return WindowUpdates; }
+    QString windowIconPath() const override { return ":/icons/download.png"; }
+    QString helpSection() const override { return "updates-window"; }
+    QString iniGroup() const override;
+
+    void saveWindowState(bool wasVisible) override;
+    void restoreWindowState() override;
 
 private:
+    void retranslateUi();
     void retranslateNewVersionBox();
 
     void setupUi();
@@ -41,4 +50,4 @@ private:
     QToolButton *m_btCheckUpdate = nullptr;
 };
 
-#endif // ABOUTPAGE_H
+#endif // UPDATESWINDOW_H

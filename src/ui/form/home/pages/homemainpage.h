@@ -10,7 +10,7 @@ class HomeMainPage : public HomeBasePage
     Q_OBJECT
 
 public:
-    enum TabIndex : qint8 { TabHome = 0, TabAbout };
+    enum TabIndex : qint8 { TabHome = 0 };
     Q_ENUM(TabIndex)
 
     explicit HomeMainPage(HomeController *ctrl = nullptr, QWidget *parent = nullptr);

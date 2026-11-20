@@ -1,5 +1,7 @@
 #include "mainmenubar.h"
 
+#include <QApplication>
+
 #include <form/home/homelinks.h>
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
@@ -38,7 +40,8 @@ void MainMenuBar::retranslateUi()
     for (int i = 0; i < m_linkActions.size(); ++i) {
         m_linkActions[i]->setText(HomeLinks::text(HomeLinks::Link(i)));
     }
-    m_actAbout->setText(tr("About"));
+    m_actCheckUpdates->setText(tr("Check for Updates"));
+    m_actAbout->setText(tr("About %1").arg(QApplication::applicationDisplayName()));
 }
 
 void MainMenuBar::setupUi()
@@ -116,8 +119,12 @@ void MainMenuBar::setupHelpMenu()
 
     m_helpMenu->addSeparator();
 
-    m_actAbout = m_helpMenu->addAction(IconCache::icon(":/icons/fort.png"), QString());
-    connect(m_actAbout, &QAction::triggered, windowManager(), &WindowManager::showHomeWindowAbout);
+    m_actCheckUpdates = m_helpMenu->addAction(IconCache::icon(":/icons/download.png"), QString());
+    connect(m_actCheckUpdates, &QAction::triggered, windowManager(),
+            &WindowManager::showUpdatesWindow);
+
+    m_actAbout = m_helpMenu->addAction(IconCache::icon(":/icons/information.png"), QString());
+    connect(m_actAbout, &QAction::triggered, windowManager(), &WindowManager::showAboutBox);
 }
 
 void MainMenuBar::updateFileMenu()

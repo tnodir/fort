@@ -13,7 +13,6 @@
 #include <manager/windowmanager.h>
 #include <util/iconcache.h>
 
-#include "aboutpage.h"
 #include "homepage.h"
 
 HomeMainPage::HomeMainPage(HomeController *ctrl, QWidget *parent) : HomeBasePage(ctrl, parent)
@@ -24,7 +23,6 @@ HomeMainPage::HomeMainPage(HomeController *ctrl, QWidget *parent) : HomeBasePage
 void HomeMainPage::onRetranslateUi()
 {
     buttonAt(TabHome)->setText(tr("My Fort"));
-    buttonAt(TabAbout)->setText(tr("About"));
 }
 
 void HomeMainPage::setupUi()
@@ -65,10 +63,7 @@ void HomeMainPage::setupSideBarButtons()
             ControlUtil::createSideButton(":/icons/fort.png", [&] { setCurrentTab(TabHome); });
     btHome->setChecked(true);
 
-    auto btAbout = ControlUtil::createSideButton(
-            ":/icons/information.png", [&] { setCurrentTab(TabAbout); });
-
-    m_buttons = { btHome, btAbout };
+    m_buttons = { btHome };
 }
 
 void HomeMainPage::setupStackedLayout()
@@ -76,7 +71,6 @@ void HomeMainPage::setupStackedLayout()
     m_stackedPages = new QStackedWidget();
 
     m_stackedPages->addWidget(ControlUtil::wrapToScrollArea(new HomePage(ctrl())));
-    m_stackedPages->addWidget(new AboutPage(ctrl()));
 }
 
 void HomeMainPage::setCurrentTab(TabIndex tabIndex)

@@ -31,6 +31,7 @@
 #include <form/traf/trafficwindow.h>
 #include <form/tray/trayicon.h>
 #include <form/zone/zoneswindow.h>
+#include <fort_version.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
 #include <stat/statmanager.h>
@@ -38,6 +39,7 @@
 #include <util/bitutil.h>
 #include <util/fileutil.h>
 #include <util/guiutil.h>
+#include <util/iconcache.h>
 #include <util/osutil.h>
 
 #include "nativeeventfilter.h"
@@ -440,10 +442,24 @@ bool WindowManager::exposeHomeWindow()
     return showHomeWindow(/*expose=*/true);
 }
 
-void WindowManager::showHomeWindowAbout()
+void WindowManager::showAboutBox()
 {
-    showHomeWindow();
-    homeWindow()->selectAboutTab();
+    const QString appName = QApplication::applicationDisplayName();
+    const QString text = QString("<b>%1</b><br>%2<br><br><a href=\"%3\">%3</a>")
+                                 .arg(appName, APP_LEGALCOPYRIGHT, APP_URL);
+
+    auto box = DialogUtil::createMessageBox({
+            .icon = QMessageBox::NoIcon,
+            .buttons = QMessageBox::Ok,
+            .text = text,
+            .title = tr("About"),
+    });
+
+    box->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/information.png"));
+    box->setIconPixmap(IconCache::pixmap(":/icons/fort-96.png"));
+    box->setTextFormat(Qt::RichText);
+
+    DialogUtil::showDialog(box);
 }
 
 bool WindowManager::showProgramEditForm(const QString &appPath)

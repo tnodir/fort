@@ -60,11 +60,6 @@ void HomeWindow::restoreWindowState()
     emit ctrl()->afterRestoreWindowState(iniUser);
 }
 
-void HomeWindow::selectAboutTab()
-{
-    m_mainPage->setCurrentTab(HomeMainPage::TabAbout);
-}
-
 bool HomeWindow::checkAboutToClose()
 {
     if (!iniUser().homeWindowAutoShowWindow())

@@ -20,8 +20,9 @@ enum WindowCode {
     WindowTimePeriods = (1 << 12),
     WindowFilterSim = (1 << 13),
     WindowGraph = (1 << 14),
-    WindowCount = 15,
-    WindowPasswordDialog = (1 << 15),
+    WindowUpdates = (1 << 15),
+    WindowCount = 16,
+    WindowPasswordDialog = (1 << 16),
 };
 
 constexpr quint32 WindowPasswordProtected = (WindowMain | WindowPrograms | WindowProgramAlert

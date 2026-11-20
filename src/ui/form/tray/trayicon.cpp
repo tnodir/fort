@@ -362,7 +362,7 @@ void TrayIcon::onTrayMessageClicked()
 
     switch (m_lastTrayMessageType) {
     case tray::MessageNewVersion: {
-        windowManager->showHomeWindowAbout();
+        windowManager->showUpdatesWindow();
     } break;
     case tray::MessageZones: {
         windowManager->showZonesWindow();

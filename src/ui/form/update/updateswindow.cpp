@@ -1,4 +1,4 @@
-#include "aboutpage.h"
+#include "updateswindow.h"
 
 #include <QGroupBox>
 #include <QLabel>
@@ -6,34 +6,65 @@
 #include <QToolButton>
 #include <QVBoxLayout>
 
+#include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
-#include <form/home/homecontroller.h>
+#include <form/controls/passwordlockframe.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
 #include <manager/autoupdatemanager.h>
+#include <manager/translationmanager.h>
+#include <manager/windowmanager.h>
 #include <task/taskinfoupdatechecker.h>
 #include <task/taskmanager.h>
+#include <user/iniuser.h>
 #include <util/dateutil.h>
 #include <util/iconcache.h>
 
 using namespace Fort;
 
-AboutPage::AboutPage(HomeController *ctrl, QWidget *parent) : HomeBasePage(ctrl, parent)
+UpdatesWindow::UpdatesWindow(QWidget *parent) : FormWindow(parent)
 {
     setupUi();
+
+    connect(translationManager(), &TranslationManager::languageChanged, this,
+            &UpdatesWindow::retranslateUi);
+    retranslateUi();
+
+    setupFormWindow(iniUser());
 }
 
-void AboutPage::onRetranslateUi()
+QString UpdatesWindow::iniGroup() const
 {
+    return IniUser::updatesWindowGroup();
+}
+
+void UpdatesWindow::saveWindowState(bool /*wasVisible*/)
+{
+    saveIniWindowGeometry();
+
+    confManager()->saveIniUser();
+}
+
+void UpdatesWindow::restoreWindowState()
+{
+    restoreIniWindowGeometry(QSize(500, 400));
+}
+
+void UpdatesWindow::retranslateUi()
+{
+    this->unsetLocale();
+
     m_btDownload->setText(tr("Download"));
     m_btInstall->setText(tr("Install"));
-    m_btCheckUpdate->setText(tr("Check for update"));
+    m_btCheckUpdate->setText(tr("Check for Updates"));
 
     retranslateNewVersionBox();
+
+    this->setWindowTitle(tr("Updates"));
 }
 
-void AboutPage::retranslateNewVersionBox()
+void UpdatesWindow::retranslateNewVersionBox()
 {
     const auto title = m_isNewVersion
             ? tr("New Version")
@@ -43,7 +74,7 @@ void AboutPage::retranslateNewVersionBox()
     m_gbNewVersion->setTitle(QString("%1 — %2").arg(lastTime, title));
 }
 
-void AboutPage::setupUi()
+void UpdatesWindow::setupUi()
 {
     // New Version Group Box
     setupNewVersionBox();
@@ -51,14 +82,26 @@ void AboutPage::setupUi()
     setupNewVersionUpdate();
     setupAutoUpdate();
 
-    auto layout = new QVBoxLayout();
-    layout->addWidget(m_gbNewVersion, 0, Qt::AlignHCenter);
-    layout->addStretch();
+    auto frameLayout = new QVBoxLayout();
+    frameLayout->addWidget(m_gbNewVersion);
+    frameLayout->addStretch();
+
+    auto frame = new PasswordLockFrame();
+    frame->setLayout(frameLayout);
+
+    auto layout = ControlUtil::createVLayout();
+    layout->addWidget(frame);
 
     this->setLayout(layout);
+
+    // Font
+    this->setFont(WindowManager::defaultFont());
+
+    // Size
+    this->setMinimumSize(400, 200);
 }
 
-void AboutPage::setupNewVersionBox()
+void UpdatesWindow::setupNewVersionBox()
 {
     // Label
     m_labelRelease = ControlUtil::createLabel();
@@ -87,7 +130,7 @@ void AboutPage::setupNewVersionBox()
     m_gbNewVersion->setLayout(layout);
 }
 
-QLayout *AboutPage::setupButtonsLayout()
+QLayout *UpdatesWindow::setupButtonsLayout()
 {
     // Download
     m_btDownload = ControlUtil::createFlatToolButton(
@@ -110,7 +153,7 @@ QLayout *AboutPage::setupButtonsLayout()
     return layout;
 }
 
-void AboutPage::setupNewVersionUpdate()
+void UpdatesWindow::setupNewVersionUpdate()
 {
     const auto refreshNewVersion = [&] {
         auto taskInfo = taskManager()->taskInfoUpdateChecker();
@@ -141,20 +184,20 @@ void AboutPage::setupNewVersionUpdate()
     });
 }
 
-void AboutPage::setupAutoUpdate()
+void UpdatesWindow::setupAutoUpdate()
 {
     refreshAutoUpdate();
 
     connect(autoUpdateManager(), &AutoUpdateManager::keepCurrentVersionChanged, this,
-            &AboutPage::refreshAutoUpdate);
+            &UpdatesWindow::refreshAutoUpdate);
     connect(autoUpdateManager(), &AutoUpdateManager::flagsChanged, this,
-            &AboutPage::refreshAutoUpdate);
+            &UpdatesWindow::refreshAutoUpdate);
 
     connect(autoUpdateManager(), &AutoUpdateManager::bytesReceivedChanged, m_progressBar,
             &QProgressBar::setValue);
 }
 
-void AboutPage::refreshAutoUpdate()
+void UpdatesWindow::refreshAutoUpdate()
 {
     auto manager = autoUpdateManager();
 
@@ -174,7 +217,7 @@ void AboutPage::refreshAutoUpdate()
     m_btCheckUpdate->setVisible(!isDownloading);
 }
 
-void AboutPage::refreshDownloadProgress(bool isDownloading, bool isDownloaded)
+void UpdatesWindow::refreshDownloadProgress(bool isDownloading, bool isDownloaded)
 {
     if (isDownloading && !isDownloaded)
         return;

@@ -15,6 +15,7 @@
 #include <form/svc/serviceswindow.h>
 #include <form/timeperiod/timeperiodswindow.h>
 #include <form/traf/trafficwindow.h>
+#include <form/update/updateswindow.h>
 #include <form/zone/zoneswindow.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -50,6 +51,7 @@ static const createWindow_func createWindow_funcList[] = {
     &createWindow<TimePeriodsWindow>,
     &createWindow<FilterSimWindow>,
     &createWindow<GraphWindow>,
+    &createWindow<UpdatesWindow>,
 };
 
 static_assert(sizeof(createWindow_funcList) / sizeof(createWindow_funcList[0]) == WindowCount,
