@@ -6,6 +6,7 @@
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
+#include <form/controls/applinks.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/headerbuttons.h>
 #include <form/controls/logowidget.h>
@@ -19,7 +20,6 @@
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "homecontroller.h"
-#include "homelinks.h"
 
 using namespace Fort;
 
@@ -94,8 +94,8 @@ void HomeWindow::retranslateUi()
     m_btPasswordLock->setText(tr("Lock"));
     m_btPasswordUnlock->setText(tr("Unlock"));
 
-    for (int i = 0; i < HomeLinks::LinkCount; ++i) {
-        m_linkButtons[i]->setText(HomeLinks::text(HomeLinks::Link(i)));
+    for (int i = 0; i < AppLinks::LinkCount; ++i) {
+        m_linkButtons[i]->setText(AppLinks::text(AppLinks::Link(i)));
     }
 
     this->setWindowTitle(tr("My Fort"));
@@ -192,14 +192,14 @@ QLayout *HomeWindow::setupDialogButtons()
     auto layout = ControlUtil::createHLayout();
     layout->setContentsMargins(6, 4, 6, 4);
 
-    for (int i = 0; i < HomeLinks::LinkCount; ++i) {
-        const auto link = HomeLinks::Link(i);
+    for (int i = 0; i < AppLinks::LinkCount; ++i) {
+        const auto link = AppLinks::Link(i);
 
         auto c = ControlUtil::createFlatToolButton(
-                HomeLinks::iconPath(link), [=] { HomeLinks::open(link); });
-        c->setToolTip(HomeLinks::path(link));
+                AppLinks::iconPath(link), [=] { AppLinks::open(link); });
+        c->setToolTip(AppLinks::path(link));
 
-        if (!HomeLinks::isVisible(link)) {
+        if (!AppLinks::isVisible(link)) {
             c->hide();
         }
 

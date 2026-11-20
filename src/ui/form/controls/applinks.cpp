@@ -1,4 +1,4 @@
-#include "homelinks.h"
+#include "applinks.h"
 
 #include <fort_version.h>
 
@@ -11,11 +11,11 @@ using namespace Fort;
 namespace {
 
 inline constexpr const char *linkTexts[] = {
-    QT_TRANSLATE_NOOP("HomeLinks", "Profile"),
-    QT_TRANSLATE_NOOP("HomeLinks", "Logs"),
-    QT_TRANSLATE_NOOP("HomeLinks", "Service Logs"),
-    QT_TRANSLATE_NOOP("HomeLinks", "Releases"),
-    QT_TRANSLATE_NOOP("HomeLinks", "Help"),
+    QT_TRANSLATE_NOOP("AppLinks", "Profile"),
+    QT_TRANSLATE_NOOP("AppLinks", "Logs"),
+    QT_TRANSLATE_NOOP("AppLinks", "Service Logs"),
+    QT_TRANSLATE_NOOP("AppLinks", "Releases"),
+    QT_TRANSLATE_NOOP("AppLinks", "Help"),
 };
 
 inline constexpr const char *linkIconPaths[] = {
@@ -26,23 +26,22 @@ inline constexpr const char *linkIconPaths[] = {
     ":/icons/help.png",
 };
 
-static_assert(std::size(linkTexts) == HomeLinks::LinkCount, "Missing a Link in linkTexts[]");
-static_assert(
-        std::size(linkIconPaths) == HomeLinks::LinkCount, "Missing a Link in linkIconPaths[]");
+static_assert(std::size(linkTexts) == AppLinks::LinkCount, "Missing a Link in linkTexts[]");
+static_assert(std::size(linkIconPaths) == AppLinks::LinkCount, "Missing a Link in linkIconPaths[]");
 
 }
 
-QString HomeLinks::text(Link link)
+QString AppLinks::text(Link link)
 {
     return tr(linkTexts[link]);
 }
 
-QString HomeLinks::iconPath(Link link)
+QString AppLinks::iconPath(Link link)
 {
     return linkIconPaths[link];
 }
 
-QString HomeLinks::path(Link link)
+QString AppLinks::path(Link link)
 {
     const auto settings = Fort::settings();
 
@@ -62,7 +61,7 @@ QString HomeLinks::path(Link link)
     }
 }
 
-bool HomeLinks::isVisible(Link link)
+bool AppLinks::isVisible(Link link)
 {
     if (link != LinkServiceLogs)
         return true;
@@ -72,7 +71,7 @@ bool HomeLinks::isVisible(Link link)
     return settings->hasService() && settings->profileLogsPath() != settings->logsPath();
 }
 
-void HomeLinks::open(Link link)
+void AppLinks::open(Link link)
 {
     OsUtil::openUrlOrFolder(path(link));
 }

@@ -84,6 +84,7 @@ SOURCES += \
     form/conn/connectionswindow.cpp \
     form/controls/actioncheckbox.cpp \
     form/controls/appinforow.cpp \
+    form/controls/applinks.cpp \
     form/controls/checkspincombo.cpp \
     form/controls/clickablemenu.cpp \
     form/controls/combobox.cpp \
@@ -148,7 +149,6 @@ SOURCES += \
     form/group/groupscontroller.cpp \
     form/group/groupswindow.cpp \
     form/home/homecontroller.cpp \
-    form/home/homelinks.cpp \
     form/home/homewindow.cpp \
     form/install/installationwindow.cpp \
     form/main/mainmenubar.cpp \
@@ -449,6 +449,7 @@ HEADERS += \
     form/conn/connectionswindow.h \
     form/controls/actioncheckbox.h \
     form/controls/appinforow.h \
+    form/controls/applinks.h \
     form/controls/checkspincombo.h \
     form/controls/clickablemenu.h \
     form/controls/combobox.h \
@@ -514,7 +515,6 @@ HEADERS += \
     form/group/groupscontroller.h \
     form/group/groupswindow.h \
     form/home/homecontroller.h \
-    form/home/homelinks.h \
     form/home/homewindow.h \
     form/install/installationwindow.h \
     form/main/mainmenubar.h \

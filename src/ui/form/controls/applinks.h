@@ -1,11 +1,11 @@
-#ifndef HOMELINKS_H
-#define HOMELINKS_H
+#ifndef APPLINKS_H
+#define APPLINKS_H
 
 #include <QCoreApplication>
 
-class HomeLinks
+class AppLinks
 {
-    Q_DECLARE_TR_FUNCTIONS(HomeLinks)
+    Q_DECLARE_TR_FUNCTIONS(AppLinks)
 
 public:
     enum Link : qint8 {
@@ -28,4 +28,4 @@ public:
     static void open(Link link);
 };
 
-#endif // HOMELINKS_H
+#endif // APPLINKS_H

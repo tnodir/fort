@@ -3,13 +3,13 @@
 #include <QMenu>
 #include <QStyleOptionToolButton>
 
-#include <form/home/homelinks.h>
 #include <fortglobal.h>
 #include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
 #include <util/iconcache.h>
 #include <util/osutil.h>
 
+#include "applinks.h"
 #include "controlutil.h"
 #include "formwindow.h"
 
@@ -59,8 +59,7 @@ void WindowMenuButton::setupMenu()
 
     menu->addSeparator();
 
-    m_actHelp =
-            menu->addAction(IconCache::icon(HomeLinks::iconPath(HomeLinks::LinkHelp)), QString());
+    m_actHelp = menu->addAction(IconCache::icon(AppLinks::iconPath(AppLinks::LinkHelp)), QString());
 
     m_actClose = menu->addAction(ControlUtil::clearIcon(this), QString());
 

@@ -2,7 +2,7 @@
 
 #include <QApplication>
 
-#include <form/home/homelinks.h>
+#include <form/controls/applinks.h>
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
@@ -37,9 +37,9 @@ void MainMenuBar::retranslateUi()
     m_actResetLayout->setText(tr("Reset Layout"));
 
     m_helpMenu->setTitle(tr("Help"));
-    m_actHelp->setText(HomeLinks::text(HomeLinks::LinkHelp));
+    m_actHelp->setText(AppLinks::text(AppLinks::LinkHelp));
     for (int i = 0; i < m_linkActions.size(); ++i) {
-        m_linkActions[i]->setText(HomeLinks::text(HomeLinks::Link(i)));
+        m_linkActions[i]->setText(AppLinks::text(AppLinks::Link(i)));
     }
     m_actCheckUpdates->setText(tr("Check for Updates"));
     m_actAbout->setText(tr("About %1").arg(QApplication::applicationDisplayName()));
@@ -107,20 +107,20 @@ void MainMenuBar::setupHelpMenu()
     m_helpMenu->setToolTipsVisible(true);
 
     m_actHelp = m_mainWindow->helpAction();
-    m_actHelp->setIcon(IconCache::icon(HomeLinks::iconPath(HomeLinks::LinkHelp)));
+    m_actHelp->setIcon(IconCache::icon(AppLinks::iconPath(AppLinks::LinkHelp)));
     m_helpMenu->addAction(m_actHelp);
 
     m_helpMenu->addSeparator();
 
     // The Help link is opened by the Help action
-    for (int i = 0; i < HomeLinks::LinkHelp; ++i) {
-        const auto link = HomeLinks::Link(i);
+    for (int i = 0; i < AppLinks::LinkHelp; ++i) {
+        const auto link = AppLinks::Link(i);
 
-        auto a = m_helpMenu->addAction(IconCache::icon(HomeLinks::iconPath(link)), {});
-        a->setToolTip(HomeLinks::path(link));
-        a->setVisible(HomeLinks::isVisible(link));
+        auto a = m_helpMenu->addAction(IconCache::icon(AppLinks::iconPath(link)), {});
+        a->setToolTip(AppLinks::path(link));
+        a->setVisible(AppLinks::isVisible(link));
 
-        connect(a, &QAction::triggered, this, [=] { HomeLinks::open(link); });
+        connect(a, &QAction::triggered, this, [=] { AppLinks::open(link); });
 
         m_linkActions.append(a);
     }
