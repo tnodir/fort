@@ -366,12 +366,9 @@ QLayout *IfacePage::setupColumn1()
     // Home Group Box
     setupHomeBox();
 
-    auto layout = new QVBoxLayout();
+    auto layout = ControlUtil::createVLayoutByWidgets(
+            { m_gbGlobal, m_gbHotKeys, m_gbHome, /*stretch*/ nullptr });
     layout->setSpacing(10);
-    layout->addWidget(m_gbGlobal);
-    layout->addWidget(m_gbHotKeys);
-    layout->addWidget(m_gbHome);
-    layout->addStretch();
 
     return layout;
 }
@@ -387,12 +384,9 @@ QLayout *IfacePage::setupColumn2()
     // Confirmations Group Box
     setupConfirmationsBox();
 
-    auto layout = new QVBoxLayout();
+    auto layout = ControlUtil::createVLayoutByWidgets(
+            { m_gbProg, m_gbTray, m_gbConfirmations, /*stretch*/ nullptr });
     layout->setSpacing(10);
-    layout->addWidget(m_gbProg);
-    layout->addWidget(m_gbTray);
-    layout->addWidget(m_gbConfirmations);
-    layout->addStretch();
 
     return layout;
 }
