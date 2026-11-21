@@ -371,6 +371,21 @@ bool SqliteDb::migrate(MigrateOptions &opt)
     return migrateDb(opt, userVersion, isNewDb);
 }
 
+bool SqliteDb::openAndMigrate(MigrateOptions &opt)
+{
+    if (!open()) {
+        qCCritical(LC) << "File open error:" << filePath() << errorMessage();
+        return false;
+    }
+
+    if (!migrate(opt)) {
+        qCCritical(LC) << "Migration error" << filePath();
+        return false;
+    }
+
+    return true;
+}
+
 bool SqliteDb::canMigrate(const MigrateOptions &opt) const
 {
     if (opt.userVersion > opt.version) {

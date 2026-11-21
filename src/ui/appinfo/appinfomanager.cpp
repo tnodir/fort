@@ -1,7 +1,6 @@
 #include "appinfomanager.h"
 
 #include <QImage>
-#include <QLoggingCategory>
 
 #include <sqlite/dbquery.h>
 #include <sqlite/sqlitedb.h>
@@ -13,8 +12,6 @@
 #include "appinfoworker.h"
 
 namespace {
-
-const QLoggingCategory LC("appInfo");
 
 inline constexpr int DATABASE_USER_VERSION = 7;
 
@@ -135,12 +132,6 @@ bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
 
 bool AppInfoManager::setupDb()
 {
-    if (!sqliteDb()->open()) {
-        qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
-                       << sqliteDb()->errorMessage();
-        return false;
-    }
-
     SqliteDb::MigrateOptions opt = {
         .sqlDir = ":/appinfo/migrations",
         .version = DATABASE_USER_VERSION,
@@ -148,12 +139,7 @@ bool AppInfoManager::setupDb()
         .importOldData = false,
     };
 
-    if (!sqliteDb()->migrate(opt)) {
-        qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
-        return false;
-    }
-
-    return true;
+    return sqliteDb()->openAndMigrate(opt);
 }
 
 void AppInfoManager::saveAppIcon(const QImage &appIcon, QVariant &iconId, bool &ok)

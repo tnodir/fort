@@ -133,13 +133,6 @@ bool HostZonesDb::open()
 {
     m_errorMessage.clear();
 
-    if (!m_db->open()) {
-        qCCritical(LC) << "File open error:" << filePath() << m_db->errorMessage();
-        setError();
-        close();
-        return false;
-    }
-
     SqliteDb::MigrateOptions opt = {
         .sqlDir = ":/dns/migrations",
         .version = DATABASE_USER_VERSION,
@@ -147,8 +140,7 @@ bool HostZonesDb::open()
         .importOldData = false,
     };
 
-    if (!m_db->migrate(opt)) {
-        qCCritical(LC) << "Migration error" << filePath();
+    if (!m_db->openAndMigrate(opt)) {
         setError();
         close();
         return false;

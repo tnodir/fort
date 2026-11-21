@@ -152,6 +152,9 @@ public:
 
     bool migrate(SqliteDb::MigrateOptions &opt);
 
+    // Opens the file and migrates it, the errors are logged
+    bool openAndMigrate(SqliteDb::MigrateOptions &opt);
+
     SqliteStmt *stmt(const char *sql);
 
     static bool isIoError(int errCode);

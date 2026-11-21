@@ -268,12 +268,6 @@ const char *StatConnManager::migrationsSqlDir() const
 
 bool StatConnManager::setupDb()
 {
-    if (!sqliteDb()->open()) {
-        qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
-                       << sqliteDb()->errorMessage();
-        return false;
-    }
-
     SqliteDb::MigrateOptions opt = {
         .sqlDir = migrationsSqlDir(),
         .version = DATABASE_USER_VERSION,
@@ -281,10 +275,8 @@ bool StatConnManager::setupDb()
         .migrateFunc = &migrateFunc,
     };
 
-    if (!sqliteDb()->migrate(opt)) {
-        qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
+    if (!sqliteDb()->openAndMigrate(opt))
         return false;
-    }
 
     if (roSqliteDb() != sqliteDb()) {
         if (!roSqliteDb()->open()) {

@@ -206,20 +206,9 @@ bool StatManager::clearTraffic()
 
 bool StatManager::setupDb()
 {
-    if (!sqliteDb()->open()) {
-        qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
-                       << sqliteDb()->errorMessage();
-        return false;
-    }
-
     SqliteDb::MigrateOptions opt = migrateOptions();
 
-    if (!sqliteDb()->migrate(opt)) {
-        qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
-        return false;
-    }
-
-    return true;
+    return sqliteDb()->openAndMigrate(opt);
 }
 
 void StatManager::logClear()
