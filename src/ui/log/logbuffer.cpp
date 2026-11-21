@@ -159,6 +159,7 @@ void LogBuffer::writeEntryConn(const LogEntryConn *logEntry)
         .inherited = logEntry->inherited(),
         .app_asked = logEntry->appAsked(),
         .proc_logged = logEntry->procLogged(),
+        .activity_only = logEntry->activityOnly(),
         .act = {
             .blocked = logEntry->blocked(),
             .drop_blocked = logEntry->dropped(),
@@ -212,6 +213,7 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
     logEntry->setInherited(conn.inherited);
     logEntry->setAppAsked(conn.app_asked);
     logEntry->setProcLogged(conn.proc_logged);
+    logEntry->setActivityOnly(conn.activity_only);
     logEntry->setInheritKernelPath(inheritPath);
     logEntry->setReason(conn.reason);
     logEntry->setIpProto(conn.ip_proto);

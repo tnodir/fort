@@ -590,7 +590,12 @@ inline static void fort_callout_ale_check_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALL
     fort_callout_ale_reauth_blocked(conn);
 
     /* Log the connection */
-    if (fort_callout_ale_log_conn_check(ca, conn, conf_ref, conf_flags)) {
+    const BOOL log_conn = fort_callout_ale_log_conn_check(ca, conn, conf_ref, conf_flags);
+
+    /* The allowed flow's CONN, not logged by the flags, is logged for the Activity only */
+    conn->activity_only = !log_conn && conn->flow_logging;
+
+    if (log_conn || conn->activity_only) {
         fort_callout_ale_log_conn(cx);
     }
 

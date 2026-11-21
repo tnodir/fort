@@ -208,6 +208,9 @@ bool LogManager::processLogEntryConn(LogBuffer *logBuffer)
     LogEntryConn connEntry;
     logBuffer->readEntryConn(&connEntry);
 
+    if (connEntry.activityOnly())
+        return true; // not for the connections' DB
+
     if (connEntry.procLogged() && !fillConnProcPaths(connEntry))
         return true; // skip the connection of an unknown process
 
