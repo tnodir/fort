@@ -75,6 +75,16 @@ typedef const FORT_LOG_PROC_NEW_HEADER *PCFORT_LOG_PROC_NEW_HEADER;
 
 #define FORT_LOG_PROC_KILL_SIZE (sizeof(UINT32) * 2)
 
+#define FORT_LOG_FLOW_STAT_SIZE (sizeof(UINT64) + 2 * sizeof(UINT32))
+
+#define FORT_LOG_FLOW_TRAF_HEADER_SIZE (sizeof(UINT32))
+
+#define FORT_LOG_FLOW_TRAF_SIZE(flow_count)                                                        \
+    (FORT_LOG_FLOW_TRAF_HEADER_SIZE + (flow_count) * FORT_LOG_FLOW_STAT_SIZE)
+
+#define FORT_LOG_FLOW_TRAF_BUFFER_FLOW_COUNT                                                       \
+    ((FORT_BUFFER_SIZE - FORT_LOG_FLOW_TRAF_HEADER_SIZE) / FORT_LOG_FLOW_STAT_SIZE)
+
 #define FORT_LOG_FLOW_CLOSED_SIZE (sizeof(UINT32) + sizeof(UINT64))
 
 #if defined(__cplusplus)
@@ -117,6 +127,15 @@ FORT_API void fort_log_time_read(const char *p, INT64 *unix_time, BOOL *system_t
 FORT_API void fort_log_proc_kill_write(char *p, UINT32 pid);
 
 FORT_API void fort_log_proc_kill_read(const char *p, UINT32 *pid);
+
+FORT_API void fort_log_flow_traf_header_write(char *p, UINT16 flow_count);
+
+FORT_API void fort_log_flow_traf_header_read(const char *p, UINT16 *flow_count);
+
+/* Returns the next flow's output */
+FORT_API char *fort_log_flow_stat_write(char *p, PCFORT_FLOW_STAT flow_stat);
+
+FORT_API void fort_log_flow_stat_read(const char *p, PFORT_FLOW_STAT flow_stat);
 
 FORT_API void fort_log_flow_closed_write(char *p, UINT64 flow_id);
 

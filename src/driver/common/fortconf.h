@@ -386,6 +386,14 @@ typedef struct fort_traf
     };
 } FORT_TRAF, *PFORT_TRAF;
 
+typedef struct fort_flow_stat
+{
+    UINT64 flow_id;
+    FORT_TRAF traf;
+} FORT_FLOW_STAT, *PFORT_FLOW_STAT;
+
+typedef const FORT_FLOW_STAT *PCFORT_FLOW_STAT;
+
 typedef struct fort_app_flags
 {
     UINT32 apply_parent : 1;

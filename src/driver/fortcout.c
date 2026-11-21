@@ -287,6 +287,21 @@ inline static void fort_callout_update_system_time(
     fort_buffer_system_time_write_locked(buf, irp_info, unix_time, system_time_changed);
 }
 
+/* Returns NULL on the buffer's error */
+static PCHAR fort_callout_flush_prepare(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT32 len)
+{
+    PCHAR out;
+
+    const NTSTATUS status = fort_buffer_prepare(buf, len, &out, irp_info);
+    if (!NT_SUCCESS(status)) {
+        LOG("Callout Timer: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_CALLOUT_TIMER_ERROR, status, 0, 0);
+        return NULL;
+    }
+
+    return out;
+}
+
 inline static void fort_callout_flush_stat_traf(
         PFORT_STAT stat, PFORT_BUFFER buf, PFORT_IRP_INFO irp_info)
 {
@@ -294,20 +309,51 @@ inline static void fort_callout_flush_stat_traf(
         const UINT16 proc_count = (stat->proc_active_count < FORT_LOG_STAT_BUFFER_PROC_COUNT)
                 ? stat->proc_active_count
                 : FORT_LOG_STAT_BUFFER_PROC_COUNT;
-        const UINT32 len = FORT_LOG_STAT_SIZE(proc_count);
-        PCHAR out;
 
-        const NTSTATUS status = fort_buffer_prepare(buf, len, &out, irp_info);
-        if (!NT_SUCCESS(status)) {
-            LOG("Callout Timer: Error: %x\n", status);
-            TRACE(FORT_CALLOUT_CALLOUT_TIMER_ERROR, status, 0, 0);
+        PCHAR out = fort_callout_flush_prepare(buf, irp_info, FORT_LOG_STAT_SIZE(proc_count));
+        if (out == NULL)
             break;
-        }
 
         fort_log_stat_traf_header_write(out, proc_count);
-        out += FORT_LOG_STAT_HEADER_SIZE;
 
-        fort_stat_traf_flush(stat, proc_count, out);
+        fort_stat_traf_flush(stat, proc_count, out + FORT_LOG_STAT_HEADER_SIZE);
+    }
+}
+
+/* Returns FALSE on the buffer's error */
+inline static BOOL fort_callout_flush_flows_prepare(
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT16 flow_count, PCHAR *out)
+{
+    *out = NULL;
+
+    /* Only the deleted flows are freed */
+    if (flow_count == 0)
+        return TRUE;
+
+    PCHAR p = fort_callout_flush_prepare(buf, irp_info, FORT_LOG_FLOW_TRAF_SIZE(flow_count));
+    if (p == NULL)
+        return FALSE;
+
+    fort_log_flow_traf_header_write(p, flow_count);
+
+    *out = p + FORT_LOG_FLOW_TRAF_HEADER_SIZE;
+
+    return TRUE;
+}
+
+inline static void fort_callout_flush_flows_traf(
+        PFORT_STAT stat, PFORT_BUFFER buf, PFORT_IRP_INFO irp_info)
+{
+    while (stat->flow_active != NULL) {
+        const UINT16 flow_count = (stat->flow_active_count < FORT_LOG_FLOW_TRAF_BUFFER_FLOW_COUNT)
+                ? (UINT16) stat->flow_active_count
+                : FORT_LOG_FLOW_TRAF_BUFFER_FLOW_COUNT;
+
+        PCHAR out;
+        if (!fort_callout_flush_flows_prepare(buf, irp_info, flow_count, &out))
+            break;
+
+        fort_stat_flows_traf_flush(stat, flow_count, out);
     }
 }
 
@@ -335,6 +381,9 @@ FORT_API void fort_callout_timer(void)
 
     /* Flush traffic statistics */
     fort_callout_flush_stat_traf(stat, buf, &irp_info);
+
+    /* Flush the flows' bytes */
+    fort_callout_flush_flows_traf(stat, buf, &irp_info);
 
     /* Unlock stat */
     KeReleaseInStackQueuedSpinLock(&stat_lock_queue);

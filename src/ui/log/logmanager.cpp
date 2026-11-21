@@ -20,6 +20,7 @@
 #include "logentryapp.h"
 #include "logentryconn.h"
 #include "logentryflowclosed.h"
+#include "logentryflowtraf.h"
 #include "logentryprockill.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
@@ -177,6 +178,7 @@ bool LogManager::processLogEntry(LogBuffer *logBuffer, FortLogType logType)
         &LogManager::processLogEntryStatTraf, // FORT_LOG_TYPE_STAT_TRAF
         &LogManager::processLogEntryTime, // FORT_LOG_TYPE_TIME
         &LogManager::processLogEntryProcKill, // FORT_LOG_TYPE_PROC_KILL
+        &LogManager::processLogEntryFlowTraf, // FORT_LOG_TYPE_FLOW_TRAF
         &LogManager::processLogEntryFlowClosed, // FORT_LOG_TYPE_FLOW_CLOSED
     };
     static_assert(std::size(processFuncs) == FORT_LOG_TYPE_COUNT);
@@ -287,6 +289,15 @@ bool LogManager::processLogEntryProcKill(LogBuffer *logBuffer)
     if (pi.isValid()) {
         pi.terminateProcess(procKillEntry.pid());
     }
+
+    return true;
+}
+
+bool LogManager::processLogEntryFlowTraf(LogBuffer *logBuffer)
+{
+    // Not used yet
+    LogEntryFlowTraf flowTrafEntry;
+    logBuffer->readEntryFlowTraf(&flowTrafEntry);
 
     return true;
 }

@@ -9,6 +9,7 @@
 class LogEntryApp;
 class LogEntryConn;
 class LogEntryFlowClosed;
+class LogEntryFlowTraf;
 class LogEntryProcKill;
 class LogEntryProcNew;
 class LogEntryStatTraf;
@@ -43,6 +44,9 @@ public:
     void readEntryTime(LogEntryTime *logEntry);
 
     void readEntryProcKill(LogEntryProcKill *logEntry);
+
+    void writeEntryFlowTraf(const LogEntryFlowTraf *logEntry);
+    void readEntryFlowTraf(LogEntryFlowTraf *logEntry);
 
     void writeEntryFlowClosed(const LogEntryFlowClosed *logEntry);
     void readEntryFlowClosed(LogEntryFlowClosed *logEntry);

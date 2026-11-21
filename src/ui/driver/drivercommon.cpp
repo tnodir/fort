@@ -378,6 +378,21 @@ quint32 logProcKillSize()
     return FORT_LOG_PROC_KILL_SIZE;
 }
 
+quint32 logFlowStatSize()
+{
+    return FORT_LOG_FLOW_STAT_SIZE;
+}
+
+quint32 logFlowTrafHeaderSize()
+{
+    return FORT_LOG_FLOW_TRAF_HEADER_SIZE;
+}
+
+quint32 logFlowTrafSize(quint16 flowCount)
+{
+    return FORT_LOG_FLOW_TRAF_SIZE(flowCount);
+}
+
 quint32 logFlowClosedSize()
 {
     return FORT_LOG_FLOW_CLOSED_SIZE;
@@ -459,6 +474,28 @@ void logProcKillWrite(char *output, quint32 pid)
 void logProcKillRead(const char *input, quint32 *pid)
 {
     fort_log_proc_kill_read(input, pid);
+}
+
+void logFlowTrafHeaderWrite(char *output, quint16 flowCount)
+{
+    fort_log_flow_traf_header_write(output, flowCount);
+}
+
+void logFlowTrafHeaderRead(const char *input, quint16 *flowCount)
+{
+    fort_log_flow_traf_header_read(input, flowCount);
+}
+
+char *logFlowStatWrite(char *output, const FORT_FLOW_STAT &flowStat)
+{
+    return fort_log_flow_stat_write(output, &flowStat);
+}
+
+FORT_FLOW_STAT logFlowStatRead(const char *input)
+{
+    FORT_FLOW_STAT flowStat;
+    fort_log_flow_stat_read(input, &flowStat);
+    return flowStat;
 }
 
 void logFlowClosedWrite(char *output, quint64 flowId)

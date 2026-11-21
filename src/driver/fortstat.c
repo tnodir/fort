@@ -5,6 +5,7 @@
 #include <assert.h>
 
 #include "common/fortdef.h"
+#include "common/fortlog.h"
 
 #include "fortutl.h"
 
@@ -166,6 +167,20 @@ FORT_API UINT16 fort_flow_flags(PFORT_FLOW flow)
     return fort_flow_flags_set(flow, 0, TRUE);
 }
 
+static void fort_flow_active_add(PFORT_STAT stat, PFORT_FLOW flow)
+{
+    if ((flow->opt.flags & FORT_FLOW_TRAF_PENDING) != 0)
+        return;
+
+    fort_flow_flags_set(flow, FORT_FLOW_TRAF_PENDING, TRUE);
+
+    /* Add to active list */
+    flow->next_active = stat->flow_active;
+    stat->flow_active = flow;
+
+    stat->flow_active_count++;
+}
+
 static void fort_flow_conn_unlog_node(PVOID arg, PVOID flow_node)
 {
     UNUSED(arg);
@@ -286,13 +301,26 @@ static PFORT_FLOW fort_flow_get(PFORT_STAT stat, UINT64 flow_id, tommy_key_t flo
     return NULL;
 }
 
+static void fort_flow_free_add(PFORT_STAT stat, PFORT_FLOW flow)
+{
+    /* Add to free list */
+    flow->next = stat->flow_free;
+    stat->flow_free = flow;
+}
+
 static void fort_flow_drop(PFORT_STAT stat, PFORT_FLOW flow)
 {
     tommy_hashdyn_remove_existing(&stat->flows_map, (tommy_hashdyn_node *) flow);
 
-    /* Add to free list */
-    flow->next = stat->flow_free;
-    stat->flow_free = flow;
+    const UINT16 old_flags = fort_flow_flags_set(flow, FORT_FLOW_DELETED, TRUE);
+
+    /* The flow of the active list is freed by its flush */
+    if ((old_flags & FORT_FLOW_TRAF_PENDING) != 0) {
+        stat->flow_active_count--;
+        return;
+    }
+
+    fort_flow_free_add(stat, flow);
 }
 
 static void fort_flow_free(PFORT_STAT stat, PFORT_FLOW flow)
@@ -318,6 +346,7 @@ static PFORT_FLOW fort_flow_new(PFORT_STAT stat, UINT64 flow_id, const tommy_key
 
     flow->flow_id = flow_id;
     flow->old_speed_limits = (FORT_SPEED_LIMIT_IDS) { 0 };
+    flow->traf.v = 0;
 
     return flow;
 }
@@ -351,6 +380,7 @@ inline static void fort_flow_opt_set(PCFORT_FLOW_ADD_ARG faa, UINT16 old_flags)
             | (conn->isIPv6 ? FORT_FLOW_IP6 : 0) | (conn->inbound ? FORT_FLOW_INBOUND : 0)
             | (conn->reason == FORT_CONN_REASON_ASK_ALLOWED ? FORT_FLOW_ASK_ALLOWED : 0)
             | (old_flags & FORT_FLOW_ASK_ALLOWED) /* till its blocked reauthorization */
+            | (old_flags & FORT_FLOW_TRAF_PENDING) /* in the active list */
             | FORT_FLOW_CONN_LOGGED;
 
     flow->opt.proc_index = faa->proc->proc_index;
@@ -515,6 +545,9 @@ FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat)
     /* Clear the processes' active list */
     fort_stat_traf_flush(stat, /*proc_count=*/FORT_PROC_COUNT_MAX, /*out=*/NULL);
 
+    /* Clear the flows' active list */
+    fort_stat_flows_traf_flush(stat, /*flow_count=*/MAXUINT32, /*out=*/NULL);
+
     /* Clear the processes' logged flag */
     fort_tommy_hashdyn_foreach_node_arg(&stat->procs_map, &fort_stat_proc_unlog_node, NULL);
 
@@ -672,6 +705,13 @@ static BOOL fort_flow_delete_closing(PFORT_STAT stat, PFORT_FLOW flow)
     return FALSE;
 }
 
+/* Gets the flow's bytes not flushed yet */
+inline static void fort_flow_stat_get(PCFORT_FLOW flow, PFORT_FLOW_STAT flow_stat)
+{
+    flow_stat->flow_id = flow->flow_id;
+    flow_stat->traf = flow->traf;
+}
+
 FORT_API BOOL fort_flow_ask_allowed_id(PFORT_STAT stat, UINT64 flowContext, UINT64 *flow_id)
 {
     /* The flows aren't closed, when their contexts are removed by the stat's closing */
@@ -705,6 +745,61 @@ FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
+/* Returns FALSE, when the bytes must be flushed before the overflow */
+inline static BOOL fort_traf_fits(const FORT_TRAF *traf, UINT32 data_len, BOOL inbound)
+{
+    const UINT32 bytes = inbound ? traf->in_bytes : traf->out_bytes;
+
+    return bytes <= MAXUINT32 - data_len;
+}
+
+inline static void fort_traf_add(PFORT_TRAF traf, UINT32 data_len, BOOL inbound)
+{
+    UINT32 *bytes = inbound ? &traf->in_bytes : &traf->out_bytes;
+
+    *bytes += data_len;
+}
+
+inline static BOOL fort_stat_proc_traf_counted(const FORT_STAT_PROC *proc)
+{
+    return proc->proc_stat && proc->log_stat;
+}
+
+/* The service knows the flow by its CONN */
+inline static BOOL fort_flow_traf_counted(PCFORT_FLOW flow)
+{
+    return (flow->opt.flags & FORT_FLOW_CONN_LOGGED) != 0;
+}
+
+/* Returns FALSE, when the process's or the flow's bytes must be flushed before the overflow */
+inline static BOOL fort_flow_traf_fits(
+        PFORT_STAT stat, PCFORT_FLOW flow, UINT32 data_len, BOOL inbound)
+{
+    const FORT_STAT_PROC *proc = tommy_arrayof_ref(&stat->procs, flow->opt.proc_index);
+
+    if (fort_stat_proc_traf_counted(proc) && !fort_traf_fits(&proc->traf, data_len, inbound))
+        return FALSE;
+
+    return !fort_flow_traf_counted(flow) || fort_traf_fits(&flow->traf, data_len, inbound);
+}
+
+static void fort_flow_traf_add(PFORT_STAT stat, PFORT_FLOW flow, UINT32 data_len, BOOL inbound)
+{
+    PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, flow->opt.proc_index);
+
+    if (fort_stat_proc_traf_counted(proc)) {
+        fort_traf_add(&proc->traf, data_len, inbound);
+
+        fort_stat_proc_active_add(stat, proc);
+    }
+
+    if (fort_flow_traf_counted(flow)) {
+        fort_traf_add(&flow->traf, data_len, inbound);
+
+        fort_flow_active_add(stat, flow);
+    }
+}
+
 FORT_API BOOL fort_flow_classify(PFORT_STAT stat, UINT64 flowContext, UINT32 data_len, BOOL inbound)
 {
     if (data_len == 0)
@@ -712,25 +807,14 @@ FORT_API BOOL fort_flow_classify(PFORT_STAT stat, UINT64 flowContext, UINT32 dat
 
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
-    BOOL res = TRUE;
-
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-    PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, flow->opt.proc_index);
+    /* Nothing is counted before the classify's repeat after the flush */
+    const BOOL res = fort_flow_traf_fits(stat, flow, data_len, inbound);
 
-    if (proc->proc_stat && proc->log_stat) {
-        UINT32 *proc_bytes = inbound ? &proc->traf.in_bytes : &proc->traf.out_bytes;
-
-        if (*proc_bytes > MAXUINT32 - data_len) {
-            /* The process's bytes must be flushed before the overflow */
-            res = FALSE;
-        } else {
-            /* Add traffic to process's bytes */
-            *proc_bytes += data_len;
-
-            fort_stat_proc_active_add(stat, proc);
-        }
+    if (res) {
+        fort_flow_traf_add(stat, flow, data_len, inbound);
     }
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -781,4 +865,46 @@ FORT_API void fort_stat_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR out
     }
 
     stat->proc_active = proc;
+}
+
+static void fort_stat_traf_flush_flow(PFORT_STAT stat, PFORT_FLOW flow, PCHAR *out)
+{
+    FORT_FLOW_STAT flow_stat;
+    fort_flow_stat_get(flow, &flow_stat);
+
+    if (*out != NULL) {
+        *out = fort_log_flow_stat_write(*out, &flow_stat);
+    }
+
+    /* Clear flow's bytes */
+    flow->traf.v = 0;
+
+    stat->flow_active_count--;
+}
+
+FORT_API void fort_stat_flows_traf_flush(PFORT_STAT stat, UINT32 flow_count, PCHAR out)
+{
+    PFORT_FLOW flow = stat->flow_active;
+
+    while (flow != NULL) {
+        const BOOL is_deleted = (flow->opt.flags & FORT_FLOW_DELETED) != 0;
+
+        if (!is_deleted && flow_count == 0)
+            break;
+
+        PFORT_FLOW flow_next = flow->next_active;
+
+        fort_flow_flags_set(flow, FORT_FLOW_TRAF_PENDING, FALSE);
+
+        if (is_deleted) {
+            fort_flow_free_add(stat, flow);
+        } else {
+            fort_stat_traf_flush_flow(stat, flow, &out);
+            --flow_count;
+        }
+
+        flow = flow_next;
+    }
+
+    stat->flow_active = flow;
 }

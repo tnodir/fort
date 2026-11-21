@@ -95,6 +95,10 @@ quint32 logTimeSize();
 
 quint32 logProcKillSize();
 
+quint32 logFlowStatSize();
+quint32 logFlowTrafHeaderSize();
+quint32 logFlowTrafSize(quint16 flowCount);
+
 quint32 logFlowClosedSize();
 
 quint8 logType(const char *input);
@@ -117,6 +121,12 @@ void logTimeRead(const char *input, qint64 *unixTime, int *systemTimeChanged);
 
 void logProcKillWrite(char *output, quint32 pid);
 void logProcKillRead(const char *input, quint32 *pid);
+
+void logFlowTrafHeaderWrite(char *output, quint16 flowCount);
+void logFlowTrafHeaderRead(const char *input, quint16 *flowCount);
+
+char *logFlowStatWrite(char *output, const FORT_FLOW_STAT &flowStat);
+FORT_FLOW_STAT logFlowStatRead(const char *input);
 
 void logFlowClosedWrite(char *output, quint64 flowId);
 void logFlowClosedRead(const char *input, quint64 *flowId);

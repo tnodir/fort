@@ -53,8 +53,9 @@ typedef struct fort_stat_proc
 #define FORT_FLOW_TCP               0x10
 #define FORT_FLOW_IP6               0x20
 #define FORT_FLOW_INBOUND           0x40
-#define FORT_FLOW_ACTIVE            0x80
+#define FORT_FLOW_DELETED           0x80 /* removed from the flows' map */
 #define FORT_FLOW_CONN_LOGGED       0x0100 /* the flow's CONN is logged */
+#define FORT_FLOW_TRAF_PENDING      0x0200 /* in the stat's list of the flows to flush */
 
 typedef struct fort_flow_opt
 {
@@ -94,6 +95,10 @@ typedef struct fort_flow
 
     FORT_SPEED_LIMIT_IDS speed_limits;
     FORT_SPEED_LIMIT_IDS old_speed_limits; /* the previous queues may have the flow's packets */
+
+    FORT_TRAF traf; /* since the last flush, regardless of the process's stat */
+
+    struct fort_flow *next_active;
 } FORT_FLOW, *PFORT_FLOW;
 
 typedef const FORT_FLOW *PCFORT_FLOW;
@@ -138,12 +143,15 @@ typedef struct fort_stat
 
     LONG volatile flow_closing_count;
 
+    UINT32 flow_active_count; /* the live flows of the active list */
+
     UINT32 callout_ids[FORT_STAT_CALLOUT_IDS_COUNT];
 
     PFORT_STAT_PROC proc_free;
     PFORT_STAT_PROC proc_active;
 
     PFORT_FLOW flow_free;
+    PFORT_FLOW flow_active;
 
     tommy_arrayof procs;
     tommy_hashdyn procs_map;
@@ -201,6 +209,10 @@ FORT_API BOOL fort_flow_classify(
         PFORT_STAT stat, UINT64 flowContext, UINT32 data_len, BOOL inbound);
 
 FORT_API void fort_stat_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR out);
+
+/* Writes the bytes of the flow_count live flows of the active list (drops them for a NULL out),
+ * frees the deleted flows on the way */
+FORT_API void fort_stat_flows_traf_flush(PFORT_STAT stat, UINT32 flow_count, PCHAR out);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -81,7 +81,7 @@ static void fort_callout_transport_classify_stat(
     PFORT_STAT stat = &fort_device()->stat;
 
     if (!fort_flow_classify(stat, ca->flowContext, ca->dataSize, ca->inbound)) {
-        /* Flush the traffic statistics on the process's bytes' overflow */
+        /* Flush the traffic statistics on the process's or the flow's bytes' overflow */
         fort_callout_timer();
 
         fort_flow_classify(stat, ca->flowContext, ca->dataSize, ca->inbound);

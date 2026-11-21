@@ -9,6 +9,7 @@
 #include <log/logentryapp.h>
 #include <log/logentryconn.h>
 #include <log/logentryflowclosed.h>
+#include <log/logentryflowtraf.h>
 #include <log/logentryprocnew.h>
 #include <log/logentrytime.h>
 #include <util/dateutil.h>
@@ -268,6 +269,50 @@ TEST_F(LogBufferTest, timeWriteRead)
     ASSERT_EQ(buf.peekEntryType(), FORT_LOG_TYPE_TIME);
     buf.readEntryTime(&entry);
     ASSERT_EQ(entry.unixTime(), unixTime);
+}
+
+TEST_F(LogBufferTest, flowTrafWriteRead)
+{
+    const int flowCount = 3;
+
+    QByteArray flowsData(flowCount * DriverCommon::logFlowStatSize(), Qt::Uninitialized);
+    char *output = flowsData.data();
+
+    for (int i = 0; i < flowCount; ++i) {
+        FORT_FLOW_STAT flowStat = { .flow_id = 0x89ABCDEF01234567ull + i };
+        flowStat.traf.in_bytes = 0x12345678u + i;
+        flowStat.traf.out_bytes = 0x87654321u + i;
+
+        output = DriverCommon::logFlowStatWrite(output, flowStat);
+    }
+    ASSERT_EQ(output, flowsData.constData() + flowsData.size());
+
+    LogBuffer buf(DriverCommon::logFlowTrafSize(flowCount) + DriverCommon::logTimeSize());
+
+    // Write: the next record follows the flows
+    const LogEntryFlowTraf flowTrafEntry(flowCount, flowsData.constData());
+    buf.writeEntryFlowTraf(&flowTrafEntry);
+
+    LogEntryTime timeEntry(DateUtil::getUnixTime());
+    buf.writeEntryTime(&timeEntry);
+
+    // Read
+    ASSERT_EQ(buf.peekEntryType(), FORT_LOG_TYPE_FLOW_TRAF);
+    LogEntryFlowTraf readEntry;
+    buf.readEntryFlowTraf(&readEntry);
+    ASSERT_EQ(readEntry.flowCount(), flowCount);
+
+    for (int i = 0; i < flowCount; ++i) {
+        const FORT_FLOW_STAT flowStat = readEntry.flowStat(i);
+        ASSERT_EQ(flowStat.flow_id, 0x89ABCDEF01234567ull + i);
+        ASSERT_EQ(flowStat.traf.in_bytes, 0x12345678u + i);
+        ASSERT_EQ(flowStat.traf.out_bytes, 0x87654321u + i);
+    }
+
+    ASSERT_EQ(buf.peekEntryType(), FORT_LOG_TYPE_TIME);
+    buf.readEntryTime(&timeEntry);
+
+    ASSERT_EQ(buf.offset(), buf.top());
 }
 
 TEST_F(LogBufferTest, flowClosedWriteRead)
