@@ -46,6 +46,13 @@ void PanelDock::takeFormWindow()
 
     m_formWindow = nullptr;
 
+    // Qt's QWidget::setParent() to a window keeps the old window's focus child when the
+    // application has no focus widget: clear it, else the Main window keeps the deleted one
+    // and crashes on its next clearFocus()
+    if (QWidget *focusWidget = w->focusWidget()) {
+        focusWidget->clearFocus();
+    }
+
     setWidget(nullptr);
     w->setParent(nullptr, Qt::Window);
 }
