@@ -59,6 +59,11 @@ QString FortSettings::pendingConnFilePath() const
     return statFilePath() + "-pending";
 }
 
+QString FortSettings::activityFilePath() const
+{
+    return statFilePath() + "-activity";
+}
+
 QString FortSettings::cacheFilePath() const
 {
     return noCache() ? ":memory:" : cachePath() + "appinfo.db";

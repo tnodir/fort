@@ -20,6 +20,9 @@ public:
 
     FORT_FLOW_STAT flowStat(int index) const;
 
+    // The driver's tick has no more portions
+    bool isTickEnd() const;
+
 private:
     quint16 m_flowCount = 0;
     const char *m_flowsData = nullptr;

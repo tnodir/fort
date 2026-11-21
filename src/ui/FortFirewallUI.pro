@@ -9,6 +9,7 @@ TARGET = FortFirewallUILib
 TEMPLATE = lib
 
 SOURCES += \
+    activity/activitymanager.cpp \
     appinfo/appbasejob.cpp \
     appinfo/appiconjob.cpp \
     appinfo/appinfo.cpp \
@@ -252,6 +253,7 @@ SOURCES += \
     model/zonelistmodel.cpp \
     model/zonesourcewrapper.cpp \
     model/zonetypewrapper.cpp \
+    rpc/activitymanagerrpc.cpp \
     rpc/appinfomanagerrpc.cpp \
     rpc/autoupdatemanagerrpc.cpp \
     rpc/confappmanagerrpc.cpp \
@@ -375,6 +377,7 @@ SOURCES += \
     util/worker/workerobject.cpp
 
 HEADERS += \
+    activity/activitymanager.h \
     appinfo/appbasejob.h \
     appinfo/appiconjob.h \
     appinfo/appinfo.h \
@@ -627,6 +630,7 @@ HEADERS += \
     model/zonesourcewrapper.h \
     model/zonetypewrapper.h \
     qtcompat.h \
+    rpc/activitymanagerrpc.h \
     rpc/appinfomanagerrpc.h \
     rpc/autoupdatemanagerrpc.h \
     rpc/confappmanagerrpc.h \
@@ -779,6 +783,7 @@ OTHER_FILES += \
     stat/migrations/traf/*.sql
 
 RESOURCES += \
+    activity/activity_migrations.qrc \
     appinfo/appinfo_migrations.qrc \
     conf/conf_migrations.qrc \
     dns/dns_migrations.qrc \

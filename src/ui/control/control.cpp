@@ -34,6 +34,8 @@ static const QHash<Command, const char *> g_commandNames = {
 
     CASE_STRING(Rpc_RpcManager_initClient),
 
+    CASE_STRING(Rpc_ActivityManager_changed),
+
     CASE_STRING(Rpc_AppInfoManager_lookupAppInfo),
     CASE_STRING(Rpc_AppInfoManager_checkLookupInfoFinished),
 
@@ -163,6 +165,7 @@ const char *const commandString(Command cmd)
 
 static const QHash<RpcManager, const char *> g_managerNames = {
     CASE_STRING(Rpc_NoneManager),
+    CASE_STRING(Rpc_ActivityManager),
     CASE_STRING(Rpc_AppInfoManager),
     CASE_STRING(Rpc_AutoUpdateManager),
     CASE_STRING(Rpc_ConfManager),
@@ -214,6 +217,8 @@ static const RpcManager g_commandManagers[] = {
     Rpc_NoneManager, // Rpc_Result_Error,
 
     Rpc_NoneManager, // Rpc_RpcManager_initClient,
+
+    Rpc_ActivityManager, // Rpc_ActivityManager_changed,
 
     Rpc_AppInfoManager, // Rpc_AppInfoManager_lookupAppInfo,
     Rpc_AppInfoManager, // Rpc_AppInfoManager_checkLookupFinished,
@@ -370,6 +375,8 @@ static const qint8 g_commandValidations[] = {
     0, // Rpc_Result_Error,
 
     0, // Rpc_RpcManager_initClient,
+
+    0, // Rpc_ActivityManager_changed,
 
     true, // Rpc_AppInfoManager_lookupAppInfo,
     0, // Rpc_AppInfoManager_checkLookupFinished,

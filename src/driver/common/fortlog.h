@@ -73,6 +73,9 @@ typedef const FORT_LOG_PROC_NEW_HEADER *PCFORT_LOG_PROC_NEW_HEADER;
 
 #define FORT_LOG_TIME_SIZE (sizeof(UINT32) + sizeof(INT64))
 
+/* The log timer writes the TIME and the traffic of its tick */
+#define FORT_LOG_TIMER_PERIOD 500 /* msecs */
+
 #define FORT_LOG_PROC_KILL_SIZE (sizeof(UINT32) * 2)
 
 #define FORT_LOG_FLOW_STAT_SIZE (sizeof(UINT64) + 2 * sizeof(UINT32))

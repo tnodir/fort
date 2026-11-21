@@ -10,6 +10,7 @@
 #include <fortglobal.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
+#include <rpc/activitymanagerrpc.h>
 #include <rpc/appinfomanagerrpc.h>
 #include <rpc/autoupdatemanagerrpc.h>
 #include <rpc/confappmanagerrpc.h>
@@ -86,6 +87,7 @@ void RpcManager::tearDown()
 
 void RpcManager::setupServerSignals()
 {
+    ActivityManagerRpc::setupServerSignals(this);
     AppInfoManagerRpc::setupServerSignals(this);
     AutoUpdateManagerRpc::setupServerSignals(this);
     ConfManagerRpc::setupServerSignals(this);
@@ -226,6 +228,7 @@ bool RpcManager::processCommandRpc(const ProcessCommandArgs &p, ProcessCommandRe
 }
 
 static const processCommand_func processManager_funcList[] = {
+    &ActivityManagerRpc::processServerCommand, // Control::Rpc_ActivityManager,
     &AppInfoManagerRpc::processServerCommand, // Control::Rpc_AppInfoManager,
     &AutoUpdateManagerRpc::processServerCommand, // Control::Rpc_AutoUpdateManager,
     &ConfManagerRpc::processServerCommand, // Control::Rpc_ConfManager,
@@ -255,12 +258,12 @@ bool RpcManager::processManagerRpc(const ProcessCommandArgs &p, ProcessCommandRe
 
     const Control::RpcManager rpcManager = Control::managerByCommand(p.command);
 
-    if (rpcManager < Control::Rpc_AppInfoManager || rpcManager > Control::Rpc_TaskManager) {
+    if (rpcManager < Control::Rpc_ActivityManager || rpcManager > Control::Rpc_TaskManager) {
         r.errorMessage = "Unknown command";
         return false;
     }
 
-    const int funcIndex = rpcManager - Control::Rpc_AppInfoManager;
+    const int funcIndex = rpcManager - Control::Rpc_ActivityManager;
     const processCommand_func func = processManager_funcList[funcIndex];
 
     return func(p, r);

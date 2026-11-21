@@ -7,6 +7,7 @@
 
 #include <fort_version.h>
 
+#include <activity/activitymanager.h>
 #include <appinfo/appinfocache.h>
 #include <conf/firewallconf.h>
 #include <control/controlmanager.h>
@@ -28,6 +29,7 @@
 #include <model/speedlimitlistmodel.h>
 #include <model/timeperiodlistmodel.h>
 #include <model/zonelistmodel.h>
+#include <rpc/activitymanagerrpc.h>
 #include <rpc/appinfomanagerrpc.h>
 #include <rpc/autoupdatemanagerrpc.h>
 #include <rpc/confappmanagerrpc.h>
@@ -108,6 +110,7 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService(new DriverManager());
     ioc->setService(new AppInfoManager(settings->cacheFilePath()));
     ioc->setService(new DnsClientManager());
+    ioc->setService(new ActivityManager(settings->activityFilePath()));
     ioc->setService(new LogManager());
     ioc->setService(new ServiceInfoManager());
     ioc->setService(new TaskManager());
@@ -131,6 +134,7 @@ inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService<DriverManager>(new DriverManagerRpc());
     ioc->setService<AppInfoManager>(
             new AppInfoManagerRpc(settings->cacheFilePath(), settings->noCache()));
+    ioc->setService<ActivityManager>(new ActivityManagerRpc(settings->activityFilePath()));
     ioc->setService<LogManager>(new LogManagerRpc());
     ioc->setService<ServiceInfoManager>(new ServiceInfoManagerRpc());
     ioc->setService<TaskManager>(new TaskManagerRpc());
@@ -416,7 +420,12 @@ bool FortManager::setupDriver()
 void FortManager::closeDriver()
 {
     updateLogManager(false);
+
+    // Process the log read before its cancelling, else it comes after the clearing
+    QCoreApplication::sendPostedEvents(logManager(), QEvent::MetaCall);
+
     updateStatManager(false);
+    activityManager()->clear();
 
     driverManager()->closeDevice();
 
@@ -800,6 +809,7 @@ void FortManager::setupPortableResource()
 
 void FortManager::setupResources()
 {
+    Q_INIT_RESOURCE(activity_migrations);
     Q_INIT_RESOURCE(appinfo_migrations);
     Q_INIT_RESOURCE(conf_migrations);
     Q_INIT_RESOURCE(conf_rule);

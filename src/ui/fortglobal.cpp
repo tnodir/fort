@@ -1,5 +1,6 @@
 #include "fortglobal.h"
 
+#include <activity/activitymanager.h>
 #include <appinfo/appinfocache.h>
 #include <appinfo/appinfomanager.h>
 #include <conf/confappmanager.h>
@@ -39,6 +40,11 @@
 #include <user/usersettings.h>
 
 namespace Fort {
+
+ActivityManager *activityManager()
+{
+    return IoC<ActivityManager>();
+}
 
 AppInfoCache *appInfoCache()
 {

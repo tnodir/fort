@@ -679,7 +679,8 @@ FORT_API NTSTATUS fort_device_load(PVOID device_param)
     fort_stat_open(&fort_device()->stat);
     fort_pending_open(&fort_device()->pending);
     fort_shaper_open(&fort_device()->shaper);
-    fort_timer_open(&fort_device()->log_timer, 500, /*flags=*/0, &fort_callout_timer);
+    fort_timer_open(
+            &fort_device()->log_timer, FORT_LOG_TIMER_PERIOD, /*flags=*/0, &fort_callout_timer);
     fort_psname_open(&fort_device()->ps_names);
     fort_pstree_open(&fort_device()->ps_tree, &fort_device()->ps_names);
 

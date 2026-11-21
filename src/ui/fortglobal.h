@@ -5,6 +5,7 @@
 
 #include <util/ioc/ioccontainer.h>
 
+class ActivityManager;
 class AppInfoCache;
 class AppInfoManager;
 class AutoUpdateManager;
@@ -53,6 +54,7 @@ constexpr T *dependency()
     return IoCDependency<T>();
 }
 
+ActivityManager *activityManager();
 AppInfoCache *appInfoCache();
 AppInfoManager *appInfoManager();
 AutoUpdateManager *autoUpdateManager();
