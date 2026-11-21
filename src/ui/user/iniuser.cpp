@@ -15,6 +15,7 @@ const char *const list[] = {
     timePeriods,
     services,
     traffic,
+    activity,
     connections,
     filterSim,
     graph,

@@ -29,6 +29,7 @@ inline constexpr WindowShow windowShows[] = {
     { .code = WindowGroups, .name = "groups" },
     { .code = WindowSpeedLimits, .name = "speed-limits" },
     { .code = WindowTimePeriods, .name = "time-periods" },
+    { .code = WindowActivity, .name = "activity" },
     { .code = WindowConnections, .name = "connections" },
     { .code = WindowTraffic, .name = "statistics" },
     { .code = WindowServices, .name = "services" },

@@ -22,6 +22,7 @@ enum ActionType : qint8 {
     ActionShowTraffic,
     ActionShowConnections,
     ActionShowTrafficGraph,
+    ActionShowActivity,
     ActionSwitchFilterEnabled,
     ActionSwitchSnoozeAlerts,
     ActionShowBlockTrafficMenu,

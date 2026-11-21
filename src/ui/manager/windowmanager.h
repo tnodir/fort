@@ -253,6 +253,7 @@ private:
         FormPointer(WindowOptions),
         FormPointer(WindowRules),
         FormPointer(WindowTraffic),
+        FormPointer(WindowActivity),
         FormPointer(WindowConnections),
         FormPointer(WindowZones),
         FormPointer(WindowGroups),

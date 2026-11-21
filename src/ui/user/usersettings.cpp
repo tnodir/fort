@@ -28,6 +28,7 @@ void UserSettings::migrateQtVerOnLoad()
     setCacheValue("serviceWindow/servicesHeader", emptyArray);
     setCacheValue("zoneWindow/zonesHeader", emptyArray);
     setCacheValue("connWindow/connListHeader", emptyArray);
+    setCacheValue("activityWindow/header", emptyArray);
 }
 
 void UserSettings::migrateQtVerOnWrite()

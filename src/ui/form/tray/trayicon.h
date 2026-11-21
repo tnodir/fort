@@ -157,6 +157,7 @@ private:
     QAction *m_servicesAction = nullptr;
     QMenu *m_statisticsMenu = nullptr;
     QAction *m_trafficAction = nullptr;
+    QAction *m_activityAction = nullptr;
     QAction *m_connectionsAction = nullptr;
     QAction *m_filterSimAction = nullptr;
     QAction *m_graphAction = nullptr;

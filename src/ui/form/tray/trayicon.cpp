@@ -69,6 +69,7 @@ const QString actionShowOptions = QStringLiteral("Options");
 const QString actionShowTraffic = QStringLiteral("Traffic");
 const QString actionShowConnections = QStringLiteral("Connections");
 const QString actionShowTrafficGraph = QStringLiteral("TrafficGraph");
+const QString actionShowActivity = QStringLiteral("Activity");
 const QString actionSwitchFilterEnabled = QStringLiteral("FilterEnabled");
 const QString actionSwitchSnoozeAlerts = QStringLiteral("SnoozeAlerts");
 const QString actionShowBlockTrafficMenu = QStringLiteral("BlockTrafficMenu");
@@ -106,6 +107,7 @@ QString actionNameByType(tray::ActionType actionType)
         actionShowTraffic,
         actionShowConnections,
         actionShowTrafficGraph,
+        actionShowActivity,
         actionSwitchFilterEnabled,
         actionSwitchSnoozeAlerts,
         actionShowBlockTrafficMenu,
@@ -133,6 +135,7 @@ tray::ActionType actionTypeByName(const QString &name)
         { actionShowConnections, tray::ActionShowConnections },
         { QStringLiteral("Statistics"), tray::ActionShowTraffic }, // COMPAT: v3.20.1
         { actionShowTrafficGraph, tray::ActionShowTrafficGraph },
+        { actionShowActivity, tray::ActionShowActivity },
         { actionSwitchFilterEnabled, tray::ActionSwitchFilterEnabled },
         { actionSwitchSnoozeAlerts, tray::ActionSwitchSnoozeAlerts },
         { actionShowBlockTrafficMenu, tray::ActionShowBlockTrafficMenu },
@@ -472,6 +475,7 @@ void TrayIcon::retranslateUi()
     m_servicesAction->setText(tr("Services"));
     m_statisticsMenu->setTitle(tr("Statistics"));
     m_trafficAction->setText(tr("Traffic"));
+    m_activityAction->setText(tr("Activity"));
     m_connectionsAction->setText(tr("Connections"));
     m_filterSimAction->setText(tr("Filter Simulator"));
     m_graphAction->setText(tr("Traffic Graph"));
@@ -632,6 +636,10 @@ void TrayIcon::setupTrayMenuStatistics()
             { ":/icons/chart_bar.png", this, SLOT(onShowWindowAction()), WindowTraffic });
     m_trafficAction->setObjectName("trafficAction");
     addHotKey(m_trafficAction, HotKey::traffic);
+
+    m_activityAction = addAction(m_statisticsMenu,
+            { ":/icons/document_tree.png", this, SLOT(onShowWindowAction()), WindowActivity });
+    addHotKey(m_activityAction, HotKey::activity);
 
     m_connectionsAction = addAction(m_statisticsMenu,
             { ":/icons/connect.png", this, SLOT(onShowWindowAction()), WindowConnections });
@@ -1060,6 +1068,7 @@ QAction *TrayIcon::clickActionByType(tray::ActionType actionType) const
         m_trafficAction,
         m_connectionsAction,
         m_graphAction,
+        m_activityAction,
         m_filterEnabledAction,
         m_snoozeAlertsAction,
         m_blockTrafficMenuAction,

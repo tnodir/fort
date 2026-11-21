@@ -12,23 +12,25 @@ enum WindowCode {
     WindowOptions = (1 << 4),
     WindowRules = (1 << 5),
     WindowTraffic = (1 << 6),
-    WindowConnections = (1 << 7),
-    WindowZones = (1 << 8),
-    WindowGroups = (1 << 9),
-    WindowSpeedLimits = (1 << 10),
-    WindowTimePeriods = (1 << 11),
-    WindowFilterSim = (1 << 12),
-    WindowGraph = (1 << 13),
-    WindowInstallation = (1 << 14),
-    WindowUpdates = (1 << 15),
-    WindowCount = 16,
-    WindowPasswordDialog = (1 << 16),
+    WindowActivity = (1 << 7),
+    WindowConnections = (1 << 8),
+    WindowZones = (1 << 9),
+    WindowGroups = (1 << 10),
+    WindowSpeedLimits = (1 << 11),
+    WindowTimePeriods = (1 << 12),
+    WindowFilterSim = (1 << 13),
+    WindowGraph = (1 << 14),
+    WindowInstallation = (1 << 15),
+    WindowUpdates = (1 << 16),
+    WindowCount = 17,
+    WindowPasswordDialog = (1 << 17),
 };
 
 constexpr quint32 WindowPasswordProtected =
         (WindowPrograms | WindowProgramAlert | WindowServices | WindowOptions | WindowRules
                 | WindowTraffic | WindowConnections | WindowZones | WindowGroups | WindowSpeedLimits
-                | WindowTimePeriods | WindowFilterSim | WindowInstallation | WindowUpdates);
+                | WindowTimePeriods | WindowFilterSim | WindowInstallation | WindowUpdates
+                | WindowActivity);
 
 /* The windows, which keep the password unlocked while they are open: the Main window is shown
  * without the password, its docked windows are disabled while the password is required */
@@ -36,6 +38,7 @@ constexpr quint32 WindowPasswordUnlocking = (WindowMain | WindowPasswordProtecte
 
 /* The windows, which can be docked into the Main window */
 constexpr quint32 WindowDockable = (WindowPrograms | WindowServices | WindowRules | WindowTraffic
-        | WindowConnections | WindowZones | WindowGroups | WindowSpeedLimits | WindowTimePeriods);
+        | WindowConnections | WindowZones | WindowGroups | WindowSpeedLimits | WindowTimePeriods
+        | WindowActivity);
 
 #endif // FORM_TYPES_H
