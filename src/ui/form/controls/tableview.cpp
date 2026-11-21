@@ -12,6 +12,19 @@
 #include <manager/windowmanager.h>
 #include <util/guiutil.h>
 
+namespace {
+
+QChar cellSeparator(const QModelIndex &prevIndex, const QModelIndex &index)
+{
+    if (!prevIndex.isValid()) {
+        return QChar();
+    }
+
+    return (prevIndex.row() != index.row()) ? '\n' : '\t';
+}
+
+}
+
 TableView::TableView(QWidget *parent) : QTableView(parent)
 {
     setWordWrap(false);
@@ -66,31 +79,18 @@ QString TableView::selectedText() const
 {
     QString text;
 
-    int prevRow = -1;
-    int prevColumn = -1;
+    QModelIndex prevIndex;
 
     const auto indexes = sortedSelectedIndexes();
     for (const auto &index : indexes) {
-        const int row = index.row();
-        if (prevRow != row) {
-            if (prevRow != -1) {
-                text.append('\n');
-            }
-            prevRow = row;
-            prevColumn = -1;
+        const QChar sep = cellSeparator(prevIndex, index);
+        if (!sep.isNull()) {
+            text.append(sep);
         }
 
-        const int column = index.column();
-        if (prevColumn != column) {
-            if (prevColumn != -1) {
-                text.append('\t');
-            }
-            prevColumn = column;
-        }
+        text.append(cellText(index).trimmed().replace('\n', '|'));
 
-        const QString s = cellText(index).trimmed().replace('\n', '|');
-
-        text.append(s);
+        prevIndex = index;
     }
 
     return text;
