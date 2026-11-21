@@ -220,6 +220,34 @@ void WindowManager::initialize()
     }
 }
 
+bool WindowManager::restoreDockedWindowByCode(WindowCode code)
+{
+    auto &form = formByCode(code);
+    return form.restoreDocked();
+}
+
+bool WindowManager::dockWindowByCode(WindowCode code)
+{
+    auto &form = formByCode(code);
+    return form.moveToDock();
+}
+
+bool WindowManager::undockWindowByCode(WindowCode code, const std::optional<QPoint> &pos)
+{
+    auto &form = formByCode(code);
+    return form.moveToWindow(pos);
+}
+
+void WindowManager::closeDockedWindows()
+{
+    for (int i = 0; i < WindowCount; ++i) {
+        auto &form = m_forms[i];
+        if (form.dock()) {
+            form.close();
+        }
+    }
+}
+
 QFont WindowManager::defaultFont()
 {
     return defaultFontRef();
@@ -542,34 +570,6 @@ void WindowManager::switchWindowByCode(WindowCode code)
         closeWindowByCode(code);
     } else {
         showWindowByCode(code);
-    }
-}
-
-bool WindowManager::restoreDockedWindowByCode(WindowCode code)
-{
-    auto &form = formByCode(code);
-    return form.restoreDocked();
-}
-
-bool WindowManager::dockWindowByCode(WindowCode code)
-{
-    auto &form = formByCode(code);
-    return form.moveToDock();
-}
-
-bool WindowManager::undockWindowByCode(WindowCode code, const std::optional<QPoint> &pos)
-{
-    auto &form = formByCode(code);
-    return form.moveToWindow(pos);
-}
-
-void WindowManager::closeDockedWindows()
-{
-    for (int i = 0; i < WindowCount; ++i) {
-        auto &form = m_forms[i];
-        if (form.dock()) {
-            form.close();
-        }
     }
 }
 

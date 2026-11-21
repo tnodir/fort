@@ -77,6 +77,14 @@ public:
 
     bool isWindowOpen(WindowCode code) const { return isAnyWindowOpen(code); }
 
+    // Shows the docked window in the Main window without the password: it is disabled there
+    bool restoreDockedWindowByCode(WindowCode code);
+
+    // Not a slot: Qt 6.1's moc needs operator<() of std::optional<QPoint>
+    bool dockWindowByCode(WindowCode code);
+    bool undockWindowByCode(WindowCode code, const std::optional<QPoint> &pos = std::nullopt);
+    void closeDockedWindows();
+
     static QFont defaultFont();
     static QSize listIconSize();
 
@@ -157,13 +165,6 @@ public slots:
     bool showWindowByCode(WindowCode code, bool activate = true, bool expose = false);
     bool closeWindowByCode(WindowCode code);
     void switchWindowByCode(WindowCode code);
-
-    // Shows the docked window in the Main window without the password: it is disabled there
-    bool restoreDockedWindowByCode(WindowCode code);
-
-    bool dockWindowByCode(WindowCode code);
-    bool undockWindowByCode(WindowCode code, const std::optional<QPoint> &pos = std::nullopt);
-    void closeDockedWindows();
 
     void saveAllWindowStates();
     void closeAllWindows(bool isAppQuitting = false);
