@@ -396,19 +396,19 @@ static void fort_pstree_proc_del(PFORT_PSTREE ps_tree, PFORT_PSNODE proc)
     fort_tommy_list_insert_tail(&ps_tree->free_procs, (tommy_node *) proc);
 }
 
+static int fort_pstree_proc_cmp(const void *arg, const void *obj)
+{
+    const DWORD *processId = arg;
+    const FORT_PSNODE *proc = obj;
+
+    return proc->process_id != *processId;
+}
+
 static PFORT_PSNODE fort_pstree_find_proc_hash(
         PFORT_PSTREE ps_tree, DWORD processId, tommy_key_t pid_hash)
 {
-    PFORT_PSNODE node = (PFORT_PSNODE) tommy_hashdyn_bucket(&ps_tree->procs_map, pid_hash);
-
-    while (node != NULL) {
-        if (node->process_id == processId)
-            return node;
-
-        node = node->next;
-    }
-
-    return NULL;
+    return (PFORT_PSNODE) fort_tommy_hashdyn_find_node(
+            &ps_tree->procs_map, &fort_pstree_proc_cmp, &processId, pid_hash);
 }
 
 static PFORT_PSNODE fort_pstree_find_proc(PFORT_PSTREE ps_tree, DWORD processId)

@@ -34,18 +34,18 @@ static void fort_stat_proc_active_add(PFORT_STAT stat, PFORT_STAT_PROC proc)
     stat->proc_active_count++;
 }
 
+static int fort_stat_proc_cmp(const void *arg, const void *obj)
+{
+    const UINT32 *process_id = arg;
+    const FORT_STAT_PROC *proc = obj;
+
+    return proc->process_id != *process_id;
+}
+
 static PFORT_STAT_PROC fort_stat_proc_get(PFORT_STAT stat, UINT32 process_id, tommy_key_t pid_hash)
 {
-    PFORT_STAT_PROC proc = (PFORT_STAT_PROC) tommy_hashdyn_bucket(&stat->procs_map, pid_hash);
-
-    while (proc != NULL) {
-        if (proc->process_id == process_id)
-            return proc;
-
-        proc = proc->next;
-    }
-
-    return NULL;
+    return (PFORT_STAT_PROC) fort_tommy_hashdyn_find_node(
+            &stat->procs_map, &fort_stat_proc_cmp, &process_id, pid_hash);
 }
 
 static void fort_stat_proc_free(PFORT_STAT stat, PFORT_STAT_PROC proc)
@@ -287,18 +287,18 @@ static void fort_flow_context_remove(PVOID stat_arg, PVOID flow_node)
 #endif
 }
 
+static int fort_flow_cmp(const void *arg, const void *obj)
+{
+    const UINT64 *flow_id = arg;
+    PCFORT_FLOW flow = obj;
+
+    return flow->flow_id != *flow_id;
+}
+
 static PFORT_FLOW fort_flow_get(PFORT_STAT stat, UINT64 flow_id, tommy_key_t flow_hash)
 {
-    PFORT_FLOW flow = (PFORT_FLOW) tommy_hashdyn_bucket(&stat->flows_map, flow_hash);
-
-    while (flow != NULL) {
-        if (flow->flow_id == flow_id)
-            return flow;
-
-        flow = flow->next;
-    }
-
-    return NULL;
+    return (PFORT_FLOW) fort_tommy_hashdyn_find_node(
+            &stat->flows_map, &fort_flow_cmp, &flow_id, flow_hash);
 }
 
 static void fort_flow_free_add(PFORT_STAT stat, PFORT_FLOW flow)

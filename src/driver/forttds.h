@@ -31,6 +31,22 @@ inline static void fort_tommy_list_insert_tail(tommy_list *list, tommy_node *nod
     tommy_list_insert_tail(list, node, node->data);
 }
 
+/* Finds the node by comparing the node itself: the data field may hold the owner's fields */
+inline static tommy_hashdyn_node *fort_tommy_hashdyn_find_node(
+        tommy_hashdyn *hashdyn, tommy_search_func *cmp, const void *cmp_arg, tommy_hash_t hash)
+{
+    tommy_hashdyn_node *node = tommy_hashdyn_bucket(hashdyn, hash);
+
+    while (node != NULL) {
+        if (node->index == hash && cmp(cmp_arg, node) == 0)
+            return node;
+
+        node = node->next;
+    }
+
+    return NULL;
+}
+
 /* Calls the function for each node: the data field may hold the owner's fields */
 FORT_API void fort_tommy_hashdyn_foreach_node_arg(
         tommy_hashdyn *hashdyn, tommy_foreach_arg_func *func, void *arg);
