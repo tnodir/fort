@@ -3,7 +3,10 @@
 
 #include <QObject>
 
+#include <optional>
+
 #include <common/fortdef.h>
+#include <stat/statmanager.h>
 #include <util/ioc/iocservice.h>
 
 class LogBuffer;
@@ -52,7 +55,11 @@ private:
     bool processLogEntry(LogBuffer *logBuffer, FortLogType logType);
     bool processLogEntryApp(LogBuffer *logBuffer);
     bool processLogEntryConn(LogBuffer *logBuffer);
-    bool fillConnProcPaths(LogEntryConn &connEntry) const;
+    void logStatConn(const LogEntryConn &connEntry);
+    void logActivityConn(const LogEntryConn &connEntry,
+            const std::optional<StatManager::LoggedProcess> &process);
+    bool fillConnProcPaths(LogEntryConn &connEntry,
+            const std::optional<StatManager::LoggedProcess> &process) const;
     bool processLogEntryProcNew(LogBuffer *logBuffer);
     bool processLogEntryStatTraf(LogBuffer *logBuffer);
     bool processLogEntryTime(LogBuffer *logBuffer);

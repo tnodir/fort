@@ -1,6 +1,7 @@
 TEMPLATE = subdirs
 
 SUBDIRS = \
+    ActivityTest \
     Common \
     ConfTest \
     DnsTest \
@@ -9,6 +10,7 @@ SUBDIRS = \
     StatTest \
     UtilTest
 
+ActivityTest.depends = Common
 ConfTest.depends = Common
 DnsTest.depends = Common
 LogBufferTest.depends = Common

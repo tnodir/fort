@@ -307,21 +307,15 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
         },
     };
 
-    const quint16 procCount = entry.procCount();
-    const quint32 *procTrafBytes = entry.procTrafBytes();
+    const int procCount = entry.procCount();
 
     for (int i = 0; i < procCount; ++i) {
-        const quint32 pidFlag = *procTrafBytes++;
-        const quint32 inBytes = *procTrafBytes++;
-        const quint32 outBytes = *procTrafBytes++;
+        const LogEntryStatTraf::ProcTraf procTraf = entry.procTraf(i);
 
-        const bool inactive = (pidFlag & 1) != 0;
-        const quint32 pid = pidFlag & ~quint32(1);
+        logTrafBytes(log, procTraf.pid, { procTraf.inBytes, procTraf.outBytes });
 
-        logTrafBytes(log, pid, { inBytes, outBytes });
-
-        if (inactive) {
-            removeLoggedProcess(pid);
+        if (procTraf.inactive) {
+            removeLoggedProcess(procTraf.pid);
         }
     }
 

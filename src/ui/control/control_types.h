@@ -36,6 +36,8 @@ enum Command : quint8 {
 
     Rpc_RpcManager_initClient,
 
+    Rpc_ActivityManager_changed,
+
     Rpc_AppInfoManager_lookupAppInfo,
     Rpc_AppInfoManager_checkLookupInfoFinished,
 
@@ -166,6 +168,7 @@ enum CommandResult : qint8 {
 
 enum RpcManager : qint8 {
     Rpc_NoneManager = 0,
+    Rpc_ActivityManager,
     Rpc_AppInfoManager,
     Rpc_AutoUpdateManager,
     Rpc_ConfManager,

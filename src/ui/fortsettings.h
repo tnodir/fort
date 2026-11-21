@@ -68,6 +68,7 @@ public:
     QString statFilePath() const;
     QString statConnFilePath() const;
     QString pendingConnFilePath() const;
+    QString activityFilePath() const;
 
     QString cachePath() const { return m_cachePath; }
     QString cacheFilePath() const;
