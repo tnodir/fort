@@ -45,6 +45,7 @@ inline constexpr DockWindow dockWindows[] = {
     { WindowSpeedLimits, &IniUser::speedLimitWindowGroup },
     { WindowTimePeriods, &IniUser::timePeriodWindowGroup },
     { WindowServices, &IniUser::serviceWindowGroup },
+    { WindowActivity, &IniUser::activityWindowGroup },
     { WindowConnections, &IniUser::connWindowGroup },
     { WindowTraffic, &IniUser::statWindowGroup },
 };

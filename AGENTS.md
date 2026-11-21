@@ -146,6 +146,8 @@ The Main window (`form/main/`: `MainWindow`, its menu bar on the tray's actions,
 
 The Options window keeps a working copy of the conf, and only three of its options follow a change saved elsewhere: Filter Enabled, Block Traffic and Filter Mode, which the Filter Off and Auto-Learn timers, the quota, the tray and `-c` change while the window is open. On `ConfManager::confChanged` `OptionsPage::updateTrafficFlags()` takes the saved value of those not edited; an edited one stays and overwrites the saved value on saving. The window saves these flags and the Active Period (a deleted Time Period is cleared in the saved conf; `StatisticsPage` saves what its selector shows) only when edited, by `FirewallConf::FlagGroup`s. The other options stay stale, as accepted: an `IniOptions` key is written only when edited, but saving any other flag writes all of them, and any address edit all the addresses, over those changed by `-c conf set`, `-c addr` or another session's Options window. The IP Addresses' Zones follow a Zone's removal: `MaskSelector::onIdRemoved()` emits `maskChanged()`, which marks the window edited, else saving the addresses would write the removed Zone's bit back.
 
+The Activity window (`form/activity/`, `ActivityWindow`, `ActivityTreeModel`: the live processes and their allowed flows with the speeds, read from `ActivityManager`'s DB, which the master writes from the driver's CONN/FLOW_TRAF/FLOW_CLOSED log entries; a client reads the file read-only): read `docs/agents/activity.md` before changing it.
+
 The traffic graph (`form/graph/`: `GraphWindow`, `GraphPlot` on a `QGraphicsView`, no chart library; the bars, lines, scrolling and animations in device pixels): read `docs/agents/traffic-graph.md` before changing it.
 
 ## Conventions

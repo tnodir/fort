@@ -81,6 +81,8 @@ SOURCES += \
     form/conn/appalertpendingconnswindow.cpp \
     form/conn/appconnswindow.cpp \
     form/conn/apppendingconnswindow.cpp \
+    form/activity/activitycontroller.cpp \
+    form/activity/activitywindow.cpp \
     form/conn/connectionscontroller.cpp \
     form/conn/connectionswindow.cpp \
     form/controls/actioncheckbox.cpp \
@@ -229,6 +231,7 @@ SOURCES += \
     manager/servicemanager.cpp \
     manager/translationmanager.cpp \
     manager/windowmanager.cpp \
+    model/activitytreemodel.cpp \
     model/appconnsearchmodel.cpp \
     model/applistmodel.cpp \
     model/applistmodeldata.cpp \
@@ -448,6 +451,8 @@ HEADERS += \
     form/conn/appalertpendingconnswindow.h \
     form/conn/appconnswindow.h \
     form/conn/apppendingconnswindow.h \
+    form/activity/activitycontroller.h \
+    form/activity/activitywindow.h \
     form/conn/connectionscontroller.h \
     form/conn/connectionswindow.h \
     form/controls/actioncheckbox.h \
@@ -598,6 +603,7 @@ HEADERS += \
     manager/servicemanager.h \
     manager/translationmanager.h \
     manager/windowmanager.h \
+    model/activitytreemodel.h \
     model/appconnsearchmodel.h \
     model/applistcolumn.h \
     model/applistmodel.h \

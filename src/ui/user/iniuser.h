@@ -15,6 +15,7 @@ const char *const speedLimits = "speedLimits";
 const char *const timePeriods = "timePeriods";
 const char *const services = "services";
 const char *const traffic = "traffic";
+const char *const activity = "activity";
 const char *const connections = "connections";
 const char *const filterSim = "filterSim";
 const char *const graph = "graph";
@@ -139,7 +140,10 @@ public:
 
     static QString mainWindowGroup() { return "mainWindow"; }
 
-    QStringList mainWindowDocks() const { return value("mainWindow/docks").toStringList(); }
+    QStringList mainWindowDocks() const
+    {
+        return value("mainWindow/docks", QStringList { activityWindowGroup() }).toStringList();
+    }
     void setMainWindowDocks(const QStringList &v) { setValue("mainWindow/docks", v); }
 
     QByteArray mainWindowDocksState() const { return valueByteArray("mainWindow/docksState"); }
@@ -190,7 +194,11 @@ public:
     bool windowMaximized(const QString &group) const { return valueBool(group + "/maximized"); }
     void setWindowMaximized(const QString &group, bool on) { setValue(group + "/maximized", on); }
 
-    bool windowDocked(const QString &group) const { return valueBool(group + "/docked"); }
+    // The Activity window is docked by default
+    bool windowDocked(const QString &group) const
+    {
+        return valueBool(group + "/docked", group == activityWindowGroup());
+    }
     void setWindowDocked(const QString &group, bool on) { setValue(group + "/docked", on); }
 
     int windowConnListHeaderVersion(const QString &group) const
@@ -610,6 +618,14 @@ public:
     void setStatAppListHeader(const QByteArray &v) { setValue("statWindow/appListHeader", v); }
 
     static QString connWindowGroup() { return "connWindow"; }
+
+    static QString activityWindowGroup() { return "activityWindow"; }
+
+    int activityHeaderVersion() const { return valueInt("activityWindow/headerVersion"); }
+    void setActivityHeaderVersion(int v) { setValue("activityWindow/headerVersion", v); }
+
+    QByteArray activityHeader() const { return valueByteArray("activityWindow/header"); }
+    void setActivityHeader(const QByteArray &v) { setValue("activityWindow/header", v); }
 
 public:
     void saveDefaultIni();
