@@ -85,7 +85,7 @@ typedef const FORT_LOG_PROC_NEW_HEADER *PCFORT_LOG_PROC_NEW_HEADER;
 #define FORT_LOG_FLOW_TRAF_BUFFER_FLOW_COUNT                                                       \
     ((FORT_BUFFER_SIZE - FORT_LOG_FLOW_TRAF_HEADER_SIZE) / FORT_LOG_FLOW_STAT_SIZE)
 
-#define FORT_LOG_FLOW_CLOSED_SIZE (sizeof(UINT32) + sizeof(UINT64))
+#define FORT_LOG_FLOW_CLOSED_SIZE (sizeof(UINT32) + FORT_LOG_FLOW_STAT_SIZE)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -137,9 +137,9 @@ FORT_API char *fort_log_flow_stat_write(char *p, PCFORT_FLOW_STAT flow_stat);
 
 FORT_API void fort_log_flow_stat_read(const char *p, PFORT_FLOW_STAT flow_stat);
 
-FORT_API void fort_log_flow_closed_write(char *p, UINT64 flow_id);
+FORT_API void fort_log_flow_closed_write(char *p, PCFORT_FLOW_STAT flow_stat);
 
-FORT_API void fort_log_flow_closed_read(const char *p, UINT64 *flow_id);
+FORT_API void fort_log_flow_closed_read(const char *p, PFORT_FLOW_STAT flow_stat);
 
 #ifdef __cplusplus
 } // extern "C"

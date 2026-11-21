@@ -356,15 +356,20 @@ void LogBuffer::writeEntryFlowClosed(const LogEntryFlowClosed *logEntry)
 {
     char *output = appendEntry(DriverCommon::logFlowClosedSize());
 
-    DriverCommon::logFlowClosedWrite(output, logEntry->flowId());
+    FORT_FLOW_STAT flowStat = { .flow_id = logEntry->flowId() };
+    flowStat.traf.in_bytes = logEntry->inBytes();
+    flowStat.traf.out_bytes = logEntry->outBytes();
+
+    DriverCommon::logFlowClosedWrite(output, flowStat);
 }
 
 void LogBuffer::readEntryFlowClosed(LogEntryFlowClosed *logEntry)
 {
     const char *input = takeEntry(DriverCommon::logFlowClosedSize());
 
-    quint64 flowId;
-    DriverCommon::logFlowClosedRead(input, &flowId);
+    const FORT_FLOW_STAT flowStat = DriverCommon::logFlowClosedRead(input);
 
-    logEntry->setFlowId(flowId);
+    logEntry->setFlowId(flowStat.flow_id);
+    logEntry->setInBytes(flowStat.traf.in_bytes);
+    logEntry->setOutBytes(flowStat.traf.out_bytes);
 }

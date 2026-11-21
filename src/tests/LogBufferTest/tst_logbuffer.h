@@ -334,7 +334,9 @@ TEST_F(LogBufferTest, flowClosedWriteRead)
         connEntry.setPid(i + 1);
         buf.writeEntryConn(&connEntry);
 
-        const LogEntryFlowClosed flowClosedEntry(0x89ABCDEF01234567ull + i);
+        LogEntryFlowClosed flowClosedEntry(0x89ABCDEF01234567ull + i);
+        flowClosedEntry.setInBytes(0x12345678u + i);
+        flowClosedEntry.setOutBytes(0x87654321u + i);
         buf.writeEntryFlowClosed(&flowClosedEntry);
     }
 
@@ -349,6 +351,8 @@ TEST_F(LogBufferTest, flowClosedWriteRead)
         LogEntryFlowClosed flowClosedEntry;
         buf.readEntryFlowClosed(&flowClosedEntry);
         ASSERT_EQ(flowClosedEntry.flowId(), 0x89ABCDEF01234567ull + i);
+        ASSERT_EQ(flowClosedEntry.inBytes(), 0x12345678u + i);
+        ASSERT_EQ(flowClosedEntry.outBytes(), 0x87654321u + i);
     }
 
     ASSERT_EQ(buf.offset(), buf.top());

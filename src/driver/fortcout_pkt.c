@@ -128,13 +128,11 @@ FORT_API void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, U
 
     fort_shaper_drop_flow_packets(&fort_device()->shaper, flowContext);
 
-    /* The allowed once flow's closing is logged */
-    UINT64 flow_id;
-    if (fort_flow_ask_allowed_id(&fort_device()->stat, flowContext, &flow_id)) {
-        fort_buffer_flow_closed_write(&fort_device()->buffer, /*irp_info=*/NULL, flow_id);
+    /* The flow's closing is logged with its bytes, while the stat is logged */
+    FORT_FLOW_STAT flow_stat;
+    if (fort_flow_delete(&fort_device()->stat, flowContext, &flow_stat)) {
+        fort_buffer_flow_closed_write(&fort_device()->buffer, /*irp_info=*/NULL, &flow_stat);
     }
-
-    fort_flow_delete(&fort_device()->stat, flowContext);
 }
 
 inline static UCHAR fort_callout_discard_flags_index(UINT16 layerId)

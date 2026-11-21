@@ -498,14 +498,16 @@ FORT_FLOW_STAT logFlowStatRead(const char *input)
     return flowStat;
 }
 
-void logFlowClosedWrite(char *output, quint64 flowId)
+void logFlowClosedWrite(char *output, const FORT_FLOW_STAT &flowStat)
 {
-    fort_log_flow_closed_write(output, flowId);
+    fort_log_flow_closed_write(output, &flowStat);
 }
 
-void logFlowClosedRead(const char *input, quint64 *flowId)
+FORT_FLOW_STAT logFlowClosedRead(const char *input)
 {
-    fort_log_flow_closed_read(input, flowId);
+    FORT_FLOW_STAT flowStat;
+    fort_log_flow_closed_read(input, &flowStat);
+    return flowStat;
 }
 
 bool confIp4InRange(const void *drvConf, quint32 ip, bool included, int addrGroupIndex)

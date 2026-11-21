@@ -61,7 +61,7 @@ FORT_API NTSTATUS fort_buffer_proc_kill_write(
         PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT32 pid);
 
 FORT_API NTSTATUS fort_buffer_flow_closed_write(
-        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT64 flow_id);
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PCFORT_FLOW_STAT flow_stat);
 
 FORT_API NTSTATUS fort_buffer_xmove(
         PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PVOID out, ULONG out_len);

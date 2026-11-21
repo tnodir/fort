@@ -161,6 +161,14 @@ static void test_stat_flow_reauth_blocked(void)
     assert(!test_stat_flow_conn_logged(&stat, &conn));
     assert(!fort_flow_ask_allowed(&stat, conn.flow_id));
 
+    /* The service knows the flow, whose reauthorization is blocked, by its CONN */
+    fort_flow_reauth_blocked(&stat, conn.flow_id);
+
+    FORT_FLOW_STAT flow_stat;
+    PFORT_FLOW flow = tommy_arrayof_ref(&stat.flows, 0);
+    assert(fort_flow_delete(&stat, (UINT64) flow, &flow_stat));
+    assert(flow_stat.flow_id == conn.flow_id);
+
     /* A deleted flow's blocked reauthorization */
     fort_flow_reauth_blocked(&stat, /*flow_id=*/2);
 
@@ -281,9 +289,14 @@ static void test_stat_flow_traf_deleted(void)
 
     const UINT64 flowContext = (UINT64) flow;
 
+    /* The deleted flow's bytes not flushed yet go to its closing's log */
     assert(fort_flow_classify(&stat, flowContext, 5, /*inbound=*/TRUE));
 
-    fort_flow_delete(&stat, flowContext);
+    FORT_FLOW_STAT flow_stat = { 0 };
+    assert(fort_flow_delete(&stat, flowContext, &flow_stat));
+    assert(flow_stat.flow_id == conn.flow_id);
+    assert(flow_stat.traf.in_bytes == 5);
+    assert(flow_stat.traf.out_bytes == 0);
 
     /* The deleted flow of the active list isn't counted, its slot is freed by the flush */
     assert((fort_flow_flags(flow) & FORT_FLOW_DELETED) != 0);
@@ -304,12 +317,14 @@ static void test_stat_flow_traf_deleted(void)
     assert((fort_flow_flags(flow) & FORT_FLOW_TRAF_PENDING) == 0);
     assert(flow->traf.v == 0);
 
-    /* The flow whose CONN isn't logged isn't counted */
+    /* The flow whose CONN isn't logged isn't counted, its closing is logged without bytes */
     fort_flow_conn_unlog(&stat, conn.flow_id);
     assert(fort_flow_classify(&stat, flowContext, 10, /*inbound=*/TRUE));
     assert(flow->traf.v == 0);
     assert(stat.flow_active == NULL);
-    fort_flow_delete(&stat, flowContext);
+    assert(fort_flow_delete(&stat, flowContext, &flow_stat));
+    assert(flow_stat.flow_id == conn.flow_id);
+    assert(flow_stat.traf.v == 0);
 
     /* The master's disconnection clears the active list */
     conn.flow_id = 3;
@@ -325,6 +340,9 @@ static void test_stat_flow_traf_deleted(void)
     assert(stat.flow_active_count == 0);
     assert(flow->traf.v == 0);
     assert((fort_flow_flags(flow) & FORT_FLOW_TRAF_PENDING) == 0);
+
+    /* The flow's closing isn't logged without the master */
+    assert(!fort_flow_delete(&stat, flowContext, &flow_stat));
 
     fort_stat_close(&stat);
 
@@ -352,11 +370,14 @@ static void test_stat_flows_traf_flush(void)
     PFORT_FLOW flow2 = tommy_arrayof_ref(&stat.flows, 1);
 
     /* The deleted flow 2 isn't counted */
-    fort_flow_delete(&stat, (UINT64) flow2);
+    FORT_FLOW_STAT flow_stat;
+    assert(fort_flow_delete(&stat, (UINT64) flow2, &flow_stat));
+    assert(flow_stat.traf.out_bytes == 11);
+    test_stat_flow_active_count_check(&stat);
     assert(stat.flow_active_count == 2);
 
     /* A page of one flow: the deleted flow after it is freed, the next live flow stays */
-    FORT_FLOW_STAT flow_stat = test_stat_flow_flush(&stat);
+    flow_stat = test_stat_flow_flush(&stat);
     assert(flow_stat.flow_id == 3);
     assert(flow_stat.traf.out_bytes == 12);
     assert(stat.flow_active == flow1);

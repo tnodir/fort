@@ -712,37 +712,32 @@ inline static void fort_flow_stat_get(PCFORT_FLOW flow, PFORT_FLOW_STAT flow_sta
     flow_stat->traf = flow->traf;
 }
 
-FORT_API BOOL fort_flow_ask_allowed_id(PFORT_STAT stat, UINT64 flowContext, UINT64 *flow_id)
-{
-    /* The flows aren't closed, when their contexts are removed by the stat's closing */
-    if ((fort_stat_flags(stat) & FORT_STAT_CLOSED) != 0)
-        return FALSE;
-
-    PCFORT_FLOW flow = (PCFORT_FLOW) flowContext;
-
-    if ((flow->opt.flags & FORT_FLOW_ASK_ALLOWED) == 0)
-        return FALSE;
-
-    *flow_id = flow->flow_id;
-    return TRUE;
-}
-
-FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext)
+FORT_API BOOL fort_flow_delete(PFORT_STAT stat, UINT64 flowContext, PFORT_FLOW_STAT flow_stat)
 {
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
+    /* The flows aren't closed, when their contexts are removed by the stat's closing */
     if (fort_flow_delete_closing(stat, flow))
-        return;
+        return FALSE;
+
+    BOOL logged = FALSE;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
     /* Double check for locked flows */
     if (!fort_flow_delete_closing(stat, flow)) {
+        /* The service may know the flow by its CONN, even after its blocked reauthorization */
+        logged = (fort_stat_flags(stat) & FORT_STAT_LOG) != 0;
+
+        fort_flow_stat_get(flow, flow_stat);
+
         fort_flow_free(stat, flow);
     }
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return logged;
 }
 
 /* Returns FALSE, when the bytes must be flushed before the overflow */
@@ -765,7 +760,7 @@ inline static BOOL fort_stat_proc_traf_counted(const FORT_STAT_PROC *proc)
     return proc->proc_stat && proc->log_stat;
 }
 
-/* The service knows the flow by its CONN */
+/* The service knows the flow by its CONN, and its reauthorization isn't blocked */
 inline static BOOL fort_flow_traf_counted(PCFORT_FLOW flow)
 {
     return (flow->opt.flags & FORT_FLOW_CONN_LOGGED) != 0;
@@ -897,6 +892,7 @@ FORT_API void fort_stat_flows_traf_flush(PFORT_STAT stat, UINT32 flow_count, PCH
         fort_flow_flags_set(flow, FORT_FLOW_TRAF_PENDING, FALSE);
 
         if (is_deleted) {
+            /* The deleted flow's bytes are logged by its FLOW_CLOSED */
             fort_flow_free_add(stat, flow);
         } else {
             fort_stat_traf_flush_flow(stat, flow, &out);

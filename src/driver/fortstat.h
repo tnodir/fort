@@ -187,9 +187,6 @@ FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat);
 FORT_API NTSTATUS fort_flow_associate(
         PFORT_STAT stat, PCFORT_CONF_META_CONN conn, PFORT_FLOW_ASSOC assoc);
 
-/* The closing flow allowed once by the user */
-FORT_API BOOL fort_flow_ask_allowed_id(PFORT_STAT stat, UINT64 flowContext, UINT64 *flow_id);
-
 /* The flow allowed once by the user */
 FORT_API BOOL fort_flow_ask_allowed(PFORT_STAT stat, UINT64 flow_id);
 
@@ -203,7 +200,9 @@ FORT_API void fort_flow_conn_unlog(PFORT_STAT stat, UINT64 flow_id);
 /* The flow's reauthorization is blocked: log its CONN by the next allowed one, ask it again */
 FORT_API void fort_flow_reauth_blocked(PFORT_STAT stat, UINT64 flow_id);
 
-FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext);
+/* Returns TRUE, when the deleted flow's CONN is logged: its closing is logged with the bytes
+ * not flushed yet */
+FORT_API BOOL fort_flow_delete(PFORT_STAT stat, UINT64 flowContext, PFORT_FLOW_STAT flow_stat);
 
 FORT_API BOOL fort_flow_classify(
         PFORT_STAT stat, UINT64 flowContext, UINT32 data_len, BOOL inbound);

@@ -295,20 +295,16 @@ FORT_API void fort_log_flow_stat_read(const char *p, PFORT_FLOW_STAT flow_stat)
     flow_stat->traf.out_bytes = *up;
 }
 
-FORT_API void fort_log_flow_closed_write(char *p, UINT64 flow_id)
+FORT_API void fort_log_flow_closed_write(char *p, PCFORT_FLOW_STAT flow_stat)
 {
     UINT32 *up = (UINT32 *) p;
 
     *up++ = fort_log_flag_type(FORT_LOG_TYPE_FLOW_CLOSED);
 
-    fort_log_u64_write(up, flow_id);
+    fort_log_flow_stat_write((char *) up, flow_stat);
 }
 
-FORT_API void fort_log_flow_closed_read(const char *p, UINT64 *flow_id)
+FORT_API void fort_log_flow_closed_read(const char *p, PFORT_FLOW_STAT flow_stat)
 {
-    const UINT32 *up = (const UINT32 *) p;
-
-    up++;
-
-    fort_log_u64_read(up, flow_id);
+    fort_log_flow_stat_read(p + sizeof(UINT32), flow_stat);
 }

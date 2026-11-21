@@ -128,8 +128,8 @@ void logFlowTrafHeaderRead(const char *input, quint16 *flowCount);
 char *logFlowStatWrite(char *output, const FORT_FLOW_STAT &flowStat);
 FORT_FLOW_STAT logFlowStatRead(const char *input);
 
-void logFlowClosedWrite(char *output, quint64 flowId);
-void logFlowClosedRead(const char *input, quint64 *flowId);
+void logFlowClosedWrite(char *output, const FORT_FLOW_STAT &flowStat);
+FORT_FLOW_STAT logFlowClosedRead(const char *input);
 
 bool confIp4InRange(const void *drvConf, quint32 ip, bool included = false, int addrGroupIndex = 0);
 bool confIp6InRange(

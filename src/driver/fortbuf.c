@@ -371,16 +371,16 @@ FORT_API NTSTATUS fort_buffer_proc_kill_write(PFORT_BUFFER buf, PFORT_IRP_INFO i
 
 static void fort_buffer_flow_closed_entry_write(char *p, const void *arg)
 {
-    fort_log_flow_closed_write(p, *((const UINT64 *) arg));
+    fort_log_flow_closed_write(p, arg);
 }
 
 FORT_API NTSTATUS fort_buffer_flow_closed_write(
-        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT64 flow_id)
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PCFORT_FLOW_STAT flow_stat)
 {
     const FORT_BUFFER_ENTRY entry = {
         .len = FORT_LOG_FLOW_CLOSED_SIZE,
         .write_func = &fort_buffer_flow_closed_entry_write,
-        .arg = &flow_id,
+        .arg = flow_stat,
     };
 
     return fort_buffer_entry_write(buf, irp_info, &entry);
