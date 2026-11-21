@@ -8,7 +8,6 @@
 #include <form/controls/formwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QHBoxLayout)
-QT_FORWARD_DECLARE_CLASS(QHeaderView)
 
 class AppInfoRow;
 class ConnSearchModel;
@@ -89,7 +88,6 @@ private:
     void setupTableConnsChanged();
 
     void showTableConnHeaderMenu(const QPoint &pos);
-    void setupTableConnHeaderMenuColumns(QMenu *menu, QHeaderView *header);
 
     void onTableConnSortClicked(int section, Qt::SortOrder order);
     void doAutoScroll();

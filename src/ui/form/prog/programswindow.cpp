@@ -673,59 +673,10 @@ void ProgramsWindow::setupTableAppsChanged()
 
 void ProgramsWindow::showTableAppsHeaderMenu(const QPoint &pos)
 {
-    auto menu = ControlUtil::createMenu();
-    ControlUtil::deleteOnClose(menu);
-
-    auto header = m_appListView->horizontalHeader();
-
-    setupTableAppsHeaderMenuColumns(menu, header);
-
-    menu->addSeparator();
-
-    // Stretch last column
-    {
-        auto a = new QAction(tr("Stretch last column"), menu);
-        a->setCheckable(true);
-        a->setChecked(header->stretchLastSection());
-
-        connect(a, &QAction::triggered, this, [&](bool checked) {
-            m_appListView->horizontalHeader()->setStretchLastSection(checked);
-        });
-
-        menu->addAction(a);
-    }
-
-    menu->popup(header->mapToGlobal(pos));
-}
-
-void ProgramsWindow::setupTableAppsHeaderMenuColumns(QMenu *menu, QHeaderView *header)
-{
-    const auto switchColumnVisible = [&](bool checked) {
-        const auto action = qobject_cast<QAction *>(sender());
-        const int column = action->data().toInt();
-
-        auto header = m_appListView->horizontalHeader();
-
-        header->setSectionHidden(column, !checked);
-    };
-
-    const bool canHide = (header->hiddenSectionCount() < int(AppListColumn::Count) - 1);
-
-    for (int i = 0; i < int(AppListColumn::Count); ++i) {
-        const auto name = AppListModel::columnName(AppListColumn(i));
-
-        auto a = new QAction(name, menu);
-        a->setData(i);
-
-        const bool isHidden = header->isSectionHidden(i);
-        a->setCheckable(true);
-        a->setChecked(!isHidden);
-        a->setEnabled(isHidden || canHide);
-
-        connect(a, &QAction::triggered, this, switchColumnVisible);
-
-        menu->addAction(a);
-    }
+    ControlUtil::showHeaderMenu(
+            m_appListView->horizontalHeader(), pos,
+            [](int column) { return AppListModel::columnName(AppListColumn(column)); },
+            tr("Stretch last column"));
 }
 
 void ProgramsWindow::onSortStateClicked(int sortState)

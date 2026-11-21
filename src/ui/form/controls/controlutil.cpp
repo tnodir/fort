@@ -4,6 +4,7 @@
 #include <QCheckBox>
 #include <QFormLayout>
 #include <QGraphicsOpacityEffect>
+#include <QHeaderView>
 #include <QLabel>
 #include <QMenu>
 #include <QPropertyAnimation>
@@ -371,6 +372,53 @@ QMenu *ControlUtil::createMenu(QWidget *parent)
     menu->setAttribute(Qt::WA_WindowPropagation); // to inherit default font
 
     return menu;
+}
+
+namespace {
+
+void addHeaderColumnActions(
+        QMenu *menu, QHeaderView *header, const std::function<QString(int column)> &columnName)
+{
+    const int count = header->count();
+    const bool canHide = (header->hiddenSectionCount() < count - 1);
+
+    for (int i = 0; i < count; ++i) {
+        const bool isHidden = header->isSectionHidden(i);
+
+        auto a = menu->addAction(columnName(i));
+        a->setCheckable(true);
+        a->setChecked(!isHidden);
+        a->setEnabled(isHidden || canHide);
+
+        QObject::connect(a, &QAction::triggered, header,
+                [=](bool checked) { header->setSectionHidden(i, !checked); });
+    }
+}
+
+void addHeaderStretchAction(QMenu *menu, QHeaderView *header, const QString &text)
+{
+    auto a = menu->addAction(text);
+    a->setCheckable(true);
+    a->setChecked(header->stretchLastSection());
+
+    QObject::connect(a, &QAction::triggered, header, &QHeaderView::setStretchLastSection);
+}
+
+}
+
+void ControlUtil::showHeaderMenu(QHeaderView *header, const QPoint &pos,
+        const std::function<QString(int column)> &columnName, const QString &stretchLastText)
+{
+    auto menu = createMenu();
+    deleteOnClose(menu);
+
+    addHeaderColumnActions(menu, header, columnName);
+
+    menu->addSeparator();
+
+    addHeaderStretchAction(menu, header, stretchLastText);
+
+    menu->popup(header->mapToGlobal(pos));
 }
 
 QMenu *ControlUtil::createMenuByLayout(QBoxLayout *layout, QWidget *parent)

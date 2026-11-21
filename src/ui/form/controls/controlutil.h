@@ -12,6 +12,7 @@ QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QFormLayout)
 QT_FORWARD_DECLARE_CLASS(QFrame)
+QT_FORWARD_DECLARE_CLASS(QHeaderView)
 QT_FORWARD_DECLARE_CLASS(QIcon)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QLayout)
@@ -94,6 +95,10 @@ public:
 
     static QMenu *createMenu(QWidget *parent = nullptr);
     static QMenu *createMenuByLayout(QBoxLayout *layout, QWidget *parent);
+
+    // The header's context menu: the columns' visibility and the last section's stretch
+    static void showHeaderMenu(QHeaderView *header, const QPoint &pos,
+            const std::function<QString(int column)> &columnName, const QString &stretchLastText);
 
     static void setActionTexts(const QList<QAction *> &actions, const QStringList &texts);
 

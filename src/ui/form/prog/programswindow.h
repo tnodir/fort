@@ -4,7 +4,6 @@
 #include <conf/app.h>
 #include <form/controls/formwindow.h>
 
-QT_FORWARD_DECLARE_CLASS(QHeaderView)
 QT_FORWARD_DECLARE_CLASS(QMenu)
 
 class AppInfoRow;
@@ -76,7 +75,6 @@ private:
     void setupTableAppsChanged();
 
     void showTableAppsHeaderMenu(const QPoint &pos);
-    void setupTableAppsHeaderMenuColumns(QMenu *menu, QHeaderView *header);
 
     void onSortStateClicked(int sortState);
     void updateSortStateCounts();

@@ -563,59 +563,10 @@ void ConnectionsWindow::addConnFilter(const ConnRow &connRow)
 
 void ConnectionsWindow::showTableConnHeaderMenu(const QPoint &pos)
 {
-    auto menu = ControlUtil::createMenu();
-    ControlUtil::deleteOnClose(menu);
-
-    auto header = m_connListView->horizontalHeader();
-
-    setupTableConnHeaderMenuColumns(menu, header);
-
-    menu->addSeparator();
-
-    // Stretch last column
-    {
-        auto a = new QAction(tr("Stretch last column"), menu);
-        a->setCheckable(true);
-        a->setChecked(header->stretchLastSection());
-
-        connect(a, &QAction::triggered, this, [&](bool checked) {
-            m_connListView->horizontalHeader()->setStretchLastSection(checked);
-        });
-
-        menu->addAction(a);
-    }
-
-    menu->popup(header->mapToGlobal(pos));
-}
-
-void ConnectionsWindow::setupTableConnHeaderMenuColumns(QMenu *menu, QHeaderView *header)
-{
-    const auto switchColumnVisible = [&](bool checked) {
-        const auto action = qobject_cast<QAction *>(sender());
-        const int column = action->data().toInt();
-
-        auto header = m_connListView->horizontalHeader();
-
-        header->setSectionHidden(column, !checked);
-    };
-
-    const bool canHide = (header->hiddenSectionCount() < int(ConnListColumn::Count) - 1);
-
-    for (int i = 0; i < int(ConnListColumn::Count); ++i) {
-        const auto name = ConnListModel::columnName(ConnListColumn(i));
-
-        auto a = new QAction(name, menu);
-        a->setData(i);
-
-        const bool isHidden = header->isSectionHidden(i);
-        a->setCheckable(true);
-        a->setChecked(!isHidden);
-        a->setEnabled(isHidden || canHide);
-
-        connect(a, &QAction::triggered, this, switchColumnVisible);
-
-        menu->addAction(a);
-    }
+    ControlUtil::showHeaderMenu(
+            m_connListView->horizontalHeader(), pos,
+            [](int column) { return ConnListModel::columnName(ConnListColumn(column)); },
+            tr("Stretch last column"));
 }
 
 void ConnectionsWindow::onTableConnSortClicked(int section, Qt::SortOrder order)
