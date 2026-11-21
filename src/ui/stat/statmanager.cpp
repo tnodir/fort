@@ -234,6 +234,8 @@ void StatManager::addLoggedProcess(const QString &appPath, const LogEntryProcNew
     // The exited process's ID may be reused by a new process with another path
     m_loggedProcessMap.insert(pid,
             {
+                    .parentPid = entry.parentPid(),
+                    .createTime = entry.createTime(),
                     .path = appPath,
                     .kernelPath = entry.kernelPath(),
                     .inheritKernelPath = entry.inheritKernelPath(),

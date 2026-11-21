@@ -39,7 +39,7 @@
     (FORT_LOG_CONN_INHERIT_PATH_OFFSET(path_len, isIPv6)                                           \
             + FORT_ALIGN_SIZE(inherit_path_len, FORT_LOG_ALIGN))
 
-#define FORT_LOG_PROC_NEW_HEADER_SIZE (4 * sizeof(UINT32))
+#define FORT_LOG_PROC_NEW_HEADER_SIZE (7 * sizeof(UINT32))
 
 /* The inherited process's name follows the aligned path */
 #define FORT_LOG_PROC_NEW_INHERIT_PATH_OFFSET(path_len)                                            \
@@ -55,6 +55,8 @@ typedef struct fort_log_proc_new_header
     UINT16 inherit_path_len;
     UINT32 app_id;
     UINT32 process_id;
+    UINT32 parent_process_id;
+    INT64 create_time;
 } FORT_LOG_PROC_NEW_HEADER, *PFORT_LOG_PROC_NEW_HEADER;
 
 typedef const FORT_LOG_PROC_NEW_HEADER *PCFORT_LOG_PROC_NEW_HEADER;

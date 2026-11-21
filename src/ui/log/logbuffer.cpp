@@ -243,6 +243,8 @@ void LogBuffer::writeEntryProcNew(const LogEntryProcNew *logEntry)
         .inherit_path_len = inheritPathLen,
         .app_id = logEntry->appId(),
         .process_id = logEntry->pid(),
+        .parent_process_id = logEntry->parentPid(),
+        .create_time = logEntry->createTime(),
     };
 
     DriverCommon::logProcNewHeaderWrite(output, header);
@@ -264,6 +266,8 @@ void LogBuffer::readEntryProcNew(LogEntryProcNew *logEntry)
 
     logEntry->setAppId(header.app_id);
     logEntry->setPid(header.process_id);
+    logEntry->setParentPid(header.parent_process_id);
+    logEntry->setCreateTime(header.create_time);
     logEntry->setKernelPath(path);
     logEntry->setInheritKernelPath(inheritPath);
 

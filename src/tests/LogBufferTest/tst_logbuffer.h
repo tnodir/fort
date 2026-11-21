@@ -351,6 +351,8 @@ TEST_F(LogBufferTest, procNewWriteRead)
 
         LogEntryProcNew procNewEntry(i + 11, path.left(i + 1));
         procNewEntry.setAppId(i + 21);
+        procNewEntry.setParentPid(i + 31);
+        procNewEntry.setCreateTime(0x123456789LL + i);
         procNewEntry.setInheritKernelPath(procNewInheritPath(i));
         buf.writeEntryProcNew(&procNewEntry);
     }
@@ -370,6 +372,8 @@ TEST_F(LogBufferTest, procNewWriteRead)
         buf.readEntryProcNew(&procNewEntry);
         ASSERT_EQ(procNewEntry.pid(), i + 11);
         ASSERT_EQ(procNewEntry.appId(), i + 21);
+        ASSERT_EQ(procNewEntry.parentPid(), i + 31);
+        ASSERT_EQ(procNewEntry.createTime(), 0x123456789LL + i);
         ASSERT_EQ(procNewEntry.kernelPath(), path.left(i + 1));
         ASSERT_EQ(procNewEntry.inheritKernelPath(), procNewInheritPath(i));
     }

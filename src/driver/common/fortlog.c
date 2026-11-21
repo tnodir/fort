@@ -17,18 +17,18 @@ static void fort_log_path_write(char *p, PCFORT_APP_PATH path)
 }
 
 /* The flow's id by its low and high halves */
-static UINT32 *fort_log_flow_id_write(UINT32 *up, UINT64 flow_id)
+static UINT32 *fort_log_u64_write(UINT32 *up, UINT64 v)
 {
-    *up++ = (UINT32) flow_id;
-    *up++ = (UINT32) (flow_id >> 32);
+    *up++ = (UINT32) v;
+    *up++ = (UINT32) (v >> 32);
 
     return up;
 }
 
-static const UINT32 *fort_log_flow_id_read(const UINT32 *up, UINT64 *flow_id)
+static const UINT32 *fort_log_u64_read(const UINT32 *up, UINT64 *v)
 {
-    *flow_id = *up++;
-    *flow_id |= ((UINT64) *up++) << 32;
+    *v = *up++;
+    *v |= ((UINT64) *up++) << 32;
 
     return up;
 }
@@ -94,7 +94,7 @@ FORT_API void fort_log_conn_header_write(
     *up++ = conn->local_port | ((UINT32) conn->remote_port << 16);
     *up++ = conn->app.data.app_id;
     *up++ = conn->process_id;
-    up = fort_log_flow_id_write(up, conn->flow_id);
+    up = fort_log_u64_write(up, conn->flow_id);
     *up++ = path_len | ((UINT32) inherit_path_len << 16);
 
     const int ip_size = FORT_IP_ADDR_SIZE(conn->isIPv6);
@@ -155,7 +155,7 @@ FORT_API void fort_log_conn_header_read(
     v = *up++;
     conn->process_id = v;
 
-    up = fort_log_flow_id_read(up, &conn->flow_id);
+    up = fort_log_u64_read(up, &conn->flow_id);
 
     v = *up++;
     *path_len = (UINT16) v;
@@ -178,7 +178,10 @@ FORT_API void fort_log_proc_new_header_write(char *p, PCFORT_LOG_PROC_NEW_HEADER
     *up++ = fort_log_flag_type(FORT_LOG_TYPE_PROC_NEW) | header->path_len;
     *up++ = header->app_id;
     *up++ = header->process_id;
-    *up = header->inherit_path_len;
+    *up++ = header->inherit_path_len;
+    *up++ = header->parent_process_id;
+
+    fort_log_u64_write(up, (UINT64) header->create_time);
 }
 
 FORT_API void fort_log_proc_new_write(
@@ -189,6 +192,8 @@ FORT_API void fort_log_proc_new_write(
         .inherit_path_len = inherit_path->len,
         .app_id = conn->app.data.app_id,
         .process_id = conn->process_id,
+        .parent_process_id = conn->parent_process_id,
+        .create_time = conn->create_time,
     };
 
     fort_log_proc_new_header_write(p, &header);
@@ -204,7 +209,10 @@ FORT_API void fort_log_proc_new_header_read(const char *p, PFORT_LOG_PROC_NEW_HE
     header->path_len = (UINT16) (*up++ & ~FORT_LOG_FLAG_EX_MASK);
     header->app_id = *up++;
     header->process_id = *up++;
-    header->inherit_path_len = (UINT16) *up;
+    header->inherit_path_len = (UINT16) *up++;
+    header->parent_process_id = *up++;
+
+    fort_log_u64_read(up, (UINT64 *) &header->create_time);
 }
 
 FORT_API void fort_log_stat_traf_header_write(char *p, UINT16 proc_count)
@@ -259,7 +267,7 @@ FORT_API void fort_log_flow_closed_write(char *p, UINT64 flow_id)
 
     *up++ = fort_log_flag_type(FORT_LOG_TYPE_FLOW_CLOSED);
 
-    fort_log_flow_id_write(up, flow_id);
+    fort_log_u64_write(up, flow_id);
 }
 
 FORT_API void fort_log_flow_closed_read(const char *p, UINT64 *flow_id)
@@ -268,5 +276,5 @@ FORT_API void fort_log_flow_closed_read(const char *p, UINT64 *flow_id)
 
     up++;
 
-    fort_log_flow_id_read(up, flow_id);
+    fort_log_u64_read(up, flow_id);
 }

@@ -29,6 +29,7 @@ typedef struct fort_psnode
     INT64 allowed_time; /* allowed by the user till the interrupt time, instead of Ask to Connect */
 
     UINT32 process_id;
+    UINT32 parent_process_id; /* 0, when unknown */
 
     FORT_PS_OPT ps_opt;
 } FORT_PSNODE, *PFORT_PSNODE;
@@ -552,6 +553,7 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSI
 
     proc->create_time = psi->createTime;
     proc->process_id = psi->processId;
+    proc->parent_process_id = psi->parentProcessId;
     proc->ps_opt.flags = FORT_PSNODE_FOUND;
     proc->ps_opt.path_drive = fort_path_drive_get(psi->path);
 
@@ -577,6 +579,11 @@ inline static void fort_pstree_handle_existing_proc(
     /* The existing process may be added without the time, e.g. by the services' update */
     if (psi->createTime != 0) {
         proc->create_time = psi->createTime;
+    }
+
+    /* The existing process may be added without the parent, e.g. by the services' update */
+    if (psi->parentProcessId != 0) {
+        proc->parent_process_id = psi->parentProcessId;
     }
 
     /* The existing process may be added without the service name, e.g. by the enumeration */
@@ -940,15 +947,17 @@ FORT_API void fort_pstree_enum_processes(PFORT_PSTREE ps_tree)
 }
 
 static PFORT_PSNAME_NODE fort_pstree_get_proc_name_locked(
-        PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, PFORT_PS_OPT ps_opt)
+        PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, PFORT_PS_INFO ps_info)
 {
     PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, processId);
     if (proc == NULL)
         return NULL;
 
-    *ps_opt = proc->ps_opt;
+    ps_info->parent_process_id = proc->parent_process_id;
+    ps_info->create_time = proc->create_time;
+    ps_info->opt = proc->ps_opt;
 
-    if ((ps_opt->flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_CUSTOM))
+    if ((ps_info->opt.flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_CUSTOM))
             == FORT_PSNODE_NAME_INHERIT)
         return NULL;
 
@@ -965,14 +974,14 @@ static PFORT_PSNAME_NODE fort_pstree_get_proc_name_locked(
 }
 
 FORT_API PFORT_PSNAME_NODE fort_pstree_get_proc_name(
-        PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, PFORT_PS_OPT ps_opt)
+        PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, PFORT_PS_INFO ps_info)
 {
     PFORT_PSNAME_NODE ps_name;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
     {
-        ps_name = fort_pstree_get_proc_name_locked(ps_tree, processId, path, ps_opt);
+        ps_name = fort_pstree_get_proc_name_locked(ps_tree, processId, path, ps_info);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
@@ -1057,6 +1066,7 @@ inline static PFORT_PSNODE fort_pstree_new_service_proc(
 
     proc->create_time = 0; /* unknown */
     proc->process_id = processId;
+    proc->parent_process_id = 0; /* unknown */
     proc->ps_opt.flags = FORT_PSNODE_IS_SVCHOST | FORT_PSNODE_FOUND;
     proc->ps_opt.path_drive = fort_path_drive_get(NULL);
 

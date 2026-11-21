@@ -82,6 +82,10 @@ static TEST_BUF_PATH_LENS test_buf_conn_write_read(PFORT_CONF_META_CONN conn,
 
         lens.path_len = header.path_len;
         lens.inherit_path_len = header.inherit_path_len;
+
+        read_conn->process_id = header.process_id;
+        read_conn->parent_process_id = header.parent_process_id;
+        read_conn->create_time = header.create_time;
     }
 
     fort_buffer_close(&buf);
@@ -96,6 +100,9 @@ static void test_buf_conn_proc_path(void)
 
     FORT_CONF_META_CONN conn = {
         .inherited = TRUE,
+        .process_id = 5,
+        .parent_process_id = 7,
+        .create_time = 0x1122334455667788LL,
         .path = path,
         .real_path = real_path,
     };
@@ -115,10 +122,13 @@ static void test_buf_conn_proc_path(void)
     assert(lens.inherit_path_len == 0);
     assert(read_conn.proc_logged);
 
-    /* The PROC_NEW has the paths */
+    /* The PROC_NEW has the paths and the process's tree */
     lens = test_buf_conn_write_read(&conn, FORT_BUFFER_CONN_WRITE_PROC_NEW, &read_conn);
     assert(lens.path_len == real_path.len);
     assert(lens.inherit_path_len == path.len);
+    assert(read_conn.process_id == conn.process_id);
+    assert(read_conn.parent_process_id == conn.parent_process_id);
+    assert(read_conn.create_time == conn.create_time);
 
     printf("test_buf_conn_proc_path: OK\n");
 }
