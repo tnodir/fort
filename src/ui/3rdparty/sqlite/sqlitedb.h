@@ -88,6 +88,8 @@ public:
     quint32 openFlags() const { return m_openFlags; }
     void setOpenFlags(quint32 v) { m_openFlags = v; }
 
+    bool isReadOnly() const { return (m_openFlags & OpenReadOnly) != 0; }
+
     QString filePath() const { return m_filePath; }
     void setFilePath(const QString &v) { m_filePath = v; }
 

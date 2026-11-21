@@ -82,7 +82,7 @@ void PendingConnManager::setUp()
     StatConnManager::setUp();
 
     // The pending connections don't survive the restart: don't wait for the disk writes
-    if ((sqliteDb()->openFlags() & SqliteDb::OpenReadOnly) == 0) {
+    if (!sqliteDb()->isReadOnly()) {
         sqliteDb()->setSynchronous(SqliteDb::SyncOff);
     }
 }

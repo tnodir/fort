@@ -379,7 +379,7 @@ bool SqliteDb::canMigrate(const MigrateOptions &opt) const
         return false;
     }
 
-    if ((openFlags() & OpenReadOnly) != 0) {
+    if (isReadOnly()) {
         qCWarning(LC) << "Cannot migrate a read-only DB";
         return false;
     }
