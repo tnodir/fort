@@ -8,7 +8,7 @@ class ControlWorker;
 
 namespace Control {
 
-enum Command : qint8 {
+enum Command : quint8 {
     CommandNone = 0,
 
     CommandMain,

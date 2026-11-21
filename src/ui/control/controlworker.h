@@ -112,9 +112,9 @@ protected:
         }
 
     private:
-        quint32 m_command : 7;
+        quint32 m_command : 8;
         quint32 m_compressed : 1;
-        quint32 m_dataSize : 24;
+        quint32 m_dataSize : 23;
         quint32 m_requestId; // the result has the request's id
     };
 
