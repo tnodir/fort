@@ -23,7 +23,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-inline constexpr int DATABASE_USER_VERSION = 72;
+inline constexpr int DATABASE_USER_VERSION = 73;
 
 using AppsMap = QHash<qint64, QString>;
 using AppIdsArray = QVector<qint64>;

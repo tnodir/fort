@@ -73,7 +73,7 @@ CREATE TABLE speed_limit(
 );
 
 CREATE TABLE app(
-  app_id INTEGER PRIMARY KEY,
+  app_id INTEGER PRIMARY KEY AUTOINCREMENT, -- not reused: the driver's log refers to the ids
   origin_path TEXT,
   path TEXT,
   icon_path TEXT,
