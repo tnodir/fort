@@ -322,7 +322,19 @@ FORT_API NTSTATUS fort_buffer_system_time_write_locked(
     return status;
 }
 
-FORT_API NTSTATUS fort_buffer_proc_kill_write(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT32 pid)
+typedef void FORT_BUFFER_ENTRY_WRITE_FUNC(char *p, const void *arg);
+
+typedef struct fort_buffer_entry
+{
+    UINT32 len;
+    FORT_BUFFER_ENTRY_WRITE_FUNC *write_func;
+    const void *arg; /* of write_func */
+} FORT_BUFFER_ENTRY, *PFORT_BUFFER_ENTRY;
+
+typedef const FORT_BUFFER_ENTRY *PCFORT_BUFFER_ENTRY;
+
+static NTSTATUS fort_buffer_entry_write(
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PCFORT_BUFFER_ENTRY entry)
 {
     NTSTATUS status;
 
@@ -330,10 +342,10 @@ FORT_API NTSTATUS fort_buffer_proc_kill_write(PFORT_BUFFER buf, PFORT_IRP_INFO i
     KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
     {
         PCHAR out;
-        status = fort_buffer_prepare(buf, FORT_LOG_PROC_KILL_SIZE, &out, irp_info);
+        status = fort_buffer_prepare(buf, entry->len, &out, irp_info);
 
         if (NT_SUCCESS(status)) {
-            fort_log_proc_kill_write(out, pid);
+            entry->write_func(out, entry->arg);
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -341,24 +353,37 @@ FORT_API NTSTATUS fort_buffer_proc_kill_write(PFORT_BUFFER buf, PFORT_IRP_INFO i
     return status;
 }
 
+static void fort_buffer_proc_kill_entry_write(char *p, const void *arg)
+{
+    fort_log_proc_kill_write(p, *((const UINT32 *) arg));
+}
+
+FORT_API NTSTATUS fort_buffer_proc_kill_write(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT32 pid)
+{
+    const FORT_BUFFER_ENTRY entry = {
+        .len = FORT_LOG_PROC_KILL_SIZE,
+        .write_func = &fort_buffer_proc_kill_entry_write,
+        .arg = &pid,
+    };
+
+    return fort_buffer_entry_write(buf, irp_info, &entry);
+}
+
+static void fort_buffer_flow_closed_entry_write(char *p, const void *arg)
+{
+    fort_log_flow_closed_write(p, *((const UINT64 *) arg));
+}
+
 FORT_API NTSTATUS fort_buffer_flow_closed_write(
         PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT64 flow_id)
 {
-    NTSTATUS status;
+    const FORT_BUFFER_ENTRY entry = {
+        .len = FORT_LOG_FLOW_CLOSED_SIZE,
+        .write_func = &fort_buffer_flow_closed_entry_write,
+        .arg = &flow_id,
+    };
 
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
-    {
-        PCHAR out;
-        status = fort_buffer_prepare(buf, FORT_LOG_FLOW_CLOSED_SIZE, &out, irp_info);
-
-        if (NT_SUCCESS(status)) {
-            fort_log_flow_closed_write(out, flow_id);
-        }
-    }
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-    return status;
+    return fort_buffer_entry_write(buf, irp_info, &entry);
 }
 
 inline static NTSTATUS fort_buffer_cancel_pending(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info)
