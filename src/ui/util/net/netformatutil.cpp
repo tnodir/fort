@@ -128,3 +128,8 @@ QString NetFormatUtil::ipToAddressText(const ip_addr_t ip, bool isIPv6)
 
     return text;
 }
+
+QString NetFormatUtil::ipPortToAddressText(const ip_addr_t ip, quint16 port, bool isIPv6)
+{
+    return ipToAddressText(ip, isIPv6) + ':' + QString::number(port);
+}

@@ -69,6 +69,17 @@ TEST_F(NetUtilTest, ipAddressText)
     ASSERT_EQ(NetFormatUtil::ipToAddressText(ip, /*isIPv6=*/true), "[::1]");
 }
 
+TEST_F(NetUtilTest, ipPortAddressText)
+{
+    ip_addr_t ip;
+
+    ip.v4 = NetFormatUtil::textToIp4("172.16.0.1");
+    ASSERT_EQ(NetFormatUtil::ipPortToAddressText(ip, 53), "172.16.0.1:53");
+
+    ip.v6 = NetFormatUtil::textToIp6("2001:db8::1");
+    ASSERT_EQ(NetFormatUtil::ipPortToAddressText(ip, 443, /*isIPv6=*/true), "[2001:db8::1]:443");
+}
+
 TEST_F(NetUtilTest, textToIp)
 {
     ip_addr_t ip;

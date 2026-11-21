@@ -30,6 +30,9 @@ public:
 
     // e.g. "1.1.1.1", "[::1]": the IPv6 address is in brackets, as in the rules' text
     static QString ipToAddressText(const ip_addr_t ip, bool isIPv6 = false);
+
+    // e.g. "1.1.1.1:53", "[::1]:53"
+    static QString ipPortToAddressText(const ip_addr_t ip, quint16 port, bool isIPv6 = false);
 };
 
 #endif // NETFORMATUTIL_H

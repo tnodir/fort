@@ -14,11 +14,6 @@ namespace {
 
 inline constexpr int connsLimitDefault = 100;
 
-QString addressText(const ip_addr_t &ip, quint16 port, bool isIPv6)
-{
-    return NetFormatUtil::ipToAddressText(ip, isIPv6) + ':' + QString::number(port);
-}
-
 QVariantMap connFields(const ConnRow &connRow)
 {
     return {
@@ -33,8 +28,12 @@ QVariantMap connFields(const ConnRow &connRow)
         { "proto", int(connRow.ipProto) },
         { "zone", int(connRow.zoneId) },
         { "rule", int(connRow.ruleId) },
-        { "local", addressText(connRow.localIp, connRow.localPort, connRow.isIPv6) },
-        { "remote", addressText(connRow.remoteIp, connRow.remotePort, connRow.isIPv6) },
+        { "local",
+                NetFormatUtil::ipPortToAddressText(
+                        connRow.localIp, connRow.localPort, connRow.isIPv6) },
+        { "remote",
+                NetFormatUtil::ipPortToAddressText(
+                        connRow.remoteIp, connRow.remotePort, connRow.isIPv6) },
         { "host", connRow.remoteHost },
         { "pid", connRow.pid },
         { "path", connRow.appPath },
