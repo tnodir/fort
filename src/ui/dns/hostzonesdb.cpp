@@ -416,16 +416,14 @@ quint32 HostZonesDb::matchPatterns(const QByteArray &key, quint32 zonesMask) con
 
     for (const Pattern &pattern : m_patterns) {
         const quint32 patternMask = pattern.zonesMask & zonesMask;
-        if (patternMask == 0)
+        if (patternMask == 0 || !HostPattern::match(pattern.name, key))
             continue;
 
-        if (HostPattern::match(pattern.name, key)) {
-            matchedMask |= patternMask;
-            zonesMask &= ~patternMask;
+        matchedMask |= patternMask;
+        zonesMask &= ~patternMask;
 
-            if (zonesMask == 0)
-                break;
-        }
+        if (zonesMask == 0)
+            break;
     }
 
     return matchedMask;
