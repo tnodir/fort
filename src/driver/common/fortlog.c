@@ -78,6 +78,7 @@ inline static UINT32 fort_log_conn_flags(PCFORT_CONF_META_CONN conn)
             | (conn->is_loopback ? FORT_LOG_CONN_LOOPBACK : 0)
             | (conn->act.conn_alert ? FORT_LOG_CONN_ALERTED : 0)
             | (conn->act.terminated ? FORT_LOG_CONN_TERMINATED : 0)
+            | (conn->flow_logging ? FORT_LOG_CONN_FLOW_LOGGING : 0)
             | (conn->activity_only ? FORT_LOG_CONN_ACTIVITY : 0) | fort_log_conn_proc_flags(conn);
 }
 
@@ -136,6 +137,7 @@ FORT_API void fort_log_conn_header_read(
     conn->act.terminated = (v & FORT_LOG_CONN_TERMINATED) != 0;
     conn->app_asked = (v & FORT_LOG_CONN_APP_ASKED) != 0;
     conn->proc_logged = (v & FORT_LOG_CONN_PROC_PATH) != 0;
+    conn->flow_logging = (v & FORT_LOG_CONN_FLOW_LOGGING) != 0;
     conn->activity_only = (v & FORT_LOG_CONN_ACTIVITY) != 0;
 
     v = *up++;

@@ -25,6 +25,7 @@ enum FortLogConnFlag {
     FORT_LOG_CONN_APP_ASKED = (1 << 6),
     FORT_LOG_CONN_PROC_PATH = (1 << 7), /* the paths are of the process's PROC_NEW */
     FORT_LOG_CONN_ACTIVITY = (1 << 8), /* for the Activity only, not for the connections' DB */
+    FORT_LOG_CONN_FLOW_LOGGING = (1 << 9), /* the flow's bytes and FLOW_CLOSED follow */
 };
 
 enum FortConnReason {

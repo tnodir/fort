@@ -38,6 +38,10 @@ public:
     bool procLogged() const { return m_procLogged; }
     void setProcLogged(bool v) { m_procLogged = v; }
 
+    // The connection logs its flow: the flow's bytes and closing follow
+    bool flowLogging() const { return m_flowLogging; }
+    void setFlowLogging(bool v) { m_flowLogging = v; }
+
     // The allowed flow's connection isn't logged by the flags: for the Activity only
     bool activityOnly() const { return m_activityOnly; }
     void setActivityOnly(bool v) { m_activityOnly = v; }
@@ -115,6 +119,7 @@ private:
     bool m_inherited : 1 = false;
     bool m_appAsked : 1 = false;
     bool m_procLogged : 1 = false;
+    bool m_flowLogging : 1 = false;
     bool m_activityOnly : 1 = false;
     bool m_remoteHostOfProcess : 1 = false;
     quint8 m_reason = 0;
