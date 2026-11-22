@@ -10,6 +10,7 @@ CREATE TABLE flow(
   flow_id INTEGER PRIMARY KEY,
   pid INTEGER NOT NULL,
   inbound BOOLEAN NOT NULL,
+  local_net BOOLEAN NOT NULL, -- the remote address is of the LAN addresses
   ip_proto INTEGER NOT NULL,
   local_port INTEGER NOT NULL,
   remote_port INTEGER NOT NULL,

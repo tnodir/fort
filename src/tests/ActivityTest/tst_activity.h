@@ -106,6 +106,7 @@ protected:
     enum FlowColumn {
         FlowPid = 0,
         FlowInbound,
+        FlowLocalNet,
         FlowIpProto,
         FlowLocalPort,
         FlowRemotePort,
@@ -174,7 +175,8 @@ int ActivityTest::count(const char *table) const
 QVariantList ActivityTest::flowRow(quint64 flowId) const
 {
     return DbQuery(m_manager.sqliteDb())
-            .sql("SELECT pid, inbound, ip_proto, local_port, remote_port, local_ip, remote_ip,"
+            .sql("SELECT pid, inbound, local_net, ip_proto, local_port, remote_port, local_ip, "
+                 "remote_ip,"
                  "    local_ip6 IS NOT NULL, remote_ip6 IS NOT NULL, remote_host, conn_time, "
                  "in_bytes, out_bytes,"
                  "    in_speed, out_speed"
@@ -210,6 +212,7 @@ TEST_F(ActivityTest, connAddsFlowAndProcess)
 {
     LogEntryConn conn = makeConn(1);
     conn.setAppId(testAppId);
+    conn.setLocalNet(true);
 
     m_manager.logConn(conn, testParentPid, testParentPath);
 
@@ -223,6 +226,7 @@ TEST_F(ActivityTest, connAddsFlowAndProcess)
     ASSERT_EQ(flow.size(), FlowColumnCount);
     ASSERT_EQ(flow[FlowPid].toUInt(), testPid);
     ASSERT_TRUE(flow[FlowInbound].toBool());
+    ASSERT_TRUE(flow[FlowLocalNet].toBool());
     ASSERT_EQ(flow[FlowIpProto].toInt(), 6);
     ASSERT_EQ(flow[FlowLocalPort].toInt(), 1000);
     ASSERT_EQ(flow[FlowRemotePort].toInt(), 443);

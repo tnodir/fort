@@ -24,10 +24,11 @@ inline constexpr int DATABASE_USER_VERSION = 1;
 
 inline constexpr qint64 hostWaitMsecs = 5 * 1000;
 
-const char *const sqlInsertFlow = "INSERT OR IGNORE INTO flow(flow_id, pid, inbound, ip_proto,"
-                                  "    local_port, remote_port, local_ip, remote_ip,"
-                                  "    local_ip6, remote_ip6, remote_host, conn_time)"
-                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12);";
+const char *const sqlInsertFlow =
+        "INSERT OR IGNORE INTO flow(flow_id, pid, inbound, local_net, ip_proto,"
+        "    local_port, remote_port, local_ip, remote_ip,"
+        "    local_ip6, remote_ip6, remote_host, conn_time)"
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13);";
 
 const char *const sqlReplaceProc =
         "INSERT OR REPLACE INTO proc(pid, app_id, parent_pid, path, parent_path)"
@@ -78,6 +79,7 @@ QVariantList flowVars(const LogEntryConn &entry)
         qint64(entry.flowId()),
         entry.pid(),
         entry.inbound(),
+        entry.localNet(),
         entry.ipProto(),
         entry.localPort(),
         entry.remotePort(),

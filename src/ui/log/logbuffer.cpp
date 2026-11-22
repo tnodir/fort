@@ -156,6 +156,7 @@ void LogBuffer::writeEntryConn(const LogEntryConn *logEntry)
         .inbound = logEntry->inbound(),
         .isIPv6 = logEntry->isIPv6(),
         .is_loopback = logEntry->loopback(),
+        .is_local_net = logEntry->localNet(),
         .inherited = logEntry->inherited(),
         .app_asked = logEntry->appAsked(),
         .proc_logged = logEntry->procLogged(),
@@ -211,6 +212,7 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
     logEntry->setIsIPv6(conn.isIPv6);
     logEntry->setInbound(conn.inbound);
     logEntry->setLoopback(conn.is_loopback);
+    logEntry->setLocalNet(conn.is_local_net);
     logEntry->setInherited(conn.inherited);
     logEntry->setAppAsked(conn.app_asked);
     logEntry->setProcLogged(conn.proc_logged);

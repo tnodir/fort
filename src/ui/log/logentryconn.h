@@ -28,6 +28,9 @@ public:
     bool loopback() const { return m_loopback; }
     void setLoopback(bool loopback) { m_loopback = loopback; }
 
+    bool localNet() const { return m_localNet; }
+    void setLocalNet(bool v) { m_localNet = v; }
+
     bool inherited() const { return m_inherited; }
     void setInherited(bool inherited) { m_inherited = inherited; }
 
@@ -116,6 +119,7 @@ private:
     bool m_isIPv6 : 1 = false;
     bool m_inbound : 1 = false;
     bool m_loopback : 1 = false;
+    bool m_localNet : 1 = false;
     bool m_inherited : 1 = false;
     bool m_appAsked : 1 = false;
     bool m_procLogged : 1 = false;
