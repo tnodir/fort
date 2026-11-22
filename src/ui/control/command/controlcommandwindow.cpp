@@ -4,57 +4,11 @@
 #include <manager/windowmanager.h>
 
 #include "controlcommandutil.h"
+#include "windowshow.h"
 
 using namespace Fort;
 
 namespace {
-
-struct WindowShow
-{
-    bool activate : 1 = true;
-    bool expose : 1 = false;
-    WindowCode code;
-    const char *name;
-};
-
-// As by the "home show" and "graph show": the main window exposed, the graph not activated
-inline constexpr WindowShow windowShows[] = {
-    { .expose = true, .code = WindowMain, .name = "main" },
-    { .expose = true, .code = WindowMain, .name = "home" }, // COMPAT: v3.21.1
-    { .code = WindowPrograms, .name = "programs" },
-    { .code = WindowOptions, .name = "options" },
-    { .code = WindowRules, .name = "rules" },
-    { .code = WindowZones, .name = "zones" },
-    { .code = WindowGroups, .name = "groups" },
-    { .code = WindowSpeedLimits, .name = "speed-limits" },
-    { .code = WindowTimePeriods, .name = "time-periods" },
-    { .code = WindowConnections, .name = "connections" },
-    { .code = WindowTraffic, .name = "statistics" },
-    { .code = WindowServices, .name = "services" },
-    { .code = WindowFilterSim, .name = "filter-sim" },
-    { .activate = false, .code = WindowGraph, .name = "graph" },
-};
-
-const WindowShow *windowShowByName(const QString &name)
-{
-    for (const auto &windowShow : windowShows) {
-        if (name == QLatin1String(windowShow.name))
-            return &windowShow;
-    }
-
-    return nullptr;
-}
-
-QString windowNamesText()
-{
-    QStringList names;
-
-    for (const auto &windowShow : windowShows) {
-        names.append(windowShow.name);
-    }
-
-    return names.join('|');
-}
 
 QStringList optionsTabNames()
 {
@@ -104,7 +58,7 @@ bool showWindow(ProcessCommandResult &r, const QVariantList &args)
 {
     const QString name = args.value(1).toString();
 
-    const WindowShow *windowShow = windowShowByName(name);
+    const WindowShow *windowShow = WindowShow::byName(name);
     if (!windowShow) {
         r.errorMessage = "Invalid <name>: " + name;
         return false;
@@ -126,7 +80,7 @@ bool ControlCommandWindow::processCommand(
         const ProcessCommandArgs &p, ProcessCommandResult &r) const
 {
     if (p.args.value(0).toString() != "show" || p.args.size() < 2) {
-        r.errorMessage = "Usage: window show <name> [<tab>]; <name>: " + windowNamesText()
+        r.errorMessage = "Usage: window show <name> [<tab>]; <name>: " + WindowShow::namesText()
                 + "; <tab> of options: " + optionsTabNames().join('|') + " or its index";
         return false;
     }

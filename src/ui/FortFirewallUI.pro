@@ -61,6 +61,7 @@ SOURCES += \
     control/command/controlcommandutil.cpp \
     control/command/controlcommandwindow.cpp \
     control/command/controlcommandzone.cpp \
+    control/command/windowshow.cpp \
     control/control.cpp \
     control/controlmanager.cpp \
     control/controlworker.cpp \
@@ -425,6 +426,7 @@ HEADERS += \
     control/command/controlcommandutil.h \
     control/command/controlcommandwindow.h \
     control/command/controlcommandzone.h \
+    control/command/windowshow.h \
     control/control.h \
     control/control_types.h \
     control/controlmanager.h \
