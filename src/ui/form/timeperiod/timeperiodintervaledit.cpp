@@ -81,15 +81,19 @@ QLayout *TimePeriodIntervalEdit::setupIntervalLayout()
 {
     // Time
     m_timeFrom = createTimeEdit();
+    m_timeFrom->setObjectName("timeFrom");
     m_timeTo = createTimeEdit();
+    m_timeTo->setObjectName("timeTo");
 
     // Week Days
     m_weekDaysSelector = new WeekDaysSelector();
+    m_weekDaysSelector->setObjectName("weekDaysSelector");
     m_weekDaysSelector->setWeekDays(TimePeriodAllWeekDays);
 
     // Remove
     m_btRemove =
             ControlUtil::createIconToolButton(":/icons/delete.png", [&] { emit removeClicked(); });
+    m_btRemove->setObjectName("btRemove");
 
     auto layout = ControlUtil::createHLayout();
     layout->addWidget(m_timeFrom);

@@ -527,14 +527,17 @@ void TrayIcon::setupTrayMenuTopActions()
 {
     m_mainAction =
             addAction(m_menu, { ":/icons/fort.png", this, SLOT(onShowWindowAction()), WindowMain });
+    m_mainAction->setObjectName("mainAction");
     addHotKey(m_mainAction, HotKey::main);
 
     m_programsAction = addAction(m_menu,
             { ":/icons/application.png", this, SLOT(onShowWindowAction()), WindowPrograms });
+    m_programsAction->setObjectName("programsAction");
     addHotKey(m_programsAction, HotKey::programs);
 
     m_programsOrAlertAction =
             addAction(m_menu, { QString(), this, SLOT(showProgramsOrAlertWindow()) });
+    m_programsOrAlertAction->setObjectName("programsOrAlertAction");
     m_programsOrAlertAction->setVisible(false);
 
     setupTrayMenuOptions();
@@ -546,6 +549,7 @@ void TrayIcon::setupTrayMenuTopActions()
     m_graphAction = addAction(m_menu,
             { ":/icons/action_log.png", this, SLOT(onShowWindowAction()), WindowGraph,
                     /*checkable=*/true, windowManager()->isWindowOpen(WindowGraph) });
+    m_graphAction->setObjectName("graphAction");
     addHotKey(m_graphAction, HotKey::graph);
 
     m_menu->addSeparator();
@@ -553,11 +557,13 @@ void TrayIcon::setupTrayMenuTopActions()
     m_filterEnabledAction = addAction(m_menu,
             { QString(), this, SLOT(switchTrayFlag(bool)), tray::ActionSwitchFilterEnabled,
                     /*checkable=*/true });
+    m_filterEnabledAction->setObjectName("filterEnabledAction");
     addHotKey(m_filterEnabledAction, HotKey::filter);
 
     m_snoozeAlertsAction = addAction(m_menu,
             { QString(), this, SLOT(switchTrayFlag(bool)), tray::ActionSwitchSnoozeAlerts,
                     /*checkable=*/true });
+    m_snoozeAlertsAction->setObjectName("snoozeAlertsAction");
     m_snoozeAlertsAction->setIcon(
             ControlUtil::checkableIcon(":/icons/do_disturb.png", ":/icons/do_not_disturb.png"));
     addHotKey(m_snoozeAlertsAction, HotKey::snoozeAlerts);
@@ -565,9 +571,11 @@ void TrayIcon::setupTrayMenuTopActions()
     m_blockTrafficMenu = addSelectMenu(blockTrafficIniKeys, FirewallConf::blockTrafficIconPaths());
     m_blockTrafficMenuAction =
             addMenuPopupAction(m_blockTrafficMenu, tray::ActionShowBlockTrafficMenu);
+    m_blockTrafficMenuAction->setObjectName("blockTrafficMenuAction");
 
     m_filterModeMenu = addSelectMenu(filterModeIniKeys, FirewallConf::filterModeIconPaths());
     m_filterModeMenuAction = addMenuPopupAction(m_filterModeMenu, tray::ActionShowFilterModeMenu);
+    m_filterModeMenuAction->setObjectName("filterModeMenuAction");
 }
 
 void TrayIcon::setupTrayMenuOptions()
@@ -577,32 +585,39 @@ void TrayIcon::setupTrayMenuOptions()
 
     m_optionsAction = addAction(
             m_optionsMenu, { ":/icons/cog.png", this, SLOT(onShowWindowAction()), WindowOptions });
+    m_optionsAction->setObjectName("optionsAction");
     addHotKey(m_optionsAction, HotKey::options);
 
     m_rulesAction = addAction(
             m_optionsMenu, { ":/icons/script.png", this, SLOT(onShowWindowAction()), WindowRules });
+    m_rulesAction->setObjectName("rulesAction");
     addHotKey(m_rulesAction, HotKey::rules);
 
     m_zonesAction = addAction(m_optionsMenu,
             { ":/icons/ip_class.png", this, SLOT(onShowWindowAction()), WindowZones });
+    m_zonesAction->setObjectName("zonesAction");
     addHotKey(m_zonesAction, HotKey::zones);
 
     m_optionsMenu->addSeparator();
 
     m_groupsAction = addAction(m_optionsMenu,
             { ":/icons/application_double.png", this, SLOT(onShowWindowAction()), WindowGroups });
+    m_groupsAction->setObjectName("groupsAction");
     addHotKey(m_groupsAction, HotKey::groups);
 
     m_speedLimitsAction = addAction(m_optionsMenu,
             { ":/icons/speedometer.png", this, SLOT(onShowWindowAction()), WindowSpeedLimits });
+    m_speedLimitsAction->setObjectName("speedLimitsAction");
     addHotKey(m_speedLimitsAction, HotKey::speedLimits);
 
     m_timePeriodsAction = addAction(m_optionsMenu,
             { ":/icons/clock.png", this, SLOT(onShowWindowAction()), WindowTimePeriods });
+    m_timePeriodsAction->setObjectName("timePeriodsAction");
     addHotKey(m_timePeriodsAction, HotKey::timePeriods);
 
     m_servicesAction = addAction(m_optionsMenu,
             { ":/icons/windows-48.png", this, SLOT(onShowWindowAction()), WindowServices });
+    m_servicesAction->setObjectName("servicesAction");
     addHotKey(m_servicesAction, HotKey::services);
 
     m_servicesAction->setEnabled(settings()->hasMasterAdmin());
@@ -615,16 +630,19 @@ void TrayIcon::setupTrayMenuStatistics()
 
     m_trafficAction = addAction(m_statisticsMenu,
             { ":/icons/chart_bar.png", this, SLOT(onShowWindowAction()), WindowTraffic });
+    m_trafficAction->setObjectName("trafficAction");
     addHotKey(m_trafficAction, HotKey::traffic);
 
     m_connectionsAction = addAction(m_statisticsMenu,
             { ":/icons/connect.png", this, SLOT(onShowWindowAction()), WindowConnections });
+    m_connectionsAction->setObjectName("connectionsAction");
     addHotKey(m_connectionsAction, HotKey::connections);
 
     m_statisticsMenu->addSeparator();
 
     m_filterSimAction = addAction(m_statisticsMenu,
             { ":/icons/filter.png", this, SLOT(onShowWindowAction()), WindowFilterSim });
+    m_filterSimAction->setObjectName("filterSimAction");
     addHotKey(m_filterSimAction, HotKey::filterSim);
 }
 
@@ -680,9 +698,11 @@ void TrayIcon::setupTrayMenuBottomActions()
 {
     m_quitAction =
             addAction(m_menu, { ":/icons/standby.png", windowManager(), SIGNAL(requestQuit()) });
+    m_quitAction->setObjectName("quitAction");
     addHotKey(m_quitAction, HotKey::quit);
 
     m_trayMenuAction = addMenuPopupAction(m_menu, tray::ActionShowTrayMenu);
+    m_trayMenuAction->setObjectName("trayMenuAction");
 }
 
 bool TrayIcon::isEditEnabled() const

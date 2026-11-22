@@ -119,6 +119,7 @@ QLayout *GroupEditDialog::setupMainLayout()
 
     // Time Period
     m_periodSelector = new TimePeriodSelector();
+    m_periodSelector->setObjectName("periodSelector");
 
     // OK/Cancel
     auto buttonsLayout = setupButtons();
@@ -141,6 +142,7 @@ QLayout *GroupEditDialog::setupNameLayout()
 
     // Name
     m_editName = new LineEdit();
+    m_editName->setObjectName("editName");
     m_editName->setMaxLength(256);
 
     layout->addRow("Name:", m_editName);
@@ -148,6 +150,7 @@ QLayout *GroupEditDialog::setupNameLayout()
 
     // Notes
     m_editNotes = new PlainTextEdit();
+    m_editNotes->setObjectName("editNotes");
     m_editNotes->setFixedHeight(40);
 
     layout->addRow("Notes:", m_editNotes);
@@ -155,11 +158,13 @@ QLayout *GroupEditDialog::setupNameLayout()
 
     // Enabled
     m_cbEnabled = new QCheckBox();
+    m_cbEnabled->setObjectName("cbEnabled");
 
     layout->addRow(QString(), m_cbEnabled);
 
     // Exclusive
     m_cbExclusive = new QCheckBox();
+    m_cbExclusive->setObjectName("cbExclusive");
 
     layout->addRow(QString(), m_cbExclusive);
 
@@ -173,6 +178,7 @@ QLayout *GroupEditDialog::setupOptionsLayout()
 
     // Rule
     m_ruleSelector = new RuleSelector();
+    m_ruleSelector->setObjectName("ruleSelector");
     m_ruleSelector->setMinimumWidth(250);
 
     layout->addRow("Rule:", m_ruleSelector);
@@ -189,10 +195,12 @@ QLayout *GroupEditDialog::setupButtons()
             this->close();
         }
     });
+    m_btOk->setObjectName("btOk");
     m_btOk->setDefault(true);
 
     // Cancel
     m_btCancel = new QPushButton();
+    m_btCancel->setObjectName("btCancel");
     connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
 
     auto layout = new QHBoxLayout();

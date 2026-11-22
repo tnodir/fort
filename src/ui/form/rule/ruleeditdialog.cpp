@@ -281,6 +281,7 @@ void RuleEditDialog::setupTabBar()
     auto usagesTab = setupUsagesTab();
 
     m_tabWidget = new QTabWidget();
+    m_tabWidget->setObjectName("tabWidget");
     m_tabWidget->addTab(generalTab, QString());
     m_tabWidget->addTab(presetsTab, QString());
     m_tabWidget->addTab(moreTab, QString());
@@ -303,12 +304,15 @@ QWidget *RuleEditDialog::setupGeneralTab()
 
     // Rule Text
     m_editRuleText = new PlainTextEdit();
+    m_editRuleText->setObjectName("editRuleText");
 
     // Terminating Rule
     m_terminatingRuleSelector = new TerminatingRuleSelector();
+    m_terminatingRuleSelector->setObjectName("terminatingRuleSelector");
 
     // Time Period
     m_periodSelector = new TimePeriodSelector();
+    m_periodSelector->setObjectName("periodSelector");
 
     auto layout = new QVBoxLayout();
     layout->addLayout(formLayout);
@@ -329,6 +333,7 @@ QWidget *RuleEditDialog::setupPresetsTab()
 {
     // Rule Set
     m_ruleSetArea = new RuleSetArea(Rule::ruleTypeBit(Rule::PresetRule));
+    m_ruleSetArea->setObjectName("ruleSetArea");
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_ruleSetArea);
@@ -352,6 +357,7 @@ QWidget *RuleEditDialog::setupUsagesTab()
 {
     // Usages
     m_usagesView = new UsagesView();
+    m_usagesView->setObjectName("usagesView");
 
     connect(m_usagesView, &UsagesView::usagesRequested, this,
             [&] { m_usagesView->setUsages(confRuleManager()->ruleUsages(m_ruleRow.ruleId)); });
@@ -369,6 +375,7 @@ QLayout *RuleEditDialog::setupFormLayout()
 
     // Name
     m_editName = new LineEdit();
+    m_editName->setObjectName("editName");
     m_editName->setMaxLength(1024);
 
     layout->addRow("Name:", m_editName);
@@ -376,6 +383,7 @@ QLayout *RuleEditDialog::setupFormLayout()
 
     // Notes
     m_editNotes = new PlainTextEdit();
+    m_editNotes->setObjectName("editNotes");
     m_editNotes->setFixedHeight(40);
 
     layout->addRow("Notes:", m_editNotes);
@@ -385,6 +393,7 @@ QLayout *RuleEditDialog::setupFormLayout()
 
     // Rule Type
     m_comboRuleType = ControlUtil::createComboBox();
+    m_comboRuleType->setObjectName("comboRuleType");
     m_comboRuleType->setMinimumWidth(100);
 
     layout->addRow("Type:", m_comboRuleType);
@@ -401,7 +410,9 @@ QLayout *RuleEditDialog::setupFormLayout()
 QLayout *RuleEditDialog::setupEnabledLayout()
 {
     m_cbEnabled = new QCheckBox();
+    m_cbEnabled->setObjectName("cbEnabled");
     m_cbTrayMenu = new QCheckBox();
+    m_cbTrayMenu->setObjectName("cbTrayMenu");
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { m_cbEnabled, ControlUtil::createVSeparator(), m_cbTrayMenu, /*stretch*/ nullptr });
@@ -414,6 +425,7 @@ QLayout *RuleEditDialog::setupActionsLayout()
 {
     // Allow
     m_rbAllow = new QRadioButton();
+    m_rbAllow->setObjectName("rbAllow");
     m_rbAllow->setIcon(
             IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ALLOW)));
     m_rbAllow->setChecked(true);
@@ -422,11 +434,13 @@ QLayout *RuleEditDialog::setupActionsLayout()
 
     // Block
     m_rbBlock = new QRadioButton();
+    m_rbBlock->setObjectName("rbBlock");
     m_rbBlock->setIcon(
             IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_BLOCK)));
 
     // Ask
     m_rbAsk = new QRadioButton();
+    m_rbAsk->setObjectName("rbAsk");
     m_rbAsk->setIcon(IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ASK)));
 
     auto layout = ControlUtil::createHLayoutByWidgets(
@@ -440,17 +454,21 @@ QLayout *RuleEditDialog::setupZonesLayout()
 {
     // Exclusive
     m_cbExclusive = new QCheckBox();
+    m_cbExclusive->setObjectName("cbExclusive");
 
     // Zones
     m_btZones = new ZonesSelector();
+    m_btZones->setObjectName("btZones");
     m_btZones->setIsTristate(true);
 
     // Inline Zones
     m_cbInlineZones = new QCheckBox();
+    m_cbInlineZones->setObjectName("cbInlineZones");
 
     // Add Filter
     m_btAddFilter = ControlUtil::createIconToolButton(
             ":/icons/filter_add.png", [&] { openFilterEditForm(); });
+    m_btAddFilter->setObjectName("btAddFilter");
 
     auto layout =
             ControlUtil::createHLayoutByWidgets({ m_cbExclusive, ControlUtil::createVSeparator(),
@@ -462,7 +480,9 @@ QLayout *RuleEditDialog::setupZonesLayout()
 QLayout *RuleEditDialog::setupLogLayout()
 {
     m_cbLogAllowedConn = new QCheckBox();
+    m_cbLogAllowedConn->setObjectName("cbLogAllowedConn");
     m_cbLogBlockedConn = new QCheckBox();
+    m_cbLogBlockedConn->setObjectName("cbLogBlockedConn");
 
     auto layout = ControlUtil::createVLayoutByWidgets({ m_cbLogAllowedConn, m_cbLogBlockedConn });
 
@@ -473,10 +493,12 @@ QLayout *RuleEditDialog::setupButtons()
 {
     // OK
     m_btOk = ControlUtil::createButton(QString(), [&] { confirmSave(); });
+    m_btOk->setObjectName("btOk");
     m_btOk->setDefault(true);
 
     // Cancel
     m_btCancel = new QPushButton();
+    m_btCancel->setObjectName("btCancel");
     connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
 
     auto layout = new QHBoxLayout();

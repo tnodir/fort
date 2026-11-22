@@ -207,8 +207,7 @@ QLayout *StatisticsPage::setupColumn2()
 void StatisticsPage::setupTrafficBox()
 {
     setupLogStat();
-    setupLogStatNoFilter();
-    setupLogStatReinjected();
+    setupLogStatFlags();
     setupActivePeriod();
     setupMonthStart();
     setupTrafKeep();
@@ -233,11 +232,12 @@ void StatisticsPage::setupLogStat()
             ctrl()->setFlagsEdited();
         }
     });
+    m_cbLogStat->setObjectName("cbLogStat");
 
     m_cbLogStat->setFont(GuiUtil::fontBold());
 }
 
-void StatisticsPage::setupLogStatNoFilter()
+void StatisticsPage::setupLogStatFlags()
 {
     m_cbLogStatNoFilter = ControlUtil::createCheckBox(conf().logStatNoFilter(), [&](bool checked) {
         if (conf().logStatNoFilter() != checked) {
@@ -245,10 +245,8 @@ void StatisticsPage::setupLogStatNoFilter()
             ctrl()->setFlagsEdited();
         }
     });
-}
+    m_cbLogStatNoFilter->setObjectName("cbLogStatNoFilter");
 
-void StatisticsPage::setupLogStatReinjected()
-{
     m_cbLogStatReinjected =
             ControlUtil::createCheckBox(conf().logStatReinjected(), [&](bool checked) {
                 if (conf().logStatReinjected() != checked) {
@@ -256,11 +254,13 @@ void StatisticsPage::setupLogStatReinjected()
                     ctrl()->setFlagsEdited();
                 }
             });
+    m_cbLogStatReinjected->setObjectName("cbLogStatReinjected");
 }
 
 void StatisticsPage::setupActivePeriod()
 {
     m_activePeriodSelector = new TimePeriodSelector();
+    m_activePeriodSelector->setObjectName("activePeriodSelector");
     m_activePeriodSelector->setPeriodEnabled(conf().activePeriodEnabled());
     m_activePeriodSelector->setPeriodId(conf().activePeriodId());
 
@@ -284,6 +284,7 @@ void StatisticsPage::setupMonthStart()
                     ctrl()->setIniEdited();
                 }
             });
+    m_lscMonthStart->setObjectName("lscMonthStart");
     m_lscMonthStart->setNamesByValues();
 }
 
@@ -297,6 +298,7 @@ void StatisticsPage::setupTrafKeep()
                     ctrl()->setIniEdited();
                 }
             });
+    m_lscTrafHourKeepDays->setObjectName("lscTrafHourKeepDays");
 
     m_lscTrafDayKeepDays = ControlUtil::createSpinCombo(
             { ini().trafDayKeepDays(), -1, 9999 }, trafKeepDayList, {}, [&](int value) {
@@ -305,6 +307,7 @@ void StatisticsPage::setupTrafKeep()
                     ctrl()->setIniEdited();
                 }
             });
+    m_lscTrafDayKeepDays->setObjectName("lscTrafDayKeepDays");
 
     const auto trafKeepMonthList = SpinCombo::makeValuesList(trafKeepMonthValues);
     m_lscTrafMonthKeepMonths = ControlUtil::createSpinCombo(
@@ -314,6 +317,7 @@ void StatisticsPage::setupTrafKeep()
                     ctrl()->setIniEdited();
                 }
             });
+    m_lscTrafMonthKeepMonths->setObjectName("lscTrafMonthKeepMonths");
 }
 
 void StatisticsPage::setupQuota()
@@ -326,6 +330,7 @@ void StatisticsPage::setupQuota()
                     ctrl()->setIniEdited();
                 }
             });
+    m_lscQuotaDayMb->setObjectName("lscQuotaDayMb");
 
     m_lscQuotaMonthMb = ControlUtil::createSpinCombo(
             { ini().quotaMonthMb(), 0, 1024 * 1024 }, quotaList, " MiB", [&](int value) {
@@ -334,6 +339,7 @@ void StatisticsPage::setupQuota()
                     ctrl()->setIniEdited();
                 }
             });
+    m_lscQuotaMonthMb->setObjectName("lscQuotaMonthMb");
 
     m_cbQuotaBlockInternet =
             ControlUtil::createCheckBox(ini().quotaBlockInetTraffic(), [&](bool checked) {
@@ -342,6 +348,7 @@ void StatisticsPage::setupQuota()
                     ctrl()->setIniEdited();
                 }
             });
+    m_cbQuotaBlockInternet->setObjectName("cbQuotaBlockInternet");
 }
 
 void StatisticsPage::setupConnBox()
@@ -366,6 +373,7 @@ void StatisticsPage::setupLogConn()
             ctrl()->setFlagsEdited();
         }
     });
+    m_cbLogAllowedConn->setObjectName("cbLogAllowedConn");
     m_cbLogAllowedConn->setFont(GuiUtil::fontBold());
 
     // Blocked Connection
@@ -375,6 +383,7 @@ void StatisticsPage::setupLogConn()
             ctrl()->setFlagsEdited();
         }
     });
+    m_cbLogBlockedConn->setObjectName("cbLogBlockedConn");
     m_cbLogBlockedConn->setFont(GuiUtil::fontBold());
 
     // Alerted Connection
@@ -384,6 +393,7 @@ void StatisticsPage::setupLogConn()
             ctrl()->setFlagsEdited();
         }
     });
+    m_cbLogAlertedConn->setObjectName("cbLogAlertedConn");
 
     // Clear Connections on Exit
     m_cbClearConnOnExit = ControlUtil::createCheckBox(ini().connClearOnExit(), [&](bool checked) {
@@ -392,6 +402,7 @@ void StatisticsPage::setupLogConn()
             ctrl()->setIniEdited();
         }
     });
+    m_cbClearConnOnExit->setObjectName("cbClearConnOnExit");
 
     // Connections Keep Count
     const auto logConnKeepCountList = SpinCombo::makeValuesList(logIpKeepCountValues);
@@ -402,4 +413,5 @@ void StatisticsPage::setupLogConn()
                     ctrl()->setIniEdited();
                 }
             });
+    m_lscConnKeepCount->setObjectName("lscConnKeepCount");
 }

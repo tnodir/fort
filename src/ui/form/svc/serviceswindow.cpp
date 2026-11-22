@@ -157,16 +157,21 @@ QLayout *ServicesWindow::setupHeader()
     auto editMenu = ControlUtil::createMenu(this);
 
     m_actTrack = editMenu->addAction(IconCache::icon(":/icons/tick.png"), QString());
+    m_actTrack->setObjectName("actTrack");
     m_actRevert = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
+    m_actRevert->setObjectName("actRevert");
     m_actRestart =
             editMenu->addAction(IconCache::icon(":/icons/arrow_rotate_clockwise.png"), QString());
+    m_actRestart->setObjectName("actRestart");
 
     m_actAddProgram = editMenu->addAction(IconCache::icon(":/icons/application.png"), QString());
+    m_actAddProgram->setObjectName("actAddProgram");
     m_actAddProgram->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     editMenu->addSeparator();
 
     m_actFind = editMenu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
+    m_actFind->setObjectName("actFind");
     m_actFind->setShortcut(QKeySequence::Find);
 
     connect(m_actTrack, &QAction::triggered, this, [&] {
@@ -198,13 +203,18 @@ QLayout *ServicesWindow::setupHeader()
     });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
+    m_btEdit->setObjectName("btEdit");
     m_btEdit->setMenu(editMenu);
 
     // Toolbar buttons
     m_btTrack = ControlUtil::createFlatToolButton(":/icons/tick.png");
+    m_btTrack->setObjectName("btTrack");
     m_btRevert = ControlUtil::createFlatToolButton(":/icons/delete.png");
+    m_btRevert->setObjectName("btRevert");
     m_btRestart = ControlUtil::createFlatToolButton(":/icons/arrow_rotate_clockwise.png");
+    m_btRestart->setObjectName("btRestart");
     m_btRefresh = ControlUtil::createFlatToolButton(":/icons/arrow_refresh_small.png");
+    m_btRefresh->setObjectName("btRefresh");
 
     connect(m_btTrack, &QAbstractButton::clicked, m_actTrack, &QAction::trigger);
     connect(m_btRevert, &QAbstractButton::clicked, m_actRevert, &QAction::trigger);
@@ -228,6 +238,7 @@ void ServicesWindow::setupEditSearch()
 {
     m_editSearch = ControlUtil::createLineEdit(
             QString(), [&](const QString &text) { serviceListModel()->setTextFilter(text); });
+    m_editSearch->setObjectName("editSearch");
     m_editSearch->setClearButtonEnabled(true);
     m_editSearch->setMaxLength(200);
     m_editSearch->setMinimumWidth(100);
@@ -239,6 +250,7 @@ void ServicesWindow::setupEditSearch()
 void ServicesWindow::setupTableServiceList()
 {
     m_serviceListView = new TableView();
+    m_serviceListView->setObjectName("serviceListView");
     m_serviceListView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_serviceListView->setSelectionBehavior(QAbstractItemView::SelectRows);
 

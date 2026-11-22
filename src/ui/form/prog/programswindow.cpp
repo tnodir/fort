@@ -265,11 +265,15 @@ QLayout *ProgramsWindow::setupToolbarButtonsLayout()
 {
     m_btAllowApp = ControlUtil::createFlatToolButton(
             ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ALLOW));
+    m_btAllowApp->setObjectName("btAllowApp");
     m_btBlockApp = ControlUtil::createFlatToolButton(
             ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_BLOCK));
+    m_btBlockApp->setObjectName("btBlockApp");
     m_btAskApp = ControlUtil::createFlatToolButton(
             ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ASK));
+    m_btAskApp->setObjectName("btAskApp");
     m_btRemoveApp = ControlUtil::createFlatToolButton(":/icons/delete.png");
+    m_btRemoveApp->setObjectName("btRemoveApp");
 
     connect(m_btAllowApp, &QAbstractButton::clicked, m_actAllowApp, &QAction::trigger);
     connect(m_btBlockApp, &QAbstractButton::clicked, m_actBlockApp, &QAction::trigger);
@@ -304,6 +308,7 @@ void ProgramsWindow::setupEditMenu()
     setupEditMenuConnections();
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
+    m_btEdit->setObjectName("btEdit");
     m_btEdit->setMenu(menu);
 }
 
@@ -315,61 +320,77 @@ void ProgramsWindow::setupEditMenuStateActions(QMenu *menu)
     m_actAllowApp = menu->addAction(
             IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ALLOW)),
             QString());
+    m_actAllowApp->setObjectName("actAllowApp");
     m_actAllowApp->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_A));
 
     m_actBlockApp = menu->addAction(
             IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_BLOCK)),
             QString());
+    m_actBlockApp->setObjectName("actBlockApp");
     m_actBlockApp->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_B));
 
     m_actAskApp = menu->addAction(
             IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ASK)),
             QString());
+    m_actAskApp->setObjectName("actAskApp");
     m_actAskApp->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_S));
 
     m_actKillApp = menu->addAction(IconCache::icon(":/icons/scull.png"), QString());
+    m_actKillApp->setObjectName("actKillApp");
     m_actKillApp->setShortcut(QKeyCombination(Qt::CTRL | Qt::ALT, Qt::Key_K));
 }
 
 void ProgramsWindow::setupEditMenuProgramActions(QMenu *menu)
 {
     m_actAddApp = menu->addAction(IconCache::icon(":/icons/add.png"), QString());
+    m_actAddApp->setObjectName("actAddApp");
     m_actAddApp->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actAddWildcard = menu->addAction(IconCache::icon(":/icons/coding.png"), QString());
+    m_actAddWildcard->setObjectName("actAddWildcard");
     m_actAddWildcard->setShortcut(QKeyCombination(Qt::CTRL | Qt::ALT, Qt::Key_N));
 
     m_actEditApp = menu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
+    m_actEditApp->setObjectName("actEditApp");
     m_actEditApp->setShortcut(Qt::Key_Enter);
 
     m_actRemoveApp = menu->addAction(IconCache::icon(":/icons/delete.png"), QString());
+    m_actRemoveApp->setObjectName("actRemoveApp");
     m_actRemoveApp->setShortcut(Qt::Key_Delete);
 }
 
 void ProgramsWindow::setupEditMenuPathActions(QMenu *menu)
 {
     m_actAppCopyPath = menu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
+    m_actAppCopyPath->setObjectName("actAppCopyPath");
     m_actAppCopyPath->setShortcut(QKeyCombination(Qt::CTRL | Qt::SHIFT, Qt::Key_C));
 
     m_actAppOpenFolder = menu->addAction(IconCache::icon(":/icons/folder.png"), QString());
+    m_actAppOpenFolder->setObjectName("actAppOpenFolder");
     m_actAppOpenFolder->setShortcut(QKeyCombination(Qt::CTRL | Qt::SHIFT, Qt::Key_O));
 
     m_actAppConns = menu->addAction(IconCache::icon(":/icons/connect.png"), QString());
+    m_actAppConns->setObjectName("actAppConns");
 }
 
 void ProgramsWindow::setupEditMenuAlertActions(QMenu *menu)
 {
     m_actReviewAlerts = menu->addAction(IconCache::icon(":/icons/error.png"), QString());
+    m_actReviewAlerts->setObjectName("actReviewAlerts");
     m_actDeleteAlertedApps = menu->addAction(QString());
+    m_actDeleteAlertedApps->setObjectName("actDeleteAlertedApps");
     m_actClearAlerts = menu->addAction(QString());
+    m_actClearAlerts->setObjectName("actClearAlerts");
 }
 
 void ProgramsWindow::setupEditMenuMiscActions(QMenu *menu)
 {
     m_actPurgeApps = menu->addAction(IconCache::icon(":/icons/recycle.png"), QString());
+    m_actPurgeApps->setObjectName("actPurgeApps");
     m_actPurgeApps->setShortcut(QKeyCombination(Qt::CTRL | Qt::ALT, Qt::Key_P));
 
     m_actFindApps = menu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
+    m_actFindApps->setObjectName("actFindApps");
     m_actFindApps->setShortcut(QKeySequence::Find);
 }
 
@@ -424,6 +445,7 @@ void ProgramsWindow::setupEditSearch()
 {
     m_editSearch = ControlUtil::createLineEdit(
             QString(), [&](const QString &text) { appListModel()->setTextFilter(text); });
+    m_editSearch->setObjectName("editSearch");
     m_editSearch->setClearButtonEnabled(true);
     m_editSearch->setMaxLength(200);
     m_editSearch->setMinimumWidth(100);
@@ -453,6 +475,7 @@ void ProgramsWindow::setupFilter()
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
     m_btFilter = ControlUtil::createButton(":/icons/table_tab_search.png");
+    m_btFilter->setObjectName("btFilter");
     m_btFilter->setMenu(menu);
 
     const auto refreshFilter = [&] {
@@ -475,18 +498,21 @@ void ProgramsWindow::setupFilterCheckBoxes()
                 appListModel()->setFilterValue(
                         AppListModel::FilterAlerted, m_cbFilterAlerted->checkState());
             });
+    m_cbFilterAlerted->setObjectName("cbFilterAlerted");
 
     m_cbFilterWildcard =
             ControlUtil::createCheckStateBox(":/icons/coding.png", Qt::PartiallyChecked, [&] {
                 appListModel()->setFilterValue(
                         AppListModel::FilterWildcard, m_cbFilterWildcard->checkState());
             });
+    m_cbFilterWildcard->setObjectName("cbFilterWildcard");
 
     m_cbFilterParked =
             ControlUtil::createCheckStateBox(":/icons/parking.png", Qt::PartiallyChecked, [&] {
                 appListModel()->setFilterValue(
                         AppListModel::FilterParked, m_cbFilterParked->checkState());
             });
+    m_cbFilterParked->setObjectName("cbFilterParked");
 
     m_cbFilterAsk = ControlUtil::createCheckStateBox(
             ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ASK), Qt::PartiallyChecked,
@@ -494,23 +520,27 @@ void ProgramsWindow::setupFilterCheckBoxes()
                 appListModel()->setFilterValue(
                         AppListModel::FilterAsk, m_cbFilterAsk->checkState());
             });
+    m_cbFilterAsk->setObjectName("cbFilterAsk");
 
     m_cbFilterKillProcess =
             ControlUtil::createCheckStateBox(":/icons/scull.png", Qt::PartiallyChecked, [&] {
                 appListModel()->setFilterValue(
                         AppListModel::FilterKillProcess, m_cbFilterKillProcess->checkState());
             });
+    m_cbFilterKillProcess->setObjectName("cbFilterKillProcess");
 
     m_cbFilterObsolete =
             ControlUtil::createCheckStateBox(":/icons/recycle.png", Qt::PartiallyChecked, [&] {
                 appListModel()->setFilterValue(
                         AppListModel::FilterObsolete, m_cbFilterObsolete->checkState());
             });
+    m_cbFilterObsolete->setObjectName("cbFilterObsolete");
 }
 
 void ProgramsWindow::setupFilterGroups()
 {
     m_btFilterGroups = new GroupsSelector();
+    m_btFilterGroups->setObjectName("btFilterGroups");
     m_btFilterGroups->menuButton()->setFlat(true);
     m_btFilterGroups->hideListWindowButton();
 
@@ -531,6 +561,7 @@ void ProgramsWindow::setupFilterClear()
         m_cbFilterObsolete->setCheckState(Qt::PartiallyChecked);
         m_btFilterGroups->setMask(0);
     });
+    m_btClearFilter->setObjectName("btClearFilter");
 }
 
 QLayout *ProgramsWindow::setupSortStatesLayout()
@@ -538,14 +569,18 @@ QLayout *ProgramsWindow::setupSortStatesLayout()
     m_btSortAllowed = createCheckableToolButton(
             ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ALLOW),
             [&] { onSortStateClicked(AppListModel::SortAllowed); });
+    m_btSortAllowed->setObjectName("btSortAllowed");
     m_btSortBlocked = createCheckableToolButton(
             ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_BLOCK),
             [&] { onSortStateClicked(AppListModel::SortBlocked); });
+    m_btSortBlocked->setObjectName("btSortBlocked");
     m_btSortAsked =
             createCheckableToolButton(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ASK),
                     [&] { onSortStateClicked(AppListModel::SortAsked); });
+    m_btSortAsked->setObjectName("btSortAsked");
     m_btSortAlerted = createCheckableToolButton(
             ":/icons/error.png", [&] { onSortStateClicked(AppListModel::SortAlerted); });
+    m_btSortAlerted->setObjectName("btSortAlerted");
 
     appListModel()->setSortState(qBound(AppListModel::SortNone,
             AppListModel::SortState(iniUser().progWindowSortState()), AppListModel::SortAsked));
@@ -574,6 +609,7 @@ QLayout *ProgramsWindow::setupSortStatesLayout()
 void ProgramsWindow::setupTableApps()
 {
     m_appListView = new TableView();
+    m_appListView->setObjectName("appListView");
     m_appListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_appListView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
@@ -633,6 +669,7 @@ void ProgramsWindow::setupTableAppsHeader()
 void ProgramsWindow::setupAppInfoRow()
 {
     m_appInfoRow = new AppInfoRow();
+    m_appInfoRow->setObjectName("appInfoRow");
 
     const auto refreshAppInfoVersion = [&] {
         m_appInfoRow->refreshAppInfoVersion(appListCurrentPath(), appInfoCache());

@@ -52,6 +52,7 @@ void FontSelector::updateFontText()
 void FontSelector::setupUi()
 {
     m_editFont = new LineEdit();
+    m_editFont->setObjectName("editFont");
     m_editFont->setFocusPolicy(Qt::NoFocus);
     m_editFont->setContextMenuPolicy(Qt::PreventContextMenu);
     m_editFont->setClearButtonEnabled(true);
@@ -65,6 +66,7 @@ void FontSelector::setupUi()
 
     m_btSelectFont =
             ControlUtil::createIconToolButton(":/icons/font.png", [&] { selectFontDialog(); });
+    m_btSelectFont->setObjectName("btSelectFont");
 
     auto layout = ControlUtil::createRowLayout(m_editFont, m_btSelectFont);
     layout->setSpacing(0);

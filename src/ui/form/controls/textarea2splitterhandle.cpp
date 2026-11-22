@@ -52,14 +52,19 @@ void TextArea2SplitterHandle::setupUi()
 
     m_btMoveAllFrom1To2 = ControlUtil::createSplitterButton(":/icons/control_fastforward.png",
             [&] { TextAreaUtil::moveAllLines(textArea1(), textArea2()); });
+    m_btMoveAllFrom1To2->setObjectName("btMoveAllFrom1To2");
     m_btMoveSelectedFrom1To2 = ControlUtil::createSplitterButton(":/icons/control_end.png",
             [&] { TextAreaUtil::moveSelectedLines(textArea1(), textArea2()); });
+    m_btMoveSelectedFrom1To2->setObjectName("btMoveSelectedFrom1To2");
     m_btInterchangeAll = ControlUtil::createSplitterButton(":/icons/control_repeat.png",
             [&] { TextAreaUtil::interchangeAllLines(textArea1(), textArea2()); });
+    m_btInterchangeAll->setObjectName("btInterchangeAll");
     m_btMoveSelectedFrom2To1 = ControlUtil::createSplitterButton(":/icons/control_start.png",
             [&] { TextAreaUtil::moveSelectedLines(textArea2(), textArea1()); });
+    m_btMoveSelectedFrom2To1->setObjectName("btMoveSelectedFrom2To1");
     m_btMoveAllFrom2To1 = ControlUtil::createSplitterButton(":/icons/control_rewind.png",
             [&] { TextAreaUtil::moveAllLines(textArea2(), textArea1()); });
+    m_btMoveAllFrom2To1->setObjectName("btMoveAllFrom2To1");
 
     m_buttonsLayout = ControlUtil::createLayout(direction);
     m_buttonsLayout->setSpacing(10);

@@ -112,6 +112,7 @@ void MaskSelector::setupUi(WindowCode listWindowCode, const QString &iconPath)
 {
     // Menu
     m_btMenu = new PushButton();
+    m_btMenu->setObjectName("btMenu");
 
     m_listLayout = new QVBoxLayout();
 
@@ -123,6 +124,7 @@ void MaskSelector::setupUi(WindowCode listWindowCode, const QString &iconPath)
     // List Window
     m_btListWindow = ControlUtil::createIconToolButton(
             iconPath, [listWindowCode] { windowManager()->showWindowByCode(listWindowCode); });
+    m_btListWindow->setObjectName("btListWindow");
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_btMenu, m_btListWindow }, /*margin=*/0);
     layout->setSpacing(0);

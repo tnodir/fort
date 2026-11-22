@@ -299,6 +299,7 @@ void FilterSimWindow::setupUi()
 
     // Simulate
     m_btSimulate = ControlUtil::createButton(":/icons/play.png", [&] { simulateConn(); });
+    m_btSimulate->setObjectName("btSimulate");
 
     // Result
     m_gbResult = new QGroupBox();
@@ -338,6 +339,7 @@ QLayout *FilterSimWindow::setupConnLayout()
 
     // Direction
     m_comboDirection = createFixedComboBox();
+    m_comboDirection->setObjectName("comboDirection");
     m_comboDirection->setFixedWidth(110); // as the Protocol's combo
 
     layout->addRow("Direction:", m_comboDirection);
@@ -345,6 +347,7 @@ QLayout *FilterSimWindow::setupConnLayout()
 
     // Protocol
     m_protocolSelector = new ProtocolSelector();
+    m_protocolSelector->setObjectName("protocolSelector");
     m_protocolSelector->setProtocol(6); // TCP
 
     layout->addRow("Protocol:", m_protocolSelector);
@@ -370,16 +373,19 @@ QLayout *FilterSimWindow::setupConnLayout()
 
     // Loopback
     m_cbLoopback = new QCheckBox();
+    m_cbLoopback->setObjectName("cbLoopback");
 
     layout->addRow(QString(), m_cbLoopback);
 
     // DNS Forwarder
     m_cbDnsForwarder = new QCheckBox();
+    m_cbDnsForwarder->setObjectName("cbDnsForwarder");
 
     layout->addRow(QString(), m_cbDnsForwarder);
 
     // Network Profile
     m_comboProfile = createFixedComboBox();
+    m_comboProfile->setObjectName("comboProfile");
     m_comboProfile->setMinimumWidth(110);
 
     layout->addRow("Network Profile:", m_comboProfile);
@@ -392,6 +398,7 @@ QLayout *FilterSimWindow::setupAppPathLayout()
 {
     // Path
     m_editAppPath = new LineEdit();
+    m_editAppPath->setObjectName("editAppPath");
     m_editAppPath->setMaxLength(1024);
 
     connect(m_editAppPath, &QLineEdit::returnPressed, this, &FilterSimWindow::simulateConn);
@@ -405,6 +412,7 @@ QLayout *FilterSimWindow::setupAppPathLayout()
             m_editAppPath->setText(FileUtil::toNativeSeparators(filePath));
         }
     });
+    m_btSelectFile->setObjectName("btSelectFile");
 
     auto layout = new QHBoxLayout();
     layout->addWidget(m_editAppPath);
@@ -417,6 +425,7 @@ QLayout *FilterSimWindow::setupRemoteLayout()
 {
     // IP
     m_editRemoteIp = new LineEdit();
+    m_editRemoteIp->setObjectName("editRemoteIp");
     m_editRemoteIp->setMaxLength(64);
     m_editRemoteIp->setClearButtonEnabled(true);
 
@@ -426,6 +435,7 @@ QLayout *FilterSimWindow::setupRemoteLayout()
     m_labelRemotePort = ControlUtil::createLabel();
 
     m_spinRemotePort = createPortSpinBox();
+    m_spinRemotePort->setObjectName("spinRemotePort");
     m_spinRemotePort->setValue(443);
 
     return createIpPortLayout(m_editRemoteIp, m_labelRemotePort, m_spinRemotePort);
@@ -434,6 +444,7 @@ QLayout *FilterSimWindow::setupRemoteLayout()
 void FilterSimWindow::setupHostName()
 {
     m_editHostName = new LineEdit();
+    m_editHostName->setObjectName("editHostName");
     m_editHostName->setMaxLength(253);
     m_editHostName->setMaximumWidth(200); // as the IPs' fields
     m_editHostName->setClearButtonEnabled(true);
@@ -445,6 +456,7 @@ QLayout *FilterSimWindow::setupLocalLayout()
 {
     // IP
     m_editLocalIp = new LineEdit();
+    m_editLocalIp->setObjectName("editLocalIp");
     m_editLocalIp->setMaxLength(64);
     m_editLocalIp->setClearButtonEnabled(true);
 
@@ -454,6 +466,7 @@ QLayout *FilterSimWindow::setupLocalLayout()
     m_labelLocalPort = ControlUtil::createLabel();
 
     m_spinLocalPort = createPortSpinBox();
+    m_spinLocalPort->setObjectName("spinLocalPort");
 
     return createIpPortLayout(m_editLocalIp, m_labelLocalPort, m_spinLocalPort);
 }

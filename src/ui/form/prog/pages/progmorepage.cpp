@@ -58,24 +58,29 @@ void ProgMorePage::setupOptions()
 {
     // Kill Child
     m_cbKillChild = ControlUtil::createCheckBox(":/icons/scull.png");
+    m_cbKillChild->setObjectName("cbKillChild");
 
     connect(m_cbKillChild, &QCheckBox::clicked, ctrl(),
             &ProgramEditController::warnDangerousOption);
 
     // Parked
     m_cbParked = ControlUtil::createCheckBox(":/icons/parking.png");
+    m_cbParked->setObjectName("cbParked");
 }
 
 void ProgMorePage::setupLogConn()
 {
     // Collect Traffic Statistics
     m_cbLogStat = new QCheckBox();
+    m_cbLogStat->setObjectName("cbLogStat");
 
     // Log Allowed Connections
     m_cbLogAllowedConn = new QCheckBox();
+    m_cbLogAllowedConn->setObjectName("cbLogAllowedConn");
 
     // Log Blocked Connections
     m_cbLogBlockedConn = new QCheckBox();
+    m_cbLogBlockedConn->setObjectName("cbLogBlockedConn");
 }
 
 void ProgMorePage::fillApp(App &app) const

@@ -70,10 +70,12 @@ void TerminatingRuleSelector::setupUi()
 {
     // Action
     m_comboAction = ControlUtil::createComboBox({ QString(), QString(), QString(), QString() });
+    m_comboAction->setObjectName("comboAction");
     m_comboAction->setMinimumWidth(100);
 
     // Alert
     m_cbAlert = ControlUtil::createCheckBox(":/icons/error.png");
+    m_cbAlert->setObjectName("cbAlert");
 
     // Terminate Check Box
     setupCbTerminate();
@@ -87,6 +89,7 @@ void TerminatingRuleSelector::setupUi()
 void TerminatingRuleSelector::setupCbTerminate()
 {
     m_cbTerminate = new QCheckBox();
+    m_cbTerminate->setObjectName("cbTerminate");
 
     const auto refreshTerminateEnabled = [&](bool checked) {
         m_comboAction->setEnabled(checked);

@@ -331,9 +331,11 @@ void MainWindow::setupUi()
 void MainWindow::setupLockActions()
 {
     m_actLock = new QAction(IconCache::icon(":/icons/lock.png"), QString(), this);
+    m_actLock->setObjectName("actLock");
     connect(m_actLock, &QAction::triggered, windowManager(), &WindowManager::resetCheckedPassword);
 
     m_actUnlock = new QAction(IconCache::icon(":/icons/lock_open.png"), QString(), this);
+    m_actUnlock->setObjectName("actUnlock");
     connect(
             m_actUnlock, &QAction::triggered, this,
             [] { windowManager()->checkPassword(WindowMain); }, Qt::QueuedConnection);
@@ -353,6 +355,7 @@ QWidget *MainWindow::setupHeader()
     auto toolBar = new MainToolBar(this);
 
     m_menuBar = new MainMenuBar(this);
+    m_menuBar->setObjectName("menuBar");
 
     layout->addWidget(m_menuBar, 0, 0);
     layout->addWidget(toolBar, 1, 0);

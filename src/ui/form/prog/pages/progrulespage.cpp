@@ -72,12 +72,14 @@ void ProgRulesPage::setupUi()
 {
     // Rule Set
     m_ruleSetArea = new RuleSetArea(Rule::assignedRuleTypes());
+    m_ruleSetArea->setObjectName("ruleSetArea");
 
     connect(m_ruleSetArea->ruleSetModel(), &RuleSetModel::rowCountChanged, this,
             &ProgRulesPage::rulesCountChanged);
 
     // Terminating Rule
     m_terminatingRuleSelector = new TerminatingRuleSelector();
+    m_terminatingRuleSelector->setObjectName("terminatingRuleSelector");
 
     // Main Layout
     auto layout = new QVBoxLayout();

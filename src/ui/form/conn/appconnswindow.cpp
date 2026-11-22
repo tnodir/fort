@@ -125,6 +125,7 @@ void AppConnsWindow::setupUi()
 void AppConnsWindow::setupEditAppName()
 {
     m_editAppName = new LineEdit();
+    m_editAppName->setObjectName("editAppName");
     m_editAppName->setReadOnly(true);
     m_editAppName->setMinimumWidth(100);
     m_editAppName->setMaximumWidth(300);

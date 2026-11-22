@@ -35,8 +35,7 @@ private:
 
     void setupTrafficBox();
     void setupLogStat();
-    void setupLogStatNoFilter();
-    void setupLogStatReinjected();
+    void setupLogStatFlags();
     void setupActivePeriod();
     void setupMonthStart();
     void setupTrafKeep();

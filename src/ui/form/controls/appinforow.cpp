@@ -25,9 +25,12 @@ void AppInfoRow::retranslateUi()
 void AppInfoRow::setupUi()
 {
     m_btAppCopyPath = ControlUtil::createIconToolButton(":/icons/page_copy.png");
+    m_btAppCopyPath->setObjectName("btAppCopyPath");
     m_btAppOpenFolder = ControlUtil::createIconToolButton(":/icons/folder.png");
+    m_btAppOpenFolder->setObjectName("btAppOpenFolder");
 
     m_lineAppPath = ControlUtil::createLineLabel();
+    m_lineAppPath->setObjectName("lineAppPath");
 
     m_labelAppProductName = ControlUtil::createLabel();
     m_labelAppProductName->setFont(GuiUtil::fontBold());

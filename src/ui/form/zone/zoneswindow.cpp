@@ -135,12 +135,15 @@ QLayout *ZonesWindow::setupHeader()
     auto editMenu = ControlUtil::createMenu(this);
 
     m_actAddZone = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
+    m_actAddZone->setObjectName("actAddZone");
     m_actAddZone->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actEditZone = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
+    m_actEditZone->setObjectName("actEditZone");
     m_actEditZone->setShortcut(Qt::Key_Enter);
 
     m_actRemoveZone = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
+    m_actRemoveZone->setObjectName("actRemoveZone");
     m_actRemoveZone->setShortcut(Qt::Key_Delete);
 
     connect(m_actAddZone, &QAction::triggered, this, &ZonesWindow::addNewZone);
@@ -151,6 +154,7 @@ QLayout *ZonesWindow::setupHeader()
     });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
+    m_btEdit->setObjectName("btEdit");
     m_btEdit->setMenu(editMenu);
 
     // Save As Text
@@ -173,17 +177,20 @@ void ZonesWindow::setupSaveAsText()
 {
     m_btSaveAsText =
             ControlUtil::createFlatToolButton(":/icons/save_as.png", [&] { saveZoneAsText(); });
+    m_btSaveAsText->setObjectName("btSaveAsText");
 }
 
 void ZonesWindow::setupTaskRun()
 {
     m_btUpdateZones =
             ControlUtil::createFlatToolButton(":/icons/play.png", [&] { downloadZones(); });
+    m_btUpdateZones->setObjectName("btUpdateZones");
 }
 
 void ZonesWindow::setupTableZones()
 {
     m_zoneListView = new TableView();
+    m_zoneListView->setObjectName("zoneListView");
     m_zoneListView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_zoneListView->setSelectionBehavior(QAbstractItemView::SelectRows);
 

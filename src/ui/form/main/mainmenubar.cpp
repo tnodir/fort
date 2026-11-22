@@ -82,9 +82,12 @@ void MainMenuBar::setupBackupMenu()
     m_backupMenu = m_fileMenu->addMenu(IconCache::icon(":/icons/save_as.png"), QString());
 
     m_actExport = m_backupMenu->addAction(IconCache::icon(":/icons/disk.png"), QString());
+    m_actExport->setObjectName("actExport");
     m_actImport = m_backupMenu->addAction(IconCache::icon(":/icons/folder.png"), QString());
+    m_actImport->setObjectName("actImport");
     m_actImportApps =
             m_backupMenu->addAction(IconCache::icon(":/icons/application.png"), QString());
+    m_actImportApps->setObjectName("actImportApps");
 
     auto ctrl = new BackupController(this);
 
@@ -98,6 +101,7 @@ void MainMenuBar::setupToolsMenu()
     m_toolsMenu = addMenu(QString());
 
     m_actReviewAlerts = m_toolsMenu->addAction(IconCache::icon(":/icons/error.png"), QString());
+    m_actReviewAlerts->setObjectName("actReviewAlerts");
     connect(m_actReviewAlerts, &QAction::triggered, windowManager(),
             [] { windowManager()->showProgramAlertWindow(); });
 }
@@ -108,6 +112,7 @@ void MainMenuBar::setupWindowMenu()
 
     m_actInstallation =
             m_windowMenu->addAction(IconCache::icon(":/icons/server_components.png"), QString());
+    m_actInstallation->setObjectName("actInstallation");
     connect(m_actInstallation, &QAction::triggered, windowManager(),
             &WindowManager::showInstallationWindow);
 
@@ -115,6 +120,7 @@ void MainMenuBar::setupWindowMenu()
 
     m_actResetLayout =
             m_windowMenu->addAction(IconCache::icon(":/icons/arrow_refresh_small.png"), QString());
+    m_actResetLayout->setObjectName("actResetLayout");
     connect(m_actResetLayout, &QAction::triggered, m_mainWindow, &MainWindow::resetDocksLayout);
 }
 
@@ -124,6 +130,7 @@ void MainMenuBar::setupHelpMenu()
     m_helpMenu->setToolTipsVisible(true);
 
     m_actHelp = m_mainWindow->helpAction();
+    m_actHelp->setObjectName("actHelp");
     m_actHelp->setIcon(IconCache::icon(AppLinks::iconPath(AppLinks::LinkHelp)));
     m_helpMenu->addAction(m_actHelp);
 
@@ -145,9 +152,11 @@ void MainMenuBar::setupHelpMenu()
     m_helpMenu->addSeparator();
 
     m_actCheckUpdates = m_helpMenu->addAction(IconCache::icon(":/icons/download.png"), QString());
+    m_actCheckUpdates->setObjectName("actCheckUpdates");
     connect(m_actCheckUpdates, &QAction::triggered, windowManager(),
             &WindowManager::showUpdatesWindow);
 
     m_actAbout = m_helpMenu->addAction(IconCache::icon(":/icons/information.png"), QString());
+    m_actAbout->setObjectName("actAbout");
     connect(m_actAbout, &QAction::triggered, windowManager(), &WindowManager::showAboutBox);
 }

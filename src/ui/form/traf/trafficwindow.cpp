@@ -218,15 +218,20 @@ void TrafficWindow::setupClearMenu()
     auto menu = ControlUtil::createMenu(this);
 
     m_actAddProgram = menu->addAction(IconCache::icon(":/icons/application.png"), QString());
+    m_actAddProgram->setObjectName("actAddProgram");
     m_actAddProgram->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actRemoveApp = menu->addAction(IconCache::icon(":/icons/delete.png"), QString());
+    m_actRemoveApp->setObjectName("actRemoveApp");
     m_actRemoveApp->setShortcut(Qt::Key_Delete);
 
     m_actResetTotal = menu->addAction(QString());
+    m_actResetTotal->setObjectName("actResetTotal");
     m_actClearAll = menu->addAction(IconCache::icon(":/icons/broom.png"), QString());
+    m_actClearAll->setObjectName("actClearAll");
 
     m_actFindApps = menu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
+    m_actFindApps->setObjectName("actFindApps");
     m_actFindApps->setShortcut(QKeySequence::Find);
 
     connect(m_actAddProgram, &QAction::triggered, this, [&] {
@@ -265,6 +270,7 @@ void TrafficWindow::setupClearMenu()
     connect(m_actFindApps, &QAction::triggered, this, [&] { m_editSearch->setFocus(); });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
+    m_btEdit->setObjectName("btEdit");
     m_btEdit->setMenu(menu);
 }
 
@@ -274,12 +280,14 @@ void TrafficWindow::setupRefresh()
         appStatModel()->refresh();
         trafListModel()->reset();
     });
+    m_btRefresh->setObjectName("btRefresh");
 }
 
 void TrafficWindow::setupEditSearch()
 {
     m_editSearch = ControlUtil::createLineEdit(
             QString(), [&](const QString &text) { appStatModel()->setTextFilter(text); });
+    m_editSearch->setObjectName("editSearch");
     m_editSearch->setClearButtonEnabled(true);
     m_editSearch->setMaxLength(200);
     m_editSearch->setMinimumWidth(100);
@@ -299,12 +307,14 @@ void TrafficWindow::setupTrafUnits()
 
         confManager()->saveIniUser();
     });
+    m_comboTrafUnit->setObjectName("comboTrafUnit");
     m_comboTrafUnit->setMinimumWidth(100);
 }
 
 void TrafficWindow::setupAppListView()
 {
     m_appListView = new TableView();
+    m_appListView->setObjectName("appListView");
     m_appListView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_appListView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
@@ -335,6 +345,7 @@ void TrafficWindow::setupAppListHeader()
 void TrafficWindow::setupTabBar()
 {
     m_tabBar = new QTabBar();
+    m_tabBar->setObjectName("tabBar");
     m_tabBar->setShape(QTabBar::RoundedNorth);
 
     for (int n = 4; --n >= 0;) {
@@ -348,6 +359,7 @@ void TrafficWindow::setupTabBar()
 void TrafficWindow::setupTableTraf()
 {
     m_tableTraf = new TableView();
+    m_tableTraf->setObjectName("tableTraf");
     m_tableTraf->setSelectionMode(QAbstractItemView::SingleSelection);
     m_tableTraf->setSelectionBehavior(QAbstractItemView::SelectRows);
 
@@ -413,6 +425,7 @@ void TrafficWindow::setupSplitter()
 void TrafficWindow::setupAppInfoRow()
 {
     m_appInfoRow = new AppInfoRow();
+    m_appInfoRow->setObjectName("appInfoRow");
 
     const auto refreshAppInfoVersion = [&] {
         const auto &appStatRow = currentAppStatRow();

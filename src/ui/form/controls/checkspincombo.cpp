@@ -12,6 +12,7 @@ CheckSpinCombo::CheckSpinCombo(QWidget *parent) : SpinCombo(parent)
 void CheckSpinCombo::setupUi()
 {
     m_checkBox = new QCheckBox();
+    m_checkBox->setObjectName("checkBox");
 
     boxLayout()->insertWidget(0, m_checkBox, 1);
 

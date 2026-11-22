@@ -76,6 +76,7 @@ QBoxLayout *WeekDaysSelector::setupMenuLayout()
 
     // All Week Days: checks all of them, unless they're already checked
     m_cbAllWeekDays = new QCheckBox();
+    m_cbAllWeekDays->setObjectName("cbAllWeekDays");
 
     connect(m_cbAllWeekDays, &QCheckBox::clicked, this, &WeekDaysSelector::onAllWeekDaysClicked);
 

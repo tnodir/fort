@@ -294,6 +294,7 @@ void OptionsPage::setupTrafficBox()
         conf().setFilterEnabled(checked);
         ctrl()->setFlagsEdited(FirewallConf::FlagFilterEnabled);
     });
+    m_cbFilterEnabled->setObjectName("cbFilterEnabled");
 
     // Block Traffic
     auto blockTrafficLayout = setupBlockTrafficLayout();
@@ -306,6 +307,7 @@ void OptionsPage::setupTrafficBox()
         conf().setGroupBlocked(checked);
         ctrl()->setFlagsEdited();
     });
+    m_cbGroupBlocked->setObjectName("cbGroupBlocked");
 
     // Speed Limiter Enabled
     m_cbSpeedLimiterEnabled =
@@ -313,6 +315,7 @@ void OptionsPage::setupTrafficBox()
                 conf().setSpeedLimiterEnabled(checked);
                 ctrl()->setFlagsEdited();
             });
+    m_cbSpeedLimiterEnabled->setObjectName("cbSpeedLimiterEnabled");
 
     // Timed Options
     setupTimedOptions();
@@ -340,6 +343,7 @@ QLayout *OptionsPage::setupBlockTrafficLayout()
 
     m_comboBlockTraffic = ControlUtil::createComboBox(
             FirewallConf::blockTrafficNames(), [&](int index) { changeBlockTraffic(index); });
+    m_comboBlockTraffic->setObjectName("comboBlockTraffic");
     m_comboBlockTraffic->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelBlockTraffic, m_comboBlockTraffic);
@@ -351,6 +355,7 @@ QLayout *OptionsPage::setupFilterModeLayout()
 
     m_comboFilterMode = ControlUtil::createComboBox(
             FirewallConf::filterModeNames(), [&](int index) { changeFilterMode(index); });
+    m_comboFilterMode->setObjectName("comboFilterMode");
     m_comboFilterMode->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelFilterMode, m_comboFilterMode);
@@ -368,6 +373,7 @@ void OptionsPage::setupTimedOptions()
                             ctrl()->setIniEdited();
                         }
                     });
+    m_lscFilterOffSeconds->setObjectName("lscFilterOffSeconds");
 
     m_lscAutoLearnSeconds =
             ControlUtil::createSpinCombo({ ini().autoLearnSeconds(), 0, timedOptionSecondsMax },
@@ -377,6 +383,7 @@ void OptionsPage::setupTimedOptions()
                             ctrl()->setIniEdited();
                         }
                     });
+    m_lscAutoLearnSeconds->setObjectName("lscAutoLearnSeconds");
 
     m_lscAskToConnectSeconds = ControlUtil::createSpinCombo(
             { conf().askToConnectSeconds(), 1, askToConnectSecondsMax },
@@ -386,6 +393,7 @@ void OptionsPage::setupTimedOptions()
                     ctrl()->setFlagsEdited();
                 }
             });
+    m_lscAskToConnectSeconds->setObjectName("lscAskToConnectSeconds");
 }
 
 void OptionsPage::setupProtectionBox()
@@ -394,20 +402,25 @@ void OptionsPage::setupProtectionBox()
         conf().setBootFilter(checked);
         ctrl()->setFlagsEdited();
     });
+    m_cbBootFilter->setObjectName("cbBootFilter");
 
     m_cbStealthMode = ControlUtil::createCheckBox(conf().stealthMode(), [&](bool checked) {
         conf().setStealthMode(checked);
         ctrl()->setFlagsEdited();
     });
+    m_cbStealthMode->setObjectName("cbStealthMode");
 
     m_cbNoServiceControl =
             createIniCheckBox(&IniOptions::noServiceControl, &IniOptions::setNoServiceControl);
+    m_cbNoServiceControl->setObjectName("cbNoServiceControl");
 
     m_cbDisableCmdLine =
             createIniCheckBox(&IniOptions::disableCmdLine, &IniOptions::setDisableCmdLine);
+    m_cbDisableCmdLine->setObjectName("cbDisableCmdLine");
 
     m_cbCheckPasswordOnUninstall = createIniCheckBox(
             &IniOptions::checkPasswordOnUninstall, &IniOptions::setCheckPasswordOnUninstall);
+    m_cbCheckPasswordOnUninstall->setObjectName("cbCheckPasswordOnUninstall");
 
     if (!Fort::settings()->hasMasterAdmin()) {
         m_cbCheckPasswordOnUninstall->setEnabled(false);
@@ -447,6 +460,7 @@ QLayout *OptionsPage::setupPasswordLayout()
         ctrl()->setIniEdited();
         setPasswordEdited(true);
     });
+    m_cbPassword->setObjectName("cbPassword");
 
     setupEditPassword();
 
@@ -466,6 +480,7 @@ void OptionsPage::setupEditPassword()
         ini().setPassword(text);
         ctrl()->setIniEdited();
     });
+    m_editPassword->setObjectName("editPassword");
     m_editPassword->setClearButtonEnabled(true);
     m_editPassword->setEchoMode(QLineEdit::Password);
     m_editPassword->setMaxLength(32);
@@ -478,6 +493,7 @@ void OptionsPage::setupPasswordLock()
         Fort::settings()->resetCheckedPassword();
         m_btPasswordLock->hide();
     });
+    m_btPasswordLock->setObjectName("btPasswordLock");
 
     connect(Fort::settings(), &FortSettings::passwordCheckedChanged, this,
             &OptionsPage::updatePasswordLock);
@@ -494,6 +510,7 @@ void OptionsPage::setupProgBox()
                     ctrl()->setIniEdited();
                 }
             });
+    m_cbRemoveLearntApps->setObjectName("cbRemoveLearntApps");
 
     m_cbPurgeOnMounted = ControlUtil::createCheckBox(ini().progPurgeOnMounted(), [&](bool checked) {
         if (ini().progPurgeOnMounted() != checked) {
@@ -501,6 +518,7 @@ void OptionsPage::setupProgBox()
             ctrl()->setIniEdited();
         }
     });
+    m_cbPurgeOnMounted->setObjectName("cbPurgeOnMounted");
 
     // Layout
     auto layout = ControlUtil::createVLayoutByWidgets({ m_cbLogApp, ControlUtil::createSeparator(),
@@ -518,6 +536,7 @@ void OptionsPage::setupLogApp()
             ctrl()->setFlagsEdited();
         }
     });
+    m_cbLogApp->setObjectName("cbLogApp");
 
     m_cbLogApp->setFont(GuiUtil::fontBold());
 }
@@ -526,12 +545,15 @@ void OptionsPage::setupUpdateBox()
 {
     m_cbUpdateKeepCurrentVersion = createIniCheckBox(
             &IniOptions::updateKeepCurrentVersion, &IniOptions::setUpdateKeepCurrentVersion);
+    m_cbUpdateKeepCurrentVersion->setObjectName("cbUpdateKeepCurrentVersion");
 
     m_cbUpdateAutoDownload =
             createIniCheckBox(&IniOptions::updateAutoDownload, &IniOptions::setUpdateAutoDownload);
+    m_cbUpdateAutoDownload->setObjectName("cbUpdateAutoDownload");
 
     m_cbUpdateAutoInstall =
             createIniCheckBox(&IniOptions::updateAutoInstall, &IniOptions::setUpdateAutoInstall);
+    m_cbUpdateAutoInstall->setObjectName("cbUpdateAutoInstall");
 
     // Layout
     auto layout = ControlUtil::createVLayoutByWidgets(
@@ -544,13 +566,16 @@ void OptionsPage::setupUpdateBox()
 void OptionsPage::setupLogsBox()
 {
     m_cbLogDebug = createIniCheckBox(&IniOptions::logDebug, &IniOptions::setLogDebug);
+    m_cbLogDebug->setObjectName("cbLogDebug");
 
     m_cbLogConsole = createIniCheckBox(&IniOptions::logConsole, &IniOptions::setLogConsole);
+    m_cbLogConsole->setObjectName("cbLogConsole");
 
     m_cbTraceEvents = ControlUtil::createCheckBox(conf().traceEvents(), [&](bool checked) {
         conf().setTraceEvents(checked);
         ctrl()->setFlagsEdited();
     });
+    m_cbTraceEvents->setObjectName("cbTraceEvents");
 
     auto layout =
             ControlUtil::createVLayoutByWidgets({ m_cbLogDebug, m_cbLogConsole, m_cbTraceEvents });

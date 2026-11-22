@@ -156,15 +156,19 @@ QLayout *ProgNetworkPage::setupZonesLayout()
 
     // Block Inbound
     m_cbBlockInbound = ControlUtil::createCheckBox();
+    m_cbBlockInbound->setObjectName("cbBlockInbound");
 
     // Block Outbound
     m_cbBlockOutbound = ControlUtil::createCheckBox();
+    m_cbBlockOutbound->setObjectName("cbBlockOutbound");
 
     // LAN Only
     m_cbLanOnly = ControlUtil::createCheckBox();
+    m_cbLanOnly->setObjectName("cbLanOnly");
 
     // Zones
     m_btZones = new ZonesSelector();
+    m_btZones->setObjectName("btZones");
     m_btZones->setIsTristate(true);
 
     auto layout = new QHBoxLayout();
@@ -183,11 +187,15 @@ QLayout *ProgNetworkPage::setupSpeedLimitsLayout()
 {
     // Download
     m_cbSpeedLimitIn = ControlUtil::createCheckBox(":/icons/green_down.png");
+    m_cbSpeedLimitIn->setObjectName("cbSpeedLimitIn");
     m_comboSpeedLimitIn = createComboSpeedLimit(m_cbSpeedLimitIn);
+    m_comboSpeedLimitIn->setObjectName("comboSpeedLimitIn");
 
     // Upload
     m_cbSpeedLimitOut = ControlUtil::createCheckBox(":/icons/blue_up.png");
+    m_cbSpeedLimitOut->setObjectName("cbSpeedLimitOut");
     m_comboSpeedLimitOut = createComboSpeedLimit(m_cbSpeedLimitOut);
+    m_comboSpeedLimitOut->setObjectName("comboSpeedLimitOut");
 
     setupSpeedLimitsChanged();
 
@@ -218,14 +226,19 @@ QLayout *ProgNetworkPage::setupFiltersHeaderLayout()
 {
     m_btAddFilter = ControlUtil::createFlatToolButton(
             ":/icons/filter_add.png", [&] { openFilterEditForm(); });
+    m_btAddFilter->setObjectName("btAddFilter");
     m_btRemoveFilter = ControlUtil::createFlatToolButton(
             ":/icons/delete.png", [&] { m_filterListModel->remove(filterListCurrentIndex()); });
+    m_btRemoveFilter->setObjectName("btRemoveFilter");
     m_btEditFilter =
             ControlUtil::createFlatToolButton(":/icons/pencil.png", [&] { editCurrentFilter(); });
+    m_btEditFilter->setObjectName("btEditFilter");
     m_btUpFilter = ControlUtil::createIconToolButton(
             ":/icons/bullet_arrow_up.png", [&] { moveCurrentFilter(-1); });
+    m_btUpFilter->setObjectName("btUpFilter");
     m_btDownFilter = ControlUtil::createIconToolButton(
             ":/icons/bullet_arrow_down.png", [&] { moveCurrentFilter(1); });
+    m_btDownFilter->setObjectName("btDownFilter");
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_btAddFilter, m_btRemoveFilter,
             m_btEditFilter, ControlUtil::createVSeparator(), m_btUpFilter, m_btDownFilter,
@@ -237,6 +250,7 @@ QLayout *ProgNetworkPage::setupFiltersHeaderLayout()
 void ProgNetworkPage::setupFilterListView()
 {
     m_filterListView = new ListView();
+    m_filterListView->setObjectName("filterListView");
     m_filterListView->setFlow(QListView::TopToBottom);
     m_filterListView->setViewMode(QListView::ListMode);
     m_filterListView->setAlternatingRowColors(true);

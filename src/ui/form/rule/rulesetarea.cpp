@@ -53,14 +53,19 @@ void RuleSetArea::setupUi()
 QLayout *RuleSetArea::setupHeaderLayout()
 {
     m_btAddRule = ControlUtil::createFlatToolButton(":/icons/add.png", [&] { selectRuleDialog(); });
+    m_btAddRule->setObjectName("btAddRule");
     m_btRemoveRule = ControlUtil::createFlatToolButton(
             ":/icons/delete.png", [&] { ruleSetModel()->remove(ruleSetCurrentIndex()); });
+    m_btRemoveRule->setObjectName("btRemoveRule");
     m_btEditRule = ControlUtil::createFlatToolButton(
             ":/icons/pencil.png", [&] { editCurrentRuleDialog(); });
+    m_btEditRule->setObjectName("btEditRule");
     m_btUpRule = ControlUtil::createIconToolButton(
             ":/icons/bullet_arrow_up.png", [&] { ruleSetModel()->moveUp(ruleSetCurrentIndex()); });
+    m_btUpRule->setObjectName("btUpRule");
     m_btDownRule = ControlUtil::createIconToolButton(":/icons/bullet_arrow_down.png",
             [&] { ruleSetModel()->moveDown(ruleSetCurrentIndex()); });
+    m_btDownRule->setObjectName("btDownRule");
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_btAddRule, m_btRemoveRule, m_btEditRule,
             ControlUtil::createVSeparator(), m_btUpRule, m_btDownRule, /*stretch*/ nullptr });
@@ -71,6 +76,7 @@ QLayout *RuleSetArea::setupHeaderLayout()
 void RuleSetArea::setupRuleSetView()
 {
     m_ruleSetView = new ListView();
+    m_ruleSetView->setObjectName("ruleSetView");
     m_ruleSetView->setFlow(QListView::TopToBottom);
     m_ruleSetView->setViewMode(QListView::ListMode);
     m_ruleSetView->setUniformItemSizes(true);

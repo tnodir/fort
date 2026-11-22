@@ -169,6 +169,7 @@ void ZoneEditDialog::setupTabBar()
     auto usagesTab = setupUsagesTab();
 
     m_tabWidget = new QTabWidget();
+    m_tabWidget->setObjectName("tabWidget");
     m_tabWidget->addTab(generalTab, QString());
     m_tabWidget->addTab(usagesTab, QString());
 }
@@ -197,6 +198,7 @@ QWidget *ZoneEditDialog::setupUsagesTab()
 {
     // Usages
     m_usagesView = new UsagesView();
+    m_usagesView->setObjectName("usagesView");
 
     connect(m_usagesView, &UsagesView::usagesRequested, this,
             [&] { m_usagesView->setUsages(confZoneManager()->zoneUsages(m_zone.zoneId)); });
@@ -213,6 +215,7 @@ QLayout *ZoneEditDialog::setupNameLayout()
 
     // Name
     m_editName = new LineEdit();
+    m_editName->setObjectName("editName");
     m_editName->setMaxLength(256);
 
     layout->addRow("Name:", m_editName);
@@ -226,6 +229,7 @@ QLayout *ZoneEditDialog::setupNameLayout()
 
     // Enabled
     m_cbEnabled = new QCheckBox();
+    m_cbEnabled->setObjectName("cbEnabled");
 
     layout->addRow(QString(), m_cbEnabled);
 
@@ -239,6 +243,7 @@ void ZoneEditDialog::setupComboSources()
 
         initializeBySource(zoneSource);
     });
+    m_comboSources->setObjectName("comboSources");
 
     m_comboSources->clear();
     for (const auto &sourceVar : zoneListModel()->zoneSources()) {
@@ -265,11 +270,13 @@ QLayout *ZoneEditDialog::setupUrlLayout()
 
     // Custom URL
     m_cbCustomUrl = new QCheckBox();
+    m_cbCustomUrl->setObjectName("cbCustomUrl");
 
     layout->addRow(QString(), m_cbCustomUrl);
 
     // URL
     m_editUrl = new LineEdit();
+    m_editUrl->setObjectName("editUrl");
     m_editUrl->setEnabled(false);
     m_editUrl->setMaxLength(1024);
 
@@ -278,6 +285,7 @@ QLayout *ZoneEditDialog::setupUrlLayout()
 
     // Form Data
     m_editFormData = new LineEdit();
+    m_editFormData->setObjectName("editFormData");
     m_editFormData->setEnabled(false);
 
     layout->addRow("Form Data:", m_editFormData);
@@ -303,6 +311,7 @@ void ZoneEditDialog::setupTextFrame()
 QLayout *ZoneEditDialog::setupTextLayout()
 {
     m_editText = new PlainTextEdit();
+    m_editText->setObjectName("editText");
     m_editText->setPlaceholderText(NetUtil::localIpNetworksText());
 
     auto layout = ControlUtil::createVLayout();
@@ -320,10 +329,12 @@ QLayout *ZoneEditDialog::setupButtons()
             this->close();
         }
     });
+    m_btOk->setObjectName("btOk");
     m_btOk->setDefault(true);
 
     // Cancel
     m_btCancel = new QPushButton();
+    m_btCancel->setObjectName("btCancel");
     connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
 
     auto layout = new QHBoxLayout();

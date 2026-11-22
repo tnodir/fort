@@ -52,14 +52,17 @@ void TimePeriodSelector::retranslateUi()
 void TimePeriodSelector::setupUi()
 {
     m_cbPeriodEnabled = new QCheckBox();
+    m_cbPeriodEnabled->setObjectName("cbPeriodEnabled");
 
     m_comboPeriod = ControlUtil::createComboBox();
+    m_comboPeriod->setObjectName("comboPeriod");
     m_comboPeriod->setSizeAdjustPolicy(QComboBox::AdjustToContents);
     m_comboPeriod->setMinimumWidth(200);
 
     // Time Periods
     m_btTimePeriods = ControlUtil::createIconToolButton(
             ":/icons/clock.png", [&] { windowManager()->showTimePeriodsWindow(); });
+    m_btTimePeriods->setObjectName("btTimePeriods");
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { m_cbPeriodEnabled, m_comboPeriod, m_btTimePeriods }, /*margin=*/0);

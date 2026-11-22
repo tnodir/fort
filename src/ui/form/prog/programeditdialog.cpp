@@ -127,6 +127,7 @@ void ProgramEditDialog::setupMainLayout()
     auto layout = ControlUtil::createVLayout();
 
     m_mainPage = new ProgMainPage(ctrl());
+    m_mainPage->setObjectName("mainPage");
     layout->addWidget(m_mainPage);
 
     connect(m_mainPage, &ProgMainPage::pendingConnsWindowToggled, this,

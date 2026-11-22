@@ -265,11 +265,13 @@ QLayout *InstallationWindow::setupDriverButtonsLayout()
                 this, [&] { fortManager()->installDriver(); },
                 tr("Are you sure to reinstall the Driver?"));
     });
+    m_btInstallDriver->setObjectName("btInstallDriver");
     m_btRemoveDriver = ControlUtil::createButton(QString(), [&] {
         windowManager()->showConfirmBox(
                 this, [&] { fortManager()->removeDriver(); },
                 tr("Are you sure to remove the Driver?"));
     });
+    m_btRemoveDriver->setObjectName("btRemoveDriver");
 
     auto layout = new QHBoxLayout();
     layout->setSpacing(10);
@@ -317,11 +319,13 @@ QLayout *InstallationWindow::setupServiceButtonsLayout()
                 this, [&] { setServiceInstalled(true); },
                 tr("Are you sure to install the Service?"));
     });
+    m_btInstallService->setObjectName("btInstallService");
     m_btRemoveService = ControlUtil::createButton(QString(), [&] {
         windowManager()->showConfirmBox(
                 this, [&] { setServiceInstalled(false); },
                 tr("Are you sure to remove the Service?"));
     });
+    m_btRemoveService->setObjectName("btRemoveService");
 
     layout->addStretch();
     layout->addWidget(m_btInstallService);
@@ -370,6 +374,7 @@ QLayout *InstallationWindow::setupPortableButtonsLayout()
                 },
                 tr("Are you sure to uninstall the Fort Firewall?"));
     });
+    m_btUninstallPortable->setObjectName("btUninstallPortable");
 
     auto layout = new QHBoxLayout();
     layout->setSpacing(10);
@@ -394,9 +399,11 @@ QLayout *InstallationWindow::setupIntegrationLayout()
 {
     m_cbExplorerMenu = ControlUtil::createCheckBox(StartupUtil::isExplorerIntegrated(),
             [&](bool checked) { StartupUtil::setExplorerIntegrated(checked); });
+    m_cbExplorerMenu->setObjectName("cbExplorerMenu");
 
     m_cbSoundsPanel = ControlUtil::createCheckBox(StartupUtil::isSoundsPanelIntegrated(),
             [&](bool checked) { StartupUtil::setSoundsPanelIntegrated(checked); });
+    m_cbSoundsPanel->setObjectName("cbSoundsPanel");
 
     // Auto Run Row
     auto autoRunLayout = setupAutoRunLayout();
@@ -415,6 +422,7 @@ QLayout *InstallationWindow::setupAutoRunLayout()
 
     m_comboAutoRun = ControlUtil::createComboBox(QStringList(),
             [&](int index) { StartupUtil::setAutoRunMode(index, settings()->defaultLanguage()); });
+    m_comboAutoRun->setObjectName("comboAutoRun");
     m_comboAutoRun->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelAutoRun, m_comboAutoRun);

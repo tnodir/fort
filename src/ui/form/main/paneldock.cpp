@@ -124,11 +124,13 @@ QWidget *PanelDock::setupTitleBar()
     m_titleLabel = ControlUtil::createLabel();
 
     m_btWindowMenu = new WindowMenuButton();
+    m_btWindowMenu->setObjectName("btWindowMenu");
     m_btWindowMenu->setFormWindow(m_formWindow);
     m_btWindowMenu->setDocked(true);
 
     m_btClose = ControlUtil::createClearButton(
             [&] { windowManager()->closeWindowByCode(m_formWindow->windowCode()); });
+    m_btClose->setObjectName("btClose");
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { m_iconLabel, m_titleLabel, /*stretch*/ nullptr, m_btWindowMenu, m_btClose });

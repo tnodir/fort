@@ -269,39 +269,50 @@ QLayout *ConnectionsWindow::setupHeader()
     auto menu = ControlUtil::createMenu(this);
 
     m_actAddFilter = menu->addAction(IconCache::icon(":/icons/filter_add.png"), QString());
+    m_actAddFilter->setObjectName("actAddFilter");
     m_actAddFilter->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_N);
 
     m_actAddProgram = menu->addAction(IconCache::icon(":/icons/application.png"), QString());
+    m_actAddProgram->setObjectName("actAddProgram");
     m_actAddProgram->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     menu->addSeparator();
 
     m_actCopyAsFilter = menu->addAction(IconCache::icon(":/icons/script.png"), QString());
+    m_actCopyAsFilter->setObjectName("actCopyAsFilter");
     m_actCopyAsFilter->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_C);
 
     m_actCopy = menu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
+    m_actCopy->setObjectName("actCopy");
     m_actCopy->setShortcut(Qt::Key_Copy);
 
     m_actLookupIp = menu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
+    m_actLookupIp->setObjectName("actLookupIp");
     m_actLookupIp->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_L);
 
     m_actFilterSim = menu->addAction(IconCache::icon(":/icons/filter.png"), QString());
+    m_actFilterSim->setObjectName("actFilterSim");
 
     m_actRemoveConn = menu->addAction(IconCache::icon(":/icons/delete.png"), QString());
+    m_actRemoveConn->setObjectName("actRemoveConn");
     m_actRemoveConn->setShortcut(Qt::Key_Delete);
 
     m_actClearAll = menu->addAction(IconCache::icon(":/icons/broom.png"), QString());
+    m_actClearAll->setObjectName("actClearAll");
 
     menu->addSeparator();
 
     m_actFind = menu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
+    m_actFind->setObjectName("actFind");
     m_actFind->setShortcut(QKeySequence::Find);
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
+    m_btEdit->setObjectName("btEdit");
     m_btEdit->setMenu(menu);
 
     // Toolbar buttons
     m_btClearAll = ControlUtil::createFlatToolButton(":/icons/broom.png");
+    m_btClearAll->setObjectName("btClearAll");
 
     connect(m_btClearAll, &QAbstractButton::clicked, m_actClearAll, &QAction::trigger);
 
@@ -391,6 +402,7 @@ void ConnectionsWindow::setupEditSearch()
 {
     m_editSearch = ControlUtil::createLineEdit(
             QString(), [&](const QString &text) { connListModel()->setTextFilter(text); });
+    m_editSearch->setObjectName("editSearch");
     m_editSearch->setClearButtonEnabled(true);
     m_editSearch->setMaxLength(200);
     m_editSearch->setMinimumWidth(100);
@@ -408,6 +420,7 @@ void ConnectionsWindow::setupListOptions()
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
     m_btListOptions = ControlUtil::createButton(":/icons/table_gear.png");
+    m_btListOptions->setObjectName("btListOptions");
     m_btListOptions->setMenu(menu);
 }
 
@@ -419,6 +432,7 @@ void ConnectionsWindow::setupAutoScroll()
 
         updateAutoScroll();
     });
+    m_cbAutoScroll->setObjectName("cbAutoScroll");
 }
 
 void ConnectionsWindow::setupShowHostNames()
@@ -429,6 +443,7 @@ void ConnectionsWindow::setupShowHostNames()
 
         updateShowHostNames();
     });
+    m_cbShowHostNames->setObjectName("cbShowHostNames");
 }
 
 void ConnectionsWindow::setupLogConnIcons()
@@ -451,6 +466,7 @@ void ConnectionsWindow::setupLogConnIcons()
 void ConnectionsWindow::setupTableConnList()
 {
     m_connListView = new TableView();
+    m_connListView->setObjectName("connListView");
     m_connListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_connListView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
@@ -514,6 +530,7 @@ void ConnectionsWindow::setupTableConnListHeader()
 void ConnectionsWindow::setupAppInfoRow()
 {
     m_appInfoRow = new AppInfoRow();
+    m_appInfoRow->setObjectName("appInfoRow");
 
     const auto refreshAppInfoVersion = [&] {
         const auto &connRow = currentConnRow();

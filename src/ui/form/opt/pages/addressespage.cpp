@@ -122,14 +122,17 @@ void AddressesPage::setupLanBox()
         conf().setFilterLocals(checked);
         ctrl()->setFlagsEdited();
     });
+    m_cbFilterLocals->setObjectName("cbFilterLocals");
 
     m_cbFilterLocalNet = ControlUtil::createCheckBox(conf().filterLocalNet(), [&](bool checked) {
         conf().setFilterLocalNet(checked);
         ctrl()->setFlagsEdited();
     });
+    m_cbFilterLocalNet->setObjectName("cbFilterLocalNet");
 
     // LAN Addresses
     m_lanAddresses = createAddressesArea(FirewallConf::AddressListLan, ":/icons/hostname.png");
+    m_lanAddresses->setObjectName("lanAddresses");
     setupEditLanTextActions();
 
     // Layout
@@ -144,6 +147,7 @@ void AddressesPage::setupLanBox()
 void AddressesPage::setupEditLanTextActions()
 {
     m_actAddLocalNetworks = new QAction(IconCache::icon(":/icons/hostname.png"), QString(), this);
+    m_actAddLocalNetworks->setObjectName("actAddLocalNetworks");
 
     connect(m_actAddLocalNetworks, &QAction::triggered, this, [&] {
         TextAreaUtil::appendText(m_lanAddresses->editIpText(), NetUtil::localIpNetworksText());
@@ -157,10 +161,12 @@ void AddressesPage::setupInetBox()
     // Allow Inet Addresses
     m_allowInetAddresses =
             createAddressesArea(FirewallConf::AddressListAllowInet, ":/icons/global_telecom.png");
+    m_allowInetAddresses->setObjectName("allowInetAddresses");
 
     // Block Inet Addresses
     m_blockInetAddresses =
             createAddressesArea(FirewallConf::AddressListBlockInet, ":/icons/ip_block.png");
+    m_blockInetAddresses->setObjectName("blockInetAddresses");
 
     // Layout
     auto layout = ControlUtil::createVLayout(/*margin=*/-1);

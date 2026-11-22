@@ -94,6 +94,7 @@ void OptMainPage::setupTabBar()
     };
 
     m_tabWidget = new QTabWidget();
+    m_tabWidget->setObjectName("tabWidget");
     m_tabWidget->addTab(ControlUtil::wrapToScrollArea(optionsPage),
             IconCache::icon(":/icons/cog.png"), QString());
     m_tabWidget->addTab(ControlUtil::wrapToScrollArea(ifacePage),
@@ -109,6 +110,7 @@ void OptMainPage::setupTabBar()
 
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
+    m_btMenu->setObjectName("btMenu");
 
     m_tabWidget->setCornerWidget(m_btMenu);
 
@@ -121,8 +123,11 @@ QLayout *OptMainPage::setupButtonsLayout()
     setupDefault();
 
     m_btOk = new QPushButton();
+    m_btOk->setObjectName("btOk");
     m_btApply = new QPushButton();
+    m_btApply->setObjectName("btApply");
     m_btCancel = new QPushButton();
+    m_btCancel->setObjectName("btCancel");
 
     connect(m_btOk, &QAbstractButton::clicked, ctrl(), &OptionsController::saveChanges);
     connect(m_btApply, &QAbstractButton::clicked, ctrl(), &OptionsController::applyChanges);
@@ -145,12 +150,15 @@ void OptMainPage::setupDefault()
     auto menu = ControlUtil::createMenu(this);
 
     m_actDefaultAll = menu->addAction(QString());
+    m_actDefaultAll->setObjectName("actDefaultAll");
     m_actDefaultTab = menu->addAction(QString());
+    m_actDefaultTab->setObjectName("actDefaultTab");
 
     connect(m_actDefaultAll, &QAction::triggered, this, [&] { emit ctrl()->resetToDefault(); });
     connect(m_actDefaultTab, &QAction::triggered, this, [&] { currentPage()->onResetToDefault(); });
 
     m_btDefault = new QPushButton();
+    m_btDefault->setObjectName("btDefault");
     m_btDefault->setMenu(menu);
 }
 

@@ -117,16 +117,19 @@ void AppPendingConnsWindow::setupDecideButtons()
 {
     m_btAllow = ControlUtil::createIconToolButton(
             ":/icons/accept.png", [&] { decideConns(PendingConnManager::ConnAllow); });
+    m_btAllow->setObjectName("btAllow");
     m_btAllow->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_A));
 
     setupAllowProcessButton();
 
     m_btBlock = ControlUtil::createIconToolButton(
             ":/icons/deny.png", [&] { decideConns(PendingConnManager::ConnBlock); });
+    m_btBlock->setObjectName("btBlock");
     m_btBlock->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_B));
 
     m_btContinue = ControlUtil::createIconToolButton(":/icons/arrow_refresh_small.png",
             [&] { decideConns(PendingConnManager::ConnContinue); });
+    m_btContinue->setObjectName("btContinue");
     m_btContinue->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_C));
 }
 
@@ -144,6 +147,7 @@ void AppPendingConnsWindow::setupAllowProcessButton()
     // Till the process's exit
     m_btAllowProcess = ControlUtil::createIconToolButton(
             ":/icons/tick.png", [&] { allowProcesses(/*seconds=*/0); });
+    m_btAllowProcess->setObjectName("btAllowProcess");
     m_btAllowProcess->setPopupMode(QToolButton::MenuButtonPopup);
     m_btAllowProcess->setMenu(menu);
     m_btAllowProcess->setShortcut(QKeyCombination(Qt::ALT, Qt::Key_P));

@@ -93,6 +93,7 @@ QLayout *PasswordDialog::setupPasswordLayout()
     m_labelPassword = ControlUtil::createLabel();
 
     m_editPassword = new QLineEdit();
+    m_editPassword->setObjectName("editPassword");
     m_editPassword->setClearButtonEnabled(true);
     m_editPassword->setEchoMode(QLineEdit::Password);
     m_editPassword->setMinimumWidth(150);
@@ -111,6 +112,7 @@ QLayout *PasswordDialog::setupUnlockLayout()
     m_labelUnlock = ControlUtil::createLabel();
 
     m_comboUnlock = ControlUtil::createComboBox();
+    m_comboUnlock->setObjectName("comboUnlock");
     m_comboUnlock->setMinimumWidth(150);
 
     layout->addWidget(m_labelUnlock);
@@ -123,6 +125,7 @@ void PasswordDialog::setupButtonBox()
 {
     m_buttonBox =
             new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal);
+    m_buttonBox->setObjectName("buttonBox");
     QObject::connect(m_buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     QObject::connect(m_buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }

@@ -146,12 +146,15 @@ QLayout *GroupsWindow::setupHeader()
     auto editMenu = ControlUtil::createMenu(this);
 
     m_actAddGroup = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
+    m_actAddGroup->setObjectName("actAddGroup");
     m_actAddGroup->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actEditGroup = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
+    m_actEditGroup->setObjectName("actEditGroup");
     m_actEditGroup->setShortcut(Qt::Key_Enter);
 
     m_actRemoveGroup = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
+    m_actRemoveGroup->setObjectName("actRemoveGroup");
     m_actRemoveGroup->setShortcut(Qt::Key_Delete);
 
     connect(m_actAddGroup, &QAction::triggered, this, &GroupsWindow::addNewGroup);
@@ -162,6 +165,7 @@ QLayout *GroupsWindow::setupHeader()
     });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
+    m_btEdit->setObjectName("btEdit");
     m_btEdit->setMenu(editMenu);
 
     // Header buttons
@@ -176,6 +180,7 @@ QLayout *GroupsWindow::setupHeader()
 void GroupsWindow::setupTableGroups()
 {
     m_groupListView = new TableView();
+    m_groupListView->setObjectName("groupListView");
     m_groupListView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_groupListView->setSelectionBehavior(QAbstractItemView::SelectRows);
 

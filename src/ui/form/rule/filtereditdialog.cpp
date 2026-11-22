@@ -353,11 +353,14 @@ void FilterEditDialog::setupDirectionProtocolRows(QFormLayout *layout)
 {
     // Direction
     m_btDirectionNot = createNotButton();
+    m_btDirectionNot->setObjectName("btDirectionNot");
 
     m_cbDirectionIn = createFieldCheckBox();
+    m_cbDirectionIn->setObjectName("cbDirectionIn");
     m_cbDirectionIn->setIcon(IconCache::icon(ConnListModel::directionIconPath(/*inbound=*/true)));
 
     m_cbDirectionOut = createFieldCheckBox();
+    m_cbDirectionOut->setObjectName("cbDirectionOut");
     m_cbDirectionOut->setIcon(IconCache::icon(ConnListModel::directionIconPath(/*inbound=*/false)));
 
     m_labelDirection = addWidgetsRow(layout, "Direction:",
@@ -365,20 +368,26 @@ void FilterEditDialog::setupDirectionProtocolRows(QFormLayout *layout)
 
     // Protocol
     m_btProtocolsNot = createNotButton();
+    m_btProtocolsNot->setObjectName("btProtocolsNot");
 
     m_cbProtocolTcp = createFieldCheckBox();
+    m_cbProtocolTcp->setObjectName("cbProtocolTcp");
     m_cbProtocolTcp->setText("TCP");
 
     m_cbProtocolUdp = createFieldCheckBox();
+    m_cbProtocolUdp->setObjectName("cbProtocolUdp");
     m_cbProtocolUdp->setText("UDP");
 
     m_cbProtocolIcmp = createFieldCheckBox();
+    m_cbProtocolIcmp->setObjectName("cbProtocolIcmp");
     m_cbProtocolIcmp->setText("ICMP");
 
     m_cbProtocolIcmp6 = createFieldCheckBox();
+    m_cbProtocolIcmp6->setObjectName("cbProtocolIcmp6");
     m_cbProtocolIcmp6->setText("ICMPv6");
 
     m_editProtocols = createValuesEdit();
+    m_editProtocols->setObjectName("editProtocols");
     m_editProtocols->setPlaceholderText("IGMP, 47, 50-51");
 
     m_labelProtocols = addWidgetsRow(layout, "Protocol:",
@@ -390,26 +399,36 @@ void FilterEditDialog::setupRemoteRows(QFormLayout *layout)
 {
     // Area
     m_btAreasNot = createNotButton();
+    m_btAreasNot->setObjectName("btAreasNot");
     m_cbAreaLocalhost = createFieldCheckBox();
+    m_cbAreaLocalhost->setObjectName("cbAreaLocalhost");
     m_cbAreaLan = createFieldCheckBox();
+    m_cbAreaLan->setObjectName("cbAreaLan");
     m_cbAreaInet = createFieldCheckBox();
+    m_cbAreaInet->setObjectName("cbAreaInet");
 
     m_labelAreas = addWidgetsRow(layout, "Area:",
             { m_btAreasNot, m_cbAreaLocalhost, m_cbAreaLan, m_cbAreaInet, /*stretch*/ nullptr });
 
     // Host
     m_btHostsNot = createNotButton();
+    m_btHostsNot->setObjectName("btHostsNot");
     m_btHostsClear = ControlUtil::createClearButton([&] { TextAreaUtil::clearArea(m_editHosts); });
+    m_btHostsClear->setObjectName("btHostsClear");
     m_editHosts = createValuesArea();
+    m_editHosts->setObjectName("editHosts");
 
     m_labelHosts = addAreaRow(
             layout, "Host:", { m_btHostsNot, /*stretch*/ nullptr, m_btHostsClear }, m_editHosts);
 
     // Remote IP
     m_btRemoteIpsNot = createNotButton();
+    m_btRemoteIpsNot->setObjectName("btRemoteIpsNot");
     m_btRemoteIpsClear =
             ControlUtil::createClearButton([&] { TextAreaUtil::clearArea(m_editRemoteIps); });
+    m_btRemoteIpsClear->setObjectName("btRemoteIpsClear");
     m_editRemoteIps = createValuesArea();
+    m_editRemoteIps->setObjectName("editRemoteIps");
 
     m_labelRemoteIps = addAreaRow(layout,
             "Remote IP:", { m_btRemoteIpsNot, /*stretch*/ nullptr, m_btRemoteIpsClear },
@@ -417,7 +436,9 @@ void FilterEditDialog::setupRemoteRows(QFormLayout *layout)
 
     // Remote Port
     m_btRemotePortsNot = createNotButton();
+    m_btRemotePortsNot->setObjectName("btRemotePortsNot");
     m_editRemotePorts = createValuesEdit();
+    m_editRemotePorts->setObjectName("editRemotePorts");
 
     m_labelRemotePorts =
             addWidgetsRow(layout, "Remote Port:", { m_btRemotePortsNot, m_editRemotePorts });
@@ -427,16 +448,22 @@ void FilterEditDialog::setupLocalRows(QFormLayout *layout)
 {
     // Local IP
     m_btLocalIpsNot = createNotButton();
+    m_btLocalIpsNot->setObjectName("btLocalIpsNot");
     m_editLocalIps = createValuesEdit();
+    m_editLocalIps->setObjectName("editLocalIps");
     m_btLocalIpsEqual = createEqualButton(m_editLocalIps);
+    m_btLocalIpsEqual->setObjectName("btLocalIpsEqual");
 
     m_labelLocalIps = addWidgetsRow(
             layout, "Local IP:", { m_btLocalIpsNot, m_editLocalIps, m_btLocalIpsEqual });
 
     // Local Port
     m_btLocalPortsNot = createNotButton();
+    m_btLocalPortsNot->setObjectName("btLocalPortsNot");
     m_editLocalPorts = createValuesEdit();
+    m_editLocalPorts->setObjectName("editLocalPorts");
     m_btLocalPortsEqual = createEqualButton(m_editLocalPorts);
+    m_btLocalPortsEqual->setObjectName("btLocalPortsEqual");
 
     m_labelLocalPorts = addWidgetsRow(
             layout, "Local Port:", { m_btLocalPortsNot, m_editLocalPorts, m_btLocalPortsEqual });
@@ -446,7 +473,9 @@ void FilterEditDialog::setupIcmpRows(QFormLayout *layout)
 {
     // ICMP Type
     m_btIcmpTypesNot = createNotButton();
+    m_btIcmpTypesNot->setObjectName("btIcmpTypesNot");
     m_icmpTypes = new IcmpSelector();
+    m_icmpTypes->setObjectName("icmpTypes");
 
     connect(m_icmpTypes, &EditCombo::edited, this, &FilterEditDialog::updateTextByFields);
 
@@ -454,7 +483,9 @@ void FilterEditDialog::setupIcmpRows(QFormLayout *layout)
 
     // ICMP Code
     m_btIcmpCodesNot = createNotButton();
+    m_btIcmpCodesNot->setObjectName("btIcmpCodesNot");
     m_icmpCodes = new IcmpSelector();
+    m_icmpCodes->setObjectName("icmpCodes");
 
     connect(m_icmpCodes, &EditCombo::edited, this, &FilterEditDialog::updateTextByFields);
 
@@ -470,6 +501,7 @@ QLayout *FilterEditDialog::setupActionsLayout()
 
     // By the button's id: FORT_RULE_FILTER_ACTION_*, 0 - the Rule's action
     m_rbRuleAction = createActionButton(/*actionTypeId=*/0, Qt::Key_R);
+    m_rbRuleAction->setObjectName("rbRuleAction");
     m_rbRuleAction->setIcon(IconCache::icon(":/icons/script.png"));
 
     // Only a Rule's filter has it: a parentless widget shown is a window
@@ -478,9 +510,13 @@ QLayout *FilterEditDialog::setupActionsLayout()
     }
 
     m_rbAllow = createActionButton(FORT_RULE_FILTER_ACTION_ALLOW, Qt::Key_A);
+    m_rbAllow->setObjectName("rbAllow");
     m_rbBlock = createActionButton(FORT_RULE_FILTER_ACTION_BLOCK, Qt::Key_B);
+    m_rbBlock->setObjectName("rbBlock");
     m_rbAsk = createActionButton(FORT_RULE_FILTER_ACTION_ASK, Qt::Key_S);
+    m_rbAsk->setObjectName("rbAsk");
     m_rbDrop = createActionButton(FORT_RULE_FILTER_ACTION_DROP, Qt::Key_D);
+    m_rbDrop->setObjectName("rbDrop");
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { m_rbRuleAction, m_rbAllow, m_rbBlock, m_rbAsk, m_rbDrop, /*stretch*/ nullptr });
@@ -585,11 +621,14 @@ QLabel *FilterEditDialog::addAreaRow(QFormLayout *layout, const QString &labelTe
 QLayout *FilterEditDialog::setupOptionsLayout()
 {
     m_cbOptionLog = createFieldCheckBox();
+    m_cbOptionLog->setObjectName("cbOptionLog");
     m_cbOptionLog->setIcon(IconCache::icon(":/icons/connect.png"));
 
     m_cbOptionNoLog = createFieldCheckBox();
+    m_cbOptionNoLog->setObjectName("cbOptionNoLog");
 
     m_cbOptionAlert = createFieldCheckBox();
+    m_cbOptionAlert->setObjectName("cbOptionAlert");
     m_cbOptionAlert->setIcon(IconCache::icon(":/icons/error.png"));
 
     auto layout = ControlUtil::createHLayoutByWidgets(
@@ -603,6 +642,7 @@ void FilterEditDialog::setupTextBox()
 {
     // Text
     m_editText = new PlainTextEdit();
+    m_editText->setObjectName("editText");
     m_editText->setReadOnly(true); // by the fields
     m_editText->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     m_editText->setFixedHeight(60); // 3 lines
@@ -610,10 +650,12 @@ void FilterEditDialog::setupTextBox()
     // Copy Text
     m_btCopyText = ControlUtil::createIconToolButton(
             ":/icons/page_copy.png", [&] { GuiUtil::setClipboardData(m_editText->toPlainText()); });
+    m_btCopyText->setObjectName("btCopyText");
 
     // Paste Text
     m_btPasteText =
             ControlUtil::createIconToolButton(":/icons/page_paste.png", [&] { pasteText(); });
+    m_btPasteText->setObjectName("btPasteText");
 
     auto buttonsLayout = ControlUtil::createVLayoutByWidgets(
             { m_btCopyText, m_btPasteText, /*stretch*/ nullptr }, /*margin=*/0);
@@ -633,10 +675,12 @@ QLayout *FilterEditDialog::setupButtons()
             this->close();
         }
     });
+    m_btOk->setObjectName("btOk");
     m_btOk->setDefault(true);
 
     // Cancel
     m_btCancel = new QPushButton();
+    m_btCancel->setObjectName("btCancel");
     connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
 
     auto layout = new QHBoxLayout();

@@ -255,6 +255,7 @@ void GraphPage::setupGraphCheckboxes()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_cbGraphHideOnClose->setObjectName("cbGraphHideOnClose");
     m_cbGraphAlwaysOnTop =
             ControlUtil::createCheckBox(iniUser().graphWindowAlwaysOnTop(), [&](bool checked) {
                 if (iniUser().graphWindowAlwaysOnTop() != checked) {
@@ -262,6 +263,7 @@ void GraphPage::setupGraphCheckboxes()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_cbGraphAlwaysOnTop->setObjectName("cbGraphAlwaysOnTop");
     m_cbGraphFrameless =
             ControlUtil::createCheckBox(iniUser().graphWindowFrameless(), [&](bool checked) {
                 if (iniUser().graphWindowFrameless() != checked) {
@@ -269,6 +271,7 @@ void GraphPage::setupGraphCheckboxes()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_cbGraphFrameless->setObjectName("cbGraphFrameless");
     m_cbGraphClickThrough =
             ControlUtil::createCheckBox(iniUser().graphWindowClickThrough(), [&](bool checked) {
                 if (iniUser().graphWindowClickThrough() != checked) {
@@ -276,6 +279,7 @@ void GraphPage::setupGraphCheckboxes()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_cbGraphClickThrough->setObjectName("cbGraphClickThrough");
     m_cbGraphHideOnHover =
             ControlUtil::createCheckBox(iniUser().graphWindowHideOnHover(), [&](bool checked) {
                 if (iniUser().graphWindowHideOnHover() != checked) {
@@ -283,6 +287,7 @@ void GraphPage::setupGraphCheckboxes()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_cbGraphHideOnHover->setObjectName("cbGraphHideOnHover");
 }
 
 void GraphPage::setupGraphViewCheckboxes()
@@ -294,6 +299,7 @@ void GraphPage::setupGraphViewCheckboxes()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_cbGraphHideYAxisLabels->setObjectName("cbGraphHideYAxisLabels");
     m_cbGraphShowSpeed =
             ControlUtil::createCheckBox(iniUser().graphWindowShowSpeed(), [&](bool checked) {
                 if (iniUser().graphWindowShowSpeed() != checked) {
@@ -301,6 +307,7 @@ void GraphPage::setupGraphViewCheckboxes()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_cbGraphShowSpeed->setObjectName("cbGraphShowSpeed");
     m_cbGraphAnimation =
             ControlUtil::createCheckBox(iniUser().graphWindowAnimation(), [&](bool checked) {
                 if (iniUser().graphWindowAnimation() != checked) {
@@ -308,6 +315,7 @@ void GraphPage::setupGraphViewCheckboxes()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_cbGraphAnimation->setObjectName("cbGraphAnimation");
     m_cbGraphAxisTicks =
             ControlUtil::createCheckBox(iniUser().graphWindowAxisTicks(), [&](bool checked) {
                 if (iniUser().graphWindowAxisTicks() != checked) {
@@ -315,6 +323,7 @@ void GraphPage::setupGraphViewCheckboxes()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_cbGraphAxisTicks->setObjectName("cbGraphAxisTicks");
 }
 
 QLayout *GraphPage::setupGraphShowLayout()
@@ -338,12 +347,14 @@ void GraphPage::setupGraphShowCheckboxes()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_cbGraphShowTotal->setObjectName("cbGraphShowTotal");
     m_cbGraphShowIn = ControlUtil::createCheckBox(iniUser().graphWindowShowIn(), [&](bool checked) {
         if (iniUser().graphWindowShowIn() != checked) {
             iniUser().setGraphWindowShowIn(checked);
             ctrl()->setIniUserEdited();
         }
     });
+    m_cbGraphShowIn->setObjectName("cbGraphShowIn");
     m_cbGraphShowOut =
             ControlUtil::createCheckBox(iniUser().graphWindowShowOut(), [&](bool checked) {
                 if (iniUser().graphWindowShowOut() != checked) {
@@ -351,6 +362,7 @@ void GraphPage::setupGraphShowCheckboxes()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_cbGraphShowOut->setObjectName("cbGraphShowOut");
 }
 
 void GraphPage::setupGraphOptions()
@@ -362,6 +374,7 @@ void GraphPage::setupGraphOptions()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_graphOpacity->setObjectName("graphOpacity");
 
     m_graphHoverOpacity = ControlUtil::createSpin(
             { iniUser().graphWindowHoverOpacity(), 0, 100 }, " %", [&](int v) {
@@ -370,6 +383,7 @@ void GraphPage::setupGraphOptions()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_graphHoverOpacity->setObjectName("graphHoverOpacity");
 
     m_graphTickLabelSize = ControlUtil::createSpin(
             { iniUser().graphWindowTickLabelSize(), 1, 99 }, {}, [&](int v) {
@@ -378,6 +392,7 @@ void GraphPage::setupGraphOptions()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_graphTickLabelSize->setObjectName("graphTickLabelSize");
 
     m_graphBarWidth =
             ControlUtil::createSpin({ iniUser().graphWindowBarWidth(), 1, 99 }, " px", [&](int v) {
@@ -386,6 +401,7 @@ void GraphPage::setupGraphOptions()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_graphBarWidth->setObjectName("graphBarWidth");
 
     m_graphMaxSeconds =
             ControlUtil::createSpin({ iniUser().graphWindowMaxSeconds(), 0, 9999 }, {}, [&](int v) {
@@ -394,6 +410,7 @@ void GraphPage::setupGraphOptions()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_graphMaxSeconds->setObjectName("graphMaxSeconds");
 
     setupGraphFixedSpeed();
 }
@@ -418,6 +435,7 @@ void GraphPage::setupGraphFixedSpeed()
                             ctrl()->setIniUserEdited();
                         }
                     });
+    m_graphFixedSpeed->setObjectName("graphFixedSpeed");
     m_graphFixedSpeed->setNames(speedNames);
 }
 
@@ -426,6 +444,7 @@ QLayout *GraphPage::setupGraphTypeLayout()
     m_labelGraphType = ControlUtil::createLabel();
 
     m_comboGraphType = ControlUtil::createComboBox({}, [&](int index) { changeGraphType(index); });
+    m_comboGraphType->setObjectName("comboGraphType");
     m_comboGraphType->setFixedWidth(110);
 
     return ControlUtil::createRowLayout(m_labelGraphType, m_comboGraphType);
@@ -449,6 +468,7 @@ QLayout *GraphPage::setupTrafUnitsLayout()
     m_traphUnits = ControlUtil::createLabel();
 
     m_comboTrafUnit = ControlUtil::createComboBox(list, [&](int index) { changeTrafUnit(index); });
+    m_comboTrafUnit->setObjectName("comboTrafUnit");
     m_comboTrafUnit->setFixedWidth(110);
 
     m_comboTrafUnit->setCurrentIndex(iniUser().graphWindowTrafUnit());
@@ -497,6 +517,7 @@ void GraphPage::setupGraphColors1()
                 iniUser().setGraphWindowDarkColor(v);
                 ctrl()->setIniUserEdited();
             });
+    m_graphColor->setObjectName("graphColor");
 
     m_graphBorderColor = ControlUtil::createLabelColor(
             iniUser().graphWindowBorderColor(), iniUser().graphWindowDarkBorderColor(),
@@ -508,6 +529,7 @@ void GraphPage::setupGraphColors1()
                 iniUser().setGraphWindowDarkBorderColor(v);
                 ctrl()->setIniUserEdited();
             });
+    m_graphBorderColor->setObjectName("graphBorderColor");
 
     m_graphColorIn = ControlUtil::createLabelColor(
             iniUser().graphWindowColorIn(), iniUser().graphWindowDarkColorIn(),
@@ -519,6 +541,7 @@ void GraphPage::setupGraphColors1()
                 iniUser().setGraphWindowDarkColorIn(v);
                 ctrl()->setIniUserEdited();
             });
+    m_graphColorIn->setObjectName("graphColorIn");
 
     m_graphColorOut = ControlUtil::createLabelColor(
             iniUser().graphWindowColorOut(), iniUser().graphWindowDarkColorOut(),
@@ -530,6 +553,7 @@ void GraphPage::setupGraphColors1()
                 iniUser().setGraphWindowDarkColorOut(v);
                 ctrl()->setIniUserEdited();
             });
+    m_graphColorOut->setObjectName("graphColorOut");
 
     m_graphTotalColor = ControlUtil::createLabelColor(
             iniUser().graphWindowTotalColor(), iniUser().graphWindowDarkTotalColor(),
@@ -541,6 +565,7 @@ void GraphPage::setupGraphColors1()
                 iniUser().setGraphWindowDarkTotalColor(v);
                 ctrl()->setIniUserEdited();
             });
+    m_graphTotalColor->setObjectName("graphTotalColor");
 }
 
 void GraphPage::setupGraphColors2()
@@ -555,6 +580,7 @@ void GraphPage::setupGraphColors2()
                 iniUser().setGraphWindowDarkAxisColor(v);
                 ctrl()->setIniUserEdited();
             });
+    m_graphAxisColor->setObjectName("graphAxisColor");
 
     m_graphTickLabelColor = ControlUtil::createLabelColor(
             iniUser().graphWindowTickLabelColor(), iniUser().graphWindowDarkTickLabelColor(),
@@ -566,6 +592,7 @@ void GraphPage::setupGraphColors2()
                 iniUser().setGraphWindowDarkTickLabelColor(v);
                 ctrl()->setIniUserEdited();
             });
+    m_graphTickLabelColor->setObjectName("graphTickLabelColor");
 
     m_graphLabelColor = ControlUtil::createLabelColor(
             iniUser().graphWindowLabelColor(), iniUser().graphWindowDarkLabelColor(),
@@ -577,6 +604,7 @@ void GraphPage::setupGraphColors2()
                 iniUser().setGraphWindowDarkLabelColor(v);
                 ctrl()->setIniUserEdited();
             });
+    m_graphLabelColor->setObjectName("graphLabelColor");
 
     m_graphGridColor = ControlUtil::createLabelColor(
             iniUser().graphWindowGridColor(), iniUser().graphWindowDarkGridColor(),
@@ -588,6 +616,7 @@ void GraphPage::setupGraphColors2()
                 iniUser().setGraphWindowDarkGridColor(v);
                 ctrl()->setIniUserEdited();
             });
+    m_graphGridColor->setObjectName("graphGridColor");
 }
 
 void GraphPage::setupGeometryBox()
@@ -621,13 +650,18 @@ void GraphPage::setupGeometryControls()
                     ctrl()->setIniUserEdited();
                 }
             });
+    m_cbGraphMaximized->setObjectName("cbGraphMaximized");
 
     const QRect rect = iniUser().graphWindowGeometry();
 
     m_graphX = createGeometrySpin(rect.x(), -99999);
+    m_graphX->setObjectName("graphX");
     m_graphY = createGeometrySpin(rect.y(), -99999);
+    m_graphY->setObjectName("graphY");
     m_graphWidth = createGeometrySpin(rect.width(), 0);
+    m_graphWidth->setObjectName("graphWidth");
     m_graphHeight = createGeometrySpin(rect.height(), 0);
+    m_graphHeight->setObjectName("graphHeight");
 }
 
 LabelSpin *GraphPage::createGeometrySpin(int value, int min)

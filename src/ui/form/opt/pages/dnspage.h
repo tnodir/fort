@@ -61,7 +61,7 @@ private:
 
     QGroupBox *m_gbForwarder = nullptr;
 
-    QCheckBox *m_cbFilterEnabled = nullptr;
+    QCheckBox *m_cbDnsFilterEnabled = nullptr;
     QLabel *m_labelServers = nullptr;
     QComboBox *m_comboServers = nullptr;
     QPushButton *m_btTest = nullptr;

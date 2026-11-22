@@ -59,6 +59,7 @@ QLayout *AddressesArea::setupHeaderLayout(const QString &iconPath)
 
     // Select Zones
     m_btSelectZones = new ZonesSelector();
+    m_btSelectZones->setObjectName("btSelectZones");
 
     connect(m_btSelectZones, &ZonesSelector::maskChanged, this,
             [&] { emit zonesEdited(m_btSelectZones->mask()); });
@@ -73,6 +74,7 @@ QLayout *AddressesArea::setupHeaderLayout(const QString &iconPath)
 void AddressesArea::setupEditIpText()
 {
     m_editIpText = new PlainTextEdit();
+    m_editIpText->setObjectName("editIpText");
 
     connect(m_editIpText, &QPlainTextEdit::textChanged, this,
             [&] { emit textEdited(m_editIpText->toPlainText()); });

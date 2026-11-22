@@ -31,7 +31,7 @@ DnsPage::DnsPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, p
 
 void DnsPage::onResetToDefault()
 {
-    m_cbFilterEnabled->setChecked(false);
+    m_cbDnsFilterEnabled->setChecked(false);
     m_editServers->clear();
     m_cbBlockPorts->setChecked(false);
 
@@ -45,8 +45,8 @@ void DnsPage::onRetranslateUi()
 
     m_gbForwarder->setTitle(tr("DNS Forwarder"));
 
-    m_cbFilterEnabled->setText(tr("Filter DNS"));
-    m_cbFilterEnabled->setToolTip(
+    m_cbDnsFilterEnabled->setText(tr("Filter DNS"));
+    m_cbDnsFilterEnabled->setToolTip(
             tr("Resolve the host names by the upstream DNS servers, adding the addresses of the "
                "Hosts Zones used by the IP Addresses, Programs and Rules and of the host() "
                "filters before answering; the names of the Block Zones are not found (only with "
@@ -114,11 +114,12 @@ void DnsPage::setupUi()
 
 void DnsPage::setupForwarderBox()
 {
-    m_cbFilterEnabled =
+    m_cbDnsFilterEnabled =
             ControlUtil::createCheckBox(conf().dnsForwarderEnabled(), [&](bool checked) {
                 conf().setDnsForwarderEnabled(checked);
                 ctrl()->setFlagsEdited();
             });
+    m_cbDnsFilterEnabled->setObjectName("cbDnsFilterEnabled");
 
     // Servers Row
     auto serversLayout = setupServersLayout();
@@ -127,12 +128,13 @@ void DnsPage::setupForwarderBox()
         conf().setBlockDnsPorts(checked);
         ctrl()->setFlagsEdited();
     });
+    m_cbBlockPorts->setObjectName("cbBlockPorts");
 
     // Block Zones Row
     auto blockZonesLayout = setupBlockZonesLayout();
 
     auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbFilterEnabled);
+    layout->addWidget(m_cbDnsFilterEnabled);
     layout->addLayout(serversLayout);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addWidget(m_cbBlockPorts);
@@ -167,6 +169,7 @@ void DnsPage::setupComboServers()
     m_comboServers = ControlUtil::createComboBox({}, [&](int index) {
         m_editServers->setPlainText(m_comboServers->itemData(index).toStringList().join('\n'));
     });
+    m_comboServers->setObjectName("comboServers");
 
     m_comboServers->addItem(QString(), QStringList());
 
@@ -178,6 +181,7 @@ void DnsPage::setupComboServers()
 void DnsPage::setupTestButton()
 {
     m_btTest = ControlUtil::createButton(":/icons/play.png", [&] { testServers(); });
+    m_btTest->setObjectName("btTest");
 
     m_btTest->setEnabled(settings()->hasService());
 }
@@ -187,6 +191,7 @@ void DnsPage::setupEditServers()
     const QStringList iniServers = ini().dnsServers();
 
     m_editServers = new PlainTextEdit();
+    m_editServers->setObjectName("editServers");
     m_editServers->setLineWrapMode(QPlainTextEdit::NoWrap);
     m_editServers->setMinimumWidth(400);
     m_editServers->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -217,6 +222,7 @@ void DnsPage::setupMixedServersWarning()
 void DnsPage::setupTestResults()
 {
     m_editTestResults = new PlainTextEdit();
+    m_editTestResults->setObjectName("editTestResults");
     m_editTestResults->setReadOnly(true);
     m_editTestResults->setLineWrapMode(QPlainTextEdit::NoWrap);
     m_editTestResults->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -229,6 +235,7 @@ QLayout *DnsPage::setupBlockZonesLayout()
     m_labelBlockZones = ControlUtil::createLabel();
 
     m_btBlockZones = new HostZonesSelector();
+    m_btBlockZones->setObjectName("btBlockZones");
     m_btBlockZones->setMask(ini().dnsBlockZones());
 
     connect(m_btBlockZones, &HostZonesSelector::maskChanged, this, &DnsPage::onBlockZonesEdited);

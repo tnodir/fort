@@ -132,6 +132,7 @@ void SchedulePage::setupUi()
 void SchedulePage::setupTableTasks()
 {
     m_tableTasks = new TableView();
+    m_tableTasks->setObjectName("tableTasks");
     m_tableTasks->setSelectionMode(QAbstractItemView::SingleSelection);
     m_tableTasks->setSelectionBehavior(QAbstractItemView::SelectItems);
 
@@ -185,8 +186,10 @@ void SchedulePage::setupTaskDetails()
 
     m_btTaskRun = ControlUtil::createFlatToolButton(
             ":/icons/play.png", [&] { taskManager()->runTask(currentTaskInfo()->type()); });
+    m_btTaskRun->setObjectName("btTaskRun");
     m_btTaskAbort = ControlUtil::createFlatToolButton(
             ":/icons/cancel.png", [&] { taskManager()->abortTask(currentTaskInfo()->type()); });
+    m_btTaskAbort->setObjectName("btTaskAbort");
 
     auto layout = ControlUtil::createHLayout();
     layout->addWidget(m_cscTaskInterval, 1);
@@ -202,6 +205,7 @@ void SchedulePage::setupTaskDetails()
 void SchedulePage::setupTaskInterval()
 {
     m_cscTaskInterval = new CheckSpinCombo();
+    m_cscTaskInterval->setObjectName("cscTaskInterval");
     m_cscTaskInterval->checkBox()->setFont(GuiUtil::fontBold());
     m_cscTaskInterval->spinBox()->setRange(1, 60 * 24 * 30 * 12); // ~Year
     m_cscTaskInterval->setValues(taskIntervalMinuteValues);
@@ -239,6 +243,7 @@ void SchedulePage::setupTaskOptionsButton()
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
     m_btOptions = ControlUtil::createButton(":/icons/widgets.png");
+    m_btOptions->setObjectName("btOptions");
     m_btOptions->setMenu(menu);
 }
 
@@ -252,6 +257,7 @@ void SchedulePage::setupTaskStartup()
         task.setRunOnStartup(checked);
         setCurrentTaskRowEdited();
     });
+    m_cbTaskRunOnStartup->setObjectName("cbTaskRunOnStartup");
     m_cbTaskRunOnStartup->setIcon(IconCache::icon(":/icons/play.png"));
 
     m_cbTaskDelayStartup = ControlUtil::createCheckBox(false, [&](bool checked) {
@@ -262,11 +268,13 @@ void SchedulePage::setupTaskStartup()
         task.setDelayStartup(checked);
         setCurrentTaskRowEdited();
     });
+    m_cbTaskDelayStartup->setObjectName("cbTaskDelayStartup");
 }
 
 void SchedulePage::setupTaskMaxRetries()
 {
     m_lsTaskMaxRetries = new LabelSpin();
+    m_lsTaskMaxRetries->setObjectName("lsTaskMaxRetries");
     m_lsTaskMaxRetries->spinBox()->setRange(0, 99);
 
     // Icon
@@ -289,6 +297,7 @@ void SchedulePage::setupTaskMaxRetries()
 void SchedulePage::setupTaskRetrySeconds()
 {
     m_lscTaskRetrySeconds = new LabelSpinCombo();
+    m_lscTaskRetrySeconds->setObjectName("lscTaskRetrySeconds");
     m_lscTaskRetrySeconds->spinBox()->setRange(0, 60000); // ~16.6 hours
     m_lscTaskRetrySeconds->setValues(taskRetrySecondsValues);
 

@@ -50,6 +50,7 @@ void RuleSelector::updateRuleName()
 void RuleSelector::setupUi()
 {
     m_editRuleName = new LineEdit();
+    m_editRuleName->setObjectName("editRuleName");
     m_editRuleName->setFocusPolicy(Qt::NoFocus);
     m_editRuleName->setContextMenuPolicy(Qt::PreventContextMenu);
     m_editRuleName->setClearButtonEnabled(true);
@@ -68,6 +69,7 @@ void RuleSelector::setupUi()
             selectRuleDialog();
         }
     });
+    m_btSelectRule->setObjectName("btSelectRule");
 
     auto layout = ControlUtil::createRowLayout(m_editRuleName, m_btSelectRule);
     layout->setSpacing(0);

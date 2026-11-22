@@ -56,12 +56,15 @@ void WindowMenuButton::setupMenu()
     auto menu = ControlUtil::createMenu(this);
 
     m_actDock = menu->addAction(QString());
+    m_actDock->setObjectName("actDock");
 
     menu->addSeparator();
 
     m_actHelp = menu->addAction(IconCache::icon(AppLinks::iconPath(AppLinks::LinkHelp)), QString());
+    m_actHelp->setObjectName("actHelp");
 
     m_actClose = menu->addAction(ControlUtil::clearIcon(this), QString());
+    m_actClose->setObjectName("actClose");
 
     connect(m_actDock, &QAction::triggered, this, &WindowMenuButton::onDockTriggered);
     connect(m_actHelp, &QAction::triggered, this, &WindowMenuButton::onHelpTriggered);

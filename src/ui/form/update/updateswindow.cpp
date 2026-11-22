@@ -107,6 +107,7 @@ void UpdatesWindow::setupNewVersionBox()
 
     // Progress Bar
     m_progressBar = new QProgressBar();
+    m_progressBar->setObjectName("progressBar");
 
     // Buttons
     auto buttonsLayout = setupButtonsLayout();
@@ -128,16 +129,19 @@ QLayout *UpdatesWindow::setupButtonsLayout()
     // Download
     m_btDownload = ControlUtil::createFlatToolButton(
             ":/icons/download.png", [&] { autoUpdateManager()->startDownload(); });
+    m_btDownload->setObjectName("btDownload");
 
     // Install
     m_btInstall = ControlUtil::createFlatToolButton(
             ":/icons/tick.png", [&] { autoUpdateManager()->runInstaller(); });
+    m_btInstall->setObjectName("btInstall");
 
     m_btInstall->setVisible(false);
 
     // Check Update
     m_btCheckUpdate = ControlUtil::createFlatToolButton(
             ":/icons/play.png", [&] { taskManager()->runTask(TaskInfo::UpdateChecker); });
+    m_btCheckUpdate->setObjectName("btCheckUpdate");
 
     auto layout = ControlUtil::createHLayoutByWidgets({ /*stretch*/ nullptr, m_btDownload,
             m_btInstall, m_btCheckUpdate, /*stretch*/ nullptr });

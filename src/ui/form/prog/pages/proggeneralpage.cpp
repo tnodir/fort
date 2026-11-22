@@ -360,6 +360,7 @@ QLayout *ProgGeneralPage::setupPathLayout()
 {
     // Path
     m_editPath = new PlainTextEdit();
+    m_editPath->setObjectName("editPath");
     m_editPath->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
 
     // Before it is laid out: a later change isn't seen by a new window's layouts till it is shown,
@@ -389,11 +390,13 @@ QLayout *ProgGeneralPage::setupPathLayout()
 
         fillEditName(); // Auto-fill the name
     });
+    m_btSelectFile->setObjectName("btSelectFile");
     m_btSelectFile->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_O));
 
     // Switch Wildcard
     m_btSwitchWildcard = ControlUtil::createIconToolButton(
             ":/icons/coding.png", [&] { ctrl()->switchWildcard(); });
+    m_btSwitchWildcard->setObjectName("btSwitchWildcard");
     m_btSwitchWildcard->setCheckable(true);
 
     auto buttonsLayout = ControlUtil::createVLayoutByWidgets(
@@ -409,10 +412,12 @@ QLayout *ProgGeneralPage::setupPathLayout()
 QLayout *ProgGeneralPage::setupNameLayout()
 {
     m_editName = new LineEdit();
+    m_editName->setObjectName("editName");
     m_editName->setMaxLength(1024);
 
     m_btGetName = ControlUtil::createIconToolButton(
             ":/icons/arrow_refresh_small.png", [&] { fillEditName(); });
+    m_btGetName->setObjectName("btGetName");
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_editName, m_btGetName });
 
@@ -422,6 +427,7 @@ QLayout *ProgGeneralPage::setupNameLayout()
 QLayout *ProgGeneralPage::setupNotesLayout()
 {
     m_editNotes = new PlainTextEdit();
+    m_editNotes->setObjectName("editNotes");
     m_editNotes->setFixedHeight(notesHeight);
 
     m_btSetIcon = ControlUtil::createIconToolButton(":/icons/application.png", [&] {
@@ -433,9 +439,11 @@ QLayout *ProgGeneralPage::setupNotesLayout()
 
         setIconPath(filePath);
     });
+    m_btSetIcon->setObjectName("btSetIcon");
 
     m_btDeleteIcon = ControlUtil::createIconToolButton(
             ":/icons/application_delete.png", [&] { setIconPath({}); });
+    m_btDeleteIcon->setObjectName("btDeleteIcon");
 
     auto layout = ControlUtil::createHLayout();
     layout->addWidget(m_editNotes);
@@ -450,12 +458,14 @@ QLayout *ProgGeneralPage::setupApplyChildGroupLayout()
     // Apply Child
     m_comboApplyChild = ControlUtil::createComboBox(
             {}, [&](int /*index*/) { ctrl()->warnRestartNeededOption(); });
+    m_comboApplyChild->setObjectName("comboApplyChild");
     m_comboApplyChild->setMinimumWidth(150);
 
     setupCbApplyChild();
 
     // Groups
     m_btGroups = new GroupsSelector();
+    m_btGroups->setObjectName("btGroups");
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { m_cbApplyChild, m_comboApplyChild, ControlUtil::createVSeparator(), m_btGroups,
@@ -467,6 +477,7 @@ QLayout *ProgGeneralPage::setupApplyChildGroupLayout()
 void ProgGeneralPage::setupCbApplyChild()
 {
     m_cbApplyChild = ControlUtil::createCheckBox(":/icons/document_tree.png");
+    m_cbApplyChild->setObjectName("cbApplyChild");
 
     const auto refreshApplyChildEnabled = [&](bool checked) {
         m_comboApplyChild->setEnabled(checked);
@@ -481,21 +492,25 @@ QLayout *ProgGeneralPage::setupActionsLayout()
 {
     // Allow
     m_rbAllow = new QRadioButton();
+    m_rbAllow->setObjectName("rbAllow");
     m_rbAllow->setIcon(
             IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ALLOW)));
     m_rbAllow->setChecked(true);
 
     // Block
     m_rbBlock = new QRadioButton();
+    m_rbBlock->setObjectName("rbBlock");
     m_rbBlock->setIcon(
             IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_BLOCK)));
 
     // Ask
     m_rbAsk = new QRadioButton();
+    m_rbAsk->setObjectName("rbAsk");
     m_rbAsk->setIcon(IconCache::icon(ActionRange::actionTypeIconPath(FORT_RULE_FILTER_ACTION_ASK)));
 
     // Kill Process
     m_rbKillProcess = new QRadioButton();
+    m_rbKillProcess->setObjectName("rbKillProcess");
     m_rbKillProcess->setIcon(IconCache::icon(":/icons/scull.png"));
 
     connect(m_rbKillProcess, &QRadioButton::clicked, ctrl(),
@@ -532,6 +547,7 @@ QLayout *ProgGeneralPage::setupScheduleLayout()
 {
     // Schedule Action
     m_comboScheduleAction = ControlUtil::createComboBox();
+    m_comboScheduleAction->setObjectName("comboScheduleAction");
     m_comboScheduleAction->setMinimumWidth(100);
 
     // Schedule Type
@@ -539,11 +555,13 @@ QLayout *ProgGeneralPage::setupScheduleLayout()
 
     // Schedule after N minutes
     m_scScheduleIn = new SpinCombo();
+    m_scScheduleIn->setObjectName("scScheduleIn");
     m_scScheduleIn->spinBox()->setRange(0, 60 * 24 * 30 * 12); // ~Year
     m_scScheduleIn->setValues(appBlockInMinuteValues);
 
     // Schedule to a specified date & time
     m_dteScheduleAt = new QDateTimeEdit();
+    m_dteScheduleAt->setObjectName("dteScheduleAt");
     m_dteScheduleAt->setCalendarPopup(true);
 
     // Quick Actions
@@ -565,6 +583,7 @@ QLayout *ProgGeneralPage::setupScheduleLayout()
 void ProgGeneralPage::setupCbSchedule()
 {
     m_cbSchedule = ControlUtil::createCheckBox(":/icons/time.png");
+    m_cbSchedule->setObjectName("cbSchedule");
 
     connect(m_cbSchedule, &QCheckBox::toggled, this, &ProgGeneralPage::updateScheduleVisible);
 }
@@ -572,6 +591,7 @@ void ProgGeneralPage::setupCbSchedule()
 void ProgGeneralPage::setupComboScheduleType()
 {
     m_comboScheduleType = ControlUtil::createComboBox();
+    m_comboScheduleType->setObjectName("comboScheduleType");
 
     connect(m_comboScheduleType, &QComboBox::currentIndexChanged, this, [&](int index) {
         const bool isTimeIn = (index == ScheduleTimeIn);
@@ -594,6 +614,7 @@ void ProgGeneralPage::setupQuickAction()
 
         ctrl()->saveChanges();
     });
+    m_btQuickAction->setObjectName("btQuickAction");
 
     const auto refreshQuickActionType = [&](bool checked) {
         m_quickActionType = checked ? App::ActionBlock : App::ActionAllow;
@@ -644,6 +665,7 @@ void ProgGeneralPage::setupTimedMenuActions()
 void ProgGeneralPage::setupTimedAction()
 {
     m_btTimedAction = createTimedButton(iniUser().progAlertWindowTimedActionMinutesKey());
+    m_btTimedAction->setObjectName("btTimedAction");
 
     connect(m_btTimedAction, &QToolButton::clicked, this, [&] {
         const auto currentActionType = App::Action(m_btgActions->checkedId());
@@ -659,6 +681,7 @@ void ProgGeneralPage::setupTimedAction()
 void ProgGeneralPage::setupTimedRemove()
 {
     m_btTimedRemove = createTimedButton(iniUser().progAlertWindowTimedRemoveMinutesKey());
+    m_btTimedRemove->setObjectName("btTimedRemove");
     m_btTimedRemove->setIcon(IconCache::icon(":/icons/delete.png"));
 
     connect(m_btTimedRemove, &QToolButton::clicked, this, [&] {

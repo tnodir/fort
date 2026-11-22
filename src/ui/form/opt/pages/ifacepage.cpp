@@ -411,12 +411,14 @@ void IfacePage::setupGlobalBox()
                 iniUser().setUseSystemLocale(checked);
                 ctrl()->setIniUserEdited(true);
             });
+    m_cbUseSystemLocale->setObjectName("cbUseSystemLocale");
 
     m_cbExcludeCapture =
             ControlUtil::createCheckBox(iniUser().excludeFromCapture(), [&](bool checked) {
                 iniUser().setExcludeFromCapture(checked);
                 ctrl()->setIniUserEdited();
             });
+    m_cbExcludeCapture->setObjectName("cbExcludeCapture");
 
     auto layout = new QVBoxLayout();
     layout->addLayout(langLayout);
@@ -439,6 +441,7 @@ QLayout *IfacePage::setupLangLayout()
 
     // Language Combobox
     m_comboLanguage = ControlUtil::createComboBox({}, [&](int index) { changeLanguage(index); });
+    m_comboLanguage->setObjectName("comboLanguage");
     m_comboLanguage->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelLanguage, m_comboLanguage);
@@ -462,6 +465,7 @@ QLayout *IfacePage::setupThemeLayout()
     m_labelTheme = ControlUtil::createLabel();
 
     m_comboTheme = ControlUtil::createComboBox({}, [&](int index) { changeTheme(index); });
+    m_comboTheme->setObjectName("comboTheme");
     m_comboTheme->setFixedWidth(200);
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
@@ -493,6 +497,7 @@ QLayout *IfacePage::setupStyleLayout()
 
     m_comboStyle = ControlUtil::createComboBox(
             {}, [&](int index) { changeStyle(m_comboStyle->itemText(index)); });
+    m_comboStyle->setObjectName("comboStyle");
     m_comboStyle->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelStyle, m_comboStyle);
@@ -526,6 +531,7 @@ QLayout *IfacePage::setupStyleSheetLayout()
                     WindowManager::updateStyleSheet(iniUser());
                 }
             });
+    m_editStyleSheet->setObjectName("editStyleSheet");
     m_editStyleSheet->setClearButtonEnabled(true);
 
     m_btStyleSheet = ControlUtil::createIconToolButton(":/icons/folder.png", [&] {
@@ -537,6 +543,7 @@ QLayout *IfacePage::setupStyleSheetLayout()
 
         m_editStyleSheet->setText(FileUtil::toNativeSeparators(filePath));
     });
+    m_btStyleSheet->setObjectName("btStyleSheet");
 
     auto layout = ControlUtil::createHLayout();
     layout->addWidget(m_labelStyleSheet);
@@ -551,6 +558,7 @@ QLayout *IfacePage::setupFontLayout()
     m_labelFont = ControlUtil::createLabel();
 
     m_fontSelector = new FontSelector();
+    m_fontSelector->setObjectName("fontSelector");
     m_fontSelector->setDefaultFont(QFont(IniUser::fontFamilyDefault(), IniUser::fontSizeDefault()));
     m_fontSelector->setFixedWidth(200);
 
@@ -594,6 +602,7 @@ void IfacePage::setupListIconSize()
                     WindowManager::updateListIconSize(iniUser());
                 }
             });
+    m_listIconSize->setObjectName("listIconSize");
 
     m_listIconSize->spinBox()->setFixedWidth(70);
 }
@@ -604,11 +613,13 @@ void IfacePage::setupHotKeysBox()
         iniUser().setHotKeyEnabled(checked);
         ctrl()->setIniUserEdited(true);
     });
+    m_cbHotKeysEnabled->setObjectName("cbHotKeysEnabled");
 
     m_cbHotKeysGlobal = ControlUtil::createCheckBox(iniUser().hotKeyGlobal(), [&](bool checked) {
         iniUser().setHotKeyGlobal(checked);
         ctrl()->setIniUserEdited(true);
     });
+    m_cbHotKeysGlobal->setObjectName("cbHotKeysGlobal");
 
     // Hot Keys Combo & Edit Rows
     auto comboLayout = setupComboHotKeyLayout();
@@ -638,6 +649,7 @@ QLayout *IfacePage::setupComboHotKeyLayout()
 
     m_comboHotKey = ControlUtil::createComboBox(
             QStringList(), [&](int /*index*/) { refreshEditShortcut(); });
+    m_comboHotKey->setObjectName("comboHotKey");
     m_comboHotKey->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelHotKey, m_comboHotKey);
@@ -648,6 +660,7 @@ QLayout *IfacePage::setupEditShortcutLayout()
     m_labelShortcut = ControlUtil::createLabel();
 
     m_editShortcut = new QKeySequenceEdit();
+    m_editShortcut->setObjectName("editShortcut");
 #if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
     m_editShortcut->setClearButtonEnabled(true);
 #endif
@@ -684,18 +697,21 @@ void IfacePage::setupMainBox()
                 iniUser().setMainWindowAutoShowWindow(checked);
                 ctrl()->setIniUserEdited();
             });
+    m_cbMainAutoShowWindow->setObjectName("cbMainAutoShowWindow");
 
     m_cbSplashVisible =
             ControlUtil::createCheckBox(iniUser().splashWindowVisible(), [&](bool checked) {
                 iniUser().setSplashWindowVisible(checked);
                 ctrl()->setIniUserEdited();
             });
+    m_cbSplashVisible->setObjectName("cbSplashVisible");
 
     m_cbUpdateWindowIcons =
             ControlUtil::createCheckBox(iniUser().updateWindowIcons(), [&](bool checked) {
                 iniUser().setUpdateWindowIcons(checked);
                 ctrl()->setIniUserEdited();
             });
+    m_cbUpdateWindowIcons->setObjectName("cbUpdateWindowIcons");
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbMainAutoShowWindow);
@@ -713,6 +729,7 @@ void IfacePage::setupProgBox()
                 iniUser().setProgNotifyMessage(checked);
                 ctrl()->setIniUserEdited();
             });
+    m_cbAppNotifyMessage->setObjectName("cbAppNotifyMessage");
 
     // Alert layout
     auto alertLayout = setupAlertLayout();
@@ -722,28 +739,33 @@ void IfacePage::setupProgBox()
                 iniUser().setProgAlertWindowAlwaysOnTop(checked);
                 ctrl()->setIniUserEdited();
             });
+    m_cbAppAlertAlwaysOnTop->setObjectName("cbAppAlertAlwaysOnTop");
 
     m_cbAppAlertAutoActive =
             ControlUtil::createCheckBox(iniUser().progAlertWindowAutoActive(), [&](bool checked) {
                 iniUser().setProgAlertWindowAutoActive(checked);
                 ctrl()->setIniUserEdited();
             });
+    m_cbAppAlertAutoActive->setObjectName("cbAppAlertAutoActive");
 
     m_cbAppAlertAutoClear =
             ControlUtil::createCheckBox(iniUser().progWindowAutoClearAlerts(), [&](bool checked) {
                 iniUser().setProgWindowAutoClearAlerts(checked);
                 ctrl()->setIniUserEdited();
             });
+    m_cbAppAlertAutoClear->setObjectName("cbAppAlertAutoClear");
 
     m_cbAppAlertSound = ControlUtil::createCheckBox(iniUser().progAlertSound(), [&](bool checked) {
         iniUser().setProgAlertSound(checked);
         ctrl()->setIniUserEdited();
     });
+    m_cbAppAlertSound->setObjectName("cbAppAlertSound");
 
     m_cbSnoozeAlerts = ControlUtil::createCheckBox(iniUser().progSnoozeAlerts(), [&](bool checked) {
         iniUser().setProgSnoozeAlerts(checked);
         ctrl()->setIniUserEdited();
     });
+    m_cbSnoozeAlerts->setObjectName("cbSnoozeAlerts");
 
     // Layout
     auto layout = new QVBoxLayout();
@@ -766,6 +788,7 @@ QLayout *IfacePage::setupAlertLayout()
                 iniUser().setProgAlertWindowAutoShow(checked);
                 ctrl()->setIniUserEdited();
             });
+    m_cbAppAlertAutoShow->setObjectName("cbAppAlertAutoShow");
 
     // Alert Modes Box
     setupAlertModes();
@@ -782,6 +805,7 @@ void IfacePage::setupAlertModes()
                 iniUser().setProgAlertWindowAutoLearn(checked);
                 ctrl()->setIniUserEdited();
             });
+    m_cbAppAlertAutoLearn->setObjectName("cbAppAlertAutoLearn");
     setAlertModeIcon(m_cbAppAlertAutoLearn, FirewallConf::ModeAutoLearn);
 
     m_cbAppAlertBlockAll =
@@ -789,6 +813,7 @@ void IfacePage::setupAlertModes()
                 iniUser().setProgAlertWindowBlockAll(checked);
                 ctrl()->setIniUserEdited();
             });
+    m_cbAppAlertBlockAll->setObjectName("cbAppAlertBlockAll");
     setAlertModeIcon(m_cbAppAlertBlockAll, FirewallConf::ModeBlockAll);
 
     m_cbAppAlertAllowAll =
@@ -796,6 +821,7 @@ void IfacePage::setupAlertModes()
                 iniUser().setProgAlertWindowAllowAll(checked);
                 ctrl()->setIniUserEdited();
             });
+    m_cbAppAlertAllowAll->setObjectName("cbAppAlertAllowAll");
     setAlertModeIcon(m_cbAppAlertAllowAll, FirewallConf::ModeAllowAll);
 
     // Setup Alert Modes Button
@@ -811,6 +837,7 @@ void IfacePage::setupAlertModesButton()
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
     m_btAlertModes = ControlUtil::createButton(":/icons/widgets.png");
+    m_btAlertModes->setObjectName("btAlertModes");
     m_btAlertModes->setMenu(menu);
 
     // Refresh Alert Modes Button
@@ -829,17 +856,20 @@ void IfacePage::setupTrayBox()
         iniUser().setTrayShowIcon(checked);
         ctrl()->setIniUserEdited(true);
     });
+    m_cbTrayShowIcon->setObjectName("cbTrayShowIcon");
 
     m_cbTrayShowAlert = ControlUtil::createCheckBox(iniUser().trayShowAlert(), [&](bool checked) {
         iniUser().setTrayShowAlert(checked);
         ctrl()->setIniUserEdited();
     });
+    m_cbTrayShowAlert->setObjectName("cbTrayShowAlert");
 
     m_cbTrayAnimateAlert =
             ControlUtil::createCheckBox(iniUser().trayAnimateAlert(), [&](bool checked) {
                 iniUser().setTrayAnimateAlert(checked);
                 ctrl()->setIniUserEdited();
             });
+    m_cbTrayAnimateAlert->setObjectName("cbTrayAnimateAlert");
 
     // Tray Max. Groups Row
     auto maxGroupsLayout = setupTrayMaxGroupsLayout();
@@ -853,6 +883,7 @@ void IfacePage::setupTrayBox()
                 iniUser().setTraySwitchWindow(checked);
                 ctrl()->setIniUserEdited();
             });
+    m_cbTraySwitchWindow->setObjectName("cbTraySwitchWindow");
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbTrayShowIcon);
@@ -873,6 +904,7 @@ QLayout *IfacePage::setupTrayMaxGroupsLayout()
     m_labelTrayMaxGroups = ControlUtil::createLabel();
 
     m_spinTrayMaxGroups = ControlUtil::createSpinBox();
+    m_spinTrayMaxGroups->setObjectName("spinTrayMaxGroups");
     m_spinTrayMaxGroups->setFixedWidth(70);
 
     m_spinTrayMaxGroups->setRange(0, trayMaxGroups);
@@ -902,6 +934,7 @@ QLayout *IfacePage::setupTrayEventLayout()
 
     m_comboTrayEvent = ControlUtil::createComboBox(
             QStringList(), [&](int /*index*/) { refreshComboTrayAction(); });
+    m_comboTrayEvent->setObjectName("comboTrayEvent");
     m_comboTrayEvent->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelTrayEvent, m_comboTrayEvent);
@@ -919,6 +952,7 @@ QLayout *IfacePage::setupTrayActionLayout()
         TrayIcon::setClickEventActionType(iniUser(), clickType, actionType);
         ctrl()->setIniUserEdited(true);
     });
+    m_comboTrayAction->setObjectName("comboTrayAction");
     m_comboTrayAction->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelTrayAction, m_comboTrayAction);
@@ -931,10 +965,12 @@ void IfacePage::setupConfirmationsBox()
                 iniUser().setConfirmTrayFlags(checked);
                 ctrl()->setIniUserEdited();
             });
+    m_cbConfirmTrayFlags->setObjectName("cbConfirmTrayFlags");
     m_cbConfirmQuit = ControlUtil::createCheckBox(iniUser().confirmQuit(), [&](bool checked) {
         iniUser().setConfirmQuit(checked);
         ctrl()->setIniUserEdited();
     });
+    m_cbConfirmQuit->setObjectName("cbConfirmQuit");
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbConfirmTrayFlags);

@@ -130,12 +130,15 @@ QLayout *SpeedLimitsWindow::setupHeader()
     auto editMenu = ControlUtil::createMenu(this);
 
     m_actAddSpeedLimit = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
+    m_actAddSpeedLimit->setObjectName("actAddSpeedLimit");
     m_actAddSpeedLimit->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actEditSpeedLimit = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
+    m_actEditSpeedLimit->setObjectName("actEditSpeedLimit");
     m_actEditSpeedLimit->setShortcut(Qt::Key_Enter);
 
     m_actRemoveSpeedLimit = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
+    m_actRemoveSpeedLimit->setObjectName("actRemoveSpeedLimit");
     m_actRemoveSpeedLimit->setShortcut(Qt::Key_Delete);
 
     connect(m_actAddSpeedLimit, &QAction::triggered, this, &SpeedLimitsWindow::addNewSpeedLimit);
@@ -148,6 +151,7 @@ QLayout *SpeedLimitsWindow::setupHeader()
     });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
+    m_btEdit->setObjectName("btEdit");
     m_btEdit->setMenu(editMenu);
 
     // Header buttons
@@ -162,6 +166,7 @@ QLayout *SpeedLimitsWindow::setupHeader()
 void SpeedLimitsWindow::setupTableSpeedLimits()
 {
     m_speedLimitListView = new TableView();
+    m_speedLimitListView->setObjectName("speedLimitListView");
     m_speedLimitListView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_speedLimitListView->setSelectionBehavior(QAbstractItemView::SelectRows);
 

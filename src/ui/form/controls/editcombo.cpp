@@ -44,6 +44,7 @@ void EditCombo::setupUi()
 void EditCombo::setupEdit()
 {
     m_lineEdit = new LineEdit();
+    m_lineEdit->setObjectName("lineEdit");
     m_lineEdit->setClearButtonEnabled(true);
 
     connect(m_lineEdit, &LineEdit::textChanged, this, &EditCombo::updateComboBoxIndex);
@@ -53,6 +54,7 @@ void EditCombo::setupEdit()
 void EditCombo::setupCombo()
 {
     m_comboBox = ControlUtil::createComboBox();
+    m_comboBox->setObjectName("comboBox");
     // The same width by any names
     m_comboBox->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     m_comboBox->setMinimumContentsLength(24);

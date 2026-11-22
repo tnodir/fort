@@ -163,20 +163,25 @@ QLayout *RulesWindow::setupHeader()
     auto editMenu = ControlUtil::createMenu(this);
 
     m_actAddRule = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
+    m_actAddRule->setObjectName("actAddRule");
     m_actAddRule->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actEditRule = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
+    m_actEditRule->setObjectName("actEditRule");
     m_actEditRule->setShortcut(Qt::Key_Enter);
 
     m_actDuplicateRule = editMenu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
+    m_actDuplicateRule->setObjectName("actDuplicateRule");
 
     m_actRemoveRule = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
+    m_actRemoveRule->setObjectName("actRemoveRule");
     m_actRemoveRule->setShortcut(Qt::Key_Delete);
 
     editMenu->addSeparator();
 
     m_actAddDefaultPresetRules =
             editMenu->addAction(IconCache::icon(":/icons/script.png"), QString());
+    m_actAddDefaultPresetRules->setObjectName("actAddDefaultPresetRules");
 
     connect(m_actAddRule, &QAction::triggered, this, &RulesWindow::addNewRule);
     connect(m_actEditRule, &QAction::triggered, this, &RulesWindow::editSelectedRule);
@@ -189,6 +194,7 @@ QLayout *RulesWindow::setupHeader()
             &RulesController::addDefaultPresetRules);
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
+    m_btEdit->setObjectName("btEdit");
     m_btEdit->setMenu(editMenu);
 
     // Search field
@@ -207,6 +213,7 @@ void RulesWindow::setupEditSearch()
 {
     m_editSearch = ControlUtil::createLineEdit(
             QString(), [&](const QString &text) { ruleListModel()->setTextFilter(text); });
+    m_editSearch->setObjectName("editSearch");
     m_editSearch->setClearButtonEnabled(true);
     m_editSearch->setMaxLength(200);
     m_editSearch->setMinimumWidth(100);
@@ -218,6 +225,7 @@ void RulesWindow::setupEditSearch()
 void RulesWindow::setupTreeRules()
 {
     m_ruleListView = new TreeView();
+    m_ruleListView->setObjectName("ruleListView");
     m_ruleListView->setAlternatingRowColors(true);
     m_ruleListView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_ruleListView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -293,10 +301,12 @@ QLayout *RulesWindow::setupButtons()
 {
     // OK
     m_btOk = ControlUtil::createButton(QString(), [&] { emitRuleSelected(); });
+    m_btOk->setObjectName("btOk");
     m_btOk->setDefault(true);
 
     // Cancel
     m_btCancel = new QPushButton();
+    m_btCancel->setObjectName("btCancel");
     connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
 
     auto layout = new QHBoxLayout();

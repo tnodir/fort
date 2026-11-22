@@ -85,12 +85,14 @@ void LabelColor::setupButtons()
 {
     // Light
     m_button = createColorButton([&] { selectColor(); });
+    m_button->setObjectName("button");
 
     connect(this, &LabelColor::colorChanged,
             [&] { setButtonColor(button(), color().name(QColor::HexArgb)); });
 
     // Dark
     m_darkButton = createColorButton([&] { selectDarkColor(); });
+    m_darkButton->setObjectName("darkButton");
 
     connect(this, &LabelColor::darkColorChanged,
             [&] { setButtonColor(darkButton(), darkColor().name(QColor::HexArgb)); });

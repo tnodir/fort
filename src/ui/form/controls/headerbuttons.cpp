@@ -26,15 +26,19 @@ void HeaderButtons::setupUi(int optionsTabIndex)
 
     // Options button
     m_btOptions = ControlUtil::createOptionsButton(optionsTabIndex);
+    m_btOptions->setObjectName("btOptions");
 
     // Statistics button
     m_btStatistics = ControlUtil::createStatisticsButton();
+    m_btStatistics->setObjectName("btStatistics");
 
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
+    m_btMenu->setObjectName("btMenu");
 
     // Window Menu button: shown by a dockable window
     m_btWindowMenu = new WindowMenuButton();
+    m_btWindowMenu->setObjectName("btWindowMenu");
     m_btWindowMenu->setVisible(false);
 
     auto layout = ControlUtil::createHLayoutByWidgets(

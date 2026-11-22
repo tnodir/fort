@@ -104,6 +104,7 @@ void OptionsWindow::setupUi()
     auto layout = ControlUtil::createVLayout();
 
     m_mainPage = new OptMainPage(ctrl());
+    m_mainPage->setObjectName("mainPage");
     layout->addWidget(m_mainPage);
 
     this->setLayout(layout);

@@ -162,13 +162,17 @@ void ProgMainPage::setupUi()
 void ProgMainPage::setupTabBar()
 {
     m_generalPage = new ProgGeneralPage(ctrl());
+    m_generalPage->setObjectName("generalPage");
     m_networkPage = new ProgNetworkPage(ctrl());
+    m_networkPage->setObjectName("networkPage");
     m_rulesPage = new ProgRulesPage(ctrl());
+    m_rulesPage->setObjectName("rulesPage");
     auto morePage = new ProgMorePage(ctrl());
 
     m_pages = { m_generalPage, m_networkPage, m_rulesPage, morePage };
 
     m_tabWidget = new QTabWidget();
+    m_tabWidget->setObjectName("tabWidget");
     m_tabWidget->addTab(m_generalPage, QString());
     m_tabWidget->addTab(m_networkPage, QString());
     m_tabWidget->addTab(m_rulesPage, QString());
@@ -176,6 +180,7 @@ void ProgMainPage::setupTabBar()
 
     // Paused Connections button: with their count
     m_btPendingConns = ControlUtil::createIconToolButton(":/icons/pause.png");
+    m_btPendingConns->setObjectName("btPendingConns");
     m_btPendingConns->setCheckable(true);
     m_btPendingConns->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
@@ -189,11 +194,13 @@ void ProgMainPage::setupTabBar()
     // Connections button
     m_btConnections = ControlUtil::createCheckableIconToolButton(
             ":/icons/disconnect.png", ":/icons/connect.png");
+    m_btConnections->setObjectName("btConnections");
 
     connect(m_btConnections, &QAbstractButton::clicked, this, &ProgMainPage::connsWindowToggled);
 
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
+    m_btMenu->setObjectName("btMenu");
 
     auto cornerLayout = ControlUtil::createHLayoutByWidgets(
             { m_btPendingConns, m_btConnections, ControlUtil::createVSeparator(), m_btMenu },
@@ -213,13 +220,16 @@ QLayout *ProgMainPage::setupButtonsLayout()
     // Service
     m_btService = ControlUtil::createFlatToolButton(":/icons/windows-48.png",
             [&] { windowManager()->showServicesWindowService(svcHostServiceName()); });
+    m_btService->setObjectName("btService");
 
     // OK
     m_btOk = ControlUtil::createButton(QString(), [&] { ctrl()->saveChanges(); });
+    m_btOk->setObjectName("btOk");
     m_btOk->setDefault(true);
 
     // Cancel
     m_btCancel = ControlUtil::createButton(QString(), [&] { ctrl()->closeWindow(); });
+    m_btCancel->setObjectName("btCancel");
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { m_btService, /*stretch*/ nullptr, m_btOk, m_btCancel });

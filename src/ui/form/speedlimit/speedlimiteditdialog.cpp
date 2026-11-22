@@ -162,6 +162,7 @@ QLayout *SpeedLimitEditDialog::setupMainLayout()
 
     // Time Period
     m_periodSelector = new TimePeriodSelector();
+    m_periodSelector->setObjectName("periodSelector");
 
     // OK/Cancel
     auto buttonsLayout = setupButtons();
@@ -186,6 +187,7 @@ QLayout *SpeedLimitEditDialog::setupNameLayout()
 
     // Name
     m_editName = new LineEdit();
+    m_editName->setObjectName("editName");
     m_editName->setMaxLength(256);
 
     layout->addRow("Name:", m_editName);
@@ -193,6 +195,7 @@ QLayout *SpeedLimitEditDialog::setupNameLayout()
 
     // Notes
     m_editNotes = new PlainTextEdit();
+    m_editNotes->setObjectName("editNotes");
     m_editNotes->setFixedHeight(40);
 
     layout->addRow("Notes:", m_editNotes);
@@ -200,6 +203,7 @@ QLayout *SpeedLimitEditDialog::setupNameLayout()
 
     // Enabled
     m_cbEnabled = new QCheckBox();
+    m_cbEnabled->setObjectName("cbEnabled");
 
     layout->addRow(QString(), m_cbEnabled);
 
@@ -210,11 +214,13 @@ QLayout *SpeedLimitEditDialog::setupDirectionLayout()
 {
     // Download
     m_rbDownload = new QRadioButton();
+    m_rbDownload->setObjectName("rbDownload");
     m_rbDownload->setIcon(IconCache::icon(":/icons/green_down.png"));
     m_rbDownload->setChecked(true);
 
     // Upload
     m_rbUpload = new QRadioButton();
+    m_rbUpload->setObjectName("rbUpload");
     m_rbUpload->setIcon(IconCache::icon(":/icons/blue_up.png"));
 
     auto layout = ControlUtil::createHLayoutByWidgets(
@@ -231,6 +237,7 @@ QLayout *SpeedLimitEditDialog::setupLimitLayout()
 
     // Speed
     m_scSpeed = new SpinCombo();
+    m_scSpeed->setObjectName("scSpeed");
     m_scSpeed->setValues(speedLimitValues);
     m_scSpeed->spinBox()->setRange(1, SPEED_LIMIT_KBPS_MAX); // the zero speed would be ignored
     m_scSpeed->spinBox()->setSuffix(" Kb/s");
@@ -240,6 +247,7 @@ QLayout *SpeedLimitEditDialog::setupLimitLayout()
 
     // Latency
     m_spinLatency = ControlUtil::createSpinBox();
+    m_spinLatency->setObjectName("spinLatency");
     m_spinLatency->setFixedWidth(110);
     m_spinLatency->setRange(0, SPEED_LIMIT_LATENCY_MAX);
     m_spinLatency->setSuffix(" ms");
@@ -249,6 +257,7 @@ QLayout *SpeedLimitEditDialog::setupLimitLayout()
 
     // Packet Loss
     m_spinPacketLoss = new DoubleSpinBox();
+    m_spinPacketLoss->setObjectName("spinPacketLoss");
     m_spinPacketLoss->setFixedWidth(110);
     m_spinPacketLoss->setRange(0, 100.0);
     m_spinPacketLoss->setDecimals(2);
@@ -259,6 +268,7 @@ QLayout *SpeedLimitEditDialog::setupLimitLayout()
 
     // Buffer Size
     m_spinBufferSize = ControlUtil::createSpinBox();
+    m_spinBufferSize->setObjectName("spinBufferSize");
     m_spinBufferSize->setFixedWidth(110);
     m_spinBufferSize->setRange(0, SPEED_LIMIT_BUFFER_SIZE_MAX);
     m_spinBufferSize->setSuffix(" bytes");
@@ -277,10 +287,12 @@ QLayout *SpeedLimitEditDialog::setupButtons()
             this->close();
         }
     });
+    m_btOk->setObjectName("btOk");
     m_btOk->setDefault(true);
 
     // Cancel
     m_btCancel = new QPushButton();
+    m_btCancel->setObjectName("btCancel");
     connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
 
     auto layout = new QHBoxLayout();

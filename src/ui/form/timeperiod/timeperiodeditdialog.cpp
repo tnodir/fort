@@ -139,6 +139,7 @@ QLayout *TimePeriodEditDialog::setupNameLayout()
 
     // Name
     m_editName = new LineEdit();
+    m_editName->setObjectName("editName");
     m_editName->setMaxLength(256);
 
     layout->addRow("Name:", m_editName);
@@ -146,6 +147,7 @@ QLayout *TimePeriodEditDialog::setupNameLayout()
 
     // Notes
     m_editNotes = new PlainTextEdit();
+    m_editNotes->setObjectName("editNotes");
     m_editNotes->setFixedHeight(40);
 
     layout->addRow("Notes:", m_editNotes);
@@ -153,6 +155,7 @@ QLayout *TimePeriodEditDialog::setupNameLayout()
 
     // Enabled
     m_cbEnabled = new QCheckBox();
+    m_cbEnabled->setObjectName("cbEnabled");
 
     layout->addRow(QString(), m_cbEnabled);
 
@@ -170,6 +173,7 @@ QLayout *TimePeriodEditDialog::setupIntervalsLayout()
     // Add Interval
     m_btAddInterval = ControlUtil::createFlatToolButton(
             ":/icons/add.png", [&] { addInterval(defaultInterval()); });
+    m_btAddInterval->setObjectName("btAddInterval");
 
     auto layout = ControlUtil::createVLayout();
     layout->addWidget(m_labelIntervals);
@@ -187,10 +191,12 @@ QLayout *TimePeriodEditDialog::setupButtons()
             this->close();
         }
     });
+    m_btOk->setObjectName("btOk");
     m_btOk->setDefault(true);
 
     // Cancel
     m_btCancel = new QPushButton();
+    m_btCancel->setObjectName("btCancel");
     connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
 
     auto layout = new QHBoxLayout();

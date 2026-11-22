@@ -123,12 +123,15 @@ QLayout *TimePeriodsWindow::setupHeader()
     auto editMenu = ControlUtil::createMenu(this);
 
     m_actAddTimePeriod = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
+    m_actAddTimePeriod->setObjectName("actAddTimePeriod");
     m_actAddTimePeriod->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actEditTimePeriod = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
+    m_actEditTimePeriod->setObjectName("actEditTimePeriod");
     m_actEditTimePeriod->setShortcut(Qt::Key_Enter);
 
     m_actRemoveTimePeriod = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
+    m_actRemoveTimePeriod->setObjectName("actRemoveTimePeriod");
     m_actRemoveTimePeriod->setShortcut(Qt::Key_Delete);
 
     connect(m_actAddTimePeriod, &QAction::triggered, this, &TimePeriodsWindow::addNewTimePeriod);
@@ -141,6 +144,7 @@ QLayout *TimePeriodsWindow::setupHeader()
     });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
+    m_btEdit->setObjectName("btEdit");
     m_btEdit->setMenu(editMenu);
 
     // Header buttons
@@ -155,6 +159,7 @@ QLayout *TimePeriodsWindow::setupHeader()
 void TimePeriodsWindow::setupTableTimePeriods()
 {
     m_timePeriodListView = new TableView();
+    m_timePeriodListView->setObjectName("timePeriodListView");
     m_timePeriodListView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_timePeriodListView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
