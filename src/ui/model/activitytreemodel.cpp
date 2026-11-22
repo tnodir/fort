@@ -724,7 +724,7 @@ QVariant ActivityTreeModel::dataDecoration(const ActivityNode *node) const
     case ActivityNodeType::Proc:
         return appInfoCache()->appIcon(procNodeOf(node).row.path);
     case ActivityNodeType::Flow:
-        return IconCache::icon(ConnListModel::directionIconPath(flowRowOf(node).inbound));
+        return IconCache::icon(ConnListModel::directionBulletIconPath(flowRowOf(node).inbound));
     default:
         return {};
     }
