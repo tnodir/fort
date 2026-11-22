@@ -30,6 +30,7 @@ enum Command : quint8 {
     CommandTraffic,
     CommandPending,
     CommandWindow,
+    CommandUi,
 
     Rpc_Result_Ok,
     Rpc_Result_Error,

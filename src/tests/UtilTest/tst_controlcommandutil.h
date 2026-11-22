@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QRect>
+
 #include <googletest.h>
 
 #include <control/command/controlcommandutil.h>
@@ -94,6 +96,12 @@ TEST_F(ControlCommandUtilTest, maskIds)
     ASSERT_EQ(ControlCommandUtil::idsMask(QVariantList { 1, 3, 32 }), 0x80000005);
 }
 
+TEST_F(ControlCommandUtilTest, escapedText)
+{
+    ASSERT_EQ(ControlCommandUtil::escapedText("a\\n\r\n\tb"), "a\\\\n\\r\\n\\tb");
+    ASSERT_EQ(ControlCommandUtil::escapedText("a b"), "a b");
+}
+
 TEST_F(ControlCommandUtilTest, fieldsToText)
 {
     ASSERT_EQ(ControlCommandUtil::fieldsToText(fields()),
@@ -103,6 +111,7 @@ TEST_F(ControlCommandUtilTest, fieldsToText)
     ASSERT_EQ(
             ControlCommandUtil::fieldsToText({ { "a", "B C" }, { "b", "D\"E" }, { "c", "F\nG" } }),
             "a=\"B C\" b=\"D\"\"E\" c=\"F\nG\"");
+    ASSERT_EQ(ControlCommandUtil::fieldsToText({ { "r", QRect(1, 2, 3, 4) } }), "r=\"1,2 3x4\"");
     ASSERT_EQ(ControlCommandUtil::fieldsToText({}), QString());
     ASSERT_EQ(
             ControlCommandUtil::fieldsToTextWithId({ { "a", 1 }, { "z", 2 } }, 3), "a=1 id=3 z=2");

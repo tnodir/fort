@@ -12,6 +12,7 @@
 #include "tst_ruletextparser.h"
 #include "tst_stringutil.h"
 #include "tst_timeperiod.h"
+#include "tst_uitestutil.h"
 #include "tst_wildmatch.h"
 
 #include <QCoreApplication>

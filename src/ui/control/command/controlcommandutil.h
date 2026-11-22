@@ -43,6 +43,9 @@ public:
     static QVariant maskIds(quint32 mask);
     static quint32 idsMask(const QVariant &ids);
 
+    // The text on one line: its backslashes doubled, its line breaks and tabs as \r, \n and \t
+    static QString escapedText(QString text);
+
     // The "key=value" pairs separated by spaces, the booleans as 0 or 1,
     // a text with white spaces or quotes in quotes, its quotes doubled
     static QString fieldsToText(const QVariantMap &fields);

@@ -91,11 +91,8 @@ QString valueText(const QVariant &value)
     case QMetaType::QVariantList: {
         return ControlCommandUtil::idsText(value);
     }
-    case QMetaType::QString: {
-        return stringText(value.toString());
-    }
     default:
-        return VariantUtil::toText(value);
+        return stringText(VariantUtil::toText(value));
     }
 }
 
@@ -213,6 +210,14 @@ quint32 ControlCommandUtil::idsMask(const QVariant &ids)
     }
 
     return mask;
+}
+
+QString ControlCommandUtil::escapedText(QString text)
+{
+    return text.replace('\\', "\\\\")
+            .replace('\r', "\\r")
+            .replace('\n', "\\n")
+            .replace('\t', "\\t");
 }
 
 QString ControlCommandUtil::fieldsToText(const QVariantMap &fields)

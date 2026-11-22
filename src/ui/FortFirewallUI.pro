@@ -58,9 +58,11 @@ SOURCES += \
     control/command/controlcommandrule.cpp \
     control/command/controlcommandsimulate.cpp \
     control/command/controlcommandtraffic.cpp \
+    control/command/controlcommandui.cpp \
     control/command/controlcommandutil.cpp \
     control/command/controlcommandwindow.cpp \
     control/command/controlcommandzone.cpp \
+    control/command/uitestutil.cpp \
     control/command/windowshow.cpp \
     control/control.cpp \
     control/controlmanager.cpp \
@@ -423,9 +425,11 @@ HEADERS += \
     control/command/controlcommandrule.h \
     control/command/controlcommandsimulate.h \
     control/command/controlcommandtraffic.h \
+    control/command/controlcommandui.h \
     control/command/controlcommandutil.h \
     control/command/controlcommandwindow.h \
     control/command/controlcommandzone.h \
+    control/command/uitestutil.h \
     control/command/windowshow.h \
     control/control.h \
     control/control_types.h \

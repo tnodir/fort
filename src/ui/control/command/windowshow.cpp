@@ -17,6 +17,9 @@ QString WindowShow::namesText()
     QStringList names;
 
     for (const auto &windowShow : windowShows) {
+        if (windowShow.alias)
+            continue;
+
         names.append(windowShow.name);
     }
 

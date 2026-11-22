@@ -9,6 +9,7 @@ struct WindowShow
 {
     bool activate : 1 = true;
     bool expose : 1 = false;
+    bool alias : 1 = false; // of the previous window's name: not listed
     WindowCode code;
     const char *name;
 
@@ -20,7 +21,7 @@ struct WindowShow
 // As by the "home show" and "graph show": the main window exposed, the graph not activated
 inline constexpr WindowShow windowShows[] = {
     { .expose = true, .code = WindowMain, .name = "main" },
-    { .expose = true, .code = WindowMain, .name = "home" }, // COMPAT: v3.21.1
+    { .expose = true, .alias = true, .code = WindowMain, .name = "home" }, // COMPAT: v3.21.1
     { .code = WindowPrograms, .name = "programs" },
     { .code = WindowOptions, .name = "options" },
     { .code = WindowRules, .name = "rules" },

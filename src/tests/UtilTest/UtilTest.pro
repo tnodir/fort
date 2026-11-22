@@ -16,6 +16,7 @@ HEADERS += \
     tst_ruletextparser.h \
     tst_stringutil.h \
     tst_timeperiod.h \
+    tst_uitestutil.h \
     tst_wildmatch.h
 
 SOURCES += \

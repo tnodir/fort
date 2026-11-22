@@ -29,7 +29,8 @@ public:
     static bool parseBool(const QString &text, QVariant &value);
     static bool parseNumber(const QString &text, QVariant &value);
 
-    // The value's text, a boolean as 0 or 1, a char as a number
+    // The value's text, a boolean as 0 or 1, a char as a number, a rect as "x,y wxh",
+    // a size as "wxh", a point as "x,y"
     static QString toText(const QVariant &value);
 
     static QVariant userData(QObject *o);

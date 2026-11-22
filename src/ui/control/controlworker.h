@@ -15,6 +15,7 @@ class ControlWorker : public QObject
 
 public:
     static constexpr int defaultWaitMsecs = 700;
+    static constexpr quint32 dataMaxSize = 1 * 1024 * 1024;
 
     explicit ControlWorker(QLocalSocket *socket, QObject *parent = nullptr);
 

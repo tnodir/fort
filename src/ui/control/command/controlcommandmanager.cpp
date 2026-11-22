@@ -24,6 +24,7 @@
 #include "controlcommandrule.h"
 #include "controlcommandsimulate.h"
 #include "controlcommandtraffic.h"
+#include "controlcommandui.h"
 #include "controlcommandutil.h"
 #include "controlcommandwindow.h"
 #include "controlcommandzone.h"
@@ -49,6 +50,7 @@ inline constexpr ControlCommandConn commandConn;
 inline constexpr ControlCommandTraffic commandTraffic;
 inline constexpr ControlCommandPending commandPending;
 inline constexpr ControlCommandWindow commandWindow;
+inline constexpr ControlCommandUi commandUi;
 
 inline constexpr ControlCommandRpc commandRpc;
 
@@ -72,12 +74,13 @@ inline constexpr const ControlCommandBase *commandList[] = {
     &commandTraffic, // Control::CommandTraffic,
     &commandPending, // Control::CommandPending,
     &commandWindow, // Control::CommandWindow,
+    &commandUi, // Control::CommandUi,
 };
 
 const ControlCommandBase *commandByType(Control::Command command)
 {
     return RpcManager::getProcessFunc<const ControlCommandBase>(
-            command, commandList, Control::CommandMain, Control::CommandWindow, &commandRpc);
+            command, commandList, Control::CommandMain, Control::CommandUi, &commandRpc);
 }
 
 bool checkCommandWindows(

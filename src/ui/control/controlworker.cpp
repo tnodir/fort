@@ -12,7 +12,6 @@ const QLoggingCategory LC("controlWorker");
 
 inline constexpr int commandMaxArgs = 32;
 inline constexpr int commandArgMaxSize = 4 * 1024;
-inline constexpr quint32 dataMaxSize = 1 * 1024 * 1024;
 
 quint32 nextWorkerId()
 {

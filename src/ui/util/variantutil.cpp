@@ -1,9 +1,35 @@
 #include "variantutil.h"
 
+#include <QRect>
+
 namespace {
 
 const char *const UserDataKey = "userData";
 
+// The text of a rect, size or point, else of the value converted
+QString geometryText(const QVariant &value)
+{
+    switch (value.metaType().id()) {
+    case QMetaType::QRect: {
+        const QRect rect = value.toRect();
+        return QString("%1,%2 %3x%4")
+                .arg(rect.x())
+                .arg(rect.y())
+                .arg(rect.width())
+                .arg(rect.height());
+    }
+    case QMetaType::QSize: {
+        const QSize size = value.toSize();
+        return QString("%1x%2").arg(size.width()).arg(size.height());
+    }
+    case QMetaType::QPoint: {
+        const QPoint point = value.toPoint();
+        return QString("%1,%2").arg(point.x()).arg(point.y());
+    }
+    default:
+        return value.toString();
+    }
+}
 }
 
 QStringList VariantUtil::listToStringList(const QVariantList &list, Qt::SplitBehavior behavior)
@@ -76,7 +102,7 @@ QString VariantUtil::toText(const QVariant &value)
         return QString::number(value.toInt());
     }
     default:
-        return value.toString();
+        return geometryText(value);
     }
 }
 
