@@ -165,7 +165,7 @@ void DnsManager::setupBlockZones(quint32 zonesMask)
     if (!isStarted())
         return;
 
-    updateBlockZonesFailed(hostZonesSource());
+    updateBlockZonesState(hostZonesSource());
 
     // The names' cached answers, found or not, bypass the forwarder
     flushResolverCache();
@@ -269,10 +269,15 @@ DnsForwarderStatus DnsManager::receivingStatus() const
         };
     }
 
-    if (m_zonesError.isEmpty())
-        return { .status = DnsForwarderStatus::StatusStarted };
+    if (!m_zonesError.isEmpty()) {
+        return { .status = DnsForwarderStatus::StatusZonesError, .errorMessage = m_zonesError };
+    }
 
-    return { .status = DnsForwarderStatus::StatusZonesError, .errorMessage = m_zonesError };
+    if (m_blockZonesNotUpdated) {
+        return { .status = DnsForwarderStatus::StatusBlockZonesNotUpdated };
+    }
+
+    return { .status = DnsForwarderStatus::StatusStarted };
 }
 
 // Shown while the system's queries are received: else their error is shown
@@ -291,22 +296,30 @@ void DnsManager::setZonesError(const QString &errorMessage)
 }
 
 // An enabled Block Zone having its cache file, but no names in the DB, after the DB's open or the
-// sync failed (e.g. the cache file being rewritten by its download); the sync's end updates it
-void DnsManager::updateBlockZonesFailed(const HostZonesSource &source)
+// sync failed (e.g. the cache file being rewritten by its download); the sync's end updates it.
+// Having neither: not updated yet or its download failed.
+void DnsManager::updateBlockZonesState(const HostZonesSource &source)
 {
     if (m_zonesSyncing)
         return;
 
-    const bool failed =
-            m_hostZonesFill.hasZonesToFill(source, source.enabledMask & m_blockZonesMask);
-    if (m_blockZonesFailed == failed)
+    const quint32 zonesMask = source.enabledMask & m_blockZonesMask;
+    const bool failed = m_hostZonesFill.hasZonesToFill(source, zonesMask);
+    const bool notUpdated = m_hostZonesFill.hasZonesUncached(source, zonesMask);
+
+    if (m_blockZonesFailed == failed && m_blockZonesNotUpdated == notUpdated)
         return;
 
-    m_blockZonesFailed = failed;
-
-    if (failed) {
+    if (failed && !m_blockZonesFailed) {
         qCWarning(LC) << "Block Zones' names aren't loaded: the queries fail";
     }
+
+    if (notUpdated && !m_blockZonesNotUpdated) {
+        qCWarning(LC) << "Block Zones aren't updated: their names are resolved";
+    }
+
+    m_blockZonesFailed = failed;
+    m_blockZonesNotUpdated = notUpdated;
 
     updateReceivingStatus();
 }
@@ -342,7 +355,7 @@ void DnsManager::loadHosts()
     } else {
         m_zonesError = m_hostZonesDb.errorMessage();
 
-        updateBlockZonesFailed(hostZonesSource());
+        updateBlockZonesState(hostZonesSource());
     }
 
     updateHostRefs();
@@ -360,6 +373,7 @@ void DnsManager::unloadHosts()
 
     m_zonesError.clear();
     m_blockZonesFailed = false;
+    m_blockZonesNotUpdated = false;
 }
 
 void DnsManager::openZonesSync()
@@ -389,7 +403,7 @@ void DnsManager::loadZones()
     if (m_hostZonesDb.isOpened()) {
         syncZones();
     } else {
-        updateBlockZonesFailed(hostZonesSource());
+        updateBlockZonesState(hostZonesSource());
     }
 }
 
@@ -444,7 +458,7 @@ void DnsManager::finishZonesSync()
     const HostZonesSource source = hostZonesSource();
 
     m_zonesChanged |= m_hostZonesFill.update(source);
-    updateBlockZonesFailed(source);
+    updateBlockZonesState(source);
 
     setQueriesPaused(false);
 

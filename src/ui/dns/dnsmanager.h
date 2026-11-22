@@ -29,18 +29,16 @@ struct DnsForwarderStatus
         StatusMixedServers, // not started: the plain and DNS over HTTPS servers are mixed
         StatusInvalidServers, // not started: the resolver can't take the servers
         StatusListenError, // not started: the port 53 can't be listened, e.g. it's busy
+        // The errors of the forwarder receiving the system's queries go last
         StatusZonesError, // started, but the Hosts Zones' names can't be opened or written
         StatusBlockZonesError, // started, but no name is resolved: a Block Zone isn't loaded
+        StatusBlockZonesNotUpdated, // started, but a Block Zone isn't updated: its names resolved
     };
 
     bool isError() const { return status >= StatusNrptError; }
 
     // The system's queries are sent to it
-    bool isReceiving() const
-    {
-        return status == StatusStarted || status == StatusZonesError
-                || status == StatusBlockZonesError;
-    }
+    bool isReceiving() const { return status == StatusStarted || status >= StatusZonesError; }
 
     bool operator==(const DnsForwarderStatus &o) const = default;
 
@@ -105,7 +103,7 @@ private:
     DnsForwarderStatus receivingStatus() const;
     void updateReceivingStatus();
     void setZonesError(const QString &errorMessage);
-    void updateBlockZonesFailed(const HostZonesSource &source);
+    void updateBlockZonesState(const HostZonesSource &source);
 
     DnsForwarderStatus::Status openResolver(const QStringList &servers);
     void closeResolver();
@@ -151,6 +149,9 @@ private:
 
     // An enabled Block Zone's names failed to be loaded: the queries fail
     bool m_blockZonesFailed = false;
+
+    // An enabled Block Zone has no cache file to load its names from: they aren't blocked
+    bool m_blockZonesNotUpdated = false;
 
     bool m_zonesSyncing = false;
     bool m_zonesSyncPending = false;

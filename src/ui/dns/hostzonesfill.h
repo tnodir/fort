@@ -31,7 +31,13 @@ public:
     // Whether the Zones of the mask have their cache files, but no own names in the DB
     bool hasZonesToFill(const HostZonesSource &source, quint32 zonesMask) const;
 
+    // Whether the Zones of the mask have neither their cache files nor own names in the DB, e.g.
+    // not updated yet
+    bool hasZonesUncached(const HostZonesSource &source, quint32 zonesMask) const;
+
 private:
+    bool hasUnfilledZones(const HostZonesSource &source, quint32 zonesMask, bool cached) const;
+
     void updateFilledMask(const HostZonesSource &source);
     quint32 actualZonesMask(const HostZonesSource &source) const;
 

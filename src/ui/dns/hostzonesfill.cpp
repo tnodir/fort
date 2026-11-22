@@ -39,13 +39,24 @@ void HostZonesFill::removeZone(int zoneId)
 
 bool HostZonesFill::hasZonesToFill(const HostZonesSource &source, quint32 zonesMask) const
 {
+    return hasUnfilledZones(source, zonesMask, /*cached=*/true);
+}
+
+bool HostZonesFill::hasZonesUncached(const HostZonesSource &source, quint32 zonesMask) const
+{
+    return hasUnfilledZones(source, zonesMask, /*cached=*/false);
+}
+
+bool HostZonesFill::hasUnfilledZones(
+        const HostZonesSource &source, quint32 zonesMask, bool cached) const
+{
     const quint32 unfilledMask = zonesMask & ~m_filledMask;
     if (unfilledMask == 0)
         return false;
 
     return std::any_of(source.zones.begin(), source.zones.end(), [&](const HostZoneSource &zone) {
         return (unfilledMask & Zone::zoneBit(zone.zoneId)) != 0
-                && FileUtil::fileExists(zone.cacheFilePath);
+                && FileUtil::fileExists(zone.cacheFilePath) == cached;
     });
 }
 

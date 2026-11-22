@@ -353,6 +353,9 @@ QString DnsPage::zonesErrorText(const DnsForwarderStatus &status)
                 .arg(status.errorMessage);
     case DnsForwarderStatus::StatusBlockZonesError:
         return blockZonesErrorText(status.errorMessage);
+    case DnsForwarderStatus::StatusBlockZonesNotUpdated:
+        return tr("The DNS Forwarder doesn't block the names of the enabled Block Zones not "
+                  "updated yet: update them in the Zones window");
     default:
         return {};
     }
