@@ -55,7 +55,12 @@ void WidgetWindow::showWindow(bool activate, bool expose)
 
 void WidgetWindow::centerTo(QWidget *w)
 {
-    this->move(w->frameGeometry().topLeft() + w->rect().center() - this->rect().center());
+    // A child widget (e.g. a docked window) has no frame: as if it had this window's one
+    const QPoint topLeft = w->isWindow()
+            ? w->frameGeometry().topLeft()
+            : w->mapToGlobal(QPoint(0, 0)) - (this->geometry().topLeft() - this->pos());
+
+    this->move(topLeft + w->rect().center() - this->rect().center());
 }
 
 void WidgetWindow::centerTo(QScreen *s)
