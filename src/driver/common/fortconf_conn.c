@@ -407,6 +407,18 @@ inline static FORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT fort_conf_conn_addr_group_opt
     return opt;
 }
 
+inline static void fort_conf_conn_set_local_net(
+        PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn)
+{
+    UCHAR local_zone_id;
+    const FORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT opt =
+            fort_conf_conn_addr_group_opt(filter, &local_zone_id);
+    PCFORT_CONF_ADDR_GROUP addr_group =
+            fort_conf_addr_group_ref(filter->conf, FORT_CONF_ADDR_GROUP_LAN);
+
+    conn->is_local_net = (UINT16) !fort_conf_addr_group_ip_included(addr_group, conn, &opt);
+}
+
 inline static BOOL fort_conf_conn_inet_addr_filtered(
         PCFORT_CONF_CONN_FILTER filter, PFORT_CONF_META_CONN conn)
 {
@@ -441,18 +453,10 @@ inline static BOOL fort_conf_conn_filter_flags_filtered(
         return TRUE;
 
     /* LAN addresses */
-    {
-        UCHAR local_zone_id;
-        const FORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT opt =
-                fort_conf_conn_addr_group_opt(filter, &local_zone_id);
-        PCFORT_CONF_ADDR_GROUP addr_group =
-                fort_conf_addr_group_ref(filter->conf, FORT_CONF_ADDR_GROUP_LAN);
+    fort_conf_conn_set_local_net(filter, conn);
 
-        conn->is_local_net = !fort_conf_addr_group_ip_included(addr_group, conn, &opt);
-
-        if (fort_conf_conn_net_flags_filtered(conn, conf_flags)) {
-            return TRUE; /* block net */
-        }
+    if (fort_conf_conn_net_flags_filtered(conn, conf_flags)) {
+        return TRUE; /* block net */
     }
 
     /* INET addresses */
@@ -475,6 +479,9 @@ FORT_API BOOL fort_conf_conn_flags_filtered(
 
     if (!(conf_flags.log_stat && conf_flags.log_stat_no_filter))
         return TRUE; /* allow (Filter Disabled) */
+
+    /* collect the traffic: the flow is logged */
+    fort_conf_conn_set_local_net(filter, conn);
 
     return FALSE;
 }

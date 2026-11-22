@@ -26,6 +26,7 @@ enum FortLogConnFlag {
     FORT_LOG_CONN_PROC_PATH = (1 << 7), /* the paths are of the process's PROC_NEW */
     FORT_LOG_CONN_ACTIVITY = (1 << 8), /* for the Activity only, not for the connections' DB */
     FORT_LOG_CONN_FLOW_LOGGING = (1 << 9), /* the flow's bytes and FLOW_CLOSED follow */
+    FORT_LOG_CONN_LOCAL_NET = (1 << 10), /* the remote address is of the LAN addresses */
 };
 
 enum FortConnReason {

@@ -72,11 +72,16 @@ inline static UINT32 fort_log_conn_proc_flags(PCFORT_CONF_META_CONN conn)
             | (conn->proc_logged ? FORT_LOG_CONN_PROC_PATH : 0);
 }
 
-inline static UINT32 fort_log_conn_flags(PCFORT_CONF_META_CONN conn)
+inline static UINT32 fort_log_conn_net_flags(PCFORT_CONF_META_CONN conn)
 {
     return (conn->isIPv6 ? FORT_LOG_CONN_IP6 : 0) | (conn->inbound ? FORT_LOG_CONN_INBOUND : 0)
             | (conn->is_loopback ? FORT_LOG_CONN_LOOPBACK : 0)
-            | (conn->act.conn_alert ? FORT_LOG_CONN_ALERTED : 0)
+            | (conn->is_local_net ? FORT_LOG_CONN_LOCAL_NET : 0);
+}
+
+inline static UINT32 fort_log_conn_flags(PCFORT_CONF_META_CONN conn)
+{
+    return fort_log_conn_net_flags(conn) | (conn->act.conn_alert ? FORT_LOG_CONN_ALERTED : 0)
             | (conn->act.terminated ? FORT_LOG_CONN_TERMINATED : 0)
             | (conn->flow_logging ? FORT_LOG_CONN_FLOW_LOGGING : 0)
             | (conn->activity_only ? FORT_LOG_CONN_ACTIVITY : 0) | fort_log_conn_proc_flags(conn);
@@ -132,6 +137,7 @@ FORT_API void fort_log_conn_header_read(
     conn->isIPv6 = (v & FORT_LOG_CONN_IP6) != 0;
     conn->inbound = (v & FORT_LOG_CONN_INBOUND) != 0;
     conn->is_loopback = (v & FORT_LOG_CONN_LOOPBACK) != 0;
+    conn->is_local_net = (v & FORT_LOG_CONN_LOCAL_NET) != 0;
     conn->inherited = (v & FORT_LOG_CONN_INHERITED) != 0;
     conn->act.conn_alert = (v & FORT_LOG_CONN_ALERTED) != 0;
     conn->act.terminated = (v & FORT_LOG_CONN_TERMINATED) != 0;

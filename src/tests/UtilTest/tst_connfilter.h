@@ -213,6 +213,10 @@ TEST_F(ConnFilterTest, filterDisabled)
     conn = connFilterConn("8.8.8.8");
     ASSERT_TRUE(connAllowed("C:\\App\\unknown.exe", conn));
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_UNKNOWN);
+
+    conn = connFilterConn("192.168.1.1");
+    ASSERT_TRUE(connAllowed("C:\\App\\unknown.exe", conn));
+    ASSERT_TRUE(conn.is_local_net);
 }
 
 TEST_F(ConnFilterTest, blockTraffic)
