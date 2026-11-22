@@ -82,6 +82,7 @@ typedef const FORT_LOG_PROC_NEW_HEADER *PCFORT_LOG_PROC_NEW_HEADER;
 #define FORT_LOG_FLOW_TRAF_SIZE(flow_count)                                                        \
     (FORT_LOG_FLOW_TRAF_HEADER_SIZE + (flow_count) * FORT_LOG_FLOW_STAT_SIZE)
 
+/* A tick's FLOW_TRAF portions are of this count, but the last one: shorter, empty if needed */
 #define FORT_LOG_FLOW_TRAF_BUFFER_FLOW_COUNT                                                       \
     ((FORT_BUFFER_SIZE - FORT_LOG_FLOW_TRAF_HEADER_SIZE) / FORT_LOG_FLOW_STAT_SIZE)
 

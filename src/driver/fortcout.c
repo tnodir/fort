@@ -320,41 +320,37 @@ inline static void fort_callout_flush_stat_traf(
     }
 }
 
-/* Returns FALSE on the buffer's error */
-inline static BOOL fort_callout_flush_flows_prepare(
-        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT16 flow_count, PCHAR *out)
+/* Returns NULL on the buffer's error */
+inline static PCHAR fort_callout_flush_flows_prepare(
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT16 flow_count)
 {
-    *out = NULL;
-
-    /* Only the deleted flows are freed */
-    if (flow_count == 0)
-        return TRUE;
-
     PCHAR p = fort_callout_flush_prepare(buf, irp_info, FORT_LOG_FLOW_TRAF_SIZE(flow_count));
     if (p == NULL)
-        return FALSE;
+        return NULL;
 
     fort_log_flow_traf_header_write(p, flow_count);
 
-    *out = p + FORT_LOG_FLOW_TRAF_HEADER_SIZE;
-
-    return TRUE;
+    return p + FORT_LOG_FLOW_TRAF_HEADER_SIZE;
 }
 
+/* The tick's FLOW_TRAF portions end by a shorter one: an empty one, if needed */
 inline static void fort_callout_flush_flows_traf(
         PFORT_STAT stat, PFORT_BUFFER buf, PFORT_IRP_INFO irp_info)
 {
-    while (stat->flow_active != NULL) {
-        const UINT16 flow_count = (stat->flow_active_count < FORT_LOG_FLOW_TRAF_BUFFER_FLOW_COUNT)
+    UINT16 flow_count;
+
+    do {
+        flow_count = (stat->flow_active_count < FORT_LOG_FLOW_TRAF_BUFFER_FLOW_COUNT)
                 ? (UINT16) stat->flow_active_count
                 : FORT_LOG_FLOW_TRAF_BUFFER_FLOW_COUNT;
 
-        PCHAR out;
-        if (!fort_callout_flush_flows_prepare(buf, irp_info, flow_count, &out))
+        PCHAR out = fort_callout_flush_flows_prepare(buf, irp_info, flow_count);
+        if (out == NULL)
             break;
 
+        /* An empty portion frees only the deleted flows */
         fort_stat_flows_traf_flush(stat, flow_count, out);
-    }
+    } while (flow_count == FORT_LOG_FLOW_TRAF_BUFFER_FLOW_COUNT);
 }
 
 FORT_API void fort_callout_timer(void)
