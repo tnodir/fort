@@ -17,6 +17,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <limits>
 
 #include <control/controlworker.h>
 #include <util/variantutil.h>
@@ -63,6 +64,14 @@ struct UiWait
     QString path;
     QString name;
     QString value;
+};
+
+struct IntField
+{
+    int value; // the default one
+    int min = 0;
+    int max = std::numeric_limits<int>::max();
+    const char *key;
 };
 
 struct UiWaitState
@@ -773,20 +782,38 @@ bool processSelect(const ProcessCommandArgs &p, ProcessCommandResult &r)
     return true;
 }
 
-bool parseWaitTimeout(const QVariantList &args, int &timeoutMsecs, QString &errorMessage)
+// The optional "key=N" argument after the command's path and its argument
+bool parseIntField(const QVariantList &args, IntField &field, QString &errorMessage)
 {
-    QVariantMap fields = { { "timeout", defaultWaitTimeoutMsecs } };
+    QVariantMap fields = { { field.key, field.value } };
 
     if (!ControlCommandUtil::parseFieldArgs(args, 3, fields, errorMessage))
         return false;
 
-    timeoutMsecs = fields["timeout"].toInt();
+    const QVariant &value = fields[field.key];
 
-    if (timeoutMsecs < 0 || timeoutMsecs > maxWaitTimeoutMsecs) {
-        errorMessage =
-                ControlCommandUtil::invalidValueText("timeout", fields["timeout"].toString());
+    field.value = value.toInt();
+
+    if (field.value < field.min || field.value > field.max) {
+        errorMessage = ControlCommandUtil::invalidValueText(field.key, value.toString());
         return false;
     }
+
+    return true;
+}
+
+bool parseWaitTimeout(const QVariantList &args, int &timeoutMsecs, QString &errorMessage)
+{
+    IntField field = {
+        .value = defaultWaitTimeoutMsecs,
+        .max = maxWaitTimeoutMsecs,
+        .key = "timeout",
+    };
+
+    if (!parseIntField(args, field, errorMessage))
+        return false;
+
+    timeoutMsecs = field.value;
 
     return true;
 }
@@ -878,16 +905,33 @@ bool processWait(const ProcessCommandArgs &p, ProcessCommandResult &r)
     return true;
 }
 
+// The scale is in percents
+QPixmap scaledPixmap(const QPixmap &pixmap, int scale)
+{
+    if (scale == 100)
+        return pixmap;
+
+    const QSize size = (pixmap.size() * scale / 100).expandedTo(QSize(1, 1));
+
+    return pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+}
+
 bool processGrab(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
+    IntField scale = { .value = 100, .min = 1, .max = 100, .key = "scale" };
+    if (!parseIntField(p.args, scale, r.errorMessage))
+        return false;
+
     QWidget *w = findArgObject<QWidget>(p, r, "a widget");
     if (!w)
         return false;
 
+    const QPixmap pixmap = scaledPixmap(w->grab(), scale.value);
+
     QByteArray data;
     QBuffer buffer(&data);
 
-    if (!buffer.open(QIODevice::WriteOnly) || !w->grab().save(&buffer, "PNG")) {
+    if (!buffer.open(QIODevice::WriteOnly) || !pixmap.save(&buffer, "PNG")) {
         r.errorMessage = "Cannot grab the widget";
         return false;
     }
@@ -938,7 +982,10 @@ inline constexpr UiCommand uiCommands[] = {
             .name = "wait",
             .usage = "wait <path> <prop>=<value> [timeout=ms]",
             .func = &processWait },
-    { .argsCount = 3, .name = "grab", .usage = "grab <path> <file>", .func = &processGrab },
+    { .argsCount = 3,
+            .name = "grab",
+            .usage = "grab <path> <file> [scale=1-100]",
+            .func = &processGrab },
 };
 
 const UiCommand *uiCommandByName(const QString &name)
