@@ -10,6 +10,7 @@ public:
         ClientFileNone = 0,
         ClientFileRead,
         ClientFileWrite,
+        ClientFileWriteData, // the result's text is the file's data in Base64
     };
 
     // Client: Read or write the files of the user

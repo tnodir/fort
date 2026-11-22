@@ -15,10 +15,12 @@ bool ControlCommandBase::prepareClientArgs(QVariantList &args, ProcessCommandRes
 bool ControlCommandBase::processClientResult(
         const QVariantList &args, ProcessCommandResult &r) const
 {
-    if (clientFileArg(args) != ClientFileWrite)
+    const ClientFileArg fileArg = clientFileArg(args);
+    if (fileArg < ClientFileWrite)
         return true;
 
-    return ControlCommandUtil::writeClientFileArg(args, r);
+    return ControlCommandUtil::writeClientFileArg(
+            args, r, /*isBase64Data=*/(fileArg == ClientFileWriteData));
 }
 
 int ControlCommandBase::resultWaitMsecs(const QVariantList & /*args*/) const

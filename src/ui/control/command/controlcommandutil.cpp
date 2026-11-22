@@ -30,6 +30,15 @@ QString clientFilePath(const QVariantList &args)
     return currentDir.absoluteFilePath(args.value(clientFileArgIndex).toString());
 }
 
+bool writeClientFile(const QString &filePath, const QString &text, bool isBase64Data)
+{
+    if (isBase64Data) {
+        return FileUtil::writeFileData(filePath, QByteArray::fromBase64(text.toLatin1()));
+    }
+
+    return FileUtil::writeFile(filePath, text);
+}
+
 bool parseValue(const QString &text, QVariant &value)
 {
     if (value.metaType().id() == QMetaType::QVariantList) {
@@ -246,12 +255,13 @@ bool ControlCommandUtil::readClientFileArg(QVariantList &args, ProcessCommandRes
     return true;
 }
 
-bool ControlCommandUtil::writeClientFileArg(const QVariantList &args, ProcessCommandResult &r)
+bool ControlCommandUtil::writeClientFileArg(
+        const QVariantList &args, ProcessCommandResult &r, bool isBase64Data)
 {
     if (r.commandResult == Control::CommandResultError)
         return true;
 
-    if (!FileUtil::writeFile(clientFilePath(args), r.errorMessage)) {
+    if (!writeClientFile(clientFilePath(args), r.errorMessage, isBase64Data)) {
         r.errorMessage = "Cannot write the file";
         return false;
     }

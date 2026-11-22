@@ -53,8 +53,9 @@ public:
     // Client: Replace the <file-path> argument with its file's text
     static bool readClientFileArg(QVariantList &args, ProcessCommandResult &r);
 
-    // Client: Write the result's text to the <file-path> argument's file
-    static bool writeClientFileArg(const QVariantList &args, ProcessCommandResult &r);
+    // Client: Write the result's text, or its data in Base64, to the <file-path> argument's file
+    static bool writeClientFileArg(
+            const QVariantList &args, ProcessCommandResult &r, bool isBase64Data);
 
     // The rule of the unique name
     static bool findRuleByName(const QString &ruleName, Rule &rule, QString &errorMessage);
