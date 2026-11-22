@@ -5,6 +5,7 @@
 #include <QApplication>
 #include <QHash>
 #include <QHeaderView>
+#include <QLineEdit>
 #include <QTableView>
 #include <QTreeView>
 
@@ -248,6 +249,19 @@ QStringList nodePaths(const QList<UiTestNode> &nodes)
     return paths;
 }
 
+bool isPasswordEdit(const QObject *o)
+{
+    const auto edit = qobject_cast<const QLineEdit *>(o);
+
+    return edit && edit->echoMode() != QLineEdit::Normal;
+}
+
+// The password field's text
+bool isHiddenProperty(const QObject *o, const QString &name)
+{
+    return isPasswordEdit(o) && (name == "text" || name == "selectedText");
+}
+
 bool isEmptyText(const QVariant &value)
 {
     return value.metaType().id() == QMetaType::QString && value.toString().isEmpty();
@@ -449,6 +463,9 @@ QVariantMap UiTestUtil::objectFields(QObject *o)
     QVariantMap fields = { { "class", className(o) } };
 
     for (const char *name : treePropertyNames) {
+        if (isHiddenProperty(o, name))
+            continue;
+
         const QVariant value = o->property(name);
         if (!value.isValid() || isEmptyText(value))
             continue;
@@ -474,6 +491,11 @@ bool UiTestUtil::pathPropertyValue(
     UiTestNode node;
     if (!findNode(path, node, errorMessage))
         return false;
+
+    if (isHiddenProperty(node.object, name)) {
+        errorMessage = "Hidden property: " + name;
+        return false;
+    }
 
     value = propertyValue(node.object, name);
     if (!value.isValid()) {

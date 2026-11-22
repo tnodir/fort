@@ -45,11 +45,12 @@ public:
     // The nodes and their descendants up to the depth (-1: unlimited)
     static QList<UiTestNode> treeNodes(const QList<UiTestNode> &nodes, int depth);
 
-    // The fields of the object's class, state and text: of the tree's nodes
+    // The fields of the object's class, state and text: of the tree's nodes;
+    // the text of a password's field is hidden
     static QVariantMap objectFields(QObject *o);
 
     // The property's value of the node by the path, or the pseudo one: class, rowCount,
-    // columnCount, or the path's one: exists
+    // columnCount, or the path's one: exists; the text of a password's field is hidden
     static bool pathPropertyValue(
             const QString &path, const QString &name, QVariant &value, QString &errorMessage);
 
