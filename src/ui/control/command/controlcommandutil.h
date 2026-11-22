@@ -47,8 +47,11 @@ public:
     static QString escapedText(QString text);
 
     // The "key=value" pairs separated by spaces, the booleans as 0 or 1,
-    // a text with white spaces or quotes in quotes, its quotes doubled
+    // a text with white spaces or quotes in quotes, its quotes doubled, escaped by escapedText()
     static QString fieldsToText(const QVariantMap &fields);
+
+    // The fields' text with every text escaped by escapedText(), quoted or not
+    static QString escapedFieldsToText(const QVariantMap &fields);
 
     // The text of the fields with the read-only "id", not a key to set
     static QString fieldsToTextWithId(QVariantMap fields, const QVariant &id);

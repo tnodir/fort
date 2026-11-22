@@ -75,25 +75,40 @@ bool parseFieldArg(const QString &arg, QVariantMap &fields, QString &errorMessag
     return true;
 }
 
-QString stringText(QString text)
+// A text not quoted is escaped only when isEscaped
+QString stringText(QString text, bool isEscaped)
 {
     const bool isQuoted =
             std::any_of(text.begin(), text.end(), [](QChar c) { return c.isSpace() || c == '"'; });
-    if (!isQuoted)
-        return text;
+    if (!isQuoted) {
+        return isEscaped ? ControlCommandUtil::escapedText(text) : text;
+    }
 
-    return '"' + text.replace('"', "\"\"") + '"';
+    text.replace('"', "\"\"");
+
+    return '"' + ControlCommandUtil::escapedText(text) + '"';
 }
 
-QString valueText(const QVariant &value)
+QString valueText(const QVariant &value, bool isEscaped)
 {
     switch (value.metaType().id()) {
     case QMetaType::QVariantList: {
         return ControlCommandUtil::idsText(value);
     }
     default:
-        return stringText(VariantUtil::toText(value));
+        return stringText(VariantUtil::toText(value), isEscaped);
     }
+}
+
+QString fieldsText(const QVariantMap &fields, bool isEscaped)
+{
+    QStringList list;
+
+    for (const auto &[key, value] : QtCompat::keyValueRange(fields)) {
+        list.append(key + '=' + valueText(value, isEscaped));
+    }
+
+    return list.join(' ');
 }
 
 }
@@ -222,13 +237,12 @@ QString ControlCommandUtil::escapedText(QString text)
 
 QString ControlCommandUtil::fieldsToText(const QVariantMap &fields)
 {
-    QStringList list;
+    return fieldsText(fields, /*isEscaped=*/false);
+}
 
-    for (const auto &[key, value] : QtCompat::keyValueRange(fields)) {
-        list.append(key + '=' + valueText(value));
-    }
-
-    return list.join(' ');
+QString ControlCommandUtil::escapedFieldsToText(const QVariantMap &fields)
+{
+    return fieldsText(fields, /*isEscaped=*/true);
 }
 
 QString ControlCommandUtil::fieldsToTextWithId(QVariantMap fields, const QVariant &id)

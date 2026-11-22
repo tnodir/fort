@@ -110,9 +110,22 @@ TEST_F(ControlCommandUtilTest, fieldsToText)
     ASSERT_EQ(ControlCommandUtil::fieldsToText({ { "ids", QVariantList { 1, 3 } } }), "ids=1,3");
     ASSERT_EQ(
             ControlCommandUtil::fieldsToText({ { "a", "B C" }, { "b", "D\"E" }, { "c", "F\nG" } }),
-            "a=\"B C\" b=\"D\"\"E\" c=\"F\nG\"");
+            "a=\"B C\" b=\"D\"\"E\" c=\"F\\nG\"");
+    ASSERT_EQ(ControlCommandUtil::fieldsToText(
+                      { { "a", "C:\\A B\\n.exe" }, { "b", "C:\\A\\n.exe" } }),
+            "a=\"C:\\\\A B\\\\n.exe\" b=C:\\A\\n.exe");
     ASSERT_EQ(ControlCommandUtil::fieldsToText({ { "r", QRect(1, 2, 3, 4) } }), "r=\"1,2 3x4\"");
     ASSERT_EQ(ControlCommandUtil::fieldsToText({}), QString());
     ASSERT_EQ(
             ControlCommandUtil::fieldsToTextWithId({ { "a", 1 }, { "z", 2 } }, 3), "a=1 id=3 z=2");
+}
+
+TEST_F(ControlCommandUtilTest, escapedFieldsToText)
+{
+    ASSERT_EQ(ControlCommandUtil::escapedFieldsToText(
+                      { { "a", "C:\\A B\\n.exe" }, { "b", "C:\\A\\n.exe" }, { "c", "D\"E" } }),
+            "a=\"C:\\\\A B\\\\n.exe\" b=C:\\\\A\\\\n.exe c=\"D\"\"E\"");
+    ASSERT_EQ(ControlCommandUtil::escapedFieldsToText(
+                      { { "flag", true }, { "ids", QVariantList { 1, 3 } } }),
+            "flag=1 ids=1,3");
 }

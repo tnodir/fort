@@ -80,7 +80,7 @@ QString argText(const QVariantList &args, int index)
 
 QString propertyText(const QString &name, const QVariant &value)
 {
-    return ControlCommandUtil::fieldsToText({ { name, value } });
+    return ControlCommandUtil::escapedFieldsToText({ { name, value } });
 }
 
 bool findArgNode(const ProcessCommandArgs &p, UiTestNode &node, ProcessCommandResult &r)
@@ -510,7 +510,7 @@ QString treeText(const QList<UiTestNode> &nodes)
     for (const auto &node : nodes) {
         const QVariantMap fields = UiTestUtil::objectFields(node.object);
 
-        lines.append(node.path + ' ' + ControlCommandUtil::fieldsToText(fields));
+        lines.append(node.path + ' ' + ControlCommandUtil::escapedFieldsToText(fields));
     }
 
     return lines.join('\n');
@@ -819,7 +819,7 @@ bool checkWait(const UiWait &wait, QString &text)
 
     text = propertyText(wait.name, value);
 
-    return VariantUtil::toText(value) == wait.value;
+    return ControlCommandUtil::escapedText(VariantUtil::toText(value)) == wait.value;
 }
 
 void checkWaitState(QTimer *timer, const UiWaitState &s)
