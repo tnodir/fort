@@ -406,18 +406,12 @@ void IfacePage::setupGlobalBox()
     // List Icon Size Row
     setupListIconSize();
 
-    m_cbUseSystemLocale =
-            ControlUtil::createCheckBox(iniUser().useSystemLocale(), [&](bool checked) {
-                iniUser().setUseSystemLocale(checked);
-                ctrl()->setIniUserEdited(true);
-            });
+    m_cbUseSystemLocale = createIniUserCheckBox(
+            &IniUser::useSystemLocale, &IniUser::setUseSystemLocale, /*flagsChanged=*/true);
     m_cbUseSystemLocale->setObjectName("cbUseSystemLocale");
 
     m_cbExcludeCapture =
-            ControlUtil::createCheckBox(iniUser().excludeFromCapture(), [&](bool checked) {
-                iniUser().setExcludeFromCapture(checked);
-                ctrl()->setIniUserEdited();
-            });
+            createIniUserCheckBox(&IniUser::excludeFromCapture, &IniUser::setExcludeFromCapture);
     m_cbExcludeCapture->setObjectName("cbExcludeCapture");
 
     auto layout = new QVBoxLayout();
@@ -609,16 +603,12 @@ void IfacePage::setupListIconSize()
 
 void IfacePage::setupHotKeysBox()
 {
-    m_cbHotKeysEnabled = ControlUtil::createCheckBox(iniUser().hotKeyEnabled(), [&](bool checked) {
-        iniUser().setHotKeyEnabled(checked);
-        ctrl()->setIniUserEdited(true);
-    });
+    m_cbHotKeysEnabled = createIniUserCheckBox(
+            &IniUser::hotKeyEnabled, &IniUser::setHotKeyEnabled, /*flagsChanged=*/true);
     m_cbHotKeysEnabled->setObjectName("cbHotKeysEnabled");
 
-    m_cbHotKeysGlobal = ControlUtil::createCheckBox(iniUser().hotKeyGlobal(), [&](bool checked) {
-        iniUser().setHotKeyGlobal(checked);
-        ctrl()->setIniUserEdited(true);
-    });
+    m_cbHotKeysGlobal = createIniUserCheckBox(
+            &IniUser::hotKeyGlobal, &IniUser::setHotKeyGlobal, /*flagsChanged=*/true);
     m_cbHotKeysGlobal->setObjectName("cbHotKeysGlobal");
 
     // Hot Keys Combo & Edit Rows
@@ -692,25 +682,16 @@ QLayout *IfacePage::setupEditShortcutLayout()
 
 void IfacePage::setupMainBox()
 {
-    m_cbMainAutoShowWindow =
-            ControlUtil::createCheckBox(iniUser().mainWindowAutoShowWindow(), [&](bool checked) {
-                iniUser().setMainWindowAutoShowWindow(checked);
-                ctrl()->setIniUserEdited();
-            });
+    m_cbMainAutoShowWindow = createIniUserCheckBox(
+            &IniUser::mainWindowAutoShowWindow, &IniUser::setMainWindowAutoShowWindow);
     m_cbMainAutoShowWindow->setObjectName("cbMainAutoShowWindow");
 
     m_cbSplashVisible =
-            ControlUtil::createCheckBox(iniUser().splashWindowVisible(), [&](bool checked) {
-                iniUser().setSplashWindowVisible(checked);
-                ctrl()->setIniUserEdited();
-            });
+            createIniUserCheckBox(&IniUser::splashWindowVisible, &IniUser::setSplashWindowVisible);
     m_cbSplashVisible->setObjectName("cbSplashVisible");
 
     m_cbUpdateWindowIcons =
-            ControlUtil::createCheckBox(iniUser().updateWindowIcons(), [&](bool checked) {
-                iniUser().setUpdateWindowIcons(checked);
-                ctrl()->setIniUserEdited();
-            });
+            createIniUserCheckBox(&IniUser::updateWindowIcons, &IniUser::setUpdateWindowIcons);
     m_cbUpdateWindowIcons->setObjectName("cbUpdateWindowIcons");
 
     auto layout = new QVBoxLayout();
@@ -725,46 +706,30 @@ void IfacePage::setupMainBox()
 void IfacePage::setupProgBox()
 {
     m_cbAppNotifyMessage =
-            ControlUtil::createCheckBox(iniUser().progNotifyMessage(), [&](bool checked) {
-                iniUser().setProgNotifyMessage(checked);
-                ctrl()->setIniUserEdited();
-            });
+            createIniUserCheckBox(&IniUser::progNotifyMessage, &IniUser::setProgNotifyMessage);
     m_cbAppNotifyMessage->setObjectName("cbAppNotifyMessage");
 
     // Alert layout
     auto alertLayout = setupAlertLayout();
 
-    m_cbAppAlertAlwaysOnTop =
-            ControlUtil::createCheckBox(iniUser().progAlertWindowAlwaysOnTop(), [&](bool checked) {
-                iniUser().setProgAlertWindowAlwaysOnTop(checked);
-                ctrl()->setIniUserEdited();
-            });
+    m_cbAppAlertAlwaysOnTop = createIniUserCheckBox(
+            &IniUser::progAlertWindowAlwaysOnTop, &IniUser::setProgAlertWindowAlwaysOnTop);
     m_cbAppAlertAlwaysOnTop->setObjectName("cbAppAlertAlwaysOnTop");
 
-    m_cbAppAlertAutoActive =
-            ControlUtil::createCheckBox(iniUser().progAlertWindowAutoActive(), [&](bool checked) {
-                iniUser().setProgAlertWindowAutoActive(checked);
-                ctrl()->setIniUserEdited();
-            });
+    m_cbAppAlertAutoActive = createIniUserCheckBox(
+            &IniUser::progAlertWindowAutoActive, &IniUser::setProgAlertWindowAutoActive);
     m_cbAppAlertAutoActive->setObjectName("cbAppAlertAutoActive");
 
-    m_cbAppAlertAutoClear =
-            ControlUtil::createCheckBox(iniUser().progWindowAutoClearAlerts(), [&](bool checked) {
-                iniUser().setProgWindowAutoClearAlerts(checked);
-                ctrl()->setIniUserEdited();
-            });
+    m_cbAppAlertAutoClear = createIniUserCheckBox(
+            &IniUser::progWindowAutoClearAlerts, &IniUser::setProgWindowAutoClearAlerts);
     m_cbAppAlertAutoClear->setObjectName("cbAppAlertAutoClear");
 
-    m_cbAppAlertSound = ControlUtil::createCheckBox(iniUser().progAlertSound(), [&](bool checked) {
-        iniUser().setProgAlertSound(checked);
-        ctrl()->setIniUserEdited();
-    });
+    m_cbAppAlertSound =
+            createIniUserCheckBox(&IniUser::progAlertSound, &IniUser::setProgAlertSound);
     m_cbAppAlertSound->setObjectName("cbAppAlertSound");
 
-    m_cbSnoozeAlerts = ControlUtil::createCheckBox(iniUser().progSnoozeAlerts(), [&](bool checked) {
-        iniUser().setProgSnoozeAlerts(checked);
-        ctrl()->setIniUserEdited();
-    });
+    m_cbSnoozeAlerts =
+            createIniUserCheckBox(&IniUser::progSnoozeAlerts, &IniUser::setProgSnoozeAlerts);
     m_cbSnoozeAlerts->setObjectName("cbSnoozeAlerts");
 
     // Layout
@@ -783,11 +748,8 @@ void IfacePage::setupProgBox()
 
 QLayout *IfacePage::setupAlertLayout()
 {
-    m_cbAppAlertAutoShow =
-            ControlUtil::createCheckBox(iniUser().progAlertWindowAutoShow(), [&](bool checked) {
-                iniUser().setProgAlertWindowAutoShow(checked);
-                ctrl()->setIniUserEdited();
-            });
+    m_cbAppAlertAutoShow = createIniUserCheckBox(
+            &IniUser::progAlertWindowAutoShow, &IniUser::setProgAlertWindowAutoShow);
     m_cbAppAlertAutoShow->setObjectName("cbAppAlertAutoShow");
 
     // Alert Modes Box
@@ -800,27 +762,18 @@ QLayout *IfacePage::setupAlertLayout()
 
 void IfacePage::setupAlertModes()
 {
-    m_cbAppAlertAutoLearn =
-            ControlUtil::createCheckBox(iniUser().progAlertWindowAutoLearn(), [&](bool checked) {
-                iniUser().setProgAlertWindowAutoLearn(checked);
-                ctrl()->setIniUserEdited();
-            });
+    m_cbAppAlertAutoLearn = createIniUserCheckBox(
+            &IniUser::progAlertWindowAutoLearn, &IniUser::setProgAlertWindowAutoLearn);
     m_cbAppAlertAutoLearn->setObjectName("cbAppAlertAutoLearn");
     setAlertModeIcon(m_cbAppAlertAutoLearn, FirewallConf::ModeAutoLearn);
 
-    m_cbAppAlertBlockAll =
-            ControlUtil::createCheckBox(iniUser().progAlertWindowBlockAll(), [&](bool checked) {
-                iniUser().setProgAlertWindowBlockAll(checked);
-                ctrl()->setIniUserEdited();
-            });
+    m_cbAppAlertBlockAll = createIniUserCheckBox(
+            &IniUser::progAlertWindowBlockAll, &IniUser::setProgAlertWindowBlockAll);
     m_cbAppAlertBlockAll->setObjectName("cbAppAlertBlockAll");
     setAlertModeIcon(m_cbAppAlertBlockAll, FirewallConf::ModeBlockAll);
 
-    m_cbAppAlertAllowAll =
-            ControlUtil::createCheckBox(iniUser().progAlertWindowAllowAll(), [&](bool checked) {
-                iniUser().setProgAlertWindowAllowAll(checked);
-                ctrl()->setIniUserEdited();
-            });
+    m_cbAppAlertAllowAll = createIniUserCheckBox(
+            &IniUser::progAlertWindowAllowAll, &IniUser::setProgAlertWindowAllowAll);
     m_cbAppAlertAllowAll->setObjectName("cbAppAlertAllowAll");
     setAlertModeIcon(m_cbAppAlertAllowAll, FirewallConf::ModeAllowAll);
 
@@ -852,23 +805,15 @@ void IfacePage::setupAlertModesButton()
 
 void IfacePage::setupTrayBox()
 {
-    m_cbTrayShowIcon = ControlUtil::createCheckBox(iniUser().trayShowIcon(), [&](bool checked) {
-        iniUser().setTrayShowIcon(checked);
-        ctrl()->setIniUserEdited(true);
-    });
+    m_cbTrayShowIcon = createIniUserCheckBox(
+            &IniUser::trayShowIcon, &IniUser::setTrayShowIcon, /*flagsChanged=*/true);
     m_cbTrayShowIcon->setObjectName("cbTrayShowIcon");
 
-    m_cbTrayShowAlert = ControlUtil::createCheckBox(iniUser().trayShowAlert(), [&](bool checked) {
-        iniUser().setTrayShowAlert(checked);
-        ctrl()->setIniUserEdited();
-    });
+    m_cbTrayShowAlert = createIniUserCheckBox(&IniUser::trayShowAlert, &IniUser::setTrayShowAlert);
     m_cbTrayShowAlert->setObjectName("cbTrayShowAlert");
 
     m_cbTrayAnimateAlert =
-            ControlUtil::createCheckBox(iniUser().trayAnimateAlert(), [&](bool checked) {
-                iniUser().setTrayAnimateAlert(checked);
-                ctrl()->setIniUserEdited();
-            });
+            createIniUserCheckBox(&IniUser::trayAnimateAlert, &IniUser::setTrayAnimateAlert);
     m_cbTrayAnimateAlert->setObjectName("cbTrayAnimateAlert");
 
     // Tray Max. Groups Row
@@ -879,10 +824,7 @@ void IfacePage::setupTrayBox()
     auto actionLayout = setupTrayActionLayout();
 
     m_cbTraySwitchWindow =
-            ControlUtil::createCheckBox(iniUser().traySwitchWindow(), [&](bool checked) {
-                iniUser().setTraySwitchWindow(checked);
-                ctrl()->setIniUserEdited();
-            });
+            createIniUserCheckBox(&IniUser::traySwitchWindow, &IniUser::setTraySwitchWindow);
     m_cbTraySwitchWindow->setObjectName("cbTraySwitchWindow");
 
     auto layout = new QVBoxLayout();
@@ -961,15 +903,9 @@ QLayout *IfacePage::setupTrayActionLayout()
 void IfacePage::setupConfirmationsBox()
 {
     m_cbConfirmTrayFlags =
-            ControlUtil::createCheckBox(iniUser().confirmTrayFlags(), [&](bool checked) {
-                iniUser().setConfirmTrayFlags(checked);
-                ctrl()->setIniUserEdited();
-            });
+            createIniUserCheckBox(&IniUser::confirmTrayFlags, &IniUser::setConfirmTrayFlags);
     m_cbConfirmTrayFlags->setObjectName("cbConfirmTrayFlags");
-    m_cbConfirmQuit = ControlUtil::createCheckBox(iniUser().confirmQuit(), [&](bool checked) {
-        iniUser().setConfirmQuit(checked);
-        ctrl()->setIniUserEdited();
-    });
+    m_cbConfirmQuit = createIniUserCheckBox(&IniUser::confirmQuit, &IniUser::setConfirmQuit);
     m_cbConfirmQuit->setObjectName("cbConfirmQuit");
 
     auto layout = new QVBoxLayout();

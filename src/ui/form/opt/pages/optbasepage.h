@@ -4,6 +4,8 @@
 #include <QFrame>
 #include <QUrl>
 
+#include <functional>
+
 QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
@@ -51,6 +53,20 @@ protected:
     // The ini option's check box: its toggling sets the option and marks the ini edited
     QCheckBox *createIniCheckBox(
             bool (IniOptions::*iniFlag)() const, void (IniOptions::*setIniFlag)(bool));
+
+    // The callback of the ini option's control: sets the changed option and marks the ini edited
+    std::function<void(int)> iniValueSetter(
+            int (IniOptions::*iniValue)() const, void (IniOptions::*setIniValue)(int));
+
+    // The user's ini option's check box: its toggling sets the option and marks the user's ini
+    // edited, its flags changed by flagsChanged
+    QCheckBox *createIniUserCheckBox(bool (IniUser::*iniFlag)() const,
+            void (IniUser::*setIniFlag)(bool), bool flagsChanged = false);
+
+    // The callback of the user's ini option's control: sets the changed option and marks
+    // the user's ini edited
+    std::function<void(int)> iniUserValueSetter(
+            int (IniUser::*iniValue)() const, void (IniUser::*setIniValue)(int));
 
 protected slots:
     virtual void onAboutToSave() { }

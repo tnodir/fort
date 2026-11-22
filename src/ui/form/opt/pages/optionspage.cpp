@@ -365,24 +365,14 @@ void OptionsPage::setupTimedOptions()
 {
     const auto timedOptionSecondsList = SpinCombo::makeValuesList(timedOptionSecondsValues);
 
-    m_lscFilterOffSeconds =
-            ControlUtil::createSpinCombo({ ini().filterOffSeconds(), 0, timedOptionSecondsMax },
-                    timedOptionSecondsList, {}, [&](int value) {
-                        if (ini().filterOffSeconds() != value) {
-                            ini().setFilterOffSeconds(value);
-                            ctrl()->setIniEdited();
-                        }
-                    });
+    m_lscFilterOffSeconds = ControlUtil::createSpinCombo(
+            { ini().filterOffSeconds(), 0, timedOptionSecondsMax }, timedOptionSecondsList, {},
+            iniValueSetter(&IniOptions::filterOffSeconds, &IniOptions::setFilterOffSeconds));
     m_lscFilterOffSeconds->setObjectName("lscFilterOffSeconds");
 
-    m_lscAutoLearnSeconds =
-            ControlUtil::createSpinCombo({ ini().autoLearnSeconds(), 0, timedOptionSecondsMax },
-                    timedOptionSecondsList, {}, [&](int value) {
-                        if (ini().autoLearnSeconds() != value) {
-                            ini().setAutoLearnSeconds(value);
-                            ctrl()->setIniEdited();
-                        }
-                    });
+    m_lscAutoLearnSeconds = ControlUtil::createSpinCombo(
+            { ini().autoLearnSeconds(), 0, timedOptionSecondsMax }, timedOptionSecondsList, {},
+            iniValueSetter(&IniOptions::autoLearnSeconds, &IniOptions::setAutoLearnSeconds));
     m_lscAutoLearnSeconds->setObjectName("lscAutoLearnSeconds");
 
     m_lscAskToConnectSeconds = ControlUtil::createSpinCombo(
@@ -503,21 +493,12 @@ void OptionsPage::setupProgBox()
 {
     setupLogApp();
 
-    m_cbRemoveLearntApps =
-            ControlUtil::createCheckBox(ini().progRemoveLearntApps(), [&](bool checked) {
-                if (ini().progRemoveLearntApps() != checked) {
-                    ini().setProgRemoveLearntApps(checked);
-                    ctrl()->setIniEdited();
-                }
-            });
+    m_cbRemoveLearntApps = createIniCheckBox(
+            &IniOptions::progRemoveLearntApps, &IniOptions::setProgRemoveLearntApps);
     m_cbRemoveLearntApps->setObjectName("cbRemoveLearntApps");
 
-    m_cbPurgeOnMounted = ControlUtil::createCheckBox(ini().progPurgeOnMounted(), [&](bool checked) {
-        if (ini().progPurgeOnMounted() != checked) {
-            ini().setProgPurgeOnMounted(checked);
-            ctrl()->setIniEdited();
-        }
-    });
+    m_cbPurgeOnMounted =
+            createIniCheckBox(&IniOptions::progPurgeOnMounted, &IniOptions::setProgPurgeOnMounted);
     m_cbPurgeOnMounted->setObjectName("cbPurgeOnMounted");
 
     // Layout

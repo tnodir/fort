@@ -7,6 +7,7 @@
 #include <form/opt/optionscontroller.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
+#include <user/iniuser.h>
 
 namespace {
 
@@ -31,6 +32,14 @@ std::function<void(T)> iniOptionSetter(
 {
     return iniSetter([page]() -> IniOptions & { return page->ini(); }, iniValue, setIniValue,
             [page] { page->ctrl()->setIniEdited(); });
+}
+
+template<typename T>
+std::function<void(T)> iniUserSetter(OptBasePage *page, T (IniUser::*iniValue)() const,
+        void (IniUser::*setIniValue)(T), bool flagsChanged)
+{
+    return iniSetter([page]() -> IniUser & { return page->iniUser(); }, iniValue, setIniValue,
+            [page, flagsChanged] { page->ctrl()->setIniUserEdited(flagsChanged); });
 }
 
 }
@@ -83,6 +92,25 @@ QCheckBox *OptBasePage::createIniCheckBox(
 {
     return ControlUtil::createCheckBox(
             (ini().*iniFlag)(), iniOptionSetter(this, iniFlag, setIniFlag));
+}
+
+std::function<void(int)> OptBasePage::iniValueSetter(
+        int (IniOptions::*iniValue)() const, void (IniOptions::*setIniValue)(int))
+{
+    return iniOptionSetter(this, iniValue, setIniValue);
+}
+
+QCheckBox *OptBasePage::createIniUserCheckBox(
+        bool (IniUser::*iniFlag)() const, void (IniUser::*setIniFlag)(bool), bool flagsChanged)
+{
+    return ControlUtil::createCheckBox(
+            (iniUser().*iniFlag)(), iniUserSetter(this, iniFlag, setIniFlag, flagsChanged));
+}
+
+std::function<void(int)> OptBasePage::iniUserValueSetter(
+        int (IniUser::*iniValue)() const, void (IniUser::*setIniValue)(int))
+{
+    return iniUserSetter(this, iniValue, setIniValue, /*flagsChanged=*/false);
 }
 
 void OptBasePage::setupController()

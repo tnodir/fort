@@ -248,81 +248,36 @@ void GraphPage::setupGraphBox()
 
 void GraphPage::setupGraphCheckboxes()
 {
-    m_cbGraphHideOnClose =
-            ControlUtil::createCheckBox(iniUser().graphWindowHideOnClose(), [&](bool checked) {
-                if (iniUser().graphWindowHideOnClose() != checked) {
-                    iniUser().setGraphWindowHideOnClose(checked);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_cbGraphHideOnClose = createIniUserCheckBox(
+            &IniUser::graphWindowHideOnClose, &IniUser::setGraphWindowHideOnClose);
     m_cbGraphHideOnClose->setObjectName("cbGraphHideOnClose");
-    m_cbGraphAlwaysOnTop =
-            ControlUtil::createCheckBox(iniUser().graphWindowAlwaysOnTop(), [&](bool checked) {
-                if (iniUser().graphWindowAlwaysOnTop() != checked) {
-                    iniUser().setGraphWindowAlwaysOnTop(checked);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_cbGraphAlwaysOnTop = createIniUserCheckBox(
+            &IniUser::graphWindowAlwaysOnTop, &IniUser::setGraphWindowAlwaysOnTop);
     m_cbGraphAlwaysOnTop->setObjectName("cbGraphAlwaysOnTop");
-    m_cbGraphFrameless =
-            ControlUtil::createCheckBox(iniUser().graphWindowFrameless(), [&](bool checked) {
-                if (iniUser().graphWindowFrameless() != checked) {
-                    iniUser().setGraphWindowFrameless(checked);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_cbGraphFrameless = createIniUserCheckBox(
+            &IniUser::graphWindowFrameless, &IniUser::setGraphWindowFrameless);
     m_cbGraphFrameless->setObjectName("cbGraphFrameless");
-    m_cbGraphClickThrough =
-            ControlUtil::createCheckBox(iniUser().graphWindowClickThrough(), [&](bool checked) {
-                if (iniUser().graphWindowClickThrough() != checked) {
-                    iniUser().setGraphWindowClickThrough(checked);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_cbGraphClickThrough = createIniUserCheckBox(
+            &IniUser::graphWindowClickThrough, &IniUser::setGraphWindowClickThrough);
     m_cbGraphClickThrough->setObjectName("cbGraphClickThrough");
-    m_cbGraphHideOnHover =
-            ControlUtil::createCheckBox(iniUser().graphWindowHideOnHover(), [&](bool checked) {
-                if (iniUser().graphWindowHideOnHover() != checked) {
-                    iniUser().setGraphWindowHideOnHover(checked);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_cbGraphHideOnHover = createIniUserCheckBox(
+            &IniUser::graphWindowHideOnHover, &IniUser::setGraphWindowHideOnHover);
     m_cbGraphHideOnHover->setObjectName("cbGraphHideOnHover");
 }
 
 void GraphPage::setupGraphViewCheckboxes()
 {
-    m_cbGraphHideYAxisLabels =
-            ControlUtil::createCheckBox(iniUser().graphWindowHideYAxisLabels(), [&](bool checked) {
-                if (iniUser().graphWindowHideYAxisLabels() != checked) {
-                    iniUser().setGraphWindowHideYAxisLabels(checked);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_cbGraphHideYAxisLabels = createIniUserCheckBox(
+            &IniUser::graphWindowHideYAxisLabels, &IniUser::setGraphWindowHideYAxisLabels);
     m_cbGraphHideYAxisLabels->setObjectName("cbGraphHideYAxisLabels");
-    m_cbGraphShowSpeed =
-            ControlUtil::createCheckBox(iniUser().graphWindowShowSpeed(), [&](bool checked) {
-                if (iniUser().graphWindowShowSpeed() != checked) {
-                    iniUser().setGraphWindowShowSpeed(checked);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_cbGraphShowSpeed = createIniUserCheckBox(
+            &IniUser::graphWindowShowSpeed, &IniUser::setGraphWindowShowSpeed);
     m_cbGraphShowSpeed->setObjectName("cbGraphShowSpeed");
-    m_cbGraphAnimation =
-            ControlUtil::createCheckBox(iniUser().graphWindowAnimation(), [&](bool checked) {
-                if (iniUser().graphWindowAnimation() != checked) {
-                    iniUser().setGraphWindowAnimation(checked);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_cbGraphAnimation = createIniUserCheckBox(
+            &IniUser::graphWindowAnimation, &IniUser::setGraphWindowAnimation);
     m_cbGraphAnimation->setObjectName("cbGraphAnimation");
-    m_cbGraphAxisTicks =
-            ControlUtil::createCheckBox(iniUser().graphWindowAxisTicks(), [&](bool checked) {
-                if (iniUser().graphWindowAxisTicks() != checked) {
-                    iniUser().setGraphWindowAxisTicks(checked);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_cbGraphAxisTicks = createIniUserCheckBox(
+            &IniUser::graphWindowAxisTicks, &IniUser::setGraphWindowAxisTicks);
     m_cbGraphAxisTicks->setObjectName("cbGraphAxisTicks");
 }
 
@@ -340,76 +295,42 @@ QLayout *GraphPage::setupGraphShowLayout()
 
 void GraphPage::setupGraphShowCheckboxes()
 {
-    m_cbGraphShowTotal =
-            ControlUtil::createCheckBox(iniUser().graphWindowShowTotal(), [&](bool checked) {
-                if (iniUser().graphWindowShowTotal() != checked) {
-                    iniUser().setGraphWindowShowTotal(checked);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_cbGraphShowTotal = createIniUserCheckBox(
+            &IniUser::graphWindowShowTotal, &IniUser::setGraphWindowShowTotal);
     m_cbGraphShowTotal->setObjectName("cbGraphShowTotal");
-    m_cbGraphShowIn = ControlUtil::createCheckBox(iniUser().graphWindowShowIn(), [&](bool checked) {
-        if (iniUser().graphWindowShowIn() != checked) {
-            iniUser().setGraphWindowShowIn(checked);
-            ctrl()->setIniUserEdited();
-        }
-    });
+    m_cbGraphShowIn =
+            createIniUserCheckBox(&IniUser::graphWindowShowIn, &IniUser::setGraphWindowShowIn);
     m_cbGraphShowIn->setObjectName("cbGraphShowIn");
     m_cbGraphShowOut =
-            ControlUtil::createCheckBox(iniUser().graphWindowShowOut(), [&](bool checked) {
-                if (iniUser().graphWindowShowOut() != checked) {
-                    iniUser().setGraphWindowShowOut(checked);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+            createIniUserCheckBox(&IniUser::graphWindowShowOut, &IniUser::setGraphWindowShowOut);
     m_cbGraphShowOut->setObjectName("cbGraphShowOut");
 }
 
 void GraphPage::setupGraphOptions()
 {
-    m_graphOpacity =
-            ControlUtil::createSpin({ iniUser().graphWindowOpacity(), 0, 100 }, " %", [&](int v) {
-                if (iniUser().graphWindowOpacity() != v) {
-                    iniUser().setGraphWindowOpacity(v);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_graphOpacity = ControlUtil::createSpin({ iniUser().graphWindowOpacity(), 0, 100 }, " %",
+            iniUserValueSetter(&IniUser::graphWindowOpacity, &IniUser::setGraphWindowOpacity));
     m_graphOpacity->setObjectName("graphOpacity");
 
-    m_graphHoverOpacity = ControlUtil::createSpin(
-            { iniUser().graphWindowHoverOpacity(), 0, 100 }, " %", [&](int v) {
-                if (iniUser().graphWindowHoverOpacity() != v) {
-                    iniUser().setGraphWindowHoverOpacity(v);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_graphHoverOpacity =
+            ControlUtil::createSpin({ iniUser().graphWindowHoverOpacity(), 0, 100 }, " %",
+                    iniUserValueSetter(&IniUser::graphWindowHoverOpacity,
+                            &IniUser::setGraphWindowHoverOpacity));
     m_graphHoverOpacity->setObjectName("graphHoverOpacity");
 
-    m_graphTickLabelSize = ControlUtil::createSpin(
-            { iniUser().graphWindowTickLabelSize(), 1, 99 }, {}, [&](int v) {
-                if (iniUser().graphWindowTickLabelSize() != v) {
-                    iniUser().setGraphWindowTickLabelSize(v);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_graphTickLabelSize =
+            ControlUtil::createSpin({ iniUser().graphWindowTickLabelSize(), 1, 99 }, {},
+                    iniUserValueSetter(&IniUser::graphWindowTickLabelSize,
+                            &IniUser::setGraphWindowTickLabelSize));
     m_graphTickLabelSize->setObjectName("graphTickLabelSize");
 
-    m_graphBarWidth =
-            ControlUtil::createSpin({ iniUser().graphWindowBarWidth(), 1, 99 }, " px", [&](int v) {
-                if (iniUser().graphWindowBarWidth() != v) {
-                    iniUser().setGraphWindowBarWidth(v);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_graphBarWidth = ControlUtil::createSpin({ iniUser().graphWindowBarWidth(), 1, 99 }, " px",
+            iniUserValueSetter(&IniUser::graphWindowBarWidth, &IniUser::setGraphWindowBarWidth));
     m_graphBarWidth->setObjectName("graphBarWidth");
 
-    m_graphMaxSeconds =
-            ControlUtil::createSpin({ iniUser().graphWindowMaxSeconds(), 0, 9999 }, {}, [&](int v) {
-                if (iniUser().graphWindowMaxSeconds() != v) {
-                    iniUser().setGraphWindowMaxSeconds(v);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_graphMaxSeconds = ControlUtil::createSpin({ iniUser().graphWindowMaxSeconds(), 0, 9999 }, {},
+            iniUserValueSetter(
+                    &IniUser::graphWindowMaxSeconds, &IniUser::setGraphWindowMaxSeconds));
     m_graphMaxSeconds->setObjectName("graphMaxSeconds");
 
     setupGraphFixedSpeed();
@@ -427,14 +348,10 @@ void GraphPage::setupGraphFixedSpeed()
     }
 
     const auto speedValuesList = SpinCombo::makeValuesList(speedValues);
-    m_graphFixedSpeed =
-            ControlUtil::createSpinCombo({ iniUser().graphWindowFixedSpeed(), 0, 9999999 },
-                    speedValuesList, " Kb/s", [&](int value) {
-                        if (iniUser().graphWindowFixedSpeed() != value) {
-                            iniUser().setGraphWindowFixedSpeed(value);
-                            ctrl()->setIniUserEdited();
-                        }
-                    });
+    m_graphFixedSpeed = ControlUtil::createSpinCombo(
+            { iniUser().graphWindowFixedSpeed(), 0, 9999999 }, speedValuesList, " Kb/s",
+            iniUserValueSetter(
+                    &IniUser::graphWindowFixedSpeed, &IniUser::setGraphWindowFixedSpeed));
     m_graphFixedSpeed->setObjectName("graphFixedSpeed");
     m_graphFixedSpeed->setNames(speedNames);
 }
@@ -643,13 +560,8 @@ void GraphPage::saveGraphWindowGeometry()
 
 void GraphPage::setupGeometryControls()
 {
-    m_cbGraphMaximized =
-            ControlUtil::createCheckBox(iniUser().graphWindowMaximized(), [&](bool checked) {
-                if (iniUser().graphWindowMaximized() != checked) {
-                    iniUser().setGraphWindowMaximized(checked);
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_cbGraphMaximized = createIniUserCheckBox(
+            &IniUser::graphWindowMaximized, &IniUser::setGraphWindowMaximized);
     m_cbGraphMaximized->setObjectName("cbGraphMaximized");
 
     const QRect rect = iniUser().graphWindowGeometry();
