@@ -2,10 +2,38 @@
 
 #include <QLabel>
 
+#include <conf/inioptions.h>
 #include <form/controls/controlutil.h>
 #include <form/opt/optionscontroller.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
+
+namespace {
+
+// The setter of the changed option of the ini got by the function: marks the ini edited
+template<typename Ini, typename T, typename IniFunc, typename EditedFunc>
+std::function<void(T)> iniSetter(const IniFunc &iniFunc, T (Ini::*iniValue)() const,
+        void (Ini::*setIniValue)(T), const EditedFunc &setEdited)
+{
+    return [=](T v) {
+        Ini &ini = iniFunc();
+        if ((ini.*iniValue)() == v)
+            return;
+
+        (ini.*setIniValue)(v);
+        setEdited();
+    };
+}
+
+template<typename T>
+std::function<void(T)> iniOptionSetter(
+        OptBasePage *page, T (IniOptions::*iniValue)() const, void (IniOptions::*setIniValue)(T))
+{
+    return iniSetter([page]() -> IniOptions & { return page->ini(); }, iniValue, setIniValue,
+            [page] { page->ctrl()->setIniEdited(); });
+}
+
+}
 
 OptBasePage::OptBasePage(OptionsController *ctrl, QWidget *parent) : QFrame(parent), m_ctrl(ctrl)
 {
@@ -48,6 +76,13 @@ QWidget *OptBasePage::createNoServiceWarning(QLabel *label)
     }
 
     return w;
+}
+
+QCheckBox *OptBasePage::createIniCheckBox(
+        bool (IniOptions::*iniFlag)() const, void (IniOptions::*setIniFlag)(bool))
+{
+    return ControlUtil::createCheckBox(
+            (ini().*iniFlag)(), iniOptionSetter(this, iniFlag, setIniFlag));
 }
 
 void OptBasePage::setupController()

@@ -48,6 +48,10 @@ protected:
     // The warning by the label, shown only without the Service
     static QWidget *createNoServiceWarning(QLabel *label);
 
+    // The ini option's check box: its toggling sets the option and marks the ini edited
+    QCheckBox *createIniCheckBox(
+            bool (IniOptions::*iniFlag)() const, void (IniOptions::*setIniFlag)(bool));
+
 protected slots:
     virtual void onAboutToSave() { }
     virtual void onEditResetted() { }

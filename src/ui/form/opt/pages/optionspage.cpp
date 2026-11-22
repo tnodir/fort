@@ -400,21 +400,14 @@ void OptionsPage::setupProtectionBox()
         ctrl()->setFlagsEdited();
     });
 
-    m_cbNoServiceControl = ControlUtil::createCheckBox(ini().noServiceControl(), [&](bool checked) {
-        ini().setNoServiceControl(checked);
-        ctrl()->setIniEdited();
-    });
+    m_cbNoServiceControl =
+            createIniCheckBox(&IniOptions::noServiceControl, &IniOptions::setNoServiceControl);
 
-    m_cbDisableCmdLine = ControlUtil::createCheckBox(ini().disableCmdLine(), [&](bool checked) {
-        ini().setDisableCmdLine(checked);
-        ctrl()->setIniEdited();
-    });
+    m_cbDisableCmdLine =
+            createIniCheckBox(&IniOptions::disableCmdLine, &IniOptions::setDisableCmdLine);
 
-    m_cbCheckPasswordOnUninstall =
-            ControlUtil::createCheckBox(ini().checkPasswordOnUninstall(), [&](bool checked) {
-                ini().setCheckPasswordOnUninstall(checked);
-                ctrl()->setIniEdited();
-            });
+    m_cbCheckPasswordOnUninstall = createIniCheckBox(
+            &IniOptions::checkPasswordOnUninstall, &IniOptions::setCheckPasswordOnUninstall);
 
     if (!Fort::settings()->hasMasterAdmin()) {
         m_cbCheckPasswordOnUninstall->setEnabled(false);
@@ -531,23 +524,14 @@ void OptionsPage::setupLogApp()
 
 void OptionsPage::setupUpdateBox()
 {
-    m_cbUpdateKeepCurrentVersion =
-            ControlUtil::createCheckBox(ini().updateKeepCurrentVersion(), [&](bool checked) {
-                ini().setUpdateKeepCurrentVersion(checked);
-                ctrl()->setIniEdited();
-            });
+    m_cbUpdateKeepCurrentVersion = createIniCheckBox(
+            &IniOptions::updateKeepCurrentVersion, &IniOptions::setUpdateKeepCurrentVersion);
 
     m_cbUpdateAutoDownload =
-            ControlUtil::createCheckBox(ini().updateAutoDownload(), [&](bool checked) {
-                ini().setUpdateAutoDownload(checked);
-                ctrl()->setIniEdited();
-            });
+            createIniCheckBox(&IniOptions::updateAutoDownload, &IniOptions::setUpdateAutoDownload);
 
     m_cbUpdateAutoInstall =
-            ControlUtil::createCheckBox(ini().updateAutoInstall(), [&](bool checked) {
-                ini().setUpdateAutoInstall(checked);
-                ctrl()->setIniEdited();
-            });
+            createIniCheckBox(&IniOptions::updateAutoInstall, &IniOptions::setUpdateAutoInstall);
 
     // Layout
     auto layout = ControlUtil::createVLayoutByWidgets(
@@ -559,15 +543,9 @@ void OptionsPage::setupUpdateBox()
 
 void OptionsPage::setupLogsBox()
 {
-    m_cbLogDebug = ControlUtil::createCheckBox(ini().logDebug(), [&](bool checked) {
-        ini().setLogDebug(checked);
-        ctrl()->setIniEdited();
-    });
+    m_cbLogDebug = createIniCheckBox(&IniOptions::logDebug, &IniOptions::setLogDebug);
 
-    m_cbLogConsole = ControlUtil::createCheckBox(ini().logConsole(), [&](bool checked) {
-        ini().setLogConsole(checked);
-        ctrl()->setIniEdited();
-    });
+    m_cbLogConsole = createIniCheckBox(&IniOptions::logConsole, &IniOptions::setLogConsole);
 
     m_cbTraceEvents = ControlUtil::createCheckBox(conf().traceEvents(), [&](bool checked) {
         conf().setTraceEvents(checked);
