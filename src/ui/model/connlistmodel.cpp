@@ -280,7 +280,7 @@ QVariant ConnListModel::headerDataDecoration(int section) const
 {
     switch (ConnListColumn(section)) {
     case ConnListColumn::Direction:
-        return IconCache::icon(":/icons/green_down.png");
+        return IconCache::icon(":/icons/bullet_up_down.png");
     case ConnListColumn::Action:
         return IconCache::icon(":/icons/accept.png");
     case ConnListColumn::Reason:

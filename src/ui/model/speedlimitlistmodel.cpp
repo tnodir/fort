@@ -187,8 +187,9 @@ QVariant SpeedLimitListModel::headerDataDisplay(int section, int role) const
 
 QVariant SpeedLimitListModel::headerDataDecoration(int section) const
 {
-    if (SpeedLimitListColumn(section) == SpeedLimitListColumn::Direction)
-        return IconCache::icon(":/icons/green_down.png");
+    if (SpeedLimitListColumn(section) == SpeedLimitListColumn::Direction) {
+        return IconCache::icon(":/icons/bullet_up_down.png");
+    }
 
     return {};
 }
