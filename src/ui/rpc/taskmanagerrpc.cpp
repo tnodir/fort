@@ -57,6 +57,12 @@ inline bool processTaskManager_abortTask(TaskManager *taskManager, const Process
     return true;
 }
 
+inline bool processTaskManager_runZonesTask(TaskManager *taskManager, const ProcessCommandArgs &p)
+{
+    taskManager->runZonesTask(p.args.value(0).toUInt());
+    return true;
+}
+
 inline bool processTaskManager_taskStarted(TaskManager *taskManager, const ProcessCommandArgs &p)
 {
     if (auto tm = qobject_cast<TaskManagerRpc *>(taskManager)) {
@@ -81,6 +87,9 @@ inline bool processTaskManagerRpcResult(TaskManager *taskManager, const ProcessC
     }
     case Control::Rpc_TaskManager_abortTask: {
         return processTaskManager_abortTask(taskManager, p);
+    }
+    case Control::Rpc_TaskManager_runZonesTask: {
+        return processTaskManager_runZonesTask(taskManager, p);
     }
     case Control::Rpc_TaskManager_taskStarted: {
         return processTaskManager_taskStarted(taskManager, p);
@@ -129,6 +138,11 @@ void TaskManagerRpc::runTask(qint8 taskType)
 void TaskManagerRpc::abortTask(qint8 taskType)
 {
     rpcManager()->invokeOnServer(Control::Rpc_TaskManager_abortTask, { taskType });
+}
+
+void TaskManagerRpc::runZonesTask(quint32 zonesMask)
+{
+    rpcManager()->invokeOnServer(Control::Rpc_TaskManager_runZonesTask, { zonesMask });
 }
 
 bool TaskManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)

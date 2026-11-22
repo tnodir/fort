@@ -52,6 +52,8 @@ public slots:
     virtual void runTask(qint8 taskType);
     virtual void abortTask(qint8 taskType);
 
+    virtual void runZonesTask(quint32 zonesMask);
+
 protected slots:
     void handleTaskStarted();
     void handleTaskFinished(bool success);

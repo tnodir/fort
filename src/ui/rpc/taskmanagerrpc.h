@@ -24,6 +24,8 @@ public slots:
     void runTask(qint8 taskType) override;
     void abortTask(qint8 taskType) override;
 
+    void runZonesTask(quint32 zonesMask) override;
+
 protected slots:
     void runExpiredTasks() override { }
 

@@ -159,6 +159,11 @@ void TaskManager::abortTask(qint8 taskType)
     }
 }
 
+void TaskManager::runZonesTask(quint32 zonesMask)
+{
+    taskInfoZoneDownloader()->runZones(zonesMask);
+}
+
 void TaskManager::handleTaskStarted()
 {
     auto taskInfo = qobject_cast<TaskInfo *>(sender());

@@ -41,6 +41,24 @@ void TaskInfoZoneDownloader::initialize()
     loadZones();
 }
 
+void TaskInfoZoneDownloader::runZones(quint32 zonesMask)
+{
+    // As TaskInfo::run(): the worker stays till the run's end, after its workFinished()
+    if (taskWorker()) {
+        addPendingZones(zonesMask);
+        return;
+    }
+
+    m_runZonesMask = zonesMask;
+
+    TaskInfo::run();
+}
+
+void TaskInfoZoneDownloader::run()
+{
+    runZones(allZonesMask);
+}
+
 bool TaskInfoZoneDownloader::processResult(bool success)
 {
     if (!success) {
@@ -149,18 +167,23 @@ void TaskInfoZoneDownloader::setupTaskWorker()
     setupNextTaskWorker();
 }
 
-void TaskInfoZoneDownloader::setupNextTaskWorker()
+// A run of all Zones requested meanwhile doesn't repeat the current one
+void TaskInfoZoneDownloader::addPendingZones(quint32 zonesMask)
 {
-    const int rowCount = zoneListModel()->rowCount();
-    if (m_zoneIndex >= rowCount) {
-        if (aborted()) {
-            loadZones(); // the rest of the Zones from the cache
-        }
-
-        emitZonesUpdated();
-
-        TaskInfo::handleFinished(m_success);
+    if (zonesMask == allZonesMask && isAllZonesRun())
         return;
+
+    m_pendingZonesMask |= zonesMask;
+}
+
+// Returns false when the run is finished: the pending Zones' run is started already
+bool TaskInfoZoneDownloader::setupNextTaskWorker()
+{
+    m_zoneIndex = nextZoneIndex(m_zoneIndex);
+
+    if (m_zoneIndex >= zoneListModel()->rowCount()) {
+        finishZones();
+        return false;
     }
 
     abortTask();
@@ -171,6 +194,61 @@ void TaskInfoZoneDownloader::setupNextTaskWorker()
     setupTaskWorkerByZone(worker, m_zoneIndex);
 
     insertZoneId(m_zones.zonesMask, worker->zoneId());
+
+    return true;
+}
+
+// Skips the Zones not to run
+int TaskInfoZoneDownloader::nextZoneIndex(int zoneIndex) const
+{
+    const int rowCount = zoneListModel()->rowCount();
+
+    while (zoneIndex < rowCount
+            && !containsZoneId(m_runZonesMask, zoneListModel()->zoneRowAt(zoneIndex).zoneId)) {
+        ++zoneIndex;
+    }
+
+    return zoneIndex;
+}
+
+void TaskInfoZoneDownloader::finishZones()
+{
+    const bool aborted = this->aborted();
+    const bool allZones = isAllZonesRun();
+
+    if (aborted || !allZones) {
+        loadZones(); // the rest of the Zones from the cache
+    }
+
+    emitZonesUpdated();
+
+    finishRunZones(allZones);
+
+    runPendingZones(aborted);
+}
+
+// A run of some Zones doesn't delay the next run of all
+void TaskInfoZoneDownloader::finishRunZones(bool allZones)
+{
+    if (allZones) {
+        TaskInfo::handleFinished(m_success);
+    } else {
+        finishRun(m_success);
+    }
+}
+
+// Also the Zones requested by the run's finish
+void TaskInfoZoneDownloader::runPendingZones(bool aborted)
+{
+    const quint32 pendingZonesMask = m_pendingZonesMask;
+
+    m_runZonesMask = allZonesMask;
+    m_pendingZonesMask = 0;
+
+    // The Zones of the DB being replaced by the Import aren't run
+    if (pendingZonesMask != 0 && !aborted) {
+        runZones(pendingZonesMask);
+    }
 }
 
 void TaskInfoZoneDownloader::setupTaskWorkerByZone(TaskZoneDownloader *worker, int zoneIndex) const
@@ -213,8 +291,9 @@ void TaskInfoZoneDownloader::handleFinished(bool success)
         ++m_zoneIndex;
     }
 
-    setupNextTaskWorker();
-    runTaskWorker();
+    if (setupNextTaskWorker()) {
+        runTaskWorker();
+    }
 }
 
 void TaskInfoZoneDownloader::processSubResult(bool success)
@@ -248,9 +327,14 @@ void TaskInfoZoneDownloader::addSubResult(TaskZoneDownloader *worker, bool succe
 {
     if (success) {
         m_zoneNames.append(worker->zoneName());
-    } else if (!worker->loadAddresses()) {
-        return;
     }
+
+    // A run of some Zones loads all of them from the cache at its end
+    if (!isAllZonesRun())
+        return;
+
+    if (!success && !worker->loadAddresses())
+        return;
 
     addZoneData(m_zones, *worker);
 }

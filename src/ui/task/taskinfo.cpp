@@ -154,6 +154,11 @@ void TaskInfo::handleFinished(bool success)
         }
     }
 
+    finishRun(success);
+}
+
+void TaskInfo::finishRun(bool success)
+{
     setRunning(false);
     emit workFinished(success);
 

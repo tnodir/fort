@@ -152,6 +152,7 @@ enum Command : quint8 {
 
     Rpc_TaskManager_runTask,
     Rpc_TaskManager_abortTask,
+    Rpc_TaskManager_runZonesTask,
     Rpc_TaskManager_taskStarted,
     Rpc_TaskManager_taskFinished,
     Rpc_TaskManager_appVersionUpdated,

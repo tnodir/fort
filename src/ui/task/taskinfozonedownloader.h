@@ -56,6 +56,9 @@ public:
 
     void initialize() override;
 
+    // Updates the Zones of the mask, loading the others from the cache: after the current run
+    void runZones(quint32 zonesMask);
+
     // Loads the Zones' addresses from the cache
     ZonesData loadZonesData() const;
 
@@ -67,6 +70,9 @@ public:
     static bool syncHostZone(HostZonesDb &db, const HostZoneSource &zone, HostRange &hostRange);
 
 public slots:
+    // Runs all Zones: after the current run of some Zones
+    void run() override;
+
     bool processResult(bool success) override;
 
     bool saveZoneAsText(const QString &filePath, int zoneIndex) const;
@@ -80,7 +86,14 @@ protected slots:
     void clearSubResults();
 
 private:
-    void setupNextTaskWorker();
+    bool isAllZonesRun() const { return m_runZonesMask == allZonesMask; }
+    void addPendingZones(quint32 zonesMask);
+
+    bool setupNextTaskWorker();
+    int nextZoneIndex(int zoneIndex) const;
+    void finishZones();
+    void finishRunZones(bool allZones);
+    void runPendingZones(bool aborted);
     void setupTaskWorkerByZone(TaskZoneDownloader *worker, int zoneIndex) const;
     void addSubResult(TaskZoneDownloader *worker, bool success);
 
@@ -98,8 +111,13 @@ private:
     QString cachePath() const;
 
 private:
+    static constexpr quint32 allZonesMask = ~quint32(0);
+
     bool m_success = false;
     int m_zoneIndex = 0;
+
+    quint32 m_runZonesMask = allZonesMask;
+    quint32 m_pendingZonesMask = 0;
 
     QStringList m_zoneNames;
 

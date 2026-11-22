@@ -90,7 +90,7 @@ signals:
     void workFinished(bool success);
 
 public slots:
-    void run();
+    virtual void run();
     void abortTask();
 
     virtual bool processResult(bool success) = 0;
@@ -100,6 +100,9 @@ protected slots:
     virtual void runTaskWorker();
 
     virtual void handleFinished(bool success);
+
+protected:
+    void finishRun(bool success);
 
 private:
     TaskWorker *createWorker();

@@ -148,6 +148,7 @@ static const QHash<Command, const char *> g_commandNames = {
 
     CASE_STRING(Rpc_TaskManager_runTask),
     CASE_STRING(Rpc_TaskManager_abortTask),
+    CASE_STRING(Rpc_TaskManager_runZonesTask),
     CASE_STRING(Rpc_TaskManager_taskStarted),
     CASE_STRING(Rpc_TaskManager_taskFinished),
     CASE_STRING(Rpc_TaskManager_appVersionUpdated),
@@ -329,6 +330,7 @@ static const RpcManager g_commandManagers[] = {
 
     Rpc_TaskManager, // Rpc_TaskManager_runTask,
     Rpc_TaskManager, // Rpc_TaskManager_abortTask,
+    Rpc_TaskManager, // Rpc_TaskManager_runZonesTask,
     Rpc_TaskManager, // Rpc_TaskManager_taskStarted,
     Rpc_TaskManager, // Rpc_TaskManager_taskFinished,
     Rpc_TaskManager, // Rpc_TaskManager_appVersionUpdated,
@@ -484,6 +486,7 @@ static const qint8 g_commandValidations[] = {
 
     true, // Rpc_TaskManager_runTask,
     true, // Rpc_TaskManager_abortTask,
+    true, // Rpc_TaskManager_runZonesTask,
     0, // Rpc_TaskManager_taskStarted,
     0, // Rpc_TaskManager_taskFinished,
     0, // Rpc_TaskManager_appVersionUpdated,
