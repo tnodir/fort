@@ -49,6 +49,7 @@ private:
     void deleteSelectedZone();
 
     void saveZoneAsText();
+    void updateZone(const Zone &zone);
     void downloadZones();
 
     int zoneListCurrentIndex() const;

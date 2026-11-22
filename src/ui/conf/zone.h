@@ -11,6 +11,7 @@ public:
 
     bool isNameEqual(const Zone &o) const;
     bool isOptionsEqual(const Zone &o) const;
+    bool isSourceEqual(const Zone &o) const;
 
 public:
     bool enabled : 1 = true;

@@ -10,6 +10,8 @@
 class HostRange;
 class HostZonesDb;
 class TaskZoneDownloader;
+class Zone;
+class ZoneSourceWrapper;
 
 struct ZonesData
 {
@@ -65,6 +67,9 @@ public:
     // The Hosts Zones' cache files to load their names from
     HostZonesSource hostZonesSource() const;
 
+    // Whether the Zone's addresses are of its inline text or of a local file
+    bool isZoneLocal(const Zone &zone) const;
+
     // Loads the changed Hosts Zone's names from its cache file into the DB: called by a worker
     // thread. Returns whether the names to match changed.
     static bool syncHostZone(HostZonesDb &db, const HostZoneSource &zone, HostRange &hostRange);
@@ -95,6 +100,10 @@ private:
     void finishRunZones(bool allZones);
     void runPendingZones(bool aborted);
     void setupTaskWorkerByZone(TaskZoneDownloader *worker, int zoneIndex) const;
+
+    static QString zoneUrl(const Zone &zone, const ZoneSourceWrapper &zoneSource);
+    static QString zoneFormData(const Zone &zone, const ZoneSourceWrapper &zoneSource);
+
     void addSubResult(TaskZoneDownloader *worker, bool success);
 
     static void addZoneData(ZonesData &zones, const TaskZoneDownloader &worker);

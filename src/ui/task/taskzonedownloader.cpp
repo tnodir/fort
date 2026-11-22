@@ -63,7 +63,7 @@ bool TaskZoneDownloader::setupDownloader()
     }
 
     // Load addresses from local file
-    if (QUrl::fromUserInput(url()).isLocalFile()) {
+    if (isLocalFileUrl(url())) {
         loadLocalFile();
         return false;
     }
@@ -72,6 +72,16 @@ bool TaskZoneDownloader::setupDownloader()
     downloader()->setData(formData().toUtf8());
 
     return true;
+}
+
+bool TaskZoneDownloader::isLocalUrl(const QString &url)
+{
+    return url.isEmpty() || isLocalFileUrl(url);
+}
+
+bool TaskZoneDownloader::isLocalFileUrl(const QString &url)
+{
+    return QUrl::fromUserInput(url).isLocalFile();
 }
 
 void TaskZoneDownloader::downloadFinished(const QByteArray &data, bool success)

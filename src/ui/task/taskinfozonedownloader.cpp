@@ -127,6 +127,13 @@ HostZonesSource TaskInfoZoneDownloader::hostZonesSource() const
     return source;
 }
 
+bool TaskInfoZoneDownloader::isZoneLocal(const Zone &zone) const
+{
+    const ZoneSourceWrapper zoneSource(zoneListModel()->zoneSourceByCode(zone.sourceCode));
+
+    return TaskZoneDownloader::isLocalUrl(zoneUrl(zone, zoneSource));
+}
+
 bool TaskInfoZoneDownloader::syncHostZone(
         HostZonesDb &db, const HostZoneSource &zone, HostRange &hostRange)
 {
@@ -265,8 +272,8 @@ void TaskInfoZoneDownloader::setupTaskWorkerByZone(TaskZoneDownloader *worker, i
     worker->setEmptyNetMask(zoneType.emptyNetMask());
     worker->setZoneId(zoneRow.zoneId);
     worker->setZoneName(zoneRow.zoneName);
-    worker->setUrl(zoneRow.customUrl ? zoneRow.url : zoneSource.url());
-    worker->setFormData(zoneRow.customUrl ? zoneRow.formData : zoneSource.formData());
+    worker->setUrl(zoneUrl(zoneRow, zoneSource));
+    worker->setFormData(zoneFormData(zoneRow, zoneSource));
     worker->setTextInline(zoneRow.textInline);
     worker->setPattern(zoneType.pattern());
     worker->setAddressCount(zoneRow.addressCount);
@@ -275,6 +282,16 @@ void TaskInfoZoneDownloader::setupTaskWorkerByZone(TaskZoneDownloader *worker, i
     worker->setCachePath(cachePath());
     worker->setSourceModTime(zoneRow.sourceModTime);
     worker->setLastSuccess(zoneRow.lastSuccess);
+}
+
+QString TaskInfoZoneDownloader::zoneUrl(const Zone &zone, const ZoneSourceWrapper &zoneSource)
+{
+    return zone.customUrl ? zone.url : zoneSource.url();
+}
+
+QString TaskInfoZoneDownloader::zoneFormData(const Zone &zone, const ZoneSourceWrapper &zoneSource)
+{
+    return zone.customUrl ? zone.formData : zoneSource.formData();
 }
 
 void TaskInfoZoneDownloader::handleFinished(bool success)

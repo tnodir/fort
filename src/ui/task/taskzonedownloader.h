@@ -72,6 +72,9 @@ public:
 
     const QByteArray &zoneData() const { return m_zoneData; }
 
+    // The addresses of the inline text (no URL) or of a local file aren't downloaded
+    static bool isLocalUrl(const QString &url);
+
     StringViewList parseAddresses(const QString &text, QString &textChecksum) const;
 
     bool storeAddresses(const StringViewList &list);
@@ -97,6 +100,8 @@ protected slots:
     void downloadFinished(const QByteArray &data, bool success) override;
 
 private:
+    static bool isLocalFileUrl(const QString &url);
+
     void loadTextInline();
     void loadLocalFile();
 

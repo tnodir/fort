@@ -7,6 +7,11 @@ bool Zone::isNameEqual(const Zone &o) const
 
 bool Zone::isOptionsEqual(const Zone &o) const
 {
-    return enabled == o.enabled && customUrl == o.customUrl && sourceCode == o.sourceCode
-            && url == o.url && formData == o.formData && textInline == o.textInline;
+    return enabled == o.enabled && isSourceEqual(o);
+}
+
+bool Zone::isSourceEqual(const Zone &o) const
+{
+    return customUrl == o.customUrl && sourceCode == o.sourceCode && url == o.url
+            && formData == o.formData && textInline == o.textInline;
 }

@@ -33,7 +33,7 @@ public:
     void initialize(const Zone &zone);
 
 signals:
-    void saved();
+    void sourceSaved(const Zone &zone);
 
 protected slots:
     void retranslateUi();

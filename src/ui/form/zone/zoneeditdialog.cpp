@@ -325,7 +325,6 @@ QLayout *ZoneEditDialog::setupButtons()
     // OK
     m_btOk = ControlUtil::createButton(QString(), [&] {
         if (save()) {
-            emit saved();
             this->close();
         }
     });
@@ -355,17 +354,27 @@ bool ZoneEditDialog::save()
     Zone zone;
     fillZone(zone, zoneSource);
 
+    const bool sourceChanged = isEmpty() || !zone.isSourceEqual(m_zone);
+
+    if (!saveZone(zone))
+        return false;
+
+    // The Zone's addresses are loaded by its update
+    if (sourceChanged) {
+        emit sourceSaved(zone);
+    }
+
+    return true;
+}
+
+bool ZoneEditDialog::saveZone(Zone &zone)
+{
     // Add new zone
     if (isEmpty()) {
         return ctrl()->addOrUpdateZone(zone);
     }
 
     // Edit selected zone
-    return saveZone(zone);
-}
-
-bool ZoneEditDialog::saveZone(Zone &zone)
-{
     if (!zone.isOptionsEqual(m_zone)) {
         zone.zoneId = m_zone.zoneId;
 

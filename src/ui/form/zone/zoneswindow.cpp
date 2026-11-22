@@ -264,9 +264,7 @@ void ZonesWindow::openZoneEditForm(const Zone &zone)
     if (!m_formZoneEdit) {
         m_formZoneEdit = new ZoneEditDialog(ctrl(), this);
 
-        connect(m_formZoneEdit, &ZoneEditDialog::saved, [&] {
-            windowManager()->showConfirmBox(this, [&] { downloadZones(); }, tr("Update Zones?"));
-        });
+        connect(m_formZoneEdit, &ZoneEditDialog::sourceSaved, this, &ZonesWindow::updateZone);
     }
 
     m_formZoneEdit->initialize(zone);
@@ -303,6 +301,19 @@ void ZonesWindow::saveZoneAsText()
     if (!taskManager()->taskInfoZoneDownloader()->saveZoneAsText(filePath, zoneIndex)) {
         windowManager()->showErrorBox(tr("Cannot save Zone addresses as text file"));
     }
+}
+
+void ZonesWindow::updateZone(const Zone &zone)
+{
+    const quint32 zonesMask = Zone::zoneBit(zone.zoneId);
+    const auto runZone = [zonesMask] { taskManager()->runZonesTask(zonesMask); };
+
+    if (taskManager()->taskInfoZoneDownloader()->isZoneLocal(zone)) {
+        runZone();
+        return;
+    }
+
+    windowManager()->showConfirmBox(this, runZone, tr("Download the Zone?"));
 }
 
 void ZonesWindow::downloadZones()
