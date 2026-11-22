@@ -607,6 +607,8 @@ bool ConfAppManager::updateAppsTimer(const QVector<qint64> &appIdList, int minut
         }
     }
 
+    updateAppEndTimer();
+
     if (isWildcard) {
         updateDriverConf();
     }
