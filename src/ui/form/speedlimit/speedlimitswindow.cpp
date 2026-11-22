@@ -112,7 +112,7 @@ void SpeedLimitsWindow::setupUi()
     setupStatusTimer();
 
     auto layout = ControlUtil::createVLayout(/*margin=*/6);
-    layout->addLayout(header);
+    layout->addWidget(createHeaderWidget(header));
     layout->addWidget(m_speedLimitListView, 1);
 
     this->setLayout(layout);

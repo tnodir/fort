@@ -207,7 +207,7 @@ void ProgramsWindow::setupUi()
     setupTableAppsChanged();
 
     auto layout = ControlUtil::createVLayout(/*margin=*/6);
-    layout->addLayout(header);
+    layout->addWidget(createHeaderWidget(header));
     layout->addWidget(m_appListView, 1);
     layout->addWidget(m_appInfoRow);
 

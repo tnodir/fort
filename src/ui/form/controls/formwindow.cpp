@@ -1,7 +1,7 @@
 #include "formwindow.h"
 
 #include <QAction>
-#include <QLayout>
+#include <QBoxLayout>
 
 #include <form/controls/controlutil.h>
 #include <form/controls/headerbuttons.h>
@@ -29,6 +29,27 @@ void FormWindow::setExcludeFromCapture(bool v)
     m_excludeFromCapture = v;
 
     excludeWindowFromCapture(this, excludeFromCapture());
+}
+
+QWidget *FormWindow::takeHeaderWidget()
+{
+    auto boxLayout = qobject_cast<QBoxLayout *>(layout());
+    if (!m_headerWidget || !boxLayout)
+        return nullptr;
+
+    m_headerIndex = boxLayout->indexOf(m_headerWidget);
+    boxLayout->removeWidget(m_headerWidget);
+
+    return m_headerWidget;
+}
+
+void FormWindow::restoreHeaderWidget()
+{
+    auto boxLayout = qobject_cast<QBoxLayout *>(layout());
+    if (!m_headerWidget || !boxLayout)
+        return;
+
+    boxLayout->insertWidget(m_headerIndex, m_headerWidget);
 }
 
 void FormWindow::shrinkToContents()
@@ -61,6 +82,16 @@ void FormWindow::setupFormWindow(IniUser &iniUser, const QString &captureIniGrou
 
     setupStateWatcher();
     setupWindowCapture(iniUser, !captureIniGroup.isEmpty() ? captureIniGroup : iniGroup());
+}
+
+QWidget *FormWindow::createHeaderWidget(QLayout *headerLayout)
+{
+    headerLayout->setContentsMargins(0, 0, 0, 0);
+
+    m_headerWidget = new QWidget();
+    m_headerWidget->setLayout(headerLayout);
+
+    return m_headerWidget;
 }
 
 void FormWindow::saveIniWindowGeometry()

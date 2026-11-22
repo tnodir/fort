@@ -136,7 +136,7 @@ void ServicesWindow::setupUi()
     setupTableServiceListHeader();
 
     auto layout = ControlUtil::createVLayout(/*margin=*/6);
-    layout->addLayout(header);
+    layout->addWidget(createHeaderWidget(header));
     layout->addWidget(m_serviceListView, 1);
 
     this->setLayout(layout);

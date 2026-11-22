@@ -248,7 +248,7 @@ void ConnectionsWindow::setupUi()
     setupTableConnsChanged();
 
     auto layout = ControlUtil::createVLayout(/*margin=*/6);
-    layout->addLayout(header);
+    layout->addWidget(createHeaderWidget(header));
     layout->addWidget(m_connListView, 1);
     layout->addWidget(m_appInfoRow);
 

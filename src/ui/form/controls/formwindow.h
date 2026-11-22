@@ -13,6 +13,7 @@ QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QDateTimeEdit)
 QT_FORWARD_DECLARE_CLASS(QFrame)
 QT_FORWARD_DECLARE_CLASS(QLabel)
+QT_FORWARD_DECLARE_CLASS(QLayout)
 QT_FORWARD_DECLARE_CLASS(QMenu)
 QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
@@ -45,6 +46,10 @@ public:
 
     WidgetWindowStateWatcher *stateWatcher() const { return m_stateWatcher; }
 
+    // The dock's title bar shows the header of a docked window
+    QWidget *takeHeaderWidget();
+    void restoreHeaderWidget();
+
     // F1 opens the helpSection()
     QAction *helpAction() const { return m_helpAction; }
 
@@ -62,6 +67,8 @@ signals:
 protected:
     // The capture option is of the captureIniGroup, by default of the window's ini group
     void setupFormWindow(IniUser &iniUser, const QString &captureIniGroup = {});
+
+    QWidget *createHeaderWidget(QLayout *headerLayout);
 
     void saveIniWindowGeometry();
     void restoreIniWindowGeometry(const QSize &defaultSize);
@@ -83,7 +90,10 @@ private:
 private:
     bool m_excludeFromCapture : 1 = false;
 
+    int m_headerIndex = -1;
+
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
+    QWidget *m_headerWidget = nullptr;
     HeaderButtons *m_headerButtons = nullptr;
     QAction *m_helpAction = nullptr;
 

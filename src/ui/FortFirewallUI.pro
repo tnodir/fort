@@ -93,6 +93,7 @@ SOURCES += \
     form/controls/applinks.cpp \
     form/controls/checkspincombo.cpp \
     form/controls/clickablemenu.cpp \
+    form/controls/clipcontainer.cpp \
     form/controls/combobox.cpp \
     form/controls/controlutil.cpp \
     form/controls/doublespinbox.cpp \
@@ -466,6 +467,7 @@ HEADERS += \
     form/controls/applinks.h \
     form/controls/checkspincombo.h \
     form/controls/clickablemenu.h \
+    form/controls/clipcontainer.h \
     form/controls/combobox.h \
     form/controls/controlutil.h \
     form/controls/doublespinbox.h \

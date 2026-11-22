@@ -101,7 +101,7 @@ void ActivityWindow::setupUi()
     setupTreeActivityHeader();
 
     auto layout = ControlUtil::createVLayout(/*margin=*/6);
-    layout->addLayout(header);
+    layout->addWidget(createHeaderWidget(header));
     layout->addWidget(m_treeView, 1);
 
     this->setLayout(layout);

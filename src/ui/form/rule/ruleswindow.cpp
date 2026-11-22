@@ -138,7 +138,7 @@ void RulesWindow::setupUi()
     setupRuleListModelReset();
 
     auto layout = ControlUtil::createVLayout(/*margin=*/6);
-    layout->addLayout(header);
+    layout->addWidget(createHeaderWidget(header));
     layout->addWidget(m_ruleListView, 1);
 
     // OK/Cancel

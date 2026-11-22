@@ -105,7 +105,7 @@ void TimePeriodsWindow::setupUi()
     setupTimePeriodListModelChanged();
 
     auto layout = ControlUtil::createVLayout(/*margin=*/6);
-    layout->addLayout(header);
+    layout->addWidget(createHeaderWidget(header));
     layout->addWidget(m_timePeriodListView, 1);
 
     this->setLayout(layout);

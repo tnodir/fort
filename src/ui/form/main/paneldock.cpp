@@ -7,6 +7,7 @@
 #include <QMenu>
 #include <QToolButton>
 
+#include <form/controls/clipcontainer.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/formwindow.h>
 #include <form/controls/windowmenubutton.h>
@@ -33,6 +34,9 @@ PanelDock::PanelDock(FormWindow *formWindow, QWidget *parent) :
 
     setWidget(formWindow);
 
+    // The window's shortcuts work in its header too
+    addActions(formWindow->actions());
+
     formWindow->installEventFilter(this);
 
     updateTitle();
@@ -44,14 +48,22 @@ void PanelDock::takeFormWindow()
 
     w->removeEventFilter(this);
 
+    const auto actions = w->actions();
+    for (QAction *a : actions) {
+        removeAction(a);
+    }
+
     m_formWindow = nullptr;
 
     // Qt's QWidget::setParent() to a window keeps the old window's focus child when the
-    // application has no focus widget: clear it, else the Main window keeps the deleted one
-    // and crashes on its next clearFocus()
-    if (QWidget *focusWidget = w->focusWidget()) {
+    // application has no focus widget: clear it (the window's or its header's in the title bar),
+    // else the Main window keeps the deleted one and crashes on its next clearFocus()
+    if (QWidget *focusWidget = this->focusWidget()) {
         focusWidget->clearFocus();
     }
+
+    m_headerArea->takeWidget();
+    w->restoreHeaderWidget();
 
     setWidget(nullptr);
     w->setParent(nullptr, Qt::Window);
@@ -123,6 +135,9 @@ QWidget *PanelDock::setupTitleBar()
 
     m_titleLabel = ControlUtil::createLabel();
 
+    m_headerArea = new ClipContainer();
+    m_headerArea->setWidget(m_formWindow->takeHeaderWidget());
+
     m_btWindowMenu = new WindowMenuButton();
     m_btWindowMenu->setObjectName("btWindowMenu");
     m_btWindowMenu->setFormWindow(m_formWindow);
@@ -132,8 +147,8 @@ QWidget *PanelDock::setupTitleBar()
             [&] { windowManager()->closeWindowByCode(m_formWindow->windowCode()); });
     m_btClose->setObjectName("btClose");
 
-    auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_iconLabel, m_titleLabel, /*stretch*/ nullptr, m_btWindowMenu, m_btClose });
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_iconLabel, m_titleLabel,
+            ControlUtil::createVSeparator(), m_headerArea, m_btWindowMenu, m_btClose });
     layout->setContentsMargins(6, 2, 6, 2);
 
     auto w = new QWidget();

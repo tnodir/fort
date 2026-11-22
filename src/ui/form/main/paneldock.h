@@ -6,6 +6,7 @@
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
+class ClipContainer;
 class FormWindow;
 class WindowMenuButton;
 
@@ -39,6 +40,7 @@ private:
 
     QLabel *m_iconLabel = nullptr;
     QLabel *m_titleLabel = nullptr;
+    ClipContainer *m_headerArea = nullptr;
     WindowMenuButton *m_btWindowMenu = nullptr;
     QToolButton *m_btClose = nullptr;
 };
