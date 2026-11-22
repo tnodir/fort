@@ -57,8 +57,8 @@ public:
     static bool parseRange(const QString &text, UiTestRange &range);
 
     // The header's line, then the rows' lines: the row's text and the cells' texts separated by
-    // tabs, escaped by ControlCommandUtil::escapedText(); the expanded rows of a tree view are
-    // followed by their children's
+    // tabs, an empty text replaced by the tooltip, escaped by ControlCommandUtil::escapedText();
+    // the expanded rows of a tree view are followed by their children's
     static QStringList cellLines(QAbstractItemView *view, const UiTestCellRange &range);
 
     // The index of the row's text: its number, of a tree's child prefixed by its parent's text

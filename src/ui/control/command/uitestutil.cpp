@@ -316,9 +316,15 @@ QList<int> cellColumns(QAbstractItemView *view, const UiTestCellRange &range)
     return columns;
 }
 
+// The text of an icon's cell is in its tooltip
 QString cellText(const QModelIndex &index)
 {
-    return ControlCommandUtil::escapedText(index.data().toString());
+    QString text = index.data().toString();
+    if (text.isEmpty()) {
+        text = index.data(Qt::ToolTipRole).toString();
+    }
+
+    return ControlCommandUtil::escapedText(text);
 }
 
 struct CellLines
