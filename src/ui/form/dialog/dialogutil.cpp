@@ -1,11 +1,30 @@
 #include "dialogutil.h"
 
+#include <QAbstractButton>
 #include <QColorDialog>
 #include <QFileDialog>
 #include <QFontDialog>
+#include <QMetaEnum>
 
 #include <form/controls/controlutil.h>
 #include <util/window/widgetwindow.h>
+
+namespace {
+
+// The buttons are named by their standard ones for the "ui" command: btYes, btNo, btOk...
+void setButtonsObjectNames(QMessageBox *box)
+{
+    const QMetaEnum metaEnum = QMetaEnum::fromType<QMessageBox::StandardButtons>();
+
+    const auto buttons = box->buttons();
+    for (QAbstractButton *button : buttons) {
+        const char *key = metaEnum.valueToKey(int(box->standardButton(button)));
+
+        button->setObjectName(QString("bt") + key);
+    }
+}
+
+}
 
 QString DialogUtil::getOpenFileName(const QString &title, const QString &dir, const QString &filter)
 {
@@ -58,6 +77,8 @@ QMessageBox *DialogUtil::createMessageBox(const MessageBoxArg &ba, QWidget *pare
 {
     auto box = new QMessageBox(ba.icon, ba.title, ba.text, ba.buttons, parent);
     ControlUtil::deleteOnClose(box);
+
+    setButtonsObjectNames(box);
 
     box->setInformativeText(ba.info);
     setupModalDialog(box);
