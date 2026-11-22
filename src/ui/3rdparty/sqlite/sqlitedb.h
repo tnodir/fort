@@ -93,6 +93,9 @@ public:
     QString filePath() const { return m_filePath; }
     void setFilePath(const QString &v) { m_filePath = v; }
 
+    // Opened, and migrated by openAndMigrate()
+    bool isOpened() const { return m_isOpened; }
+
     bool open();
     void close();
 
@@ -187,6 +190,8 @@ private:
     void clearStmts();
 
 private:
+    bool m_isOpened = false;
+
     quint32 m_openFlags = 0;
     sqlite3 *m_db = nullptr;
     QString m_filePath;

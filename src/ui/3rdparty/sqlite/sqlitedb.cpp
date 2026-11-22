@@ -87,6 +87,8 @@ bool SqliteDb::open()
 
     const bool ok = sqlite3_open_v2(filePathUtf8.data(), &m_db, m_openFlags, nullptr) == SQLITE_OK;
 
+    m_isOpened = ok;
+
     if (ok) {
         setBusyTimeoutMs(DATABASE_BUSY_TIMEOUT);
 
@@ -99,6 +101,8 @@ bool SqliteDb::open()
 void SqliteDb::close()
 {
     clearStmts();
+
+    m_isOpened = false;
 
     if (m_db) {
         sqlite3_close(m_db);
@@ -380,6 +384,7 @@ bool SqliteDb::openAndMigrate(MigrateOptions &opt)
 
     if (!migrate(opt)) {
         qCCritical(LC) << "Migration error" << filePath();
+        m_isOpened = false;
         return false;
     }
 
