@@ -371,7 +371,7 @@ QLineEdit *ControlUtil::createSearchEdit(const std::function<void(const QString 
     c->setObjectName("editSearch");
     c->setClearButtonEnabled(true);
     c->setMaxLength(200);
-    c->setMinimumWidth(100);
+    c->setMinimumWidth(60);
     c->setMaximumWidth(200);
 
     return c;
