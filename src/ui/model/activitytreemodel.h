@@ -196,6 +196,8 @@ public slots:
 private:
     static ActivityNode *nodeOf(const QModelIndex &index);
 
+    QVariant headerDataDecoration(int section) const;
+
     QVariant dataDisplay(const ActivityNode *node, int column) const;
     QVariant dataDecoration(const ActivityNode *node) const;
 

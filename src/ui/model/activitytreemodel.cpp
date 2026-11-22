@@ -654,8 +654,28 @@ QString ActivityTreeModel::columnName(const ActivityColumn column)
 
 QVariant ActivityTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+    if (orientation != Qt::Horizontal)
+        return {};
+
+    switch (role) {
+    case Qt::DisplayRole:
         return columnName(ActivityColumn(section));
+    case Qt::DecorationRole:
+        return headerDataDecoration(section);
+    }
+
+    return {};
+}
+
+QVariant ActivityTreeModel::headerDataDecoration(int section) const
+{
+    switch (ActivityColumn(section)) {
+    case ActivityColumn::Download:
+    case ActivityColumn::Downloaded:
+        return IconCache::icon(":/icons/bullet_green_down.png");
+    case ActivityColumn::Upload:
+    case ActivityColumn::Uploaded:
+        return IconCache::icon(":/icons/bullet_blue_up.png");
     }
 
     return {};

@@ -174,9 +174,9 @@ QVariant TrafListModel::headerDataDecoration(int section) const
 {
     switch (TrafListColumn(section)) {
     case TrafListColumn::Download:
-        return IconCache::icon(":/icons/green_down.png");
+        return IconCache::icon(":/icons/bullet_green_down.png");
     case TrafListColumn::Upload:
-        return IconCache::icon(":/icons/blue_up.png");
+        return IconCache::icon(":/icons/bullet_blue_up.png");
     }
 
     return {};

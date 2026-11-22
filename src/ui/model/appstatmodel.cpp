@@ -106,9 +106,9 @@ QVariant AppStatModel::headerDataDecoration(int section) const
 {
     switch (AppStatColumn(section)) {
     case AppStatColumn::Download:
-        return IconCache::icon(":/icons/green_down.png");
+        return IconCache::icon(":/icons/bullet_green_down.png");
     case AppStatColumn::Upload:
-        return IconCache::icon(":/icons/blue_up.png");
+        return IconCache::icon(":/icons/bullet_blue_up.png");
     }
 
     return {};
