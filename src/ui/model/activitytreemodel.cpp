@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <cstring>
 
+#include <ws2tcpip.h>
+
 #include <activity/activitymanager.h>
 #include <appinfo/appinfocache.h>
 #include <conf/confappmanager.h>
@@ -14,6 +16,7 @@
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/formatutil.h>
+#include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/net/netformatutil.h>
 #include <util/net/netutil.h>
@@ -117,7 +120,23 @@ QString remoteText(const ActivityFlowRow &f)
 
 QString flowNameOf(const ActivityFlowRow &f)
 {
-    return remoteText(f) + ':' + QString::number(f.remotePort);
+    const QString name = remoteText(f) + ':' + QString::number(f.remotePort);
+    if (f.ipProto == IPPROTO_TCP)
+        return name;
+
+    return name + " (" + NetUtil::protocolName(f.ipProto) + ')';
+}
+
+QVariant procToolTip(const ActivityProcRow &row, int column)
+{
+    switch (ActivityColumn(column)) {
+    case ActivityColumn::Program:
+        return row.path;
+    case ActivityColumn::Parent:
+        return row.parentPath;
+    default:
+        return {};
+    }
 }
 
 QString speedText(qint64 bytesPerSecond)
@@ -536,6 +555,14 @@ QVariant ActivityTreeModel::data(const QModelIndex &index, int role) const
         return dataDecoration(node);
     }
 
+    if (role == Qt::FontRole) {
+        return dataFont(node, column);
+    }
+
+    if (role == Qt::ToolTipRole) {
+        return dataToolTip(node, column);
+    }
+
     return {};
 }
 
@@ -564,6 +591,25 @@ QVariant ActivityTreeModel::dataDecoration(const ActivityNode *node) const
         return appInfoCache()->appIcon(procNodeOf(node).row.path);
     case ActivityNodeType::Flow:
         return IconCache::icon(ConnListModel::directionBulletIconPath(flowRowOf(node).inbound));
+    default:
+        return {};
+    }
+}
+
+QVariant ActivityTreeModel::dataFont(const ActivityNode *node, int column) const
+{
+    if (node->type == ActivityNodeType::App) {
+        return (column == int(ActivityColumn::Program)) ? GuiUtil::fontBold() : QVariant();
+    }
+
+    return {};
+}
+
+QVariant ActivityTreeModel::dataToolTip(const ActivityNode *node, int column) const
+{
+    switch (node->type) {
+    case ActivityNodeType::Proc:
+        return procToolTip(procNodeOf(node).row, column);
     default:
         return {};
     }

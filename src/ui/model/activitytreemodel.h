@@ -122,6 +122,8 @@ private:
 
     QVariant dataDisplay(const ActivityNode *node, int column) const;
     QVariant dataDecoration(const ActivityNode *node) const;
+    QVariant dataFont(const ActivityNode *node, int column) const;
+    QVariant dataToolTip(const ActivityNode *node, int column) const;
 
     QModelIndex indexOfNode(const ActivityNode *node, int column = 0) const;
 
