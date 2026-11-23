@@ -22,6 +22,7 @@ public:
     ~HostInfoCache() override;
 
     QString hostName(const ip_addr_t &ip, bool isIPv6);
+    QString cachedHostName(const ip_addr_t &ip, bool isIPv6) const;
 
 signals:
     void cacheChanged();

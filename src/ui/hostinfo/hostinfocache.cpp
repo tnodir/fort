@@ -24,6 +24,14 @@ QString HostInfoCache::hostName(const ip_addr_t &ip, bool isIPv6)
     return hostName(NetFormatUtil::ipToText(ip, isIPv6));
 }
 
+// Doesn't look up the address: neither inserts into the cache, nor evicts from it
+QString HostInfoCache::cachedHostName(const ip_addr_t &ip, bool isIPv6) const
+{
+    const HostInfo *hostInfo = m_cache.object(NetFormatUtil::ipToText(ip, isIPv6));
+
+    return hostInfo ? hostInfo->hostName : QString();
+}
+
 QString HostInfoCache::hostName(const QString &address)
 {
     HostInfo *hostInfo = m_cache.object(address);

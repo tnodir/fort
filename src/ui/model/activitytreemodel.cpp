@@ -116,33 +116,29 @@ QString parentText(const ActivityProcRow &row)
     return nameWithPid(name, row.parentPid);
 }
 
-QString ptrHostName(const ActivityFlowRow &f)
-{
-    return hostInfoCache()->hostName(f.remoteIp, f.isIPv6);
-}
-
-// The host name the program asked, else the address's PTR name
-QString hostNameOf(const ActivityFlowRow &f)
+// The host name the program asked, else the address's PTR name. The sorting takes only the cached
+// PTR names: it doesn't look up all the flows' addresses, only the shown rows do
+QString hostNameOf(const ActivityFlowRow &f, bool cachedOnly = false)
 {
     if (!f.remoteHost.isEmpty()) {
         return f.remoteHost;
     }
 
-    return ptrHostName(f);
+    return cachedOnly ? hostInfoCache()->cachedHostName(f.remoteIp, f.isIPv6)
+                      : hostInfoCache()->hostName(f.remoteIp, f.isIPv6);
 }
 
 bool isPtrHostName(const ActivityFlowRow &f)
 {
-    return f.remoteHost.isEmpty() && !ptrHostName(f).isEmpty();
+    return f.remoteHost.isEmpty() && !hostNameOf(f).isEmpty();
 }
 
 // The remote host's name or address
-QString remoteText(const ActivityFlowRow &f)
+QString remoteText(const ActivityFlowRow &f, bool cachedOnly = false)
 {
-    const QString hostName = hostNameOf(f);
-    if (!hostName.isEmpty()) {
+    const QString hostName = hostNameOf(f, cachedOnly);
+    if (!hostName.isEmpty())
         return hostName;
-    }
 
     return NetFormatUtil::ipToAddressText(f.remoteIp, f.isIPv6);
 }
@@ -372,7 +368,8 @@ const ActivityColumnFuncs columnFuncsList[] = {
                     },
             .flowCompare =
                     [](const ActivityFlowRow &a, const ActivityFlowRow &b) {
-                        const int res = compareTexts(remoteText(a), remoteText(b));
+                        const int res = compareTexts(remoteText(a, /*cachedOnly=*/true),
+                                remoteText(b, /*cachedOnly=*/true));
 
                         return (res != 0) ? res : compareValues(a.remotePort, b.remotePort);
                     },
@@ -438,7 +435,8 @@ const ActivityColumnFuncs columnFuncsList[] = {
             .flowDisplay = [](const ActivityFlowRow &f) -> QVariant { return hostNameOf(f); },
             .flowCompare =
                     [](const ActivityFlowRow &a, const ActivityFlowRow &b) {
-                        return compareTexts(hostNameOf(a), hostNameOf(b));
+                        return compareTexts(hostNameOf(a, /*cachedOnly=*/true),
+                                hostNameOf(b, /*cachedOnly=*/true));
                     },
     },
     // Direction
