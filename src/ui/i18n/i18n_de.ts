@@ -21,6 +21,112 @@
     </message>
 </context>
 <context>
+    <name>ActivityTreeModel</name>
+    <message>
+        <source>Process %1</source>
+        <translation>Prozess %1</translation>
+    </message>
+    <message>
+        <source>Program</source>
+        <translation>Programm</translation>
+    </message>
+    <message>
+        <source>PID</source>
+        <translation>PID</translation>
+    </message>
+    <message>
+        <source>Parent</source>
+        <translation>Übergeordnet</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Protokoll</translation>
+    </message>
+    <message>
+        <source>Local Address</source>
+        <translation>Lokale Adresse</translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation>Lokaler Port</translation>
+    </message>
+    <message>
+        <source>Remote Address</source>
+        <translation>Entfernte Adresse</translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation>Entfernter Port</translation>
+    </message>
+    <message>
+        <source>Host Name</source>
+        <translation>Hostname</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Richtung</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation>Grund</translation>
+    </message>
+    <message>
+        <source>DL Speed</source>
+        <translation>DL-Geschwindigkeit</translation>
+    </message>
+    <message>
+        <source>UL Speed</source>
+        <translation>UL-Geschwindigkeit</translation>
+    </message>
+    <message>
+        <source>DL Total</source>
+        <translation>DL gesamt</translation>
+    </message>
+    <message>
+        <source>UL Total</source>
+        <translation>UL gesamt</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Verbindungen</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>Zeit</translation>
+    </message>
+</context>
+<context>
+    <name>ActivityWindow</name>
+    <message>
+        <source>Search</source>
+        <translation>Suche</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Als Filter kopieren</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>IP nachschlagen</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation>Filtersimulator</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Suchen</translation>
+    </message>
+    <message>
+        <source>Activity</source>
+        <translation>Aktivität</translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>Letzte Spalte strecken</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -738,6 +844,10 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     <message>
         <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
         <translation>Die DNS-Weiterleitung gleicht die Namen nicht mit den Hosts-Zonen ab oder mit veralteten: Deren Datenbank kann nicht geöffnet oder beschrieben werden: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t block the names of the enabled Block Zones not updated yet: update them in the Zones window</source>
+        <translation>Die DNS-Weiterleitung sperrt die Namen der aktivierten, noch nicht aktualisierten Sperrzonen nicht: Aktualisieren Sie sie im Zonen-Fenster</translation>
     </message>
     <message>
         <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
@@ -1913,6 +2023,10 @@ Ein Programm ist nur aktiviert, wenn IRGENDEINE seiner exklusiven Gruppen aktivi
         <translation>Datenverkehr-Diagramm ein-/ausblenden</translation>
     </message>
     <message>
+        <source>Show Activity</source>
+        <translation>Aktivität anzeigen</translation>
+    </message>
+    <message>
         <source>Switch Filter Enabled</source>
         <translation>Filter aktivieren</translation>
     </message>
@@ -2225,7 +2339,7 @@ Ein Programm ist nur aktiviert, wenn IRGENDEINE seiner exklusiven Gruppen aktivi
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Über</translation>
     </message>
 </context>
 <context>
@@ -4263,6 +4377,10 @@ Paketverlust: %2</translation>
         <translation>Zeiträume</translation>
     </message>
     <message>
+        <source>Activity</source>
+        <translation>Aktivität</translation>
+    </message>
+    <message>
         <source>Filter Simulator</source>
         <translation>Filtersimulator</translation>
     </message>
@@ -4411,7 +4529,7 @@ Paketverlust: %2</translation>
     <name>WindowManager</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Über</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -4636,12 +4754,12 @@ Paketverlust: %2</translation>
         <translation>Kann Zonenadressen nicht als Textdatei speichern</translation>
     </message>
     <message>
-        <source>Update Zones</source>
-        <translation>Zonen aktualisieren</translation>
+        <source>Download the Zone?</source>
+        <translation>Die Zone herunterladen?</translation>
     </message>
     <message>
-        <source>Update Zones?</source>
-        <translation>Zonen aktualisieren?</translation>
+        <source>Update Zones</source>
+        <translation>Zonen aktualisieren</translation>
     </message>
 </context>
 </TS>

@@ -21,6 +21,112 @@
     </message>
 </context>
 <context>
+    <name>ActivityTreeModel</name>
+    <message>
+        <source>Process %1</source>
+        <translation>プロセス %1</translation>
+    </message>
+    <message>
+        <source>Program</source>
+        <translation>プログラム</translation>
+    </message>
+    <message>
+        <source>PID</source>
+        <translation>PID</translation>
+    </message>
+    <message>
+        <source>Parent</source>
+        <translation>親プロセス</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>プロトコル</translation>
+    </message>
+    <message>
+        <source>Local Address</source>
+        <translation>ローカルアドレス</translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation>ローカル ポート</translation>
+    </message>
+    <message>
+        <source>Remote Address</source>
+        <translation>リモートアドレス</translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation>リモート ポート</translation>
+    </message>
+    <message>
+        <source>Host Name</source>
+        <translation>ホスト名</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>方向</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation>理由</translation>
+    </message>
+    <message>
+        <source>DL Speed</source>
+        <translation>ダウンロード速度</translation>
+    </message>
+    <message>
+        <source>UL Speed</source>
+        <translation>アップロード速度</translation>
+    </message>
+    <message>
+        <source>DL Total</source>
+        <translation>ダウンロード合計</translation>
+    </message>
+    <message>
+        <source>UL Total</source>
+        <translation>アップロード合計</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>接続</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>時間</translation>
+    </message>
+</context>
+<context>
+    <name>ActivityWindow</name>
+    <message>
+        <source>Search</source>
+        <translation>検索</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>フィルターとしてコピー</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>IP 検索</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation>フィルターシミュレーター</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>検索</translation>
+    </message>
+    <message>
+        <source>Activity</source>
+        <translation>アクティビティ</translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>最後の列を伸ばす</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -738,6 +844,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
         <translation>DNS フォワーダーはホストゾーンの名前と照合しないか、古い名前と照合しています: そのデータベースを開くことも書き込むこともできません: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t block the names of the enabled Block Zones not updated yet: update them in the Zones window</source>
+        <translation>DNS フォワーダーは、まだ更新されていない有効なブロックゾーンの名前をブロックしません: ゾーン ウィンドウで更新してください</translation>
     </message>
     <message>
         <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
@@ -1913,6 +2023,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>トラフィックグラフの表示/非表示</translation>
     </message>
     <message>
+        <source>Show Activity</source>
+        <translation>アクティビティを表示</translation>
+    </message>
+    <message>
         <source>Switch Filter Enabled</source>
         <translation>フィルターの有効/無効</translation>
     </message>
@@ -2225,7 +2339,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>バージョン情報</translation>
     </message>
 </context>
 <context>
@@ -4263,6 +4377,10 @@ Packet loss: %2</source>
         <translation>時間帯</translation>
     </message>
     <message>
+        <source>Activity</source>
+        <translation>アクティビティ</translation>
+    </message>
+    <message>
         <source>Filter Simulator</source>
         <translation>フィルターシミュレーター</translation>
     </message>
@@ -4411,7 +4529,7 @@ Packet loss: %2</source>
     <name>WindowManager</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>バージョン情報</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -4636,12 +4754,12 @@ Packet loss: %2</source>
         <translation>ゾーンアドレスをテキストファイルとして保存できません</translation>
     </message>
     <message>
-        <source>Update Zones</source>
-        <translation>ゾーンの更新</translation>
+        <source>Download the Zone?</source>
+        <translation>ゾーンをダウンロードしますか?</translation>
     </message>
     <message>
-        <source>Update Zones?</source>
-        <translation>ゾーンを更新しますか?</translation>
+        <source>Update Zones</source>
+        <translation>ゾーンの更新</translation>
     </message>
 </context>
 </TS>

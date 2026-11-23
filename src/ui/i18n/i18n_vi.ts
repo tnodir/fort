@@ -21,6 +21,112 @@
     </message>
 </context>
 <context>
+    <name>ActivityTreeModel</name>
+    <message>
+        <source>Process %1</source>
+        <translation>Tiến trình %1</translation>
+    </message>
+    <message>
+        <source>Program</source>
+        <translation>Chương trình</translation>
+    </message>
+    <message>
+        <source>PID</source>
+        <translation>PID</translation>
+    </message>
+    <message>
+        <source>Parent</source>
+        <translation>Tiến trình cha</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Giao thức</translation>
+    </message>
+    <message>
+        <source>Local Address</source>
+        <translation>Địa chỉ cục bộ</translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation>Cổng cục bộ</translation>
+    </message>
+    <message>
+        <source>Remote Address</source>
+        <translation>Địa chỉ từ xa</translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation>Cổng từ xa</translation>
+    </message>
+    <message>
+        <source>Host Name</source>
+        <translation>Tên máy</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Hướng</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation>Lý do</translation>
+    </message>
+    <message>
+        <source>DL Speed</source>
+        <translation>Tốc độ tải xuống</translation>
+    </message>
+    <message>
+        <source>UL Speed</source>
+        <translation>Tốc độ tải lên</translation>
+    </message>
+    <message>
+        <source>DL Total</source>
+        <translation>Tổng tải xuống</translation>
+    </message>
+    <message>
+        <source>UL Total</source>
+        <translation>Tổng tải lên</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Kết nối</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>Thời gian</translation>
+    </message>
+</context>
+<context>
+    <name>ActivityWindow</name>
+    <message>
+        <source>Search</source>
+        <translation>Tìm kiếm</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Sao chép thành bộ lọc</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>Tra cứu IP</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation>Trình mô phỏng bộ lọc</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Tìm</translation>
+    </message>
+    <message>
+        <source>Activity</source>
+        <translation>Hoạt động</translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>Kéo giãn cột cuối cùng</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -738,6 +844,10 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
     <message>
         <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
         <translation>Bộ chuyển tiếp DNS không so khớp tên với các Vùng tên máy hoặc so khớp với tên đã lỗi thời: không thể mở hoặc ghi cơ sở dữ liệu của chúng: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t block the names of the enabled Block Zones not updated yet: update them in the Zones window</source>
+        <translation>Bộ chuyển tiếp DNS không chặn tên của các Vùng chặn đã bật nhưng chưa được cập nhật: hãy cập nhật chúng trong cửa sổ Vùng</translation>
     </message>
     <message>
         <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
@@ -1913,6 +2023,10 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
         <translation>Ẩn/Hiện biểu đồ lưu lượng</translation>
     </message>
     <message>
+        <source>Show Activity</source>
+        <translation>Hiển thị hoạt động</translation>
+    </message>
+    <message>
         <source>Switch Filter Enabled</source>
         <translation>Bật/Tắt bộ lọc</translation>
     </message>
@@ -2225,7 +2339,7 @@ Một chương trình chỉ được bật nếu BẤT KỲ nhóm độc quyền
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Giới thiệu</translation>
     </message>
 </context>
 <context>
@@ -4263,6 +4377,10 @@ Mất gói tin: %2</translation>
         <translation>Khoảng thời gian</translation>
     </message>
     <message>
+        <source>Activity</source>
+        <translation>Hoạt động</translation>
+    </message>
+    <message>
         <source>Filter Simulator</source>
         <translation>Trình mô phỏng bộ lọc</translation>
     </message>
@@ -4411,7 +4529,7 @@ Mất gói tin: %2</translation>
     <name>WindowManager</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Giới thiệu</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -4636,12 +4754,12 @@ Mất gói tin: %2</translation>
         <translation>Không thể lưu các địa chỉ vùng dưới dạng tệp văn bản</translation>
     </message>
     <message>
-        <source>Update Zones</source>
-        <translation>Cập nhật vùng</translation>
+        <source>Download the Zone?</source>
+        <translation>Tải xuống Vùng?</translation>
     </message>
     <message>
-        <source>Update Zones?</source>
-        <translation>Cập nhật các vùng?</translation>
+        <source>Update Zones</source>
+        <translation>Cập nhật vùng</translation>
     </message>
 </context>
 </TS>

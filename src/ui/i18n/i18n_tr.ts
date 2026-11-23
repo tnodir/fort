@@ -21,6 +21,112 @@
     </message>
 </context>
 <context>
+    <name>ActivityTreeModel</name>
+    <message>
+        <source>Process %1</source>
+        <translation>İşlem %1</translation>
+    </message>
+    <message>
+        <source>Program</source>
+        <translation>Program</translation>
+    </message>
+    <message>
+        <source>PID</source>
+        <translation>PID</translation>
+    </message>
+    <message>
+        <source>Parent</source>
+        <translation>Üst İşlem</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Protokol</translation>
+    </message>
+    <message>
+        <source>Local Address</source>
+        <translation>Yerel Adres</translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation>Yerel Port </translation>
+    </message>
+    <message>
+        <source>Remote Address</source>
+        <translation>Uzak Adres</translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation>Uzak Port </translation>
+    </message>
+    <message>
+        <source>Host Name</source>
+        <translation>Sunucu Adı</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Yön</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation>Neden</translation>
+    </message>
+    <message>
+        <source>DL Speed</source>
+        <translation>İndirme Hızı</translation>
+    </message>
+    <message>
+        <source>UL Speed</source>
+        <translation>Yükleme Hızı</translation>
+    </message>
+    <message>
+        <source>DL Total</source>
+        <translation>Toplam İndirme</translation>
+    </message>
+    <message>
+        <source>UL Total</source>
+        <translation>Toplam Yükleme</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Bağlantılar</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>Zaman</translation>
+    </message>
+</context>
+<context>
+    <name>ActivityWindow</name>
+    <message>
+        <source>Search</source>
+        <translation>Ara</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Filtre Olarak Kopyala</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>IP Adresini Sorgula </translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation>Filtre Simülatörü</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Bul</translation>
+    </message>
+    <message>
+        <source>Activity</source>
+        <translation>Etkinlik</translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>Son Sütunu Uzat</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -738,6 +844,10 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     <message>
         <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
         <translation>DNS Yönlendirici adları Host Bölgeleriyle eşleştirmiyor veya eskileriyle eşleştiriyor: veritabanları açılamıyor veya yazılamıyor: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t block the names of the enabled Block Zones not updated yet: update them in the Zones window</source>
+        <translation>DNS Yönlendirici, henüz güncellenmemiş etkin Engelleme Bölgelerinin adlarını engellemiyor: bunları Bölgeler penceresinde güncelleyin</translation>
     </message>
     <message>
         <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
@@ -1913,6 +2023,10 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
         <translation>Trafik Tablosunu Göster/Gizle</translation>
     </message>
     <message>
+        <source>Show Activity</source>
+        <translation>Etkinliği Göster</translation>
+    </message>
+    <message>
         <source>Switch Filter Enabled</source>
         <translation>Filtrelemeyi Etkinleştir</translation>
     </message>
@@ -2225,7 +2339,7 @@ Bir program yalnızca özel gruplarından HERHANGİ BİRİ etkinse veya özel gr
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Hakkında</translation>
     </message>
 </context>
 <context>
@@ -4262,6 +4376,10 @@ Paket kaybı: %2</translation>
         <translation>Zaman Dilimleri</translation>
     </message>
     <message>
+        <source>Activity</source>
+        <translation>Etkinlik</translation>
+    </message>
+    <message>
         <source>Filter Simulator</source>
         <translation>Filtre Simülatörü</translation>
     </message>
@@ -4410,7 +4528,7 @@ Paket kaybı: %2</translation>
     <name>WindowManager</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Hakkında</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -4635,12 +4753,12 @@ Paket kaybı: %2</translation>
         <translation>Bölge Adresleri Metin Dosyası Olarak Kaydedilemiyor </translation>
     </message>
     <message>
-        <source>Update Zones</source>
-        <translation>Bölgeleri Güncelle</translation>
+        <source>Download the Zone?</source>
+        <translation>Bölge İndirilsin mi?</translation>
     </message>
     <message>
-        <source>Update Zones?</source>
-        <translation>Bölgeler Güncellensin Mi?</translation>
+        <source>Update Zones</source>
+        <translation>Bölgeleri Güncelle</translation>
     </message>
 </context>
 </TS>

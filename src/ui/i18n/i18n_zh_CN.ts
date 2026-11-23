@@ -21,6 +21,112 @@
     </message>
 </context>
 <context>
+    <name>ActivityTreeModel</name>
+    <message>
+        <source>Process %1</source>
+        <translation>进程 %1</translation>
+    </message>
+    <message>
+        <source>Program</source>
+        <translation>应用程序</translation>
+    </message>
+    <message>
+        <source>PID</source>
+        <translation>PID</translation>
+    </message>
+    <message>
+        <source>Parent</source>
+        <translation>父进程</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>协议</translation>
+    </message>
+    <message>
+        <source>Local Address</source>
+        <translation>本地地址</translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation>本地端口</translation>
+    </message>
+    <message>
+        <source>Remote Address</source>
+        <translation>远程地址</translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation>远程端口</translation>
+    </message>
+    <message>
+        <source>Host Name</source>
+        <translation>主机名称</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>排序顺序</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation>原因</translation>
+    </message>
+    <message>
+        <source>DL Speed</source>
+        <translation>下载速度</translation>
+    </message>
+    <message>
+        <source>UL Speed</source>
+        <translation>上传速度</translation>
+    </message>
+    <message>
+        <source>DL Total</source>
+        <translation>下载总量</translation>
+    </message>
+    <message>
+        <source>UL Total</source>
+        <translation>上传总量</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>连接</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>时间</translation>
+    </message>
+</context>
+<context>
+    <name>ActivityWindow</name>
+    <message>
+        <source>Search</source>
+        <translation>搜索</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>复制为过滤器</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>查找IP</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation>过滤器模拟器</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>查找</translation>
+    </message>
+    <message>
+        <source>Activity</source>
+        <translation>活动</translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>拉伸最后一列</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -738,6 +844,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
         <translation>DNS 转发器未与主机区域的名称匹配，或与过时的名称匹配：无法打开或写入其数据库：%1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t block the names of the enabled Block Zones not updated yet: update them in the Zones window</source>
+        <translation>DNS 转发器不阻止尚未更新的已启用阻止区域的名称：请在区域窗口中更新它们</translation>
     </message>
     <message>
         <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
@@ -1913,6 +2023,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>显示/隐藏流量图</translation>
     </message>
     <message>
+        <source>Show Activity</source>
+        <translation>显示活动</translation>
+    </message>
+    <message>
         <source>Switch Filter Enabled</source>
         <translation>切换过滤器启用</translation>
     </message>
@@ -2225,7 +2339,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>关于</translation>
     </message>
 </context>
 <context>
@@ -4263,6 +4377,10 @@ Packet loss: %2</source>
         <translation>时间段</translation>
     </message>
     <message>
+        <source>Activity</source>
+        <translation>活动</translation>
+    </message>
+    <message>
         <source>Filter Simulator</source>
         <translation>过滤器模拟器</translation>
     </message>
@@ -4411,7 +4529,7 @@ Packet loss: %2</source>
     <name>WindowManager</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>关于</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -4636,12 +4754,12 @@ Packet loss: %2</source>
         <translation>无法将区域地址保存为文本文件</translation>
     </message>
     <message>
-        <source>Update Zones</source>
-        <translation>更新区域</translation>
+        <source>Download the Zone?</source>
+        <translation>下载该区域？</translation>
     </message>
     <message>
-        <source>Update Zones?</source>
-        <translation>更新区域吗？</translation>
+        <source>Update Zones</source>
+        <translation>更新区域</translation>
     </message>
 </context>
 </TS>

@@ -21,6 +21,112 @@
     </message>
 </context>
 <context>
+    <name>ActivityTreeModel</name>
+    <message>
+        <source>Process %1</source>
+        <translation>فرایند %1</translation>
+    </message>
+    <message>
+        <source>Program</source>
+        <translation>برنامه</translation>
+    </message>
+    <message>
+        <source>PID</source>
+        <translation>PID</translation>
+    </message>
+    <message>
+        <source>Parent</source>
+        <translation>والد</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>پروتکل</translation>
+    </message>
+    <message>
+        <source>Local Address</source>
+        <translation>آدرس محلی</translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation>پورت محلی</translation>
+    </message>
+    <message>
+        <source>Remote Address</source>
+        <translation>آدرس راه دور</translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation>پورت راه دور</translation>
+    </message>
+    <message>
+        <source>Host Name</source>
+        <translation>نام میزبان</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>جهت</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation>دلیل</translation>
+    </message>
+    <message>
+        <source>DL Speed</source>
+        <translation>سرعت دریافت</translation>
+    </message>
+    <message>
+        <source>UL Speed</source>
+        <translation>سرعت ارسال</translation>
+    </message>
+    <message>
+        <source>DL Total</source>
+        <translation>کل دریافت</translation>
+    </message>
+    <message>
+        <source>UL Total</source>
+        <translation>کل ارسال</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>اتصال‌ها</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>زمان</translation>
+    </message>
+</context>
+<context>
+    <name>ActivityWindow</name>
+    <message>
+        <source>Search</source>
+        <translation>جستجو</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>کپی به‌عنوان فیلتر</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>جستجوی IP</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation>شبیه‌ساز فیلتر</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>یافتن</translation>
+    </message>
+    <message>
+        <source>Activity</source>
+        <translation>فعالیت</translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>گسترش ستون آخر</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -738,6 +844,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
         <translation>بازارسال‌کننده DNS نام‌ها را با مناطق میزبان‌ها تطبیق نمی‌دهد یا با نام‌های قدیمی تطبیق می‌دهد: پایگاه داده آن‌ها را نمی‌توان باز کرد یا در آن نوشت: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t block the names of the enabled Block Zones not updated yet: update them in the Zones window</source>
+        <translation>بازارسال‌کننده DNS نام‌های مناطق مسدودسازی فعال را که هنوز به‌روزرسانی نشده‌اند مسدود نمی‌کند: آن‌ها را در پنجره مناطق به‌روزرسانی کنید</translation>
     </message>
     <message>
         <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
@@ -1913,6 +2023,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>نمایش/پنهان کردن نمودار ترافیک</translation>
     </message>
     <message>
+        <source>Show Activity</source>
+        <translation>نمایش فعالیت</translation>
+    </message>
+    <message>
         <source>Switch Filter Enabled</source>
         <translation>تغییر وضعیت فعال بودن فیلتر</translation>
     </message>
@@ -2225,7 +2339,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>درباره</translation>
     </message>
 </context>
 <context>
@@ -4263,6 +4377,10 @@ Packet loss: %2</source>
         <translation>بازه‌های زمانی</translation>
     </message>
     <message>
+        <source>Activity</source>
+        <translation>فعالیت</translation>
+    </message>
+    <message>
         <source>Filter Simulator</source>
         <translation>شبیه‌ساز فیلتر</translation>
     </message>
@@ -4411,7 +4529,7 @@ Packet loss: %2</source>
     <name>WindowManager</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>درباره</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -4636,12 +4754,12 @@ Packet loss: %2</source>
         <translation>ذخیره آدرس‌های منطقه به‌صورت فایل متنی ممکن نیست</translation>
     </message>
     <message>
-        <source>Update Zones</source>
-        <translation>به‌روزرسانی مناطق</translation>
+        <source>Download the Zone?</source>
+        <translation>منطقه دانلود شود؟</translation>
     </message>
     <message>
-        <source>Update Zones?</source>
-        <translation>مناطق به‌روزرسانی شوند؟</translation>
+        <source>Update Zones</source>
+        <translation>به‌روزرسانی مناطق</translation>
     </message>
 </context>
 </TS>

@@ -21,6 +21,112 @@
     </message>
 </context>
 <context>
+    <name>ActivityTreeModel</name>
+    <message>
+        <source>Process %1</source>
+        <translation>Proces %1</translation>
+    </message>
+    <message>
+        <source>Program</source>
+        <translation>Program</translation>
+    </message>
+    <message>
+        <source>PID</source>
+        <translation>PID</translation>
+    </message>
+    <message>
+        <source>Parent</source>
+        <translation>Nadrzędny</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Protokół</translation>
+    </message>
+    <message>
+        <source>Local Address</source>
+        <translation>Adres lokalny</translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation>Port lokalny</translation>
+    </message>
+    <message>
+        <source>Remote Address</source>
+        <translation>Adres zdalny</translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation>Zdalny port</translation>
+    </message>
+    <message>
+        <source>Host Name</source>
+        <translation>Nazwa hosta</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Kierunek</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation>Przyczyna</translation>
+    </message>
+    <message>
+        <source>DL Speed</source>
+        <translation>Prędkość pobierania</translation>
+    </message>
+    <message>
+        <source>UL Speed</source>
+        <translation>Prędkość wysyłania</translation>
+    </message>
+    <message>
+        <source>DL Total</source>
+        <translation>Łącznie pobrano</translation>
+    </message>
+    <message>
+        <source>UL Total</source>
+        <translation>Łącznie wysłano</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Połączenia</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>Czas</translation>
+    </message>
+</context>
+<context>
+    <name>ActivityWindow</name>
+    <message>
+        <source>Search</source>
+        <translation>Szukaj</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Kopiuj jako filtr</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>Wyszukaj IP</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation>Symulator filtrów</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Znajdź</translation>
+    </message>
+    <message>
+        <source>Activity</source>
+        <translation>Aktywność</translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>Rozciągnij ostatnią kolumnę</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -738,6 +844,10 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
     <message>
         <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
         <translation>Przekazywanie DNS nie dopasowuje nazw Stref hostów lub dopasowuje nieaktualne: nie można otworzyć ani zapisać ich bazy danych: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t block the names of the enabled Block Zones not updated yet: update them in the Zones window</source>
+        <translation>Przekazywanie DNS nie blokuje nazw włączonych Stref blokowania, jeszcze niezaktualizowanych: zaktualizuj je w oknie Strefy</translation>
     </message>
     <message>
         <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
@@ -1913,6 +2023,10 @@ Program jest włączony tylko wtedy, gdy DOWOLNA z jego grup wyłącznych jest w
         <translation>Pokaż/ukryj wykres ruchu</translation>
     </message>
     <message>
+        <source>Show Activity</source>
+        <translation>Pokaż aktywność</translation>
+    </message>
+    <message>
         <source>Switch Filter Enabled</source>
         <translation>Przełącz włączone filtry</translation>
     </message>
@@ -2225,7 +2339,7 @@ Program jest włączony tylko wtedy, gdy DOWOLNA z jego grup wyłącznych jest w
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>O programie</translation>
     </message>
 </context>
 <context>
@@ -4263,6 +4377,10 @@ Utrata pakietów: %2</translation>
         <translation>Okresy czasowe</translation>
     </message>
     <message>
+        <source>Activity</source>
+        <translation>Aktywność</translation>
+    </message>
+    <message>
         <source>Filter Simulator</source>
         <translation>Symulator filtrów</translation>
     </message>
@@ -4411,7 +4529,7 @@ Utrata pakietów: %2</translation>
     <name>WindowManager</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>O programie</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -4636,12 +4754,12 @@ Utrata pakietów: %2</translation>
         <translation>Nie można zapisać adresów stref jako pliku tekstowego</translation>
     </message>
     <message>
-        <source>Update Zones</source>
-        <translation>Aktualizuj strefy</translation>
+        <source>Download the Zone?</source>
+        <translation>Pobrać Strefę?</translation>
     </message>
     <message>
-        <source>Update Zones?</source>
-        <translation>Aktualizować strefy?</translation>
+        <source>Update Zones</source>
+        <translation>Aktualizuj strefy</translation>
     </message>
 </context>
 </TS>

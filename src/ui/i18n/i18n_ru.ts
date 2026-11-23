@@ -21,6 +21,112 @@
     </message>
 </context>
 <context>
+    <name>ActivityTreeModel</name>
+    <message>
+        <source>Process %1</source>
+        <translation>Процесс %1</translation>
+    </message>
+    <message>
+        <source>Program</source>
+        <translation>Программа</translation>
+    </message>
+    <message>
+        <source>PID</source>
+        <translation>PID</translation>
+    </message>
+    <message>
+        <source>Parent</source>
+        <translation>Родитель</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Протокол</translation>
+    </message>
+    <message>
+        <source>Local Address</source>
+        <translation>Локал. адрес</translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation>Локал. порт</translation>
+    </message>
+    <message>
+        <source>Remote Address</source>
+        <translation>Удал. адрес</translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation>Удал. порт</translation>
+    </message>
+    <message>
+        <source>Host Name</source>
+        <translation>Имя хоста</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Направление</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation>Причина</translation>
+    </message>
+    <message>
+        <source>DL Speed</source>
+        <translation>Скорость загрузки</translation>
+    </message>
+    <message>
+        <source>UL Speed</source>
+        <translation>Скорость отдачи</translation>
+    </message>
+    <message>
+        <source>DL Total</source>
+        <translation>Всего загружено</translation>
+    </message>
+    <message>
+        <source>UL Total</source>
+        <translation>Всего отдано</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Соединения</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>Время</translation>
+    </message>
+</context>
+<context>
+    <name>ActivityWindow</name>
+    <message>
+        <source>Search</source>
+        <translation>Поиск</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Копировать как фильтр</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>Поиск IP</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation>Симулятор фильтра</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Найти</translation>
+    </message>
+    <message>
+        <source>Activity</source>
+        <translation>Активность</translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>Растянуть последнюю колонку</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -738,6 +844,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
         <translation>DNS-ретранслятор не сверяет имена с Зонами хостов или сверяет с устаревшими: их базу данных не удаётся открыть или записать: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t block the names of the enabled Block Zones not updated yet: update them in the Zones window</source>
+        <translation>DNS-ретранслятор не блокирует имена включённых Зон блокировки, ещё не обновлённых: обновите их в окне Зоны</translation>
     </message>
     <message>
         <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
@@ -1913,6 +2023,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>Показать/Скрыть График трафика</translation>
     </message>
     <message>
+        <source>Show Activity</source>
+        <translation>Показать Активность</translation>
+    </message>
+    <message>
         <source>Switch Filter Enabled</source>
         <translation>Переключить &quot;Фильтр включён&quot;</translation>
     </message>
@@ -2225,7 +2339,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>О программе</translation>
     </message>
 </context>
 <context>
@@ -4263,6 +4377,10 @@ Packet loss: %2</source>
         <translation>Периоды времени</translation>
     </message>
     <message>
+        <source>Activity</source>
+        <translation>Активность</translation>
+    </message>
+    <message>
         <source>Filter Simulator</source>
         <translation>Симулятор фильтра</translation>
     </message>
@@ -4411,7 +4529,7 @@ Packet loss: %2</source>
     <name>WindowManager</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>О программе</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -4636,12 +4754,12 @@ Packet loss: %2</source>
         <translation>Не удалось сохранить адреса Зоны в текстовый файл</translation>
     </message>
     <message>
-        <source>Update Zones</source>
-        <translation>Обновить Зоны</translation>
+        <source>Download the Zone?</source>
+        <translation>Загрузить Зону?</translation>
     </message>
     <message>
-        <source>Update Zones?</source>
-        <translation>Обновить Зоны?</translation>
+        <source>Update Zones</source>
+        <translation>Обновить Зоны</translation>
     </message>
 </context>
 </TS>

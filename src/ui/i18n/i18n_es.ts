@@ -21,6 +21,112 @@
     </message>
 </context>
 <context>
+    <name>ActivityTreeModel</name>
+    <message>
+        <source>Process %1</source>
+        <translation>Proceso %1</translation>
+    </message>
+    <message>
+        <source>Program</source>
+        <translation>Programa</translation>
+    </message>
+    <message>
+        <source>PID</source>
+        <translation>PID</translation>
+    </message>
+    <message>
+        <source>Parent</source>
+        <translation>Padre</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Protocolo</translation>
+    </message>
+    <message>
+        <source>Local Address</source>
+        <translation>Dirección local</translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation>Puerto local</translation>
+    </message>
+    <message>
+        <source>Remote Address</source>
+        <translation>Dirección remota</translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation>Puerto remoto</translation>
+    </message>
+    <message>
+        <source>Host Name</source>
+        <translation>Nombre de host</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Dirección</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation>Motivo</translation>
+    </message>
+    <message>
+        <source>DL Speed</source>
+        <translation>Vel. de descarga</translation>
+    </message>
+    <message>
+        <source>UL Speed</source>
+        <translation>Vel. de carga</translation>
+    </message>
+    <message>
+        <source>DL Total</source>
+        <translation>Total descargado</translation>
+    </message>
+    <message>
+        <source>UL Total</source>
+        <translation>Total cargado</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Conexiones</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>Fecha</translation>
+    </message>
+</context>
+<context>
+    <name>ActivityWindow</name>
+    <message>
+        <source>Search</source>
+        <translation>Buscar</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Copiar como Filtro</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>Consultar IP</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation>Simulador de filtros</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Buscar</translation>
+    </message>
+    <message>
+        <source>Activity</source>
+        <translation>Actividad</translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>Ampliar la última columna</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -738,6 +844,10 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     <message>
         <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
         <translation>El Reenviador DNS no compara los nombres con las Zonas de hosts o los compara con los obsoletos: su base de datos no se puede abrir ni escribir: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t block the names of the enabled Block Zones not updated yet: update them in the Zones window</source>
+        <translation>El Reenviador DNS no bloquea los nombres de las Zonas de bloqueo activadas aún no actualizadas: actualícelas en la ventana Zonas</translation>
     </message>
     <message>
         <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
@@ -1913,6 +2023,10 @@ Un programa está activado solo si CUALQUIERA de sus grupos exclusivos está act
         <translation>Mostrar / Ocultar gráfica del tráfico</translation>
     </message>
     <message>
+        <source>Show Activity</source>
+        <translation>Mostrar actividad</translation>
+    </message>
+    <message>
         <source>Switch Filter Enabled</source>
         <translation>Alternar filtro activado</translation>
     </message>
@@ -2225,7 +2339,7 @@ Un programa está activado solo si CUALQUIERA de sus grupos exclusivos está act
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Acerca de</translation>
     </message>
 </context>
 <context>
@@ -4266,6 +4380,10 @@ Paquetes perdidos: %2</translation>
         <translation>Períodos de tiempo</translation>
     </message>
     <message>
+        <source>Activity</source>
+        <translation>Actividad</translation>
+    </message>
+    <message>
         <source>Filter Simulator</source>
         <translation>Simulador de filtros</translation>
     </message>
@@ -4414,7 +4532,7 @@ Paquetes perdidos: %2</translation>
     <name>WindowManager</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Acerca de</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -4639,12 +4757,12 @@ Paquetes perdidos: %2</translation>
         <translation>No se pueden guardar las direcciones de la zona como archivo de texto</translation>
     </message>
     <message>
-        <source>Update Zones</source>
-        <translation>Actualizar zonas</translation>
+        <source>Download the Zone?</source>
+        <translation>¿Descargar la Zona?</translation>
     </message>
     <message>
-        <source>Update Zones?</source>
-        <translation>¿Actualizar zonas?</translation>
+        <source>Update Zones</source>
+        <translation>Actualizar zonas</translation>
     </message>
 </context>
 </TS>

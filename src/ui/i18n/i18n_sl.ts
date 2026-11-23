@@ -21,6 +21,112 @@
     </message>
 </context>
 <context>
+    <name>ActivityTreeModel</name>
+    <message>
+        <source>Process %1</source>
+        <translation>Proces %1</translation>
+    </message>
+    <message>
+        <source>Program</source>
+        <translation>Program</translation>
+    </message>
+    <message>
+        <source>PID</source>
+        <translation>PID</translation>
+    </message>
+    <message>
+        <source>Parent</source>
+        <translation>Nadrejeni</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Protokol</translation>
+    </message>
+    <message>
+        <source>Local Address</source>
+        <translation>Lokalni naslov</translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation>Lokalno vrata</translation>
+    </message>
+    <message>
+        <source>Remote Address</source>
+        <translation>Oddaljeni naslov</translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation>Oddaljena vrata</translation>
+    </message>
+    <message>
+        <source>Host Name</source>
+        <translation>Ime gostitelja</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Smer</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation>Razlog</translation>
+    </message>
+    <message>
+        <source>DL Speed</source>
+        <translation>Hitrost prenosa</translation>
+    </message>
+    <message>
+        <source>UL Speed</source>
+        <translation>Hitrost nalaganja</translation>
+    </message>
+    <message>
+        <source>DL Total</source>
+        <translation>Skupno preneseno</translation>
+    </message>
+    <message>
+        <source>UL Total</source>
+        <translation>Skupno naloženo</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Povezave</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>Čas</translation>
+    </message>
+</context>
+<context>
+    <name>ActivityWindow</name>
+    <message>
+        <source>Search</source>
+        <translation>Poišči</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Kopiraj kot filter</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>Iskanje IP-ja</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation>Simulator filtra</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Poišči</translation>
+    </message>
+    <message>
+        <source>Activity</source>
+        <translation>Dejavnost</translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>Raztegnite zadnji stolpec</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -738,6 +844,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
         <translation>Posredovalnik DNS imen ne primerja s Področji gostiteljev ali jih primerja z zastarelimi: njihove zbirke podatkov ni mogoče odpreti ali zapisati: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t block the names of the enabled Block Zones not updated yet: update them in the Zones window</source>
+        <translation>Posredovalnik DNS ne blokira imen omogočenih Področij blokiranja, ki še niso posodobljena: posodobite jih v oknu Področja</translation>
     </message>
     <message>
         <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
@@ -1913,6 +2023,10 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
         <translation>Prikaži/skrij graf prometa</translation>
     </message>
     <message>
+        <source>Show Activity</source>
+        <translation>Prikaži dejavnost</translation>
+    </message>
+    <message>
         <source>Switch Filter Enabled</source>
         <translation>Preklop filtra omogočen</translation>
     </message>
@@ -2225,7 +2339,7 @@ Program je omogočen samo, če je omogočena KATERAKOLI od njegovih ekskluzivnih
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>O programu</translation>
     </message>
 </context>
 <context>
@@ -4263,6 +4377,10 @@ Izguba paketov: %2</translation>
         <translation>Časovna obdobja</translation>
     </message>
     <message>
+        <source>Activity</source>
+        <translation>Dejavnost</translation>
+    </message>
+    <message>
         <source>Filter Simulator</source>
         <translation>Simulator filtra</translation>
     </message>
@@ -4411,7 +4529,7 @@ Izguba paketov: %2</translation>
     <name>WindowManager</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>O programu</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -4636,12 +4754,12 @@ Izguba paketov: %2</translation>
         <translation>Naslovov področij ni mogoče shraniti kot besedilno datoteko</translation>
     </message>
     <message>
-        <source>Update Zones</source>
-        <translation>Posodobi področja</translation>
+        <source>Download the Zone?</source>
+        <translation>Ali želite prenesti Področje?</translation>
     </message>
     <message>
-        <source>Update Zones?</source>
-        <translation>Posodobi področja?</translation>
+        <source>Update Zones</source>
+        <translation>Posodobi področja</translation>
     </message>
 </context>
 </TS>

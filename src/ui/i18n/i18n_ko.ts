@@ -21,6 +21,112 @@
     </message>
 </context>
 <context>
+    <name>ActivityTreeModel</name>
+    <message>
+        <source>Process %1</source>
+        <translation>프로세스 %1</translation>
+    </message>
+    <message>
+        <source>Program</source>
+        <translation>프로그램</translation>
+    </message>
+    <message>
+        <source>PID</source>
+        <translation>PID</translation>
+    </message>
+    <message>
+        <source>Parent</source>
+        <translation>상위 프로세스</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>프로토콜</translation>
+    </message>
+    <message>
+        <source>Local Address</source>
+        <translation>로컬 주소</translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation>로컬 포트</translation>
+    </message>
+    <message>
+        <source>Remote Address</source>
+        <translation>원격 주소</translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation>원격 포트</translation>
+    </message>
+    <message>
+        <source>Host Name</source>
+        <translation>호스트 이름</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>방향</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation>이유</translation>
+    </message>
+    <message>
+        <source>DL Speed</source>
+        <translation>다운로드 속도</translation>
+    </message>
+    <message>
+        <source>UL Speed</source>
+        <translation>업로드 속도</translation>
+    </message>
+    <message>
+        <source>DL Total</source>
+        <translation>다운로드 합계</translation>
+    </message>
+    <message>
+        <source>UL Total</source>
+        <translation>업로드 합계</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>연결</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>시간</translation>
+    </message>
+</context>
+<context>
+    <name>ActivityWindow</name>
+    <message>
+        <source>Search</source>
+        <translation>검색</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>필터로 복사</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>IP 조회</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation>필터 시뮬레이터</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>찾기</translation>
+    </message>
+    <message>
+        <source>Activity</source>
+        <translation>활동</translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>마지막 열 늘리기</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -738,6 +844,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
         <translation>DNS 전달자가 호스트 영역의 이름과 대조하지 않거나 오래된 이름과 대조합니다: 해당 데이터베이스를 열거나 쓸 수 없습니다: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t block the names of the enabled Block Zones not updated yet: update them in the Zones window</source>
+        <translation>DNS 전달자가 아직 업데이트되지 않은 사용하는 차단 영역의 이름을 차단하지 않습니다: 영역 창에서 업데이트하세요</translation>
     </message>
     <message>
         <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
@@ -1913,6 +2023,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>트래픽 도표 표시/숨김</translation>
     </message>
     <message>
+        <source>Show Activity</source>
+        <translation>활동 표시</translation>
+    </message>
+    <message>
         <source>Switch Filter Enabled</source>
         <translation>필터 활성화 전환</translation>
     </message>
@@ -2225,7 +2339,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>정보</translation>
     </message>
 </context>
 <context>
@@ -4263,6 +4377,10 @@ Packet loss: %2</source>
         <translation>기간</translation>
     </message>
     <message>
+        <source>Activity</source>
+        <translation>활동</translation>
+    </message>
+    <message>
         <source>Filter Simulator</source>
         <translation>필터 시뮬레이터</translation>
     </message>
@@ -4411,7 +4529,7 @@ Packet loss: %2</source>
     <name>WindowManager</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>정보</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -4636,12 +4754,12 @@ Packet loss: %2</source>
         <translation>대역 주소를 텍스트 파일로 저장할 수 없습니다.</translation>
     </message>
     <message>
-        <source>Update Zones</source>
-        <translation>영역 업데이트</translation>
+        <source>Download the Zone?</source>
+        <translation>영역을 다운로드하시겠습니까?</translation>
     </message>
     <message>
-        <source>Update Zones?</source>
-        <translation>영역 업데이트?</translation>
+        <source>Update Zones</source>
+        <translation>영역 업데이트</translation>
     </message>
 </context>
 </TS>

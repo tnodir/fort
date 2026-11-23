@@ -21,6 +21,112 @@
     </message>
 </context>
 <context>
+    <name>ActivityTreeModel</name>
+    <message>
+        <source>Process %1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Program</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>PID</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Parent</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Local Address</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remote Address</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Host Name</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>DL Speed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>UL Speed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>DL Total</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>UL Total</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ActivityWindow</name>
+    <message>
+        <source>Search</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Activity</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -735,6 +841,10 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t block the names of the enabled Block Zones not updated yet: update them in the Zones window</source>
         <translation></translation>
     </message>
     <message>
@@ -1907,6 +2017,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>Show/Hide Traffic Graph</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show Activity</source>
         <translation></translation>
     </message>
     <message>
@@ -4250,6 +4364,10 @@ Packet loss: %2</source>
         <translation></translation>
     </message>
     <message>
+        <source>Activity</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Filter Simulator</source>
         <translation></translation>
     </message>
@@ -4623,11 +4741,11 @@ Packet loss: %2</source>
         <translation></translation>
     </message>
     <message>
-        <source>Update Zones</source>
+        <source>Download the Zone?</source>
         <translation></translation>
     </message>
     <message>
-        <source>Update Zones?</source>
+        <source>Update Zones</source>
         <translation></translation>
     </message>
 </context>

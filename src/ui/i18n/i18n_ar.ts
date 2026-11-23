@@ -21,6 +21,112 @@
     </message>
 </context>
 <context>
+    <name>ActivityTreeModel</name>
+    <message>
+        <source>Process %1</source>
+        <translation>العملية %1</translation>
+    </message>
+    <message>
+        <source>Program</source>
+        <translation>البرنامج</translation>
+    </message>
+    <message>
+        <source>PID</source>
+        <translation>PID</translation>
+    </message>
+    <message>
+        <source>Parent</source>
+        <translation>العملية الأم</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>البروتوكول</translation>
+    </message>
+    <message>
+        <source>Local Address</source>
+        <translation>العنوان المحلي</translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation>المنفذ المحلي</translation>
+    </message>
+    <message>
+        <source>Remote Address</source>
+        <translation>العنوان البعيد</translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation>المنفذ البعيد</translation>
+    </message>
+    <message>
+        <source>Host Name</source>
+        <translation>اسم المضيف</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>الاتجاه</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation>السبب</translation>
+    </message>
+    <message>
+        <source>DL Speed</source>
+        <translation>سرعة التنزيل</translation>
+    </message>
+    <message>
+        <source>UL Speed</source>
+        <translation>سرعة الرفع</translation>
+    </message>
+    <message>
+        <source>DL Total</source>
+        <translation>إجمالي التنزيل</translation>
+    </message>
+    <message>
+        <source>UL Total</source>
+        <translation>إجمالي الرفع</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>الاتصالات</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>الوقت</translation>
+    </message>
+</context>
+<context>
+    <name>ActivityWindow</name>
+    <message>
+        <source>Search</source>
+        <translation>البحث</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>نسخ كمرشّح</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>البحث عن عنوان IP</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation>محاكي المرشّح</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>بحث</translation>
+    </message>
+    <message>
+        <source>Activity</source>
+        <translation>النشاط</translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>توسيع العمود الأخير</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -738,6 +844,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
         <translation>مُعيد توجيه DNS لا يطابق أسماء مناطق المضيفين أو يطابق الأسماء القديمة: تعذّر فتح قاعدة بياناتها أو الكتابة فيها: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t block the names of the enabled Block Zones not updated yet: update them in the Zones window</source>
+        <translation>مُعيد توجيه DNS لا يحظر أسماء مناطق الحظر المفعّلة التي لم تُحدَّث بعد: حدِّثها في نافذة المناطق</translation>
     </message>
     <message>
         <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
@@ -1913,6 +2023,10 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
         <translation>عرض / إخفاء مخطط حركة البيانات</translation>
     </message>
     <message>
+        <source>Show Activity</source>
+        <translation>عرض النشاط</translation>
+    </message>
+    <message>
         <source>Switch Filter Enabled</source>
         <translation>تفعيل المرشّح</translation>
     </message>
@@ -2225,7 +2339,7 @@ A program is enabled only if ANY of its exclusive groups is enabled, or, without
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>حول</translation>
     </message>
 </context>
 <context>
@@ -4263,6 +4377,10 @@ Packet loss: %2</source>
         <translation>الفترات الزمنية</translation>
     </message>
     <message>
+        <source>Activity</source>
+        <translation>النشاط</translation>
+    </message>
+    <message>
         <source>Filter Simulator</source>
         <translation>محاكي المرشّح</translation>
     </message>
@@ -4411,7 +4529,7 @@ Packet loss: %2</source>
     <name>WindowManager</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>حول</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -4636,12 +4754,12 @@ Packet loss: %2</source>
         <translation>لا يمكن حفظ عناوين المناطق كملف نصي</translation>
     </message>
     <message>
-        <source>Update Zones</source>
-        <translation>تحديث المناطق</translation>
+        <source>Download the Zone?</source>
+        <translation>هل تريد تنزيل المنطقة؟</translation>
     </message>
     <message>
-        <source>Update Zones?</source>
-        <translation>تحديث المناطق؟</translation>
+        <source>Update Zones</source>
+        <translation>تحديث المناطق</translation>
     </message>
 </context>
 </TS>

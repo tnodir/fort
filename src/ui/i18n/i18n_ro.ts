@@ -21,6 +21,112 @@
     </message>
 </context>
 <context>
+    <name>ActivityTreeModel</name>
+    <message>
+        <source>Process %1</source>
+        <translation>Proces %1</translation>
+    </message>
+    <message>
+        <source>Program</source>
+        <translation>Program</translation>
+    </message>
+    <message>
+        <source>PID</source>
+        <translation>PID</translation>
+    </message>
+    <message>
+        <source>Parent</source>
+        <translation>Părinte</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Protocol</translation>
+    </message>
+    <message>
+        <source>Local Address</source>
+        <translation>Adresă locală</translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation>Port local</translation>
+    </message>
+    <message>
+        <source>Remote Address</source>
+        <translation>Adresă la distanță</translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation>Port la distanță</translation>
+    </message>
+    <message>
+        <source>Host Name</source>
+        <translation>Nume gazdă</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Direcție</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation>Motiv</translation>
+    </message>
+    <message>
+        <source>DL Speed</source>
+        <translation>Viteză descărcare</translation>
+    </message>
+    <message>
+        <source>UL Speed</source>
+        <translation>Viteză încărcare</translation>
+    </message>
+    <message>
+        <source>DL Total</source>
+        <translation>Total descărcat</translation>
+    </message>
+    <message>
+        <source>UL Total</source>
+        <translation>Total încărcat</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Conexiuni</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>Ora</translation>
+    </message>
+</context>
+<context>
+    <name>ActivityWindow</name>
+    <message>
+        <source>Search</source>
+        <translation>Căutare</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Copiază ca filtru</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>Caută IP-ul</translation>
+    </message>
+    <message>
+        <source>Filter Simulator</source>
+        <translation>Simulator de filtrare</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Caută</translation>
+    </message>
+    <message>
+        <source>Activity</source>
+        <translation>Activitate</translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>Extinde ultima coloană</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
         <source>Add Local Networks</source>
@@ -738,6 +844,10 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
     <message>
         <source>The DNS Forwarder doesn&apos;t match the Hosts Zones&apos; names or matches the outdated ones: their database can&apos;t be opened or written: %1</source>
         <translation>Redirecționarea DNS nu compară numele cu Zonele de gazde sau le compară cu cele învechite: baza lor de date nu poate fi deschisă sau scrisă: %1</translation>
+    </message>
+    <message>
+        <source>The DNS Forwarder doesn&apos;t block the names of the enabled Block Zones not updated yet: update them in the Zones window</source>
+        <translation>Redirecționarea DNS nu blochează numele Zonelor de blocare activate încă neactualizate: actualizați-le în fereastra Zone</translation>
     </message>
     <message>
         <source>The DNS Forwarder doesn&apos;t resolve the names: the names of the enabled Block Zones aren&apos;t loaded</source>
@@ -1913,6 +2023,10 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
         <translation>Afișează/ascunde graficul de trafic</translation>
     </message>
     <message>
+        <source>Show Activity</source>
+        <translation>Afișează activitatea</translation>
+    </message>
+    <message>
         <source>Switch Filter Enabled</source>
         <translation>Comută filtrul activat</translation>
     </message>
@@ -2225,7 +2339,7 @@ Un program este activat doar dacă ORICARE dintre grupurile sale exclusive este 
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Despre</translation>
     </message>
 </context>
 <context>
@@ -4263,6 +4377,10 @@ Pierdere de pachete: %2</translation>
         <translation>Perioade de timp</translation>
     </message>
     <message>
+        <source>Activity</source>
+        <translation>Activitate</translation>
+    </message>
+    <message>
         <source>Filter Simulator</source>
         <translation>Simulator de filtrare</translation>
     </message>
@@ -4411,7 +4529,7 @@ Pierdere de pachete: %2</translation>
     <name>WindowManager</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Despre</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -4636,12 +4754,12 @@ Pierdere de pachete: %2</translation>
         <translation>Adresele zonei nu pot fi salvate ca fișier text</translation>
     </message>
     <message>
-        <source>Update Zones</source>
-        <translation>Actualizează zonele</translation>
+        <source>Download the Zone?</source>
+        <translation>Descărcați Zona?</translation>
     </message>
     <message>
-        <source>Update Zones?</source>
-        <translation>Actualizați zonele?</translation>
+        <source>Update Zones</source>
+        <translation>Actualizează zonele</translation>
     </message>
 </context>
 </TS>
