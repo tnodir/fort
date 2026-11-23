@@ -365,6 +365,18 @@ QLineEdit *ControlUtil::createLineEdit(
     return c;
 }
 
+QLineEdit *ControlUtil::createSearchEdit(const std::function<void(const QString &text)> &onEdited)
+{
+    auto c = createLineEdit(QString(), onEdited);
+    c->setObjectName("editSearch");
+    c->setClearButtonEnabled(true);
+    c->setMaxLength(200);
+    c->setMinimumWidth(100);
+    c->setMaximumWidth(200);
+
+    return c;
+}
+
 QMenu *ControlUtil::createMenu(QWidget *parent)
 {
     auto menu = new QMenu(parent);

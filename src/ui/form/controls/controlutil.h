@@ -92,6 +92,7 @@ public:
     static QLineEdit *createLineLabel();
     static QLineEdit *createLineEdit(
             const QString &text, const std::function<void(const QString &text)> &onChanged);
+    static QLineEdit *createSearchEdit(const std::function<void(const QString &text)> &onChanged);
 
     static QMenu *createMenu(QWidget *parent = nullptr);
     static QMenu *createMenuByLayout(QBoxLayout *layout, QWidget *parent);

@@ -443,13 +443,8 @@ void ProgramsWindow::setupTimerMenuActions()
 
 void ProgramsWindow::setupEditSearch()
 {
-    m_editSearch = ControlUtil::createLineEdit(
-            QString(), [&](const QString &text) { appListModel()->setTextFilter(text); });
-    m_editSearch->setObjectName("editSearch");
-    m_editSearch->setClearButtonEnabled(true);
-    m_editSearch->setMaxLength(200);
-    m_editSearch->setMinimumWidth(100);
-    m_editSearch->setMaximumWidth(200);
+    m_editSearch = ControlUtil::createSearchEdit(
+            [&](const QString &text) { appListModel()->setTextFilter(text); });
 
     connect(this, &ProgramsWindow::aboutToShow, m_editSearch, qOverload<>(&QWidget::setFocus));
 }

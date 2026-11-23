@@ -285,13 +285,8 @@ void TrafficWindow::setupRefresh()
 
 void TrafficWindow::setupEditSearch()
 {
-    m_editSearch = ControlUtil::createLineEdit(
-            QString(), [&](const QString &text) { appStatModel()->setTextFilter(text); });
-    m_editSearch->setObjectName("editSearch");
-    m_editSearch->setClearButtonEnabled(true);
-    m_editSearch->setMaxLength(200);
-    m_editSearch->setMinimumWidth(100);
-    m_editSearch->setMaximumWidth(200);
+    m_editSearch = ControlUtil::createSearchEdit(
+            [&](const QString &text) { appStatModel()->setTextFilter(text); });
 }
 
 void TrafficWindow::setupTrafUnits()
