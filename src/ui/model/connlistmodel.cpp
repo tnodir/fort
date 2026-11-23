@@ -31,7 +31,7 @@ const QLoggingCategory LC("connListModel");
 QString formatIp(const ip_addr_t ip, bool isIPv6, bool resolveAddress = false)
 {
     if (resolveAddress) {
-        const QString hostName = hostInfoCache()->hostName(NetFormatUtil::ipToText(ip, isIPv6));
+        const QString hostName = hostInfoCache()->hostName(ip, isIPv6);
         if (!hostName.isEmpty()) {
             return hostName;
         }

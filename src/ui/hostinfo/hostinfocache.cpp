@@ -1,5 +1,7 @@
 #include "hostinfocache.h"
 
+#include <util/net/netformatutil.h>
+
 #include "hostinfomanager.h"
 
 HostInfoCache::HostInfoCache(QObject *parent) :
@@ -15,6 +17,11 @@ HostInfoCache::~HostInfoCache()
 {
     clear();
     close();
+}
+
+QString HostInfoCache::hostName(const ip_addr_t &ip, bool isIPv6)
+{
+    return hostName(NetFormatUtil::ipToText(ip, isIPv6));
 }
 
 QString HostInfoCache::hostName(const QString &address)

@@ -4,6 +4,8 @@
 #include <QCache>
 #include <QObject>
 
+#include <common/common_types.h>
+
 #include <util/ioc/iocservice.h>
 #include <util/triggertimer.h>
 
@@ -18,6 +20,8 @@ class HostInfoCache : public QObject, public IocService
 public:
     explicit HostInfoCache(QObject *parent = nullptr);
     ~HostInfoCache() override;
+
+    QString hostName(const ip_addr_t &ip, bool isIPv6);
 
 signals:
     void cacheChanged();
