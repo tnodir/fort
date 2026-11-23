@@ -50,7 +50,6 @@ public:
 
     static QString directionText(bool inbound);
     static QString directionIconPath(bool inbound);
-    static QString directionBulletIconPath(bool inbound);
     static QString actionText(bool blocked, bool dropped = false);
 
     static QString columnName(const ConnListColumn column, int role = Qt::DisplayRole);

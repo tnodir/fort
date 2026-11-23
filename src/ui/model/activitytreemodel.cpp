@@ -162,7 +162,6 @@ QVariant flowDecoration(const ActivityFlowRow &f, int column)
 {
     switch (ActivityColumn(column)) {
     case ActivityColumn::Program:
-        return IconCache::icon(ConnListModel::directionBulletIconPath(f.inbound));
     case ActivityColumn::Direction:
         return IconCache::icon(ConnListModel::directionIconPath(f.inbound));
     case ActivityColumn::Reason:

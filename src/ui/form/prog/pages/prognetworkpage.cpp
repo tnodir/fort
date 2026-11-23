@@ -186,13 +186,13 @@ QLayout *ProgNetworkPage::setupZonesLayout()
 QLayout *ProgNetworkPage::setupSpeedLimitsLayout()
 {
     // Download
-    m_cbSpeedLimitIn = ControlUtil::createCheckBox(":/icons/green_down.png");
+    m_cbSpeedLimitIn = ControlUtil::createCheckBox(":/icons/bullet_green_down.png");
     m_cbSpeedLimitIn->setObjectName("cbSpeedLimitIn");
     m_comboSpeedLimitIn = createComboSpeedLimit(m_cbSpeedLimitIn);
     m_comboSpeedLimitIn->setObjectName("comboSpeedLimitIn");
 
     // Upload
-    m_cbSpeedLimitOut = ControlUtil::createCheckBox(":/icons/blue_up.png");
+    m_cbSpeedLimitOut = ControlUtil::createCheckBox(":/icons/bullet_blue_up.png");
     m_cbSpeedLimitOut->setObjectName("cbSpeedLimitOut");
     m_comboSpeedLimitOut = createComboSpeedLimit(m_cbSpeedLimitOut);
     m_comboSpeedLimitOut->setObjectName("comboSpeedLimitOut");

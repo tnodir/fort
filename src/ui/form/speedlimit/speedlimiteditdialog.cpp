@@ -215,13 +215,13 @@ QLayout *SpeedLimitEditDialog::setupDirectionLayout()
     // Download
     m_rbDownload = new QRadioButton();
     m_rbDownload->setObjectName("rbDownload");
-    m_rbDownload->setIcon(IconCache::icon(":/icons/green_down.png"));
+    m_rbDownload->setIcon(IconCache::icon(":/icons/bullet_green_down.png"));
     m_rbDownload->setChecked(true);
 
     // Upload
     m_rbUpload = new QRadioButton();
     m_rbUpload->setObjectName("rbUpload");
-    m_rbUpload->setIcon(IconCache::icon(":/icons/blue_up.png"));
+    m_rbUpload->setIcon(IconCache::icon(":/icons/bullet_blue_up.png"));
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { /*stretch*/ nullptr, m_rbDownload, m_rbUpload, /*stretch*/ nullptr });

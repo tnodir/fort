@@ -653,11 +653,6 @@ QString ConnListModel::directionText(bool inbound)
 
 QString ConnListModel::directionIconPath(bool inbound)
 {
-    return inbound ? ":/icons/green_down.png" : ":/icons/blue_up.png";
-}
-
-QString ConnListModel::directionBulletIconPath(bool inbound)
-{
     return inbound ? ":/icons/bullet_green_down.png" : ":/icons/bullet_blue_up.png";
 }
 
