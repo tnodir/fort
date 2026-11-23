@@ -14,7 +14,8 @@
 // cached ones too), for the connections' log: an address keeps its name for a fixed time after the
 // last answer, as the answers' events have no TTL. Also the names of the addresses by the service's
 // DNS forwarder's answers (to the Dnscache: of any process), by their TTL: they come before the
-// connections, while the DNS Client's events usually come after them
+// connections, while the DNS Client's events usually come after them. Likewise the names of the
+// live flows of the service's previous run, for their connections logged again after the restart
 class DnsClientManager : public QObject, public IocService
 {
     Q_OBJECT
@@ -37,6 +38,10 @@ public:
 
     void addForwarderAnswer(
             const QString &name, const DnsAddresses &addresses, qint64 lifetimeMsecs);
+
+    // The name of a live flow of the service's previous run, for its connection logged again:
+    // kept as the answer's one
+    void addFlowHost(const ProcessIpKey &key, const QString &name);
 
 signals:
     // The address had no or another name: its connections logged before the answer have none or

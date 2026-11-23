@@ -147,6 +147,11 @@ bool OsUtil::isHvciRunning()
     return (info.CodeIntegrityOptions & CODEINTEGRITY_OPTION_HVCI_KMCI_ENABLED) != 0;
 }
 
+QDateTime OsUtil::bootTime()
+{
+    return QDateTime::currentDateTime().addMSecs(-qint64(GetTickCount64()));
+}
+
 bool OsUtil::beep(BeepType type)
 {
     return MessageBeep(type);

@@ -7,6 +7,8 @@
 #include <sqlite/sqlitestmt.h>
 
 #include <common/fortlog.h>
+#include <dns/dnsclientmanager.h>
+#include <fortglobal.h>
 #include <log/logentryconn.h>
 #include <log/logentryflowclosed.h>
 #include <log/logentryflowtraf.h>
@@ -15,6 +17,7 @@
 #include <util/fileutil.h>
 #include <util/net/netutil.h>
 #include <util/net/processipkey.h>
+#include <util/osutil.h>
 
 namespace {
 
@@ -60,6 +63,10 @@ const char *const sqlUpdateFlowHost4 =
 const char *const sqlUpdateFlowHost6 =
         "UPDATE flow SET remote_host = ?1"
         "  WHERE pid = ?2 AND remote_ip6 = ?3 AND remote_host IS NULL;";
+
+const char *const sqlSelectFlowHosts =
+        "SELECT DISTINCT pid, remote_ip, remote_ip6, remote_host FROM flow"
+        "  WHERE remote_host IS NOT NULL;";
 
 const char *const sqlDeleteFlow = "DELETE FROM flow WHERE flow_id = ?1;";
 
@@ -107,6 +114,23 @@ QVariantList flowVars(const LogEntryConn &entry)
     };
 }
 
+// The columns: pid, remote_ip, remote_ip6
+ProcessIpKey flowHostKey(const SqliteStmt &stmt)
+{
+    ip_addr_t ip;
+
+    const QByteArray ip6 = stmt.columnBlob(2);
+    const bool isIPv6 = (ip6.size() == int(sizeof(ip6_addr_t)));
+
+    if (isIPv6) {
+        ip.v6 = NetUtil::arrayViewToIp6(ip6);
+    } else {
+        ip.v4 = quint32(stmt.columnInt(1));
+    }
+
+    return ProcessIpKey(stmt.columnUInt(0), ip, isIPv6);
+}
+
 // The reason with its details
 QVariantList flowReasonVars(const LogEntryConn &entry)
 {
@@ -132,6 +156,8 @@ void ActivityManager::setUp()
 {
     // The live flows don't survive the restart: recreate the DB by the current schema
     if (!sqliteDb()->isReadOnly()) {
+        restoreFlowHosts();
+
         FileUtil::removeFilesByPrefix(sqliteDb()->filePath());
     }
 
@@ -146,9 +172,27 @@ void ActivityManager::setUp()
     }
 }
 
-void ActivityManager::tearDown()
+// The host names of the previous run's flows (kept on its stop), for their connections logged
+// again; not of a run before the boot, as the processes' ids are reused
+void ActivityManager::restoreFlowHosts()
 {
-    clear();
+    const QString filePath = sqliteDb()->filePath();
+    if (!FileUtil::fileExists(filePath) || FileUtil::fileModTime(filePath) < OsUtil::bootTime())
+        return;
+
+    SqliteDb db(filePath, SqliteDb::OpenDefaultReadOnly);
+    if (!db.open())
+        return;
+
+    SqliteStmt stmt;
+    if (!DbQuery(&db).sql(sqlSelectFlowHosts).prepare(stmt))
+        return;
+
+    auto dnsClientManager = Fort::dependency<DnsClientManager>();
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        dnsClientManager->addFlowHost(flowHostKey(stmt), stmt.columnText(3));
+    }
 }
 
 bool ActivityManager::setupDb()
@@ -406,9 +450,6 @@ void ActivityManager::clearIdleSpeeds()
 
 void ActivityManager::clear()
 {
-    if (sqliteDb()->isReadOnly())
-        return;
-
     if (!beginChanges())
         return;
 

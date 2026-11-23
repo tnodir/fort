@@ -32,7 +32,6 @@ public:
     SqliteDb *sqliteDb() const override { return m_sqliteDb.data(); }
 
     void setUp() override;
-    void tearDown() override;
 
     void logConn(const LogEntryConn &entry, quint32 parentPid = 0,
             const QString &parentPath = QString());
@@ -48,7 +47,7 @@ public:
     // The host name resolved after the flows' CONN
     void updateConnHost(const ProcessIpKey &key, const QString &name);
 
-    // The flows aren't logged: the driver's device is closed, the service starts or stops
+    // The flows aren't logged: the service starts with the old file left opened by a client
     void clear();
 
 signals:
@@ -56,6 +55,7 @@ signals:
     void activityChanged();
 
 private:
+    void restoreFlowHosts();
     bool setupDb();
 
     bool beginChanges();

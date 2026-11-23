@@ -421,11 +421,10 @@ void FortManager::closeDriver()
 {
     updateLogManager(false);
 
-    // Process the log read before its cancelling, else it comes after the clearing
+    // Process the log read before its cancelling, else its flows' changes are lost on the stop
     QCoreApplication::sendPostedEvents(logManager(), QEvent::MetaCall);
 
     updateStatManager(false);
-    activityManager()->clear();
 
     driverManager()->closeDevice();
 

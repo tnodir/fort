@@ -40,6 +40,11 @@ void DnsClientManager::addForwarderAnswer(
     addHosts(/*pid=*/0, addresses, name, QDeadlineTimer(lifetimeMsecs));
 }
 
+void DnsClientManager::addFlowHost(const ProcessIpKey &key, const QString &name)
+{
+    m_hosts.insert(key, name, QDeadlineTimer(hostLifetimeMsecs));
+}
+
 void DnsClientManager::addAnswer(const DnsClientAnswer &answer)
 {
     addHosts(answer.processId(), answer.addresses(), answer.name(),

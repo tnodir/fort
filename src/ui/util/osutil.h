@@ -1,6 +1,7 @@
 #ifndef OSUTIL_H
 #define OSUTIL_H
 
+#include <QDateTime>
 #include <QObject>
 
 enum BeepType {
@@ -39,6 +40,8 @@ public:
     static bool isUserAdmin();
 
     static bool isHvciRunning();
+
+    static QDateTime bootTime();
 
     static bool beep(BeepType type = BeepSimple);
     static bool playSound(SoundType type = SoundDefault);
