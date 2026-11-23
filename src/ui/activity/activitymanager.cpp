@@ -25,10 +25,11 @@ inline constexpr int DATABASE_USER_VERSION = 1;
 inline constexpr qint64 hostWaitMsecs = 5 * 1000;
 
 const char *const sqlInsertFlow =
-        "INSERT OR IGNORE INTO flow(flow_id, pid, inbound, local_net, reason, ip_proto,"
-        "    local_port, remote_port, local_ip, remote_ip,"
-        "    local_ip6, remote_ip6, remote_host, conn_time)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14);";
+        "INSERT OR IGNORE INTO flow(flow_id, pid, terminated, inherited, inbound, loopback,"
+        "    local_net, reason, ip_proto, zone_id, rule_id, local_port, remote_port,"
+        "    local_ip, remote_ip, local_ip6, remote_ip6, remote_host, inherit_path, conn_time)"
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17,"
+        "    ?18, ?19, ?20);";
 
 const char *const sqlReplaceProc =
         "INSERT OR REPLACE INTO proc(pid, app_id, parent_pid, path, parent_path)"
@@ -41,7 +42,11 @@ const char *const sqlUpdateProcApp =
         "UPDATE proc SET app_id = ?2 WHERE pid = ?1 AND app_id IS NOT ?2;";
 
 const char *const sqlUpdateFlowReason =
-        "UPDATE flow SET reason = ?2 WHERE flow_id = ?1 AND reason <> ?2;";
+        "UPDATE flow SET terminated = ?2, inherited = ?3, reason = ?4, zone_id = ?5,"
+        "    rule_id = ?6, inherit_path = ?7"
+        "  WHERE flow_id = ?1"
+        "    AND (terminated IS NOT ?2 OR inherited IS NOT ?3 OR reason IS NOT ?4"
+        "      OR zone_id IS NOT ?5 OR rule_id IS NOT ?6 OR inherit_path IS NOT ?7);";
 
 const char *const sqlUpdateFlowTraf = "UPDATE flow"
                                       "  SET in_bytes = in_bytes + ?2, out_bytes = out_bytes + ?3,"
@@ -81,10 +86,15 @@ QVariantList flowVars(const LogEntryConn &entry)
     return {
         qint64(entry.flowId()),
         entry.pid(),
+        entry.terminated(),
+        entry.inherited(),
         entry.inbound(),
+        entry.loopback(),
         entry.localNet(),
         entry.reason(),
         entry.ipProto(),
+        DbVar::nullable(entry.zoneId()),
+        DbVar::nullable(entry.ruleId()),
         entry.localPort(),
         entry.remotePort(),
         isIPv6 ? QVariant() : QVariant(qint32(entry.localIp4())),
@@ -92,16 +102,22 @@ QVariantList flowVars(const LogEntryConn &entry)
         isIPv6 ? QVariant(entry.localIp6View().toByteArray()) : QVariant(),
         isIPv6 ? QVariant(entry.remoteIp6View().toByteArray()) : QVariant(),
         DbVar::nullable(entry.remoteHost()),
+        DbVar::nullable(entry.inheritPath()),
         entry.connTime(),
     };
 }
 
-// The reason
+// The reason with its details
 QVariantList flowReasonVars(const LogEntryConn &entry)
 {
     return {
         qint64(entry.flowId()),
+        entry.terminated(),
+        entry.inherited(),
         entry.reason(),
+        DbVar::nullable(entry.zoneId()),
+        DbVar::nullable(entry.ruleId()),
+        DbVar::nullable(entry.inheritPath()),
     };
 }
 

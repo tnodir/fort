@@ -16,8 +16,9 @@ inline constexpr const char *sqlSelectProcs =
         "SELECT pid, app_id, parent_pid, path, parent_path FROM proc;";
 
 inline constexpr const char *sqlSelectFlows =
-        "SELECT flow_id, pid, inbound, reason, ip_proto, local_port, remote_port,"
-        "    local_ip, remote_ip, local_ip6, remote_ip6, remote_host, conn_time,"
+        "SELECT flow_id, pid, terminated, inherited, inbound, loopback, reason, ip_proto,"
+        "    zone_id, rule_id, local_port, remote_port, local_ip, remote_ip, local_ip6,"
+        "    remote_ip6, remote_host, inherit_path, conn_time,"
         "    in_bytes, out_bytes, in_speed, out_speed"
         "  FROM flow;";
 
@@ -35,16 +36,16 @@ ActivityProcRow readProcRow(const SqliteStmt &stmt)
 // The columns: local_ip, remote_ip, local_ip6, remote_ip6
 void readFlowIps(const SqliteStmt &stmt, ActivityFlowRow &row)
 {
-    const QByteArray localIp6 = stmt.columnBlob(9);
+    const QByteArray localIp6 = stmt.columnBlob(14);
     if (localIp6.size() != int(sizeof(ip6_addr_t))) {
-        row.localIp.v4 = quint32(stmt.columnInt(7));
-        row.remoteIp.v4 = quint32(stmt.columnInt(8));
+        row.localIp.v4 = quint32(stmt.columnInt(12));
+        row.remoteIp.v4 = quint32(stmt.columnInt(13));
         return;
     }
 
     row.isIPv6 = true;
     row.localIp.v6 = NetUtil::arrayViewToIp6(localIp6);
-    row.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(10));
+    row.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(15));
 }
 
 ActivityFlowRow readFlowRow(const SqliteStmt &stmt)
@@ -52,20 +53,26 @@ ActivityFlowRow readFlowRow(const SqliteStmt &stmt)
     ActivityFlowRow row;
     row.flowId = stmt.columnUInt64(0);
     row.pid = stmt.columnUInt(1);
-    row.inbound = stmt.columnBool(2);
-    row.reason = quint8(stmt.columnInt(3));
-    row.ipProto = quint8(stmt.columnInt(4));
-    row.localPort = quint16(stmt.columnInt(5));
-    row.remotePort = quint16(stmt.columnInt(6));
+    row.terminated = stmt.columnBool(2);
+    row.inherited = stmt.columnBool(3);
+    row.inbound = stmt.columnBool(4);
+    row.loopback = stmt.columnBool(5);
+    row.reason = quint8(stmt.columnInt(6));
+    row.ipProto = quint8(stmt.columnInt(7));
+    row.zoneId = quint8(stmt.columnInt(8));
+    row.ruleId = quint16(stmt.columnInt(9));
+    row.localPort = quint16(stmt.columnInt(10));
+    row.remotePort = quint16(stmt.columnInt(11));
 
     readFlowIps(stmt, row);
 
-    row.remoteHost = stmt.columnText(11);
-    row.connTime = stmt.columnUnixTime(12);
-    row.traf.inBytes = stmt.columnInt64(13);
-    row.traf.outBytes = stmt.columnInt64(14);
-    row.traf.inSpeed = stmt.columnInt64(15);
-    row.traf.outSpeed = stmt.columnInt64(16);
+    row.remoteHost = stmt.columnText(16);
+    row.inheritAppPath = stmt.columnText(17);
+    row.connTime = stmt.columnUnixTime(18);
+    row.traf.inBytes = stmt.columnInt64(19);
+    row.traf.outBytes = stmt.columnInt64(20);
+    row.traf.inSpeed = stmt.columnInt64(21);
+    row.traf.outSpeed = stmt.columnInt64(22);
     return row;
 }
 

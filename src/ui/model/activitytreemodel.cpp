@@ -25,10 +25,11 @@ using namespace Fort;
 
 namespace {
 
-// The reason: changed by the flow's CONN logged again
+// The reason with its details: changed by the flow's CONN logged again
 bool isFlowReasonChanged(const Conn &a, const Conn &b)
 {
-    return a.reason != b.reason;
+    return a.terminated != b.terminated || a.inherited != b.inherited || a.reason != b.reason
+            || a.zoneId != b.zoneId || a.ruleId != b.ruleId || a.inheritAppPath != b.inheritAppPath;
 }
 
 bool isFlowChanged(const ActivityFlowRow &a, const ActivityFlowRow &b)
@@ -164,13 +165,22 @@ QVariant procToolTip(const ActivityProcRow &row, int column)
     }
 }
 
+QString flowReasonToolTip(const ActivityNode *node)
+{
+    // The inherited Program is compared with the process's path
+    Conn conn = flowRowOf(node);
+    conn.appPath = procNodeOf(node->parent).row.path;
+
+    return ConnListModel::reasonDetailsText(conn);
+}
+
 QVariant flowToolTip(const ActivityNode *node, int column)
 {
     switch (ActivityColumn(column)) {
     case ActivityColumn::Direction:
         return ConnListModel::directionText(flowRowOf(node).inbound);
     case ActivityColumn::Reason:
-        return reasonTextOf(flowRowOf(node));
+        return flowReasonToolTip(node);
     default:
         return {};
     }

@@ -608,32 +608,32 @@ QString ConnListModel::reasonIconPath(FortConnReason reason)
     return ":/icons/information.png";
 }
 
-QString ConnListModel::reasonDetailsText(const ConnRow &connRow)
+QString ConnListModel::reasonDetailsText(const Conn &conn)
 {
-    QStringList list = { reasonText(FortConnReason(connRow.reason)) };
+    QStringList list = { reasonText(FortConnReason(conn.reason)) };
 
-    if (connRow.ruleId != 0) {
-        const QString ruleName = confRuleManager()->ruleNameById(connRow.ruleId);
+    if (conn.ruleId != 0) {
+        const QString ruleName = confRuleManager()->ruleNameById(conn.ruleId);
 
         list << tr("Rule: %1").arg(ruleName);
     }
 
-    if (connRow.terminated) {
+    if (conn.terminated) {
         list << terminatedText();
     }
 
-    if (connRow.zoneId != 0) {
-        const QString zoneName = confZoneManager()->zoneNameById(connRow.zoneId);
+    if (conn.zoneId != 0) {
+        const QString zoneName = confZoneManager()->zoneNameById(conn.zoneId);
 
         list << tr("Zone: %1").arg(zoneName);
     }
 
-    if (connRow.loopback) {
+    if (conn.loopback) {
         list << tr("Loopback");
     }
 
-    if (connRow.inherited) {
-        list << inheritedText(connRow);
+    if (conn.inherited) {
+        list << inheritedText(conn);
     }
 
     return list.join('\n');
@@ -644,13 +644,14 @@ QString ConnListModel::terminatedText()
     return tr("Terminating Rule");
 }
 
-QString ConnListModel::inheritedText(const ConnRow &connRow)
+QString ConnListModel::inheritedText(const Conn &conn)
 {
-    const QString &inheritAppPath = connRow.inheritAppPath;
+    const QString &inheritAppPath = conn.inheritAppPath;
 
     // A child process of the same program inherits its own path
-    if (inheritAppPath.isEmpty() || inheritAppPath == connRow.appPath)
+    if (inheritAppPath.isEmpty() || inheritAppPath == conn.appPath) {
         return tr("Inherited");
+    }
 
     return tr("Inherited from: %1").arg(inheritAppPath);
 }
