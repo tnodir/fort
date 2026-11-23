@@ -164,16 +164,8 @@ QList<PanelDock *> MainWindow::docks() const
 PanelDock *MainWindow::currentDock() const
 {
     const auto w = focusWidget();
-    if (!w)
-        return nullptr;
 
-    const auto docks = this->docks();
-    for (PanelDock *dock : docks) {
-        if (dock->isAncestorOf(w))
-            return dock;
-    }
-
-    return nullptr;
+    return w ? dockOf(w) : nullptr;
 }
 
 PanelDock *MainWindow::addDock(FormWindow *w)
@@ -247,28 +239,73 @@ QStringList MainWindow::dockGroups() const
     return list;
 }
 
+PanelDock *MainWindow::dockOf(const QWidget *w) const
+{
+    const auto docks = this->docks();
+    for (PanelDock *dock : docks) {
+        if (dock->isAncestorOf(w))
+            return dock;
+    }
+
+    return nullptr;
+}
+
+bool MainWindow::isShownWidget(const QWidget *w) const
+{
+    if (!w->isVisible())
+        return false;
+
+    // A tabified dock's other tabs aren't hidden: Qt moves them off the dock host, and a new dock's
+    // contents may be laid out later
+    const auto dock = dockOf(w);
+
+    return !dock || !dock->visibleRegion().isEmpty();
+}
+
 void MainWindow::restoreDocks()
 {
     if (!isVisible())
         return;
 
-    const auto &iniUser = Fort::iniUser();
-
-    // The window shown on request stays current
+    // The window shown on request stays current, with its focus
     const auto shownDocks = docks();
 
-    const QStringList groups = iniUser.mainWindowDocks();
-    for (const QString &group : groups) {
-        const WindowCode code = dockWindowCode(group);
-        if (code != WindowNone) {
-            windowManager()->restoreDockedWindowByCode(code);
-        }
+    QList<QPointer<QWidget>> focuses;
+    if (!shownDocks.isEmpty()) {
+        focuses.append(focusWidget());
     }
 
-    m_dockHost->restoreState(iniUser.mainWindowDocksState(), DOCKS_STATE_VERSION);
+    restoreDockedWindows(focuses);
+
+    m_dockHost->restoreState(iniUser().mainWindowDocksState(), DOCKS_STATE_VERSION);
 
     for (PanelDock *dock : shownDocks) {
         dock->raise();
+    }
+
+    // The restoring hides the docks, moving the focus out of them
+    setFocusToShown(focuses);
+}
+
+void MainWindow::restoreDockedWindows(QList<QPointer<QWidget>> &focuses)
+{
+    const QStringList groups = iniUser().mainWindowDocks();
+    for (const QString &group : groups) {
+        const WindowCode code = dockWindowCode(group);
+        if (code != WindowNone && windowManager()->restoreDockedWindowByCode(code)) {
+            // Set on its showing
+            focuses.append(focusWidget());
+        }
+    }
+}
+
+void MainWindow::setFocusToShown(const QList<QPointer<QWidget>> &focuses)
+{
+    for (const auto &w : focuses) {
+        if (w && isShownWidget(w)) {
+            w->setFocus();
+            return;
+        }
     }
 }
 

@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QPointer>
+
 #include <form/controls/formwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QAction)
@@ -48,7 +50,12 @@ protected slots:
 private:
     QStringList dockGroups() const;
 
+    PanelDock *dockOf(const QWidget *w) const;
+    bool isShownWidget(const QWidget *w) const;
+
     void restoreDocks();
+    void restoreDockedWindows(QList<QPointer<QWidget>> &focuses);
+    void setFocusToShown(const QList<QPointer<QWidget>> &focuses);
     void updateLocked();
     void updateLockToolTip();
 

@@ -179,9 +179,16 @@ bool FormPointer::moveToDock()
 
     w->saveWindowState(/*wasVisible=*/true);
 
+    // The re-parenting clears it: the Main window's focus child, maybe in a hidden tab, gets it
+    const QPointer<QWidget> focus = w->focusWidget();
+
     if (!showDocked(/*activate=*/true, /*expose=*/false)) {
         setIniDocked(false);
         return false;
+    }
+
+    if (focus) {
+        focus->setFocus();
     }
 
     return true;

@@ -32,7 +32,15 @@ PanelDock::PanelDock(FormWindow *formWindow, QWidget *parent) :
     // By the window's ini group: the Main window's saved layout finds it by the name
     setObjectName(formWindow->iniGroup());
 
+    const bool hidden = formWindow->isHidden();
+
     setWidget(formWindow);
+
+    // QDockWidget shows its widget: a hidden window stays hidden till its showWindow(), which
+    // emits aboutToShow()
+    if (hidden) {
+        formWindow->hide();
+    }
 
     // The window's shortcuts work in its header too
     addActions(formWindow->actions());
