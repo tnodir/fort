@@ -499,10 +499,10 @@ QString ActivityTreeModel::columnName(const ActivityColumn column)
         tr("Remote Address"),
         tr("Remote Port"),
         tr("Host Name"),
-        tr("Download"),
-        tr("Upload"),
-        tr("Downloaded"),
-        tr("Uploaded"),
+        tr("DL Speed"),
+        tr("UL Speed"),
+        tr("DL Total"),
+        tr("UL Total"),
         tr("Connections"),
         tr("Time"),
     };
@@ -528,11 +528,11 @@ QVariant ActivityTreeModel::headerData(int section, Qt::Orientation orientation,
 QVariant ActivityTreeModel::headerDataDecoration(int section) const
 {
     switch (ActivityColumn(section)) {
-    case ActivityColumn::Download:
-    case ActivityColumn::Downloaded:
+    case ActivityColumn::DownloadSpeed:
+    case ActivityColumn::DownloadTotal:
         return IconCache::icon(":/icons/bullet_green_down.png");
-    case ActivityColumn::Upload:
-    case ActivityColumn::Uploaded:
+    case ActivityColumn::UploadSpeed:
+    case ActivityColumn::UploadTotal:
         return IconCache::icon(":/icons/bullet_blue_up.png");
     }
 
@@ -948,7 +948,7 @@ void ActivityTreeModel::updateTotals(ActivityGroupNode *node, const ActivityTota
 
     node->totals = totals;
 
-    emitColumnsChanged(node, ActivityColumn::Download, ActivityColumn::Connections);
+    emitColumnsChanged(node, ActivityColumn::DownloadSpeed, ActivityColumn::Connections);
 }
 
 void ActivityTreeModel::syncFlows(const ActivitySnapshot &snapshot)
@@ -970,7 +970,7 @@ void ActivityTreeModel::updateFlow(ActivityFlowNode *node, const ActivityFlowRow
     node->row = row;
 
     // The host name is in the Program's column too
-    emitColumnsChanged(node, ActivityColumn::Program, ActivityColumn::Uploaded);
+    emitColumnsChanged(node, ActivityColumn::Program, ActivityColumn::UploadTotal);
 }
 
 void ActivityTreeModel::addFlow(const ActivityFlowRow &row)
