@@ -25,10 +25,10 @@ inline constexpr int DATABASE_USER_VERSION = 1;
 inline constexpr qint64 hostWaitMsecs = 5 * 1000;
 
 const char *const sqlInsertFlow =
-        "INSERT OR IGNORE INTO flow(flow_id, pid, inbound, local_net, ip_proto,"
+        "INSERT OR IGNORE INTO flow(flow_id, pid, inbound, local_net, reason, ip_proto,"
         "    local_port, remote_port, local_ip, remote_ip,"
         "    local_ip6, remote_ip6, remote_host, conn_time)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13);";
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14);";
 
 const char *const sqlReplaceProc =
         "INSERT OR REPLACE INTO proc(pid, app_id, parent_pid, path, parent_path)"
@@ -39,6 +39,9 @@ const char *const sqlUpdateProcPath =
 
 const char *const sqlUpdateProcApp =
         "UPDATE proc SET app_id = ?2 WHERE pid = ?1 AND app_id IS NOT ?2;";
+
+const char *const sqlUpdateFlowReason =
+        "UPDATE flow SET reason = ?2 WHERE flow_id = ?1 AND reason <> ?2;";
 
 const char *const sqlUpdateFlowTraf = "UPDATE flow"
                                       "  SET in_bytes = in_bytes + ?2, out_bytes = out_bytes + ?3,"
@@ -80,6 +83,7 @@ QVariantList flowVars(const LogEntryConn &entry)
         entry.pid(),
         entry.inbound(),
         entry.localNet(),
+        entry.reason(),
         entry.ipProto(),
         entry.localPort(),
         entry.remotePort(),
@@ -89,6 +93,15 @@ QVariantList flowVars(const LogEntryConn &entry)
         isIPv6 ? QVariant(entry.remoteIp6View().toByteArray()) : QVariant(),
         DbVar::nullable(entry.remoteHost()),
         entry.connTime(),
+    };
+}
+
+// The reason
+QVariantList flowReasonVars(const LogEntryConn &entry)
+{
+    return {
+        qint64(entry.flowId()),
+        entry.reason(),
     };
 }
 
@@ -158,8 +171,10 @@ void ActivityManager::logConn(
     if (!beginChanges())
         return;
 
-    // Logged again (after a blocked reauthorization): the flow is kept, its Program may be changed
+    // Logged again (after a blocked reauthorization): the flow is kept, its reason and Program may
+    // be changed
     if (!insertFlow(entry)) {
+        updateFlowReason(entry);
         updateProcApp(entry);
         return;
     }
@@ -205,6 +220,11 @@ void ActivityManager::waitConnHost(const LogEntryConn &entry)
         return;
 
     m_hostWaits.insert(entry.remoteIpKey(), true, QDeadlineTimer(hostWaitMsecs));
+}
+
+void ActivityManager::updateFlowReason(const LogEntryConn &entry)
+{
+    doneChange(sqlUpdateFlowReason, flowReasonVars(entry));
 }
 
 void ActivityManager::updateProcApp(const LogEntryConn &entry)

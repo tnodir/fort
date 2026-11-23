@@ -11,6 +11,7 @@ CREATE TABLE flow(
   pid INTEGER NOT NULL,
   inbound BOOLEAN NOT NULL,
   local_net BOOLEAN NOT NULL, -- the remote address is of the LAN addresses
+  reason INTEGER NOT NULL, -- FORT_CONN_REASON_*, 0 when unknown
   ip_proto INTEGER NOT NULL,
   local_port INTEGER NOT NULL,
   remote_port INTEGER NOT NULL,

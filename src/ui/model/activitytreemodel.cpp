@@ -25,9 +25,15 @@ using namespace Fort;
 
 namespace {
 
+// The reason: changed by the flow's CONN logged again
+bool isFlowReasonChanged(const Conn &a, const Conn &b)
+{
+    return a.reason != b.reason;
+}
+
 bool isFlowChanged(const ActivityFlowRow &a, const ActivityFlowRow &b)
 {
-    return a.traf != b.traf || a.remoteHost != b.remoteHost;
+    return a.traf != b.traf || isFlowReasonChanged(a, b) || a.remoteHost != b.remoteHost;
 }
 
 const ActivityAppNode &appNodeOf(const ActivityNode *node)
@@ -127,6 +133,25 @@ QString flowNameOf(const ActivityFlowRow &f)
     return name + " (" + NetUtil::protocolName(f.ipProto) + ')';
 }
 
+QString reasonTextOf(const ActivityFlowRow &f)
+{
+    return ConnListModel::reasonText(FortConnReason(f.reason));
+}
+
+QVariant flowDecoration(const ActivityFlowRow &f, int column)
+{
+    switch (ActivityColumn(column)) {
+    case ActivityColumn::Program:
+        return IconCache::icon(ConnListModel::directionBulletIconPath(f.inbound));
+    case ActivityColumn::Direction:
+        return IconCache::icon(ConnListModel::directionIconPath(f.inbound));
+    case ActivityColumn::Reason:
+        return IconCache::icon(ConnListModel::reasonIconPath(FortConnReason(f.reason)));
+    default:
+        return {};
+    }
+}
+
 QVariant procToolTip(const ActivityProcRow &row, int column)
 {
     switch (ActivityColumn(column)) {
@@ -137,6 +162,24 @@ QVariant procToolTip(const ActivityProcRow &row, int column)
     default:
         return {};
     }
+}
+
+QVariant flowToolTip(const ActivityNode *node, int column)
+{
+    switch (ActivityColumn(column)) {
+    case ActivityColumn::Direction:
+        return ConnListModel::directionText(flowRowOf(node).inbound);
+    case ActivityColumn::Reason:
+        return reasonTextOf(flowRowOf(node));
+    default:
+        return {};
+    }
+}
+
+// The columns shown by the icons only, as in the Connections
+bool isIconColumn(int column)
+{
+    return column == int(ActivityColumn::Direction) || column == int(ActivityColumn::Reason);
 }
 
 QString speedText(qint64 bytesPerSecond)
@@ -366,6 +409,20 @@ const ActivityColumnFuncs columnFuncsList[] = {
                         return compareTexts(a.remoteHost, b.remoteHost);
                     },
     },
+    // Direction
+    {
+            .flowCompare =
+                    [](const ActivityFlowRow &a, const ActivityFlowRow &b) {
+                        return compareValues(a.inbound, b.inbound);
+                    },
+    },
+    // Reason
+    {
+            .flowCompare =
+                    [](const ActivityFlowRow &a, const ActivityFlowRow &b) {
+                        return compareTexts(reasonTextOf(a), reasonTextOf(b));
+                    },
+    },
     trafColumn<&ActivityTraf::inSpeed, speedText>(), // Download
     trafColumn<&ActivityTraf::outSpeed, speedText>(), // Upload
     trafColumn<&ActivityTraf::inBytes, bytesText>(), // Downloaded
@@ -499,6 +556,8 @@ QString ActivityTreeModel::columnName(const ActivityColumn column)
         tr("Remote Address"),
         tr("Remote Port"),
         tr("Host Name"),
+        tr("Direction"),
+        tr("Reason"),
         tr("DL Speed"),
         tr("UL Speed"),
         tr("DL Total"),
@@ -517,6 +576,8 @@ QVariant ActivityTreeModel::headerData(int section, Qt::Orientation orientation,
 
     switch (role) {
     case Qt::DisplayRole:
+        return isIconColumn(section) ? QVariant() : columnName(ActivityColumn(section));
+    case Qt::ToolTipRole:
         return columnName(ActivityColumn(section));
     case Qt::DecorationRole:
         return headerDataDecoration(section);
@@ -534,6 +595,10 @@ QVariant ActivityTreeModel::headerDataDecoration(int section) const
     case ActivityColumn::UploadSpeed:
     case ActivityColumn::UploadTotal:
         return IconCache::icon(":/icons/bullet_blue_up.png");
+    case ActivityColumn::Direction:
+        return IconCache::icon(ConnListModel::columnIconPath(ConnListColumn::Direction));
+    case ActivityColumn::Reason:
+        return IconCache::icon(ConnListModel::columnIconPath(ConnListColumn::Reason));
     }
 
     return {};
@@ -551,8 +616,8 @@ QVariant ActivityTreeModel::data(const QModelIndex &index, int role) const
         return dataDisplay(node, column);
     }
 
-    if (role == Qt::DecorationRole && column == int(ActivityColumn::Program)) {
-        return dataDecoration(node);
+    if (role == Qt::DecorationRole) {
+        return dataDecoration(node, column);
     }
 
     if (role == Qt::FontRole) {
@@ -582,15 +647,20 @@ QVariant ActivityTreeModel::dataDisplay(const ActivityNode *node, int column) co
     }
 }
 
-QVariant ActivityTreeModel::dataDecoration(const ActivityNode *node) const
+QVariant ActivityTreeModel::dataDecoration(const ActivityNode *node, int column) const
 {
+    if (node->type == ActivityNodeType::Flow) {
+        return flowDecoration(flowRowOf(node), column);
+    }
+
+    if (column != int(ActivityColumn::Program))
+        return {};
+
     switch (node->type) {
     case ActivityNodeType::App:
         return appIconOf(appNodeOf(node));
     case ActivityNodeType::Proc:
         return appInfoCache()->appIcon(procNodeOf(node).row.path);
-    case ActivityNodeType::Flow:
-        return IconCache::icon(ConnListModel::directionBulletIconPath(flowRowOf(node).inbound));
     default:
         return {};
     }
@@ -610,6 +680,8 @@ QVariant ActivityTreeModel::dataToolTip(const ActivityNode *node, int column) co
     switch (node->type) {
     case ActivityNodeType::Proc:
         return procToolTip(procNodeOf(node).row, column);
+    case ActivityNodeType::Flow:
+        return flowToolTip(node, column);
     default:
         return {};
     }

@@ -21,6 +21,8 @@ enum class ActivityColumn : qint8 {
     RemoteAddress,
     RemotePort,
     HostName,
+    Direction,
+    Reason,
     DownloadSpeed,
     UploadSpeed,
     DownloadTotal,
@@ -121,7 +123,7 @@ private:
     QVariant headerDataDecoration(int section) const;
 
     QVariant dataDisplay(const ActivityNode *node, int column) const;
-    QVariant dataDecoration(const ActivityNode *node) const;
+    QVariant dataDecoration(const ActivityNode *node, int column) const;
     QVariant dataFont(const ActivityNode *node, int column) const;
     QVariant dataToolTip(const ActivityNode *node, int column) const;
 

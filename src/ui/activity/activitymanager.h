@@ -65,6 +65,7 @@ private:
     bool insertFlow(const LogEntryConn &entry);
     void replaceProc(const LogEntryConn &entry, quint32 parentPid, const QString &parentPath);
     void waitConnHost(const LogEntryConn &entry);
+    void updateFlowReason(const LogEntryConn &entry);
     void updateProcApp(const LogEntryConn &entry);
 
     void updateFlowsTraf(const LogEntryFlowTraf &entry);

@@ -16,7 +16,7 @@ inline constexpr const char *sqlSelectProcs =
         "SELECT pid, app_id, parent_pid, path, parent_path FROM proc;";
 
 inline constexpr const char *sqlSelectFlows =
-        "SELECT flow_id, pid, inbound, ip_proto, local_port, remote_port,"
+        "SELECT flow_id, pid, inbound, reason, ip_proto, local_port, remote_port,"
         "    local_ip, remote_ip, local_ip6, remote_ip6, remote_host, conn_time,"
         "    in_bytes, out_bytes, in_speed, out_speed"
         "  FROM flow;";
@@ -35,16 +35,16 @@ ActivityProcRow readProcRow(const SqliteStmt &stmt)
 // The columns: local_ip, remote_ip, local_ip6, remote_ip6
 void readFlowIps(const SqliteStmt &stmt, ActivityFlowRow &row)
 {
-    const QByteArray localIp6 = stmt.columnBlob(8);
+    const QByteArray localIp6 = stmt.columnBlob(9);
     if (localIp6.size() != int(sizeof(ip6_addr_t))) {
-        row.localIp.v4 = quint32(stmt.columnInt(6));
-        row.remoteIp.v4 = quint32(stmt.columnInt(7));
+        row.localIp.v4 = quint32(stmt.columnInt(7));
+        row.remoteIp.v4 = quint32(stmt.columnInt(8));
         return;
     }
 
     row.isIPv6 = true;
     row.localIp.v6 = NetUtil::arrayViewToIp6(localIp6);
-    row.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(9));
+    row.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(10));
 }
 
 ActivityFlowRow readFlowRow(const SqliteStmt &stmt)
@@ -53,18 +53,19 @@ ActivityFlowRow readFlowRow(const SqliteStmt &stmt)
     row.flowId = stmt.columnUInt64(0);
     row.pid = stmt.columnUInt(1);
     row.inbound = stmt.columnBool(2);
-    row.ipProto = quint8(stmt.columnInt(3));
-    row.localPort = quint16(stmt.columnInt(4));
-    row.remotePort = quint16(stmt.columnInt(5));
+    row.reason = quint8(stmt.columnInt(3));
+    row.ipProto = quint8(stmt.columnInt(4));
+    row.localPort = quint16(stmt.columnInt(5));
+    row.remotePort = quint16(stmt.columnInt(6));
 
     readFlowIps(stmt, row);
 
-    row.remoteHost = stmt.columnText(10);
-    row.connTime = stmt.columnUnixTime(11);
-    row.traf.inBytes = stmt.columnInt64(12);
-    row.traf.outBytes = stmt.columnInt64(13);
-    row.traf.inSpeed = stmt.columnInt64(14);
-    row.traf.outSpeed = stmt.columnInt64(15);
+    row.remoteHost = stmt.columnText(11);
+    row.connTime = stmt.columnUnixTime(12);
+    row.traf.inBytes = stmt.columnInt64(13);
+    row.traf.outBytes = stmt.columnInt64(14);
+    row.traf.inSpeed = stmt.columnInt64(15);
+    row.traf.outSpeed = stmt.columnInt64(16);
     return row;
 }
 

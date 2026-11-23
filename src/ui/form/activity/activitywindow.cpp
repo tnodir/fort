@@ -20,7 +20,7 @@ using namespace Fort;
 
 namespace {
 
-inline constexpr int ACTIVITY_HEADER_VERSION = 2;
+inline constexpr int ACTIVITY_HEADER_VERSION = 4;
 
 }
 
@@ -143,13 +143,16 @@ void ActivityWindow::setupTreeActivityHeader()
     header->setSectionResizeMode(QHeaderView::Interactive);
     header->setStretchLastSection(true);
 
-    constexpr int columnWidths[] = { 360, 60, 160, 60, 140, 80, 200, 80, 200, 90, 90, 90, 90, 80,
-        140 };
+    constexpr int columnWidths[] = { 360, 50, 50, 40, 100, 60, 120, 60, 160, 30, 30, 90, 90, 90, 90,
+        40, 140 };
     static_assert(std::size(columnWidths) == int(ActivityColumn::Count));
 
     for (int i = 0; i < int(ActivityColumn::Count); ++i) {
         header->resizeSection(i, columnWidths[i]);
     }
+
+    header->setSectionResizeMode(int(ActivityColumn::Direction), QHeaderView::Fixed);
+    header->setSectionResizeMode(int(ActivityColumn::Reason), QHeaderView::Fixed);
 
     // Hidden columns
     constexpr ActivityColumn hiddenColumns[] = {
@@ -160,6 +163,8 @@ void ActivityWindow::setupTreeActivityHeader()
         ActivityColumn::RemoteAddress,
         ActivityColumn::RemotePort,
         ActivityColumn::HostName,
+        ActivityColumn::Direction,
+        ActivityColumn::Reason,
     };
 
     for (const ActivityColumn column : hiddenColumns) {
