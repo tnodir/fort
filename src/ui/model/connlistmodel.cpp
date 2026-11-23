@@ -19,6 +19,7 @@
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/net/actionrange.h>
+#include <util/net/netdbutil.h>
 #include <util/net/netformatutil.h>
 #include <util/net/netutil.h>
 
@@ -385,14 +386,11 @@ void ConnListModel::fillConnRow(ConnRow &connRow, const SqliteStmt &stmt)
     connRow.localPort = stmt.columnInt(12);
     connRow.remotePort = stmt.columnInt(13);
 
-    connRow.isIPv6 = stmt.columnIsNull(14);
-    if (!connRow.isIPv6) {
-        connRow.localIp.v4 = stmt.columnInt(14);
-        connRow.remoteIp.v4 = stmt.columnInt(15);
-    } else {
-        connRow.localIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(16, /*isView=*/true));
-        connRow.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(17, /*isView=*/true));
-    }
+    const bool isIPv6 = NetDbUtil::columnIsIPv6(stmt, 14);
+
+    connRow.isIPv6 = isIPv6;
+    connRow.localIp = NetDbUtil::columnIp(stmt, 14, 16, isIPv6);
+    connRow.remoteIp = NetDbUtil::columnIp(stmt, 15, 17, isIPv6);
 
     connRow.remoteHost = stmt.columnText(18);
 

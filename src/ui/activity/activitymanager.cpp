@@ -15,6 +15,7 @@
 #include <log/logentryprocnew.h>
 #include <log/logentrystattraf.h>
 #include <util/fileutil.h>
+#include <util/net/netdbutil.h>
 #include <util/net/netutil.h>
 #include <util/net/processipkey.h>
 #include <util/osutil.h>
@@ -117,18 +118,9 @@ QVariantList flowVars(const LogEntryConn &entry)
 // The columns: pid, remote_ip, remote_ip6
 ProcessIpKey flowHostKey(const SqliteStmt &stmt)
 {
-    ip_addr_t ip;
+    const bool isIPv6 = NetDbUtil::columnIsIPv6(stmt, 1);
 
-    const QByteArray ip6 = stmt.columnBlob(2);
-    const bool isIPv6 = (ip6.size() == int(sizeof(ip6_addr_t)));
-
-    if (isIPv6) {
-        ip.v6 = NetUtil::arrayViewToIp6(ip6);
-    } else {
-        ip.v4 = quint32(stmt.columnInt(1));
-    }
-
-    return ProcessIpKey(stmt.columnUInt(0), ip, isIPv6);
+    return ProcessIpKey(stmt.columnUInt(0), NetDbUtil::columnIp(stmt, 1, 2, isIPv6), isIPv6);
 }
 
 // The reason with its details

@@ -6,7 +6,7 @@
 
 #include <activity/activitymanager.h>
 #include <fortglobal.h>
-#include <util/net/netutil.h>
+#include <util/net/netdbutil.h>
 
 using namespace Fort;
 
@@ -33,21 +33,6 @@ ActivityProcRow readProcRow(const SqliteStmt &stmt)
     return row;
 }
 
-// The columns: local_ip, remote_ip, local_ip6, remote_ip6
-void readFlowIps(const SqliteStmt &stmt, ActivityFlowRow &row)
-{
-    const QByteArray localIp6 = stmt.columnBlob(14);
-    if (localIp6.size() != int(sizeof(ip6_addr_t))) {
-        row.localIp.v4 = quint32(stmt.columnInt(12));
-        row.remoteIp.v4 = quint32(stmt.columnInt(13));
-        return;
-    }
-
-    row.isIPv6 = true;
-    row.localIp.v6 = NetUtil::arrayViewToIp6(localIp6);
-    row.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(15));
-}
-
 ActivityFlowRow readFlowRow(const SqliteStmt &stmt)
 {
     ActivityFlowRow row;
@@ -64,7 +49,11 @@ ActivityFlowRow readFlowRow(const SqliteStmt &stmt)
     row.localPort = quint16(stmt.columnInt(10));
     row.remotePort = quint16(stmt.columnInt(11));
 
-    readFlowIps(stmt, row);
+    const bool isIPv6 = NetDbUtil::columnIsIPv6(stmt, 12);
+
+    row.isIPv6 = isIPv6;
+    row.localIp = NetDbUtil::columnIp(stmt, 12, 14, isIPv6);
+    row.remoteIp = NetDbUtil::columnIp(stmt, 13, 15, isIPv6);
 
     row.remoteHost = stmt.columnText(16);
     row.inheritAppPath = stmt.columnText(17);

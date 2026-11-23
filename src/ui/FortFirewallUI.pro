@@ -346,6 +346,7 @@ SOURCES += \
     util/net/hostrange.cpp \
     util/net/iprange.cpp \
     util/net/ipverrange.cpp \
+    util/net/netdbutil.cpp \
     util/net/netdownloader.cpp \
     util/net/netformatutil.cpp \
     util/net/netutil.cpp \
@@ -739,6 +740,7 @@ HEADERS += \
     util/net/hostrange.h \
     util/net/iprange.h \
     util/net/ipverrange.h \
+    util/net/netdbutil.h \
     util/net/netdownloader.h \
     util/net/netformatutil.h \
     util/net/netutil.h \
