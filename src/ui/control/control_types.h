@@ -160,6 +160,8 @@ enum Command : quint8 {
     Rpc_TaskManager_appVersionUpdated,
     Rpc_TaskManager_appVersionDownloaded,
     Rpc_TaskManager_zonesDownloaded,
+
+    CommandCount
 };
 
 enum CommandResult : qint8 {

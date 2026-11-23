@@ -2,6 +2,8 @@
 
 #include <QHash>
 
+#include <iterator>
+
 namespace Control {
 
 #define CASE_STRING(id) { id, #id }
@@ -28,6 +30,7 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(CommandTraffic),
     CASE_STRING(CommandPending),
     CASE_STRING(CommandWindow),
+    CASE_STRING(CommandUi),
 
     CASE_STRING(Rpc_Result_Ok),
     CASE_STRING(Rpc_Result_Error),
@@ -212,6 +215,7 @@ static const RpcManager g_commandManagers[] = {
     Rpc_NoneManager, // CommandTraffic,
     Rpc_NoneManager, // CommandPending,
     Rpc_NoneManager, // CommandWindow,
+    Rpc_NoneManager, // CommandUi,
 
     Rpc_NoneManager, // Rpc_Result_Ok,
     Rpc_NoneManager, // Rpc_Result_Error,
@@ -221,7 +225,7 @@ static const RpcManager g_commandManagers[] = {
     Rpc_ActivityManager, // Rpc_ActivityManager_changed,
 
     Rpc_AppInfoManager, // Rpc_AppInfoManager_lookupAppInfo,
-    Rpc_AppInfoManager, // Rpc_AppInfoManager_checkLookupFinished,
+    Rpc_AppInfoManager, // Rpc_AppInfoManager_checkLookupInfoFinished,
 
     Rpc_AutoUpdateManager, // Rpc_AutoUpdateManager_startDownload,
     Rpc_AutoUpdateManager, // Rpc_AutoUpdateManager_runInstaller,
@@ -343,6 +347,8 @@ static const RpcManager g_commandManagers[] = {
     Rpc_TaskManager, // Rpc_TaskManager_zonesDownloaded,
 };
 
+static_assert(std::size(g_commandManagers) == CommandCount);
+
 RpcManager managerByCommand(Command cmd)
 {
     return g_commandManagers[cmd];
@@ -370,6 +376,7 @@ static const qint8 g_commandValidations[] = {
     0, // CommandTraffic,
     0, // CommandPending,
     0, // CommandWindow,
+    0, // CommandUi,
 
     0, // Rpc_Result_Ok,
     0, // Rpc_Result_Error,
@@ -379,7 +386,7 @@ static const qint8 g_commandValidations[] = {
     0, // Rpc_ActivityManager_changed,
 
     true, // Rpc_AppInfoManager_lookupAppInfo,
-    0, // Rpc_AppInfoManager_checkLookupFinished,
+    0, // Rpc_AppInfoManager_checkLookupInfoFinished,
 
     true, // Rpc_AutoUpdateManager_startDownload,
     true, // Rpc_AutoUpdateManager_runInstaller,
@@ -500,6 +507,8 @@ static const qint8 g_commandValidations[] = {
     0, // Rpc_TaskManager_appVersionDownloaded,
     0, // Rpc_TaskManager_zonesDownloaded,
 };
+
+static_assert(std::size(g_commandValidations) == CommandCount);
 
 bool commandRequiresValidation(Command cmd)
 {
