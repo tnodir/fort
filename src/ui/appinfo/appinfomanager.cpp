@@ -276,6 +276,13 @@ void AppInfoManager::deleteOldApps(int limitCount)
     }
 }
 
+void AppInfoManager::optimizeDb()
+{
+    QMutexLocker locker(&m_mutex);
+
+    sqliteDb()->optimize();
+}
+
 void AppInfoManager::getOldAppsAndIcons(
         QStringList &appPaths, QHash<qint64, int> &iconIds, int limitCount) const
 {

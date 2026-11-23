@@ -286,6 +286,7 @@ SOURCES += \
     stat/deletetimedoutconnsjob.cpp \
     stat/logconnjob.cpp \
     stat/logpendingconnjob.cpp \
+    stat/optimizeconndbjob.cpp \
     stat/pendingconnmanager.cpp \
     stat/quotamanager.cpp \
     stat/shiftconnidsjob.cpp \
@@ -670,6 +671,7 @@ HEADERS += \
     stat/deletetimedoutconnsjob.h \
     stat/logconnjob.h \
     stat/logpendingconnjob.h \
+    stat/optimizeconndbjob.h \
     stat/pendingconnmanager.h \
     stat/quotamanager.h \
     stat/shiftconnidsjob.h \

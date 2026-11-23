@@ -37,6 +37,8 @@ public:
     void deleteAppInfo(const QString &appPath, const AppInfo &appInfo);
     void deleteOldApps(int limitCount);
 
+    void optimizeDb();
+
 signals:
     void lookupInfoFinished(const QString &appPath, const AppInfo &appInfo);
     void lookupIconFinished(const QString &appPath, const QImage &image);

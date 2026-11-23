@@ -74,6 +74,7 @@ private:
     void setupConfSpeedLimitManager();
     void setupConfZoneManager();
     void setupQuotaManager();
+    void setupStatManager();
     void setupTaskManager();
     void setupServiceInfoManager();
     void setupWindowManager();

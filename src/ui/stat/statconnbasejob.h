@@ -17,6 +17,7 @@ public:
         JobTypeShiftConnIds,
         JobTypeDeleteTimedOutConns,
         JobTypeUpdateConnHosts,
+        JobTypeOptimizeDb,
     };
 
     StatConnManager *manager() const { return m_manager; }

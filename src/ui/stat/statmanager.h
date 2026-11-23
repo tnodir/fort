@@ -65,6 +65,8 @@ public:
     virtual bool importMasterBackup(const QString &path);
 
 signals:
+    void dayChanged(); // by the first traffic of the day
+
     void trafficCleared();
 
     void appStatRemoved(qint64 appId);

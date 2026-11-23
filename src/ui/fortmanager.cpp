@@ -51,6 +51,7 @@
 #include <rpc/statmanagerrpc.h>
 #include <rpc/taskmanagerrpc.h>
 #include <rpc/windowmanagerfake.h>
+#include <sqlite/sqlitedb.h>
 #include <task/taskinfozonedownloader.h>
 #include <user/iniuser.h>
 #include <user/usersettings.h>
@@ -233,6 +234,7 @@ void FortManager::initialize()
     setupConfSpeedLimitManager();
     setupConfZoneManager();
     setupQuotaManager();
+    setupStatManager();
     setupTaskManager();
     setupServiceInfoManager();
     setupWindowManager();
@@ -666,6 +668,18 @@ void FortManager::setupQuotaManager()
 {
     connect(quotaManager(), &QuotaManager::alert, this, [&](qint8 alertType) {
         windowManager()->showInfoBox(QuotaManager::alertTypeText(alertType), tr("Quota Alert"));
+    });
+}
+
+void FortManager::setupStatManager()
+{
+    // The long-lived connections are optimized daily
+    connect(statManager(), &StatManager::dayChanged, this, [&] {
+        confManager()->sqliteDb()->optimize();
+        statManager()->sqliteDb()->optimize();
+        statConnManager()->optimizeDb();
+        pendingConnManager()->optimizeDb();
+        appInfoManager()->optimizeDb();
     });
 }
 

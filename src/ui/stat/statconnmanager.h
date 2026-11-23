@@ -43,6 +43,8 @@ public:
     virtual void deleteConn(qint64 connIdTo = 0);
     virtual void deleteConns(const QVector<qint64> &connIds);
 
+    void optimizeDb();
+
     /* The newest logged connection's id, 0 - none */
     qint64 lastConnId() const;
 

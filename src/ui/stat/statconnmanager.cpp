@@ -14,6 +14,7 @@
 
 #include "deleteconnjob.h"
 #include "logconnjob.h"
+#include "optimizeconndbjob.h"
 #include "shiftconnidsjob.h"
 #include "statconnworker.h"
 #include "statsql.h"
@@ -133,6 +134,12 @@ void StatConnManager::deleteConns(const QVector<qint64> &connIds)
         return;
 
     enqueueJob(WorkerJobPtr(createDeleteConnIdsJob(connIds)));
+}
+
+void StatConnManager::optimizeDb()
+{
+    // The worker's thread writes the DB
+    enqueueJob(WorkerJobPtr(new OptimizeConnDbJob()));
 }
 
 qint64 StatConnManager::lastConnId() const

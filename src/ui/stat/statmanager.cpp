@@ -339,6 +339,10 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
 
     commitTransaction();
 
+    if (isNewDay) {
+        emit dayChanged();
+    }
+
     // Check quotas
     checkQuotas(log.sum.inBytes);
 
