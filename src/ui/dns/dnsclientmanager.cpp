@@ -2,7 +2,8 @@
 
 namespace {
 
-inline constexpr qint64 hostLifetimeMsecs = 10 * 60 * 1000;
+// The programs keep the resolved addresses in their own caches and connections' pools
+inline constexpr qint64 hostLifetimeMsecs = 60 * 60 * 1000;
 inline constexpr qint64 purgePeriodMsecs = 60 * 1000;
 
 }
