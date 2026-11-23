@@ -315,16 +315,8 @@ const ConnRow &ConnListModel::connRowAt(int row) const
 
 QString ConnListModel::rowsAsFilter(const QVector<int> &rows) const
 {
-    QStringList list;
-
-    for (int row : rows) {
-        FilterLineText line;
-        line.addConnAddresses(connRowAt(row));
-
-        list << line.text();
-    }
-
-    return list.join('\n');
+    return FilterLineText::connsAddressesText(
+            rows.size(), [&](int index) -> Conn { return connRowAt(rows[index]); });
 }
 
 void ConnListModel::updateConnIdRange()

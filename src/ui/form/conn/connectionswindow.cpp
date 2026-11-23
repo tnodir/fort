@@ -12,13 +12,11 @@
 
 #include <appinfo/appinfocache.h>
 #include <conf/confmanager.h>
-#include <conf/filtersimconn.h>
 #include <conf/firewallconf.h>
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/headerbuttons.h>
 #include <form/controls/tableview.h>
-#include <form/filtersim/filtersimwindow.h>
 #include <form/opt/pages/optmainpage.h>
 #include <form/prog/programeditdialog.h>
 #include <fortglobal.h>
@@ -28,6 +26,7 @@
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/net/actionrange.h>
+#include <util/net/netformatutil.h>
 #include <util/osutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
@@ -38,32 +37,6 @@ using namespace Fort;
 namespace {
 
 inline constexpr auto iconSize = QSize(16, 16);
-
-void showFilterSimWindow(const ConnRow &connRow)
-{
-    auto windowManager = Fort::windowManager();
-
-    if (!windowManager->showFilterSimWindow())
-        return;
-
-    FilterSimConn simConn;
-    simConn.appPath = connRow.appPath;
-    simConn.hostName = connRow.remoteHost;
-
-    FORT_CONF_META_CONN &conn = simConn.conn;
-    conn.inbound = connRow.inbound;
-    conn.isIPv6 = connRow.isIPv6;
-    conn.is_loopback = connRow.loopback;
-    // The Service's connection is known by its reason only
-    conn.is_fort_service = (connRow.reason == FORT_CONN_REASON_DNS_FORWARDER);
-    conn.ip_proto = connRow.ipProto;
-    conn.local_port = connRow.localPort;
-    conn.remote_port = connRow.remotePort;
-    conn.local_ip = connRow.localIp;
-    conn.remote_ip = connRow.remoteIp;
-
-    windowManager->filterSimWindow()->initialize(simConn);
-}
 
 // The disabled icon is grayed
 void updateLogConnIcon(QLabel *icon, bool enabled, const QString &onText, const QString &offText)
@@ -362,16 +335,12 @@ void ConnectionsWindow::setupHeaderConnections()
         GuiUtil::setClipboardData(text);
     });
     connect(m_actCopy, &QAction::triggered, m_connListView, &TableView::copySelectedText);
-    connect(m_actLookupIp, &QAction::triggered, this, [&] {
-        const auto row = m_connListView->currentRow();
-        const auto index = connListModel()->index(row, int(ConnListColumn::RemoteIp));
-        const auto textIp = connListModel()->data(index).toString();
-
-        OsUtil::openIpLocationUrl(textIp);
+    setupConnRowAction(m_actLookupIp, [&](const ConnRow &connRow) {
+        OsUtil::openIpLocationUrl(NetFormatUtil::ipToText(connRow.remoteIp, connRow.isIPv6));
     });
 
-    setupConnRowAction(
-            m_actFilterSim, [&](const ConnRow &connRow) { showFilterSimWindow(connRow); });
+    setupConnRowAction(m_actFilterSim,
+            [&](const ConnRow &connRow) { windowManager()->showFilterSimWindowConn(connRow); });
     connect(m_actRemoveConn, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
                 this, [&] { deleteConn(connListCurrentIndex()); },
@@ -380,10 +349,7 @@ void ConnectionsWindow::setupHeaderConnections()
     connect(m_actClearAll, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(this, [&] { clearConns(); }, clearConnsConfirmText());
     });
-    connect(m_actFind, &QAction::triggered, this, [&] {
-        m_editSearch->setFocus();
-        m_editSearch->selectAll();
-    });
+    ControlUtil::setupFindAction(m_actFind, m_editSearch);
 }
 
 void ConnectionsWindow::setupConnRowAction(

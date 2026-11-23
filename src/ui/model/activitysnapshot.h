@@ -7,6 +7,8 @@
 #include <common/common_types.h>
 #include <util/conf/conn.h>
 
+class TextMatcher;
+
 struct ActivityProcRow
 {
     quint32 pid = 0;
@@ -81,6 +83,9 @@ struct ActivitySnapshot
     QHash<quint64, ActivityFlowRow> flows;
 
     bool read();
+
+    // The programs are matched by their processes' paths
+    void removeUnmatchedFlows(const TextMatcher &textMatcher);
 };
 
 // A process with flows
@@ -98,6 +103,9 @@ struct ActivityShown
     QHash<quint32, ActivityShownProc> procs;
 
     static ActivityShown build(const ActivitySnapshot &snapshot);
+
+    // Keeps the processes with the snapshot's flows and their Programs
+    void removeProcsWithoutFlows(const ActivitySnapshot &snapshot);
 };
 
 #endif // ACTIVITYSNAPSHOT_H

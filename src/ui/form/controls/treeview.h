@@ -15,6 +15,9 @@ public:
 
     void setModel(QAbstractItemModel *model) override;
 
+    // The selected rows' and the current row's first column, in the tree's order
+    QModelIndexList selectedRows() const;
+
     void setupItemDelegate();
 
 signals:

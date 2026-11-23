@@ -18,9 +18,7 @@ using namespace Fort;
 
 namespace {
 
-inline constexpr int searchTimerInterval = 150;
-
-using AppTextHash = QHash<QString, QString>; // by app path
+using AppTextHash = ConnSearchModel::AppTextHash;
 
 const QString &appSearchText(AppTextHash &appTexts, const QString &appPath)
 {
@@ -33,43 +31,33 @@ const QString &appSearchText(AppTextHash &appTexts, const QString &appPath)
     return text;
 }
 
-QString connRowSearchText(const ConnRow &connRow, const QString &appText)
+QString connSearchText(const Conn &conn, const QString &appText)
 {
-    const bool isIPv6 = connRow.isIPv6;
+    const bool isIPv6 = conn.isIPv6;
 
     const QStringList list = {
         appText,
-        QString::number(connRow.pid),
-        NetUtil::protocolName(connRow.ipProto),
-        NetFormatUtil::ipToText(connRow.localIp, isIPv6),
-        NetUtil::serviceName(connRow.localPort),
-        QString::number(connRow.localPort),
-        NetFormatUtil::ipToText(connRow.remoteIp, isIPv6),
-        connRow.remoteHost,
-        NetUtil::serviceName(connRow.remotePort),
-        QString::number(connRow.remotePort),
-        ConnListModel::directionText(connRow.inbound),
-        ConnListModel::actionText(connRow.blocked),
-        ConnListModel::reasonDetailsText(connRow),
+        QString::number(conn.pid),
+        NetUtil::protocolName(conn.ipProto),
+        NetFormatUtil::ipToText(conn.localIp, isIPv6),
+        NetUtil::serviceName(conn.localPort),
+        QString::number(conn.localPort),
+        NetFormatUtil::ipToText(conn.remoteIp, isIPv6),
+        conn.remoteHost,
+        NetUtil::serviceName(conn.remotePort),
+        QString::number(conn.remotePort),
+        ConnListModel::directionText(conn.inbound),
+        ConnListModel::actionText(conn.blocked),
+        ConnListModel::reasonDetailsText(conn),
     };
 
     return list.join('\n');
 }
 
-bool isConnRowMatched(const TextMatcher &textMatcher, const ConnRow &connRow, AppTextHash &appTexts)
-{
-    if (textMatcher.isEmpty())
-        return true;
-
-    const QString &appText = appSearchText(appTexts, connRow.appPath);
-
-    return textMatcher.isMatched(connRowSearchText(connRow, appText));
-}
-
 }
 
 ConnSearchModel::ConnSearchModel(QObject *parent) :
-    ConnListModel(parent), m_searchTimer(searchTimerInterval)
+    ConnListModel(parent), m_searchTimer(TriggerTimer::SearchInterval)
 {
     connect(&m_searchTimer, &QTimer::timeout, this, &ConnSearchModel::updateSearch);
 }
@@ -186,6 +174,17 @@ qint64 ConnSearchModel::searchConnIdMin(int count)
     return qMax(idMin, lastConnsIdMin(idMax, count));
 }
 
+bool ConnSearchModel::isConnMatched(
+        const TextMatcher &textMatcher, const Conn &conn, AppTextHash &appTexts)
+{
+    if (textMatcher.isEmpty())
+        return true;
+
+    const QString &appText = appSearchText(appTexts, conn.appPath);
+
+    return textMatcher.isMatched(connSearchText(conn, appText));
+}
+
 void ConnSearchModel::applyTextFilter()
 {
     m_textMatcher.setFilter(m_textFilter);
@@ -200,7 +199,7 @@ QVector<ConnRow> ConnSearchModel::matchedConnRows(const QVector<ConnRow> &connRo
     AppTextHash appTexts;
 
     for (const auto &connRow : connRows) {
-        if (isConnRowMatched(m_textMatcher, connRow, appTexts)) {
+        if (isConnMatched(m_textMatcher, connRow, appTexts)) {
             matchedRows.append(connRow);
         }
     }

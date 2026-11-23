@@ -11,6 +11,7 @@
 #include <util/ioc/iocservice.h>
 #include <util/taskbarbutton.h>
 
+class Conn;
 class ConnectionsWindow;
 class FilterSimWindow;
 class FormWindow;
@@ -144,6 +145,8 @@ public slots:
     bool showTimePeriodsWindow() { return showWindowByCode(WindowTimePeriods); }
 
     bool showFilterSimWindow() { return showWindowByCode(WindowFilterSim); }
+
+    bool showFilterSimWindowConn(const Conn &conn);
 
     bool showGraphWindow() { return showWindowByCode(WindowGraph, /*activate=*/false); }
     bool closeGraphWindow() { return closeWindowByCode(WindowGraph); }

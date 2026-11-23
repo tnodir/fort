@@ -3,10 +3,28 @@
 #include <QContextMenuEvent>
 #include <QMenu>
 
+#include <algorithm>
+
 #include <manager/windowmanager.h>
 #include <util/model/tableitemmodel.h>
 
 #include "treeitemdelegate.h"
+
+namespace {
+
+// The rows from the top to the index
+QVector<int> treeRowsOf(QModelIndex index)
+{
+    QVector<int> rows;
+
+    for (; index.isValid(); index = index.parent()) {
+        rows.prepend(index.row());
+    }
+
+    return rows;
+}
+
+}
 
 TreeView::TreeView(QWidget *parent) : QTreeView(parent)
 {
@@ -22,6 +40,22 @@ void TreeView::setModel(QAbstractItemModel *model)
 
     connect(model, &QAbstractItemModel::modelReset, this,
             [&] { emit currentIndexChanged(currentIndex()); });
+}
+
+QModelIndexList TreeView::selectedRows() const
+{
+    auto indexes = selectionModel()->selectedRows();
+
+    const QModelIndex index = currentIndex().siblingAtColumn(0);
+    if (index.isValid() && !indexes.contains(index)) {
+        indexes.append(index);
+    }
+
+    std::sort(indexes.begin(), indexes.end(), [](const QModelIndex &a, const QModelIndex &b) {
+        return treeRowsOf(a) < treeRowsOf(b);
+    });
+
+    return indexes;
 }
 
 void TreeView::setupItemDelegate()

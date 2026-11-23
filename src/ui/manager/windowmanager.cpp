@@ -538,6 +538,19 @@ bool WindowManager::showOptionsWindowTab(int index)
     return true;
 }
 
+bool WindowManager::showFilterSimWindowConn(const Conn &conn)
+{
+    if (!showFilterSimWindow())
+        return false;
+
+    FilterSimConn simConn;
+    simConn.setConn(conn);
+
+    filterSimWindow()->initialize(simConn);
+
+    return true;
+}
+
 bool WindowManager::setWindowVisibleByCode(
         WindowCode code, const QVariant &visibleOrSwitch, bool activate)
 {

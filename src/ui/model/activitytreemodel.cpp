@@ -14,6 +14,7 @@
 #include <hostinfo/hostinfocache.h>
 #include <model/applistmodeldata.h>
 #include <model/connlistmodel.h>
+#include <util/conf/filterlinetext.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/formatutil.h>
@@ -183,13 +184,18 @@ QVariant procToolTip(const ActivityProcRow &row, int column)
     }
 }
 
-QString flowReasonToolTip(const ActivityNode *node)
+Conn flowConnOf(const ActivityNode *node)
 {
-    // The inherited Program is compared with the process's path
     Conn conn = flowRowOf(node);
     conn.appPath = procNodeOf(node->parent).row.path;
 
-    return ConnListModel::reasonDetailsText(conn);
+    return conn;
+}
+
+QString flowReasonToolTip(const ActivityNode *node)
+{
+    // The inherited Program is compared with the process's path
+    return ConnListModel::reasonDetailsText(flowConnOf(node));
 }
 
 QVariant flowToolTip(const ActivityNode *node, int column)
@@ -481,8 +487,12 @@ static_assert(std::size(columnFuncsList) == int(ActivityColumn::Count));
 }
 
 ActivityTreeModel::ActivityTreeModel(QObject *parent) :
-    QAbstractItemModel(parent), m_root(new ActivityGroupNode(ActivityNodeType::Root))
+    QAbstractItemModel(parent),
+    m_searchTimer(TriggerTimer::SearchInterval),
+    m_root(new ActivityGroupNode(ActivityNodeType::Root))
 {
+    connect(&m_searchTimer, &QTimer::timeout, this, &ActivityTreeModel::applyTextFilter);
+
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &ActivityTreeModel::refreshNames);
     connect(hostInfoCache(), &HostInfoCache::cacheChanged, this,
             &ActivityTreeModel::refreshHostNames);
@@ -514,6 +524,25 @@ void ActivityTreeModel::setActive(bool active)
 void ActivityTreeModel::refreshTexts()
 {
     emit headerDataChanged(Qt::Horizontal, 0, int(ActivityColumn::Count) - 1);
+}
+
+void ActivityTreeModel::setTextFilter(const QString &filter)
+{
+    if (m_textFilter == filter)
+        return;
+
+    m_textFilter = filter;
+
+    m_searchTimer.startTrigger();
+}
+
+void ActivityTreeModel::applyTextFilter()
+{
+    m_textMatcher.setFilter(m_textFilter);
+
+    if (m_active) {
+        refresh();
+    }
 }
 
 int ActivityTreeModel::columnCount(const QModelIndex & /*parent*/) const
@@ -599,6 +628,25 @@ QString ActivityTreeModel::columnName(const ActivityColumn column)
     };
 
     return columnNames.value(int(column));
+}
+
+bool ActivityTreeModel::isFlowIndex(const QModelIndex &index)
+{
+    return index.isValid() && nodeOf(index)->type == ActivityNodeType::Flow;
+}
+
+Conn ActivityTreeModel::flowConnAt(const QModelIndex &index)
+{
+    return flowConnOf(nodeOf(index));
+}
+
+QString ActivityTreeModel::flowsAsFilter(const QModelIndexList &indexes)
+{
+    QModelIndexList flowIndexes;
+    std::copy_if(indexes.cbegin(), indexes.cend(), std::back_inserter(flowIndexes), isFlowIndex);
+
+    return FilterLineText::connsAddressesText(
+            flowIndexes.size(), [&](int index) { return flowConnAt(flowIndexes[index]); });
 }
 
 QVariant ActivityTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -927,7 +975,13 @@ void ActivityTreeModel::refresh()
     if (!snapshot.read())
         return;
 
-    const ActivityShown shown = ActivityShown::build(snapshot);
+    // The sums are of all the flows of the shown Programs and processes
+    ActivityShown shown = ActivityShown::build(snapshot);
+
+    if (!m_textMatcher.isEmpty()) {
+        snapshot.removeUnmatchedFlows(m_textMatcher);
+        shown.removeProcsWithoutFlows(snapshot);
+    }
 
     if (m_procs.isEmpty()) {
         resetFromSnapshot(snapshot, shown);

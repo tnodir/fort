@@ -8,6 +8,8 @@
 #include <memory>
 
 #include <conf/app.h>
+#include <util/textmatcher.h>
+#include <util/triggertimer.h>
 
 #include "activitysnapshot.h"
 
@@ -99,6 +101,9 @@ public:
 
     void refreshTexts();
 
+    // The flows matched by the text with their Programs and processes
+    void setTextFilter(const QString &filter);
+
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
@@ -113,6 +118,14 @@ public:
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
 
     static QString columnName(const ActivityColumn column);
+
+    static bool isFlowIndex(const QModelIndex &index);
+
+    // The flow's connection with its process's path
+    static Conn flowConnAt(const QModelIndex &index);
+
+    // The flows' lines in the indexes' order; the other rows are skipped
+    static QString flowsAsFilter(const QModelIndexList &indexes);
 
 public slots:
     void refresh();
@@ -131,6 +144,8 @@ private:
 
     void emitColumnsChanged(const ActivityNode *node, ActivityColumn first, ActivityColumn last);
     void emitAppNamesChanged(const ActivityAppNode *node);
+
+    void applyTextFilter();
 
     void reloadApps();
     void refreshNames();
@@ -169,6 +184,10 @@ private:
 
     Qt::SortOrder m_sortOrder = Qt::AscendingOrder;
     int m_sortColumn = -1;
+
+    QString m_textFilter;
+    TextMatcher m_textMatcher;
+    TriggerTimer m_searchTimer;
 
     std::unique_ptr<ActivityGroupNode> m_root; // the invisible top
 

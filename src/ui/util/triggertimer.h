@@ -9,6 +9,7 @@ class TriggerTimer : public QTimer
 
 public:
     constexpr static int DefaultInterval = 100;
+    constexpr static int SearchInterval = 150; // to apply a search text being typed
 
     explicit TriggerTimer(QObject *parent = nullptr);
     explicit TriggerTimer(int interval, QObject *parent = nullptr);

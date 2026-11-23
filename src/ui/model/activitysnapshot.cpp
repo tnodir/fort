@@ -1,11 +1,14 @@
 #include "activitysnapshot.h"
 
+#include <QSet>
+
 #include <sqlite/dbquery.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
 #include <activity/activitymanager.h>
 #include <fortglobal.h>
+#include <model/connsearchmodel.h>
 #include <util/net/netdbutil.h>
 
 using namespace Fort;
@@ -130,6 +133,18 @@ bool ActivitySnapshot::read()
     return ok;
 }
 
+void ActivitySnapshot::removeUnmatchedFlows(const TextMatcher &textMatcher)
+{
+    ConnSearchModel::AppTextHash appTexts;
+
+    flows.removeIf([&](const auto &it) {
+        Conn conn = it.value();
+        conn.appPath = procs.value(conn.pid).path;
+
+        return !ConnSearchModel::isConnMatched(textMatcher, conn, appTexts);
+    });
+}
+
 ActivityShown ActivityShown::build(const ActivitySnapshot &snapshot)
 {
     ActivityShown shown;
@@ -146,4 +161,21 @@ ActivityShown ActivityShown::build(const ActivitySnapshot &snapshot)
     }
 
     return shown;
+}
+
+void ActivityShown::removeProcsWithoutFlows(const ActivitySnapshot &snapshot)
+{
+    QSet<quint32> pids;
+    for (const auto &flow : snapshot.flows) {
+        pids.insert(flow.pid);
+    }
+
+    procs.removeIf([&](const auto &it) { return !pids.contains(it.key()); });
+
+    QSet<ActivityAppKey> appKeys;
+    for (const auto &proc : std::as_const(procs)) {
+        appKeys.insert(proc.appKey);
+    }
+
+    apps.removeIf([&](const auto &it) { return !appKeys.contains(it.key()); });
 }

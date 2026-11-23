@@ -197,10 +197,6 @@ QLayout *ServicesWindow::setupHeader()
             windowManager()->openProgramEditForm(appPath, /*appId=*/0, this);
         }
     });
-    connect(m_actFind, &QAction::triggered, this, [&] {
-        m_editSearch->setFocus();
-        m_editSearch->selectAll();
-    });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setObjectName("btEdit");
@@ -238,6 +234,8 @@ void ServicesWindow::setupEditSearch()
 {
     m_editSearch = ControlUtil::createSearchEdit(
             [&](const QString &text) { serviceListModel()->setTextFilter(text); });
+
+    ControlUtil::setupFindAction(m_actFind, m_editSearch);
 
     connect(this, &ServicesWindow::aboutToShow, m_editSearch, qOverload<>(&QWidget::setFocus));
 }

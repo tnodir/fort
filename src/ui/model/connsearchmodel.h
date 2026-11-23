@@ -1,6 +1,7 @@
 #ifndef CONNSEARCHMODEL_H
 #define CONNSEARCHMODEL_H
 
+#include <QHash>
 #include <QVector>
 
 #include <util/textmatcher.h>
@@ -29,6 +30,12 @@ public:
 
     /* The matched rows' ids */
     QVector<qint64> connIds() const;
+
+    using AppTextHash = QHash<QString, QString>; // by app path
+
+    /* The programs' texts are cached in appTexts */
+    static bool isConnMatched(
+            const TextMatcher &textMatcher, const Conn &conn, AppTextHash &appTexts);
 
 public slots:
     void updateSearchLater();

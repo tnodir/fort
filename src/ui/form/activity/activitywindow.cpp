@@ -1,6 +1,8 @@
 #include "activitywindow.h"
 
 #include <QHeaderView>
+#include <QLineEdit>
+#include <QMenu>
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
@@ -12,6 +14,11 @@
 #include <manager/windowmanager.h>
 #include <model/activitytreemodel.h>
 #include <user/iniuser.h>
+#include <util/conf/conn.h>
+#include <util/guiutil.h>
+#include <util/iconcache.h>
+#include <util/net/netformatutil.h>
+#include <util/osutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "activitycontroller.h"
@@ -86,6 +93,13 @@ void ActivityWindow::retranslateUi()
 {
     this->unsetLocale();
 
+    m_editSearch->setPlaceholderText(tr("Search") + " /");
+
+    m_actCopyAsFilter->setText(tr("Copy as Filter"));
+    m_actLookupIp->setText(tr("Lookup IP"));
+    m_actFilterSim->setText(tr("Filter Simulator"));
+    m_actFind->setText(tr("Find"));
+
     m_model->refreshTexts();
 
     this->setWindowTitle(tr("Activity"));
@@ -98,7 +112,11 @@ void ActivityWindow::setupUi()
 
     // Tree
     setupTreeActivity();
+    setupTreeActivityMenu();
     setupTreeActivityHeader();
+
+    // Actions on the tree's current changed
+    setupTreeActivityChanged();
 
     auto layout = ControlUtil::createVLayout(/*margin=*/6);
     layout->addWidget(createHeaderWidget(header));
@@ -115,10 +133,22 @@ void ActivityWindow::setupUi()
 
 QLayout *ActivityWindow::setupHeader()
 {
+    // Search
+    setupEditSearch();
+
     // Header buttons
     m_headerButtons = new HeaderButtons(OptMainPage::TabStatistics);
 
-    return ControlUtil::createHLayoutByWidgets({ /*stretch*/ nullptr, m_headerButtons });
+    return ControlUtil::createHLayoutByWidgets(
+            { m_editSearch, /*stretch*/ nullptr, m_headerButtons });
+}
+
+void ActivityWindow::setupEditSearch()
+{
+    m_editSearch = ControlUtil::createSearchEdit(
+            [&](const QString &text) { m_model->setTextFilter(text); });
+
+    connect(this, &ActivityWindow::aboutToShow, m_editSearch, qOverload<>(&QWidget::setFocus));
 }
 
 void ActivityWindow::setupTreeActivity()
@@ -126,7 +156,7 @@ void ActivityWindow::setupTreeActivity()
     m_treeView = new TreeView();
     m_treeView->setObjectName("treeView");
     m_treeView->setAlternatingRowColors(true);
-    m_treeView->setSelectionMode(QAbstractItemView::SingleSelection);
+    m_treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_treeView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     m_treeView->setModel(m_model);
@@ -134,6 +164,59 @@ void ActivityWindow::setupTreeActivity()
     // The rows are sorted on the header's click only
     m_treeView->header()->setSortIndicator(int(ActivityColumn::Program), Qt::AscendingOrder);
     m_treeView->setSortingEnabled(true);
+}
+
+void ActivityWindow::setupTreeActivityMenu()
+{
+    auto menu = ControlUtil::createMenu(this);
+
+    m_actCopyAsFilter = menu->addAction(IconCache::icon(":/icons/script.png"), QString());
+    m_actCopyAsFilter->setObjectName("actCopyAsFilter");
+    m_actCopyAsFilter->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_C);
+
+    m_actLookupIp = menu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
+    m_actLookupIp->setObjectName("actLookupIp");
+    m_actLookupIp->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_L);
+
+    m_actFilterSim = menu->addAction(IconCache::icon(":/icons/filter.png"), QString());
+    m_actFilterSim->setObjectName("actFilterSim");
+
+    menu->addSeparator();
+
+    m_actFind = menu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
+    m_actFind->setObjectName("actFind");
+    m_actFind->setShortcut(QKeySequence::Find);
+
+    m_treeView->setMenu(menu);
+
+    setupTreeActivityMenuConnections();
+}
+
+void ActivityWindow::setupTreeActivityMenuConnections()
+{
+    connect(m_actCopyAsFilter, &QAction::triggered, this, [&] {
+        const auto text = ActivityTreeModel::flowsAsFilter(m_treeView->selectedRows());
+
+        GuiUtil::setClipboardData(text);
+    });
+    setupFlowAction(m_actLookupIp, [](const Conn &conn) {
+        OsUtil::openIpLocationUrl(NetFormatUtil::ipToText(conn.remoteIp, conn.isIPv6));
+    });
+    setupFlowAction(m_actFilterSim,
+            [](const Conn &conn) { windowManager()->showFilterSimWindowConn(conn); });
+    ControlUtil::setupFindAction(m_actFind, m_editSearch);
+}
+
+void ActivityWindow::setupFlowAction(
+        QAction *action, const std::function<void(const Conn &conn)> &func)
+{
+    connect(action, &QAction::triggered, this, [this, func] {
+        const QModelIndex index = m_treeView->currentIndex();
+
+        if (ActivityTreeModel::isFlowIndex(index)) {
+            func(ActivityTreeModel::flowConnAt(index));
+        }
+    });
 }
 
 void ActivityWindow::setupTreeActivityHeader()
@@ -174,6 +257,21 @@ void ActivityWindow::setupTreeActivityHeader()
     header->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(header, &QHeaderView::customContextMenuRequested, this,
             &ActivityWindow::showTreeActivityHeaderMenu);
+}
+
+void ActivityWindow::setupTreeActivityChanged()
+{
+    const auto refreshTreeActivityChanged = [&] {
+        const bool flowSelected = ActivityTreeModel::isFlowIndex(m_treeView->currentIndex());
+
+        m_actCopyAsFilter->setEnabled(flowSelected);
+        m_actLookupIp->setEnabled(flowSelected);
+        m_actFilterSim->setEnabled(flowSelected);
+    };
+
+    refreshTreeActivityChanged();
+
+    connect(m_treeView, &TreeView::currentIndexChanged, this, refreshTreeActivityChanged);
 }
 
 void ActivityWindow::showTreeActivityHeaderMenu(const QPoint &pos)

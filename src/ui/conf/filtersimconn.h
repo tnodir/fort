@@ -5,6 +5,8 @@
 
 #include <driver/drivercommon.h>
 
+class Conn;
+
 struct FilterSimConn
 {
     enum HostNameResult : qint8 {
@@ -13,6 +15,9 @@ struct FilterSimConn
         HostNameBlocked, // a Block Zone lists the name: the DNS Forwarder doesn't resolve it
         HostNameNoForwarder, // the DNS Forwarder doesn't receive the system's queries
     };
+
+    // Set the input by a collected connection
+    void setConn(const Conn &v);
 
     // Set the remote address by its text; loopback for a loopback address too
     bool setRemoteIp(const QString &text, bool isLoopback = false);

@@ -94,6 +94,9 @@ public:
             const QString &text, const std::function<void(const QString &text)> &onChanged);
     static QLineEdit *createSearchEdit(const std::function<void(const QString &text)> &onChanged);
 
+    // The Find action focuses the search field and selects its text
+    static void setupFindAction(QAction *action, QLineEdit *editSearch);
+
     static QMenu *createMenu(QWidget *parent = nullptr);
     static QMenu *createMenuByLayout(QBoxLayout *layout, QWidget *parent);
 

@@ -1,5 +1,7 @@
 #include "filterlinetext.h"
 
+#include <QStringList>
+
 #include <common/fortconf.h>
 
 #include <util/net/netformatutil.h>
@@ -61,6 +63,20 @@ void FilterLineText::addConnAddresses(const Conn &conn)
     addFilter(FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS,
             NetFormatUtil::ipToAddressText(conn.localIp, conn.isIPv6));
     addPort(FORT_RULE_FILTER_TYPE_LOCAL_PORT, conn.localPort);
+}
+
+QString FilterLineText::connsAddressesText(int count, const std::function<Conn(int index)> &connAt)
+{
+    QStringList list;
+
+    for (int i = 0; i < count; ++i) {
+        FilterLineText line;
+        line.addConnAddresses(connAt(i));
+
+        list << line.text();
+    }
+
+    return list.join('\n');
 }
 
 bool FilterLineText::isValuesLines(QStringView values)

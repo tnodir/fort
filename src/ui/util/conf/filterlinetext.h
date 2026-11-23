@@ -3,6 +3,8 @@
 
 #include <QString>
 
+#include <functional>
+
 class Conn;
 
 // A rule text line of filters by their types (FORT_RULE_FILTER_TYPE_*) with their names
@@ -29,6 +31,9 @@ public:
     // Adds the connection's filters to match it, in the order of FilterEditDialog's fields: the
     // direction, protocol, remote host (by the DNS Client's answer), IP and port, local IP and port
     void addConnAddresses(const Conn &conn);
+
+    // The connections' lines of addConnAddresses()
+    static QString connsAddressesText(int count, const std::function<Conn(int index)> &connAt);
 
     // The values need their own lines: several lines or a comment, which ends by its line
     static bool isValuesLines(QStringView values);

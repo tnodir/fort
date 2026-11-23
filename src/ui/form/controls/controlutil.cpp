@@ -377,6 +377,14 @@ QLineEdit *ControlUtil::createSearchEdit(const std::function<void(const QString 
     return c;
 }
 
+void ControlUtil::setupFindAction(QAction *action, QLineEdit *editSearch)
+{
+    QObject::connect(action, &QAction::triggered, editSearch, [=] {
+        editSearch->setFocus();
+        editSearch->selectAll();
+    });
+}
+
 QMenu *ControlUtil::createMenu(QWidget *parent)
 {
     auto menu = new QMenu(parent);
