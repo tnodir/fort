@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QCryptographicHash>
+#include <QDataStream>
 #include <QEventLoop>
 #include <QNetworkDatagram>
 #include <QTcpServer>
@@ -17,6 +18,7 @@
 
 #include <dns/dnsanswer.h>
 #include <dns/dnsclientanswer.h>
+#include <dns/dnshostsfile.h>
 #include <dns/dnshttpsresolver.h>
 #include <dns/dnslistener.h>
 #include <dns/dnsplainresolver.h>
@@ -31,6 +33,7 @@
 #include <util/fileutil.h>
 #include <util/net/hostrange.h>
 #include <util/net/netformatutil.h>
+#include <util/osutil.h>
 
 class DnsTest : public Test
 {
@@ -1147,4 +1150,91 @@ TEST_F(DnsTest, clientAnswerQueryResults)
     DnsClientAnswer emptyAnswer;
     emptyAnswer.readQueryResults(u"type: 5 alias.example.com;");
     ASSERT_TRUE(emptyAnswer.addresses().isEmpty());
+}
+
+namespace {
+
+ProcessIpKey hostsFileKey(quint32 pid, const QString &ipText)
+{
+    ip_addr_t ip = {};
+    bool isIPv6 = false;
+    NetFormatUtil::textToIp(ipText, ip, isIPv6);
+
+    return ProcessIpKey(pid, ip, isIPv6);
+}
+
+QByteArray hostsFileSection(quint16 tag, const QByteArray &data)
+{
+    QByteArray section;
+    QDataStream stream(&section, QDataStream::WriteOnly);
+    stream << tag << quint32(data.size());
+    stream.writeRawData(data.constData(), int(data.size()));
+
+    return section;
+}
+
+}
+
+TEST_F(DnsTest, hostsFile)
+{
+    QTemporaryDir tempDir;
+    const QString filePath = tempDir.filePath("dns-hosts.bin");
+
+    const ProcessIpKey key4 = hostsFileKey(10, "1.2.3.4");
+    const ProcessIpKey key6 = hostsFileKey(10, "2001:db8::1");
+    const ProcessIpKey keyForwarder = hostsFileKey(0, "1.2.3.4");
+    const ProcessIpKey keyExpired = hostsFileKey(20, "5.6.7.8");
+
+    DnsHostsHash hosts(60000);
+    hosts.insert(key4, "example.com", QDeadlineTimer(60000));
+    hosts.insert(key6, "example.com", QDeadlineTimer(60000));
+    hosts.insert(keyForwarder, "cdn.example.net", QDeadlineTimer(60000));
+    hosts.insert(keyExpired, "old.example.org", QDeadlineTimer(0));
+
+    ASSERT_TRUE(DnsHostsFile::write(filePath, hosts));
+
+    const auto checkRead = [&](const QByteArray &data) {
+        if (!FileUtil::writeFileData(filePath, data))
+            return false;
+
+        DnsHostsHash readHosts(60000);
+        if (!DnsHostsFile::read(filePath, readHosts))
+            return false;
+
+        EXPECT_EQ(readHosts.value(key4), "example.com");
+        EXPECT_EQ(readHosts.value(key6), "example.com");
+        EXPECT_EQ(readHosts.value(keyForwarder), "cdn.example.net");
+        EXPECT_TRUE(readHosts.value(keyExpired).isEmpty());
+        return true;
+    };
+
+    const QByteArray data = FileUtil::readFileData(filePath);
+    ASSERT_TRUE(checkRead(data));
+
+    // A later version's section is skipped
+    constexpr int headerSize = 4 + 2 + 8;
+    ASSERT_TRUE(checkRead(QByteArray(data).insert(headerSize, hostsFileSection(0xFFFF, "abc"))));
+    ASSERT_TRUE(checkRead(data + hostsFileSection(0xFFFE, "defg")));
+
+    // A damaged file
+    ASSERT_FALSE(checkRead(data.left(data.size() - 1)));
+    ASSERT_FALSE(checkRead(data + hostsFileSection(1, "x")));
+
+    // Another format's version
+    QByteArray versionData = data;
+    qToBigEndian<quint16>(2, versionData.data() + 4);
+    ASSERT_FALSE(checkRead(versionData));
+
+    // Written before the boot
+    QByteArray oldData = data;
+    qToBigEndian<qint64>(OsUtil::bootTime().toMSecsSinceEpoch() - 1000, oldData.data() + 6);
+    ASSERT_FALSE(checkRead(oldData));
+
+    // A damaged file doesn't change the names
+    DnsHostsHash keptHosts(60000);
+    keptHosts.insert(keyExpired, "kept.example.org", QDeadlineTimer(60000));
+    ASSERT_TRUE(FileUtil::writeFileData(filePath, data.left(data.size() - 1)));
+    ASSERT_FALSE(DnsHostsFile::read(filePath, keptHosts));
+    ASSERT_TRUE(keptHosts.value(key4).isEmpty());
+    ASSERT_EQ(keptHosts.value(keyExpired), "kept.example.org");
 }

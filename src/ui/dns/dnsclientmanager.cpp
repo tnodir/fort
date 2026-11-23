@@ -1,6 +1,10 @@
 #include "dnsclientmanager.h"
 
+#include <QLoggingCategory>
+
 namespace {
+
+const QLoggingCategory LC("dns.clientManager");
 
 // The programs keep the resolved addresses in their own caches and connections' pools
 inline constexpr qint64 hostLifetimeMsecs = 60 * 60 * 1000;
@@ -8,10 +12,17 @@ inline constexpr qint64 purgePeriodMsecs = 60 * 1000;
 
 }
 
-DnsClientManager::DnsClientManager(QObject *parent) : QObject(parent), m_hosts(purgePeriodMsecs) { }
+DnsClientManager::DnsClientManager(const QString &hostsFilePath, QObject *parent) :
+    QObject(parent), m_hostsFilePath(hostsFilePath), m_hosts(purgePeriodMsecs)
+{
+}
 
 void DnsClientManager::setUp()
 {
+    if (hasHostsFile()) {
+        DnsHostsFile::read(m_hostsFilePath, m_hosts);
+    }
+
     connect(&m_listener, &DnsEtwListener::answerReceived, this, &DnsClientManager::addAnswer,
             Qt::QueuedConnection);
 
@@ -22,6 +33,17 @@ void DnsClientManager::setUp()
 void DnsClientManager::tearDown()
 {
     m_listener.close();
+
+    if (hasHostsFile()) {
+        saveHosts();
+    }
+}
+
+void DnsClientManager::saveHosts()
+{
+    if (!DnsHostsFile::write(m_hostsFilePath, m_hosts)) {
+        qCWarning(LC) << "Hosts file write error:" << m_hostsFilePath;
+    }
 }
 
 DnsClientManager::ConnHostName DnsClientManager::connHostName(const ProcessIpKey &key) const

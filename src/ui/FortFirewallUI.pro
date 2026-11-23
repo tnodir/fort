@@ -69,6 +69,7 @@ SOURCES += \
     control/controlmanager.cpp \
     control/controlworker.cpp \
     dns/dnsclientmanager.cpp \
+    dns/dnshostsfile.cpp \
     dns/dnsmanager.cpp \
     dns/dnsnrptcheck.cpp \
     dns/dnsprovider.cpp \
@@ -444,6 +445,7 @@ HEADERS += \
     control/controlmanager.h \
     control/controlworker.h \
     dns/dnsclientmanager.h \
+    dns/dnshostsfile.h \
     dns/dnsmanager.h \
     dns/dnsnrptcheck.h \
     dns/dnsprovider.h \

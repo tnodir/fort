@@ -5,8 +5,8 @@
 #include <QObject>
 
 #include <dns/dnsetwlistener.h>
+#include <dns/dnshostsfile.h>
 #include <util/classhelpers.h>
-#include <util/expiringhash.h>
 #include <util/ioc/iocservice.h>
 #include <util/net/processipkey.h>
 
@@ -15,13 +15,14 @@
 // last answer, as the answers' events have no TTL. Also the names of the addresses by the service's
 // DNS forwarder's answers (to the Dnscache: of any process), by their TTL: they come before the
 // connections, while the DNS Client's events usually come after them. Likewise the names of the
-// live flows of the service's previous run, for their connections logged again after the restart
+// live flows of the service's previous run, for their connections logged again after the restart.
+// The names are kept in a file over the restart, for the programs' addresses cached before it
 class DnsClientManager : public QObject, public IocService
 {
     Q_OBJECT
 
 public:
-    explicit DnsClientManager(QObject *parent = nullptr);
+    explicit DnsClientManager(const QString &hostsFilePath, QObject *parent = nullptr);
     CLASS_DELETE_COPY_MOVE(DnsClientManager)
 
     void setUp() override;
@@ -49,13 +50,19 @@ signals:
     void hostNameAdded(const ProcessIpKey &key, const QString &name);
 
 private:
+    bool hasHostsFile() const { return !m_hostsFilePath.isEmpty(); }
+
+    void saveHosts();
+
     void addAnswer(const DnsClientAnswer &answer);
     void addHosts(quint32 pid, const DnsAddresses &addresses, const QString &name,
             const QDeadlineTimer &deadline);
     void addHost(const ProcessIpKey &key, const QString &name, const QDeadlineTimer &deadline);
 
 private:
-    ExpiringHash<ProcessIpKey, QString> m_hosts; // the DNS forwarder's ones by the process id 0
+    QString m_hostsFilePath;
+
+    DnsHostsHash m_hosts; // the DNS forwarder's ones by the process id 0
 
     DnsEtwListener m_listener;
 };

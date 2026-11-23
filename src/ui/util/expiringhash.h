@@ -57,6 +57,19 @@ public:
         }
     }
 
+    // With their remaining time
+    template<typename Func>
+    void forEachUnexpired(Func func) const
+    {
+        for (auto it = m_hash.constBegin(); it != m_hash.constEnd(); ++it) {
+            const qint64 remainingMsecs = it->deadline.remainingTime();
+            if (remainingMsecs == 0)
+                continue;
+
+            func(it.key(), it->value, remainingMsecs);
+        }
+    }
+
 private:
     struct Entry
     {

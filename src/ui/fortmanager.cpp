@@ -109,7 +109,7 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService(new AutoUpdateManager(settings->updatePath()));
     ioc->setService(new DriverManager());
     ioc->setService(new AppInfoManager(settings->cacheFilePath()));
-    ioc->setService(new DnsClientManager());
+    ioc->setService(new DnsClientManager(settings->dnsHostsFilePath()));
     ioc->setService(new ActivityManager(settings->activityFilePath()));
     ioc->setService(new LogManager());
     ioc->setService(new ServiceInfoManager());
