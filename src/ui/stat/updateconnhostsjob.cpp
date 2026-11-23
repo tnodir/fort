@@ -5,7 +5,7 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
-#include <util/net/netutil.h>
+#include <util/net/netdbutil.h>
 
 #include "statconnmanager.h"
 #include "statsql.h"
@@ -53,19 +53,12 @@ void UpdateConnHostsJob::emitFinished()
 int UpdateConnHostsJob::updateConnHost(const ConnHost &connHost)
 {
     const ProcessIpKey &key = connHost.key;
+    const bool isIPv6 = (key.isIPv6 != 0);
 
-    SqliteStmt *stmt =
-            getStmt(key.isIPv6 ? StatSql::sqlUpdateConnHostIp6 : StatSql::sqlUpdateConnHostIp4);
+    SqliteStmt *stmt = getStmt(StatSql::sqlUpdateConnHost);
 
-    stmt->bindText(1, connHost.name);
-    stmt->bindInt64(2, connHost.connIdMin);
-    stmt->bindInt(3, key.pid);
-
-    if (key.isIPv6) {
-        stmt->bindBlobView(4, NetUtil::ip6ToArrayView(key.ip.v6));
-    } else {
-        stmt->bindInt(4, key.ip.v4);
-    }
+    stmt->bindVars({ connHost.name, connHost.connIdMin, key.pid, NetDbUtil::ip4Var(key.ip, isIPv6),
+            NetDbUtil::ip6Var(key.ip, isIPv6) });
 
     if (!sqliteDb()->done(stmt))
         return 0;

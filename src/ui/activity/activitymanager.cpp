@@ -16,7 +16,6 @@
 #include <log/logentrystattraf.h>
 #include <util/fileutil.h>
 #include <util/net/netdbutil.h>
-#include <util/net/netutil.h>
 #include <util/net/processipkey.h>
 #include <util/osutil.h>
 
@@ -57,13 +56,9 @@ const char *const sqlUpdateFlowTraf = "UPDATE flow"
                                       "    in_speed = ?4, out_speed = ?5, updated_tick = ?6"
                                       "  WHERE flow_id = ?1;";
 
-const char *const sqlUpdateFlowHost4 =
+const char *const sqlUpdateFlowHost =
         "UPDATE flow SET remote_host = ?1"
-        "  WHERE pid = ?2 AND remote_ip = ?3 AND remote_host IS NULL;";
-
-const char *const sqlUpdateFlowHost6 =
-        "UPDATE flow SET remote_host = ?1"
-        "  WHERE pid = ?2 AND remote_ip6 = ?3 AND remote_host IS NULL;";
+        "  WHERE pid = ?2 AND remote_ip IS ?3 AND remote_ip6 IS ?4 AND remote_host IS NULL;";
 
 const char *const sqlSelectFlowHosts =
         "SELECT DISTINCT pid, remote_ip, remote_ip6, remote_host FROM flow"
@@ -105,10 +100,10 @@ QVariantList flowVars(const LogEntryConn &entry)
         DbVar::nullable(entry.ruleId()),
         entry.localPort(),
         entry.remotePort(),
-        isIPv6 ? QVariant() : QVariant(qint32(entry.localIp4())),
-        isIPv6 ? QVariant() : QVariant(qint32(entry.remoteIp4())),
-        isIPv6 ? QVariant(entry.localIp6View().toByteArray()) : QVariant(),
-        isIPv6 ? QVariant(entry.remoteIp6View().toByteArray()) : QVariant(),
+        NetDbUtil::ip4Var(entry.localIp(), isIPv6),
+        NetDbUtil::ip4Var(entry.remoteIp(), isIPv6),
+        NetDbUtil::ip6Var(entry.localIp(), isIPv6),
+        NetDbUtil::ip6Var(entry.remoteIp(), isIPv6),
         DbVar::nullable(entry.remoteHost()),
         DbVar::nullable(entry.inheritPath()),
         entry.connTime(),
@@ -376,10 +371,9 @@ void ActivityManager::updateFlowsHost(const ProcessIpKey &key, const QString &na
 {
     const bool isIPv6 = (key.isIPv6 != 0);
 
-    const QVariant ipVar = isIPv6 ? QVariant(NetUtil::ip6ToArrayView(key.ip.v6).toByteArray())
-                                  : QVariant(qint32(key.ip.v4));
-
-    doneChange(isIPv6 ? sqlUpdateFlowHost6 : sqlUpdateFlowHost4, { name, key.pid, ipVar });
+    doneChange(sqlUpdateFlowHost,
+            { name, key.pid, NetDbUtil::ip4Var(key.ip, isIPv6),
+                    NetDbUtil::ip6Var(key.ip, isIPv6) });
 }
 
 void ActivityManager::logTime()

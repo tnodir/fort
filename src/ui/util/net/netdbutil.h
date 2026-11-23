@@ -1,6 +1,8 @@
 #ifndef NETDBUTIL_H
 #define NETDBUTIL_H
 
+#include <QVariant>
+
 #include <common/common_types.h>
 
 class SqliteStmt;
@@ -9,6 +11,9 @@ class SqliteStmt;
 class NetDbUtil
 {
 public:
+    static QVariant ip4Var(const ip_addr_t &ip, bool isIPv6);
+    static QVariant ip6Var(const ip_addr_t &ip, bool isIPv6);
+
     static bool columnIsIPv6(const SqliteStmt &stmt, int column4);
     static ip_addr_t columnIp(const SqliteStmt &stmt, int column4, int column6, bool isIPv6);
 };

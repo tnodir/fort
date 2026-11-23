@@ -4,6 +4,16 @@
 
 #include "netutil.h"
 
+QVariant NetDbUtil::ip4Var(const ip_addr_t &ip, bool isIPv6)
+{
+    return isIPv6 ? QVariant() : QVariant(qint32(ip.v4));
+}
+
+QVariant NetDbUtil::ip6Var(const ip_addr_t &ip, bool isIPv6)
+{
+    return isIPv6 ? QVariant(NetUtil::ip6ToArrayView(ip.v6).toByteArray()) : QVariant();
+}
+
 bool NetDbUtil::columnIsIPv6(const SqliteStmt &stmt, int column4)
 {
     return stmt.columnIsNull(column4);

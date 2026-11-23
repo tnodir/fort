@@ -228,13 +228,10 @@ const char *const StatSql::sqlSelectConnIdsAfter =
 
 const char *const StatSql::sqlUpdateConnId = "UPDATE conn SET conn_id = ?1 WHERE conn_id = ?2;";
 
-const char *const StatSql::sqlUpdateConnHostIp4 =
-        "UPDATE conn SET remote_host = ?1"
-        "  WHERE conn_id > ?2 AND process_id = ?3 AND remote_ip = ?4 AND remote_host IS NOT ?1;";
-
-const char *const StatSql::sqlUpdateConnHostIp6 =
-        "UPDATE conn SET remote_host = ?1"
-        "  WHERE conn_id > ?2 AND process_id = ?3 AND remote_ip6 = ?4 AND remote_host IS NOT ?1;";
+const char *const StatSql::sqlUpdateConnHost = "UPDATE conn SET remote_host = ?1"
+                                               "  WHERE conn_id > ?2 AND process_id = ?3"
+                                               "    AND remote_ip IS ?4 AND remote_ip6 IS ?5"
+                                               "    AND remote_host IS NOT ?1;";
 
 const char *const StatSql::sqlSelectConnHosts = "SELECT conn_id, remote_host FROM conn"
                                                 "  WHERE conn_id >= ?1 AND remote_host IS NOT NULL"
