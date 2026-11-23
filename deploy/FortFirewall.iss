@@ -242,11 +242,6 @@ begin
   Result := IsUpgradeVar;
 end;
 
-function VCRedist86Exists(): Boolean;
-begin
-  Result := FileExists(ExpandConstant('{syswow64}\vcruntime140.dll'));
-end;
-
 function IsWindows10OrNewer(): Boolean;
 var
   Version: TWindowsVersion;
@@ -471,15 +466,6 @@ begin
   end;
 #endif
 #else
-  if not VCRedist86Exists() then
-  begin
-    if SuppressibleMsgBox(ExpandConstant('{cm:InstallVCRedist}'), mbCriticalError, MB_OKCANCEL, IDCANCEL) = IDOK then
-      OpenUrl('https://aka.ms/vs/17/release/vc_redist.x86.exe');
-
-    Result := False;
-    Exit;
-  end;
-
   if IsWindows7() and not IsDriverSignatureValid() then
   begin
     SuppressibleMsgBox(ExpandConstant('{cm:NotCompatibleWithWindows7}'), mbCriticalError, MB_OK, IDOK);

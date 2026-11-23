@@ -16,5 +16,4 @@ UninstallPasswordCancel=انصراف
 WrongPassword=گذرواژه اشتباه است
 NotCompatibleWithWindows=این برنامه با این نسخه از ویندوز سازگار نیست (ویندوز 10 نسخه 1809 یا جدیدتر لازم است).
 NotCompatibleWithWindows7=این برنامه با این نسخه از ویندوز 7 سازگار نیست (به‌روزرسانی KB4474419 لازم است).
-InstallVCRedist=آخرین نسخه بسته توزیع‌پذیر Visual C++ را نصب کنید!
 IsDeleteData=فایل‌های پیکربندی و داده‌ها حذف شوند؟

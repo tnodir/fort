@@ -15,5 +15,4 @@ UninstallPasswordCancel=Отмена
 WrongPassword=Неверный пароль
 NotCompatibleWithWindows=Эта программа несовместима с версией Windows (требуется Windows 10 1809 или новее).
 NotCompatibleWithWindows7=Эта программа несовместима с версией Windows 7 (требуется KB4474419).
-InstallVCRedist=Установите последнюю версию распространяемого пакета Visual C++!
 IsDeleteData=Удалить настройки и файлы данных?
