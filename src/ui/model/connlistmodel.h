@@ -43,6 +43,7 @@ public:
     QString rowsAsFilter(const QVector<int> &rows) const;
 
     static QString reasonText(FortConnReason reason);
+    static QString reasonIconPath(FortConnReason reason);
     static QString reasonDetailsText(const ConnRow &connRow);
     static QString terminatedText();
     static QString inheritedText(const ConnRow &connRow);
@@ -53,6 +54,7 @@ public:
     static QString actionText(bool blocked, bool dropped = false);
 
     static QString columnName(const ConnListColumn column, int role = Qt::DisplayRole);
+    static QString columnIconPath(const ConnListColumn column);
 
 protected slots:
     virtual void updateConnIdRange();

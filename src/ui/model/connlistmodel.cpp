@@ -49,44 +49,6 @@ QString formatPort(const quint16 port, int role)
     return QString::number(port);
 }
 
-QString reasonIconPath(const ConnRow &connRow)
-{
-    static const char *const reasonIcons[] = {
-        ":/icons/ip_block.png",
-        ":/icons/arrow_refresh_small.png",
-        ":/icons/application.png",
-        ":/icons/application_double.png",
-        ":/icons/lightbulb.png",
-        ":/icons/hostname.png",
-        ":/icons/ip_class.png",
-        ":/icons/script.png",
-        ":/icons/script_code.png",
-        ":/icons/script_code_red.png",
-        ":/icons/help.png",
-        ":/icons/ip_block.png",
-        ":/icons/filter.png",
-        ":/icons/ip_block.png",
-        ":/icons/help.png",
-        ":/icons/help.png",
-        ":/icons/help.png",
-        ":/icons/help.png",
-        ":/icons/global_telecom.png",
-        ":/icons/fort.png",
-        ":/icons/dns.png",
-        ":/icons/lock.png",
-    };
-    static_assert(
-            std::size(reasonIcons) == FORT_CONN_REASON_COUNT - FORT_CONN_REASON_IP_BLOCK_INET);
-
-    if (connRow.reason >= FORT_CONN_REASON_IP_BLOCK_INET
-            && connRow.reason < FORT_CONN_REASON_COUNT) {
-        const int index = connRow.reason - FORT_CONN_REASON_IP_BLOCK_INET;
-        return reasonIcons[index];
-    }
-
-    return ":/icons/information.png";
-}
-
 QString actionIconPath(const ConnRow &connRow)
 {
     return ActionRange::actionTypeIconPath(
@@ -278,16 +240,7 @@ QVariant ConnListModel::headerDataDisplay(int section, int role) const
 
 QVariant ConnListModel::headerDataDecoration(int section) const
 {
-    switch (ConnListColumn(section)) {
-    case ConnListColumn::Direction:
-        return IconCache::icon(":/icons/bullet_up_down.png");
-    case ConnListColumn::Action:
-        return IconCache::icon(":/icons/accept.png");
-    case ConnListColumn::Reason:
-        return IconCache::icon(":/icons/information.png");
-    }
-
-    return {};
+    return IconCache::icon(columnIconPath(ConnListColumn(section)));
 }
 
 QVariant ConnListModel::dataDisplay(const QModelIndex &index, int role) const
@@ -324,7 +277,7 @@ QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
     case ConnListColumn::Action:
         return dataDecorationAction(connRow);
     case ConnListColumn::Reason:
-        return IconCache::icon(reasonIconPath(connRow));
+        return IconCache::icon(reasonIconPath(FortConnReason(connRow.reason)));
     }
 
     return {};
@@ -618,6 +571,43 @@ QString ConnListModel::reasonText(FortConnReason reason)
     return tr("Unknown");
 }
 
+QString ConnListModel::reasonIconPath(FortConnReason reason)
+{
+    static const char *const reasonIcons[] = {
+        ":/icons/ip_block.png",
+        ":/icons/arrow_refresh_small.png",
+        ":/icons/application.png",
+        ":/icons/application_double.png",
+        ":/icons/lightbulb.png",
+        ":/icons/hostname.png",
+        ":/icons/ip_class.png",
+        ":/icons/script.png",
+        ":/icons/script_code.png",
+        ":/icons/script_code_red.png",
+        ":/icons/help.png",
+        ":/icons/ip_block.png",
+        ":/icons/filter.png",
+        ":/icons/ip_block.png",
+        ":/icons/help.png",
+        ":/icons/help.png",
+        ":/icons/help.png",
+        ":/icons/help.png",
+        ":/icons/global_telecom.png",
+        ":/icons/fort.png",
+        ":/icons/dns.png",
+        ":/icons/lock.png",
+    };
+    static_assert(
+            std::size(reasonIcons) == FORT_CONN_REASON_COUNT - FORT_CONN_REASON_IP_BLOCK_INET);
+
+    if (reason >= FORT_CONN_REASON_IP_BLOCK_INET && reason < FORT_CONN_REASON_COUNT) {
+        const int index = reason - FORT_CONN_REASON_IP_BLOCK_INET;
+        return reasonIcons[index];
+    }
+
+    return ":/icons/information.png";
+}
+
 QString ConnListModel::reasonDetailsText(const ConnRow &connRow)
 {
     QStringList list = { reasonText(FortConnReason(connRow.reason)) };
@@ -729,4 +719,18 @@ QString ConnListModel::columnName(const ConnListColumn column, int role)
     }
 
     return g_columnNames.value(col);
+}
+
+QString ConnListModel::columnIconPath(const ConnListColumn column)
+{
+    switch (column) {
+    case ConnListColumn::Direction:
+        return ":/icons/bullet_up_down.png";
+    case ConnListColumn::Action:
+        return ":/icons/accept.png";
+    case ConnListColumn::Reason:
+        return ":/icons/information.png";
+    }
+
+    return {};
 }
