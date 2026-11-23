@@ -12,7 +12,8 @@ md %TARGET_PATH%
 cd %TARGET_PATH%
 
 %QT_PATH%/configure -release -force-debug-info -optimize-size -c++std c++20 ^
-	-static -unity-build -feature-relocatable -prefix "%TARGET_PATH%\static" ^
+	-static -static-runtime -unity-build -feature-relocatable ^
+	-prefix "%TARGET_PATH%\static" ^
 	-opensource -confirm-license ^
 	%* ^
 	-nomake examples -nomake tests ^

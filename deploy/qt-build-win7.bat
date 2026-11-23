@@ -12,7 +12,8 @@ md %TARGET_PATH%
 cd %TARGET_PATH%
 
 %QT_PATH%/qtbase/configure -release -force-debug-info -optimize-size ^
-	-static -feature-relocatable -prefix "%TARGET_PATH%\static" ^
+	-static -static-runtime -feature-relocatable ^
+	-prefix "%TARGET_PATH%\static" ^
 	-opensource -confirm-license -mp -no-opengl ^
 	%* ^
 	-nomake examples -nomake tests ^

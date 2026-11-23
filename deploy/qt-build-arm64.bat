@@ -12,11 +12,12 @@ md %TARGET_PATH%
 cd %TARGET_PATH%
 
 %QT_PATH%/configure -release -force-debug-info -optimize-size -c++std c++20 ^
-	-static -unity-build -feature-relocatable -prefix "%TARGET_PATH%\static" ^
+	-static -static-runtime -unity-build -feature-relocatable ^
+	-prefix "%TARGET_PATH%\static" ^
 	-opensource -confirm-license ^
 	%* ^
 	-platform win32-arm64-msvc TARGET_CONFIGURE_ARGS=-release ^
-	-qt-host-path "%~dp0build-qt\static"
+	-qt-host-path "%~dp0build-qt\static" ^
 	^
 	-nomake examples -nomake tests ^
 	^
