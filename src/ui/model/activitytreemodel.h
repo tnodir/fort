@@ -134,6 +134,7 @@ private:
 
     void reloadApps();
     void refreshNames();
+    void refreshHostNames();
 
     int compareNodes(const ActivityNode *a, const ActivityNode *b) const;
     bool lessNode(const ActivityNode *a, const ActivityNode *b) const;

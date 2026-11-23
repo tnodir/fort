@@ -114,6 +114,13 @@ QFont GuiUtil::fontBold()
     return font;
 }
 
+QFont GuiUtil::fontItalic()
+{
+    QFont font;
+    font.setItalic(true);
+    return font;
+}
+
 QFont GuiUtil::fontStrikeOut()
 {
     QFont font;

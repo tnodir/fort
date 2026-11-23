@@ -365,8 +365,9 @@ QString NetUtil::getHostName(const QString &address)
 
     WCHAR hostName[NI_MAXHOST];
 
-    const int res = GetNameInfoW(
-            addrInfo->ai_addr, int(addrInfo->ai_addrlen), hostName, NI_MAXHOST, nullptr, 0, 0);
+    /* Without NI_NAMEREQD an address without a PTR record is returned as its numeric text */
+    const int res = GetNameInfoW(addrInfo->ai_addr, int(addrInfo->ai_addrlen), hostName, NI_MAXHOST,
+            nullptr, 0, NI_NAMEREQD);
 
     FreeAddrInfoW(addrInfo);
 

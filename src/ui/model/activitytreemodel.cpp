@@ -11,6 +11,7 @@
 #include <appinfo/appinfocache.h>
 #include <conf/confappmanager.h>
 #include <fortglobal.h>
+#include <hostinfo/hostinfocache.h>
 #include <model/applistmodeldata.h>
 #include <model/connlistmodel.h>
 #include <util/dateutil.h>
@@ -115,11 +116,32 @@ QString parentText(const ActivityProcRow &row)
     return nameWithPid(name, row.parentPid);
 }
 
-// The remote host's name or address
-QString remoteText(const ActivityFlowRow &f)
+QString ptrHostName(const ActivityFlowRow &f)
+{
+    return hostInfoCache()->hostName(f.remoteIp, f.isIPv6);
+}
+
+// The host name the program asked, else the address's PTR name
+QString hostNameOf(const ActivityFlowRow &f)
 {
     if (!f.remoteHost.isEmpty()) {
         return f.remoteHost;
+    }
+
+    return ptrHostName(f);
+}
+
+bool isPtrHostName(const ActivityFlowRow &f)
+{
+    return f.remoteHost.isEmpty() && !ptrHostName(f).isEmpty();
+}
+
+// The remote host's name or address
+QString remoteText(const ActivityFlowRow &f)
+{
+    const QString hostName = hostNameOf(f);
+    if (!hostName.isEmpty()) {
+        return hostName;
     }
 
     return NetFormatUtil::ipToAddressText(f.remoteIp, f.isIPv6);
@@ -413,10 +435,10 @@ const ActivityColumnFuncs columnFuncsList[] = {
     },
     // HostName
     {
-            .flowDisplay = [](const ActivityFlowRow &f) -> QVariant { return f.remoteHost; },
+            .flowDisplay = [](const ActivityFlowRow &f) -> QVariant { return hostNameOf(f); },
             .flowCompare =
                     [](const ActivityFlowRow &a, const ActivityFlowRow &b) {
-                        return compareTexts(a.remoteHost, b.remoteHost);
+                        return compareTexts(hostNameOf(a), hostNameOf(b));
                     },
     },
     // Direction
@@ -464,6 +486,8 @@ ActivityTreeModel::ActivityTreeModel(QObject *parent) :
     QAbstractItemModel(parent), m_root(new ActivityGroupNode(ActivityNodeType::Root))
 {
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &ActivityTreeModel::refreshNames);
+    connect(hostInfoCache(), &HostInfoCache::cacheChanged, this,
+            &ActivityTreeModel::refreshHostNames);
 
     connect(confAppManager(), &ConfAppManager::appsChanged, this, &ActivityTreeModel::reloadApps);
     connect(confAppManager(), &ConfAppManager::appUpdated, this, &ActivityTreeModel::reloadApps);
@@ -682,7 +706,15 @@ QVariant ActivityTreeModel::dataFont(const ActivityNode *node, int column) const
         return (column == int(ActivityColumn::Program)) ? GuiUtil::fontBold() : QVariant();
     }
 
-    return {};
+    if (node->type != ActivityNodeType::Flow)
+        return {};
+
+    // The host name's columns
+    if (column != int(ActivityColumn::Program) && column != int(ActivityColumn::HostName))
+        return {};
+
+    // The PTR name differs from the asked ones
+    return isPtrHostName(flowRowOf(node)) ? GuiUtil::fontItalic() : QVariant();
 }
 
 QVariant ActivityTreeModel::dataToolTip(const ActivityNode *node, int column) const
@@ -705,6 +737,15 @@ void ActivityTreeModel::refreshNames()
 
     for (const auto *proc : std::as_const(m_procs)) {
         emitColumnsChanged(proc, ActivityColumn::Program, ActivityColumn::Parent);
+    }
+}
+
+void ActivityTreeModel::refreshHostNames()
+{
+    for (const auto *flow : std::as_const(m_flows)) {
+        if (flow->row.remoteHost.isEmpty()) {
+            emitColumnsChanged(flow, ActivityColumn::Program, ActivityColumn::HostName);
+        }
     }
 }
 
