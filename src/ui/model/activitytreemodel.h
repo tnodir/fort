@@ -7,8 +7,9 @@
 
 #include <memory>
 
-#include <common/common_types.h>
 #include <conf/app.h>
+
+#include "activitysnapshot.h"
 
 enum class ActivityColumn : qint8 {
     Program = 0,
@@ -27,82 +28,6 @@ enum class ActivityColumn : qint8 {
     Connections,
     Time,
     Count,
-};
-
-struct ActivityProcRow
-{
-    quint32 pid = 0;
-    quint32 parentPid = 0; // 0 - unknown
-    qint64 appId = 0; // 0 - unknown Program
-    QString path;
-    QString parentPath; // empty - unknown
-
-    bool operator==(const ActivityProcRow &o) const = default;
-};
-
-// The Program of the processes: an unknown one by the process's path
-struct ActivityAppKey
-{
-    qint64 appId = 0;
-    QString path; // of an unknown Program only
-
-    bool operator==(const ActivityAppKey &o) const = default;
-};
-
-inline size_t qHash(const ActivityAppKey &key, size_t seed = 0)
-{
-    return qHashMulti(seed, key.appId, key.path);
-}
-
-struct ActivityTraf
-{
-    qint64 inBytes = 0;
-    qint64 outBytes = 0;
-    qint64 inSpeed = 0; // bytes per second
-    qint64 outSpeed = 0;
-
-    bool operator==(const ActivityTraf &o) const = default;
-
-    ActivityTraf &operator+=(const ActivityTraf &o)
-    {
-        inBytes += o.inBytes;
-        outBytes += o.outBytes;
-        inSpeed += o.inSpeed;
-        outSpeed += o.outSpeed;
-        return *this;
-    }
-};
-
-struct ActivityFlowRow
-{
-    bool inbound = false;
-    bool isIPv6 = false;
-    quint8 ipProto = 0;
-    quint16 localPort = 0;
-    quint16 remotePort = 0;
-    quint32 pid = 0;
-    quint64 flowId = 0;
-    qint64 connTime = 0;
-    ActivityTraf traf;
-    ip_addr_t localIp = {};
-    ip_addr_t remoteIp = {};
-    QString remoteHost;
-};
-
-// The sums of the flows
-struct ActivityTotals
-{
-    int flowCount = 0;
-    ActivityTraf traf;
-
-    bool operator==(const ActivityTotals &o) const = default;
-
-    ActivityTotals &operator+=(const ActivityTotals &o)
-    {
-        flowCount += o.flowCount;
-        traf += o.traf;
-        return *this;
-    }
 };
 
 enum class ActivityNodeType : qint8 {
@@ -156,9 +81,6 @@ struct ActivityFlowNode : ActivityNode
 
     ActivityFlowRow row;
 };
-
-struct ActivitySnapshot;
-struct ActivityShown;
 
 // The live Programs with their processes and flows, read from the Activity DB. The rows are
 // synchronized by the flows' ids, so the expanded state is kept. Sorted only on the header's click.

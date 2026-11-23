@@ -235,6 +235,7 @@ SOURCES += \
     manager/servicemanager.cpp \
     manager/translationmanager.cpp \
     manager/windowmanager.cpp \
+    model/activitysnapshot.cpp \
     model/activitytreemodel.cpp \
     model/appconnsearchmodel.cpp \
     model/applistmodel.cpp \
@@ -611,6 +612,7 @@ HEADERS += \
     manager/servicemanager.h \
     manager/translationmanager.h \
     manager/windowmanager.h \
+    model/activitysnapshot.h \
     model/activitytreemodel.h \
     model/appconnsearchmodel.h \
     model/applistcolumn.h \
