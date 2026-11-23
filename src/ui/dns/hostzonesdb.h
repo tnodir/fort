@@ -37,6 +37,9 @@ public:
     bool open();
     void close();
 
+    // Before closing a short-lived connection
+    void optimize();
+
     // The Zones having their names in the DB
     quint32 zonesMask() const;
 

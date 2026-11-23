@@ -17,6 +17,11 @@ void HostZonesSyncJob::doJob(WorkerManager *manager)
 
     if (db.open()) {
         syncZones(manager, db);
+
+        // The forwarder's stop doesn't wait for it
+        if (!manager->aborted()) {
+            db.optimize();
+        }
     }
 
     m_errorMessage = db.errorMessage();

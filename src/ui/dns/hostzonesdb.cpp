@@ -159,6 +159,11 @@ void HostZonesDb::close()
     m_patterns.clear();
 }
 
+void HostZonesDb::optimize()
+{
+    m_db->optimize();
+}
+
 quint32 HostZonesDb::zonesMask() const
 {
     quint32 zonesMask = 0;
