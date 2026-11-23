@@ -140,11 +140,15 @@ bool SqliteDb::shrinkMemory()
 
 bool SqliteDb::optimize(OptimizeFlags flags)
 {
-    if (flags == OptimizeDefault) {
-        return execute("PRAGMA optimize;");
+    const bool ok = (flags == OptimizeDefault)
+            ? execute("PRAGMA optimize;")
+            : executeStr(QString("PRAGMA optimize(%1);").arg(int(flags)));
+
+    if (!ok) {
+        qCWarning(LC) << "Optimize error:" << filePath() << errorMessage();
     }
 
-    return executeStr(QString("PRAGMA optimize(%1);").arg(int(flags)));
+    return ok;
 }
 
 bool SqliteDb::execute(const char *sql)
@@ -347,7 +351,13 @@ bool SqliteDb::import(SqliteDb::MigrateOptions &opt)
         opt.userVersion = db.userVersion();
     }
 
-    return importDb(opt);
+    if (!importDb(opt))
+        return false;
+
+    // The tables' sizes changed
+    optimize(OptimizeOnOpen);
+
+    return true;
 }
 
 bool SqliteDb::migrate(MigrateOptions &opt)
@@ -386,6 +396,11 @@ bool SqliteDb::openAndMigrate(MigrateOptions &opt)
         qCCritical(LC) << "Migration error" << filePath();
         m_isOpened = false;
         return false;
+    }
+
+    // ANALYZE writes the statistics
+    if (!isReadOnly()) {
+        optimize(OptimizeOnOpen);
     }
 
     return true;

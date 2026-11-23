@@ -49,6 +49,8 @@ public:
         OptimizeAnalyze = 0x00002, // Run ANALYZE on tables that might benefit.
         OptimizeAnalysisLimit = 0x00010, // Temporary analysis_limit to prevent excess run-time.
         OptimizeCheckTablesSize = 0x10000, // Check the size of all tables.
+        // On a long-lived connection's open
+        OptimizeOnOpen = (OptimizeAnalyze | OptimizeAnalysisLimit | OptimizeCheckTablesSize),
     };
     Q_DECLARE_FLAGS(OptimizeFlags, OptimizeFlag)
 
