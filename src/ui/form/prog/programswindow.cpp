@@ -421,7 +421,6 @@ void ProgramsWindow::setupEditMenuConnections()
                 this, [&] { ctrl()->purgeApps(); },
                 tr("Are you sure to remove all non-existent programs?"));
     });
-    connect(m_actFindApps, &QAction::triggered, this, [&] { m_editSearch->setFocus(); });
 }
 
 void ProgramsWindow::setupTimerMenuActions()
@@ -445,6 +444,8 @@ void ProgramsWindow::setupEditSearch()
 {
     m_editSearch = ControlUtil::createSearchEdit(
             [&](const QString &text) { appListModel()->setTextFilter(text); });
+
+    ControlUtil::setupFindAction(m_actFindApps, m_editSearch);
 
     connect(this, &ProgramsWindow::aboutToShow, m_editSearch, qOverload<>(&QWidget::setFocus));
 }

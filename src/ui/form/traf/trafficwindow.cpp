@@ -267,7 +267,6 @@ void TrafficWindow::setupClearMenu()
                 },
                 tr("Are you sure to clear all statistics?"));
     });
-    connect(m_actFindApps, &QAction::triggered, this, [&] { m_editSearch->setFocus(); });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setObjectName("btEdit");
@@ -287,6 +286,8 @@ void TrafficWindow::setupEditSearch()
 {
     m_editSearch = ControlUtil::createSearchEdit(
             [&](const QString &text) { appStatModel()->setTextFilter(text); });
+
+    ControlUtil::setupFindAction(m_actFindApps, m_editSearch);
 }
 
 void TrafficWindow::setupTrafUnits()
