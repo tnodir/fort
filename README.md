@@ -26,9 +26,9 @@ Fort is an effective firewall designed for Windows 7 and later versions, offerin
   - Connections log, traffic statistics and bandwidth graph
   - Password protection and command-line management
 
-## [System Requirements](https://github.com/tnodir/fort/wiki/User-Guide#system-requirements)
+## [System Requirements](https://github.com/tnodir/fort/wiki/Fort-Firewall-User-Guide#requirements)
 
-  - Disable [HVCI (Core Isolation: Memory Integrity)](https://github.com/tnodir/fort/wiki/HVCI) on Windows 10+
+  - Disable [HVCI (Core Isolation: Memory Integrity)](https://github.com/tnodir/fort/wiki/Fort-Firewall-User-Guide#hvci--memory-integrity) on Windows 10+
 
 ### Which installer should I download?
 
