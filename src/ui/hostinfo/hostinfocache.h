@@ -11,6 +11,7 @@
 
 #include "hostinfo.h"
 
+class Conn;
 class HostInfoManager;
 
 class HostInfoCache : public QObject, public IocService
@@ -23,6 +24,8 @@ public:
 
     QString hostName(const ip_addr_t &ip, bool isIPv6);
     QString cachedHostName(const ip_addr_t &ip, bool isIPv6) const;
+
+    QString remoteHostName(const Conn &conn, bool cachedOnly = false);
 
 signals:
     void cacheChanged();

@@ -117,16 +117,11 @@ QString parentText(const ActivityProcRow &row)
     return nameWithPid(name, row.parentPid);
 }
 
-// The host name the program asked, else the address's PTR name. The sorting takes only the cached
-// PTR names: it doesn't look up all the flows' addresses, only the shown rows do
+// The sorting takes only the cached PTR names: it doesn't look up all the flows' addresses, only
+// the shown rows do
 QString hostNameOf(const ActivityFlowRow &f, bool cachedOnly = false)
 {
-    if (!f.remoteHost.isEmpty()) {
-        return f.remoteHost;
-    }
-
-    return cachedOnly ? hostInfoCache()->cachedHostName(f.remoteIp, f.isIPv6)
-                      : hostInfoCache()->hostName(f.remoteIp, f.isIPv6);
+    return hostInfoCache()->remoteHostName(f, cachedOnly);
 }
 
 bool isPtrHostName(const ActivityFlowRow &f)

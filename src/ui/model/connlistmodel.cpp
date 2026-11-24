@@ -29,16 +29,17 @@ namespace {
 
 const QLoggingCategory LC("connListModel");
 
-QString formatIp(const ip_addr_t ip, bool isIPv6, bool resolveAddress = false)
+// The host's name, else its address; the tooltip shows both
+QString formatHostName(const QString &hostName, const ip_addr_t ip, bool isIPv6, int role)
 {
-    if (resolveAddress) {
-        const QString hostName = hostInfoCache()->hostName(ip, isIPv6);
-        if (!hostName.isEmpty()) {
-            return hostName;
-        }
+    if (hostName.isEmpty()) {
+        return NetFormatUtil::ipToAddressText(ip, isIPv6);
     }
 
-    return NetFormatUtil::ipToAddressText(ip, isIPv6);
+    if (role != Qt::ToolTipRole)
+        return hostName;
+
+    return NetFormatUtil::ipToAddressText(ip, isIPv6) + '\n' + hostName;
 }
 
 QString formatPort(const quint16 port, int role)
@@ -73,14 +74,14 @@ QVariant dataDisplayProtocolName(const ConnRow &connRow, int /*role*/)
 
 QVariant dataDisplayLocalHostName(const ConnRow &connRow, int role)
 {
-    const bool resolveAddress = (role >= Qt::UserRole);
+    const QString hostName = hostInfoCache()->hostName(connRow.localIp, connRow.isIPv6);
 
-    return formatIp(connRow.localIp, connRow.isIPv6, resolveAddress);
+    return formatHostName(hostName, connRow.localIp, connRow.isIPv6, role);
 }
 
 QVariant dataDisplayLocalIp(const ConnRow &connRow, int /*role*/)
 {
-    return formatIp(connRow.localIp, connRow.isIPv6);
+    return NetFormatUtil::ipToAddressText(connRow.localIp, connRow.isIPv6);
 }
 
 QVariant dataDisplayLocalPort(const ConnRow &connRow, int role)
@@ -90,19 +91,14 @@ QVariant dataDisplayLocalPort(const ConnRow &connRow, int role)
 
 QVariant dataDisplayRemoteHostName(const ConnRow &connRow, int role)
 {
-    const bool resolveAddress = (role >= Qt::UserRole);
+    const QString hostName = hostInfoCache()->remoteHostName(connRow);
 
-    // The name the program asked, else the address's PTR one
-    if (resolveAddress && !connRow.remoteHost.isEmpty()) {
-        return connRow.remoteHost;
-    }
-
-    return formatIp(connRow.remoteIp, connRow.isIPv6, resolveAddress);
+    return formatHostName(hostName, connRow.remoteIp, connRow.isIPv6, role);
 }
 
 QVariant dataDisplayRemoteIp(const ConnRow &connRow, int /*role*/)
 {
-    return formatIp(connRow.remoteIp, connRow.isIPv6);
+    return NetFormatUtil::ipToAddressText(connRow.remoteIp, connRow.isIPv6);
 }
 
 QVariant dataDisplayRemotePort(const ConnRow &connRow, int role)
@@ -156,6 +152,19 @@ static const dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplayReason,
     &dataDisplayTime,
 };
+
+// Without the resolving the host names' columns show the addresses
+ConnListColumn addressColumn(ConnListColumn column)
+{
+    switch (column) {
+    case ConnListColumn::LocalHostName:
+        return ConnListColumn::LocalIp;
+    case ConnListColumn::RemoteHostName:
+        return ConnListColumn::RemoteIp;
+    default:
+        return column;
+    }
+}
 
 }
 
@@ -247,18 +256,17 @@ QVariant ConnListModel::headerDataDecoration(int section) const
 QVariant ConnListModel::dataDisplay(const QModelIndex &index, int role) const
 {
     const int row = index.row();
-    const int column = index.column();
+    int column = index.column();
 
     const auto &connRow = connRowAt(row);
     if (connRow.isNull())
         return {};
 
-    const dataDisplay_func func = dataDisplay_funcList[column];
-
-    if (column == int(ConnListColumn::LocalHostName)
-            || column == int(ConnListColumn::RemoteHostName)) {
-        role += resolveAddress() ? Qt::UserRole : 0;
+    if (!resolveAddress()) {
+        column = int(addressColumn(ConnListColumn(column)));
     }
+
+    const dataDisplay_func func = dataDisplay_funcList[column];
 
     return func(connRow, role);
 }

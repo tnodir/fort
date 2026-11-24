@@ -1,5 +1,6 @@
 #include "hostinfocache.h"
 
+#include <util/conf/conn.h>
 #include <util/net/netformatutil.h>
 
 #include "hostinfomanager.h"
@@ -30,6 +31,17 @@ QString HostInfoCache::cachedHostName(const ip_addr_t &ip, bool isIPv6) const
     const HostInfo *hostInfo = m_cache.object(NetFormatUtil::ipToText(ip, isIPv6));
 
     return hostInfo ? hostInfo->hostName : QString();
+}
+
+// The host name the program asked, else the remote address's PTR name
+QString HostInfoCache::remoteHostName(const Conn &conn, bool cachedOnly)
+{
+    if (!conn.remoteHost.isEmpty()) {
+        return conn.remoteHost;
+    }
+
+    return cachedOnly ? cachedHostName(conn.remoteIp, conn.isIPv6)
+                      : hostName(conn.remoteIp, conn.isIPv6);
 }
 
 QString HostInfoCache::hostName(const QString &address)
