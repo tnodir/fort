@@ -12,6 +12,7 @@ bool isIconColumn(AppListColumn column)
 {
     switch (column) {
     case AppListColumn::Zones:
+    case AppListColumn::Filters:
     case AppListColumn::Rule:
     case AppListColumn::Groups:
     case AppListColumn::SpeedLimits:
@@ -41,6 +42,8 @@ QVariant AppListModelHeaderData::headerDataDecoration() const
     switch (AppListColumn(column())) {
     case AppListColumn::Zones:
         return IconCache::icon(":/icons/ip_class.png");
+    case AppListColumn::Filters:
+        return IconCache::icon(":/icons/filter.png");
     case AppListColumn::Rule:
         return IconCache::icon(":/icons/script.png");
     case AppListColumn::Groups:

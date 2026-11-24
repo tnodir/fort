@@ -109,6 +109,11 @@ bool App::hasZone() const
     return zones.accept_mask != 0 || zones.reject_mask != 0;
 }
 
+bool App::hasFilters() const
+{
+    return !filtersText.isEmpty();
+}
+
 bool App::hasSpeedLimit() const
 {
     const FORT_SPEED_LIMIT_IDS limits = activeSpeedLimits();

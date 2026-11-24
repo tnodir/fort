@@ -374,6 +374,7 @@ QString AppListModel::sqlOrderColumn() const
     static const QStringList orderColumns = {
         nameColumn + "%1", // Name
         "t.accept_zones%1, t.reject_zones%1", // Zones
+        "t.filters_text%1", // Filters
         "r.rule_type ASC NULLS LAST, lower(r.name)%1", // Rule
         "t.groups_mask%1", // Groups
         "t.groups_mask%1", // Group
@@ -388,6 +389,7 @@ QString AppListModel::sqlOrderColumn() const
     static const QStringList postOrderColumns = {
         pathColumn, // Name
         nameColumn, // Zones
+        nameColumn, // Filters
         nameColumn, // Rule
         nameColumn, // Groups
         nameColumn, // Group
@@ -466,6 +468,7 @@ QString AppListModel::columnName(const AppListColumn column)
         g_columnNames = {
             tr("Name"),
             tr("Zones"),
+            tr("Filters"),
             tr("Rule"),
             tr("Groups"),
             tr("Group"),

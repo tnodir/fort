@@ -82,6 +82,14 @@ QVariant dataDisplayZones(const App &app, int role)
     return list.join('\n');
 }
 
+QVariant dataDisplayFilters(const App &app, int role)
+{
+    if (role != Qt::ToolTipRole)
+        return {};
+
+    return app.filtersText;
+}
+
 QVariant dataDisplayRule(const App &app, int role)
 {
     if (role != Qt::ToolTipRole)
@@ -176,6 +184,7 @@ using dataDisplay_func = QVariant (*)(const App &app, int role);
 static const dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplayName,
     &dataDisplayZones,
+    &dataDisplayFilters,
     &dataDisplayRule,
     &dataDisplayGroups,
     &dataDisplayGroup,
@@ -250,6 +259,11 @@ QIcon AppListModelData::appZonesIcon() const
     return app().hasZone() ? IconCache::icon(":/icons/ip_class.png") : QIcon();
 }
 
+QIcon AppListModelData::appFiltersIcon() const
+{
+    return app().hasFilters() ? IconCache::icon(":/icons/filter.png") : QIcon();
+}
+
 QIcon AppListModelData::appRuleIcon() const
 {
     return app().hasRule() ? IconCache::icon(":/icons/script.png") : QIcon();
@@ -281,24 +295,30 @@ QIcon AppListModelData::appActionIcon() const
 
 QVariant AppListModelData::dataDecorationIcon() const
 {
-    switch (AppListColumn(column())) {
-    case AppListColumn::Name:
-        return appIcon();
-    case AppListColumn::Zones:
-        return appZonesIcon();
-    case AppListColumn::Rule:
-        return appRuleIcon();
-    case AppListColumn::Groups:
-        return appGroupsIcon();
-    case AppListColumn::SpeedLimits:
-        return appSpeedLimitsIcon();
-    case AppListColumn::Scheduled:
-        return appScheduledIcon();
-    case AppListColumn::Action:
-        return appActionIcon();
-    }
+    using appIcon_func = QIcon (AppListModelData::*)() const;
 
-    return {};
+    static const appIcon_func appIcon_funcList[] = {
+        &AppListModelData::appIcon, // Name
+        &AppListModelData::appZonesIcon, // Zones
+        &AppListModelData::appFiltersIcon, // Filters
+        &AppListModelData::appRuleIcon, // Rule
+        &AppListModelData::appGroupsIcon, // Groups
+        nullptr, // Group
+        &AppListModelData::appSpeedLimitsIcon, // Speed Limits
+        &AppListModelData::appScheduledIcon, // Scheduled
+        &AppListModelData::appActionIcon, // Action
+        nullptr, // File Path
+        nullptr, // Creation Time
+        nullptr, // Notes
+    };
+
+    static_assert(std::size(appIcon_funcList) == int(AppListColumn::Count));
+
+    const appIcon_func func = appIcon_funcList[column()];
+    if (!func)
+        return {};
+
+    return (this->*func)();
 }
 
 QVariant AppListModelData::dataForeground() const

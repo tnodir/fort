@@ -40,7 +40,7 @@ using namespace Fort;
 
 namespace {
 
-inline constexpr int APPS_HEADER_VERSION = 17;
+inline constexpr int APPS_HEADER_VERSION = 18;
 
 const std::array timerMinuteValues = { -1, 1, 5, 10, 30, 60 * 1, 60 * 3, 60 * 6 };
 
@@ -625,6 +625,7 @@ void ProgramsWindow::setupTableAppsHeader()
 
     header->setSectionResizeMode(int(AppListColumn::Name), QHeaderView::Interactive);
     header->setSectionResizeMode(int(AppListColumn::Zones), QHeaderView::Fixed);
+    header->setSectionResizeMode(int(AppListColumn::Filters), QHeaderView::Fixed);
     header->setSectionResizeMode(int(AppListColumn::Rule), QHeaderView::Fixed);
     header->setSectionResizeMode(int(AppListColumn::Groups), QHeaderView::Fixed);
     header->setSectionResizeMode(int(AppListColumn::Group), QHeaderView::Interactive);
@@ -638,6 +639,7 @@ void ProgramsWindow::setupTableAppsHeader()
 
     header->resizeSection(int(AppListColumn::Name), 300);
     header->resizeSection(int(AppListColumn::Zones), 30);
+    header->resizeSection(int(AppListColumn::Filters), 30);
     header->resizeSection(int(AppListColumn::Rule), 30);
     header->resizeSection(int(AppListColumn::Groups), 30);
     header->resizeSection(int(AppListColumn::Group), 150);

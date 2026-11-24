@@ -26,6 +26,7 @@ public:
     bool appFileExists() const;
     QIcon appIcon() const;
     QIcon appZonesIcon() const;
+    QIcon appFiltersIcon() const;
     QIcon appRuleIcon() const;
     QIcon appGroupsIcon() const;
     QIcon appSpeedLimitsIcon() const;

@@ -48,6 +48,7 @@ public:
     bool isProcWild() const;
     bool hasGroup() const;
     bool hasZone() const;
+    bool hasFilters() const;
     bool hasSpeedLimit() const;
     bool hasRule() const;
 
