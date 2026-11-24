@@ -26,8 +26,6 @@ public:
     // The process's data by its Process New entry
     struct LoggedProcess
     {
-        quint32 parentPid = 0;
-        qint64 createTime = 0;
         QString path;
         QString kernelPath;
         QString inheritKernelPath;

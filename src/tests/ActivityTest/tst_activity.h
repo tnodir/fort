@@ -13,7 +13,9 @@
 #include <log/logentryconn.h>
 #include <log/logentryflowclosed.h>
 #include <log/logentryflowtraf.h>
+#include <log/logentryprocexit.h>
 #include <log/logentryprocnew.h>
+#include <log/logentryprocstart.h>
 #include <log/logentrystattraf.h>
 #include <util/net/processipkey.h>
 
@@ -23,13 +25,14 @@ inline constexpr quint32 testPid = 100;
 inline constexpr quint32 testParentPid = 10;
 inline constexpr qint64 testCreateTime = 12345;
 inline constexpr quint32 testAppId = 7;
+inline constexpr char testPath[] = "C:\\test\\app.exe";
 inline constexpr char testParentPath[] = "C:\\test\\parent.exe";
 
 LogEntryConn makeConn(quint64 flowId, quint32 pid = testPid)
 {
     LogEntryConn entry;
     entry.setPid(pid);
-    entry.setKernelPath("C:\\test\\app.exe");
+    entry.setKernelPath(testPath);
     entry.setBlocked(false);
     entry.setFlowLogging(true);
     entry.setInbound(true);
@@ -51,6 +54,22 @@ LogEntryProcNew makeProcNew(quint32 pid = testPid)
     entry.setParentPid(testParentPid);
     entry.setCreateTime(testCreateTime);
     return entry;
+}
+
+LogEntryProcStart makeProcStart(
+        quint32 pid, quint32 parentPid, qint64 createTime, const QString &kernelPath = testPath)
+{
+    LogEntryProcStart entry(pid, kernelPath);
+    entry.setParentPid(parentPid);
+    entry.setCreateTime(createTime);
+    return entry;
+}
+
+// The process and its parent are started
+void logProcStarts(ActivityManager &manager)
+{
+    manager.logProcStart(makeProcStart(testParentPid, 1, testCreateTime - 1, testParentPath));
+    manager.logProcStart(makeProcStart(testPid, testParentPid, testCreateTime));
 }
 
 QByteArray flowTrafData(const QVector<FORT_FLOW_STAT> &flowStats)
@@ -214,7 +233,7 @@ TEST_F(ActivityTest, connAddsFlowAndProcess)
     conn.setAppId(testAppId);
     conn.setLocalNet(true);
 
-    m_manager.logConn(conn, testParentPid, testParentPath);
+    m_manager.logConn(conn);
 
     // Not committed till the log buffer's end
     ASSERT_EQ(m_changedCount, 0);
@@ -238,12 +257,134 @@ TEST_F(ActivityTest, connAddsFlowAndProcess)
     ASSERT_EQ(flow[FlowInBytes].toLongLong(), 0);
     ASSERT_EQ(flow[FlowInSpeed].toLongLong(), 0);
 
+    // The process without PROC_START, a System's one: its parent is unknown
     const QVariantList process = procRow(testPid);
     ASSERT_EQ(process.size(), 4);
     ASSERT_EQ(process[0].toUInt(), testAppId);
+    ASSERT_TRUE(process[1].isNull());
+    ASSERT_EQ(process[2].toString(), conn.path());
+    ASSERT_TRUE(process[3].isNull());
+}
+
+TEST_F(ActivityTest, procStartAddsProcess)
+{
+    logProcStarts(m_manager);
+    endBuffer();
+    ASSERT_EQ(m_changedCount, 1);
+
+    // The processes without flows are kept
+    ASSERT_EQ(procCount(), 2);
+
+    // The parent's path is of its row
+    QVariantList process = procRow(testPid);
+    ASSERT_TRUE(process[0].isNull());
+    ASSERT_EQ(process[1].toUInt(), testParentPid);
+    ASSERT_EQ(process[2].toString(), makeProcStart(testPid, 0, 0).path());
+    ASSERT_EQ(process[3].toString(), makeProcStart(testParentPid, 0, 0, testParentPath).path());
+
+    // The flow's CONN sets the Program
+    LogEntryConn conn = makeConn(1);
+    conn.setAppId(testAppId);
+    m_manager.logConn(conn);
+    endBuffer();
+
+    process = procRow(testPid);
+    ASSERT_EQ(process[0].toUInt(), testAppId);
+    ASSERT_EQ(process[1].toUInt(), testParentPid);
+    ASSERT_FALSE(process[3].isNull());
+}
+
+TEST_F(ActivityTest, procStartParentCreatedLater)
+{
+    // The parent's id is reused by a newer process
+    m_manager.logProcStart(makeProcStart(testParentPid, 1, testCreateTime + 1, testParentPath));
+    m_manager.logProcStart(makeProcStart(testPid, testParentPid, testCreateTime));
+    endBuffer();
+
+    ASSERT_TRUE(procRow(testPid)[3].isNull());
+
+    // An unknown creation time is trusted
+    m_manager.logProcStart(makeProcStart(testPid + 4, testParentPid, 0));
+    endBuffer();
+
+    ASSERT_FALSE(procRow(testPid + 4)[3].isNull());
+}
+
+TEST_F(ActivityTest, procStartLoggedAgainKept)
+{
+    logProcStarts(m_manager);
+
+    LogEntryConn conn = makeConn(1);
+    conn.setAppId(testAppId);
+    m_manager.logConn(conn);
+    endBuffer();
+    const int changedCount = m_changedCount;
+
+    // The process created during the enumeration is logged twice
+    m_manager.logProcStart(makeProcStart(testPid, testParentPid, testCreateTime));
+    endBuffer();
+
+    ASSERT_EQ(procRow(testPid)[0].toUInt(), testAppId);
+    ASSERT_EQ(m_changedCount, changedCount);
+}
+
+TEST_F(ActivityTest, procStartAfterConn)
+{
+    // The CONN is logged before its process's PROC_START: the conf is set before the enumeration
+    LogEntryConn conn = makeConn(1);
+    conn.setAppId(testAppId);
+    m_manager.logConn(conn);
+    endBuffer();
+
+    m_manager.logProcStart(makeProcStart(testParentPid, 1, testCreateTime - 1, testParentPath));
+    m_manager.logProcStart(
+            makeProcStart(testPid, testParentPid, testCreateTime, "C:\\test\\exe.exe"));
+    endBuffer();
+
+    // The row keeps its Program and path, gets the process's tree
+    const QVariantList process = procRow(testPid);
+    ASSERT_EQ(process[0].toUInt(), testAppId);
     ASSERT_EQ(process[1].toUInt(), testParentPid);
     ASSERT_EQ(process[2].toString(), conn.path());
-    ASSERT_EQ(process[3].toString(), testParentPath);
+    ASSERT_FALSE(process[3].isNull());
+}
+
+TEST_F(ActivityTest, procStartReusedPid)
+{
+    logProcStarts(m_manager);
+
+    LogEntryConn conn = makeConn(1);
+    conn.setAppId(testAppId);
+    m_manager.logConn(conn);
+    endBuffer();
+
+    // The exited process's PROC_EXIT is lost: its id is reused by a new process
+    const LogEntryProcStart procStart =
+            makeProcStart(testPid, testParentPid + 4, testCreateTime + 1, "C:\\test\\new.exe");
+    m_manager.logProcStart(procStart);
+    endBuffer();
+
+    const QVariantList process = procRow(testPid);
+    ASSERT_TRUE(process[0].isNull());
+    ASSERT_EQ(process[1].toUInt(), testParentPid + 4);
+    ASSERT_EQ(process[2].toString(), procStart.path());
+    ASSERT_TRUE(process[3].isNull());
+}
+
+TEST_F(ActivityTest, procExitRemovesProcessAndFlows)
+{
+    logProcStarts(m_manager);
+    m_manager.logConn(makeConn(1));
+    m_manager.logConn(makeConn(2, testParentPid));
+    endBuffer();
+
+    m_manager.logProcExit(LogEntryProcExit(testPid));
+    endBuffer();
+
+    ASSERT_TRUE(procRow(testPid).isEmpty());
+    ASSERT_TRUE(flowRow(1).isEmpty());
+    ASSERT_FALSE(procRow(testParentPid).isEmpty());
+    ASSERT_FALSE(flowRow(2).isEmpty());
 }
 
 TEST_F(ActivityTest, connIPv6)
@@ -402,7 +543,8 @@ TEST_F(ActivityTest, reloggedConnKeepsFlow)
 
 TEST_F(ActivityTest, reloggedConnChangesProgram)
 {
-    m_manager.logConn(makeConn(1), testParentPid, testParentPath);
+    logProcStarts(m_manager);
+    m_manager.logConn(makeConn(1));
     endBuffer();
     const int changedCount = m_changedCount;
 
@@ -416,7 +558,7 @@ TEST_F(ActivityTest, reloggedConnChangesProgram)
     const QVariantList process = procRow(testPid);
     ASSERT_EQ(process[0].toUInt(), testAppId);
     ASSERT_EQ(process[1].toUInt(), testParentPid);
-    ASSERT_EQ(process[3].toString(), testParentPath);
+    ASSERT_FALSE(process[3].isNull());
     ASSERT_EQ(m_changedCount, changedCount + 1);
 
     // The Program is deleted
@@ -430,7 +572,8 @@ TEST_F(ActivityTest, reloggedConnChangesProgram)
 TEST_F(ActivityTest, procNewUpdatesProcess)
 {
     // The CONN is logged with the paths before its process's PROC_NEW
-    m_manager.logConn(makeConn(1), testParentPid, testParentPath);
+    logProcStarts(m_manager);
+    m_manager.logConn(makeConn(1));
     endBuffer();
     const int changedCount = m_changedCount;
 
@@ -441,21 +584,21 @@ TEST_F(ActivityTest, procNewUpdatesProcess)
     const QVariantList process = procRow(testPid);
     ASSERT_EQ(process[1].toUInt(), testParentPid);
     ASSERT_EQ(process[2].toString(), "C:\\test\\service.exe");
-    ASSERT_EQ(process[3].toString(), testParentPath);
+    ASSERT_FALSE(process[3].isNull());
     ASSERT_EQ(m_changedCount, changedCount + 1);
 
-    // The process without flows isn't added
+    // The process without PROC_START isn't added
     m_manager.logProcNew(makeProcNew(testPid + 4), "C:\\test\\other.exe");
     endBuffer();
 
-    ASSERT_EQ(procCount(), 1);
+    ASSERT_EQ(procCount(), 2);
     ASSERT_EQ(m_changedCount, changedCount + 1);
 }
 
 TEST_F(ActivityTest, procNewSamePathUnchanged)
 {
     // The CONN is logged with the paths before its process's PROC_NEW
-    m_manager.logConn(makeConn(1), testParentPid, testParentPath);
+    m_manager.logConn(makeConn(1));
     endBuffer();
     const int changedCount = m_changedCount;
 
@@ -465,7 +608,7 @@ TEST_F(ActivityTest, procNewSamePathUnchanged)
     ASSERT_EQ(m_changedCount, changedCount);
 }
 
-TEST_F(ActivityTest, flowClosedRemovesFlowAndProcess)
+TEST_F(ActivityTest, flowClosedKeepsProcess)
 {
     m_manager.logConn(makeConn(1));
     m_manager.logConn(makeConn(2));
@@ -482,7 +625,7 @@ TEST_F(ActivityTest, flowClosedRemovesFlowAndProcess)
     endBuffer();
 
     ASSERT_EQ(flowCount(), 0);
-    ASSERT_EQ(procCount(), 0);
+    ASSERT_EQ(procCount(), 1);
 }
 
 TEST_F(ActivityTest, closedProcessRemovesFlows)
@@ -497,8 +640,7 @@ TEST_F(ActivityTest, closedProcessRemovesFlows)
 
     ASSERT_TRUE(flowRow(1).isEmpty());
     ASSERT_FALSE(flowRow(2).isEmpty());
-    ASSERT_TRUE(procRow(testPid).isEmpty());
-    ASSERT_FALSE(procRow(testPid + 4).isEmpty());
+    ASSERT_EQ(procCount(), 2);
 }
 
 TEST_F(ActivityTest, clearRemovesAll)

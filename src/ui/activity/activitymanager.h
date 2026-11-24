@@ -15,10 +15,12 @@
 class LogEntryConn;
 class LogEntryFlowClosed;
 class LogEntryFlowTraf;
+class LogEntryProcExit;
 class LogEntryProcNew;
+class LogEntryProcStart;
 class LogEntryStatTraf;
 
-// The live allowed flows by their processes, for the Activity window: the master keeps them in
+// The live processes and their allowed flows, for the Activity window: the master keeps them in
 // the DB (the `proc` and `flow` tables), a client opens it read-only
 class ActivityManager : public QObject, public IocService, public SqliteUtilBase
 {
@@ -33,9 +35,10 @@ public:
 
     void setUp() override;
 
-    void logConn(const LogEntryConn &entry, quint32 parentPid = 0,
-            const QString &parentPath = QString());
+    void logConn(const LogEntryConn &entry);
     void logProcNew(const LogEntryProcNew &entry, const QString &path);
+    void logProcStart(const LogEntryProcStart &entry);
+    void logProcExit(const LogEntryProcExit &entry);
     void logFlowTraf(const LogEntryFlowTraf &entry);
     void logFlowClosed(const LogEntryFlowClosed &entry);
     void logStatTraf(const LogEntryStatTraf &entry);
@@ -63,24 +66,21 @@ private:
     bool doneChange(const char *sql, const QVariantList &vars);
 
     bool insertFlow(const LogEntryConn &entry);
-    void replaceProc(const LogEntryConn &entry, quint32 parentPid, const QString &parentPath);
+    void upsertConnProc(const LogEntryConn &entry);
     void waitConnHost(const LogEntryConn &entry);
     void updateFlowReason(const LogEntryConn &entry);
-    void updateProcApp(const LogEntryConn &entry);
 
     void updateFlowsTraf(const LogEntryFlowTraf &entry);
 
-    void closeFlows(const char *sql, quint64 id);
+    void deleteById(const char *sql, quint64 id);
 
     void updateFlowsHost(const ProcessIpKey &key, const QString &name);
 
-    void removeEmptyProcesses();
     void clearIdleSpeeds();
 
 private:
     bool m_inChanges = false; // the write transaction is opened, till the log buffer's end
     bool m_changed = false; // the opened transaction has changes
-    bool m_hasEmptyProcesses = false;
     bool m_hasSpeeds = false; // the flows may have the speeds of the previous tick
     bool m_tickHasSpeeds = false; // the current tick's portions have set the speeds
 

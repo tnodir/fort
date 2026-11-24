@@ -46,44 +46,11 @@ bool isLogReadOk(bool success, quint32 errorCode)
     return success || errorCode == 0;
 }
 
-// The parent is valid only by the creation times' order, an unknown time is trusted: the ids are
-// reused
-bool isCreatedEarlier(
-        const StatManager::LoggedProcess &parent, const StatManager::LoggedProcess &process)
-{
-    if (parent.createTime == 0 || process.createTime == 0)
-        return true;
-
-    return parent.createTime < process.createTime;
-}
-
-// The parent's path is known while the parent has logged connections
-QString parentProcessPath(const std::optional<StatManager::LoggedProcess> &process)
-{
-    if (!process || process->parentPid == 0)
-        return {};
-
-    const auto parent = statManager()->loggedProcess(process->parentPid);
-    if (!parent || !isCreatedEarlier(*parent, *process))
-        return {};
-
-    return parent->path;
-}
-
 bool isActivityConn(const LogEntryConn &connEntry)
 {
     return connEntry.flowLogging() && !connEntry.blocked();
 }
 
-// The process gives the paths of the CONN logged without them and the Activity's parent
-std::optional<StatManager::LoggedProcess> connProcess(
-        const LogEntryConn &connEntry, bool isActivity)
-{
-    if (!connEntry.procLogged() && !isActivity)
-        return {};
-
-    return statManager()->loggedProcess(connEntry.pid());
-}
 }
 
 LogManager::LogManager(QObject *parent) : QObject(parent) { }
@@ -254,10 +221,7 @@ bool LogManager::processLogEntryConn(LogBuffer *logBuffer)
     LogEntryConn connEntry;
     logBuffer->readEntryConn(&connEntry);
 
-    const bool isActivity = isActivityConn(connEntry);
-    const auto process = connProcess(connEntry, isActivity);
-
-    if (connEntry.procLogged() && !fillConnProcPaths(connEntry, process))
+    if (connEntry.procLogged() && !fillConnProcPaths(connEntry))
         return true; // skip the connection of an unknown process
 
     connEntry.setConnTime(currentUnixTime());
@@ -265,8 +229,8 @@ bool LogManager::processLogEntryConn(LogBuffer *logBuffer)
     connEntry.setRemoteHostOfProcess(hostName.ofProcess);
     connEntry.setRemoteHost(hostName.name);
 
-    if (isActivity) {
-        logActivityConn(connEntry, process);
+    if (isActivityConn(connEntry)) {
+        activityManager()->logConn(connEntry);
     }
 
     if (connEntry.activityOnly())
@@ -290,17 +254,10 @@ void LogManager::logStatConn(const LogEntryConn &connEntry)
     }
 }
 
-void LogManager::logActivityConn(
-        const LogEntryConn &connEntry, const std::optional<StatManager::LoggedProcess> &process)
+bool LogManager::fillConnProcPaths(LogEntryConn &connEntry) const
 {
-    const quint32 parentPid = process ? process->parentPid : 0;
+    const auto process = statManager()->loggedProcess(connEntry.pid());
 
-    activityManager()->logConn(connEntry, parentPid, parentProcessPath(process));
-}
-
-bool LogManager::fillConnProcPaths(
-        LogEntryConn &connEntry, const std::optional<StatManager::LoggedProcess> &process) const
-{
     if (Q_UNLIKELY(!process)) {
         qCCritical(LC) << "UI & Driver's states mismatch! Unknown process of the connection:"
                        << connEntry.pid();
@@ -393,6 +350,8 @@ bool LogManager::processLogEntryProcStart(LogBuffer *logBuffer)
     LogEntryProcStart procStartEntry;
     logBuffer->readEntryProcStart(&procStartEntry);
 
+    activityManager()->logProcStart(procStartEntry);
+
     return true;
 }
 
@@ -400,6 +359,8 @@ bool LogManager::processLogEntryProcExit(LogBuffer *logBuffer)
 {
     LogEntryProcExit procExitEntry;
     logBuffer->readEntryProcExit(&procExitEntry);
+
+    activityManager()->logProcExit(procExitEntry);
 
     return true;
 }

@@ -15,8 +15,10 @@ using namespace Fort;
 
 namespace {
 
+// Only the processes with flows are shown
 inline constexpr const char *sqlSelectProcs =
-        "SELECT pid, app_id, parent_pid, path, parent_path FROM proc;";
+        "SELECT pid, app_id, parent_pid, path, parent_path FROM proc"
+        "  WHERE EXISTS (SELECT 1 FROM flow WHERE flow.pid = proc.pid);";
 
 inline constexpr const char *sqlSelectFlows =
         "SELECT flow_id, pid, terminated, inherited, inbound, loopback, reason, ip_proto,"

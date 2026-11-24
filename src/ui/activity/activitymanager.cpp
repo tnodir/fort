@@ -12,7 +12,9 @@
 #include <log/logentryconn.h>
 #include <log/logentryflowclosed.h>
 #include <log/logentryflowtraf.h>
+#include <log/logentryprocexit.h>
 #include <log/logentryprocnew.h>
+#include <log/logentryprocstart.h>
 #include <log/logentrystattraf.h>
 #include <util/fileutil.h>
 #include <util/net/netdbutil.h>
@@ -34,15 +36,26 @@ const char *const sqlInsertFlow =
         "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17,"
         "    ?18, ?19, ?20);";
 
-const char *const sqlReplaceProc =
-        "INSERT OR REPLACE INTO proc(pid, app_id, parent_pid, path, parent_path)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5);";
+// The parent's path is valid only by the creation times' order, an unknown time is trusted: the
+// ids are reused. The enumerated process may be logged again: kept. The row added by the process's
+// CONN (without the time: the conf is set before the enumeration on the master's restart) keeps its
+// Program and path
+const char *const sqlUpsertProcStart =
+        "INSERT INTO proc(pid, parent_pid, create_time, path, parent_path)"
+        "  VALUES(?1, ?2, ?3, ?4,"
+        "    (SELECT path FROM proc WHERE pid = ?2"
+        "      AND (create_time IS NULL OR ?3 IS NULL OR create_time < ?3)))"
+        "  ON CONFLICT(pid) DO UPDATE SET app_id = IIF(create_time IS NULL, app_id, NULL),"
+        "    parent_pid = ?2, create_time = ?3, path = IIF(create_time IS NULL, path, ?4),"
+        "    parent_path = excluded.parent_path"
+        "  WHERE create_time IS NOT ?3;";
+
+const char *const sqlUpsertConnProc = "INSERT INTO proc(pid, app_id, path) VALUES(?1, ?2, ?3)"
+                                      "  ON CONFLICT(pid) DO UPDATE SET app_id = ?2, path = ?3"
+                                      "  WHERE app_id IS NOT ?2 OR path IS NOT ?3;";
 
 const char *const sqlUpdateProcPath =
         "UPDATE proc SET path = ?2 WHERE pid = ?1 AND path IS NOT ?2;";
-
-const char *const sqlUpdateProcApp =
-        "UPDATE proc SET app_id = ?2 WHERE pid = ?1 AND app_id IS NOT ?2;";
 
 const char *const sqlUpdateFlowReason =
         "UPDATE flow SET terminated = ?2, inherited = ?3, reason = ?4, zone_id = ?5,"
@@ -68,9 +81,7 @@ const char *const sqlDeleteFlow = "DELETE FROM flow WHERE flow_id = ?1;";
 
 const char *const sqlDeleteProcFlows = "DELETE FROM flow WHERE pid = ?1;";
 
-const char *const sqlDeleteEmptyProcs = "DELETE FROM proc"
-                                        "  WHERE NOT EXISTS (SELECT 1 FROM flow"
-                                        "    WHERE flow.pid = proc.pid);";
+const char *const sqlDeleteProc = "DELETE FROM proc WHERE pid = ?1;";
 
 const char *const sqlClearIdleSpeeds = "UPDATE flow SET in_speed = 0, out_speed = 0"
                                        "  WHERE (in_speed <> 0 OR out_speed <> 0)"
@@ -212,23 +223,20 @@ bool ActivityManager::beginChanges()
     return true;
 }
 
-void ActivityManager::logConn(
-        const LogEntryConn &entry, quint32 parentPid, const QString &parentPath)
+void ActivityManager::logConn(const LogEntryConn &entry)
 {
     if (!beginChanges())
         return;
 
-    // Logged again (after a blocked reauthorization): the flow is kept, its reason and Program may
-    // be changed
-    if (!insertFlow(entry)) {
+    // Logged again (after a blocked reauthorization): the flow is kept, its reason may be changed
+    if (insertFlow(entry)) {
+        waitConnHost(entry);
+    } else {
         updateFlowReason(entry);
-        updateProcApp(entry);
-        return;
     }
 
-    replaceProc(entry, parentPid, parentPath);
-
-    waitConnHost(entry);
+    // The process's Program may be changed; a System's process isn't logged by PROC_START
+    upsertConnProc(entry);
 }
 
 bool ActivityManager::doneChange(SqliteStmt *stmt)
@@ -253,12 +261,9 @@ bool ActivityManager::insertFlow(const LogEntryConn &entry)
     return doneChange(sqlInsertFlow, flowVars(entry));
 }
 
-void ActivityManager::replaceProc(
-        const LogEntryConn &entry, quint32 parentPid, const QString &parentPath)
+void ActivityManager::upsertConnProc(const LogEntryConn &entry)
 {
-    doneChange(sqlReplaceProc,
-            { entry.pid(), DbVar::nullable(entry.appId()), DbVar::nullable(parentPid), entry.path(),
-                    DbVar::nullable(parentPath) });
+    doneChange(sqlUpsertConnProc, { entry.pid(), DbVar::nullable(entry.appId()), entry.path() });
 }
 
 void ActivityManager::waitConnHost(const LogEntryConn &entry)
@@ -274,11 +279,6 @@ void ActivityManager::updateFlowReason(const LogEntryConn &entry)
     doneChange(sqlUpdateFlowReason, flowReasonVars(entry));
 }
 
-void ActivityManager::updateProcApp(const LogEntryConn &entry)
-{
-    doneChange(sqlUpdateProcApp, { entry.pid(), DbVar::nullable(entry.appId()) });
-}
-
 void ActivityManager::logProcNew(const LogEntryProcNew &entry, const QString &path)
 {
     if (!beginChanges())
@@ -286,6 +286,23 @@ void ActivityManager::logProcNew(const LogEntryProcNew &entry, const QString &pa
 
     // The process of a known flow is logged again: its name is changed
     doneChange(sqlUpdateProcPath, { entry.pid(), path });
+}
+
+void ActivityManager::logProcStart(const LogEntryProcStart &entry)
+{
+    if (!beginChanges())
+        return;
+
+    doneChange(sqlUpsertProcStart,
+            { entry.pid(), DbVar::nullable(entry.parentPid()), DbVar::nullable(entry.createTime()),
+                    entry.path() });
+}
+
+void ActivityManager::logProcExit(const LogEntryProcExit &entry)
+{
+    // The process's flows are closed after its exit: removed with it
+    deleteById(sqlDeleteProcFlows, entry.pid());
+    deleteById(sqlDeleteProc, entry.pid());
 }
 
 void ActivityManager::logFlowTraf(const LogEntryFlowTraf &entry)
@@ -325,7 +342,7 @@ void ActivityManager::updateFlowsTraf(const LogEntryFlowTraf &entry)
 
 void ActivityManager::logFlowClosed(const LogEntryFlowClosed &entry)
 {
-    closeFlows(sqlDeleteFlow, entry.flowId());
+    deleteById(sqlDeleteFlow, entry.flowId());
 }
 
 void ActivityManager::logStatTraf(const LogEntryStatTraf &entry)
@@ -337,19 +354,17 @@ void ActivityManager::logStatTraf(const LogEntryStatTraf &entry)
 
         // The process's flows are closed: their FLOW_CLOSED may be lost by the log's overflow
         if (procTraf.inactive) {
-            closeFlows(sqlDeleteProcFlows, procTraf.pid);
+            deleteById(sqlDeleteProcFlows, procTraf.pid);
         }
     }
 }
 
-void ActivityManager::closeFlows(const char *sql, quint64 id)
+void ActivityManager::deleteById(const char *sql, quint64 id)
 {
     if (!beginChanges())
         return;
 
-    if (doneChange(sql, { qint64(id) })) {
-        m_hasEmptyProcesses = true;
-    }
+    doneChange(sql, { qint64(id) });
 }
 
 void ActivityManager::updateConnHost(const ProcessIpKey &key, const QString &name)
@@ -386,8 +401,6 @@ void ActivityManager::commitChanges()
     if (!m_inChanges)
         return;
 
-    removeEmptyProcesses();
-
     const bool changed = m_changed;
 
     m_inChanges = false;
@@ -404,16 +417,6 @@ void ActivityManager::commitChanges()
     if (changed) {
         emit activityChanged();
     }
-}
-
-void ActivityManager::removeEmptyProcesses()
-{
-    if (!m_hasEmptyProcesses)
-        return;
-
-    m_hasEmptyProcesses = false;
-
-    sqliteDb()->done(sqliteDb()->stmt(sqlDeleteEmptyProcs));
 }
 
 void ActivityManager::clearIdleSpeeds()
@@ -438,8 +441,6 @@ void ActivityManager::clear()
 {
     if (!beginChanges())
         return;
-
-    m_hasEmptyProcesses = false;
 
     DbQuery(sqliteDb()).sql("DELETE FROM flow;").executeOk();
     DbQuery(sqliteDb()).sql("DELETE FROM proc;").executeOk();

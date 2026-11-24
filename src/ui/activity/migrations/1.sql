@@ -1,9 +1,10 @@
 CREATE TABLE proc(
   pid INTEGER PRIMARY KEY,
-  app_id INTEGER, -- the Program, NULL when unknown
+  app_id INTEGER, -- the Program by the flows' CONN, NULL when unknown
   parent_pid INTEGER, -- NULL when unknown
+  create_time INTEGER, -- FILETIME, NULL when unknown
   path TEXT NOT NULL,
-  parent_path TEXT -- NULL when unknown
+  parent_path TEXT -- by the parent's row at the process's start, NULL when unknown
 );
 
 CREATE TABLE flow(
