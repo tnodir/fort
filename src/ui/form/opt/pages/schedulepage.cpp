@@ -168,7 +168,7 @@ void SchedulePage::setupTableTasksHeader()
 
     const auto refreshTableTasksHeader = [&] {
         auto hh = m_tableTasks->horizontalHeader();
-        hh->resizeSection(0, qRound(hh->width() * 0.45f));
+        hh->resizeSection(0, qRound(hh->width() * 0.38f));
 
         hh->resizeSection(2, 30);
         hh->resizeSection(3, 30);

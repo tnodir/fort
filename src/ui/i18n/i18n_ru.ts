@@ -4089,7 +4089,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Last Success</source>
-        <translation>Последний успешный запуск</translation>
+        <translation>Успешный запуск</translation>
     </message>
     <message>
         <source>Run On Startup</source>
@@ -4630,7 +4630,7 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Last Success</source>
-        <translation>Последняя успешная загрузка</translation>
+        <translation>Успешная загрузка</translation>
     </message>
     <message>
         <source>Addresses</source>
