@@ -3,6 +3,10 @@
 #include <QDebug>
 #include <QElapsedTimer>
 #include <QSignalSpy>
+#include <QTemporaryDir>
+
+#define WIN32_LEAN_AND_MEAN
+#include <qt_windows.h>
 
 #include <googletest.h>
 
@@ -42,7 +46,7 @@ void debugProcNew(SqliteDb *sqliteDb)
 {
     SqliteStmt stmt;
 
-    ASSERT_TRUE(stmt.prepare(sqliteDb->db(), "SELECT app_id, path FROM app;"));
+    ASSERT_TRUE(stmt.prepare(sqliteDb, "SELECT app_id, path FROM app;"));
 
     qDebug() << "> app <";
     while (stmt.step() == SqliteStmt::StepRow) {
@@ -55,7 +59,7 @@ void debugStatTrafStep(SqliteDb *sqliteDb, const char *name, const char *sql)
 {
     SqliteStmt stmt;
 
-    if (!stmt.prepare(sqliteDb->db(), sql)) {
+    if (!stmt.prepare(sqliteDb, sql)) {
         qWarning() << "SqliteStmt prepare error" << sql << sqliteDb->errorMessage();
         Q_UNREACHABLE();
         return;
@@ -97,6 +101,48 @@ void debugStatTraf(SqliteDb *sqliteDb)
             "SELECT app_id, traf_time, in_bytes, out_bytes"
             "  FROM traffic_app;");
 }
+
+// Holds the WAL's read locks of the DB's -shm file, so that no reader can start: SQLite sleeps
+// ~10 seconds and returns SQLITE_PROTOCOL
+class WalReadLocker
+{
+public:
+    explicit WalReadLocker(const QString &dbFilePath)
+    {
+        const QString shmPath = QDir::toNativeSeparators(dbFilePath + "-shm");
+
+        m_handle = ::CreateFileW(reinterpret_cast<LPCWSTR>(shmPath.utf16()),
+                GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
+                OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+    }
+
+    ~WalReadLocker()
+    {
+        if (m_handle != INVALID_HANDLE_VALUE) {
+            ::CloseHandle(m_handle);
+        }
+    }
+
+    bool lock()
+    {
+        // WALINDEX_LOCK_OFFSET + WAL_READ_LOCK(0..4)
+        constexpr DWORD lockOffset = 120 + 3;
+        constexpr DWORD readLockCount = 5;
+
+        for (DWORD i = 0; i < readLockCount; ++i) {
+            OVERLAPPED ov = {};
+            ov.Offset = lockOffset + i;
+
+            if (!::LockFileEx(m_handle, LOCKFILE_EXCLUSIVE_LOCK | LOCKFILE_FAIL_IMMEDIATELY, 0, 1,
+                        0, &ov))
+                return false;
+        }
+        return true;
+    }
+
+private:
+    HANDLE m_handle = INVALID_HANDLE_VALUE;
+};
 
 }
 
@@ -186,4 +232,63 @@ TEST_F(StatTest, monthStart)
     ASSERT_EQ(d2.year(), 2017);
     ASSERT_EQ(d2.month(), 12);
     ASSERT_EQ(d2.day(), 1);
+}
+
+TEST_F(StatTest, dbProtocolError)
+{
+    IocContainer ioc;
+    ioc.pinToThread();
+
+    QTemporaryDir dir;
+    ASSERT_TRUE(dir.isValid());
+
+    const QString filePath = dir.filePath("stat.db");
+
+    ConfManager confManager(":memory:");
+    ConfTimePeriodManager confTimePeriodManager;
+    NiceMock<MockAppInfoCache> appInfoCache;
+    NiceMock<MockQuotaManager> quotaManager;
+
+    ioc.set<ConfManager>(confManager);
+    ioc.set<ConfTimePeriodManager>(confTimePeriodManager);
+    ioc.set<AppInfoCache>(appInfoCache);
+    ioc.set<QuotaManager>(quotaManager);
+
+    StatManager statManager(filePath);
+
+    statManager.setUp();
+
+    const QString appPath = "C:\\test\\test.exe";
+    const quint32 procId = 10;
+    const quint32 trafBytes[3] = { procId, 100, 200 }; // pid, in, out
+
+    LogEntryProcNew procEntry(procId, appPath);
+    ASSERT_TRUE(statManager.logProcNew(procEntry));
+
+    LogEntryStatTraf trafEntry(1, trafBytes);
+    ASSERT_TRUE(statManager.logStatTraf(trafEntry));
+
+    SqliteDb *sqliteDb = statManager.sqliteDb();
+    ASSERT_FALSE(sqliteDb->isProtocolBlocked());
+
+    WalReadLocker locker(filePath);
+    ASSERT_TRUE(locker.lock());
+
+    QSignalSpy trafficAddedSpy(&statManager, &StatManager::trafficAdded);
+
+    // The first statement waits for SQLite's retries, then the DB is blocked
+    ASSERT_TRUE(statManager.logStatTraf(trafEntry));
+    ASSERT_TRUE(sqliteDb->isProtocolBlocked());
+    ASSERT_EQ(trafficAddedSpy.size(), 1);
+
+    // The blocked DB fails at once, the traffic is still counted
+    QElapsedTimer timer;
+    timer.start();
+
+    ASSERT_FALSE(statManager.logProcNew(LogEntryProcNew(procId + 1, appPath + "2")));
+    ASSERT_TRUE(statManager.logStatTraf(trafEntry));
+    ASSERT_FALSE(sqliteDb->execute("BEGIN IMMEDIATE;"));
+
+    ASSERT_LT(timer.elapsed(), 1000);
+    ASSERT_EQ(trafficAddedSpy.size(), 2);
 }

@@ -8,6 +8,8 @@
 #include <qtcompat.h>
 #include <sqlite.h>
 
+#include "sqlitedb.h"
+
 namespace {
 
 bool stmtBindVarNull(SqliteStmt &stmt, int index, const QVariant & /*v*/)
@@ -89,9 +91,18 @@ SqliteStmt::~SqliteStmt()
     finalize();
 }
 
-bool SqliteStmt::prepare(sqlite3 *db, const char *sql, SqliteStmt::PrepareFlags flags)
+bool SqliteStmt::prepare(SqliteDb *db, const char *sql, SqliteStmt::PrepareFlags flags)
 {
-    return sqlite3_prepare_v3(db, sql, /*nByte=*/-1, flags, &m_stmt, nullptr) == SQLITE_OK;
+    m_db = db;
+
+    if (db->isProtocolBlocked())
+        return false;
+
+    const int res = sqlite3_prepare_v3(db->db(), sql, /*nByte=*/-1, flags, &m_stmt, nullptr);
+
+    db->checkProtocolError(res);
+
+    return res == SQLITE_OK;
 }
 
 void SqliteStmt::finalize()
@@ -260,7 +271,12 @@ bool SqliteStmt::isBusy() const
 
 SqliteStmt::StepResult SqliteStmt::step()
 {
+    if (!m_stmt || m_db->isProtocolBlocked())
+        return StepError;
+
     const int res = sqlite3_step(m_stmt);
+
+    m_db->checkProtocolError(res);
 
     switch (res) {
     case SQLITE_ROW:

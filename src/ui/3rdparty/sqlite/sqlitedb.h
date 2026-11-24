@@ -8,6 +8,8 @@
 
 #include <util/classhelpers.h>
 
+#include "sqlitestmt.h"
+
 QT_FORWARD_DECLARE_CLASS(QDir)
 
 struct sqlite3;
@@ -127,6 +129,13 @@ public:
 
     bool isAutoCommit() const;
 
+    // After SQLITE_PROTOCOL (the WAL's read lock can't be taken: SQLite retries for ~10 s first)
+    // the statements fail at once for a minute, so as not to block the thread again
+    bool isProtocolBlocked() const;
+
+    // Blocks the DB on SQLITE_PROTOCOL of a statement's preparing, execution or step
+    void checkProtocolError(int resCode);
+
     bool beginSavepoint(const char *name = nullptr);
     bool releaseSavepoint(const char *name = nullptr);
     bool rollbackSavepoint(const char *name = nullptr);
@@ -189,6 +198,11 @@ private:
     bool copyTable(const QString &srcSchema, const QString &dstSchema, const QString &tableName);
     bool clearTable(const QString &dstSchema, const QString &tableName);
 
+    bool execAlways(const char *sql);
+    bool execStrAlways(const QString &sql);
+
+    void blockOnProtocolError();
+
     void clearStmts();
 
 private:
@@ -196,7 +210,10 @@ private:
 
     quint32 m_openFlags = 0;
     sqlite3 *m_db = nullptr;
+    qint64 m_protocolBlockDeadline = 0; // QDeadlineTimer's msecs, 0 - not blocked
     QString m_filePath;
+
+    SqliteStmt m_blockedStmt; // unprepared, returned while the DB is blocked
 
     QHash<const char *, SqliteStmt *> m_stmts;
 };

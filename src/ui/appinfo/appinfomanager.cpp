@@ -111,7 +111,7 @@ bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
 
     // Load version info
     SqliteStmt stmt;
-    if (!stmt.prepare(sqliteDb()->db(), sqlSelectAppInfo))
+    if (!stmt.prepare(sqliteDb(), sqlSelectAppInfo))
         return false;
 
     stmt.bindText(1, appPath);
@@ -287,7 +287,7 @@ void AppInfoManager::getOldAppsAndIcons(
         QStringList &appPaths, QHash<qint64, int> &iconIds, int limitCount) const
 {
     SqliteStmt stmt;
-    if (!stmt.prepare(sqliteDb()->db(), sqlSelectOldApps, SqliteStmt::PreparePersistent))
+    if (!stmt.prepare(sqliteDb(), sqlSelectOldApps, SqliteStmt::PreparePersistent))
         return;
 
     stmt.bindInt(1, limitCount);

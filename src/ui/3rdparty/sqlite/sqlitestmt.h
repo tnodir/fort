@@ -11,6 +11,8 @@
 
 struct sqlite3_stmt;
 
+class SqliteDb;
+
 class SqliteStmt
 {
 public:
@@ -29,7 +31,7 @@ public:
     virtual ~SqliteStmt();
     CLASS_DEFAULT_COPY_MOVE(SqliteStmt)
 
-    bool prepare(struct sqlite3 *db, const char *sql, PrepareFlags flags = PrepareDefault);
+    bool prepare(SqliteDb *db, const char *sql, PrepareFlags flags = PrepareDefault);
     void finalize();
 
     QString expandedSql() const;
@@ -78,6 +80,7 @@ public:
     QVariant columnVar(int column = 0) const;
 
 private:
+    SqliteDb *m_db = nullptr;
     sqlite3_stmt *m_stmt = nullptr;
 
     QHash<int, QVariant> m_bindObjects;

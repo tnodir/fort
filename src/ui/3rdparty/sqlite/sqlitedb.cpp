@@ -2,6 +2,7 @@
 
 #include <QAtomicInt>
 #include <QDateTime>
+#include <QDeadlineTimer>
 #include <QDir>
 #include <QLoggingCategory>
 #include <QSet>
@@ -17,6 +18,8 @@ namespace {
 const QLoggingCategory LC("db");
 
 inline constexpr int DATABASE_BUSY_TIMEOUT = 3000; // 3 seconds
+
+inline constexpr int DATABASE_PROTOCOL_BLOCK_TIMEOUT = 60 * 1000; // 1 minute
 
 const char *const defaultSqlPragmas = "PRAGMA journal_mode = WAL;"
                                       "PRAGMA locking_mode = NORMAL;"
@@ -153,7 +156,50 @@ bool SqliteDb::optimize(OptimizeFlags flags)
 
 bool SqliteDb::execute(const char *sql)
 {
-    return sqlite3_exec(m_db, sql, nullptr, nullptr, nullptr) == SQLITE_OK;
+    if (isProtocolBlocked())
+        return false;
+
+    return execAlways(sql);
+}
+
+bool SqliteDb::execAlways(const char *sql)
+{
+    const int res = sqlite3_exec(m_db, sql, nullptr, nullptr, nullptr);
+
+    checkProtocolError(res);
+
+    return res == SQLITE_OK;
+}
+
+bool SqliteDb::execStrAlways(const QString &sql)
+{
+    const auto sqlUtf8 = sql.toUtf8();
+
+    return execAlways(sqlUtf8.data());
+}
+
+bool SqliteDb::isProtocolBlocked() const
+{
+    // Not blocked yet: without reading the clock
+    if (m_protocolBlockDeadline == 0)
+        return false;
+
+    return QDeadlineTimer::current().deadline() < m_protocolBlockDeadline;
+}
+
+void SqliteDb::checkProtocolError(int resCode)
+{
+    if (resCode == SQLITE_PROTOCOL) {
+        blockOnProtocolError();
+    }
+}
+
+void SqliteDb::blockOnProtocolError()
+{
+    m_protocolBlockDeadline = QDeadlineTimer(DATABASE_PROTOCOL_BLOCK_TIMEOUT).deadline();
+
+    qCWarning(LC) << "Locking protocol error: skip the statements for"
+                  << (DATABASE_PROTOCOL_BLOCK_TIMEOUT / 1000) << "seconds:" << m_filePath;
 }
 
 bool SqliteDb::executeStr(const QString &sql)
@@ -203,12 +249,12 @@ bool SqliteDb::endTransaction(bool ok)
 
 bool SqliteDb::commitTransaction()
 {
-    return execute("COMMIT;");
+    return execAlways("COMMIT;"); // ends an open transaction, even if the DB is blocked
 }
 
 bool SqliteDb::rollbackTransaction()
 {
-    return execute("ROLLBACK;");
+    return execAlways("ROLLBACK;");
 }
 
 bool SqliteDb::isAutoCommit() const
@@ -223,12 +269,13 @@ bool SqliteDb::beginSavepoint(const char *name)
 
 bool SqliteDb::releaseSavepoint(const char *name)
 {
-    return executeStr(QString("RELEASE %1;").arg(makeSavepointName(name)));
+    // Ends an open savepoint, even if the DB is blocked
+    return execStrAlways(QString("RELEASE %1;").arg(makeSavepointName(name)));
 }
 
 bool SqliteDb::rollbackSavepoint(const char *name)
 {
-    return executeStr(QString("ROLLBACK TO %1;").arg(makeSavepointName(name)));
+    return execStrAlways(QString("ROLLBACK TO %1;").arg(makeSavepointName(name)));
 }
 
 int SqliteDb::errorCode() const
@@ -313,7 +360,7 @@ QStringList SqliteDb::tableNames(const QString &schemaName)
                              .arg(masterTable, ftsTableSuffix);
 
     SqliteStmt stmt;
-    if (stmt.prepare(db(), sql.toLatin1())) {
+    if (stmt.prepare(this, sql.toLatin1())) {
         while (stmt.step() == SqliteStmt::StepRow) {
             list.append(stmt.columnText());
         }
@@ -330,7 +377,7 @@ QStringList SqliteDb::columnNames(const QString &tableName, const QString &schem
     const auto sql = QString("SELECT * FROM %1 WHERE 0 = 1 LIMIT 1;").arg(schemaTableName);
 
     SqliteStmt stmt;
-    if (stmt.prepare(db(), sql.toLatin1())) {
+    if (stmt.prepare(this, sql.toLatin1())) {
         const int n = stmt.columnCount();
         for (int i = 0; i < n; ++i) {
             list.append(stmt.columnName(i));
@@ -369,6 +416,11 @@ bool SqliteDb::migrate(MigrateOptions &opt)
 
     // Check version
     const int userVersion = this->userVersion();
+
+    // The DB, which is unavailable, isn't a new one
+    if (isProtocolBlocked())
+        return false;
+
     if (userVersion == opt.version)
         return true;
 
@@ -716,13 +768,23 @@ bool SqliteDb::clearTable(const QString &dstSchema, const QString &tableName)
 SqliteStmt *SqliteDb::stmt(const char *sql)
 {
     SqliteStmt *stmt = m_stmts.value(sql);
+    if (stmt)
+        return stmt;
 
-    if (!stmt) {
-        stmt = new SqliteStmt();
-        stmt->prepare(db(), sql, SqliteStmt::PreparePersistent);
-
-        m_stmts.insert(sql, stmt);
+    // The statement failed by the DB's block isn't cached: it's prepared after the block
+    if (isProtocolBlocked()) {
+        return &m_blockedStmt;
     }
+
+    stmt = new SqliteStmt();
+
+    // The preparing may start the block
+    if (!stmt->prepare(this, sql, SqliteStmt::PreparePersistent) && isProtocolBlocked()) {
+        delete stmt;
+        return &m_blockedStmt;
+    }
+
+    m_stmts.insert(sql, stmt);
 
     return stmt;
 }

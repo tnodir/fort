@@ -792,7 +792,7 @@ void ConfAppManager::updateAppEndTimes()
     QVector<qint64> appIdListToRemove;
 
     SqliteStmt stmt;
-    if (!stmt.prepare(sqliteDb()->db(), sqlSelectEndedApps))
+    if (!stmt.prepare(sqliteDb(), sqlSelectEndedApps))
         return;
 
     stmt.bindDateTime(1, DateUtil::now());

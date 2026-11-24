@@ -731,7 +731,7 @@ void ConfManager::saveTasksByIni(const IniOptions &ini)
 bool ConfManager::loadTask(TaskInfo *taskInfo)
 {
     SqliteStmt stmt;
-    if (!stmt.prepare(sqliteDb()->db(), sqlSelectTaskByName))
+    if (!stmt.prepare(sqliteDb(), sqlSelectTaskByName))
         return false;
 
     stmt.bindText(1, taskInfo->name());

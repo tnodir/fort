@@ -109,6 +109,7 @@ private:
     void deleteOldTraffic(qint32 trafHour);
 
     void logTrafBytes(TrafLog &log, quint32 pid, const TrafBytes &bytes);
+    void logAppTrafBytes(TrafLog &log, const QString &appPath, const TrafBytes &bytes);
 
     void updateTrafficList(const TrafStmts &stmts, const TrafBytes &bytes, qint64 appId = 0);
 

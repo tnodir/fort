@@ -411,9 +411,9 @@ qint64 StatManager::getOrCreateAppId(const QString &appPath, quint32 confAppId, 
         }
         appId = createAppId(appPath, confAppId, unixTime);
 
-        Q_ASSERT(appId != INVALID_APP_ID);
-
-        emit appCreated(appId, appPath);
+        if (appId != INVALID_APP_ID) {
+            emit appCreated(appId, appPath);
+        }
     }
     return appId;
 }
@@ -425,7 +425,9 @@ qint64 StatManager::getOrCreateCachedAppId(
     if (appId == INVALID_APP_ID) {
         appId = getOrCreateAppId(appPath, confAppId, unixTime);
 
-        addCachedAppId(appPath, appId);
+        if (appId != INVALID_APP_ID) {
+            addCachedAppId(appPath, appId);
+        }
     }
     return appId;
 }
@@ -494,17 +496,25 @@ void StatManager::logTrafBytes(TrafLog &log, quint32 pid, const TrafBytes &bytes
     if (bytes.inBytes == 0 && bytes.outBytes == 0)
         return;
 
-    const qint64 appId = getOrCreateCachedAppId(process->path, /*confAppId=*/0, log.unixTime);
-    Q_ASSERT(appId != INVALID_APP_ID);
+    logAppTrafBytes(log, process->path, bytes);
+
+    // Update sum traffic bytes
+    log.sum.inBytes += bytes.inBytes;
+    log.sum.outBytes += bytes.outBytes;
+}
+
+void StatManager::logAppTrafBytes(TrafLog &log, const QString &appPath, const TrafBytes &bytes)
+{
+    const qint64 appId = getOrCreateCachedAppId(appPath, /*confAppId=*/0, log.unixTime);
+
+    // The DB is unavailable: the bytes are only summed for the quotas and the graph
+    if (appId == INVALID_APP_ID)
+        return;
 
     if (log.logStat) {
         // Update or insert app bytes
         updateTrafficList(log.appStmts, bytes, appId);
     }
-
-    // Update sum traffic bytes
-    log.sum.inBytes += bytes.inBytes;
-    log.sum.outBytes += bytes.outBytes;
 }
 
 void StatManager::updateTrafficList(const TrafStmts &stmts, const TrafBytes &bytes, qint64 appId)
@@ -514,6 +524,10 @@ void StatManager::updateTrafficList(const TrafStmts &stmts, const TrafBytes &byt
         if (!updateTraffic(stmtUpdate, bytes, appId)) {
             SqliteStmt *stmtInsert = stmts.insert.at(i);
             if (!updateTraffic(stmtInsert, bytes, appId)) {
+                // SqliteDb has logged it
+                if (sqliteDb()->isProtocolBlocked())
+                    return;
+
                 qCCritical(LC) << "Update traffic error:" << sqliteDb()->errorMessage()
                                << "inBytes:" << bytes.inBytes << "outBytes:" << bytes.outBytes
                                << "appId:" << appId << "index:" << i;

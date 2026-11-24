@@ -35,7 +35,7 @@ DbQuery &DbQuery::vars(const QVariantHash &varsMap)
 
 bool DbQuery::prepare(SqliteStmt &stmt)
 {
-    if (!stmt.prepare(sqliteDb()->db(), m_sql))
+    if (!stmt.prepare(sqliteDb(), m_sql))
         return false;
 
     return stmt.bindVars(m_vars) && stmt.bindVarsMap(m_varsMap);
