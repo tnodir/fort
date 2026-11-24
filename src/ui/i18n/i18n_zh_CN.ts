@@ -806,8 +806,8 @@ Make sure that you have a fresh backup.</source>
         <translation>自定义</translation>
     </message>
     <message>
-        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
-        <translation>在过滤 DNS 时，阻止除 Fort Firewall 服务以外的应用程序连接 DNS 服务器的端口 53 以及 DNS over TLS 和 DNS over QUIC 服务器的端口 853：它们无法通过这些协议绕过 DNS 转发器解析名称。请在确认过滤 DNS 时名称能够解析后再启用：DNS 转发器失败时（例如其端口被 VPN 阻止），任何名称都无法解析。DNS over HTTPS 使用网站的端口 443，该端口不会被阻止</translation>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. The programs using their own DNS resolver instead of the system&apos;s one can&apos;t resolve the names at all. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>在过滤 DNS 时，阻止除 Fort Firewall 服务以外的应用程序连接 DNS 服务器的端口 53 以及 DNS over TLS 和 DNS over QUIC 服务器的端口 853：它们无法通过这些协议绕过 DNS 转发器解析名称。使用自带 DNS 解析器而非系统解析器的应用程序完全无法解析名称。请在确认过滤 DNS 时名称能够解析后再启用：DNS 转发器失败时（例如其端口被 VPN 阻止），任何名称都无法解析。DNS over HTTPS 使用网站的端口 443，该端口不会被阻止</translation>
     </message>
     <message>
         <source>Test</source>

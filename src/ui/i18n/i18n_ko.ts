@@ -806,8 +806,8 @@ Make sure that you have a fresh backup.</source>
         <translation>사용자 지정</translation>
     </message>
     <message>
-        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
-        <translation>DNS를 필터링하는 동안 Fort Firewall 서비스 이외의 프로그램이 DNS 서버의 포트 53 및 DNS over TLS와 DNS over QUIC 서버의 포트 853에 연결하는 것을 차단합니다. 이 프로그램들은 이 프로토콜들로 DNS 전달자를 우회하여 이름을 확인할 수 없습니다. DNS를 필터링할 때 이름이 확인되는지 점검한 후에 켜세요. DNS 전달자가 실패하는 동안(예: VPN이 해당 포트를 차단하는 경우) 어떤 이름도 확인되지 않습니다. DNS over HTTPS는 웹 사이트의 포트 443으로 가며, 이 포트는 차단되지 않습니다</translation>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. The programs using their own DNS resolver instead of the system&apos;s one can&apos;t resolve the names at all. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>DNS를 필터링하는 동안 Fort Firewall 서비스 이외의 프로그램이 DNS 서버의 포트 53 및 DNS over TLS와 DNS over QUIC 서버의 포트 853에 연결하는 것을 차단합니다. 이 프로그램들은 이 프로토콜들로 DNS 전달자를 우회하여 이름을 확인할 수 없습니다. 시스템 리졸버 대신 자체 DNS 리졸버를 사용하는 프로그램은 이름을 전혀 확인할 수 없습니다. DNS를 필터링할 때 이름이 확인되는지 점검한 후에 켜세요. DNS 전달자가 실패하는 동안(예: VPN이 해당 포트를 차단하는 경우) 어떤 이름도 확인되지 않습니다. DNS over HTTPS는 웹 사이트의 포트 443으로 가며, 이 포트는 차단되지 않습니다</translation>
     </message>
     <message>
         <source>Test</source>

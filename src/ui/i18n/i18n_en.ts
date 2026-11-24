@@ -804,7 +804,7 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. The programs using their own DNS resolver instead of the system&apos;s one can&apos;t resolve the names at all. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
         <translation></translation>
     </message>
     <message>

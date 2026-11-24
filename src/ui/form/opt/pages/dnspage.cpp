@@ -68,10 +68,11 @@ void DnsPage::onRetranslateUi()
             tr("Block the connections of the programs other than Fort Firewall's Service to the "
                "DNS servers' port 53 and to the DNS over TLS and over QUIC servers' port 853, "
                "while DNS is filtered: they can't resolve the names past the DNS Forwarder by "
-               "these protocols. Turn it on after checking that the names are resolved with DNS "
-               "filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no "
-               "name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which "
-               "isn't blocked"));
+               "these protocols. The programs using their own DNS resolver instead of the "
+               "system's one can't resolve the names at all. Turn it on after checking that the "
+               "names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its "
+               "port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port "
+               "443 of the web sites, which isn't blocked"));
     m_labelBlockZones->setText(tr("Block Zones:"));
     m_labelBlockZones->setToolTip(tr("The names of the enabled Hosts Zones are not found, even if "
                                      "a host() filter lists them"));

@@ -806,8 +806,8 @@ Make sure that you have a fresh backup.</source>
         <translation>カスタム</translation>
     </message>
     <message>
-        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
-        <translation>DNS のフィルター中、Fort Firewall のサービス以外のプログラムから DNS サーバーのポート 53 および DNS over TLS と DNS over QUIC サーバーのポート 853 への接続をブロックします。これらのプログラムはこれらのプロトコルで DNS フォワーダーを迂回して名前を解決できません。DNS のフィルター中に名前が解決されることを確認してからオンにしてください。DNS フォワーダーが失敗している間 (VPN によってそのポートがブロックされている場合など)、名前は解決されません。DNS over HTTPS はウェブサイトのポート 443 を使用し、これはブロックされません</translation>
+        <source>Block the connections of the programs other than Fort Firewall&apos;s Service to the DNS servers&apos; port 53 and to the DNS over TLS and over QUIC servers&apos; port 853, while DNS is filtered: they can&apos;t resolve the names past the DNS Forwarder by these protocols. The programs using their own DNS resolver instead of the system&apos;s one can&apos;t resolve the names at all. Turn it on after checking that the names are resolved with DNS filtered: while the DNS Forwarder fails, e.g. its port is blocked by a VPN, no name is resolved. DNS over HTTPS goes to the port 443 of the web sites, which isn&apos;t blocked</source>
+        <translation>DNS のフィルター中、Fort Firewall のサービス以外のプログラムから DNS サーバーのポート 53 および DNS over TLS と DNS over QUIC サーバーのポート 853 への接続をブロックします。これらのプログラムはこれらのプロトコルで DNS フォワーダーを迂回して名前を解決できません。システムのリゾルバーではなく独自の DNS リゾルバーを使うプログラムは、名前をまったく解決できません。DNS のフィルター中に名前が解決されることを確認してからオンにしてください。DNS フォワーダーが失敗している間 (VPN によってそのポートがブロックされている場合など)、名前は解決されません。DNS over HTTPS はウェブサイトのポート 443 を使用し、これはブロックされません</translation>
     </message>
     <message>
         <source>Test</source>
