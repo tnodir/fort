@@ -46,6 +46,7 @@ public:
     QString serviceName;
     QString realServiceName;
     QString displayName;
+    QString commandLine; // of the service's svchost.exe process, by the Activity's DB
 };
 
 #endif // SERVICEINFO_H

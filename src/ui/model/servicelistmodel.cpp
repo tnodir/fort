@@ -2,6 +2,7 @@
 
 #include <QIcon>
 
+#include <activity/activitymanager.h>
 #include <fortglobal.h>
 #include <manager/serviceinfomanager.h>
 #include <util/iconcache.h>
@@ -19,6 +20,10 @@ QString serviceSearchText(const ServiceInfo &info)
         list.append(QString::number(info.processId));
     }
 
+    if (!info.commandLine.isEmpty()) {
+        list.append(info.commandLine);
+    }
+
     return list.join('\n');
 }
 
@@ -31,8 +36,19 @@ int compareServiceInfos(const ServiceInfo &a, const ServiceInfo &b, int column)
         return a.displayName.compare(b.displayName, Qt::CaseInsensitive);
     case 2:
         return int(a.processId > b.processId) - int(a.processId < b.processId);
+    case 3:
+        return a.commandLine.compare(b.commandLine, Qt::CaseInsensitive);
     }
     return 0;
+}
+
+void fillCommandLines(QVector<ServiceInfo> &services)
+{
+    const auto cmdLines = activityManager()->serviceCommandLines();
+
+    for (auto &info : services) {
+        info.commandLine = cmdLines.value(info.processId);
+    }
 }
 
 }
@@ -42,6 +58,8 @@ ServiceListModel::ServiceListModel(QObject *parent) : TableItemModel(parent) { }
 void ServiceListModel::initialize()
 {
     m_allServices = ServiceInfoManager::loadServiceInfoList();
+
+    fillCommandLines(m_allServices);
 
     updateServices();
 }
@@ -96,7 +114,7 @@ int ServiceListModel::rowCount(const QModelIndex &parent) const
 
 int ServiceListModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return 3;
+    return 4;
 }
 
 QVariant ServiceListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -157,6 +175,8 @@ QVariant ServiceListModel::headerDataDisplay(int section) const
         return tr("Display Name");
     case 2:
         return "PID";
+    case 3:
+        return tr("Command Line");
     }
     return {};
 }
@@ -175,6 +195,8 @@ QVariant ServiceListModel::dataDisplay(const QModelIndex &index) const
         return info.displayName;
     case 2:
         return dataDisplayProcessId(info);
+    case 3:
+        return info.commandLine;
     }
 
     return {};

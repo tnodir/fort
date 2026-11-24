@@ -406,6 +406,8 @@ TEST_F(ActivityTest, procStartServiceCommandLine)
     endBuffer();
 
     ASSERT_TRUE(procCmdLine(testPid).isNull());
+
+    ASSERT_EQ(m_manager.serviceCommandLines(), (QHash<quint32, QString> { { pid, cmdLine } }));
 }
 
 TEST_F(ActivityTest, procExitRemovesProcessAndFlows)

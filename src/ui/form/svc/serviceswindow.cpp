@@ -32,7 +32,7 @@ using namespace Fort;
 
 namespace {
 
-inline constexpr int SERVICES_HEADER_VERSION = 2;
+inline constexpr int SERVICES_HEADER_VERSION = 3;
 
 inline constexpr int SERVICE_RESTART_REFRESH_DELAY = 3000; // msec
 
@@ -262,11 +262,12 @@ void ServicesWindow::setupTableServiceListHeader()
     header->setSectionResizeMode(0, QHeaderView::Interactive);
     header->setSectionResizeMode(1, QHeaderView::Interactive);
     header->setSectionResizeMode(2, QHeaderView::Interactive);
+    header->setSectionResizeMode(3, QHeaderView::Interactive);
     header->setStretchLastSection(true);
 
     header->resizeSection(0, 180);
-    header->resizeSection(1, 520);
-    header->resizeSection(2, 100);
+    header->resizeSection(1, 300);
+    header->resizeSection(2, 80);
 
     header->setSectionsClickable(true);
     header->setSortIndicatorShown(true);

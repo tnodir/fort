@@ -1,6 +1,7 @@
 #ifndef ACTIVITYMANAGER_H
 #define ACTIVITYMANAGER_H
 
+#include <QHash>
 #include <QObject>
 
 #include <sqlite/sqlite_types.h>
@@ -52,6 +53,9 @@ public:
 
     // The flows aren't logged: the service starts with the old file left opened by a client
     void clear();
+
+    // The live services' processes' command lines by their PIDs
+    QHash<quint32, QString> serviceCommandLines() const;
 
 signals:
     // The changes are committed: each log buffer and each late host name at most

@@ -78,6 +78,9 @@ const char *const sqlSelectFlowHosts =
         "SELECT DISTINCT pid, remote_ip, remote_ip6, remote_host FROM flow"
         "  WHERE remote_host IS NOT NULL;";
 
+const char *const sqlSelectProcCmdLines =
+        "SELECT pid, cmdline FROM proc WHERE cmdline IS NOT NULL;";
+
 const char *const sqlDeleteFlow = "DELETE FROM flow WHERE flow_id = ?1;";
 
 const char *const sqlDeleteProcFlows = "DELETE FROM flow WHERE pid = ?1;";
@@ -466,4 +469,19 @@ void ActivityManager::clear()
     m_changed = true;
 
     commitChanges();
+}
+
+QHash<quint32, QString> ActivityManager::serviceCommandLines() const
+{
+    QHash<quint32, QString> cmdLines;
+
+    SqliteStmt stmt;
+    if (!DbQuery(sqliteDb()).sql(sqlSelectProcCmdLines).prepare(stmt))
+        return cmdLines;
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        cmdLines.insert(stmt.columnUInt(0), stmt.columnText(1));
+    }
+
+    return cmdLines;
 }
