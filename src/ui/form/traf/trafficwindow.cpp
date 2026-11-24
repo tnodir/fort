@@ -87,7 +87,7 @@ void TrafficWindow::restoreWindowState()
 {
     const auto &iniUser = Fort::iniUser();
 
-    restoreIniWindowGeometry(QSize(1024, 768));
+    restoreIniWindowGeometry(QSize(800, 600));
 
     // App List
     if (iniUser.statAppListHeaderVersion() == APP_LIST_HEADER_VERSION) {

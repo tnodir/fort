@@ -56,7 +56,7 @@ void OptionsWindow::restoreWindowState()
 {
     auto &iniUser = Fort::iniUser();
 
-    restoreIniWindowGeometry(QSize(1024, 768));
+    restoreIniWindowGeometry(QSize(800, 600));
 
     emit ctrl()->afterRestoreWindowState(iniUser);
 }

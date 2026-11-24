@@ -119,7 +119,7 @@ void MainWindow::saveWindowState(bool /*wasVisible*/)
 
 void MainWindow::restoreWindowState()
 {
-    restoreIniWindowGeometry(QSize(1024, 768));
+    restoreIniWindowGeometry(QSize(800, 600));
 }
 
 void MainWindow::onWindowClosed()

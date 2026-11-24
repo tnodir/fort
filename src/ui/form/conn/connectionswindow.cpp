@@ -87,7 +87,7 @@ void ConnectionsWindow::saveWindowState(bool /*wasVisible*/)
 
 void ConnectionsWindow::restoreWindowState()
 {
-    restoreIniWindowGeometry(QSize(1024, 768));
+    restoreIniWindowGeometry(QSize(800, 600));
     restoreIniConnListHeader();
 }
 

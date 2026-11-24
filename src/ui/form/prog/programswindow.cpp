@@ -105,7 +105,7 @@ void ProgramsWindow::restoreWindowState()
 {
     const auto &iniUser = Fort::iniUser();
 
-    restoreIniWindowGeometry(QSize(1024, 768));
+    restoreIniWindowGeometry(QSize(800, 600));
 
     // Apps header
     if (iniUser.progAppsHeaderVersion() == APPS_HEADER_VERSION) {

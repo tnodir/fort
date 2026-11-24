@@ -74,7 +74,7 @@ void AppConnsWindow::restoreWindowState()
 
     // The saved size only: next to the owner or at the default position, not over each other
     auto owner = parentWidget();
-    const QSize defaultSize = owner ? QSize(800, minimumHeight()) : QSize(1024, 768);
+    const QSize defaultSize = owner ? QSize(800, minimumHeight()) : QSize(800, 600);
     const QSize size = iniUser.windowGeometry(group).size();
 
     resize(size.isEmpty() ? defaultSize : size);
