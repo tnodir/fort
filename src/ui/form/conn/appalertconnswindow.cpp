@@ -5,6 +5,8 @@
 AppAlertConnsWindow::AppAlertConnsWindow(const App &app, QWidget *parent) :
     AppConnsWindow(app, parent, Qt::Window)
 {
+    hideClearAll();
+
     setupWindow();
 }
 

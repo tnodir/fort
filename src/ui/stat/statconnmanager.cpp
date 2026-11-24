@@ -12,10 +12,11 @@
 #include <fortsettings.h>
 #include <util/fileutil.h>
 
+#include "deleteappconnsjob.h"
+#include "deleteconnidsjob.h"
 #include "deleteconnjob.h"
 #include "logconnjob.h"
 #include "optimizeconndbjob.h"
-#include "shiftconnidsjob.h"
 #include "statconnworker.h"
 #include "statsql.h"
 #include "updateconnhostsjob.h"
@@ -133,7 +134,12 @@ void StatConnManager::deleteConns(const QVector<qint64> &connIds)
     if (connIds.isEmpty())
         return;
 
-    enqueueJob(WorkerJobPtr(createDeleteConnIdsJob(connIds)));
+    enqueueJob(WorkerJobPtr(new DeleteConnIdsJob(connIds)));
+}
+
+void StatConnManager::deleteAppConns(qint64 confAppId, const QString &appPath)
+{
+    enqueueJob(WorkerJobPtr(new DeleteAppConnsJob(confAppId, appPath)));
 }
 
 void StatConnManager::optimizeDb()
@@ -261,11 +267,6 @@ bool StatConnManager::canLogConn(const LogEntryConn &entry) const
 LogConnJob *StatConnManager::createLogConnJob(const LogEntryConn &entry) const
 {
     return new LogConnJob(entry);
-}
-
-DeleteConnIdsJob *StatConnManager::createDeleteConnIdsJob(const QVector<qint64> &connIds) const
-{
-    return new ShiftConnIdsJob(connIds);
 }
 
 const char *StatConnManager::migrationsSqlDir() const

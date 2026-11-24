@@ -50,6 +50,7 @@ protected:
     void restoreIniConnListHeader();
 
     void hideEditing();
+    void hideClearAll();
     void hideAutoScroll();
     void hideLogConnIcons();
 
@@ -63,6 +64,9 @@ protected:
     const ConnRow &currentConnRow() const;
 
     virtual void addConnFilter(const ConnRow &connRow);
+
+    virtual QString clearAllConfirmText() const;
+    virtual void clearAllConns();
 
 protected slots:
     virtual void retranslateWindowTitle();
@@ -140,7 +144,8 @@ private:
 
     QList<QMetaObject::Connection> m_scrollConnections;
 
-    QList<QWidget *> m_editWidgets; // the Edit and Clear All buttons
+    QList<QWidget *> m_editWidgets; // the Edit button and its separator
+    QList<QWidget *> m_clearAllWidgets; // the Clear All button and its separator
 };
 
 #endif // CONNECTIONSWINDOW_H

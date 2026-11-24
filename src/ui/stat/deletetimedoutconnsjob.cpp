@@ -37,13 +37,7 @@ void DeleteTimedOutConnsJob::emitFinished()
 
 void DeleteTimedOutConnsJob::deleteConns()
 {
-    SqliteStmt *stmt = getIdStmt(StatSql::sqlDeleteTimedOutConns, expireTime());
-
-    while (stmt->step() == SqliteStmt::StepRow) {
-        m_flowIds.append(stmt->columnInt64(0));
-    }
-
-    stmt->reset();
+    m_flowIds = DbUtil::stepIds<quint64>(getIdStmt(StatSql::sqlDeleteTimedOutConns, expireTime()));
 
     if (!m_flowIds.isEmpty()) {
         DbUtil::doList({ getStmt(StatSql::sqlDeleteConnApps) });

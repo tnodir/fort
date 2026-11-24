@@ -212,16 +212,24 @@ const char *const StatSql::sqlSelectMinMaxConnId = "SELECT MIN(conn_id), MAX(con
 
 const char *const StatSql::sqlSelectMaxConnId = "SELECT MAX(conn_id) FROM conn;";
 
-const char *const StatSql::sqlSelectAppConnIds = "WITH a AS ("
-                                                 "  SELECT app_id FROM app"
-                                                 "    WHERE conf_app_id = ?1 OR path = ?2"
-                                                 ")"
-                                                 "SELECT conn_id"
-                                                 "  FROM conn"
-                                                 "  WHERE app_id IN (SELECT app_id FROM a)"
-                                                 "    OR inherit_app_id IN (SELECT app_id FROM a)"
-                                                 "  ORDER BY conn_id DESC"
-                                                 "  LIMIT ?3 OFFSET ?4;";
+/* The program's connections, including the inherited ones: the Program Connections' list */
+#define SQL_WITH_APP_IDS                                                                           \
+    "WITH a AS ("                                                                                  \
+    "  SELECT app_id FROM app"                                                                     \
+    "    WHERE conf_app_id = ?1 OR path = ?2"                                                      \
+    ")"
+
+#define SQL_WHERE_APP_CONNS                                                                        \
+    "  WHERE app_id IN (SELECT app_id FROM a)"                                                     \
+    "    OR inherit_app_id IN (SELECT app_id FROM a)"
+
+const char *const StatSql::sqlSelectAppConnIds =
+        SQL_WITH_APP_IDS "SELECT conn_id"
+                         "  FROM conn" SQL_WHERE_APP_CONNS "  ORDER BY conn_id DESC"
+                         "  LIMIT ?3 OFFSET ?4;";
+
+const char *const StatSql::sqlDeleteAppConns =
+        SQL_WITH_APP_IDS "DELETE FROM conn" SQL_WHERE_APP_CONNS "  RETURNING conn_id;";
 
 const char *const StatSql::sqlSelectConnIdsAfter =
         "SELECT conn_id FROM conn WHERE conn_id > ?1 ORDER BY conn_id;";

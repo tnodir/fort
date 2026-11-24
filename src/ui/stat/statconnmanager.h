@@ -14,7 +14,6 @@
 #include <util/triggertimer.h>
 #include <util/worker/workermanager.h>
 
-class DeleteConnIdsJob;
 class IniOptions;
 class LogConnJob;
 class LogEntryConn;
@@ -42,6 +41,11 @@ public:
 
     virtual void deleteConn(qint64 connIdTo = 0);
     virtual void deleteConns(const QVector<qint64> &connIds);
+    virtual void deleteAppConns(qint64 confAppId, const QString &appPath);
+
+    /* Shifts the later connections' ids down after deleting by ids: ConnListModel lists the
+     * contiguous ids */
+    virtual bool isConnIdsContiguous() const { return true; }
 
     void optimizeDb();
 
@@ -80,9 +84,6 @@ protected:
 
     virtual bool canLogConn(const LogEntryConn &entry) const;
     virtual LogConnJob *createLogConnJob(const LogEntryConn &entry) const;
-
-    /* Shifts the later connections' ids down: ConnListModel lists the contiguous ids */
-    virtual DeleteConnIdsJob *createDeleteConnIdsJob(const QVector<qint64> &connIds) const;
 
     virtual const char *migrationsSqlDir() const;
 

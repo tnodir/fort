@@ -3,6 +3,7 @@
 #include <QLoggingCategory>
 
 #include <sqlite/dbquery.h>
+#include <sqlite/dbutil.h>
 #include <sqlite/dbvar.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
@@ -18,7 +19,6 @@
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 
-#include "deleteconnidsjob.h"
 #include "deletetimedoutconnsjob.h"
 #include "logpendingconnjob.h"
 #include "statsql.h"
@@ -200,11 +200,6 @@ LogConnJob *PendingConnManager::createLogConnJob(const LogEntryConn &entry) cons
     return new LogPendingConnJob(entry);
 }
 
-DeleteConnIdsJob *PendingConnManager::createDeleteConnIdsJob(const QVector<qint64> &connIds) const
-{
-    return new DeleteConnIdsJob(connIds);
-}
-
 const char *PendingConnManager::migrationsSqlDir() const
 {
     return ":/stat/migrations/conn_pending";
@@ -272,13 +267,7 @@ void PendingConnManager::deleteProcessConns(quint32 processId)
                     .prepare(stmt))
         return;
 
-    QVector<qint64> connIds;
-
-    while (stmt.step() == SqliteStmt::StepRow) {
-        connIds.append(stmt.columnInt64(0));
-    }
-
-    deleteConns(connIds);
+    deleteConns(DbUtil::stepIds(&stmt));
 }
 
 void PendingConnManager::deleteTimedOutConns()

@@ -16,3 +16,8 @@ void ConnectionsController::deleteConns(const QVector<qint64> &connIds)
 {
     statConnManager()->deleteConns(connIds);
 }
+
+void ConnectionsController::deleteAppConns(qint64 confAppId, const QString &appPath)
+{
+    statConnManager()->deleteAppConns(confAppId, appPath);
+}

@@ -13,6 +13,8 @@
 #include <user/iniuser.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
+#include "connectionscontroller.h"
+
 using namespace Fort;
 
 namespace {
@@ -151,6 +153,16 @@ QString AppConnsWindow::iniGroup() const
 void AppConnsWindow::addConnFilter(const ConnRow &connRow)
 {
     emit addFilterRequested(connRow);
+}
+
+QString AppConnsWindow::clearAllConfirmText() const
+{
+    return tr("Are you sure to remove all connections of the program?");
+}
+
+void AppConnsWindow::clearAllConns()
+{
+    ctrl()->deleteAppConns(appConnListModel()->confAppId(), appConnListModel()->appPath());
 }
 
 bool AppConnsWindow::updateApp(const App &app)

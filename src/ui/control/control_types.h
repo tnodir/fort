@@ -137,6 +137,7 @@ enum Command : quint8 {
 
     Rpc_StatConnManager_deleteConn,
     Rpc_StatConnManager_deleteConns,
+    Rpc_StatConnManager_deleteAppConns,
     Rpc_StatConnManager_connChanged,
     Rpc_StatConnManager_connCleared,
     Rpc_StatConnManager_connIdsShifted,

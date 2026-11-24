@@ -15,6 +15,7 @@ public:
 
     void deleteConn(qint64 connIdTo = 0) override;
     void deleteConns(const QVector<qint64> &connIds) override;
+    void deleteAppConns(qint64 confAppId, const QString &appPath) override;
 
     static bool processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 

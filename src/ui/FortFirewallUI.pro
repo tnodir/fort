@@ -279,6 +279,7 @@ SOURCES += \
     rpc/statmanagerrpc.cpp \
     rpc/taskmanagerrpc.cpp \
     rpc/windowmanagerfake.cpp \
+    stat/deleteappconnsjob.cpp \
     stat/deleteconnidsjob.cpp \
     stat/deleteconnjob.cpp \
     stat/deletetimedoutconnsjob.cpp \
@@ -287,7 +288,6 @@ SOURCES += \
     stat/optimizeconndbjob.cpp \
     stat/pendingconnmanager.cpp \
     stat/quotamanager.cpp \
-    stat/shiftconnidsjob.cpp \
     stat/statconnbasejob.cpp \
     stat/statconnmanager.cpp \
     stat/statconnworker.cpp \
@@ -668,6 +668,7 @@ HEADERS += \
     rpc/statmanagerrpc.h \
     rpc/taskmanagerrpc.h \
     rpc/windowmanagerfake.h \
+    stat/deleteappconnsjob.h \
     stat/deleteconnidsjob.h \
     stat/deleteconnjob.h \
     stat/deletetimedoutconnsjob.h \
@@ -676,7 +677,6 @@ HEADERS += \
     stat/optimizeconndbjob.h \
     stat/pendingconnmanager.h \
     stat/quotamanager.h \
-    stat/shiftconnidsjob.h \
     stat/statconnbasejob.h \
     stat/statconnmanager.h \
     stat/statconnworker.h \

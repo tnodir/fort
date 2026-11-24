@@ -96,6 +96,9 @@ void AppPendingConnsWindow::setupUi()
     // After the hidden program's name
     hideAppName();
 
+    // The paused connections are decided, not cleared
+    hideClearAll();
+
     // The pending connections are listed regardless of the log flags
     hideLogConnIcons();
 

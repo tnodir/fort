@@ -34,6 +34,9 @@ protected:
 
     void addConnFilter(const ConnRow &connRow) override;
 
+    QString clearAllConfirmText() const override;
+    void clearAllConns() override;
+
     AppConnsWindow(const App &app, QWidget *parent, Qt::WindowFlags f);
     AppConnsWindow(
             AppConnSearchModel *connListModel, const App &app, QWidget *parent, Qt::WindowFlags f);

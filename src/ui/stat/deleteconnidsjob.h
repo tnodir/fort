@@ -5,6 +5,8 @@
 
 #include "statconnbasejob.h"
 
+/* Deletes the connections; shifts the later ones' ids down, when the manager keeps the ids
+ * contiguous */
 class DeleteConnIdsJob : public StatConnBaseJob
 {
 public:
@@ -20,6 +22,18 @@ protected:
     void emitFinished() override;
 
     virtual void deleteConns();
+
+    void setConnIds(const QVector<qint64> &connIds) { m_connIds = connIds; }
+
+private:
+    /* Shifts the later connections' ids, deletes the unused apps */
+    void processDeletedConns();
+
+    qint64 connIdFrom() const;
+
+    void shiftConnIds();
+
+    void updateConnId(qint64 connId, qint64 newConnId);
 
 private:
     QVector<qint64> m_connIds;

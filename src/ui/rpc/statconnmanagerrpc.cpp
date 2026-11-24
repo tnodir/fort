@@ -24,6 +24,9 @@ inline bool processStatConnManagerRpcResult(
         statConnManager->deleteConns(connIds);
         return true;
     }
+    case Control::Rpc_StatConnManager_deleteAppConns:
+        statConnManager->deleteAppConns(p.args.value(0).toLongLong(), p.args.value(1).toString());
+        return true;
     default:
         return false;
     }
@@ -50,6 +53,11 @@ void StatConnManagerRpc::deleteConns(const QVector<qint64> &connIds)
     VariantUtil::addToList(args, QVariant(connIdVarList));
 
     rpcManager()->doOnServer(Control::Rpc_StatConnManager_deleteConns, args);
+}
+
+void StatConnManagerRpc::deleteAppConns(qint64 confAppId, const QString &appPath)
+{
+    rpcManager()->doOnServer(Control::Rpc_StatConnManager_deleteAppConns, { confAppId, appPath });
 }
 
 bool StatConnManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)

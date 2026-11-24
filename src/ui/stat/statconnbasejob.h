@@ -14,7 +14,7 @@ public:
         JobTypeLogConn,
         JobTypeDeleteConn,
         JobTypeDeleteConnIds,
-        JobTypeShiftConnIds,
+        JobTypeDeleteAppConns,
         JobTypeDeleteTimedOutConns,
         JobTypeUpdateConnHosts,
         JobTypeOptimizeDb,

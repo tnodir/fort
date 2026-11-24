@@ -14,6 +14,7 @@ public:
 
     void deleteConn(qint64 connIdTo = 0);
     void deleteConns(const QVector<qint64> &connIds);
+    void deleteAppConns(qint64 confAppId, const QString &appPath);
 };
 
 #endif // CONNECTIONSCONTROLLER_H

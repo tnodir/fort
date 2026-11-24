@@ -120,9 +120,17 @@ void ConnectionsWindow::hideEditing()
 
     m_actAddProgram->setVisible(false);
     m_actRemoveConn->setVisible(false);
-    m_actClearAll->setVisible(false);
 
     disconnect(m_connListView, &TableView::doubleClicked, m_actAddProgram, &QAction::trigger);
+}
+
+void ConnectionsWindow::hideClearAll()
+{
+    for (auto w : m_clearAllWidgets) {
+        w->hide();
+    }
+
+    m_actClearAll->setVisible(false);
 }
 
 void ConnectionsWindow::hideAutoScroll()
@@ -305,7 +313,8 @@ QLayout *ConnectionsWindow::setupHeader()
     const auto editSeparator = ControlUtil::createVSeparator();
     const auto clearAllSeparator = ControlUtil::createVSeparator();
 
-    m_editWidgets = { m_btEdit, editSeparator, m_btClearAll, clearAllSeparator };
+    m_editWidgets = { m_btEdit, editSeparator };
+    m_clearAllWidgets = { m_btClearAll, clearAllSeparator };
 
     layout->addWidget(m_btEdit);
     layout->addWidget(editSeparator);
@@ -658,10 +667,20 @@ void ConnectionsWindow::deleteConn(int row)
     ctrl()->deleteConn(connRow.connId);
 }
 
+QString ConnectionsWindow::clearAllConfirmText() const
+{
+    return tr("Are you sure to remove all connections?");
+}
+
+void ConnectionsWindow::clearAllConns()
+{
+    ctrl()->deleteConn();
+}
+
 QString ConnectionsWindow::clearConnsConfirmText() const
 {
     if (!connListModel()->isFiltering()) {
-        return tr("Are you sure to remove all connections?");
+        return clearAllConfirmText();
     }
 
     return tr("Are you sure to remove the found connections?") + '\n'
@@ -674,7 +693,7 @@ void ConnectionsWindow::clearConns()
     if (connListModel()->isFiltering()) {
         ctrl()->deleteConns(connListModel()->connIds());
     } else {
-        ctrl()->deleteConn();
+        clearAllConns();
     }
 }
 

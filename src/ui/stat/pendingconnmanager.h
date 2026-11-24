@@ -32,6 +32,10 @@ public:
 
     void setUp() override;
 
+    /* The decided connections are no longer pending: the others keep their ids, the Alert
+     * Program window and the pending commands refer to them */
+    bool isConnIdsContiguous() const override { return false; }
+
     bool logConn(const LogEntryConn &entry, bool urgent = false) override;
 
     virtual bool decideConn(qint64 connId, ConnDecision decision);
@@ -58,10 +62,6 @@ protected:
     /* The pending connections are logged always: the Alert Program window shows them */
     bool canLogConn(const LogEntryConn & /*entry*/) const override { return true; }
     LogConnJob *createLogConnJob(const LogEntryConn &entry) const override;
-
-    /* The decided connections are no longer pending: the others keep their ids, the Alert
-     * Program window and the pending commands refer to them */
-    DeleteConnIdsJob *createDeleteConnIdsJob(const QVector<qint64> &connIds) const override;
 
     const char *migrationsSqlDir() const override;
 
