@@ -57,8 +57,12 @@ FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN
 FORT_API NTSTATUS fort_buffer_system_time_write_locked(
         PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, INT64 unix_time, BOOL system_time_changed);
 
-FORT_API NTSTATUS fort_buffer_proc_kill_write(
-        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT32 pid);
+FORT_API NTSTATUS fort_buffer_proc_start_write(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info,
+        PCFORT_LOG_PROC_HEADER header, PCFORT_APP_PATH path);
+
+/* The PROC_KILL or PROC_EXIT */
+FORT_API NTSTATUS fort_buffer_proc_pid_write(
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT32 type, UINT32 pid);
 
 FORT_API NTSTATUS fort_buffer_flow_closed_write(
         PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PCFORT_FLOW_STAT flow_stat);

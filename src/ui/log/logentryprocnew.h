@@ -1,9 +1,9 @@
 #ifndef LOGENTRYPROCNEW_H
 #define LOGENTRYPROCNEW_H
 
-#include "logentry.h"
+#include "logentryprocstart.h"
 
-class LogEntryProcNew : public LogEntry
+class LogEntryProcNew : public LogEntryProcStart
 {
 public:
     explicit LogEntryProcNew(quint32 pid = 0, const QString &kernelPath = QString());
@@ -13,20 +13,6 @@ public:
     quint32 appId() const { return m_appId; }
     void setAppId(quint32 v) { m_appId = v; }
 
-    quint32 pid() const { return m_pid; }
-    void setPid(quint32 pid) { m_pid = pid; }
-
-    quint32 parentPid() const { return m_parentPid; }
-    void setParentPid(quint32 v) { m_parentPid = v; }
-
-    qint64 createTime() const { return m_createTime; }
-    void setCreateTime(qint64 v) { m_createTime = v; }
-
-    QString kernelPath() const { return m_kernelPath; }
-    void setKernelPath(const QString &kernelPath) { m_kernelPath = kernelPath; }
-
-    QString path() const;
-
     QString inheritKernelPath() const { return m_inheritKernelPath; }
     void setInheritKernelPath(const QString &v) { m_inheritKernelPath = v; }
 
@@ -34,10 +20,6 @@ public:
 
 private:
     quint32 m_appId = 0;
-    quint32 m_pid = 0;
-    quint32 m_parentPid = 0;
-    qint64 m_createTime = 0;
-    QString m_kernelPath;
     QString m_inheritKernelPath;
 };
 

@@ -64,7 +64,8 @@ FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree, PFORT_PSNAMES ps_names);
 /* Returns FALSE, when the process monitor is still active */
 FORT_API BOOL fort_pstree_close(PFORT_PSTREE ps_tree);
 
-FORT_API void fort_pstree_enum_processes(PFORT_PSTREE ps_tree);
+/* Logs the processes' PROC_START, when log_start */
+FORT_API void fort_pstree_enum_processes(PFORT_PSTREE ps_tree, BOOL log_start);
 
 /* Returns the process's name, which is referenced until fort_psname_put() */
 FORT_API PFORT_PSNAME_NODE fort_pstree_get_proc_name(

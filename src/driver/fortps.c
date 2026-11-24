@@ -81,6 +81,8 @@ typedef FUNC_SET_CREATE_PROCESS_NOTIFY_ROUTINE_EX2 *PFUNC_SET_CREATE_PROCESS_NOT
 
 typedef struct fort_psinfo_hash
 {
+    BOOL log_start; /* log the process's PROC_START */
+
     tommy_key_t pid_hash;
     HANDLE processHandle;
     DWORD processId;
@@ -663,6 +665,45 @@ inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc(
     return ps_flags;
 }
 
+static BOOL fort_pstree_proc_logging(void)
+{
+    return fort_device_flag(&fort_device()->conf, FORT_DEVICE_IS_OPENED) != 0;
+}
+
+inline static BOOL fort_pstree_proc_start_loggable(
+        PCFORT_PSINFO_HASH psi, const FORT_PS_FLAGS ps_flags)
+{
+    if (!psi->log_start || psi->path == NULL)
+        return FALSE;
+
+    /* The process to be killed isn't logged */
+    return (ps_flags & FORT_PSNODE_KILL_PROCESS) == 0;
+}
+
+static void fort_pstree_log_proc_start(PCFORT_PSINFO_HASH psi, const FORT_PS_FLAGS ps_flags)
+{
+    if (!fort_pstree_proc_start_loggable(psi, ps_flags))
+        return;
+
+    const FORT_LOG_PROC_HEADER header = {
+        .path_len = psi->path->len,
+        .process_id = psi->processId,
+        .parent_process_id = psi->parentProcessId,
+        .create_time = psi->createTime,
+    };
+
+    fort_buffer_proc_start_write(&fort_device()->buffer, /*irp_info=*/NULL, &header, psi->path);
+}
+
+static void fort_pstree_log_proc_exit(DWORD processId)
+{
+    if (!fort_pstree_proc_logging())
+        return;
+
+    fort_buffer_proc_pid_write(
+            &fort_device()->buffer, /*irp_info=*/NULL, FORT_LOG_TYPE_PROC_EXIT, processId);
+}
+
 /* The enumerated process's ID may be reused by a newer process */
 inline static BOOL fort_pstree_create_time_changed(INT64 oldTime, INT64 newTime)
 {
@@ -694,6 +735,8 @@ static FORT_PS_FLAGS fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree, PFORT
     /* Must be called in PASSIVE level only! */
     const FORT_PS_FLAGS ps_flags = fort_pstree_handle_opened_proc(ps_tree, psi, &pb);
 
+    fort_pstree_log_proc_start(psi, ps_flags);
+
     fort_path_buffer_free(&pb);
 
     ZwClose(processHandle);
@@ -710,6 +753,7 @@ inline static void fort_pstree_notify_process_created(
     if (fort_is_system_process(psi->processId, psi->parentProcessId))
         return; /* skip System (sub)processes */
 
+    psi->log_start = fort_pstree_proc_logging();
     psi->fileObject = createInfo->FileObject;
     psi->commandLine = createInfo->CommandLine;
 
@@ -739,6 +783,8 @@ inline static BOOL fort_pstree_notify_process_prepare(
     PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, psi->processId, psi->pid_hash);
     if (proc != NULL) {
         fort_pstree_notify_process_closed(ps_tree, createInfo, proc);
+    } else if (createInfo == NULL) {
+        res = FALSE; /* the unknown process's exit isn't logged */
     }
 
     /* Check parent process */
@@ -783,7 +829,9 @@ inline static void fort_pstree_notify_process(PFORT_PSTREE ps_tree, PCFORT_PSTRE
     if (!fort_pstree_notify_process_prepare(ps_tree, createInfo, &psi))
         return;
 
-    if (createInfo != NULL) {
+    if (createInfo == NULL) {
+        fort_pstree_log_proc_exit(processId);
+    } else {
         /* The exited process's ID may be reused, so the new process's flows will log it again */
         fort_flow_proc_unlog(&fort_device()->stat, processId);
 
@@ -881,11 +929,13 @@ inline static void fort_pstree_enum_process_check_kill(
     const BOOL is_kill_process = (ps_flags & FORT_PSNODE_KILL_PROCESS) != 0;
 
     if (is_kill_process) {
-        fort_buffer_proc_kill_write(&fort_device()->buffer, /*irp_info=*/NULL, processId);
+        fort_buffer_proc_pid_write(
+                &fort_device()->buffer, /*irp_info=*/NULL, FORT_LOG_TYPE_PROC_KILL, processId);
     }
 }
 
-inline static void fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
+inline static void fort_pstree_enum_process(
+        PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry, BOOL log_start)
 {
     const DWORD processId = (DWORD) processEntry->ProcessId;
     const DWORD parentProcessId = (DWORD) processEntry->ParentProcessId;
@@ -894,6 +944,7 @@ inline static void fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCES
         return; /* skip System (sub)processes */
 
     FORT_PSINFO_HASH psi = {
+        .log_start = log_start,
         .pid_hash = fort_pstree_proc_hash(processId),
         .processId = processId,
         .parentProcessId = parentProcessId,
@@ -906,10 +957,10 @@ inline static void fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCES
 }
 
 inline static void fort_pstree_enum_processes_loop(
-        PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
+        PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry, BOOL log_start)
 {
     for (;;) {
-        fort_pstree_enum_process(ps_tree, processEntry);
+        fort_pstree_enum_process(ps_tree, processEntry, log_start);
 
         const ULONG nextEntryOffset = processEntry->NextEntryOffset;
         if (nextEntryOffset == 0)
@@ -919,7 +970,7 @@ inline static void fort_pstree_enum_processes_loop(
     }
 }
 
-FORT_API void fort_pstree_enum_processes(PFORT_PSTREE ps_tree)
+FORT_API void fort_pstree_enum_processes(PFORT_PSTREE ps_tree, BOOL log_start)
 {
     NTSTATUS status;
 
@@ -937,7 +988,7 @@ FORT_API void fort_pstree_enum_processes(PFORT_PSTREE ps_tree)
 
     status = ZwQuerySystemInformation(SystemProcessInformation, buffer, bufferSize, NULL);
     if (NT_SUCCESS(status)) {
-        fort_pstree_enum_processes_loop(ps_tree, buffer);
+        fort_pstree_enum_processes_loop(ps_tree, buffer, log_start);
     } else {
         LOG("PsTree: Enum Processes Error: %x\n", status);
         TRACE(FORT_PSTREE_ENUM_PROCESSES_ERROR, status, 0, 0);

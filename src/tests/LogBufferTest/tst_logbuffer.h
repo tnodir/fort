@@ -10,7 +10,9 @@
 #include <log/logentryconn.h>
 #include <log/logentryflowclosed.h>
 #include <log/logentryflowtraf.h>
+#include <log/logentryprocexit.h>
 #include <log/logentryprocnew.h>
+#include <log/logentryprocstart.h>
 #include <log/logentrytime.h>
 #include <util/dateutil.h>
 
@@ -433,6 +435,44 @@ TEST_F(LogBufferTest, procNewWriteRead)
         ASSERT_EQ(procNewEntry.createTime(), 0x123456789LL + i);
         ASSERT_EQ(procNewEntry.kernelPath(), path.left(i + 1));
         ASSERT_EQ(procNewEntry.inheritKernelPath(), procNewInheritPath(i));
+    }
+
+    ASSERT_EQ(buf.offset(), buf.top());
+}
+
+TEST_F(LogBufferTest, procStartExitWriteRead)
+{
+    const QString path("C:\\test\\app.exe");
+
+    const int testCount = 3;
+
+    LogBuffer buf;
+
+    // Write: the Process Start records of different sizes and the Process Exit ones alternate
+    for (int i = 0; i < testCount; ++i) {
+        LogEntryProcStart procStartEntry(i + 11, path.left(path.size() - i));
+        procStartEntry.setParentPid(i + 31);
+        procStartEntry.setCreateTime(0x123456789LL + i);
+        buf.writeEntryProcStart(&procStartEntry);
+
+        const LogEntryProcExit procExitEntry(i + 41);
+        buf.writeEntryProcExit(&procExitEntry);
+    }
+
+    // Read
+    for (int i = 0; i < testCount; ++i) {
+        ASSERT_EQ(buf.peekEntryType(), FORT_LOG_TYPE_PROC_START);
+        LogEntryProcStart procStartEntry;
+        buf.readEntryProcStart(&procStartEntry);
+        ASSERT_EQ(procStartEntry.pid(), i + 11);
+        ASSERT_EQ(procStartEntry.parentPid(), i + 31);
+        ASSERT_EQ(procStartEntry.createTime(), 0x123456789LL + i);
+        ASSERT_EQ(procStartEntry.kernelPath(), path.left(path.size() - i));
+
+        ASSERT_EQ(buf.peekEntryType(), FORT_LOG_TYPE_PROC_EXIT);
+        LogEntryProcExit procExitEntry;
+        buf.readEntryProcExit(&procExitEntry);
+        ASSERT_EQ(procExitEntry.pid(), i + 41);
     }
 
     ASSERT_EQ(buf.offset(), buf.top());

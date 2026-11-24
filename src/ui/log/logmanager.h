@@ -66,6 +66,8 @@ private:
     bool processLogEntryProcKill(LogBuffer *logBuffer);
     bool processLogEntryFlowTraf(LogBuffer *logBuffer);
     bool processLogEntryFlowClosed(LogBuffer *logBuffer);
+    bool processLogEntryProcStart(LogBuffer *logBuffer);
+    bool processLogEntryProcExit(LogBuffer *logBuffer);
     bool processLogEntryError(LogBuffer *logBuffer, FortLogType logType);
 
 private:

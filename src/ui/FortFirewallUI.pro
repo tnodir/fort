@@ -221,8 +221,10 @@ SOURCES += \
     log/logentryconn.cpp \
     log/logentryflowclosed.cpp \
     log/logentryflowtraf.cpp \
+    log/logentryprocexit.cpp \
     log/logentryprockill.cpp \
     log/logentryprocnew.cpp \
+    log/logentryprocstart.cpp \
     log/logentrystattraf.cpp \
     log/logentrytime.cpp \
     log/logmanager.cpp \
@@ -601,8 +603,10 @@ HEADERS += \
     log/logentryconn.h \
     log/logentryflowclosed.h \
     log/logentryflowtraf.h \
+    log/logentryprocexit.h \
     log/logentryprockill.h \
     log/logentryprocnew.h \
+    log/logentryprocstart.h \
     log/logentrystattraf.h \
     log/logentrytime.h \
     log/logmanager.h \

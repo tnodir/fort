@@ -184,7 +184,7 @@ inline static NTSTATUS fort_device_control_setconf_ref(
 
     /* Enumerate processes */
     if (was_null_conf) {
-        fort_pstree_enum_processes(&fort_device()->ps_tree);
+        fort_pstree_enum_processes(&fort_device()->ps_tree, /*log_start=*/TRUE);
 
         fort_device_flag_set(device_conf, FORT_DEVICE_PS_ENUMERATED, TRUE);
     }
@@ -267,7 +267,7 @@ static NTSTATUS fort_device_control_app(PFORT_DEVICE_CONTROL_ARG dca, BOOL is_ad
     if (NT_SUCCESS(status)) {
         /* Enumerate processes */
         if (app_entry->app_data.flags.kill_process) {
-            fort_pstree_enum_processes(&fort_device()->ps_tree);
+            fort_pstree_enum_processes(&fort_device()->ps_tree, /*log_start=*/FALSE);
         }
 
         fort_device_reauth_queue();

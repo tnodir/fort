@@ -83,6 +83,9 @@ quint32 logConnHeaderSize(bool isIPv6 = false);
 quint32 logConnInheritPathOffset(quint16 pathLen, bool isIPv6 = false);
 quint32 logConnSize(quint16 pathLen, quint16 inheritPathLen, bool isIPv6 = false);
 
+quint32 logProcHeaderSize();
+quint32 logProcStartSize(quint16 pathLen);
+
 quint32 logProcNewHeaderSize();
 quint32 logProcNewInheritPathOffset(quint16 pathLen);
 quint32 logProcNewSize(quint16 pathLen, quint16 inheritPathLen);
@@ -93,7 +96,7 @@ quint32 logStatSize(quint16 procCount);
 
 quint32 logTimeSize();
 
-quint32 logProcKillSize();
+quint32 logProcPidSize();
 
 quint32 logFlowStatSize();
 quint32 logFlowTrafHeaderSize();
@@ -111,6 +114,9 @@ void logConnHeaderWrite(
 void logConnHeaderRead(
         const char *input, PFORT_CONF_META_CONN conn, quint16 *pathLen, quint16 *inheritPathLen);
 
+void logProcStartHeaderWrite(char *output, const FORT_LOG_PROC_HEADER &header);
+FORT_LOG_PROC_HEADER logProcHeaderRead(const char *input);
+
 void logProcNewHeaderWrite(char *output, const FORT_LOG_PROC_NEW_HEADER &header);
 FORT_LOG_PROC_NEW_HEADER logProcNewHeaderRead(const char *input);
 
@@ -119,8 +125,8 @@ void logStatTrafHeaderRead(const char *input, quint16 *procCount);
 void logTimeWrite(char *output, qint64 unixTime, int systemTimeChanged);
 void logTimeRead(const char *input, qint64 *unixTime, int *systemTimeChanged);
 
-void logProcKillWrite(char *output, quint32 pid);
-void logProcKillRead(const char *input, quint32 *pid);
+void logProcPidWrite(char *output, FortLogType type, quint32 pid);
+void logProcPidRead(const char *input, quint32 *pid);
 
 void logFlowTrafHeaderWrite(char *output, quint16 flowCount);
 void logFlowTrafHeaderRead(const char *input, quint16 *flowCount);

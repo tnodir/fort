@@ -4,6 +4,7 @@
 #include "common.h"
 
 #include "fortconf.h"
+#include "fortdef.h"
 
 #define FORT_BUFFER_SIZE  (16 * 1024 - 64)
 #define FORT_LOG_PATH_MAX FORT_CONF_APP_PATH_MAX_SIZE
@@ -39,7 +40,23 @@
     (FORT_LOG_CONN_INHERIT_PATH_OFFSET(path_len, isIPv6)                                           \
             + FORT_ALIGN_SIZE(inherit_path_len, FORT_LOG_ALIGN))
 
-#define FORT_LOG_PROC_NEW_HEADER_SIZE (7 * sizeof(UINT32))
+/* The process's header of PROC_START, which PROC_NEW begins with */
+#define FORT_LOG_PROC_HEADER_SIZE (5 * sizeof(UINT32))
+
+#define FORT_LOG_PROC_START_SIZE(path_len)                                                         \
+    (FORT_LOG_PROC_HEADER_SIZE + FORT_ALIGN_SIZE(path_len, FORT_LOG_ALIGN))
+
+typedef struct fort_log_proc_header
+{
+    UINT16 path_len;
+    UINT32 process_id;
+    UINT32 parent_process_id;
+    INT64 create_time;
+} FORT_LOG_PROC_HEADER, *PFORT_LOG_PROC_HEADER;
+
+typedef const FORT_LOG_PROC_HEADER *PCFORT_LOG_PROC_HEADER;
+
+#define FORT_LOG_PROC_NEW_HEADER_SIZE (FORT_LOG_PROC_HEADER_SIZE + 2 * sizeof(UINT32))
 
 /* The inherited process's name follows the aligned path */
 #define FORT_LOG_PROC_NEW_INHERIT_PATH_OFFSET(path_len)                                            \
@@ -51,12 +68,9 @@
 
 typedef struct fort_log_proc_new_header
 {
-    UINT16 path_len;
     UINT16 inherit_path_len;
     UINT32 app_id;
-    UINT32 process_id;
-    UINT32 parent_process_id;
-    INT64 create_time;
+    FORT_LOG_PROC_HEADER proc;
 } FORT_LOG_PROC_NEW_HEADER, *PFORT_LOG_PROC_NEW_HEADER;
 
 typedef const FORT_LOG_PROC_NEW_HEADER *PCFORT_LOG_PROC_NEW_HEADER;
@@ -76,7 +90,8 @@ typedef const FORT_LOG_PROC_NEW_HEADER *PCFORT_LOG_PROC_NEW_HEADER;
 /* The log timer writes the TIME and the traffic of its tick */
 #define FORT_LOG_TIMER_PERIOD 500 /* msecs */
 
-#define FORT_LOG_PROC_KILL_SIZE (sizeof(UINT32) * 2)
+/* The PROC_KILL and PROC_EXIT of a process */
+#define FORT_LOG_PROC_PID_SIZE (sizeof(UINT32) * 2)
 
 #define FORT_LOG_FLOW_STAT_SIZE (sizeof(UINT64) + 2 * sizeof(UINT32))
 
@@ -113,6 +128,13 @@ FORT_API void fort_log_conn_write(
 FORT_API void fort_log_conn_header_read(
         const char *p, PFORT_CONF_META_CONN conn, UINT16 *path_len, UINT16 *inherit_path_len);
 
+FORT_API void fort_log_proc_start_header_write(char *p, PCFORT_LOG_PROC_HEADER header);
+
+FORT_API void fort_log_proc_start_write(
+        char *p, PCFORT_LOG_PROC_HEADER header, PCFORT_APP_PATH path);
+
+FORT_API void fort_log_proc_header_read(const char *p, PFORT_LOG_PROC_HEADER header);
+
 FORT_API void fort_log_proc_new_header_write(char *p, PCFORT_LOG_PROC_NEW_HEADER header);
 
 FORT_API void fort_log_proc_new_write(
@@ -128,9 +150,9 @@ FORT_API void fort_log_time_write(char *p, INT64 unix_time, BOOL system_time_cha
 
 FORT_API void fort_log_time_read(const char *p, INT64 *unix_time, BOOL *system_time_changed);
 
-FORT_API void fort_log_proc_kill_write(char *p, UINT32 pid);
+FORT_API void fort_log_proc_pid_write(char *p, UINT32 type, UINT32 pid);
 
-FORT_API void fort_log_proc_kill_read(const char *p, UINT32 *pid);
+FORT_API void fort_log_proc_pid_read(const char *p, UINT32 *pid);
 
 FORT_API void fort_log_flow_traf_header_write(char *p, UINT16 flow_count);
 

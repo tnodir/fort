@@ -353,17 +353,65 @@ static NTSTATUS fort_buffer_entry_write(
     return status;
 }
 
-static void fort_buffer_proc_kill_entry_write(char *p, const void *arg)
+typedef struct fort_buffer_proc_start_arg
 {
-    fort_log_proc_kill_write(p, *((const UINT32 *) arg));
+    PCFORT_LOG_PROC_HEADER header;
+    PCFORT_APP_PATH path;
+} FORT_BUFFER_PROC_START_ARG, *PFORT_BUFFER_PROC_START_ARG;
+
+typedef const FORT_BUFFER_PROC_START_ARG *PCFORT_BUFFER_PROC_START_ARG;
+
+static void fort_buffer_proc_start_entry_write(char *p, const void *arg)
+{
+    PCFORT_BUFFER_PROC_START_ARG psa = arg;
+
+    fort_log_proc_start_write(p, psa->header, psa->path);
 }
 
-FORT_API NTSTATUS fort_buffer_proc_kill_write(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT32 pid)
+FORT_API NTSTATUS fort_buffer_proc_start_write(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info,
+        PCFORT_LOG_PROC_HEADER header, PCFORT_APP_PATH path)
 {
+    const FORT_BUFFER_PROC_START_ARG psa = {
+        .header = header,
+        .path = path,
+    };
+
     const FORT_BUFFER_ENTRY entry = {
-        .len = FORT_LOG_PROC_KILL_SIZE,
-        .write_func = &fort_buffer_proc_kill_entry_write,
-        .arg = &pid,
+        .len = FORT_LOG_PROC_START_SIZE(path->len),
+        .write_func = &fort_buffer_proc_start_entry_write,
+        .arg = &psa,
+    };
+
+    return fort_buffer_entry_write(buf, irp_info, &entry);
+}
+
+typedef struct fort_buffer_proc_pid_arg
+{
+    UINT32 type;
+    UINT32 pid;
+} FORT_BUFFER_PROC_PID_ARG, *PFORT_BUFFER_PROC_PID_ARG;
+
+typedef const FORT_BUFFER_PROC_PID_ARG *PCFORT_BUFFER_PROC_PID_ARG;
+
+static void fort_buffer_proc_pid_entry_write(char *p, const void *arg)
+{
+    PCFORT_BUFFER_PROC_PID_ARG ppa = arg;
+
+    fort_log_proc_pid_write(p, ppa->type, ppa->pid);
+}
+
+FORT_API NTSTATUS fort_buffer_proc_pid_write(
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT32 type, UINT32 pid)
+{
+    const FORT_BUFFER_PROC_PID_ARG ppa = {
+        .type = type,
+        .pid = pid,
+    };
+
+    const FORT_BUFFER_ENTRY entry = {
+        .len = FORT_LOG_PROC_PID_SIZE,
+        .write_func = &fort_buffer_proc_pid_entry_write,
+        .arg = &ppa,
     };
 
     return fort_buffer_entry_write(buf, irp_info, &entry);

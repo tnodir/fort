@@ -2,8 +2,6 @@
 
 #include "fortlog.h"
 
-#include "fortdef.h"
-
 static void fort_log_path_write(char *p, PCFORT_APP_PATH path)
 {
     const UINT16 path_len = path->len;
@@ -180,48 +178,78 @@ FORT_API void fort_log_conn_header_read(
     RtlCopyMemory(conn->remote_ip.data, up, ip_size);
 }
 
-FORT_API void fort_log_proc_new_header_write(char *p, PCFORT_LOG_PROC_NEW_HEADER header)
+/* Returns the output after the process's header */
+static UINT32 *fort_log_proc_header_write(char *p, UINT32 type, PCFORT_LOG_PROC_HEADER header)
 {
     UINT32 *up = (UINT32 *) p;
 
-    *up++ = fort_log_flag_type(FORT_LOG_TYPE_PROC_NEW) | header->path_len;
-    *up++ = header->app_id;
+    *up++ = fort_log_flag_type(type) | header->path_len;
     *up++ = header->process_id;
-    *up++ = header->inherit_path_len;
     *up++ = header->parent_process_id;
 
-    fort_log_u64_write(up, (UINT64) header->create_time);
+    return fort_log_u64_write(up, (UINT64) header->create_time);
+}
+
+FORT_API void fort_log_proc_start_header_write(char *p, PCFORT_LOG_PROC_HEADER header)
+{
+    fort_log_proc_header_write(p, FORT_LOG_TYPE_PROC_START, header);
+}
+
+FORT_API void fort_log_proc_start_write(
+        char *p, PCFORT_LOG_PROC_HEADER header, PCFORT_APP_PATH path)
+{
+    fort_log_proc_start_header_write(p, header);
+
+    fort_log_path_write(p + FORT_LOG_PROC_HEADER_SIZE, path);
+}
+
+FORT_API void fort_log_proc_header_read(const char *p, PFORT_LOG_PROC_HEADER header)
+{
+    const UINT32 *up = (const UINT32 *) p;
+
+    header->path_len = (UINT16) (*up++ & ~FORT_LOG_FLAG_EX_MASK);
+    header->process_id = *up++;
+    header->parent_process_id = *up++;
+
+    fort_log_u64_read(up, (UINT64 *) &header->create_time);
+}
+
+FORT_API void fort_log_proc_new_header_write(char *p, PCFORT_LOG_PROC_NEW_HEADER header)
+{
+    UINT32 *up = fort_log_proc_header_write(p, FORT_LOG_TYPE_PROC_NEW, &header->proc);
+
+    *up++ = header->app_id;
+    *up = header->inherit_path_len;
 }
 
 FORT_API void fort_log_proc_new_write(
         char *p, PCFORT_CONF_META_CONN conn, PCFORT_APP_PATH path, PCFORT_APP_PATH inherit_path)
 {
     const FORT_LOG_PROC_NEW_HEADER header = {
-        .path_len = path->len,
         .inherit_path_len = inherit_path->len,
         .app_id = conn->app.data.app_id,
-        .process_id = conn->process_id,
-        .parent_process_id = conn->parent_process_id,
-        .create_time = conn->create_time,
+        .proc = {
+            .path_len = path->len,
+            .process_id = conn->process_id,
+            .parent_process_id = conn->parent_process_id,
+            .create_time = conn->create_time,
+        },
     };
 
     fort_log_proc_new_header_write(p, &header);
 
     fort_log_path_write(p + FORT_LOG_PROC_NEW_HEADER_SIZE, path);
-    fort_log_path_write(p + FORT_LOG_PROC_NEW_INHERIT_PATH_OFFSET(header.path_len), inherit_path);
+    fort_log_path_write(p + FORT_LOG_PROC_NEW_INHERIT_PATH_OFFSET(path->len), inherit_path);
 }
 
 FORT_API void fort_log_proc_new_header_read(const char *p, PFORT_LOG_PROC_NEW_HEADER header)
 {
-    const UINT32 *up = (const UINT32 *) p;
+    fort_log_proc_header_read(p, &header->proc);
 
-    header->path_len = (UINT16) (*up++ & ~FORT_LOG_FLAG_EX_MASK);
+    const UINT32 *up = (const UINT32 *) (p + FORT_LOG_PROC_HEADER_SIZE);
+
     header->app_id = *up++;
-    header->process_id = *up++;
-    header->inherit_path_len = (UINT16) *up++;
-    header->parent_process_id = *up++;
-
-    fort_log_u64_read(up, (UINT64 *) &header->create_time);
+    header->inherit_path_len = (UINT16) *up;
 }
 
 FORT_API void fort_log_stat_traf_header_write(char *p, UINT16 proc_count)
@@ -254,15 +282,15 @@ FORT_API void fort_log_time_read(const char *p, INT64 *unix_time, BOOL *system_t
     *unix_time = *((INT64 *) up);
 }
 
-FORT_API void fort_log_proc_kill_write(char *p, UINT32 pid)
+FORT_API void fort_log_proc_pid_write(char *p, UINT32 type, UINT32 pid)
 {
     UINT32 *up = (UINT32 *) p;
 
-    *up++ = fort_log_flag_type(FORT_LOG_TYPE_PROC_KILL);
+    *up++ = fort_log_flag_type(type);
     *up = pid;
 }
 
-FORT_API void fort_log_proc_kill_read(const char *p, UINT32 *pid)
+FORT_API void fort_log_proc_pid_read(const char *p, UINT32 *pid)
 {
     const UINT32 *up = (const UINT32 *) p;
 

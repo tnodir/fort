@@ -22,8 +22,10 @@
 #include "logentryconn.h"
 #include "logentryflowclosed.h"
 #include "logentryflowtraf.h"
+#include "logentryprocexit.h"
 #include "logentryprockill.h"
 #include "logentryprocnew.h"
+#include "logentryprocstart.h"
 #include "logentrystattraf.h"
 #include "logentrytime.h"
 
@@ -222,6 +224,8 @@ bool LogManager::processLogEntry(LogBuffer *logBuffer, FortLogType logType)
         &LogManager::processLogEntryProcKill, // FORT_LOG_TYPE_PROC_KILL
         &LogManager::processLogEntryFlowTraf, // FORT_LOG_TYPE_FLOW_TRAF
         &LogManager::processLogEntryFlowClosed, // FORT_LOG_TYPE_FLOW_CLOSED
+        &LogManager::processLogEntryProcStart, // FORT_LOG_TYPE_PROC_START
+        &LogManager::processLogEntryProcExit, // FORT_LOG_TYPE_PROC_EXIT
     };
     static_assert(std::size(processFuncs) == FORT_LOG_TYPE_COUNT);
 
@@ -380,6 +384,22 @@ bool LogManager::processLogEntryFlowClosed(LogBuffer *logBuffer)
     logBuffer->readEntryFlowClosed(&flowClosedEntry);
 
     activityManager()->logFlowClosed(flowClosedEntry);
+
+    return true;
+}
+
+bool LogManager::processLogEntryProcStart(LogBuffer *logBuffer)
+{
+    LogEntryProcStart procStartEntry;
+    logBuffer->readEntryProcStart(&procStartEntry);
+
+    return true;
+}
+
+bool LogManager::processLogEntryProcExit(LogBuffer *logBuffer)
+{
+    LogEntryProcExit procExitEntry;
+    logBuffer->readEntryProcExit(&procExitEntry);
 
     return true;
 }
