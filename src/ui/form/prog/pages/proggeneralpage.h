@@ -5,6 +5,8 @@
 
 #include "progbasepage.h"
 
+QT_FORWARD_DECLARE_CLASS(QAbstractButton)
+
 class GroupsSelector;
 class LineEdit;
 class PlainTextEdit;
@@ -71,7 +73,8 @@ private:
     QLayout *setupScheduleLayout();
     void setupCbSchedule();
     void setupComboScheduleType();
-    void setupQuickAction();
+    void setupQuickActions();
+    QToolButton *createQuickActionButton(App::Action action);
     void setupTimedMenu();
     void setupTimedMenuActions();
     void setupTimedAction();
@@ -81,8 +84,13 @@ private:
     void updateWildcard();
     void updateApplyChild();
     void updateAppIcon();
-    void updateQuickAction();
+    void updateTimedAction();
+    void updateQuickActionsVisible();
     void updateScheduleVisible(bool checked);
+
+    QAbstractButton *actionButton(App::Action action) const;
+    App::Action checkedAction() const;
+    App::Action timedActionType() const;
 
     void selectTimedMenuAction(int index);
 
@@ -97,6 +105,7 @@ private:
     bool isPathValid() const;
 
     void onWildcardSwitched();
+    void onActionToggled(int id, bool checked);
 
     void setIconPath(const QString &iconPath);
 
@@ -109,8 +118,6 @@ private:
     void fillAppEndTime(App &app) const;
 
 private:
-    App::Action m_quickActionType = App::ActionBlock;
-
     QLabel *m_labelEditPath = nullptr;
     PlainTextEdit *m_editPath = nullptr;
     QToolButton *m_btSelectFile = nullptr;
@@ -138,7 +145,8 @@ private:
     SpinCombo *m_scScheduleIn = nullptr;
     QDateTimeEdit *m_dteScheduleAt = nullptr;
 
-    QPushButton *m_btQuickAction = nullptr;
+    QToolButton *m_btQuickAllow = nullptr;
+    QToolButton *m_btQuickBlock = nullptr;
     QToolButton *m_btTimedAction = nullptr;
     QToolButton *m_btTimedRemove = nullptr;
     QToolButton *m_timedMenuOwner = nullptr; // transient

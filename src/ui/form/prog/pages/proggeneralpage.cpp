@@ -8,7 +8,6 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QMenu>
-#include <QPushButton>
 #include <QRadioButton>
 #include <QSpinBox>
 
@@ -58,7 +57,7 @@ ProgGeneralPage::ProgGeneralPage(ProgramEditController *ctrl, QWidget *parent) :
 
 void ProgGeneralPage::selectAction(App::Action action)
 {
-    m_btgActions->button(int(action))->setChecked(true);
+    actionButton(action)->setChecked(true);
 }
 
 void ProgGeneralPage::onPageInitialize(const App &app)
@@ -173,10 +172,13 @@ void ProgGeneralPage::onRetranslateUi()
     retranslateScheduleIn();
     m_dteScheduleAt->unsetLocale();
 
-    updateQuickAction();
+    m_btQuickAllow->setToolTip(m_rbAllow->text());
+    m_btQuickBlock->setToolTip(m_rbBlock->text());
     retranslateTimedMenuActions();
     retranslateTimedAction(m_btTimedAction);
+    updateTimedAction();
     retranslateTimedAction(m_btTimedRemove);
+    m_btTimedRemove->setToolTip(tr("Remove Later"));
 }
 
 void ProgGeneralPage::retranslatePathPlaceholderText()
@@ -534,13 +536,7 @@ void ProgGeneralPage::setupActionsGroup()
     m_btgActions->addButton(m_rbAsk, int(App::ActionAsk));
     m_btgActions->addButton(m_rbKillProcess, int(App::ActionKillProcess));
 
-    connect(m_btgActions, &QButtonGroup::idToggled, this, [&](int id, bool checked) {
-        if (!checked)
-            return;
-
-        // The asked Program's connections are filtered too
-        emit ctrl()->allowToggled(!App::isActionBlocked(App::Action(id)));
-    });
+    connect(m_btgActions, &QButtonGroup::idToggled, this, &ProgGeneralPage::onActionToggled);
 }
 
 QLayout *ProgGeneralPage::setupScheduleLayout()
@@ -565,7 +561,7 @@ QLayout *ProgGeneralPage::setupScheduleLayout()
     m_dteScheduleAt->setCalendarPopup(true);
 
     // Quick Actions
-    setupQuickAction();
+    setupQuickActions();
     setupTimedMenu();
     setupTimedAction();
     setupTimedRemove();
@@ -575,7 +571,7 @@ QLayout *ProgGeneralPage::setupScheduleLayout()
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_cbSchedule, m_comboScheduleAction,
             m_comboScheduleType, /*stretch*/ nullptr, m_scScheduleIn, m_dteScheduleAt,
-            m_btQuickAction, m_btTimedAction, m_btTimedRemove });
+            m_btQuickAllow, m_btQuickBlock, m_btTimedAction, m_btTimedRemove });
 
     return layout;
 }
@@ -607,22 +603,26 @@ void ProgGeneralPage::setupComboScheduleType()
     });
 }
 
-void ProgGeneralPage::setupQuickAction()
+void ProgGeneralPage::setupQuickActions()
 {
-    m_btQuickAction = ControlUtil::createButton({}, [&] {
-        selectAction(m_quickActionType);
+    m_btQuickAllow = createQuickActionButton(App::ActionAllow);
+    m_btQuickAllow->setObjectName("btQuickAllow");
+
+    m_btQuickBlock = createQuickActionButton(App::ActionBlock);
+    m_btQuickBlock->setObjectName("btQuickBlock");
+}
+
+QToolButton *ProgGeneralPage::createQuickActionButton(App::Action action)
+{
+    auto bt = ControlUtil::createToolButton({}, [this, action] {
+        selectAction(action);
 
         ctrl()->saveChanges();
     });
-    m_btQuickAction->setObjectName("btQuickAction");
+    bt->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    bt->setIcon(actionButton(action)->icon());
 
-    const auto refreshQuickActionType = [&](bool checked) {
-        m_quickActionType = checked ? App::ActionBlock : App::ActionAllow;
-
-        updateQuickAction();
-    };
-
-    connect(m_rbAllow, &QRadioButton::toggled, this, refreshQuickActionType);
+    return bt;
 }
 
 void ProgGeneralPage::setupTimedMenu()
@@ -667,10 +667,12 @@ void ProgGeneralPage::setupTimedAction()
     m_btTimedAction = createTimedButton(iniUser().progAlertWindowTimedActionMinutesKey());
     m_btTimedAction->setObjectName("btTimedAction");
 
-    connect(m_btTimedAction, &QToolButton::clicked, this, [&] {
-        const auto currentActionType = App::Action(m_btgActions->checkedId());
+    updateTimedAction();
 
-        selectAction(m_quickActionType);
+    connect(m_btTimedAction, &QToolButton::clicked, this, [&] {
+        const auto currentActionType = checkedAction();
+
+        selectAction(timedActionType());
 
         const int minutes = timedActionMinutes(m_btTimedAction);
 
@@ -752,14 +754,24 @@ void ProgGeneralPage::updateAppIcon()
     m_labelEditNotes->setPixmap(pixmap);
 }
 
-void ProgGeneralPage::updateQuickAction()
+void ProgGeneralPage::updateTimedAction()
 {
-    auto rb = m_btgActions->button(int(m_quickActionType));
+    const auto action = timedActionType();
 
-    m_btQuickAction->setIcon(rb->icon());
-    m_btQuickAction->setText(rb->text());
+    m_btTimedAction->setIcon(actionButton(action)->icon());
+    m_btTimedAction->setToolTip(
+            (action == App::ActionAllow) ? tr("Allow Temporarily") : tr("Block Temporarily"));
+}
 
-    m_btTimedAction->setIcon(rb->icon());
+void ProgGeneralPage::updateQuickActionsVisible()
+{
+    const bool scheduled = m_cbSchedule->isChecked();
+    const auto action = checkedAction();
+
+    m_btQuickAllow->setVisible(!scheduled && action != App::ActionAllow);
+    m_btQuickBlock->setVisible(!scheduled && action != App::ActionBlock);
+    m_btTimedAction->setVisible(!scheduled);
+    m_btTimedRemove->setVisible(!scheduled);
 }
 
 void ProgGeneralPage::updateScheduleVisible(bool checked)
@@ -770,9 +782,22 @@ void ProgGeneralPage::updateScheduleVisible(bool checked)
     m_scScheduleIn->setVisible(checked && m_scScheduleIn->isEnabled());
     m_dteScheduleAt->setVisible(checked && m_dteScheduleAt->isEnabled());
 
-    m_btQuickAction->setVisible(!checked);
-    m_btTimedAction->setVisible(!checked);
-    m_btTimedRemove->setVisible(!checked);
+    updateQuickActionsVisible();
+}
+
+QAbstractButton *ProgGeneralPage::actionButton(App::Action action) const
+{
+    return m_btgActions->button(int(action));
+}
+
+App::Action ProgGeneralPage::checkedAction() const
+{
+    return App::Action(m_btgActions->checkedId());
+}
+
+App::Action ProgGeneralPage::timedActionType() const
+{
+    return (checkedAction() == App::ActionAllow) ? App::ActionBlock : App::ActionAllow;
 }
 
 void ProgGeneralPage::selectTimedMenuAction(int index)
@@ -848,6 +873,22 @@ void ProgGeneralPage::onWildcardSwitched()
     updateWildcard();
 }
 
+void ProgGeneralPage::onActionToggled(int id, bool checked)
+{
+    // Both the Allow's checking and unchecking switch the timed action
+    if (id == int(App::ActionAllow)) {
+        updateTimedAction();
+    }
+
+    if (!checked)
+        return;
+
+    // The asked Program's connections are filtered too
+    emit ctrl()->allowToggled(!App::isActionBlocked(App::Action(id)));
+
+    updateQuickActionsVisible();
+}
+
 void ProgGeneralPage::setIconPath(const QString &iconPath)
 {
     m_iconPath = iconPath;
@@ -902,7 +943,7 @@ bool ProgGeneralPage::validateFields() const
 void ProgGeneralPage::fillApp(App &app) const
 {
     app.isWildcard = isWildcard();
-    app.setAction(App::Action(m_btgActions->checkedId()));
+    app.setAction(checkedAction());
     app.groups = m_btGroups->mask();
     app.appName = m_editName->text();
     app.notes = m_editNotes->toPlainText();
