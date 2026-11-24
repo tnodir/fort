@@ -54,6 +54,14 @@ TEST_F(FileUtilTest, systemPath)
     ASSERT_EQ(FileUtil::pathToKernelPath("System", /*lower=*/true), FileUtil::systemApp());
 }
 
+TEST_F(FileUtilTest, svcHostExe)
+{
+    const QString systemRoot = qEnvironmentVariable("SystemRoot");
+
+    ASSERT_TRUE(FileUtil::isSvcHostExe(systemRoot + R"(\System32\SVCHOST.EXE)"));
+    ASSERT_FALSE(FileUtil::isSvcHostExe(systemRoot + R"(\SysWOW64\svchost.exe)"));
+}
+
 TEST_F(FileUtilTest, validFileName)
 {
     ASSERT_EQ(FileUtil::validFileName(R"(a\b/c:d*e?f"g<h>i|j)"), "a_b_c_d_e_f_g_h_i_j");
@@ -116,4 +124,6 @@ TEST_F(FileUtilTest, process)
 
     ASSERT_TRUE(pi.isValid());
     ASSERT_FALSE(pi.path().isEmpty());
+    ASSERT_NE(pi.createTime(), 0);
+    ASSERT_TRUE(pi.commandLine().contains("UtilTest", Qt::CaseInsensitive));
 }

@@ -4,6 +4,7 @@ CREATE TABLE proc(
   parent_pid INTEGER, -- NULL when unknown
   create_time INTEGER, -- FILETIME, NULL when unknown
   path TEXT NOT NULL,
+  cmdline TEXT, -- of a svchost.exe process only, NULL when unknown
   parent_path TEXT -- by the parent's row at the process's start, NULL when unknown
 );
 

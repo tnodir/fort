@@ -2,8 +2,32 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
+#include <winternl.h>
 
 #define PROC_PATH_MAX 65536
+
+namespace {
+
+// Windows 8.1+: a UNICODE_STRING followed by its buffer
+inline constexpr auto ProcessCommandLineInformation = PROCESSINFOCLASS(60);
+
+QByteArray queryProcessInfo(ProcessHandle handle, PROCESSINFOCLASS infoClass)
+{
+    // The size is returned by the first call
+    ULONG len = 0;
+    NtQueryInformationProcess(handle, infoClass, nullptr, 0, &len);
+    if (len == 0)
+        return {};
+
+    QByteArray buf(len, Qt::Uninitialized);
+
+    if (!NT_SUCCESS(NtQueryInformationProcess(handle, infoClass, buf.data(), len, &len)))
+        return {};
+
+    return buf;
+}
+
+}
 
 ProcessInfo::ProcessInfo(quint32 pid, quint8 openFlags) : m_openFlags(openFlags), m_pid(pid)
 {
@@ -57,6 +81,30 @@ QString ProcessInfo::path(bool isKernelPath) const
     }
 
     return QString();
+}
+
+qint64 ProcessInfo::createTime() const
+{
+    FILETIME creationTime, exitTime, kernelTime, userTime;
+
+    if (!isValid() || !GetProcessTimes(m_handle, &creationTime, &exitTime, &kernelTime, &userTime))
+        return 0;
+
+    return (qint64(creationTime.dwHighDateTime) << 32) | creationTime.dwLowDateTime;
+}
+
+QString ProcessInfo::commandLine() const
+{
+    if (!isValid())
+        return {};
+
+    const QByteArray buf = queryProcessInfo(m_handle, ProcessCommandLineInformation);
+    if (buf.isEmpty())
+        return {};
+
+    const auto cmdLine = reinterpret_cast<const UNICODE_STRING *>(buf.constData());
+
+    return QString::fromWCharArray(cmdLine->Buffer, cmdLine->Length / sizeof(wchar_t));
 }
 
 bool ProcessInfo::terminateProcess(int exitCode)

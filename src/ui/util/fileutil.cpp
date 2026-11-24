@@ -49,6 +49,21 @@ bool isSvcHostService(const QString &path, QString &serviceName)
     return true;
 }
 
+QString svcHostExePath()
+{
+    wchar_t buf[MAX_PATH];
+    const UINT len = GetSystemDirectoryW(buf, MAX_PATH);
+
+    return QString::fromWCharArray(buf, int(len)) + R"(\svchost.exe)";
+}
+
+bool isSvcHostExe(const QString &path)
+{
+    static const QString exePath = svcHostExePath();
+
+    return QString::compare(path, exePath, Qt::CaseInsensitive) == 0;
+}
+
 bool isDriveFilePath(const QString &path)
 {
     return path.size() > 1 && path[0].isLetter() && path[1] == ':';

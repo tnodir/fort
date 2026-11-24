@@ -25,6 +25,12 @@ public:
 
     QString path(bool isKernelPath = false) const;
 
+    // FILETIME, 0 when unknown
+    qint64 createTime() const;
+
+    // Windows 8.1+, empty on Windows 7
+    QString commandLine() const;
+
     bool terminateProcess(int exitCode);
 
     static quint32 currentPid();

@@ -20,6 +20,7 @@
 #include <util/net/netdbutil.h>
 #include <util/net/processipkey.h>
 #include <util/osutil.h>
+#include <util/processinfo.h>
 
 namespace {
 
@@ -41,13 +42,13 @@ const char *const sqlInsertFlow =
 // CONN (without the time: the conf is set before the enumeration on the master's restart) keeps its
 // Program and path
 const char *const sqlUpsertProcStart =
-        "INSERT INTO proc(pid, parent_pid, create_time, path, parent_path)"
-        "  VALUES(?1, ?2, ?3, ?4,"
+        "INSERT INTO proc(pid, parent_pid, create_time, path, cmdline, parent_path)"
+        "  VALUES(?1, ?2, ?3, ?4, ?5,"
         "    (SELECT path FROM proc WHERE pid = ?2"
         "      AND (create_time IS NULL OR ?3 IS NULL OR create_time < ?3)))"
         "  ON CONFLICT(pid) DO UPDATE SET app_id = IIF(create_time IS NULL, app_id, NULL),"
         "    parent_pid = ?2, create_time = ?3, path = IIF(create_time IS NULL, path, ?4),"
-        "    parent_path = excluded.parent_path"
+        "    cmdline = ?5, parent_path = excluded.parent_path"
         "  WHERE create_time IS NOT ?3;";
 
 const char *const sqlUpsertConnProc = "INSERT INTO proc(pid, app_id, path) VALUES(?1, ?2, ?3)"
@@ -127,6 +128,21 @@ ProcessIpKey flowHostKey(const SqliteStmt &stmt)
     const bool isIPv6 = NetDbUtil::columnIsIPv6(stmt, 1);
 
     return ProcessIpKey(stmt.columnUInt(0), NetDbUtil::columnIp(stmt, 1, 2, isIPv6), isIPv6);
+}
+
+// The services' command lines only: the others may hold secrets, the DB is readable by all
+QString serviceCommandLine(const LogEntryProcStart &entry, const QString &path)
+{
+    if (!FileUtil::isSvcHostExe(path))
+        return {};
+
+    const ProcessInfo pi(entry.pid());
+
+    // The exited process's id may be reused
+    if (pi.createTime() != entry.createTime())
+        return {};
+
+    return pi.commandLine();
 }
 
 // The reason with its details
@@ -293,9 +309,11 @@ void ActivityManager::logProcStart(const LogEntryProcStart &entry)
     if (!beginChanges())
         return;
 
+    const QString path = entry.path();
+
     doneChange(sqlUpsertProcStart,
             { entry.pid(), DbVar::nullable(entry.parentPid()), DbVar::nullable(entry.createTime()),
-                    entry.path() });
+                    path, DbVar::nullable(serviceCommandLine(entry, path)) });
 }
 
 void ActivityManager::logProcExit(const LogEntryProcExit &entry)

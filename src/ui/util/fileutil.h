@@ -16,6 +16,7 @@ bool isSystemApp(const QString &path);
 QString svcHostPrefix();
 QString svcHostServicePath(const QString &serviceName);
 bool isSvcHostService(const QString &path, QString &serviceName);
+bool isSvcHostExe(const QString &path);
 
 bool isDriveFilePath(const QString &path);
 

@@ -18,6 +18,7 @@
 #include <log/logentryprocstart.h>
 #include <log/logentrystattraf.h>
 #include <util/net/processipkey.h>
+#include <util/processinfo.h>
 
 namespace {
 
@@ -144,6 +145,7 @@ protected:
 
     QVariantList flowRow(quint64 flowId) const;
     QVariantList procRow(quint32 pid) const;
+    QVariant procCmdLine(quint32 pid) const;
 
     QByteArray flowIp6(quint64 flowId, const char *column) const;
 
@@ -225,6 +227,14 @@ QVariantList ActivityTest::procRow(quint32 pid) const
             .vars({ pid })
             .execute(4)
             .toList();
+}
+
+QVariant ActivityTest::procCmdLine(quint32 pid) const
+{
+    return DbQuery(m_manager.sqliteDb())
+            .sql("SELECT cmdline FROM proc WHERE pid = ?1;")
+            .vars({ pid })
+            .execute();
 }
 
 TEST_F(ActivityTest, connAddsFlowAndProcess)
@@ -369,6 +379,33 @@ TEST_F(ActivityTest, procStartReusedPid)
     ASSERT_EQ(process[1].toUInt(), testParentPid + 4);
     ASSERT_EQ(process[2].toString(), procStart.path());
     ASSERT_TRUE(process[3].isNull());
+}
+
+TEST_F(ActivityTest, procStartServiceCommandLine)
+{
+    // The current process is taken for a service's one
+    const quint32 pid = ProcessInfo::currentPid();
+    const qint64 createTime = ProcessInfo(pid).createTime();
+    const QString svcHostPath = qEnvironmentVariable("SystemRoot") + R"(\System32\svchost.exe)";
+
+    // The process's id is reused
+    m_manager.logProcStart(makeProcStart(pid, 0, createTime + 1, svcHostPath));
+    endBuffer();
+
+    ASSERT_TRUE(procCmdLine(pid).isNull());
+
+    m_manager.logProcStart(makeProcStart(pid, 0, createTime, svcHostPath));
+    endBuffer();
+
+    const QString cmdLine = ProcessInfo(pid).commandLine();
+    ASSERT_FALSE(cmdLine.isEmpty());
+    ASSERT_EQ(procCmdLine(pid).toString(), cmdLine);
+
+    // The other processes' command lines aren't stored
+    m_manager.logProcStart(makeProcStart(testPid, 0, 0, QCoreApplication::applicationFilePath()));
+    endBuffer();
+
+    ASSERT_TRUE(procCmdLine(testPid).isNull());
 }
 
 TEST_F(ActivityTest, procExitRemovesProcessAndFlows)
