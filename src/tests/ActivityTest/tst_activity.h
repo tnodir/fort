@@ -48,15 +48,6 @@ LogEntryConn makeConn(quint64 flowId, quint32 pid = testPid)
     return entry;
 }
 
-LogEntryProcNew makeProcNew(quint32 pid = testPid)
-{
-    LogEntryProcNew entry;
-    entry.setPid(pid);
-    entry.setParentPid(testParentPid);
-    entry.setCreateTime(testCreateTime);
-    return entry;
-}
-
 LogEntryProcStart makeProcStart(
         quint32 pid, quint32 parentPid, qint64 createTime, const QString &kernelPath = testPath)
 {
@@ -616,7 +607,7 @@ TEST_F(ActivityTest, procNewUpdatesProcess)
     endBuffer();
     const int changedCount = m_changedCount;
 
-    m_manager.logProcNew(makeProcNew(), "C:\\test\\service.exe");
+    m_manager.logProcNew(LogEntryProcNew(testPid), "C:\\test\\service.exe");
     endBuffer();
 
     // Only the name is changed
@@ -627,7 +618,7 @@ TEST_F(ActivityTest, procNewUpdatesProcess)
     ASSERT_EQ(m_changedCount, changedCount + 1);
 
     // The process without PROC_START isn't added
-    m_manager.logProcNew(makeProcNew(testPid + 4), "C:\\test\\other.exe");
+    m_manager.logProcNew(LogEntryProcNew(testPid + 4), "C:\\test\\other.exe");
     endBuffer();
 
     ASSERT_EQ(procCount(), 2);
@@ -641,7 +632,7 @@ TEST_F(ActivityTest, procNewSamePathUnchanged)
     endBuffer();
     const int changedCount = m_changedCount;
 
-    m_manager.logProcNew(makeProcNew(), procRow(testPid)[2].toString());
+    m_manager.logProcNew(LogEntryProcNew(testPid), procRow(testPid)[2].toString());
     endBuffer();
 
     ASSERT_EQ(m_changedCount, changedCount);

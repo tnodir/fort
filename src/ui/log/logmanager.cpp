@@ -315,7 +315,7 @@ bool LogManager::processLogEntryTime(LogBuffer *logBuffer)
 bool LogManager::processLogEntryProcKill(LogBuffer *logBuffer)
 {
     LogEntryProcKill procKillEntry;
-    logBuffer->readEntryProcKill(&procKillEntry);
+    logBuffer->readEntryProcPid(&procKillEntry);
 
     ProcessInfo pi(procKillEntry.pid(), ProcessInfo::OpenTerminate);
     if (pi.isValid()) {
@@ -358,7 +358,7 @@ bool LogManager::processLogEntryProcStart(LogBuffer *logBuffer)
 bool LogManager::processLogEntryProcExit(LogBuffer *logBuffer)
 {
     LogEntryProcExit procExitEntry;
-    logBuffer->readEntryProcExit(&procExitEntry);
+    logBuffer->readEntryProcPid(&procExitEntry);
 
     activityManager()->logProcExit(procExitEntry);
 

@@ -79,17 +79,14 @@ static void fort_callout_ale_fill_meta_path(PCFORT_CALLOUT_ARG ca, PFORT_CONF_ME
     PFORT_APP_PATH real_path = &conn->real_path;
     *real_path = *path;
 
-    FORT_PS_INFO ps_info = { 0 };
+    FORT_PS_OPT ps_opt = { 0 };
 
     conn->ps_name =
-            fort_pstree_get_proc_name(&fort_device()->ps_tree, conn->process_id, path, &ps_info);
-
-    conn->parent_process_id = ps_info.parent_process_id;
-    conn->create_time = ps_info.create_time;
+            fort_pstree_get_proc_name(&fort_device()->ps_tree, conn->process_id, path, &ps_opt);
 
     if (conn->ps_name != NULL) {
 
-        const BOOL inherited = (ps_info.opt.flags & FORT_PSNODE_NAME_INHERITED) != 0;
+        const BOOL inherited = (ps_opt.flags & FORT_PSNODE_NAME_INHERITED) != 0;
         if (!inherited) {
             *real_path = *path;
             return;
@@ -98,7 +95,7 @@ static void fort_callout_ale_fill_meta_path(PCFORT_CALLOUT_ARG ca, PFORT_CONF_ME
         conn->inherited = TRUE;
     }
 
-    fort_callout_ale_fill_meta_path_real(conn, processPath, ps_info.opt.path_drive);
+    fort_callout_ale_fill_meta_path_real(conn, processPath, ps_opt.path_drive);
 
     if (!conn->inherited) {
         *path = *real_path;

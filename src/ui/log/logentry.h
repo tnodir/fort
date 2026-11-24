@@ -14,9 +14,6 @@ public:
     CLASS_DEFAULT_COPY_MOVE(LogEntry)
 
     virtual FortLogType type() const = 0;
-
-protected:
-    static QString getAppPath(const QString &kernelPath, quint32 pid);
 };
 
 #endif // LOGENTRY_H

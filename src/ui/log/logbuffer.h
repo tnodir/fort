@@ -10,8 +10,7 @@ class LogEntryApp;
 class LogEntryConn;
 class LogEntryFlowClosed;
 class LogEntryFlowTraf;
-class LogEntryProcExit;
-class LogEntryProcKill;
+class LogEntryProc;
 class LogEntryProcNew;
 class LogEntryProcStart;
 class LogEntryStatTraf;
@@ -48,10 +47,9 @@ public:
     void writeEntryTime(const LogEntryTime *logEntry);
     void readEntryTime(LogEntryTime *logEntry);
 
-    void readEntryProcKill(LogEntryProcKill *logEntry);
-
-    void writeEntryProcExit(const LogEntryProcExit *logEntry);
-    void readEntryProcExit(LogEntryProcExit *logEntry);
+    // The PROC_KILL or PROC_EXIT
+    void writeEntryProcPid(const LogEntryProc *logEntry);
+    void readEntryProcPid(LogEntryProc *logEntry);
 
     void writeEntryFlowTraf(const LogEntryFlowTraf *logEntry);
     void readEntryFlowTraf(LogEntryFlowTraf *logEntry);
@@ -73,8 +71,6 @@ private:
     const char *entryInput() const;
     void skipEntry(quint32 entrySize);
     const char *takeEntry(quint32 entrySize);
-
-    quint32 readEntryPid();
 
 private:
     int m_top = 0;

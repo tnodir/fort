@@ -355,7 +355,7 @@ static NTSTATUS fort_buffer_entry_write(
 
 typedef struct fort_buffer_proc_start_arg
 {
-    PCFORT_LOG_PROC_HEADER header;
+    PCFORT_LOG_PROC_START_HEADER header;
     PCFORT_APP_PATH path;
 } FORT_BUFFER_PROC_START_ARG, *PFORT_BUFFER_PROC_START_ARG;
 
@@ -369,7 +369,7 @@ static void fort_buffer_proc_start_entry_write(char *p, const void *arg)
 }
 
 FORT_API NTSTATUS fort_buffer_proc_start_write(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info,
-        PCFORT_LOG_PROC_HEADER header, PCFORT_APP_PATH path)
+        PCFORT_LOG_PROC_START_HEADER header, PCFORT_APP_PATH path)
 {
     const FORT_BUFFER_PROC_START_ARG psa = {
         .header = header,

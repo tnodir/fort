@@ -540,11 +540,8 @@ typedef struct fort_conf_meta_conn
     UINT16 remote_port;
 
     UINT32 process_id;
-    UINT32 parent_process_id; /* of the process's tree, 0 when unknown */
 
     UINT32 host_zones_mask; /* the Zones of the remote IP added at runtime */
-
-    INT64 create_time; /* the process's, 0 when unknown */
 
     UINT64 flow_id;
 

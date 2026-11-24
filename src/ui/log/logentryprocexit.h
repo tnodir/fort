@@ -1,20 +1,14 @@
 #ifndef LOGENTRYPROCEXIT_H
 #define LOGENTRYPROCEXIT_H
 
-#include "logentry.h"
+#include "logentryproc.h"
 
-class LogEntryProcExit : public LogEntry
+class LogEntryProcExit : public LogEntryProc
 {
 public:
-    explicit LogEntryProcExit(quint32 pid = 0);
+    using LogEntryProc::LogEntryProc;
 
     FortLogType type() const override { return FORT_LOG_TYPE_PROC_EXIT; }
-
-    quint32 pid() const { return m_pid; }
-    void setPid(quint32 pid) { m_pid = pid; }
-
-private:
-    quint32 m_pid = 0;
 };
 
 #endif // LOGENTRYPROCEXIT_H

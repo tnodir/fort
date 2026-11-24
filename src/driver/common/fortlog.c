@@ -185,30 +185,42 @@ static UINT32 *fort_log_proc_header_write(char *p, UINT32 type, PCFORT_LOG_PROC_
 
     *up++ = fort_log_flag_type(type) | header->path_len;
     *up++ = header->process_id;
-    *up++ = header->parent_process_id;
 
-    return fort_log_u64_write(up, (UINT64) header->create_time);
+    return up;
 }
 
-FORT_API void fort_log_proc_start_header_write(char *p, PCFORT_LOG_PROC_HEADER header)
-{
-    fort_log_proc_header_write(p, FORT_LOG_TYPE_PROC_START, header);
-}
-
-FORT_API void fort_log_proc_start_write(
-        char *p, PCFORT_LOG_PROC_HEADER header, PCFORT_APP_PATH path)
-{
-    fort_log_proc_start_header_write(p, header);
-
-    fort_log_path_write(p + FORT_LOG_PROC_HEADER_SIZE, path);
-}
-
-FORT_API void fort_log_proc_header_read(const char *p, PFORT_LOG_PROC_HEADER header)
+/* Returns the input after the process's header */
+static const UINT32 *fort_log_proc_header_read(const char *p, PFORT_LOG_PROC_HEADER header)
 {
     const UINT32 *up = (const UINT32 *) p;
 
     header->path_len = (UINT16) (*up++ & ~FORT_LOG_FLAG_EX_MASK);
     header->process_id = *up++;
+
+    return up;
+}
+
+FORT_API void fort_log_proc_start_header_write(char *p, PCFORT_LOG_PROC_START_HEADER header)
+{
+    UINT32 *up = fort_log_proc_header_write(p, FORT_LOG_TYPE_PROC_START, &header->proc);
+
+    *up++ = header->parent_process_id;
+
+    fort_log_u64_write(up, (UINT64) header->create_time);
+}
+
+FORT_API void fort_log_proc_start_write(
+        char *p, PCFORT_LOG_PROC_START_HEADER header, PCFORT_APP_PATH path)
+{
+    fort_log_proc_start_header_write(p, header);
+
+    fort_log_path_write(p + FORT_LOG_PROC_START_HEADER_SIZE, path);
+}
+
+FORT_API void fort_log_proc_start_header_read(const char *p, PFORT_LOG_PROC_START_HEADER header)
+{
+    const UINT32 *up = fort_log_proc_header_read(p, &header->proc);
+
     header->parent_process_id = *up++;
 
     fort_log_u64_read(up, (UINT64 *) &header->create_time);
@@ -231,8 +243,6 @@ FORT_API void fort_log_proc_new_write(
         .proc = {
             .path_len = path->len,
             .process_id = conn->process_id,
-            .parent_process_id = conn->parent_process_id,
-            .create_time = conn->create_time,
         },
     };
 
@@ -244,9 +254,7 @@ FORT_API void fort_log_proc_new_write(
 
 FORT_API void fort_log_proc_new_header_read(const char *p, PFORT_LOG_PROC_NEW_HEADER header)
 {
-    fort_log_proc_header_read(p, &header->proc);
-
-    const UINT32 *up = (const UINT32 *) (p + FORT_LOG_PROC_HEADER_SIZE);
+    const UINT32 *up = fort_log_proc_header_read(p, &header->proc);
 
     header->app_id = *up++;
     header->inherit_path_len = (UINT16) *up;

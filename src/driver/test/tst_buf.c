@@ -85,8 +85,6 @@ static TEST_BUF_PATH_LENS test_buf_conn_write_read(PFORT_CONF_META_CONN conn,
 
         read_conn->app.data.app_id = header.app_id;
         read_conn->process_id = header.proc.process_id;
-        read_conn->parent_process_id = header.proc.parent_process_id;
-        read_conn->create_time = header.proc.create_time;
     }
 
     fort_buffer_close(&buf);
@@ -103,8 +101,6 @@ static void test_buf_conn_proc_path(void)
         .inherited = TRUE,
         .app.data.app_id = 3,
         .process_id = 5,
-        .parent_process_id = 7,
-        .create_time = 0x1122334455667788LL,
         .path = path,
         .real_path = real_path,
     };
@@ -124,14 +120,12 @@ static void test_buf_conn_proc_path(void)
     assert(lens.inherit_path_len == 0);
     assert(read_conn.proc_logged);
 
-    /* The PROC_NEW has the paths and the process's tree */
+    /* The PROC_NEW has the paths and the Program */
     lens = test_buf_conn_write_read(&conn, FORT_BUFFER_CONN_WRITE_PROC_NEW, &read_conn);
     assert(lens.path_len == real_path.len);
     assert(lens.inherit_path_len == path.len);
     assert(read_conn.app.data.app_id == conn.app.data.app_id);
     assert(read_conn.process_id == conn.process_id);
-    assert(read_conn.parent_process_id == conn.parent_process_id);
-    assert(read_conn.create_time == conn.create_time);
 
     printf("test_buf_conn_proc_path: OK\n");
 }
@@ -139,18 +133,20 @@ static void test_buf_conn_proc_path(void)
 static void test_buf_proc_start_exit(void)
 {
     const FORT_APP_PATH path = { .len = 6, .buffer = L"abc" };
-    const FORT_LOG_PROC_HEADER header = {
-        .path_len = path.len,
-        .process_id = 5,
+    const FORT_LOG_PROC_START_HEADER header = {
         .parent_process_id = 7,
         .create_time = 0x1122334455667788LL,
+        .proc = {
+            .path_len = path.len,
+            .process_id = 5,
+        },
     };
 
     FORT_BUFFER buf = { 0 };
     fort_buffer_open(&buf);
 
     assert(fort_buffer_proc_start_write(&buf, NULL, &header, &path) == STATUS_SUCCESS);
-    assert(fort_buffer_proc_pid_write(&buf, NULL, FORT_LOG_TYPE_PROC_EXIT, header.process_id)
+    assert(fort_buffer_proc_pid_write(&buf, NULL, FORT_LOG_TYPE_PROC_EXIT, header.proc.process_id)
             == STATUS_SUCCESS);
 
     static CHAR read_buf[FORT_BUFFER_SIZE];
@@ -161,13 +157,13 @@ static void test_buf_proc_start_exit(void)
     const char *p = read_buf;
     assert(fort_log_type(p) == FORT_LOG_TYPE_PROC_START);
 
-    FORT_LOG_PROC_HEADER read_header;
-    fort_log_proc_header_read(p, &read_header);
-    assert(read_header.path_len == path.len);
-    assert(read_header.process_id == header.process_id);
+    FORT_LOG_PROC_START_HEADER read_header;
+    fort_log_proc_start_header_read(p, &read_header);
+    assert(read_header.proc.path_len == path.len);
+    assert(read_header.proc.process_id == header.proc.process_id);
     assert(read_header.parent_process_id == header.parent_process_id);
     assert(read_header.create_time == header.create_time);
-    assert(memcmp(p + FORT_LOG_PROC_HEADER_SIZE, path.buffer, path.len) == 0);
+    assert(memcmp(p + FORT_LOG_PROC_START_HEADER_SIZE, path.buffer, path.len) == 0);
 
     /* The PROC_EXIT follows */
     p += FORT_LOG_PROC_START_SIZE(path.len);
@@ -175,7 +171,7 @@ static void test_buf_proc_start_exit(void)
 
     UINT32 pid = 0;
     fort_log_proc_pid_read(p, &pid);
-    assert(pid == header.process_id);
+    assert(pid == header.proc.process_id);
 
     fort_buffer_close(&buf);
 

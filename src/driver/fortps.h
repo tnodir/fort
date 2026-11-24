@@ -46,15 +46,6 @@ typedef struct fort_ps_opt
 
 typedef const FORT_PS_OPT *PCFORT_PS_OPT;
 
-typedef struct fort_ps_info
-{
-    UINT32 parent_process_id; /* 0, when unknown */
-
-    INT64 create_time; /* 0, when unknown */
-
-    FORT_PS_OPT opt;
-} FORT_PS_INFO, *PFORT_PS_INFO;
-
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -69,7 +60,7 @@ FORT_API void fort_pstree_enum_processes(PFORT_PSTREE ps_tree, BOOL log_start);
 
 /* Returns the process's name, which is referenced until fort_psname_put() */
 FORT_API PFORT_PSNAME_NODE fort_pstree_get_proc_name(
-        PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, PFORT_PS_INFO ps_info);
+        PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, PFORT_PS_OPT ps_opt);
 
 /* The process's Ask to Connect is replaced by the user's allowance */
 FORT_API BOOL fort_pstree_proc_allow(PFORT_PSTREE ps_tree, PCFORT_PROC_ALLOW proc_allow);

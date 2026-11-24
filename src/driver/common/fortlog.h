@@ -40,21 +40,30 @@
     (FORT_LOG_CONN_INHERIT_PATH_OFFSET(path_len, isIPv6)                                           \
             + FORT_ALIGN_SIZE(inherit_path_len, FORT_LOG_ALIGN))
 
-/* The process's header of PROC_START, which PROC_NEW begins with */
-#define FORT_LOG_PROC_HEADER_SIZE (5 * sizeof(UINT32))
-
-#define FORT_LOG_PROC_START_SIZE(path_len)                                                         \
-    (FORT_LOG_PROC_HEADER_SIZE + FORT_ALIGN_SIZE(path_len, FORT_LOG_ALIGN))
+/* The process's header, which PROC_START and PROC_NEW begin with */
+#define FORT_LOG_PROC_HEADER_SIZE (2 * sizeof(UINT32))
 
 typedef struct fort_log_proc_header
 {
     UINT16 path_len;
     UINT32 process_id;
-    UINT32 parent_process_id;
-    INT64 create_time;
 } FORT_LOG_PROC_HEADER, *PFORT_LOG_PROC_HEADER;
 
 typedef const FORT_LOG_PROC_HEADER *PCFORT_LOG_PROC_HEADER;
+
+#define FORT_LOG_PROC_START_HEADER_SIZE (FORT_LOG_PROC_HEADER_SIZE + 3 * sizeof(UINT32))
+
+#define FORT_LOG_PROC_START_SIZE(path_len)                                                         \
+    (FORT_LOG_PROC_START_HEADER_SIZE + FORT_ALIGN_SIZE(path_len, FORT_LOG_ALIGN))
+
+typedef struct fort_log_proc_start_header
+{
+    UINT32 parent_process_id;
+    INT64 create_time;
+    FORT_LOG_PROC_HEADER proc;
+} FORT_LOG_PROC_START_HEADER, *PFORT_LOG_PROC_START_HEADER;
+
+typedef const FORT_LOG_PROC_START_HEADER *PCFORT_LOG_PROC_START_HEADER;
 
 #define FORT_LOG_PROC_NEW_HEADER_SIZE (FORT_LOG_PROC_HEADER_SIZE + 2 * sizeof(UINT32))
 
@@ -128,12 +137,12 @@ FORT_API void fort_log_conn_write(
 FORT_API void fort_log_conn_header_read(
         const char *p, PFORT_CONF_META_CONN conn, UINT16 *path_len, UINT16 *inherit_path_len);
 
-FORT_API void fort_log_proc_start_header_write(char *p, PCFORT_LOG_PROC_HEADER header);
+FORT_API void fort_log_proc_start_header_write(char *p, PCFORT_LOG_PROC_START_HEADER header);
 
 FORT_API void fort_log_proc_start_write(
-        char *p, PCFORT_LOG_PROC_HEADER header, PCFORT_APP_PATH path);
+        char *p, PCFORT_LOG_PROC_START_HEADER header, PCFORT_APP_PATH path);
 
-FORT_API void fort_log_proc_header_read(const char *p, PFORT_LOG_PROC_HEADER header);
+FORT_API void fort_log_proc_start_header_read(const char *p, PFORT_LOG_PROC_START_HEADER header);
 
 FORT_API void fort_log_proc_new_header_write(char *p, PCFORT_LOG_PROC_NEW_HEADER header);
 

@@ -1,20 +1,14 @@
 #ifndef LOGENTRYPROCKILL_H
 #define LOGENTRYPROCKILL_H
 
-#include "logentry.h"
+#include "logentryproc.h"
 
-class LogEntryProcKill : public LogEntry
+class LogEntryProcKill : public LogEntryProc
 {
 public:
-    explicit LogEntryProcKill(quint32 pid = 0);
+    using LogEntryProc::LogEntryProc;
 
     FortLogType type() const override { return FORT_LOG_TYPE_PROC_KILL; }
-
-    quint32 pid() const { return m_pid; }
-    void setPid(quint32 pid) { m_pid = pid; }
-
-private:
-    quint32 m_pid = 0;
 };
 
 #endif // LOGENTRYPROCKILL_H

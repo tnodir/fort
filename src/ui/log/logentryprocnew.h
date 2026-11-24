@@ -1,12 +1,12 @@
 #ifndef LOGENTRYPROCNEW_H
 #define LOGENTRYPROCNEW_H
 
-#include "logentryprocstart.h"
+#include "logentryprocpath.h"
 
-class LogEntryProcNew : public LogEntryProcStart
+class LogEntryProcNew : public LogEntryProcPath
 {
 public:
-    explicit LogEntryProcNew(quint32 pid = 0, const QString &kernelPath = QString());
+    using LogEntryProcPath::LogEntryProcPath;
 
     FortLogType type() const override { return FORT_LOG_TYPE_PROC_NEW; }
 

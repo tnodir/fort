@@ -6,9 +6,8 @@
 #include "logentryconn.h"
 #include "logentryflowclosed.h"
 #include "logentryflowtraf.h"
-#include "logentryprocexit.h"
-#include "logentryprockill.h"
 #include "logentryprocnew.h"
+#include "logentryprocstart.h"
 #include "logentrystattraf.h"
 #include "logentrytime.h"
 
@@ -19,22 +18,18 @@ quint16 pathSize(const QString &path)
     return quint16(path.size()) * sizeof(wchar_t);
 }
 
-FORT_LOG_PROC_HEADER procHeader(const LogEntryProcStart *logEntry, quint16 pathLen)
+FORT_LOG_PROC_HEADER procHeader(const LogEntryProcPath *logEntry, quint16 pathLen)
 {
     return {
         .path_len = pathLen,
         .process_id = logEntry->pid(),
-        .parent_process_id = logEntry->parentPid(),
-        .create_time = logEntry->createTime(),
     };
 }
 
 void setProcEntry(
-        LogEntryProcStart *logEntry, const FORT_LOG_PROC_HEADER &header, const QString &kernelPath)
+        LogEntryProcPath *logEntry, const FORT_LOG_PROC_HEADER &header, const QString &kernelPath)
 {
     logEntry->setPid(header.process_id);
-    logEntry->setParentPid(header.parent_process_id);
-    logEntry->setCreateTime(header.create_time);
     logEntry->setKernelPath(kernelPath);
 }
 
@@ -114,16 +109,6 @@ const char *LogBuffer::takeEntry(quint32 entrySize)
     skipEntry(entrySize);
 
     return input;
-}
-
-quint32 LogBuffer::readEntryPid()
-{
-    const char *input = takeEntry(DriverCommon::logProcPidSize());
-
-    quint32 pid;
-    DriverCommon::logProcPidRead(input, &pid);
-
-    return pid;
 }
 
 FortLogType LogBuffer::peekEntryType()
@@ -272,22 +257,32 @@ void LogBuffer::writeEntryProcStart(const LogEntryProcStart *logEntry)
 
     char *output = appendEntry(DriverCommon::logProcStartSize(pathLen));
 
-    DriverCommon::logProcStartHeaderWrite(output, procHeader(logEntry, pathLen));
+    const FORT_LOG_PROC_START_HEADER header = {
+        .parent_process_id = logEntry->parentPid(),
+        .create_time = logEntry->createTime(),
+        .proc = procHeader(logEntry, pathLen),
+    };
 
-    writePath(output + DriverCommon::logProcHeaderSize(), path);
+    DriverCommon::logProcStartHeaderWrite(output, header);
+
+    writePath(output + DriverCommon::logProcStartHeaderSize(), path);
 }
 
 void LogBuffer::readEntryProcStart(LogEntryProcStart *logEntry)
 {
     const char *input = entryInput();
 
-    const auto header = DriverCommon::logProcHeaderRead(input);
+    const auto header = DriverCommon::logProcStartHeaderRead(input);
 
-    const QString path = readPath(input + DriverCommon::logProcHeaderSize(), header.path_len);
+    const quint16 pathLen = header.proc.path_len;
 
-    setProcEntry(logEntry, header, path);
+    const QString path = readPath(input + DriverCommon::logProcStartHeaderSize(), pathLen);
 
-    skipEntry(DriverCommon::logProcStartSize(header.path_len));
+    setProcEntry(logEntry, header.proc, path);
+    logEntry->setParentPid(header.parent_process_id);
+    logEntry->setCreateTime(header.create_time);
+
+    skipEntry(DriverCommon::logProcStartSize(pathLen));
 }
 
 void LogBuffer::writeEntryProcNew(const LogEntryProcNew *logEntry)
@@ -367,21 +362,21 @@ void LogBuffer::readEntryTime(LogEntryTime *logEntry)
     logEntry->setUnixTime(unixTime);
 }
 
-void LogBuffer::readEntryProcKill(LogEntryProcKill *logEntry)
-{
-    logEntry->setPid(readEntryPid());
-}
-
-void LogBuffer::writeEntryProcExit(const LogEntryProcExit *logEntry)
+void LogBuffer::writeEntryProcPid(const LogEntryProc *logEntry)
 {
     char *output = appendEntry(DriverCommon::logProcPidSize());
 
     DriverCommon::logProcPidWrite(output, logEntry->type(), logEntry->pid());
 }
 
-void LogBuffer::readEntryProcExit(LogEntryProcExit *logEntry)
+void LogBuffer::readEntryProcPid(LogEntryProc *logEntry)
 {
-    logEntry->setPid(readEntryPid());
+    const char *input = takeEntry(DriverCommon::logProcPidSize());
+
+    quint32 pid;
+    DriverCommon::logProcPidRead(input, &pid);
+
+    logEntry->setPid(pid);
 }
 
 void LogBuffer::writeEntryFlowTraf(const LogEntryFlowTraf *logEntry)

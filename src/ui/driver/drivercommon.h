@@ -83,7 +83,7 @@ quint32 logConnHeaderSize(bool isIPv6 = false);
 quint32 logConnInheritPathOffset(quint16 pathLen, bool isIPv6 = false);
 quint32 logConnSize(quint16 pathLen, quint16 inheritPathLen, bool isIPv6 = false);
 
-quint32 logProcHeaderSize();
+quint32 logProcStartHeaderSize();
 quint32 logProcStartSize(quint16 pathLen);
 
 quint32 logProcNewHeaderSize();
@@ -114,8 +114,8 @@ void logConnHeaderWrite(
 void logConnHeaderRead(
         const char *input, PFORT_CONF_META_CONN conn, quint16 *pathLen, quint16 *inheritPathLen);
 
-void logProcStartHeaderWrite(char *output, const FORT_LOG_PROC_HEADER &header);
-FORT_LOG_PROC_HEADER logProcHeaderRead(const char *input);
+void logProcStartHeaderWrite(char *output, const FORT_LOG_PROC_START_HEADER &header);
+FORT_LOG_PROC_START_HEADER logProcStartHeaderRead(const char *input);
 
 void logProcNewHeaderWrite(char *output, const FORT_LOG_PROC_NEW_HEADER &header);
 FORT_LOG_PROC_NEW_HEADER logProcNewHeaderRead(const char *input);
