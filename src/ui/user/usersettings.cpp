@@ -65,7 +65,6 @@ void UserSettings::migrateIniOnLoad()
         setCacheValue("connWindow/geometry", iniValue("statWindow/geometry"));
         setCacheValue("connWindow/maximized", iniValue("statWindow/maximized"));
         setCacheValue("connWindow/autoScroll", iniValue("statWindow/autoScroll"));
-        setCacheValue("connWindow/showHostNames", iniValue("statWindow/showHostNames"));
         setCacheValue("hotKey/traffic", iniValue("hotKey/statistics"));
     }
 
@@ -120,7 +119,6 @@ void UserSettings::migrateIniOnWrite()
         ini()->setValue("connWindow/geometry", cacheValue("connWindow/geometry"));
         ini()->setValue("connWindow/maximized", cacheValue("connWindow/maximized"));
         ini()->setValue("connWindow/autoScroll", cacheValue("connWindow/autoScroll"));
-        ini()->setValue("connWindow/showHostNames", cacheValue("connWindow/showHostNames"));
         ini()->setValue("hotKey/traffic", cacheValue("hotKey/traffic"));
     }
 
@@ -146,7 +144,6 @@ void UserSettings::migrateUserIniOnLoad(int version)
     setCacheValue(
             "statWindow/connListHeaderVersion", ini()->value("connWindow/connListHeaderVersion"));
     setCacheValue("statWindow/autoScroll", ini()->value("connWindow/autoScroll"));
-    setCacheValue("statWindow/showHostNames", ini()->value("connWindow/showHostNames"));
     setCacheValue("statWindow/maximized", ini()->value("connWindow/maximized"));
 }
 
@@ -171,6 +168,5 @@ void UserSettings::migrateUserIniOnWrite(int version)
     ini()->setValue(
             "statWindow/connListHeaderVersion", cacheValue("statWindow/connListHeaderVersion"));
     ini()->setValue("statWindow/autoScroll", cacheValue("statWindow/autoScroll"));
-    ini()->setValue("statWindow/showHostNames", cacheValue("statWindow/showHostNames"));
     ini()->setValue("statWindow/maximized", cacheValue("statWindow/maximized"));
 }

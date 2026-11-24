@@ -84,7 +84,6 @@ private:
     void setupEditSearch();
     void setupListOptions();
     void setupAutoScroll();
-    void setupShowHostNames();
     void setupLogConnIcons();
     void setupTableConnList();
     void setupTableConnListHeader();
@@ -103,7 +102,6 @@ private:
     void updateAutoScroll();
     void setupAutoScrollConnections();
     void setupKeepScrollConnections();
-    void updateShowHostNames();
 
     void deleteConn(int row);
 
@@ -131,7 +129,6 @@ private:
     QLineEdit *m_editSearch = nullptr;
     QPushButton *m_btListOptions = nullptr;
     QCheckBox *m_cbAutoScroll = nullptr;
-    QCheckBox *m_cbShowHostNames = nullptr;
     QWidget *m_logConnIcons = nullptr;
     QLabel *m_iconLogAllowedConn = nullptr;
     QLabel *m_iconLogBlockedConn = nullptr;

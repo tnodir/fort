@@ -25,9 +25,6 @@ class ConnListModel : public TableSqlModel
 public:
     explicit ConnListModel(QObject *parent = nullptr);
 
-    bool resolveAddress() const { return m_resolveAddress; }
-    void setResolveAddress(bool v) { m_resolveAddress = v; }
-
     SqliteDb *sqliteDb() const override;
 
     void initialize();
@@ -108,8 +105,6 @@ private:
     void insertConnRows(qint64 idMax, int count);
 
 private:
-    uint m_resolveAddress : 1 = false;
-
     qint64 m_connIdMin = 0;
     qint64 m_connIdMax = 0;
 

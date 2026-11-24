@@ -197,7 +197,6 @@ void ConnectionsWindow::retranslateUi()
 
     m_btListOptions->setToolTip(tr("List Options"));
     m_cbAutoScroll->setText(tr("Auto scroll"));
-    m_cbShowHostNames->setText(tr("Show host names"));
 
     updateLogConnIcons();
     m_iconLogAlertedConn->setToolTip(
@@ -382,10 +381,9 @@ void ConnectionsWindow::setupEditSearch()
 void ConnectionsWindow::setupListOptions()
 {
     setupAutoScroll();
-    setupShowHostNames();
 
     // Menu
-    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbAutoScroll, m_cbShowHostNames });
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbAutoScroll });
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
@@ -403,17 +401,6 @@ void ConnectionsWindow::setupAutoScroll()
         updateAutoScroll();
     });
     m_cbAutoScroll->setObjectName("cbAutoScroll");
-}
-
-void ConnectionsWindow::setupShowHostNames()
-{
-    m_cbShowHostNames = ControlUtil::createCheckBox(/*checked=*/false, [&](bool checked) {
-        iniUser().setWindowShowHostNames(iniGroup(), checked);
-        confManager()->saveIniUser();
-
-        updateShowHostNames();
-    });
-    m_cbShowHostNames->setObjectName("cbShowHostNames");
 }
 
 void ConnectionsWindow::setupLogConnIcons()
@@ -597,19 +584,13 @@ void ConnectionsWindow::restoreTopRow()
 
 void ConnectionsWindow::restoreIniListOptions()
 {
-    const auto &iniUser = Fort::iniUser();
-    const auto group = iniGroup();
-
     {
         const QSignalBlocker autoScrollBlocker(m_cbAutoScroll);
-        const QSignalBlocker showHostNamesBlocker(m_cbShowHostNames);
 
-        m_cbAutoScroll->setChecked(iniUser.windowAutoScroll(group));
-        m_cbShowHostNames->setChecked(iniUser.windowShowHostNames(group));
+        m_cbAutoScroll->setChecked(iniUser().windowAutoScroll(iniGroup()));
     }
 
     updateAutoScroll();
-    updateShowHostNames();
 }
 
 void ConnectionsWindow::updateAutoScroll()
@@ -650,12 +631,6 @@ void ConnectionsWindow::setupKeepScrollConnections()
         connect(connListModel(), &QAbstractItemModel::rowsRemoved, this,
                 &ConnectionsWindow::restoreTopRow),
     };
-}
-
-void ConnectionsWindow::updateShowHostNames()
-{
-    connListModel()->setResolveAddress(m_cbShowHostNames->isChecked());
-    connListModel()->refresh();
 }
 
 void ConnectionsWindow::deleteConn(int row)

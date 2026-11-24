@@ -222,15 +222,6 @@ public:
     bool windowAutoScroll(const QString &group) const { return valueBool(group + "/autoScroll"); }
     void setWindowAutoScroll(const QString &group, bool on) { setValue(group + "/autoScroll", on); }
 
-    bool windowShowHostNames(const QString &group) const
-    {
-        return valueBool(group + "/showHostNames");
-    }
-    void setWindowShowHostNames(const QString &group, bool on)
-    {
-        setValue(group + "/showHostNames", on);
-    }
-
     bool progAlertWindowAutoShow() const { return valueBool("progAlertWindow/autoShow", true); }
     void setProgAlertWindowAutoShow(bool on) { setValue("progAlertWindow/autoShow", on); }
 

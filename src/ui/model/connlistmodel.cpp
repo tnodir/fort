@@ -153,19 +153,6 @@ static const dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplayTime,
 };
 
-// Without the resolving the host names' columns show the addresses
-ConnListColumn addressColumn(ConnListColumn column)
-{
-    switch (column) {
-    case ConnListColumn::LocalHostName:
-        return ConnListColumn::LocalIp;
-    case ConnListColumn::RemoteHostName:
-        return ConnListColumn::RemoteIp;
-    default:
-        return column;
-    }
-}
-
 }
 
 ConnListModel::ConnListModel(QObject *parent) : TableSqlModel(parent) { }
@@ -256,15 +243,11 @@ QVariant ConnListModel::headerDataDecoration(int section) const
 QVariant ConnListModel::dataDisplay(const QModelIndex &index, int role) const
 {
     const int row = index.row();
-    int column = index.column();
+    const int column = index.column();
 
     const auto &connRow = connRowAt(row);
     if (connRow.isNull())
         return {};
-
-    if (!resolveAddress()) {
-        column = int(addressColumn(ConnListColumn(column)));
-    }
 
     const dataDisplay_func func = dataDisplay_funcList[column];
 
