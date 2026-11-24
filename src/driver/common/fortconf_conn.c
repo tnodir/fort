@@ -7,6 +7,9 @@
 #define FORT_CONF_DNS_PORT 53
 #define FORT_CONF_DOT_PORT 853 /* DNS over TLS (TCP) and over QUIC (UDP) */
 
+#define FORT_CONF_LOOPBACK_IP4      0x7F000001 /* 127.0.0.1 */
+#define FORT_CONF_LOOPBACK_IP6_HI64 0x0100000000000000ULL /* [::1]: its last byte */
+
 inline static BOOL fort_conf_conn_is_local_broadcast(PCFORT_CONF_META_CONN conn)
 {
     if (conn->isIPv6) {
@@ -21,18 +24,35 @@ inline static BOOL fort_conf_conn_is_dns_query(PCFORT_CONF_META_CONN conn)
     return !conn->inbound && conn->remote_port == FORT_CONF_DNS_PORT;
 }
 
+/* The Service's DNS Forwarder listens on 127.0.0.1 and [::1] */
+inline static BOOL fort_conf_conn_is_forwarder_ip(PCFORT_CONF_META_CONN conn)
+{
+    if (conn->isIPv6) {
+        return conn->remote_ip.v6.lo64 == 0
+                && conn->remote_ip.v6.hi64 == FORT_CONF_LOOPBACK_IP6_HI64;
+    }
+
+    return conn->remote_ip.v4 == FORT_CONF_LOOPBACK_IP4;
+}
+
+inline static BOOL fort_conf_conn_is_forwarder_query(PCFORT_CONF_META_CONN conn)
+{
+    return fort_conf_conn_is_dns_query(conn) && fort_conf_conn_is_forwarder_ip(conn);
+}
+
 inline static BOOL fort_conf_conn_loopback_allowed(
         PFORT_CONF_META_CONN conn, const FORT_CONF_FLAGS conf_flags)
 {
     if (conf_flags.block_traffic)
         return FALSE;
 
-    if (conf_flags.dns_forwarder_enabled && fort_conf_conn_is_dns_query(conn)) {
-        /* The Service's DNS Forwarder asked by the loopback */
+    if (conf_flags.dns_forwarder_enabled && fort_conf_conn_is_forwarder_query(conn)) {
+        /* The Service's DNS Forwarder asked by the loopback, even with the locals filtered */
         conn->act.permit_hard = TRUE;
+        return TRUE;
     }
 
-    return TRUE;
+    return !conf_flags.filter_locals;
 }
 
 FORT_API BOOL fort_conf_conn_local_allowed(
@@ -40,13 +60,13 @@ FORT_API BOOL fort_conf_conn_local_allowed(
 {
     conn->is_broadcast = (UINT16) fort_conf_conn_is_local_broadcast(conn);
 
-    if (conf_flags.filter_locals)
-        return FALSE;
-
     /* Loopback */
     if (conn->is_loopback) {
         return fort_conf_conn_loopback_allowed(conn, conf_flags);
     }
+
+    if (conf_flags.filter_locals)
+        return FALSE;
 
     /* Broadcast */
     if (conn->is_broadcast) {

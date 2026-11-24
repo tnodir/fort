@@ -264,6 +264,16 @@ TEST_F(ConnFilterTest, localAddresses)
     ASSERT_TRUE(connAllowed("C:\\App\\unknown.exe", conn));
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_UNKNOWN);
 
+    // Not filtered as the Local Network
+    confFlags()->filter_local_net = true;
+
+    conn = connFilterConn("127.0.0.1");
+    conn.is_loopback = true;
+    ASSERT_TRUE(connAllowed("C:\\App\\unknown.exe", conn));
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_UNKNOWN);
+
+    confFlags()->filter_local_net = false;
+
     conn = connFilterConn("255.255.255.255");
     ASSERT_TRUE(connAllowed("C:\\App\\unknown.exe", conn));
     ASSERT_TRUE(conn.is_broadcast);
@@ -292,6 +302,47 @@ TEST_F(ConnFilterTest, localAddresses)
     ASSERT_FALSE(connAllowed("C:\\App\\unknown.exe", conn));
     ASSERT_TRUE(conn.is_local_net);
     ASSERT_EQ(conn.reason, FORT_CONN_REASON_FILTER_MODE);
+
+    // The DNS Forwarder asked by the loopback: allowed without the Conf
+    confFlags()->dns_forwarder_enabled = true;
+
+    conn = connFilterConn("127.0.0.1");
+    conn.is_loopback = true;
+    conn.remote_port = 53;
+    ASSERT_TRUE(connAllowed("C:\\App\\unknown.exe", conn));
+    ASSERT_TRUE(conn.act.permit_hard);
+    ASSERT_EQ(conn.reason, FORT_CONN_REASON_UNKNOWN);
+
+    conn = {
+        .isIPv6 = true,
+        .is_loopback = true,
+        .ip_proto = IpProto_UDP,
+        .remote_port = 53,
+        .remote_ip = { .v6 = NetFormatUtil::textToIp6("::1") },
+    };
+    ASSERT_TRUE(connAllowed("C:\\App\\unknown.exe", conn));
+    ASSERT_TRUE(conn.act.permit_hard);
+
+    // Not the DNS port: filtered
+    conn = connFilterConn("127.0.0.1");
+    conn.is_loopback = true;
+    ASSERT_FALSE(connAllowed("C:\\App\\unknown.exe", conn));
+    ASSERT_FALSE(conn.act.permit_hard);
+
+    // Another local DNS server: filtered
+    conn = connFilterConn("127.0.0.2");
+    conn.is_loopback = true;
+    conn.remote_port = 53;
+    ASSERT_FALSE(connAllowed("C:\\App\\unknown.exe", conn));
+    ASSERT_FALSE(conn.act.permit_hard);
+
+    // Blocked
+    confFlags()->block_traffic = true;
+
+    conn = connFilterConn("127.0.0.1");
+    conn.is_loopback = true;
+    conn.remote_port = 53;
+    ASSERT_FALSE(connAllowed("C:\\App\\unknown.exe", conn));
 }
 
 TEST_F(ConnFilterTest, blockInetTraffic)
