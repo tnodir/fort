@@ -81,7 +81,7 @@ void TableItemModel::refresh()
         return;
 
     const auto firstCell = index(0, 0);
-    const auto lastCell = index(rowCount - 1, columnCount(firstCell) - 1);
+    const auto lastCell = index(rowCount - 1, columnCount() - 1);
 
     emit dataChanged(firstCell, lastCell);
 }
