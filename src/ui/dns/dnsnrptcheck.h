@@ -1,6 +1,7 @@
 #ifndef DNSNRPTCHECK_H
 #define DNSNRPTCHECK_H
 
+#include <QElapsedTimer>
 #include <QObject>
 
 #include <util/classhelpers.h>
@@ -18,6 +19,14 @@ class DnsNrptCheck : public QObject
 public:
     explicit DnsNrptCheck(QObject *parent = nullptr);
     CLASS_DELETE_COPY_MOVE(DnsNrptCheck)
+
+    bool isRunning() const { return m_lookupId >= 0; }
+
+    // The last check was started within the time
+    bool isStartedWithin(qint64 msecs) const
+    {
+        return m_startTimer.isValid() && !m_startTimer.hasExpired(msecs);
+    }
 
     // Resolves a unique name by the system resolver
     void start();
@@ -37,6 +46,8 @@ private:
     bool m_received = false;
 
     int m_lookupId = -1;
+
+    QElapsedTimer m_startTimer;
 
     QString m_name;
 };

@@ -31,6 +31,8 @@ const QLoggingCategory LC("dns.manager");
 // The programs connect after the answer and may keep the addresses a bit longer, e.g. of a TTL of 0
 inline constexpr quint32 ttlMargin = 60; // seconds
 
+inline constexpr int nrptRecheckInterval = 60 * 1000; // msecs
+
 // The Name Resolution Policy Table's rule sends the Dnscache's queries of all names to the listener
 inline constexpr char nrptPolicyKey[] =
         R"(SYSTEM\CurrentControlSet\Services\Dnscache\Parameters\DnsPolicyConfig)";
@@ -249,11 +251,30 @@ void DnsManager::startNrptCheck()
     m_nrptCheck.start();
 }
 
+// A query received may be the system's one: e.g. the rule applied or the blocking filter removed
+// after the check
+void DnsManager::recheckNrptIgnored()
+{
+    if (m_status.status != DnsForwarderStatus::StatusNrptIgnored)
+        return;
+
+    if (m_nrptCheck.isRunning() || m_nrptCheck.isStartedWithin(nrptRecheckInterval))
+        return;
+
+    m_nrptCheck.start();
+}
+
 void DnsManager::onNrptChecked(bool received)
 {
+    const bool wasIgnored = (m_status.status == DnsForwarderStatus::StatusNrptIgnored);
+
     if (received) {
+        if (wasIgnored) {
+            qCInfo(LC) << "NRPT rule: the system's queries are received after the check failed";
+        }
+
         setStatus(receivingStatus());
-    } else {
+    } else if (!wasIgnored) {
         qCWarning(LC) << "NRPT rule ignored: the system's queries aren't received";
 
         setStatus({ .status = DnsForwarderStatus::StatusNrptIgnored });
@@ -603,6 +624,8 @@ void DnsManager::processQuery(const DnsClient &client, const QByteArray &data)
 
     if (!request.query.parse(data))
         return;
+
+    recheckNrptIgnored();
 
     const quint8 rcode = checkQuery(request);
     if (rcode != ARES_RCODE_NOERROR) {

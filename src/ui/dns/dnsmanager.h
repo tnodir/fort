@@ -98,6 +98,7 @@ private:
     void closeForwarder();
 
     void startNrptCheck();
+    void recheckNrptIgnored();
     void onNrptChecked(bool received);
 
     DnsForwarderStatus receivingStatus() const;

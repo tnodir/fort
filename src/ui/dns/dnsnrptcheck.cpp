@@ -29,12 +29,14 @@ void DnsNrptCheck::start()
     m_received = false;
     m_name = uniqueCheckName();
 
+    m_startTimer.start();
+
     m_lookupId = QHostInfo::lookupHost(m_name, this, &DnsNrptCheck::onLookedUp);
 }
 
 void DnsNrptCheck::abort()
 {
-    if (m_lookupId < 0)
+    if (!isRunning())
         return;
 
     QHostInfo::abortHostLookup(m_lookupId);
