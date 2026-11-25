@@ -81,6 +81,15 @@ public:
     int hoverOpacity() const { return valueInt("hoverOpacity", hoverOpacityDefault()); }
     void setHoverOpacity(int v) { setValue("hoverOpacity", v); }
 
+    static constexpr bool showInTaskbarDefault() { return false; }
+    bool showInTaskbar() const { return valueBool("showInTaskbar", showInTaskbarDefault()); }
+    void setShowInTaskbar(bool on) { setValue("showInTaskbar", on); }
+
+    // At 100% scale, px
+    static constexpr int taskbarWidthDefault() { return 120; }
+    int taskbarWidth() const { return valueInt("taskbarWidth", taskbarWidthDefault()); }
+    void setTaskbarWidth(int v) { setValue("taskbarWidth", v); }
+
     static constexpr int maxSecondsDefault() { return 500; }
     int maxSeconds() const { return valueInt("maxSeconds", maxSecondsDefault()); }
     void setMaxSeconds(int v) { setValue("maxSeconds", v); }

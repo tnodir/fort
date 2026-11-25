@@ -182,7 +182,7 @@ FormPointer &WindowManager::graphFormById(int graphId) const
 GraphWindow *WindowManager::graphWindow(int graphId) const
 {
     const auto &form = graphFormById(graphId);
-    return static_cast<GraphWindow *>(form.window());
+    return qobject_cast<GraphWindow *>(form.window()); // not the taskbar's one
 }
 
 void WindowManager::setUp()
@@ -474,15 +474,42 @@ void WindowManager::updateGraphWindowsVisibility()
     }
 }
 
+void WindowManager::updateGraphWindowHost(const IniGraph &iniGraph)
+{
+    const int graphId = iniGraph.graphId();
+
+    auto &form = graphFormById(graphId);
+    const auto w = static_cast<GraphBaseWindow *>(form.window());
+
+    if (!w)
+        return;
+
+    if (iniGraph.showInTaskbar() == w->inTaskbar())
+        return;
+
+    // Another window's type: closed, then shown anew, if it was
+    const bool wasShown = form.isShown();
+
+    deleteGraphWindow(graphId);
+
+    if (wasShown) {
+        showGraphWindow(graphId);
+    }
+}
+
 void WindowManager::updateGraphWindowVisibility(int graphId)
 {
+    const IniGraph iniGraph(Fort::iniUser(), graphId);
+
+    updateGraphWindowHost(iniGraph);
+
     auto &form = graphFormById(graphId);
     const auto w = form.window();
 
     if (w && w->isVisible())
         return;
 
-    if (IniGraph(Fort::iniUser(), graphId).hideOnClose()) {
+    if (iniGraph.hideOnClose()) {
         if (!w) {
             form.initialize();
         }

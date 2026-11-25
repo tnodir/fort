@@ -3,22 +3,16 @@
 
 #include <QTimer>
 
-#include <form/controls/formwindow.h>
-#include <form/graph/graphview.h>
+#include <form/graph/graphbasewindow.h>
 
-class GraphWindow : public FormWindow
+class GraphWindow : public GraphBaseWindow
 {
     Q_OBJECT
 
 public:
     explicit GraphWindow(int graphId, QWidget *parent = nullptr);
 
-    int graphId() const { return iniGraph().graphId(); }
-
-    WindowCode windowCode() const override { return WindowGraph; }
-    QString helpSection() const override { return "traffic-graph"; }
-    QString iniGroup() const override;
-    bool deleteOnClose() const override;
+    bool inTaskbar() const override { return false; }
 
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
@@ -33,10 +27,7 @@ private slots:
     void updateWindowTitle(const QString &inText, const QString &outText);
 
 private:
-    const IniGraph &iniGraph() const { return m_view->iniGraph(); }
-    IniGraph &iniGraph() { return m_view->iniGraph(); }
-
-    GraphPlot *plot() const { return m_view->plot(); }
+    void setIniGeometry();
 
     void onMouseDoubleClick(QMouseEvent *event);
     void onMouseDragBegin(QMouseEvent *event);
@@ -46,7 +37,7 @@ private:
     void cancelMousePressAndDragging();
 
 private:
-    void setupUi(int graphId);
+    void setupUi();
 
     void setupWindowOptions();
 
@@ -69,8 +60,6 @@ protected:
 private:
     bool m_mouseDragResize = false;
     bool m_iniMaximized = false;
-
-    GraphView *m_view = nullptr;
 
     QPoint m_mousePressPoint;
     QPoint m_posOnMousePress;

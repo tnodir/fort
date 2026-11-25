@@ -231,6 +231,7 @@ private:
     void updateTrayIconVisibility(const IniUser &ini);
     void showGraphWindows();
     void updateGraphWindowsVisibility();
+    void updateGraphWindowHost(const IniGraph &iniGraph);
     void updateGraphWindowVisibility(int graphId);
 
     void walkForms(const std::function<void(FormPointer &form)> &func) const;

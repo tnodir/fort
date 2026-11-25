@@ -52,6 +52,9 @@ void GraphOptionsArea::resetToDefault()
     m_graphOpacity->spinBox()->setValue(IniGraph::opacityDefault());
     m_graphHoverOpacity->spinBox()->setValue(IniGraph::hoverOpacityDefault());
 
+    m_cbGraphShowInTaskbar->setChecked(IniGraph::showInTaskbarDefault());
+    m_graphTaskbarWidth->spinBox()->setValue(IniGraph::taskbarWidthDefault());
+
     m_cbGraphShowGraph->setChecked(IniGraph::showGraphDefault());
     changeGraphType(IniGraph::graphTypeDefault());
     m_cbGraphShowTotal->setChecked(IniGraph::showTotalDefault());
@@ -81,6 +84,7 @@ void GraphOptionsArea::retranslateUi()
 {
     m_gbWindow->setTitle(tr("Window"));
     m_gbGeometry->setTitle(tr("Window Geometry"));
+    m_gbTaskbar->setTitle(tr("Taskbar"));
     m_gbGraph->setTitle(tr("Graph"));
     m_gbText->setTitle(tr("Text"));
     m_gbColors->setTitle(tr("Colors (Light | Dark)"));
@@ -99,6 +103,9 @@ void GraphOptionsArea::retranslateUi()
     m_graphY->label()->setText(tr("Y:"));
     m_graphWidth->label()->setText(tr("Width:"));
     m_graphHeight->label()->setText(tr("Height:"));
+
+    m_cbGraphShowInTaskbar->setText(tr("Show in taskbar"));
+    m_graphTaskbarWidth->label()->setText(tr("Width:"));
 
     m_cbGraphShowGraph->setText(tr("Show graph"));
     m_labelGraphType->setText(tr("Graph type:"));
@@ -207,7 +214,10 @@ QLayout *GraphOptionsArea::setupColumn1()
     // Window Geometry Group Box
     setupGeometryBox();
 
-    return createColumnLayout({ m_gbWindow, m_gbGeometry });
+    // Taskbar Group Box
+    setupTaskbarBox();
+
+    return createColumnLayout({ m_gbWindow, m_gbGeometry, m_gbTaskbar });
 }
 
 QLayout *GraphOptionsArea::setupColumn2()
@@ -333,6 +343,23 @@ void GraphOptionsArea::onGeometryEdited()
         iniGraph().setGeometry(rect);
         emit edited();
     }
+}
+
+void GraphOptionsArea::setupTaskbarBox()
+{
+    m_cbGraphShowInTaskbar =
+            createIniGraphCheckBox(&IniGraph::showInTaskbar, &IniGraph::setShowInTaskbar);
+    m_cbGraphShowInTaskbar->setObjectName("cbGraphShowInTaskbar");
+
+    m_graphTaskbarWidth = ControlUtil::createSpin({ iniGraph().taskbarWidth(), 1, 9999 }, " px",
+            iniGraphSetter(&IniGraph::taskbarWidth, &IniGraph::setTaskbarWidth));
+    m_graphTaskbarWidth->setObjectName("graphTaskbarWidth");
+
+    auto layout =
+            ControlUtil::createVLayoutByWidgets({ m_cbGraphShowInTaskbar, m_graphTaskbarWidth });
+
+    m_gbTaskbar = new QGroupBox();
+    m_gbTaskbar->setLayout(layout);
 }
 
 void GraphOptionsArea::setupGraphBox()

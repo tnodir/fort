@@ -5,6 +5,7 @@
 #include <form/filtersim/filtersimwindow.h>
 #include <form/graph/graphswindow.h>
 #include <form/graph/graphwindow.h>
+#include <form/graph/taskbargraphwindow.h>
 #include <form/group/groupswindow.h>
 #include <form/install/installationwindow.h>
 #include <form/main/mainwindow.h>
@@ -37,6 +38,10 @@ FormWindow *createWindow(int /*id*/)
 
 FormWindow *createGraphWindow(int id)
 {
+    if (IniGraph(iniUser(), id).showInTaskbar()) {
+        return new TaskbarGraphWindow(id);
+    }
+
     return new GraphWindow(id);
 }
 

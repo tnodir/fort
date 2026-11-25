@@ -6,7 +6,6 @@
 #include <QScreen>
 
 #include <conf/confmanager.h>
-#include <form/controls/controlutil.h>
 #include <fortglobal.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
@@ -35,9 +34,9 @@ int stickyEdgeDiff(int screenStart, int screenEnd, int winStart, int winEnd)
 
 }
 
-GraphWindow::GraphWindow(int graphId, QWidget *parent) : FormWindow(parent)
+GraphWindow::GraphWindow(int graphId, QWidget *parent) : GraphBaseWindow(graphId, parent)
 {
-    setupUi(graphId);
+    setupUi();
     setupWindowOptions();
     setupHoverTimer();
 
@@ -46,21 +45,11 @@ GraphWindow::GraphWindow(int graphId, QWidget *parent) : FormWindow(parent)
     connect(confManager(), &ConfManager::iniUserChanged, this, &GraphWindow::updateWindowGeometry);
 }
 
-QString GraphWindow::iniGroup() const
-{
-    return iniGraph().group();
-}
-
-bool GraphWindow::deleteOnClose() const
-{
-    return !iniGraph().hideOnClose();
-}
-
 void GraphWindow::saveWindowState(bool wasVisible)
 {
-    iniGraph().setVisible(wasVisible);
+    setIniGeometry();
 
-    saveWindowGeometry();
+    GraphBaseWindow::saveWindowState(wasVisible);
 }
 
 void GraphWindow::restoreWindowState()
@@ -75,13 +64,7 @@ void GraphWindow::restoreWindowState()
 
 void GraphWindow::saveWindowGeometry()
 {
-    IniGraph &ini = iniGraph();
-
-    m_iniGeometry = stateWatcher()->geometry();
-    m_iniMaximized = stateWatcher()->maximized();
-
-    ini.setGeometry(m_iniGeometry);
-    ini.setMaximized(m_iniMaximized);
+    setIniGeometry();
 
     confManager()->saveIniUser();
 }
@@ -96,11 +79,20 @@ void GraphWindow::updateWindowGeometry()
     restoreWindowState();
 }
 
-void GraphWindow::setupUi(int graphId)
+void GraphWindow::setIniGeometry()
 {
-    m_view = new GraphView(graphId);
+    IniGraph &ini = iniGraph();
 
-    connect(m_view, &GraphView::speedUpdated, this, &GraphWindow::updateWindowTitle);
+    m_iniGeometry = stateWatcher()->geometry();
+    m_iniMaximized = stateWatcher()->maximized();
+
+    ini.setGeometry(m_iniGeometry);
+    ini.setMaximized(m_iniMaximized);
+}
+
+void GraphWindow::setupUi()
+{
+    connect(view(), &GraphView::speedUpdated, this, &GraphWindow::updateWindowTitle);
 
     // Interactions
     const auto plot = this->plot();
@@ -110,10 +102,6 @@ void GraphWindow::setupUi(int graphId)
     connect(plot, &GraphPlot::mouseDragBegin, this, &GraphWindow::onMouseDragBegin);
     connect(plot, &GraphPlot::mouseDragMove, this, &GraphWindow::onMouseDragMove);
     connect(plot, &GraphPlot::mouseDragEnd, this, &GraphWindow::onMouseDragEnd);
-
-    // Widget Layout
-    auto layout = ControlUtil::createVLayoutByWidgets({ m_view }, /*margin=*/0);
-    setLayout(layout);
 
     setMinimumSize(QSize(30, 10));
 }
@@ -164,7 +152,7 @@ void GraphWindow::updateBorder(const IniGraph &ini)
 
     plot()->setBorderVisible(frameless);
 
-    m_view->updateGraph(); // the view is updated before
+    view()->updateGraph(); // the view is updated before
 }
 
 void GraphWindow::setupHoverTimer()

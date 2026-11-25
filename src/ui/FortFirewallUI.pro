@@ -148,6 +148,7 @@ SOURCES += \
     form/formpointer.cpp \
     form/graph/axistickerspeed.cpp \
     form/graph/graphanimation.cpp \
+    form/graph/graphbasewindow.cpp \
     form/graph/graphbarsitem.cpp \
     form/graph/graphcacheditem.cpp \
     form/graph/grapheditdialog.cpp \
@@ -158,6 +159,8 @@ SOURCES += \
     form/graph/graphswindow.cpp \
     form/graph/graphview.cpp \
     form/graph/graphwindow.cpp \
+    form/graph/taskbargraphwindow.cpp \
+    form/graph/taskbarhost.cpp \
     form/group/groupeditdialog.cpp \
     form/group/groupscontroller.cpp \
     form/group/groupswindow.cpp \
@@ -532,6 +535,7 @@ HEADERS += \
     form/graph/axistickerspeed.h \
     form/graph/graph_types.h \
     form/graph/graphanimation.h \
+    form/graph/graphbasewindow.h \
     form/graph/graphbarsitem.h \
     form/graph/graphcacheditem.h \
     form/graph/grapheditdialog.h \
@@ -542,6 +546,8 @@ HEADERS += \
     form/graph/graphswindow.h \
     form/graph/graphview.h \
     form/graph/graphwindow.h \
+    form/graph/taskbargraphwindow.h \
+    form/graph/taskbarhost.h \
     form/group/groupeditdialog.h \
     form/group/groupscontroller.h \
     form/group/groupswindow.h \

@@ -63,6 +63,7 @@ private:
     void setupGeometryControls();
     LabelSpin *createGeometrySpin(int value, int min);
     void onGeometryEdited();
+    void setupTaskbarBox();
     void setupGraphBox();
     QLayout *setupGraphTypeLayout();
     void changeGraphType(int index);
@@ -84,6 +85,7 @@ private:
 
     QGroupBox *m_gbWindow = nullptr;
     QGroupBox *m_gbGeometry = nullptr;
+    QGroupBox *m_gbTaskbar = nullptr;
     QGroupBox *m_gbGraph = nullptr;
     QGroupBox *m_gbText = nullptr;
     QGroupBox *m_gbColors = nullptr;
@@ -101,6 +103,9 @@ private:
     LabelSpin *m_graphY = nullptr;
     LabelSpin *m_graphWidth = nullptr;
     LabelSpin *m_graphHeight = nullptr;
+
+    QCheckBox *m_cbGraphShowInTaskbar = nullptr;
+    LabelSpin *m_graphTaskbarWidth = nullptr;
 
     QCheckBox *m_cbGraphShowGraph = nullptr;
     QLabel *m_labelGraphType = nullptr;
