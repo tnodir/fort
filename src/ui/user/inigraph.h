@@ -22,6 +22,12 @@ public:
 
     static QString groupName(int graphId);
 
+    // Removes the graph's options
+    void remove();
+
+    QString name() const { return value("name").toString(); }
+    void setName(const QString &v) { setValue("name", v); }
+
     static constexpr bool hideOnCloseDefault() { return false; }
     bool hideOnClose() const { return valueBool("hideOnClose", hideOnCloseDefault()); }
     void setHideOnClose(bool on) { setValue("hideOnClose", on); }

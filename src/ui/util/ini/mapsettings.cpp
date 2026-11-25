@@ -6,7 +6,10 @@
 
 MapSettings::MapSettings(Settings *settings) : m_settings(settings) { }
 
-MapSettings::MapSettings(const MapSettings &o) : MapWrapper(o.map()), m_settings(o.settings()) { }
+MapSettings::MapSettings(const MapSettings &o) :
+    MapWrapper(o.map()), m_settings(o.settings()), m_removedGroups(o.m_removedGroups)
+{
+}
 
 QVariant MapSettings::value(const QString &key, const QVariant &defaultValue) const
 {
@@ -33,9 +36,27 @@ void MapSettings::setCacheValue(const QString &key, const QVariant &v) const
     settings()->setCacheValue(key, v);
 }
 
+void MapSettings::removeGroup(const QString &group)
+{
+    const QString groupPrefix = group + '/';
+
+    QVariantMap map = this->map();
+
+    map.removeIf([&](QVariantMap::iterator it) { return it.key().startsWith(groupPrefix); });
+
+    setMap(map);
+
+    m_removedGroups.append(group);
+}
+
 void MapSettings::save()
 {
     Q_ASSERT(settings());
+
+    for (const QString &group : std::as_const(m_removedGroups)) {
+        settings()->removeIniKey(group);
+    }
+    m_removedGroups.clear();
 
     for (const auto &[key, v] : QtCompat::keyValueRange(map())) {
         if (!isTransientKey(key)) {

@@ -40,6 +40,11 @@ QString IniGraph::groupName(int graphId)
     return (graphId == 0) ? name : name + QString::number(graphId);
 }
 
+void IniGraph::remove()
+{
+    m_ini.removeGroup(m_group);
+}
+
 const char *IniGraph::colorKey(GraphColorType type, bool dark)
 {
     return graphColorInfos[type].keys[dark];

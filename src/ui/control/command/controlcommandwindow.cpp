@@ -13,7 +13,7 @@ namespace {
 QStringList optionsTabNames()
 {
     // Sync with enum OptMainPage::TabIndex
-    return { "options", "interface", "addresses", "dns", "statistics", "graph", "schedule" };
+    return { "options", "interface", "addresses", "dns", "statistics", "schedule" };
 }
 
 // The tab's index by its name or index, -1 when invalid

@@ -21,6 +21,9 @@ public:
 
     void setCacheValue(const QString &key, const QVariant &v) const;
 
+    // Removes the group's keys from the map and from the .ini on save
+    void removeGroup(const QString &group);
+
     static bool isTransientKey(const QString &key) { return key.endsWith('_'); }
 
 public slots:
@@ -29,6 +32,8 @@ public slots:
 
 private:
     Settings *m_settings = nullptr;
+
+    QStringList m_removedGroups;
 };
 
 #endif // MAPSETTINGS_H

@@ -16,7 +16,6 @@ public:
         TabAddresses,
         TabDns,
         TabStatistics,
-        TabGraph,
         TabSchedule,
     };
 

@@ -221,6 +221,14 @@ void Settings::saveIniValue(const QString &key, const QVariant &value)
 void Settings::removeIniKey(const QString &key)
 {
     m_ini->remove(key);
+
+    // The key may be a group: drop the cached values of its keys too
+    const QString cachedKey = cacheKey(key);
+    const QString groupPrefix = cachedKey + '/';
+
+    m_cache.removeIf([&](QHash<QString, QVariant>::iterator it) {
+        return it.key() == cachedKey || it.key().startsWith(groupPrefix);
+    });
 }
 
 QStringList Settings::iniChildKeys(const QString &prefix) const

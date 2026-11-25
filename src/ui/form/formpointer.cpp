@@ -3,6 +3,7 @@
 #include <form/activity/activitywindow.h>
 #include <form/conn/connectionswindow.h>
 #include <form/filtersim/filtersimwindow.h>
+#include <form/graph/graphswindow.h>
 #include <form/graph/graphwindow.h>
 #include <form/group/groupswindow.h>
 #include <form/install/installationwindow.h>
@@ -59,6 +60,7 @@ static const createWindow_func createWindow_funcList[] = {
     &createGraphWindow,
     &createWindow<InstallationWindow>,
     &createWindow<UpdatesWindow>,
+    &createWindow<GraphsWindow>,
 };
 
 static_assert(sizeof(createWindow_funcList) / sizeof(createWindow_funcList[0]) == WindowCount,

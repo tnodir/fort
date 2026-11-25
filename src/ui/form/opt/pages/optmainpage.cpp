@@ -18,7 +18,6 @@
 
 #include "addressespage.h"
 #include "dnspage.h"
-#include "graphpage.h"
 #include "ifacepage.h"
 #include "optionspage.h"
 #include "schedulepage.h"
@@ -46,7 +45,6 @@ void OptMainPage::onRetranslateUi()
     m_tabWidget->setTabText(TabAddresses, tr("IP Addresses"));
     m_tabWidget->setTabText(TabDns, tr("DNS"));
     m_tabWidget->setTabText(TabStatistics, tr("Statistics"));
-    m_tabWidget->setTabText(TabGraph, tr("Traffic Graph"));
     m_tabWidget->setTabText(TabSchedule, tr("Schedule"));
 
     m_btDefault->setText(tr("Default"));
@@ -80,7 +78,6 @@ void OptMainPage::setupTabBar()
     auto addressesPage = new AddressesPage(ctrl());
     auto dnsPage = new DnsPage(ctrl());
     auto statisticsPage = new StatisticsPage(ctrl());
-    auto graphPage = new GraphPage(ctrl());
     auto schedulePage = new SchedulePage(ctrl());
 
     m_pages = {
@@ -89,7 +86,6 @@ void OptMainPage::setupTabBar()
         addressesPage,
         dnsPage,
         statisticsPage,
-        graphPage,
         schedulePage,
     };
 
@@ -104,8 +100,6 @@ void OptMainPage::setupTabBar()
             ControlUtil::wrapToScrollArea(dnsPage), IconCache::icon(":/icons/dns.png"), QString());
     m_tabWidget->addTab(ControlUtil::wrapToScrollArea(statisticsPage),
             IconCache::icon(":/icons/chart_bar.png"), QString());
-    m_tabWidget->addTab(ControlUtil::wrapToScrollArea(graphPage),
-            IconCache::icon(":/icons/action_log.png"), QString());
     m_tabWidget->addTab(schedulePage, IconCache::icon(":/icons/clock.png"), QString());
 
     // Menu button

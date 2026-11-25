@@ -477,6 +477,7 @@ void TrayIcon::retranslateUi()
     m_trafficAction->setText(tr("Traffic"));
     m_activityAction->setText(tr("Activity"));
     m_connectionsAction->setText(tr("Connections"));
+    m_graphsAction->setText(tr("Graphs"));
     m_filterSimAction->setText(tr("Filter Simulator"));
     m_graphAction->setText(tr("Traffic Graph"));
 
@@ -645,6 +646,10 @@ void TrayIcon::setupTrayMenuStatistics()
             { ":/icons/connect.png", this, SLOT(onShowWindowAction()), WindowConnections });
     m_connectionsAction->setObjectName("connectionsAction");
     addHotKey(m_connectionsAction, HotKey::connections);
+
+    m_graphsAction = addAction(m_statisticsMenu,
+            { ":/icons/action_log.png", this, SLOT(onShowWindowAction()), WindowGraphs });
+    m_graphsAction->setObjectName("graphsAction");
 
     m_statisticsMenu->addSeparator();
 

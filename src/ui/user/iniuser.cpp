@@ -2,6 +2,8 @@
 
 #include <QHash>
 
+#include <util/bitutil.h>
+
 #include "inigraph.h"
 
 namespace HotKey {
@@ -96,6 +98,25 @@ QVector<int> IniUser::graphWindowIds() const
     }
 
     return graphIds;
+}
+
+int IniUser::newGraphWindowId() const
+{
+    const int graphId = BitUtil::firstZeroBit(graphWindowIdsMask());
+
+    return (graphId < IniGraph::maxCount) ? graphId : -1;
+}
+
+void IniUser::addGraphWindowId(int graphId)
+{
+    setGraphWindowIdsMask(graphWindowIdsMask() | (1 << graphId));
+}
+
+void IniUser::removeGraphWindowId(int graphId)
+{
+    IniGraph(*this, graphId).remove();
+
+    setGraphWindowIdsMask(graphWindowIdsMask() & ~(1 << graphId));
 }
 
 QString IniUser::hotKeyValue(const char *key) const

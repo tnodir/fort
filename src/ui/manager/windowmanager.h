@@ -96,6 +96,7 @@ public:
 
 signals:
     void windowVisibilityChanged(WindowCode code, bool isVisible);
+    void graphWindowVisibilityChanged(int graphId, bool isVisible);
 
     void requestQuit();
 
@@ -155,6 +156,9 @@ public slots:
 
     bool showGraphWindow(int graphId = 0);
     bool closeGraphWindow(int graphId = 0);
+    void deleteGraphWindow(int graphId);
+
+    bool isGraphWindowShown(int graphId) const;
 
     bool setGraphWindowVisible(const QVariant &visibleOrSwitch = {})
     {
@@ -275,6 +279,7 @@ private:
         FormPointer(WindowGraph),
         FormPointer(WindowInstallation),
         FormPointer(WindowUpdates),
+        FormPointer(WindowGraphs),
     };
 
     // The graphs' windows but the main one (of m_forms)

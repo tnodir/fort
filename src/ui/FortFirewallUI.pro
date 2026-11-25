@@ -150,9 +150,12 @@ SOURCES += \
     form/graph/graphanimation.cpp \
     form/graph/graphbarsitem.cpp \
     form/graph/graphcacheditem.cpp \
+    form/graph/grapheditdialog.cpp \
     form/graph/graphlineitem.cpp \
     form/graph/graphoptionsarea.cpp \
     form/graph/graphplot.cpp \
+    form/graph/graphscontroller.cpp \
+    form/graph/graphswindow.cpp \
     form/graph/graphwindow.cpp \
     form/group/groupeditdialog.cpp \
     form/group/groupscontroller.cpp \
@@ -168,7 +171,6 @@ SOURCES += \
     form/opt/pages/addresses/addressesarea.cpp \
     form/opt/pages/addressespage.cpp \
     form/opt/pages/dnspage.cpp \
-    form/opt/pages/graphpage.cpp \
     form/opt/pages/ifacepage.cpp \
     form/opt/pages/optbasepage.cpp \
     form/opt/pages/optionspage.cpp \
@@ -245,6 +247,7 @@ SOURCES += \
     model/appstatmodel.cpp \
     model/connlistmodel.cpp \
     model/connsearchmodel.cpp \
+    model/graphlistmodel.cpp \
     model/grouplistmodel.cpp \
     model/pendingconnsearchmodel.cpp \
     model/rulelistmodel.cpp \
@@ -530,9 +533,12 @@ HEADERS += \
     form/graph/graphanimation.h \
     form/graph/graphbarsitem.h \
     form/graph/graphcacheditem.h \
+    form/graph/grapheditdialog.h \
     form/graph/graphlineitem.h \
     form/graph/graphoptionsarea.h \
     form/graph/graphplot.h \
+    form/graph/graphscontroller.h \
+    form/graph/graphswindow.h \
     form/graph/graphwindow.h \
     form/group/groupeditdialog.h \
     form/group/groupscontroller.h \
@@ -548,7 +554,6 @@ HEADERS += \
     form/opt/pages/addresses/addressesarea.h \
     form/opt/pages/addressespage.h \
     form/opt/pages/dnspage.h \
-    form/opt/pages/graphpage.h \
     form/opt/pages/ifacepage.h \
     form/opt/pages/optbasepage.h \
     form/opt/pages/optionspage.h \
@@ -635,6 +640,7 @@ HEADERS += \
     model/connlistcolumn.h \
     model/connlistmodel.h \
     model/connsearchmodel.h \
+    model/graphlistmodel.h \
     model/grouplistmodel.h \
     model/pendingconnsearchmodel.h \
     model/rulelistmodel.h \

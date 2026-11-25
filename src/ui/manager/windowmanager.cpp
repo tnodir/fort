@@ -440,6 +440,18 @@ bool WindowManager::closeGraphWindow(int graphId)
     return form.close();
 }
 
+void WindowManager::deleteGraphWindow(int graphId)
+{
+    auto &form = graphFormById(graphId);
+    form.close(/*isAppQuitting=*/true); // deletes the window hidden on close too
+}
+
+bool WindowManager::isGraphWindowShown(int graphId) const
+{
+    const auto &form = graphFormById(graphId);
+    return form.isShown();
+}
+
 void WindowManager::showGraphWindows()
 {
     auto &ini = Fort::iniUser();
@@ -841,6 +853,10 @@ void WindowManager::onPasswordCheckedChanged()
 
 void WindowManager::windowOpened(WindowCode code, int id)
 {
+    if (code == WindowGraph) {
+        emit graphWindowVisibilityChanged(id, /*isVisible=*/true);
+    }
+
     // The windows of a code are tracked by the first one's state
     if (id != 0)
         return;
@@ -874,6 +890,10 @@ bool WindowManager::isAnyWindowUnlocked() const
 
 void WindowManager::windowClosed(WindowCode code, int id)
 {
+    if (code == WindowGraph) {
+        emit graphWindowVisibilityChanged(id, /*isVisible=*/false);
+    }
+
     if (id != 0)
         return;
 

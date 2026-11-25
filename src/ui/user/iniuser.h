@@ -335,8 +335,23 @@ public:
 
     static QString filterSimWindowGroup() { return "filterSimWindow"; }
 
+    static QString graphsWindowGroup() { return "graphsWindow"; }
+
     // The graphs' ids: the main graph's one (0) is always present
     QVector<int> graphWindowIds() const;
+
+    // The new graph's id, -1 when the max count of the graphs is reached
+    int newGraphWindowId() const;
+
+    void addGraphWindowId(int graphId);
+    // Removes the graph's options too
+    void removeGraphWindowId(int graphId);
+
+    int graphsHeaderVersion() const { return valueInt("graphsWindow/graphsHeaderVersion"); }
+    void setGraphsHeaderVersion(int v) { setValue("graphsWindow/graphsHeaderVersion", v); }
+
+    QByteArray graphsHeader() const { return valueByteArray("graphsWindow/graphsHeader"); }
+    void setGraphsHeader(const QByteArray &v) { setValue("graphsWindow/graphsHeader", v); }
 
     static QString updatesWindowGroup() { return "updatesWindow"; }
 
