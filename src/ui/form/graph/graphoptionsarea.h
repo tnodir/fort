@@ -53,6 +53,7 @@ private:
     QLayout *setupColumns();
     QLayout *setupColumn1();
     QLayout *setupColumn2();
+    QLayout *setupColumn3();
 
     void setupGraphBox();
     void setupGraphCheckboxes();
@@ -65,22 +66,22 @@ private:
     void changeGraphType(int index);
     QLayout *setupTrafUnitsLayout();
     void changeTrafUnit(int index);
-    void setupColorsBox();
-    void setupGraphColors();
-    LabelColor *createGraphColor(GraphColorType type);
-    void setGraphColor(GraphColorType type, bool dark, const QColor &v);
     void setupGeometryBox();
     void saveGraphWindowGeometry();
     void setupGeometryControls();
     LabelSpin *createGeometrySpin(int value, int min);
     void onGeometryEdited();
+    void setupColorsBox();
+    void setupGraphColors();
+    LabelColor *createGraphColor(GraphColorType type);
+    void setGraphColor(GraphColorType type, bool dark, const QColor &v);
 
 private:
     IniGraph m_iniGraph;
 
     QGroupBox *m_gbGraph = nullptr;
-    QGroupBox *m_gbColors = nullptr;
     QGroupBox *m_gbGeometry = nullptr;
+    QGroupBox *m_gbColors = nullptr;
 
     QCheckBox *m_cbGraphHideOnClose = nullptr;
     QCheckBox *m_cbGraphAlwaysOnTop = nullptr;
@@ -106,13 +107,13 @@ private:
     QLabel *m_traphUnits = nullptr;
     QComboBox *m_comboTrafUnit = nullptr;
 
-    std::array<LabelColor *, GraphColorCount> m_graphColors = {};
-
     QCheckBox *m_cbGraphMaximized = nullptr;
     LabelSpin *m_graphX = nullptr;
     LabelSpin *m_graphY = nullptr;
     LabelSpin *m_graphWidth = nullptr;
     LabelSpin *m_graphHeight = nullptr;
+
+    std::array<LabelColor *, GraphColorCount> m_graphColors = {};
 };
 
 #endif // GRAPHOPTIONSAREA_H

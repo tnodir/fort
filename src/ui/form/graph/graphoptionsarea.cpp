@@ -64,8 +64,8 @@ void GraphOptionsArea::resetToDefault()
 void GraphOptionsArea::retranslateUi()
 {
     m_gbGraph->setTitle(tr("Window"));
-    m_gbColors->setTitle(tr("Colors (Light | Dark)"));
     m_gbGeometry->setTitle(tr("Window Geometry"));
+    m_gbColors->setTitle(tr("Colors (Light | Dark)"));
 
     m_cbGraphHideOnClose->setText(tr("Hide on close"));
 
@@ -95,13 +95,13 @@ void GraphOptionsArea::retranslateUi()
     retranslateGraphTypeCombo();
     m_traphUnits->setText(tr("Units:"));
 
-    retranslateGraphColors();
-
     m_cbGraphMaximized->setText(tr("Maximized"));
     m_graphX->label()->setText(tr("X:"));
     m_graphY->label()->setText(tr("Y:"));
     m_graphWidth->label()->setText(tr("Width:"));
     m_graphHeight->label()->setText(tr("Height:"));
+
+    retranslateGraphColors();
 }
 
 void GraphOptionsArea::retranslateFixedSpeedCombo()
@@ -162,11 +162,16 @@ QLayout *GraphOptionsArea::setupColumns()
     // Column #2
     auto colLayout2 = setupColumn2();
 
+    // Column #3
+    auto colLayout3 = setupColumn3();
+
     // Main layout
     auto layout = new QHBoxLayout();
     layout->addLayout(colLayout1);
     layout->addStretch();
     layout->addLayout(colLayout2);
+    layout->addStretch();
+    layout->addLayout(colLayout3);
     layout->addStretch();
 
     return layout;
@@ -187,16 +192,25 @@ QLayout *GraphOptionsArea::setupColumn1()
 
 QLayout *GraphOptionsArea::setupColumn2()
 {
-    // Graph Colors Group Box
-    setupColorsBox();
-
     // Window Geometry Group Box
     setupGeometryBox();
 
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
-    layout->addWidget(m_gbColors);
     layout->addWidget(m_gbGeometry);
+    layout->addStretch();
+
+    return layout;
+}
+
+QLayout *GraphOptionsArea::setupColumn3()
+{
+    // Graph Colors Group Box
+    setupColorsBox();
+
+    auto layout = new QVBoxLayout();
+    layout->setSpacing(10);
+    layout->addWidget(m_gbColors);
     layout->addStretch();
 
     return layout;
@@ -389,46 +403,6 @@ void GraphOptionsArea::changeTrafUnit(int index)
     m_comboTrafUnit->setCurrentIndex(index);
 }
 
-void GraphOptionsArea::setupColorsBox()
-{
-    setupGraphColors();
-
-    auto layout = ControlUtil::createVLayoutByWidgets(
-            QList<QWidget *>(m_graphColors.begin(), m_graphColors.end()));
-
-    m_gbColors = new QGroupBox();
-    m_gbColors->setLayout(layout);
-}
-
-void GraphOptionsArea::setupGraphColors()
-{
-    for (int i = 0; i < GraphColorCount; ++i) {
-        m_graphColors[i] = createGraphColor(GraphColorType(i));
-    }
-}
-
-LabelColor *GraphOptionsArea::createGraphColor(GraphColorType type)
-{
-    auto c = ControlUtil::createLabelColor(
-            iniGraph().color(type, /*dark=*/false), iniGraph().color(type, /*dark=*/true),
-            [=, this](const QColor &v) { setGraphColor(type, /*dark=*/false, v); },
-            [=, this](const QColor &v) { setGraphColor(type, /*dark=*/true, v); });
-
-    const QString key = IniGraph::colorKey(type, /*dark=*/false);
-    c->setObjectName("graph" + StringUtil::capitalize(key));
-
-    return c;
-}
-
-void GraphOptionsArea::setGraphColor(GraphColorType type, bool dark, const QColor &v)
-{
-    if (iniGraph().color(type, dark) == v)
-        return;
-
-    iniGraph().setColor(type, dark, v);
-    emit edited();
-}
-
 void GraphOptionsArea::setupGeometryBox()
 {
     saveGraphWindowGeometry();
@@ -483,4 +457,44 @@ void GraphOptionsArea::onGeometryEdited()
         iniGraph().setGeometry(rect);
         emit edited();
     }
+}
+
+void GraphOptionsArea::setupColorsBox()
+{
+    setupGraphColors();
+
+    auto layout = ControlUtil::createVLayoutByWidgets(
+            QList<QWidget *>(m_graphColors.begin(), m_graphColors.end()));
+
+    m_gbColors = new QGroupBox();
+    m_gbColors->setLayout(layout);
+}
+
+void GraphOptionsArea::setupGraphColors()
+{
+    for (int i = 0; i < GraphColorCount; ++i) {
+        m_graphColors[i] = createGraphColor(GraphColorType(i));
+    }
+}
+
+LabelColor *GraphOptionsArea::createGraphColor(GraphColorType type)
+{
+    auto c = ControlUtil::createLabelColor(
+            iniGraph().color(type, /*dark=*/false), iniGraph().color(type, /*dark=*/true),
+            [=, this](const QColor &v) { setGraphColor(type, /*dark=*/false, v); },
+            [=, this](const QColor &v) { setGraphColor(type, /*dark=*/true, v); });
+
+    const QString key = IniGraph::colorKey(type, /*dark=*/false);
+    c->setObjectName("graph" + StringUtil::capitalize(key));
+
+    return c;
+}
+
+void GraphOptionsArea::setGraphColor(GraphColorType type, bool dark, const QColor &v)
+{
+    if (iniGraph().color(type, dark) == v)
+        return;
+
+    iniGraph().setColor(type, dark, v);
+    emit edited();
 }
