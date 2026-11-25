@@ -20,6 +20,7 @@ public:
     GraphPlot *plot() const { return m_plot; }
 
 signals:
+    void optionsUpdated();
     void speedUpdated(const QString &inText, const QString &outText);
 
 public slots:

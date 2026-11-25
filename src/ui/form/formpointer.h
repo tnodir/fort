@@ -22,6 +22,7 @@ public:
     PanelDock *dock() const;
 
     bool isShown() const;
+    bool isHostChanged() const;
 
     FormWindow *initialize();
 

@@ -39,6 +39,9 @@ public:
     virtual bool isDockable() const { return (windowCode() & WindowDockable) != 0; }
     bool isDocked() const { return !isWindow(); }
 
+    // The window is to be created anew for another host
+    virtual bool isHostChanged() const { return false; }
+
     virtual bool deleteOnClose() const { return true; }
 
     bool excludeFromCapture() const { return m_excludeFromCapture; }

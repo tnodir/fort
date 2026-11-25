@@ -21,6 +21,11 @@ bool GraphBaseWindow::deleteOnClose() const
     return !iniGraph().hideOnClose();
 }
 
+bool GraphBaseWindow::isHostChanged() const
+{
+    return iniGraph().showInTaskbar() != inTaskbar();
+}
+
 void GraphBaseWindow::saveWindowState(bool wasVisible)
 {
     iniGraph().setVisible(wasVisible);

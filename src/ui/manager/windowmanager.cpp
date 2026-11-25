@@ -18,6 +18,7 @@
 #include <form/dialog/splashscreen.h>
 #include <form/filtersim/filtersimwindow.h>
 #include <form/graph/graphwindow.h>
+#include <form/graph/taskbarhost.h>
 #include <form/group/groupswindow.h>
 #include <form/main/mainwindow.h>
 #include <form/opt/optionswindow.h>
@@ -78,7 +79,10 @@ QAbstractItemView *listView(QWidget *w)
 
 }
 
-WindowManager::WindowManager(QObject *parent) : QObject(parent) { }
+WindowManager::WindowManager(QObject *parent) :
+    QObject(parent), m_taskbarHost(new TaskbarHost(this))
+{
+}
 
 bool WindowManager::hasForm(WindowCode code)
 {
@@ -446,6 +450,18 @@ void WindowManager::deleteGraphWindow(int graphId)
     form.close(/*isAppQuitting=*/true); // deletes the window hidden on close too
 }
 
+void WindowManager::recreateGraphWindow(int graphId)
+{
+    // Closed, then shown anew, if it was
+    const bool wasShown = isGraphWindowShown(graphId);
+
+    deleteGraphWindow(graphId);
+
+    if (wasShown) {
+        showGraphWindow(graphId);
+    }
+}
+
 bool WindowManager::isGraphWindowShown(int graphId) const
 {
     const auto &form = graphFormById(graphId);
@@ -474,26 +490,12 @@ void WindowManager::updateGraphWindowsVisibility()
     }
 }
 
-void WindowManager::updateGraphWindowHost(const IniGraph &iniGraph)
+void WindowManager::updateGraphWindowHost(int graphId)
 {
-    const int graphId = iniGraph.graphId();
+    const auto &form = graphFormById(graphId);
 
-    auto &form = graphFormById(graphId);
-    const auto w = static_cast<GraphBaseWindow *>(form.window());
-
-    if (!w)
-        return;
-
-    if (iniGraph.showInTaskbar() == w->inTaskbar())
-        return;
-
-    // Another window's type: closed, then shown anew, if it was
-    const bool wasShown = form.isShown();
-
-    deleteGraphWindow(graphId);
-
-    if (wasShown) {
-        showGraphWindow(graphId);
+    if (form.isHostChanged()) {
+        recreateGraphWindow(graphId);
     }
 }
 
@@ -501,7 +503,7 @@ void WindowManager::updateGraphWindowVisibility(int graphId)
 {
     const IniGraph iniGraph(Fort::iniUser(), graphId);
 
-    updateGraphWindowHost(iniGraph);
+    updateGraphWindowHost(graphId);
 
     auto &form = graphFormById(graphId);
     const auto w = form.window();

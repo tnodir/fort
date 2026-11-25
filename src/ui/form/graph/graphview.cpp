@@ -71,6 +71,8 @@ void GraphView::updateOptions(bool onlyFlags)
     updateFormat(ini);
 
     updateGraph();
+
+    emit optionsUpdated();
 }
 
 void GraphView::updateColors(const IniGraph &ini)

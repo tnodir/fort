@@ -31,6 +31,7 @@ class ProgramsWindow;
 class RulesWindow;
 class ServicesWindow;
 class SpeedLimitsWindow;
+class TaskbarHost;
 class TimePeriodsWindow;
 class TrafficWindow;
 class TrayIcon;
@@ -51,6 +52,8 @@ public:
     bool isAppQuitting() const { return m_isAppQuitting; }
 
     TaskbarButton &taskbarButton() { return m_taskbarButton; }
+
+    TaskbarHost *taskbarHost() const { return m_taskbarHost; }
 
     NativeWindow *nativeWindow() const { return m_nativeWindow; }
     TrayIcon *trayIcon() const { return m_trayIcon; }
@@ -157,6 +160,7 @@ public slots:
     bool showGraphWindow(int graphId = 0);
     bool closeGraphWindow(int graphId = 0);
     void deleteGraphWindow(int graphId);
+    void recreateGraphWindow(int graphId);
 
     bool isGraphWindowShown(int graphId) const;
 
@@ -231,7 +235,7 @@ private:
     void updateTrayIconVisibility(const IniUser &ini);
     void showGraphWindows();
     void updateGraphWindowsVisibility();
-    void updateGraphWindowHost(const IniGraph &iniGraph);
+    void updateGraphWindowHost(int graphId);
     void updateGraphWindowVisibility(int graphId);
 
     void walkForms(const std::function<void(FormPointer &form)> &func) const;
@@ -259,6 +263,7 @@ private:
 
     TaskbarButton m_taskbarButton;
 
+    TaskbarHost *m_taskbarHost = nullptr;
     NativeWindow *m_nativeWindow = nullptr;
     TrayIcon *m_trayIcon = nullptr;
 

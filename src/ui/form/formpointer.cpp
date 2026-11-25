@@ -105,6 +105,11 @@ bool FormPointer::show(bool activate, bool expose)
     if (!windowManager->checkWindowPassword(code()))
         return false;
 
+    // Another window's type or layering
+    if (isHostChanged()) {
+        close(/*isAppQuitting=*/true); // deletes the window hidden on close too
+    }
+
     if (!window()) {
         initialize();
     }
@@ -176,6 +181,11 @@ bool FormPointer::isShown() const
 {
     // A docked window may be hidden in its tab
     return m_window && (m_window->isVisible() || m_dock);
+}
+
+bool FormPointer::isHostChanged() const
+{
+    return m_window && m_window->isHostChanged();
 }
 
 bool FormPointer::moveToDock()

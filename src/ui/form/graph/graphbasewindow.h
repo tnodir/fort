@@ -16,6 +16,8 @@ public:
 
     virtual bool inTaskbar() const = 0;
 
+    bool isHostChanged() const override;
+
     WindowCode windowCode() const override { return WindowGraph; }
     QString helpSection() const override { return "traffic-graph"; }
     QString iniGroup() const override;
