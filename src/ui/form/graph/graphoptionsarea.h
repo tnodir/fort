@@ -55,22 +55,25 @@ private:
     QLayout *setupColumn2();
     QLayout *setupColumn3();
 
-    void setupGraphBox();
-    void setupGraphCheckboxes();
-    void setupGraphViewCheckboxes();
-    QLayout *setupGraphShowLayout();
-    void setupGraphShowCheckboxes();
-    void setupGraphOptions();
-    void setupGraphFixedSpeed();
-    QLayout *setupGraphTypeLayout();
-    void changeGraphType(int index);
-    QLayout *setupTrafUnitsLayout();
-    void changeTrafUnit(int index);
+    void setupWindowBox();
+    void setupWindowCheckboxes();
+    void setupWindowOpacity();
     void setupGeometryBox();
     void saveGraphWindowGeometry();
     void setupGeometryControls();
     LabelSpin *createGeometrySpin(int value, int min);
     void onGeometryEdited();
+    void setupGraphBox();
+    QLayout *setupGraphTypeLayout();
+    void changeGraphType(int index);
+    QLayout *setupGraphShowLayout();
+    void setupGraphShowCheckboxes();
+    void setupGraphOptions();
+    void setupGraphFixedSpeed();
+    void setupGraphViewOptions();
+    void setupTextBox();
+    QLayout *setupTrafUnitsLayout();
+    void changeTrafUnit(int index);
     void setupColorsBox();
     void setupGraphColors();
     LabelColor *createGraphColor(GraphColorType type);
@@ -79,8 +82,10 @@ private:
 private:
     IniGraph m_iniGraph;
 
-    QGroupBox *m_gbGraph = nullptr;
+    QGroupBox *m_gbWindow = nullptr;
     QGroupBox *m_gbGeometry = nullptr;
+    QGroupBox *m_gbGraph = nullptr;
+    QGroupBox *m_gbText = nullptr;
     QGroupBox *m_gbColors = nullptr;
 
     QCheckBox *m_cbGraphHideOnClose = nullptr;
@@ -88,30 +93,32 @@ private:
     QCheckBox *m_cbGraphFrameless = nullptr;
     QCheckBox *m_cbGraphClickThrough = nullptr;
     QCheckBox *m_cbGraphHideOnHover = nullptr;
-    QCheckBox *m_cbGraphHideYAxisLabels = nullptr;
-    QCheckBox *m_cbGraphShowSpeed = nullptr;
-    QCheckBox *m_cbGraphAnimation = nullptr;
-    QCheckBox *m_cbGraphAxisTicks = nullptr;
-    QLabel *m_labelGraphShow = nullptr;
-    QCheckBox *m_cbGraphShowTotal = nullptr;
-    QCheckBox *m_cbGraphShowIn = nullptr;
-    QCheckBox *m_cbGraphShowOut = nullptr;
     LabelSpin *m_graphOpacity = nullptr;
     LabelSpin *m_graphHoverOpacity = nullptr;
-    LabelSpin *m_graphTickLabelSize = nullptr;
-    LabelSpin *m_graphBarWidth = nullptr;
-    LabelSpin *m_graphMaxSeconds = nullptr;
-    LabelSpinCombo *m_graphFixedSpeed = nullptr;
-    QLabel *m_labelGraphType = nullptr;
-    QComboBox *m_comboGraphType = nullptr;
-    QLabel *m_traphUnits = nullptr;
-    QComboBox *m_comboTrafUnit = nullptr;
 
     QCheckBox *m_cbGraphMaximized = nullptr;
     LabelSpin *m_graphX = nullptr;
     LabelSpin *m_graphY = nullptr;
     LabelSpin *m_graphWidth = nullptr;
     LabelSpin *m_graphHeight = nullptr;
+
+    QLabel *m_labelGraphType = nullptr;
+    QComboBox *m_comboGraphType = nullptr;
+    QLabel *m_labelGraphShow = nullptr;
+    QCheckBox *m_cbGraphShowTotal = nullptr;
+    QCheckBox *m_cbGraphShowIn = nullptr;
+    QCheckBox *m_cbGraphShowOut = nullptr;
+    LabelSpin *m_graphBarWidth = nullptr;
+    LabelSpin *m_graphMaxSeconds = nullptr;
+    LabelSpinCombo *m_graphFixedSpeed = nullptr;
+    QCheckBox *m_cbGraphAnimation = nullptr;
+    QCheckBox *m_cbGraphAxisTicks = nullptr;
+    QCheckBox *m_cbGraphHideYAxisLabels = nullptr;
+    LabelSpin *m_graphTickLabelSize = nullptr;
+
+    QCheckBox *m_cbGraphShowSpeed = nullptr;
+    QLabel *m_labelTrafUnits = nullptr;
+    QComboBox *m_comboTrafUnit = nullptr;
 
     std::array<LabelColor *, GraphColorCount> m_graphColors = {};
 };

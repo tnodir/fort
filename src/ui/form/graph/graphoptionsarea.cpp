@@ -23,6 +23,19 @@
 
 using namespace Fort;
 
+namespace {
+
+QLayout *createColumnLayout(const QList<QWidget *> &boxes)
+{
+    auto layout = ControlUtil::createVLayoutByWidgets(boxes);
+    layout->setSpacing(10);
+    layout->addStretch();
+
+    return layout;
+}
+
+}
+
 GraphOptionsArea::GraphOptionsArea(const IniGraph &iniGraph, QWidget *parent) :
     QWidget(parent), m_iniGraph(iniGraph)
 {
@@ -37,20 +50,22 @@ void GraphOptionsArea::resetToDefault()
     m_cbGraphFrameless->setChecked(IniGraph::framelessDefault());
     m_cbGraphClickThrough->setChecked(IniGraph::clickThroughDefault());
     m_cbGraphHideOnHover->setChecked(IniGraph::hideOnHoverDefault());
-    m_cbGraphHideYAxisLabels->setChecked(IniGraph::hideYAxisLabelsDefault());
-    m_cbGraphShowSpeed->setChecked(IniGraph::showSpeedDefault());
-    m_cbGraphAnimation->setChecked(IniGraph::animationDefault());
-    m_cbGraphAxisTicks->setChecked(IniGraph::axisTicksDefault());
+    m_graphOpacity->spinBox()->setValue(IniGraph::opacityDefault());
+    m_graphHoverOpacity->spinBox()->setValue(IniGraph::hoverOpacityDefault());
+
+    changeGraphType(IniGraph::graphTypeDefault());
     m_cbGraphShowTotal->setChecked(IniGraph::showTotalDefault());
     m_cbGraphShowIn->setChecked(IniGraph::showInDefault());
     m_cbGraphShowOut->setChecked(IniGraph::showOutDefault());
-    m_graphOpacity->spinBox()->setValue(IniGraph::opacityDefault());
-    m_graphHoverOpacity->spinBox()->setValue(IniGraph::hoverOpacityDefault());
-    m_graphTickLabelSize->spinBox()->setValue(IniGraph::tickLabelSizeDefault());
     m_graphBarWidth->spinBox()->setValue(IniGraph::barWidthDefault());
     m_graphMaxSeconds->spinBox()->setValue(IniGraph::maxSecondsDefault());
     m_graphFixedSpeed->spinBox()->setValue(IniGraph::fixedSpeedDefault());
-    changeGraphType(IniGraph::graphTypeDefault());
+    m_cbGraphAnimation->setChecked(IniGraph::animationDefault());
+    m_cbGraphAxisTicks->setChecked(IniGraph::axisTicksDefault());
+    m_cbGraphHideYAxisLabels->setChecked(IniGraph::hideYAxisLabelsDefault());
+    m_graphTickLabelSize->spinBox()->setValue(IniGraph::tickLabelSizeDefault());
+
+    m_cbGraphShowSpeed->setChecked(IniGraph::showSpeedDefault());
     changeTrafUnit(IniGraph::trafUnitDefault());
 
     for (int i = 0; i < GraphColorCount; ++i) {
@@ -63,8 +78,10 @@ void GraphOptionsArea::resetToDefault()
 
 void GraphOptionsArea::retranslateUi()
 {
-    m_gbGraph->setTitle(tr("Window"));
+    m_gbWindow->setTitle(tr("Window"));
     m_gbGeometry->setTitle(tr("Window Geometry"));
+    m_gbGraph->setTitle(tr("Graph"));
+    m_gbText->setTitle(tr("Text"));
     m_gbColors->setTitle(tr("Colors (Light | Dark)"));
 
     m_cbGraphHideOnClose->setText(tr("Hide on close"));
@@ -73,17 +90,21 @@ void GraphOptionsArea::retranslateUi()
     m_cbGraphFrameless->setText(tr("Frameless"));
     m_cbGraphClickThrough->setText(tr("Click through"));
     m_cbGraphHideOnHover->setText(tr("Hide on hover"));
-    m_cbGraphHideYAxisLabels->setText(tr("Hide Y axis scale labels"));
-    m_cbGraphShowSpeed->setText(tr("Show speed"));
-    m_cbGraphAnimation->setText(tr("Animation"));
-    m_cbGraphAxisTicks->setText(tr("Axis ticks"));
+    m_graphOpacity->label()->setText(tr("Opacity:"));
+    m_graphHoverOpacity->label()->setText(tr("Hover opacity:"));
+
+    m_cbGraphMaximized->setText(tr("Maximized"));
+    m_graphX->label()->setText(tr("X:"));
+    m_graphY->label()->setText(tr("Y:"));
+    m_graphWidth->label()->setText(tr("Width:"));
+    m_graphHeight->label()->setText(tr("Height:"));
+
+    m_labelGraphType->setText(tr("Graph type:"));
+    retranslateGraphTypeCombo();
     m_labelGraphShow->setText(tr("Show:"));
     m_cbGraphShowTotal->setText(tr("Total"));
     m_cbGraphShowIn->setText(tr("Download"));
     m_cbGraphShowOut->setText(tr("Upload"));
-    m_graphOpacity->label()->setText(tr("Opacity:"));
-    m_graphHoverOpacity->label()->setText(tr("Hover opacity:"));
-    m_graphTickLabelSize->label()->setText(tr("Tick label size:"));
     m_graphBarWidth->label()->setText(tr("Bar width:"));
     m_graphMaxSeconds->label()->setText(tr("History length:"));
     m_graphMaxSeconds->setToolTip(tr("How many seconds of the traffic the graph shows"));
@@ -91,15 +112,13 @@ void GraphOptionsArea::retranslateUi()
     m_graphFixedSpeed->setToolTip(
             tr("The constant top of the speed scale instead of the automatic one"));
     retranslateFixedSpeedCombo();
-    m_labelGraphType->setText(tr("Graph type:"));
-    retranslateGraphTypeCombo();
-    m_traphUnits->setText(tr("Units:"));
+    m_cbGraphAnimation->setText(tr("Animation"));
+    m_cbGraphAxisTicks->setText(tr("Axis ticks"));
+    m_cbGraphHideYAxisLabels->setText(tr("Hide Y axis scale labels"));
+    m_graphTickLabelSize->label()->setText(tr("Tick label size:"));
 
-    m_cbGraphMaximized->setText(tr("Maximized"));
-    m_graphX->label()->setText(tr("X:"));
-    m_graphY->label()->setText(tr("Y:"));
-    m_graphWidth->label()->setText(tr("Width:"));
-    m_graphHeight->label()->setText(tr("Height:"));
+    m_cbGraphShowSpeed->setText(tr("Show speed"));
+    m_labelTrafUnits->setText(tr("Units:"));
 
     retranslateGraphColors();
 }
@@ -179,28 +198,24 @@ QLayout *GraphOptionsArea::setupColumns()
 
 QLayout *GraphOptionsArea::setupColumn1()
 {
-    // Graph Group Box
-    setupGraphBox();
+    // Window Group Box
+    setupWindowBox();
 
-    auto layout = new QVBoxLayout();
-    layout->setSpacing(10);
-    layout->addWidget(m_gbGraph);
-    layout->addStretch();
+    // Window Geometry Group Box
+    setupGeometryBox();
 
-    return layout;
+    return createColumnLayout({ m_gbWindow, m_gbGeometry });
 }
 
 QLayout *GraphOptionsArea::setupColumn2()
 {
-    // Window Geometry Group Box
-    setupGeometryBox();
+    // Graph Group Box
+    setupGraphBox();
 
-    auto layout = new QVBoxLayout();
-    layout->setSpacing(10);
-    layout->addWidget(m_gbGeometry);
-    layout->addStretch();
+    // Text Group Box
+    setupTextBox();
 
-    return layout;
+    return createColumnLayout({ m_gbGraph, m_gbText });
 }
 
 QLayout *GraphOptionsArea::setupColumn3()
@@ -208,29 +223,13 @@ QLayout *GraphOptionsArea::setupColumn3()
     // Graph Colors Group Box
     setupColorsBox();
 
-    auto layout = new QVBoxLayout();
-    layout->setSpacing(10);
-    layout->addWidget(m_gbColors);
-    layout->addStretch();
-
-    return layout;
+    return createColumnLayout({ m_gbColors });
 }
 
-void GraphOptionsArea::setupGraphBox()
+void GraphOptionsArea::setupWindowBox()
 {
-    setupGraphCheckboxes();
-    setupGraphViewCheckboxes();
-
-    // Graphs to Show
-    auto graphShowLayout = setupGraphShowLayout();
-
-    setupGraphOptions();
-
-    // Graph Type
-    auto graphTypeLayout = setupGraphTypeLayout();
-
-    // Traffic Units
-    auto trafUnitsLayout = setupTrafUnitsLayout();
+    setupWindowCheckboxes();
+    setupWindowOpacity();
 
     auto layout = ControlUtil::createVLayoutByWidgets({
             m_cbGraphHideOnClose,
@@ -239,26 +238,16 @@ void GraphOptionsArea::setupGraphBox()
             m_cbGraphFrameless,
             m_cbGraphClickThrough,
             m_cbGraphHideOnHover,
-            m_cbGraphHideYAxisLabels,
-            m_cbGraphShowSpeed,
-            m_cbGraphAnimation,
-            m_cbGraphAxisTicks,
             ControlUtil::createSeparator(),
+            m_graphOpacity,
+            m_graphHoverOpacity,
     });
-    layout->addLayout(graphShowLayout);
 
-    ControlUtil::fillLayoutByWidgets(layout,
-            { ControlUtil::createSeparator(), m_graphOpacity, m_graphHoverOpacity,
-                    m_graphTickLabelSize, m_graphBarWidth, m_graphMaxSeconds, m_graphFixedSpeed,
-                    ControlUtil::createSeparator() });
-    layout->addLayout(graphTypeLayout);
-    layout->addLayout(trafUnitsLayout);
-
-    m_gbGraph = new QGroupBox();
-    m_gbGraph->setLayout(layout);
+    m_gbWindow = new QGroupBox();
+    m_gbWindow->setLayout(layout);
 }
 
-void GraphOptionsArea::setupGraphCheckboxes()
+void GraphOptionsArea::setupWindowCheckboxes()
 {
     m_cbGraphHideOnClose =
             createIniGraphCheckBox(&IniGraph::hideOnClose, &IniGraph::setHideOnClose);
@@ -276,42 +265,7 @@ void GraphOptionsArea::setupGraphCheckboxes()
     m_cbGraphHideOnHover->setObjectName("cbGraphHideOnHover");
 }
 
-void GraphOptionsArea::setupGraphViewCheckboxes()
-{
-    m_cbGraphHideYAxisLabels =
-            createIniGraphCheckBox(&IniGraph::hideYAxisLabels, &IniGraph::setHideYAxisLabels);
-    m_cbGraphHideYAxisLabels->setObjectName("cbGraphHideYAxisLabels");
-    m_cbGraphShowSpeed = createIniGraphCheckBox(&IniGraph::showSpeed, &IniGraph::setShowSpeed);
-    m_cbGraphShowSpeed->setObjectName("cbGraphShowSpeed");
-    m_cbGraphAnimation = createIniGraphCheckBox(&IniGraph::animation, &IniGraph::setAnimation);
-    m_cbGraphAnimation->setObjectName("cbGraphAnimation");
-    m_cbGraphAxisTicks = createIniGraphCheckBox(&IniGraph::axisTicks, &IniGraph::setAxisTicks);
-    m_cbGraphAxisTicks->setObjectName("cbGraphAxisTicks");
-}
-
-QLayout *GraphOptionsArea::setupGraphShowLayout()
-{
-    m_labelGraphShow = ControlUtil::createLabel();
-
-    setupGraphShowCheckboxes();
-
-    return ControlUtil::createHLayoutByWidgets(
-            { m_labelGraphShow, /*stretch*/ nullptr, m_cbGraphShowTotal, m_cbGraphShowIn,
-                    m_cbGraphShowOut },
-            /*margin=*/0);
-}
-
-void GraphOptionsArea::setupGraphShowCheckboxes()
-{
-    m_cbGraphShowTotal = createIniGraphCheckBox(&IniGraph::showTotal, &IniGraph::setShowTotal);
-    m_cbGraphShowTotal->setObjectName("cbGraphShowTotal");
-    m_cbGraphShowIn = createIniGraphCheckBox(&IniGraph::showIn, &IniGraph::setShowIn);
-    m_cbGraphShowIn->setObjectName("cbGraphShowIn");
-    m_cbGraphShowOut = createIniGraphCheckBox(&IniGraph::showOut, &IniGraph::setShowOut);
-    m_cbGraphShowOut->setObjectName("cbGraphShowOut");
-}
-
-void GraphOptionsArea::setupGraphOptions()
+void GraphOptionsArea::setupWindowOpacity()
 {
     m_graphOpacity = ControlUtil::createSpin({ iniGraph().opacity(), 0, 100 }, " %",
             iniGraphSetter(&IniGraph::opacity, &IniGraph::setOpacity));
@@ -320,87 +274,6 @@ void GraphOptionsArea::setupGraphOptions()
     m_graphHoverOpacity = ControlUtil::createSpin({ iniGraph().hoverOpacity(), 0, 100 }, " %",
             iniGraphSetter(&IniGraph::hoverOpacity, &IniGraph::setHoverOpacity));
     m_graphHoverOpacity->setObjectName("graphHoverOpacity");
-
-    m_graphTickLabelSize = ControlUtil::createSpin({ iniGraph().tickLabelSize(), 1, 99 }, {},
-            iniGraphSetter(&IniGraph::tickLabelSize, &IniGraph::setTickLabelSize));
-    m_graphTickLabelSize->setObjectName("graphTickLabelSize");
-
-    m_graphBarWidth = ControlUtil::createSpin({ iniGraph().barWidth(), 1, 99 }, " px",
-            iniGraphSetter(&IniGraph::barWidth, &IniGraph::setBarWidth));
-    m_graphBarWidth->setObjectName("graphBarWidth");
-
-    m_graphMaxSeconds = ControlUtil::createSpin({ iniGraph().maxSeconds(), 0, 9999 }, {},
-            iniGraphSetter(&IniGraph::maxSeconds, &IniGraph::setMaxSeconds));
-    m_graphMaxSeconds->setObjectName("graphMaxSeconds");
-
-    setupGraphFixedSpeed();
-}
-
-void GraphOptionsArea::setupGraphFixedSpeed()
-{
-    const std::array speedValues = { 100, 0, 500, 1024, 3 * 1024, 5 * 1024, 10 * 1024, 20 * 1024,
-        50 * 1024 };
-
-    QStringList speedNames;
-    for (const int kbits : speedValues) {
-        const auto name = FormatUtil::formatSpeed(kbits * 1024LL);
-        speedNames.append(name);
-    }
-
-    const auto speedValuesList = SpinCombo::makeValuesList(speedValues);
-    m_graphFixedSpeed =
-            ControlUtil::createSpinCombo({ iniGraph().fixedSpeed(), 0, 9999999 }, speedValuesList,
-                    " Kb/s", iniGraphSetter(&IniGraph::fixedSpeed, &IniGraph::setFixedSpeed));
-    m_graphFixedSpeed->setObjectName("graphFixedSpeed");
-    m_graphFixedSpeed->setNames(speedNames);
-}
-
-QLayout *GraphOptionsArea::setupGraphTypeLayout()
-{
-    m_labelGraphType = ControlUtil::createLabel();
-
-    m_comboGraphType = ControlUtil::createComboBox({}, [&](int index) { changeGraphType(index); });
-    m_comboGraphType->setObjectName("comboGraphType");
-    m_comboGraphType->setFixedWidth(110);
-
-    return ControlUtil::createRowLayout(m_labelGraphType, m_comboGraphType);
-}
-
-void GraphOptionsArea::changeGraphType(int index)
-{
-    if (iniGraph().graphType() == index)
-        return;
-
-    iniGraph().setGraphType(index);
-    emit edited();
-
-    m_comboGraphType->setCurrentIndex(index);
-}
-
-QLayout *GraphOptionsArea::setupTrafUnitsLayout()
-{
-    const QStringList list = { "b/s", "B/s", "ib/s", "iB/s" };
-
-    m_traphUnits = ControlUtil::createLabel();
-
-    m_comboTrafUnit = ControlUtil::createComboBox(list, [&](int index) { changeTrafUnit(index); });
-    m_comboTrafUnit->setObjectName("comboTrafUnit");
-    m_comboTrafUnit->setFixedWidth(110);
-
-    m_comboTrafUnit->setCurrentIndex(iniGraph().trafUnit());
-
-    return ControlUtil::createRowLayout(m_traphUnits, m_comboTrafUnit);
-}
-
-void GraphOptionsArea::changeTrafUnit(int index)
-{
-    if (iniGraph().trafUnit() == index)
-        return;
-
-    iniGraph().setTrafUnit(index);
-    emit edited();
-
-    m_comboTrafUnit->setCurrentIndex(index);
 }
 
 void GraphOptionsArea::setupGeometryBox()
@@ -457,6 +330,162 @@ void GraphOptionsArea::onGeometryEdited()
         iniGraph().setGeometry(rect);
         emit edited();
     }
+}
+
+void GraphOptionsArea::setupGraphBox()
+{
+    // Graph Type
+    auto graphTypeLayout = setupGraphTypeLayout();
+
+    // Graphs to Show
+    auto graphShowLayout = setupGraphShowLayout();
+
+    setupGraphOptions();
+    setupGraphViewOptions();
+
+    auto layout = new QVBoxLayout();
+    layout->addLayout(graphTypeLayout);
+    layout->addLayout(graphShowLayout);
+
+    ControlUtil::fillLayoutByWidgets(layout,
+            { ControlUtil::createSeparator(), m_graphBarWidth, m_graphMaxSeconds, m_graphFixedSpeed,
+                    ControlUtil::createSeparator(), m_cbGraphAnimation, m_cbGraphAxisTicks,
+                    m_cbGraphHideYAxisLabels, m_graphTickLabelSize });
+
+    m_gbGraph = new QGroupBox();
+    m_gbGraph->setLayout(layout);
+}
+
+QLayout *GraphOptionsArea::setupGraphTypeLayout()
+{
+    m_labelGraphType = ControlUtil::createLabel();
+
+    m_comboGraphType = ControlUtil::createComboBox({}, [&](int index) { changeGraphType(index); });
+    m_comboGraphType->setObjectName("comboGraphType");
+    m_comboGraphType->setFixedWidth(110);
+
+    return ControlUtil::createRowLayout(m_labelGraphType, m_comboGraphType);
+}
+
+void GraphOptionsArea::changeGraphType(int index)
+{
+    if (iniGraph().graphType() == index)
+        return;
+
+    iniGraph().setGraphType(index);
+    emit edited();
+
+    m_comboGraphType->setCurrentIndex(index);
+}
+
+QLayout *GraphOptionsArea::setupGraphShowLayout()
+{
+    m_labelGraphShow = ControlUtil::createLabel();
+
+    setupGraphShowCheckboxes();
+
+    return ControlUtil::createHLayoutByWidgets(
+            { m_labelGraphShow, /*stretch*/ nullptr, m_cbGraphShowTotal, m_cbGraphShowIn,
+                    m_cbGraphShowOut },
+            /*margin=*/0);
+}
+
+void GraphOptionsArea::setupGraphShowCheckboxes()
+{
+    m_cbGraphShowTotal = createIniGraphCheckBox(&IniGraph::showTotal, &IniGraph::setShowTotal);
+    m_cbGraphShowTotal->setObjectName("cbGraphShowTotal");
+    m_cbGraphShowIn = createIniGraphCheckBox(&IniGraph::showIn, &IniGraph::setShowIn);
+    m_cbGraphShowIn->setObjectName("cbGraphShowIn");
+    m_cbGraphShowOut = createIniGraphCheckBox(&IniGraph::showOut, &IniGraph::setShowOut);
+    m_cbGraphShowOut->setObjectName("cbGraphShowOut");
+}
+
+void GraphOptionsArea::setupGraphOptions()
+{
+    m_graphBarWidth = ControlUtil::createSpin({ iniGraph().barWidth(), 1, 99 }, " px",
+            iniGraphSetter(&IniGraph::barWidth, &IniGraph::setBarWidth));
+    m_graphBarWidth->setObjectName("graphBarWidth");
+
+    m_graphMaxSeconds = ControlUtil::createSpin({ iniGraph().maxSeconds(), 0, 9999 }, {},
+            iniGraphSetter(&IniGraph::maxSeconds, &IniGraph::setMaxSeconds));
+    m_graphMaxSeconds->setObjectName("graphMaxSeconds");
+
+    setupGraphFixedSpeed();
+}
+
+void GraphOptionsArea::setupGraphFixedSpeed()
+{
+    const std::array speedValues = { 100, 0, 500, 1024, 3 * 1024, 5 * 1024, 10 * 1024, 20 * 1024,
+        50 * 1024 };
+
+    QStringList speedNames;
+    for (const int kbits : speedValues) {
+        const auto name = FormatUtil::formatSpeed(kbits * 1024LL);
+        speedNames.append(name);
+    }
+
+    const auto speedValuesList = SpinCombo::makeValuesList(speedValues);
+    m_graphFixedSpeed =
+            ControlUtil::createSpinCombo({ iniGraph().fixedSpeed(), 0, 9999999 }, speedValuesList,
+                    " Kb/s", iniGraphSetter(&IniGraph::fixedSpeed, &IniGraph::setFixedSpeed));
+    m_graphFixedSpeed->setObjectName("graphFixedSpeed");
+    m_graphFixedSpeed->setNames(speedNames);
+}
+
+void GraphOptionsArea::setupGraphViewOptions()
+{
+    m_cbGraphAnimation = createIniGraphCheckBox(&IniGraph::animation, &IniGraph::setAnimation);
+    m_cbGraphAnimation->setObjectName("cbGraphAnimation");
+    m_cbGraphAxisTicks = createIniGraphCheckBox(&IniGraph::axisTicks, &IniGraph::setAxisTicks);
+    m_cbGraphAxisTicks->setObjectName("cbGraphAxisTicks");
+    m_cbGraphHideYAxisLabels =
+            createIniGraphCheckBox(&IniGraph::hideYAxisLabels, &IniGraph::setHideYAxisLabels);
+    m_cbGraphHideYAxisLabels->setObjectName("cbGraphHideYAxisLabels");
+
+    m_graphTickLabelSize = ControlUtil::createSpin({ iniGraph().tickLabelSize(), 1, 99 }, {},
+            iniGraphSetter(&IniGraph::tickLabelSize, &IniGraph::setTickLabelSize));
+    m_graphTickLabelSize->setObjectName("graphTickLabelSize");
+}
+
+void GraphOptionsArea::setupTextBox()
+{
+    m_cbGraphShowSpeed = createIniGraphCheckBox(&IniGraph::showSpeed, &IniGraph::setShowSpeed);
+    m_cbGraphShowSpeed->setObjectName("cbGraphShowSpeed");
+
+    // Traffic Units
+    auto trafUnitsLayout = setupTrafUnitsLayout();
+
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbGraphShowSpeed });
+    layout->addLayout(trafUnitsLayout);
+
+    m_gbText = new QGroupBox();
+    m_gbText->setLayout(layout);
+}
+
+QLayout *GraphOptionsArea::setupTrafUnitsLayout()
+{
+    const QStringList list = { "b/s", "B/s", "ib/s", "iB/s" };
+
+    m_labelTrafUnits = ControlUtil::createLabel();
+
+    m_comboTrafUnit = ControlUtil::createComboBox(list, [&](int index) { changeTrafUnit(index); });
+    m_comboTrafUnit->setObjectName("comboTrafUnit");
+    m_comboTrafUnit->setFixedWidth(110);
+
+    m_comboTrafUnit->setCurrentIndex(iniGraph().trafUnit());
+
+    return ControlUtil::createRowLayout(m_labelTrafUnits, m_comboTrafUnit);
+}
+
+void GraphOptionsArea::changeTrafUnit(int index)
+{
+    if (iniGraph().trafUnit() == index)
+        return;
+
+    iniGraph().setTrafUnit(index);
+    emit edited();
+
+    m_comboTrafUnit->setCurrentIndex(index);
 }
 
 void GraphOptionsArea::setupColorsBox()
