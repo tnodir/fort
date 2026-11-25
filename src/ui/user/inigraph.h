@@ -107,6 +107,10 @@ public:
     int speedTextSize() const { return valueInt("speedTextSize", speedTextSizeDefault()); }
     void setSpeedTextSize(int v) { setValue("speedTextSize", v); }
 
+    static constexpr bool showGraphDefault() { return true; }
+    bool showGraph() const { return valueBool("showGraph", showGraphDefault()); }
+    void setShowGraph(bool on) { setValue("showGraph", on); }
+
     static constexpr int graphTypeDefault() { return 0; }
     int graphType() const { return valueInt("graphType", graphTypeDefault()); }
     void setGraphType(int v) { setValue("graphType", v); }

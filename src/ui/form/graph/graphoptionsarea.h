@@ -102,6 +102,7 @@ private:
     LabelSpin *m_graphWidth = nullptr;
     LabelSpin *m_graphHeight = nullptr;
 
+    QCheckBox *m_cbGraphShowGraph = nullptr;
     QLabel *m_labelGraphType = nullptr;
     QComboBox *m_comboGraphType = nullptr;
     QLabel *m_labelGraphShow = nullptr;

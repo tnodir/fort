@@ -195,6 +195,22 @@ GraphPlot::GraphPlot(QWidget *parent) : QGraphicsView(parent)
     setupScaleAnimation();
 }
 
+void GraphPlot::setGraphVisible(bool v)
+{
+    if (m_graphVisible == v)
+        return;
+
+    m_graphVisible = v;
+
+    updateGraphItemsVisible();
+
+    if (!v) {
+        stopGraphAnimations();
+    }
+
+    m_axesChanged = true; // the graph or the text alone is laid out
+}
+
 void GraphPlot::setAnimated(bool v)
 {
     m_animated = v;
@@ -250,17 +266,14 @@ void GraphPlot::setAxisTicksVisible(bool v)
     m_axesChanged = true;
 }
 
-bool GraphPlot::yAxisLabelsVisible() const
-{
-    return m_yAxisLabels->isVisible();
-}
-
 void GraphPlot::setYAxisLabelsVisible(bool v)
 {
-    if (yAxisLabelsVisible() == v)
+    if (m_yAxisLabelsVisible == v)
         return;
 
-    m_yAxisLabels->setVisible(v);
+    m_yAxisLabelsVisible = v;
+
+    updateGraphItemsVisible();
 
     m_axesChanged = true;
 }
@@ -408,6 +421,11 @@ void GraphPlot::cancelMousePressAndDragging()
 
 void GraphPlot::replot()
 {
+    if (!m_graphVisible) {
+        redrawText();
+        return;
+    }
+
     const quint64 bits = maxBits(keyLower());
     m_barsEmpty = (bits == 0);
 
@@ -614,6 +632,24 @@ void GraphPlot::setupScaleAnimation()
     connect(&m_scaleAnimation, &GraphAnimation::valueChanged, this, &GraphPlot::updateScale);
 }
 
+void GraphPlot::updateGraphItemsVisible()
+{
+    m_grid->setVisible(m_graphVisible);
+    m_bars->setVisible(m_graphVisible);
+    m_axes->setVisible(m_graphVisible);
+    m_yAxisLabels->setVisible(m_graphVisible && m_yAxisLabelsVisible);
+}
+
+void GraphPlot::stopGraphAnimations()
+{
+    m_scrollTimer.stop();
+    m_risingAnimation.stop();
+    m_scaleAnimation.stop();
+
+    // The stopped scale is at its target
+    setValueUpper(m_valueTarget);
+}
+
 void GraphPlot::updateItemsVisible()
 {
     // The hidden graphs' bars are empty
@@ -781,6 +817,17 @@ void GraphPlot::redraw()
     updateSpeedBox();
 }
 
+void GraphPlot::redrawText()
+{
+    // The text alone depends on the view's size only
+    if (m_axesChanged) {
+        m_axesChanged = false;
+        layoutText();
+    }
+
+    updateSpeedBox();
+}
+
 void GraphPlot::layoutAxes()
 {
     AxisTicks axisTicks;
@@ -798,6 +845,14 @@ void GraphPlot::layoutAxes()
     updateAxes(tickYs, subTickYs);
     updateTickLabels(tickYs);
     updateUnitLabel();
+    updateBorder();
+}
+
+void GraphPlot::layoutText()
+{
+    // The text is clipped by the view
+    m_plotArea->setRect(viewport()->rect());
+
     updateBorder();
 }
 
@@ -1061,10 +1116,25 @@ void GraphPlot::updateSpeedBox()
     width = layoutSpeedItem(m_speedOutText, width);
 
     const qreal height = m_speedInText->boundingRect().height();
-    const double centerX = m_axisRect.left() + m_axisRect.width() / 2.0;
 
     m_speedBox->setRect(QRectF(0, 0, width, height));
-    m_speedBox->setPos(qRound(centerX - width / 2), m_axisRect.top());
+    m_speedBox->setPos(speedBoxPos(width, height));
+}
+
+QPointF GraphPlot::speedBoxPos(qreal width, qreal height) const
+{
+    // The text alone is in the view's center
+    if (!m_graphVisible) {
+        const QRect viewRect = viewport()->rect();
+
+        return QPointF(
+                qRound((viewRect.width() - width) / 2), qRound((viewRect.height() - height) / 2));
+    }
+
+    // At the axis rectangle's top center
+    const double centerX = m_axisRect.left() + m_axisRect.width() / 2.0;
+
+    return QPointF(qRound(centerX - width / 2), m_axisRect.top());
 }
 
 void GraphPlot::updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs)

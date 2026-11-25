@@ -7,7 +7,6 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QToolButton>
-#include <QVBoxLayout>
 
 #include <form/controls/controlutil.h>
 #include <form/controls/labelcolor.h>
@@ -53,6 +52,7 @@ void GraphOptionsArea::resetToDefault()
     m_graphOpacity->spinBox()->setValue(IniGraph::opacityDefault());
     m_graphHoverOpacity->spinBox()->setValue(IniGraph::hoverOpacityDefault());
 
+    m_cbGraphShowGraph->setChecked(IniGraph::showGraphDefault());
     changeGraphType(IniGraph::graphTypeDefault());
     m_cbGraphShowTotal->setChecked(IniGraph::showTotalDefault());
     m_cbGraphShowIn->setChecked(IniGraph::showInDefault());
@@ -100,6 +100,7 @@ void GraphOptionsArea::retranslateUi()
     m_graphWidth->label()->setText(tr("Width:"));
     m_graphHeight->label()->setText(tr("Height:"));
 
+    m_cbGraphShowGraph->setText(tr("Show graph"));
     m_labelGraphType->setText(tr("Graph type:"));
     retranslateGraphTypeCombo();
     m_labelGraphShow->setText(tr("Show:"));
@@ -336,6 +337,9 @@ void GraphOptionsArea::onGeometryEdited()
 
 void GraphOptionsArea::setupGraphBox()
 {
+    m_cbGraphShowGraph = createIniGraphCheckBox(&IniGraph::showGraph, &IniGraph::setShowGraph);
+    m_cbGraphShowGraph->setObjectName("cbGraphShowGraph");
+
     // Graph Type
     auto graphTypeLayout = setupGraphTypeLayout();
 
@@ -345,7 +349,7 @@ void GraphOptionsArea::setupGraphBox()
     setupGraphOptions();
     setupGraphViewOptions();
 
-    auto layout = new QVBoxLayout();
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbGraphShowGraph });
     layout->addLayout(graphTypeLayout);
     layout->addLayout(graphShowLayout);
 

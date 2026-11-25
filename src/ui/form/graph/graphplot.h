@@ -80,6 +80,9 @@ public:
     bool mousePressed() const { return m_mousePressed; }
     bool mouseDragging() const { return m_mouseDragging; }
 
+    bool graphVisible() const { return m_graphVisible; }
+    void setGraphVisible(bool v);
+
     int maxSeconds() const { return m_maxSeconds; }
     void setMaxSeconds(int v) { m_maxSeconds = v; }
 
@@ -116,7 +119,7 @@ public:
     bool axisTicksVisible() const { return m_axisTicksVisible; }
     void setAxisTicksVisible(bool v);
 
-    bool yAxisLabelsVisible() const;
+    bool yAxisLabelsVisible() const { return m_yAxisLabelsVisible; }
     void setYAxisLabelsVisible(bool v);
 
     bool borderVisible() const { return m_borderVisible; }
@@ -169,6 +172,9 @@ private:
     void setupRisingAnimation();
     void setupScaleAnimation();
 
+    void updateGraphItemsVisible();
+    void stopGraphAnimations();
+
     void updateItemsVisible();
     void updateLinesVisible();
 
@@ -192,8 +198,10 @@ private:
     void updateScale(double value);
 
     void redraw();
+    void redrawText();
 
     void layoutAxes();
+    void layoutText();
 
     void setupTickLabelStyle(QGraphicsSimpleTextItem *label) const;
     void updateTickLabelsStyle();
@@ -216,6 +224,7 @@ private:
     void updateScroll();
     void setupSpeedArrows(const QFont &font);
     void updateSpeedBox();
+    QPointF speedBoxPos(qreal width, qreal height) const;
     void updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs);
     void updateTickLabels(const QVector<int> &tickYs);
     void updateUnitLabel();
@@ -232,11 +241,13 @@ private:
     QPointF linePoint(const GraphColumn &column, int height) const;
 
 private:
+    bool m_graphVisible : 1 = true;
     bool m_mousePressed : 1 = false;
     bool m_mouseDragging : 1 = false;
     bool m_mouseHasMoved : 1 = false;
     bool m_animated : 1 = false;
     bool m_axisTicksVisible : 1 = false;
+    bool m_yAxisLabelsVisible : 1 = true;
     bool m_borderVisible : 1 = false;
     bool m_axesChanged : 1 = true;
     bool m_barsEmpty : 1 = true;

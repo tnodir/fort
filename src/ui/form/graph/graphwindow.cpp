@@ -210,6 +210,7 @@ void GraphWindow::updateFonts(const IniGraph &ini)
 
 void GraphWindow::updateFormat(const IniGraph &ini)
 {
+    m_plot->setGraphVisible(ini.showGraph());
     m_plot->setMaxSeconds(ini.maxSeconds());
     m_plot->setGraphType(GraphPlot::graphTypeByIndex(ini.graphType()));
     m_plot->setTotalVisible(ini.showTotal());
