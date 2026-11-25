@@ -445,7 +445,7 @@ void GraphOptionsArea::setupGeometryBox()
 void GraphOptionsArea::saveGraphWindowGeometry()
 {
     // The window saves its geometry on close only
-    const auto w = windowManager()->graphWindow();
+    const auto w = windowManager()->graphWindow(iniGraph().graphId());
     if (w) {
         w->saveWindowGeometry();
     }

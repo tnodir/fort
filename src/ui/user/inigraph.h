@@ -12,6 +12,8 @@ class MapSettings;
 class IniGraph
 {
 public:
+    static constexpr int maxCount = 8;
+
     explicit IniGraph(MapSettings &ini, int graphId = 0);
 
     int graphId() const { return m_graphId; }

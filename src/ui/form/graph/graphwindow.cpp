@@ -14,7 +14,6 @@
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <stat/statmanager.h>
-#include <user/inigraph.h>
 #include <user/iniuser.h>
 #include <util/dateutil.h>
 #include <util/guiutil.h>
@@ -57,7 +56,8 @@ inline void checkWindowVerticalEdges(const QRect &screenRect, const QRect &winRe
 
 }
 
-GraphWindow::GraphWindow(QWidget *parent) : FormWindow(parent)
+GraphWindow::GraphWindow(int graphId, QWidget *parent) :
+    FormWindow(parent), m_iniGraph(Fort::iniUser(), graphId)
 {
     setupUi();
     setupFlagsAndColors();
@@ -93,7 +93,7 @@ void GraphWindow::saveWindowState(bool wasVisible)
 
 void GraphWindow::restoreWindowState()
 {
-    const IniGraph ini = iniGraph();
+    const IniGraph &ini = iniGraph();
 
     m_iniGeometry = ini.geometry();
     m_iniMaximized = ini.maximized();
@@ -103,7 +103,7 @@ void GraphWindow::restoreWindowState()
 
 void GraphWindow::saveWindowGeometry()
 {
-    IniGraph ini = iniGraph();
+    IniGraph &ini = iniGraph();
 
     m_iniGeometry = stateWatcher()->geometry();
     m_iniMaximized = stateWatcher()->maximized();
@@ -116,17 +116,12 @@ void GraphWindow::saveWindowGeometry()
 
 void GraphWindow::updateWindowGeometry()
 {
-    const IniGraph ini = iniGraph();
+    const IniGraph &ini = iniGraph();
 
     if (ini.geometry() == m_iniGeometry && ini.maximized() == m_iniMaximized)
         return;
 
     restoreWindowState();
-}
-
-IniGraph GraphWindow::iniGraph() const
-{
-    return IniGraph(Fort::iniUser());
 }
 
 void GraphWindow::setupUi()
@@ -175,7 +170,7 @@ void GraphWindow::updateFlagsAndColors(bool onlyFlags)
     if (onlyFlags)
         return;
 
-    const IniGraph ini = iniGraph();
+    const IniGraph &ini = iniGraph();
 
     updateWindowFlags(ini);
     updateColors(ini);

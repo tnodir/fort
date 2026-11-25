@@ -172,9 +172,17 @@ FilterSimWindow *WindowManager::filterSimWindow() const
     return static_cast<FilterSimWindow *>(windowByCode(WindowFilterSim));
 }
 
-GraphWindow *WindowManager::graphWindow() const
+FormPointer &WindowManager::graphFormById(int graphId) const
 {
-    return static_cast<GraphWindow *>(windowByCode(WindowGraph));
+    Q_ASSERT(graphId >= 0 && graphId < IniGraph::maxCount);
+
+    return (graphId == 0) ? formByCode(WindowGraph) : m_graphForms[graphId - 1];
+}
+
+GraphWindow *WindowManager::graphWindow(int graphId) const
+{
+    const auto &form = graphFormById(graphId);
+    return static_cast<GraphWindow *>(form.window());
 }
 
 void WindowManager::setUp()
@@ -216,9 +224,7 @@ void WindowManager::initialize()
         showSplashScreen();
     }
 
-    if (IniGraph(Fort::iniUser()).visible()) {
-        showGraphWindow();
-    }
+    showGraphWindows();
 }
 
 bool WindowManager::restoreDockedWindowByCode(WindowCode code)
@@ -241,12 +247,11 @@ bool WindowManager::undockWindowByCode(WindowCode code, const std::optional<QPoi
 
 void WindowManager::closeDockedWindows()
 {
-    for (int i = 0; i < WindowCount; ++i) {
-        auto &form = m_forms[i];
+    walkForms([](FormPointer &form) {
         if (form.dock()) {
             form.close();
         }
-    }
+    });
 }
 
 QFont WindowManager::defaultFont()
@@ -324,7 +329,7 @@ void WindowManager::setupByIniUser()
     updateFont(ini);
     updateListIconSize(ini);
     updateTrayIconVisibility(ini);
-    updateGraphWindowVisibility();
+    updateGraphWindowsVisibility();
 }
 
 void WindowManager::updateTheme(const IniUser &ini)
@@ -423,15 +428,49 @@ void WindowManager::updateTrayIconVisibility(const IniUser &ini)
     }
 }
 
-void WindowManager::updateGraphWindowVisibility()
+bool WindowManager::showGraphWindow(int graphId)
 {
-    auto &form = formByCode(WindowGraph);
+    auto &form = graphFormById(graphId);
+    return form.show(/*activate=*/false);
+}
+
+bool WindowManager::closeGraphWindow(int graphId)
+{
+    auto &form = graphFormById(graphId);
+    return form.close();
+}
+
+void WindowManager::showGraphWindows()
+{
+    auto &ini = Fort::iniUser();
+
+    const auto graphIds = ini.graphWindowIds();
+
+    for (const int graphId : graphIds) {
+        if (IniGraph(ini, graphId).visible()) {
+            showGraphWindow(graphId);
+        }
+    }
+}
+
+void WindowManager::updateGraphWindowsVisibility()
+{
+    const auto graphIds = Fort::iniUser().graphWindowIds();
+
+    for (const int graphId : graphIds) {
+        updateGraphWindowVisibility(graphId);
+    }
+}
+
+void WindowManager::updateGraphWindowVisibility(int graphId)
+{
+    auto &form = graphFormById(graphId);
     const auto w = form.window();
 
     if (w && w->isVisible())
         return;
 
-    if (IniGraph(Fort::iniUser()).hideOnClose()) {
+    if (IniGraph(Fort::iniUser(), graphId).hideOnClose()) {
         if (!w) {
             form.initialize();
         }
@@ -589,22 +628,28 @@ void WindowManager::switchWindowByCode(WindowCode code)
 
 void WindowManager::saveAllWindowStates()
 {
-    for (int i = 0; i < WindowCount; ++i) {
-        const auto &form = m_forms[i];
-        if (!form.isShown())
-            continue;
-
-        form.window()->saveWindowState(/*wasVisible=*/true);
-    }
+    walkForms([](FormPointer &form) {
+        if (form.isShown()) {
+            form.window()->saveWindowState(/*wasVisible=*/true);
+        }
+    });
 }
 
 void WindowManager::closeAllWindows(bool isAppQuitting)
 {
     emit aboutToCloseAllWindows();
 
-    for (int i = 0; i < WindowCount; ++i) {
-        auto &form = m_forms[i];
-        form.close(isAppQuitting);
+    walkForms([=](FormPointer &form) { form.close(isAppQuitting); });
+}
+
+void WindowManager::walkForms(const std::function<void(FormPointer &form)> &func) const
+{
+    for (auto &form : m_forms) {
+        func(form);
+    }
+
+    for (auto &form : m_graphForms) {
+        func(form);
     }
 }
 
@@ -794,8 +839,12 @@ void WindowManager::onPasswordCheckedChanged()
     }
 }
 
-void WindowManager::windowOpened(WindowCode code)
+void WindowManager::windowOpened(WindowCode code, int id)
 {
+    // The windows of a code are tracked by the first one's state
+    if (id != 0)
+        return;
+
     m_openedWindows |= code;
 
     if (!settings()->isPasswordRequired()) {
@@ -823,8 +872,11 @@ bool WindowManager::isAnyWindowUnlocked() const
     return m_unlockedWindows != 0;
 }
 
-void WindowManager::windowClosed(WindowCode code)
+void WindowManager::windowClosed(WindowCode code, int id)
 {
+    if (id != 0)
+        return;
+
     m_openedWindows &= ~code;
     m_unlockedWindows &= ~code;
 

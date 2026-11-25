@@ -5,15 +5,16 @@
 
 #include <form/controls/formwindow.h>
 #include <form/graph/graphplot.h>
-
-class IniGraph;
+#include <user/inigraph.h>
 
 class GraphWindow : public FormWindow
 {
     Q_OBJECT
 
 public:
-    explicit GraphWindow(QWidget *parent = nullptr);
+    explicit GraphWindow(int graphId, QWidget *parent = nullptr);
+
+    int graphId() const { return iniGraph().graphId(); }
 
     WindowCode windowCode() const override { return WindowGraph; }
     QString helpSection() const override { return "traffic-graph"; }
@@ -42,7 +43,8 @@ protected:
     static GraphPlot::ColorArray getColors(const IniGraph &ini);
 
 private:
-    IniGraph iniGraph() const;
+    const IniGraph &iniGraph() const { return m_iniGraph; }
+    IniGraph &iniGraph() { return m_iniGraph; }
 
     void onMouseDoubleClick(QMouseEvent *event);
     void onMouseDragBegin(QMouseEvent *event);
@@ -91,6 +93,8 @@ private:
     QSize m_sizeOnMousePress;
 
     QRect m_iniGeometry;
+
+    IniGraph m_iniGraph;
 
     QTimer m_updateTimer;
     QTimer m_hoverTimer;

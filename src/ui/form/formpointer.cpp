@@ -29,12 +29,17 @@ using namespace Fort;
 namespace {
 
 template<class T>
-FormWindow *createWindow()
+FormWindow *createWindow(int /*id*/)
 {
     return new T();
 }
 
-using createWindow_func = FormWindow *(*)(void);
+FormWindow *createGraphWindow(int id)
+{
+    return new GraphWindow(id);
+}
+
+using createWindow_func = FormWindow *(*)(int id);
 
 static const createWindow_func createWindow_funcList[] = {
     &createWindow<MainWindow>,
@@ -51,7 +56,7 @@ static const createWindow_func createWindow_funcList[] = {
     &createWindow<SpeedLimitsWindow>,
     &createWindow<TimePeriodsWindow>,
     &createWindow<FilterSimWindow>,
-    &createWindow<GraphWindow>,
+    &createGraphWindow,
     &createWindow<InstallationWindow>,
     &createWindow<UpdatesWindow>,
 };
@@ -59,7 +64,7 @@ static const createWindow_func createWindow_funcList[] = {
 static_assert(sizeof(createWindow_funcList) / sizeof(createWindow_funcList[0]) == WindowCount,
         "Missing a WindowCode in createWindow_funcList[]");
 
-FormWindow *createWindowByCode(WindowCode code)
+FormWindow *createWindowByCode(WindowCode code, int id)
 {
     const int index = BitUtil::bitScanForward(code);
 
@@ -67,18 +72,18 @@ FormWindow *createWindowByCode(WindowCode code)
 
     const createWindow_func func = createWindow_funcList[index];
 
-    return func();
+    return func(id);
 }
 
 }
 
-FormPointer::FormPointer(WindowCode code) : m_code(code) { }
+FormPointer::FormPointer(WindowCode code, qint8 id) : m_id(id), m_code(code) { }
 
 FormWindow *FormPointer::initialize()
 {
     Q_ASSERT(!m_window);
 
-    auto w = createWindowByCode(code());
+    auto w = createWindowByCode(code(), id());
     m_window.reset(w);
 
     QObject::connect(w, &FormWindow::aboutToClose, [&] { close(); });
@@ -100,7 +105,7 @@ bool FormPointer::show(bool activate, bool expose)
     if (!showWindow(activate, expose))
         return false;
 
-    windowManager->windowOpened(code());
+    windowManager->windowOpened(code(), id());
 
     return true;
 }
@@ -117,7 +122,7 @@ bool FormPointer::restoreDocked()
     if (!showDocked(/*activate=*/false, /*expose=*/false))
         return false;
 
-    Fort::windowManager()->windowOpened(code());
+    Fort::windowManager()->windowOpened(code(), id());
 
     return true;
 }
@@ -141,7 +146,7 @@ bool FormPointer::close(bool isAppQuitting)
 
         w->onWindowClosed();
 
-        windowManager->windowClosed(code());
+        windowManager->windowClosed(code(), id());
     }
 
     if (isAppQuitting || w->deleteOnClose()) {

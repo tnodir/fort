@@ -5,9 +5,12 @@
 #include <QObject>
 #include <QVariant>
 
+#include <functional>
+
 #include <form/form_types.h>
 #include <form/formpointer.h>
 #include <form/tray/trayicon_types.h>
+#include <user/inigraph.h>
 #include <util/ioc/iocservice.h>
 #include <util/taskbarbutton.h>
 
@@ -56,6 +59,8 @@ public:
     FormPointer &formByCode(WindowCode code) const;
     FormWindow *windowByCode(WindowCode code) const;
 
+    FormPointer &graphFormById(int graphId) const;
+
     MainWindow *mainWindow() const;
     ProgramsWindow *progWindow() const;
     ProgramAlertWindow *progAlertWindow() const;
@@ -69,7 +74,7 @@ public:
     SpeedLimitsWindow *speedLimitsWindow() const;
     TimePeriodsWindow *timePeriodsWindow() const;
     FilterSimWindow *filterSimWindow() const;
-    GraphWindow *graphWindow() const;
+    GraphWindow *graphWindow(int graphId = 0) const;
 
     void setUp() override;
     void tearDown() override;
@@ -148,8 +153,8 @@ public slots:
 
     bool showFilterSimWindowConn(const Conn &conn);
 
-    bool showGraphWindow() { return showWindowByCode(WindowGraph, /*activate=*/false); }
-    bool closeGraphWindow() { return closeWindowByCode(WindowGraph); }
+    bool showGraphWindow(int graphId = 0);
+    bool closeGraphWindow(int graphId = 0);
 
     bool setGraphWindowVisible(const QVariant &visibleOrSwitch = {})
     {
@@ -220,7 +225,11 @@ private:
     void setupByIniUser();
 
     void updateTrayIconVisibility(const IniUser &ini);
-    void updateGraphWindowVisibility();
+    void showGraphWindows();
+    void updateGraphWindowsVisibility();
+    void updateGraphWindowVisibility(int graphId);
+
+    void walkForms(const std::function<void(FormPointer &form)> &func) const;
 
     void closeAll();
     void quitApp();
@@ -229,13 +238,13 @@ private:
 
     void onPasswordCheckedChanged();
 
-    void windowOpened(WindowCode code);
+    void windowOpened(WindowCode code, int id = 0);
     bool isAnyWindowOpen(quint32 codes) const;
 
     void windowUnlocked(WindowCode code);
     bool isAnyWindowUnlocked() const;
 
-    void windowClosed(WindowCode code);
+    void windowClosed(WindowCode code, int id = 0);
 
 private:
     bool m_isAppQuitting = false;
@@ -266,6 +275,17 @@ private:
         FormPointer(WindowGraph),
         FormPointer(WindowInstallation),
         FormPointer(WindowUpdates),
+    };
+
+    // The graphs' windows but the main one (of m_forms)
+    mutable std::array<FormPointer, IniGraph::maxCount - 1> m_graphForms = {
+        FormPointer(WindowGraph, 1),
+        FormPointer(WindowGraph, 2),
+        FormPointer(WindowGraph, 3),
+        FormPointer(WindowGraph, 4),
+        FormPointer(WindowGraph, 5),
+        FormPointer(WindowGraph, 6),
+        FormPointer(WindowGraph, 7),
     };
 };
 

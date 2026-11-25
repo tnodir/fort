@@ -2,6 +2,8 @@
 
 #include <QHash>
 
+#include "inigraph.h"
+
 namespace HotKey {
 
 const char *const list[] = {
@@ -50,6 +52,51 @@ const char *const defaultValue(const char *key)
 }
 
 IniUser::IniUser(Settings *settings) : MapSettings(settings) { }
+
+quint8 IniUser::graphWindowIdsMask() const
+{
+    quint8 mask = 1; // the main graph's
+
+    const QStringList list = valueList("graphsWindow/graphIds");
+
+    for (const QString &s : list) {
+        const int graphId = s.toInt();
+
+        if (graphId > 0 && graphId < IniGraph::maxCount) {
+            mask |= quint8(1 << graphId);
+        }
+    }
+
+    return mask;
+}
+
+void IniUser::setGraphWindowIdsMask(quint8 v)
+{
+    QStringList list;
+
+    for (int graphId = 1; graphId < IniGraph::maxCount; ++graphId) {
+        if ((v & (1 << graphId)) != 0) {
+            list.append(QString::number(graphId));
+        }
+    }
+
+    setValue("graphsWindow/graphIds", list);
+}
+
+QVector<int> IniUser::graphWindowIds() const
+{
+    QVector<int> graphIds;
+
+    const quint8 mask = graphWindowIdsMask();
+
+    for (int graphId = 0; graphId < IniGraph::maxCount; ++graphId) {
+        if ((mask & (1 << graphId)) != 0) {
+            graphIds.append(graphId);
+        }
+    }
+
+    return graphIds;
+}
 
 QString IniUser::hotKeyValue(const char *key) const
 {

@@ -335,6 +335,9 @@ public:
 
     static QString filterSimWindowGroup() { return "filterSimWindow"; }
 
+    // The graphs' ids: the main graph's one (0) is always present
+    QVector<int> graphWindowIds() const;
+
     static QString updatesWindowGroup() { return "updatesWindow"; }
 
     static QString statWindowGroup() { return "statWindow"; }
@@ -370,6 +373,11 @@ public:
 
     static int colorSchemeByName(const QString &theme);
     static QString colorSchemeName(int colorScheme);
+
+private:
+    // The graphs' ids' bits: the main graph's one (0) is always set
+    quint8 graphWindowIdsMask() const;
+    void setGraphWindowIdsMask(quint8 v);
 
 private:
     QString m_defaultLanguage;
