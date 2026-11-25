@@ -42,6 +42,9 @@ public slots:
     void refreshLater();
     void refresh();
 
+    // Also the header's texts, on the language's change
+    void refreshTexts();
+
 protected:
     virtual Qt::ItemFlags flagHasChildren(const QModelIndex &index) const;
     virtual Qt::ItemFlags flagIsUserCheckable(const QModelIndex &index) const;

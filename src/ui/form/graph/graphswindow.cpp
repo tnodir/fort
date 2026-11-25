@@ -84,7 +84,7 @@ void GraphsWindow::retranslateUi()
     m_actEditGraph->setText(tr("Edit"));
     m_actRemoveGraph->setText(tr("Remove"));
 
-    m_graphListModel->refresh();
+    m_graphListModel->refreshTexts();
 
     this->setWindowTitle(tr("Graphs"));
 }

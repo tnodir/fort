@@ -88,7 +88,7 @@ void SpeedLimitsWindow::retranslateUi()
     m_actEditSpeedLimit->setText(tr("Edit"));
     m_actRemoveSpeedLimit->setText(tr("Remove"));
 
-    speedLimitListModel()->refresh();
+    speedLimitListModel()->refreshTexts();
 
     this->setWindowTitle(tr("Speed Limits"));
 }

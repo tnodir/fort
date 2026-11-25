@@ -176,7 +176,7 @@ void ProgramsWindow::retranslateUi()
     m_btFilterGroups->retranslateUi();
     m_btFilterGroups->menuButton()->setToolTip(tr("Filter by Groups"));
 
-    appListModel()->refresh();
+    appListModel()->refreshTexts();
 
     m_appInfoRow->retranslateUi();
 

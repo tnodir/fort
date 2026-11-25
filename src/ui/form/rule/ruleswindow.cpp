@@ -109,7 +109,7 @@ void RulesWindow::retranslateUi()
     m_actAddDefaultPresetRules->setText(tr("Add Default Preset Rules"));
     m_editSearch->setPlaceholderText(tr("Search") + " /");
 
-    ruleListModel()->refresh();
+    ruleListModel()->refreshTexts();
 
     if (isOpenSelectRule()) {
         m_btOk->setText(tr("OK"));

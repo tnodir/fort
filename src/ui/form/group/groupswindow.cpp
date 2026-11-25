@@ -107,7 +107,7 @@ void GroupsWindow::retranslateUi()
     m_actEditGroup->setText(tr("Edit"));
     m_actRemoveGroup->setText(tr("Remove"));
 
-    groupListModel()->refresh();
+    groupListModel()->refreshTexts();
 
     this->setWindowTitle(tr("Groups"));
 }

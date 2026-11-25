@@ -114,6 +114,8 @@ void ServicesWindow::retranslateUi()
 
     m_editSearch->setPlaceholderText(tr("Search") + " /");
 
+    serviceListModel()->refreshTexts();
+
     this->setWindowTitle(tr("Services"));
 }
 

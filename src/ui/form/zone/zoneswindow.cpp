@@ -96,7 +96,7 @@ void ZonesWindow::retranslateUi()
     m_btSaveAsText->setText(tr("Save As Text"));
     m_btUpdateZones->setText(tr("Update Zones"));
 
-    zoneListModel()->refresh();
+    zoneListModel()->refreshTexts();
 
     this->setWindowTitle(tr("Zones"));
 }

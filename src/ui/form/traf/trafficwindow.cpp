@@ -125,7 +125,11 @@ void TrafficWindow::retranslateUi()
     m_traphUnits->setText(tr("Units:"));
     retranslateTrafUnitNames();
 
+    appStatModel()->refreshTexts();
+
     retranslateTabBar();
+
+    trafListModel()->refreshTexts();
 
     m_appInfoRow->retranslateUi();
 

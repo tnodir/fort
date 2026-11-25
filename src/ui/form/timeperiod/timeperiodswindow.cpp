@@ -84,7 +84,7 @@ void TimePeriodsWindow::retranslateUi()
     m_actEditTimePeriod->setText(tr("Edit"));
     m_actRemoveTimePeriod->setText(tr("Remove"));
 
-    timePeriodListModel()->refresh();
+    timePeriodListModel()->refreshTexts();
 
     this->setWindowTitle(tr("Time Periods"));
 }

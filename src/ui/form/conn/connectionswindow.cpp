@@ -203,7 +203,7 @@ void ConnectionsWindow::retranslateUi()
             tr("Only the connections of alerted programs or marked by the Alert action are "
                "collected"));
 
-    connListModel()->refresh();
+    connListModel()->refreshTexts();
 
     m_appInfoRow->retranslateUi();
 

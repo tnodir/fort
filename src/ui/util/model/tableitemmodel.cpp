@@ -86,6 +86,13 @@ void TableItemModel::refresh()
     emit dataChanged(firstCell, lastCell);
 }
 
+void TableItemModel::refreshTexts()
+{
+    emit headerDataChanged(Qt::Horizontal, 0, columnCount() - 1);
+
+    refresh();
+}
+
 void TableItemModel::invalidateRowCache() const
 {
     tableRow().invalidate();
