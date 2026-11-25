@@ -86,7 +86,7 @@ public:
     void setShowInTaskbar(bool on) { setValue("showInTaskbar", on); }
 
     // At 100% scale, px
-    static constexpr int taskbarWidthDefault() { return 120; }
+    static constexpr int taskbarWidthDefault() { return 200; }
     int taskbarWidth() const { return valueInt("taskbarWidth", taskbarWidthDefault()); }
     void setTaskbarWidth(int v) { setValue("taskbarWidth", v); }
 

@@ -26,6 +26,7 @@ inline constexpr int speedBgAlpha = 130;
 inline constexpr int barOutlineDarker = 150; // as in NetTraffic
 inline constexpr qreal lineCenterOffset = 1.5; // device pixels: a line of 2 is above the value
 inline constexpr int speedArrowSpacing = 2;
+inline constexpr char speedSampleText[] = "888.88 MiB/s"; // the widest speed text
 inline constexpr double speedArrowTop = 0.18; // of the text's height
 inline constexpr double speedArrowWidth = 0.55; // of the text's height
 inline constexpr double speedArrowHeight = 0.66; // of the text's height
@@ -113,6 +114,12 @@ qreal layoutSpeedItem(QGraphicsItem *item, qreal x)
 
     // The items' rectangles start at 0
     return x + item->boundingRect().right();
+}
+
+void layoutSpeedRow(QGraphicsItem *arrow, QGraphicsItem *text, qreal y, qreal width)
+{
+    arrow->setPos(0, y);
+    text->setPos(width - text->boundingRect().right(), y);
 }
 
 // Smooth, unlike the other items aligned to the pixels
@@ -302,7 +309,25 @@ bool GraphPlot::speedVisible() const
 
 void GraphPlot::setSpeedVisible(bool v)
 {
+    if (m_speedBox->isVisible() == v)
+        return;
+
     m_speedBox->setVisible(v);
+
+    m_axesChanged = true; // the speed column is changed
+}
+
+void GraphPlot::setSpeedLeft(bool v)
+{
+    if (m_speedLeft == v)
+        return;
+
+    m_speedLeft = v;
+
+    // The column is out of the plot area
+    m_speedBox->setParentItem(v ? nullptr : m_plotArea);
+
+    m_axesChanged = true;
 }
 
 void GraphPlot::setSpeedText(const QString &inText, const QString &outText)
@@ -395,6 +420,8 @@ void GraphPlot::setSpeedTextSize(int pointSize)
     m_speedSpacing = QFontMetricsF(speedFont).horizontalAdvance(QLatin1String("  "));
 
     setupSpeedArrows(speedFont);
+
+    m_axesChanged = true; // the speed column is changed
 }
 
 void GraphPlot::addPoint(const GraphPoint &point)
@@ -904,8 +931,9 @@ void GraphPlot::updateAxisRect(int tickLabelsWidth)
 {
     const int border = borderWidth();
     const int ticksWidth = axisTickLength();
-    const int leftWidth = yAxisLabelsWidth(tickLabelsWidth) + ticksWidth;
-    // The base line is on the border without the labels and ticks
+    const int speedWidth = speedColumnWidth();
+    const int leftWidth = speedWidth + yAxisLabelsWidth(tickLabelsWidth) + ticksWidth;
+    // The base line is on the border without the speed, labels and ticks
     const int leftMargin = (leftWidth > 0) ? border + leftWidth : 0;
     // The bars are up to the right edge without the ticks
     const int rightMargin = border + ticksWidth;
@@ -1109,26 +1137,68 @@ void GraphPlot::setupSpeedArrows(const QFont &font)
 
 void GraphPlot::updateSpeedBox()
 {
+    const QSizeF size = m_speedLeft ? layoutSpeedRows() : layoutSpeedLine();
+
+    m_speedBox->setRect(QRectF(QPointF(), size));
+    m_speedBox->setPos(speedBoxPos(size.width(), size.height()));
+}
+
+QSizeF GraphPlot::layoutSpeedLine()
+{
     // The arrows are colored by their bars
     qreal width = layoutSpeedItem(m_speedInArrow, 0) + speedArrowSpacing;
     width = layoutSpeedItem(m_speedInText, width) + m_speedSpacing;
     width = layoutSpeedItem(m_speedOutArrow, width) + speedArrowSpacing;
     width = layoutSpeedItem(m_speedOutText, width);
 
+    return { width, m_speedInText->boundingRect().height() };
+}
+
+QSizeF GraphPlot::layoutSpeedRows()
+{
+    // The in and out rows: the arrows at the left, the texts at the right
+    const qreal width = speedRowsWidth();
     const qreal height = m_speedInText->boundingRect().height();
 
-    m_speedBox->setRect(QRectF(0, 0, width, height));
-    m_speedBox->setPos(speedBoxPos(width, height));
+    layoutSpeedRow(m_speedInArrow, m_speedInText, 0, width);
+    layoutSpeedRow(m_speedOutArrow, m_speedOutText, height, width);
+
+    return { width, height * 2 };
+}
+
+qreal GraphPlot::speedRowsWidth() const
+{
+    // By the widest speed text: the graph doesn't move with the speed
+    const QFontMetricsF metrics(m_speedInText->font());
+
+    return m_speedInArrow->boundingRect().right() + speedArrowSpacing
+            + metrics.horizontalAdvance(QLatin1String(speedSampleText));
+}
+
+int GraphPlot::speedColumnWidth() const
+{
+    if (!m_speedLeft || !m_graphVisible)
+        return 0;
+
+    if (!m_speedBox->isVisible())
+        return 0;
+
+    return qCeil(speedRowsWidth()) + axisPadding * 2;
 }
 
 QPointF GraphPlot::speedBoxPos(qreal width, qreal height) const
 {
+    const QRect viewRect = viewport()->rect();
+    const int y = qRound((viewRect.height() - height) / 2);
+
     // The text alone is in the view's center
     if (!m_graphVisible) {
-        const QRect viewRect = viewport()->rect();
+        return QPointF(qRound((viewRect.width() - width) / 2), y);
+    }
 
-        return QPointF(
-                qRound((viewRect.width() - width) / 2), qRound((viewRect.height() - height) / 2));
+    // At the view's left, left of the graph
+    if (m_speedLeft) {
+        return QPointF(borderWidth() + axisPadding, y);
     }
 
     // At the axis rectangle's top center
@@ -1182,7 +1252,9 @@ void GraphPlot::updateUnitLabel()
     const double centerY = m_axisRect.top() + m_axisRect.height() / 2.0;
 
     // The rotated label's text goes up from its position
-    m_unitLabel->setPos(borderWidth() + axisPadding, qRound(centerY + rect.width() / 2));
+    const int x = borderWidth() + speedColumnWidth() + axisPadding;
+
+    m_unitLabel->setPos(x, qRound(centerY + rect.width() / 2));
 
     // Hide the label clipped by the view's border
     m_unitLabel->setVisible(rect.width() <= viewport()->height());

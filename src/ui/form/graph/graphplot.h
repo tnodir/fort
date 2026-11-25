@@ -131,6 +131,9 @@ public:
     bool speedVisible() const;
     void setSpeedVisible(bool v);
 
+    bool speedLeft() const { return m_speedLeft; }
+    void setSpeedLeft(bool v);
+
     void setSpeedText(const QString &inText, const QString &outText);
 
     GraphPoint pointAt(qint64 unixTime) const;
@@ -224,6 +227,10 @@ private:
     void updateScroll();
     void setupSpeedArrows(const QFont &font);
     void updateSpeedBox();
+    QSizeF layoutSpeedLine();
+    QSizeF layoutSpeedRows();
+    qreal speedRowsWidth() const;
+    int speedColumnWidth() const;
     QPointF speedBoxPos(qreal width, qreal height) const;
     void updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs);
     void updateTickLabels(const QVector<int> &tickYs);
@@ -254,6 +261,7 @@ private:
     bool m_totalVisible : 1 = false;
     bool m_inVisible : 1 = true;
     bool m_outVisible : 1 = true;
+    bool m_speedLeft : 1 = false;
 
     GraphType m_graphType = GraphTypeColumn;
 

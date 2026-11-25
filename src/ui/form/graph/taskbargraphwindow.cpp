@@ -20,6 +20,9 @@ TaskbarGraphWindow::TaskbarGraphWindow(int graphId, QWidget *parent) :
 
 void TaskbarGraphWindow::setupUi()
 {
+    // The speed is left of the graph: the taskbar's height is small
+    plot()->setSpeedLeft(true);
+
     // The taskbar's layout may change: the placement is kept up to date by the graph's updates
     connect(view(), &GraphView::speedUpdated, this, &TaskbarGraphWindow::updatePlacement);
 
