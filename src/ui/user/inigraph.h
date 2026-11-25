@@ -103,6 +103,10 @@ public:
     int tickLabelSize() const { return valueInt("tickLabelSize", tickLabelSizeDefault()); }
     void setTickLabelSize(int v) { setValue("tickLabelSize", v); }
 
+    static constexpr int speedTextSizeDefault() { return 10; }
+    int speedTextSize() const { return valueInt("speedTextSize", speedTextSizeDefault()); }
+    void setSpeedTextSize(int v) { setValue("speedTextSize", v); }
+
     static constexpr int graphTypeDefault() { return 0; }
     int graphType() const { return valueInt("graphType", graphTypeDefault()); }
     void setGraphType(int v) { setValue("graphType", v); }

@@ -117,6 +117,7 @@ private:
     LabelSpin *m_graphTickLabelSize = nullptr;
 
     QCheckBox *m_cbGraphShowSpeed = nullptr;
+    LabelSpin *m_graphSpeedTextSize = nullptr;
     QLabel *m_labelTrafUnits = nullptr;
     QComboBox *m_comboTrafUnit = nullptr;
 

@@ -365,9 +365,16 @@ void GraphPlot::setTickLabelSize(int pointSize)
     m_tickLabelFont.setPointSize(pointSize);
     m_tickLabelFont.setWeight(QFont::DemiBold);
 
-    // Text Speed
-    QFont speedFont = m_tickLabelFont;
-    speedFont.setPointSize(pointSize + 1);
+    updateTickLabelsStyle();
+
+    m_axesChanged = true; // the tick labels' sizes are changed
+}
+
+void GraphPlot::setSpeedTextSize(int pointSize)
+{
+    QFont speedFont = font();
+    speedFont.setPointSize(pointSize);
+    speedFont.setWeight(QFont::DemiBold);
 
     m_speedInText->setFont(speedFont);
     m_speedOutText->setFont(speedFont);
@@ -375,10 +382,6 @@ void GraphPlot::setTickLabelSize(int pointSize)
     m_speedSpacing = QFontMetricsF(speedFont).horizontalAdvance(QLatin1String("  "));
 
     setupSpeedArrows(speedFont);
-
-    updateTickLabelsStyle();
-
-    m_axesChanged = true; // the tick labels' sizes are changed
 }
 
 void GraphPlot::addPoint(const GraphPoint &point)

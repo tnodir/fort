@@ -66,6 +66,7 @@ void GraphOptionsArea::resetToDefault()
     m_graphTickLabelSize->spinBox()->setValue(IniGraph::tickLabelSizeDefault());
 
     m_cbGraphShowSpeed->setChecked(IniGraph::showSpeedDefault());
+    m_graphSpeedTextSize->spinBox()->setValue(IniGraph::speedTextSizeDefault());
     changeTrafUnit(IniGraph::trafUnitDefault());
 
     for (int i = 0; i < GraphColorCount; ++i) {
@@ -118,6 +119,7 @@ void GraphOptionsArea::retranslateUi()
     m_graphTickLabelSize->label()->setText(tr("Tick label size:"));
 
     m_cbGraphShowSpeed->setText(tr("Show speed"));
+    m_graphSpeedTextSize->label()->setText(tr("Speed text size:"));
     m_labelTrafUnits->setText(tr("Units:"));
 
     retranslateGraphColors();
@@ -452,10 +454,14 @@ void GraphOptionsArea::setupTextBox()
     m_cbGraphShowSpeed = createIniGraphCheckBox(&IniGraph::showSpeed, &IniGraph::setShowSpeed);
     m_cbGraphShowSpeed->setObjectName("cbGraphShowSpeed");
 
+    m_graphSpeedTextSize = ControlUtil::createSpin({ iniGraph().speedTextSize(), 1, 99 }, {},
+            iniGraphSetter(&IniGraph::speedTextSize, &IniGraph::setSpeedTextSize));
+    m_graphSpeedTextSize->setObjectName("graphSpeedTextSize");
+
     // Traffic Units
     auto trafUnitsLayout = setupTrafUnitsLayout();
 
-    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbGraphShowSpeed });
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbGraphShowSpeed, m_graphSpeedTextSize });
     layout->addLayout(trafUnitsLayout);
 
     m_gbText = new QGroupBox();

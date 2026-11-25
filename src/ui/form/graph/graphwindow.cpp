@@ -204,6 +204,7 @@ void GraphWindow::updateColors(const IniGraph &ini)
 void GraphWindow::updateFonts(const IniGraph &ini)
 {
     m_plot->setTickLabelSize(ini.tickLabelSize());
+    m_plot->setSpeedTextSize(ini.speedTextSize());
     m_plot->setSpeedVisible(ini.showSpeed());
 }
 

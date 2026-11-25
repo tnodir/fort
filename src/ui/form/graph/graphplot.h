@@ -134,6 +134,7 @@ public:
 
     void setColors(const GraphPlot::ColorArray &colors);
     void setTickLabelSize(int pointSize);
+    void setSpeedTextSize(int pointSize);
 
     void addPoint(const GraphPoint &point);
 
