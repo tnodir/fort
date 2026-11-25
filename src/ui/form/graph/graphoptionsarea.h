@@ -1,0 +1,118 @@
+#ifndef GRAPHOPTIONSAREA_H
+#define GRAPHOPTIONSAREA_H
+
+#include <QWidget>
+
+#include <array>
+#include <functional>
+
+#include <user/inigraph.h>
+
+QT_FORWARD_DECLARE_CLASS(QCheckBox)
+QT_FORWARD_DECLARE_CLASS(QComboBox)
+QT_FORWARD_DECLARE_CLASS(QGroupBox)
+QT_FORWARD_DECLARE_CLASS(QLabel)
+
+class LabelColor;
+class LabelSpin;
+class LabelSpinCombo;
+
+class GraphOptionsArea : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit GraphOptionsArea(const IniGraph &iniGraph, QWidget *parent = nullptr);
+
+    const IniGraph &iniGraph() const { return m_iniGraph; }
+    IniGraph &iniGraph() { return m_iniGraph; }
+
+signals:
+    void edited();
+
+public slots:
+    void resetToDefault();
+
+    void retranslateUi();
+
+private:
+    // The callback of the graph's option's control: sets the changed option and emits edited()
+    template<typename T>
+    std::function<void(T)> iniGraphSetter(
+            T (IniGraph::*iniValue)() const, void (IniGraph::*setIniValue)(T));
+
+    // The graph's option's check box: its toggling sets the option and emits edited()
+    QCheckBox *createIniGraphCheckBox(
+            bool (IniGraph::*iniFlag)() const, void (IniGraph::*setIniFlag)(bool));
+
+    void retranslateFixedSpeedCombo();
+    void retranslateGraphColors();
+    void retranslateGraphTypeCombo();
+
+    void setupUi();
+    QLayout *setupColumns();
+    QLayout *setupColumn1();
+    QLayout *setupColumn2();
+
+    void setupGraphBox();
+    void setupGraphCheckboxes();
+    void setupGraphViewCheckboxes();
+    QLayout *setupGraphShowLayout();
+    void setupGraphShowCheckboxes();
+    void setupGraphOptions();
+    void setupGraphFixedSpeed();
+    QLayout *setupGraphTypeLayout();
+    void changeGraphType(int index);
+    QLayout *setupTrafUnitsLayout();
+    void changeTrafUnit(int index);
+    void setupColorsBox();
+    void setupGraphColors();
+    LabelColor *createGraphColor(GraphColorType type);
+    void setGraphColor(GraphColorType type, bool dark, const QColor &v);
+    void setupGeometryBox();
+    void saveGraphWindowGeometry();
+    void setupGeometryControls();
+    LabelSpin *createGeometrySpin(int value, int min);
+    void onGeometryEdited();
+
+private:
+    IniGraph m_iniGraph;
+
+    QGroupBox *m_gbGraph = nullptr;
+    QGroupBox *m_gbColors = nullptr;
+    QGroupBox *m_gbGeometry = nullptr;
+
+    QCheckBox *m_cbGraphHideOnClose = nullptr;
+    QCheckBox *m_cbGraphAlwaysOnTop = nullptr;
+    QCheckBox *m_cbGraphFrameless = nullptr;
+    QCheckBox *m_cbGraphClickThrough = nullptr;
+    QCheckBox *m_cbGraphHideOnHover = nullptr;
+    QCheckBox *m_cbGraphHideYAxisLabels = nullptr;
+    QCheckBox *m_cbGraphShowSpeed = nullptr;
+    QCheckBox *m_cbGraphAnimation = nullptr;
+    QCheckBox *m_cbGraphAxisTicks = nullptr;
+    QLabel *m_labelGraphShow = nullptr;
+    QCheckBox *m_cbGraphShowTotal = nullptr;
+    QCheckBox *m_cbGraphShowIn = nullptr;
+    QCheckBox *m_cbGraphShowOut = nullptr;
+    LabelSpin *m_graphOpacity = nullptr;
+    LabelSpin *m_graphHoverOpacity = nullptr;
+    LabelSpin *m_graphTickLabelSize = nullptr;
+    LabelSpin *m_graphBarWidth = nullptr;
+    LabelSpin *m_graphMaxSeconds = nullptr;
+    LabelSpinCombo *m_graphFixedSpeed = nullptr;
+    QLabel *m_labelGraphType = nullptr;
+    QComboBox *m_comboGraphType = nullptr;
+    QLabel *m_traphUnits = nullptr;
+    QComboBox *m_comboTrafUnit = nullptr;
+
+    std::array<LabelColor *, GraphColorCount> m_graphColors = {};
+
+    QCheckBox *m_cbGraphMaximized = nullptr;
+    LabelSpin *m_graphX = nullptr;
+    LabelSpin *m_graphY = nullptr;
+    LabelSpin *m_graphWidth = nullptr;
+    LabelSpin *m_graphHeight = nullptr;
+};
+
+#endif // GRAPHOPTIONSAREA_H

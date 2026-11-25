@@ -442,14 +442,8 @@ GraphPlot::ColorArray GraphWindow::getColors(const IniGraph &ini)
             true;
 #endif
 
-    if (isLightTheme) {
-        colors << ini.color() << ini.borderColor() << ini.colorIn() << ini.colorOut()
-               << ini.totalColor() << ini.axisColor() << ini.tickLabelColor() << ini.labelColor()
-               << ini.gridColor();
-    } else {
-        colors << ini.darkColor() << ini.darkBorderColor() << ini.darkColorIn()
-               << ini.darkColorOut() << ini.darkTotalColor() << ini.darkAxisColor()
-               << ini.darkTickLabelColor() << ini.darkLabelColor() << ini.darkGridColor();
+    for (int i = 0; i < GraphColorCount; ++i) {
+        colors << ini.color(GraphColorType(i), /*dark=*/!isLightTheme);
     }
 
     return colors;

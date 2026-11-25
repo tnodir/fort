@@ -151,6 +151,7 @@ SOURCES += \
     form/graph/graphbarsitem.cpp \
     form/graph/graphcacheditem.cpp \
     form/graph/graphlineitem.cpp \
+    form/graph/graphoptionsarea.cpp \
     form/graph/graphplot.cpp \
     form/graph/graphwindow.cpp \
     form/group/groupeditdialog.cpp \
@@ -525,10 +526,12 @@ HEADERS += \
     form/form_types.h \
     form/formpointer.h \
     form/graph/axistickerspeed.h \
+    form/graph/graph_types.h \
     form/graph/graphanimation.h \
     form/graph/graphbarsitem.h \
     form/graph/graphcacheditem.h \
     form/graph/graphlineitem.h \
+    form/graph/graphoptionsarea.h \
     form/graph/graphplot.h \
     form/graph/graphwindow.h \
     form/group/groupeditdialog.h \
@@ -728,6 +731,7 @@ HEADERS += \
     util/formatutil.h \
     util/guiutil.h \
     util/iconcache.h \
+    util/ini/inisetter.h \
     util/ini/mapsettings.h \
     util/ini/settings.h \
     util/ioc/ioccontainer.h \

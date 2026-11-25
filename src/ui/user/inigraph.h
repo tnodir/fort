@@ -5,6 +5,8 @@
 #include <QRect>
 #include <QVariant>
 
+#include <form/graph/graph_types.h>
+
 class MapSettings;
 
 class IniGraph
@@ -83,83 +85,11 @@ public:
     int trafUnit() const { return valueInt("trafUnit", trafUnitDefault()); }
     void setTrafUnit(int v) { setValue("trafUnit", v); }
 
-    static constexpr QColor colorDefault() { return QColor(255, 255, 255); }
-    QColor color() const { return valueColor("color", colorDefault()); }
-    void setColor(const QColor &v) { setColorValue("color", v); }
+    static const char *colorKey(GraphColorType type, bool dark);
 
-    static constexpr QColor borderColorDefault() { return QColor(108, 108, 108); }
-    QColor borderColor() const { return valueColor("borderColor", borderColorDefault()); }
-    void setBorderColor(const QColor &v) { setColorValue("borderColor", v); }
-
-    static constexpr QColor colorInDefault() { return QColor(52, 196, 84); }
-    QColor colorIn() const { return valueColor("colorIn", colorInDefault()); }
-    void setColorIn(const QColor &v) { setColorValue("colorIn", v); }
-
-    static constexpr QColor colorOutDefault() { return QColor(235, 71, 63); }
-    QColor colorOut() const { return valueColor("colorOut", colorOutDefault()); }
-    void setColorOut(const QColor &v) { setColorValue("colorOut", v); }
-
-    static constexpr QColor totalColorDefault() { return QColor(245, 184, 0); }
-    QColor totalColor() const { return valueColor("totalColor", totalColorDefault()); }
-    void setTotalColor(const QColor &v) { setColorValue("totalColor", v); }
-
-    static constexpr QColor axisColorDefault() { return QColor(108, 108, 108); }
-    QColor axisColor() const { return valueColor("axisColor", axisColorDefault()); }
-    void setAxisColor(const QColor &v) { setColorValue("axisColor", v); }
-
-    static constexpr QColor tickLabelColorDefault() { return QColor(0, 0, 0); }
-    QColor tickLabelColor() const { return valueColor("tickLabelColor", tickLabelColorDefault()); }
-    void setTickLabelColor(const QColor &v) { setColorValue("tickLabelColor", v); }
-
-    static constexpr QColor labelColorDefault() { return QColor(33, 33, 33); }
-    QColor labelColor() const { return valueColor("labelColor", labelColorDefault()); }
-    void setLabelColor(const QColor &v) { setColorValue("labelColor", v); }
-
-    static constexpr QColor gridColorDefault() { return QColor(141, 141, 141); }
-    QColor gridColor() const { return valueColor("gridColor", gridColorDefault()); }
-    void setGridColor(const QColor &v) { setColorValue("gridColor", v); }
-
-    static constexpr QColor darkColorDefault() { return QColor(56, 56, 56); }
-    QColor darkColor() const { return valueColor("darkColor", darkColorDefault()); }
-    void setDarkColor(const QColor &v) { setColorValue("darkColor", v); }
-
-    static constexpr QColor darkBorderColorDefault() { return QColor(141, 141, 141); }
-    QColor darkBorderColor() const
-    {
-        return valueColor("darkBorderColor", darkBorderColorDefault());
-    }
-    void setDarkBorderColor(const QColor &v) { setColorValue("darkBorderColor", v); }
-
-    static constexpr QColor darkColorInDefault() { return QColor(52, 196, 84); }
-    QColor darkColorIn() const { return valueColor("darkColorIn", darkColorInDefault()); }
-    void setDarkColorIn(const QColor &v) { setColorValue("darkColorIn", v); }
-
-    static constexpr QColor darkColorOutDefault() { return QColor(235, 71, 63); }
-    QColor darkColorOut() const { return valueColor("darkColorOut", darkColorOutDefault()); }
-    void setDarkColorOut(const QColor &v) { setColorValue("darkColorOut", v); }
-
-    static constexpr QColor darkTotalColorDefault() { return QColor(245, 184, 0); }
-    QColor darkTotalColor() const { return valueColor("darkTotalColor", darkTotalColorDefault()); }
-    void setDarkTotalColor(const QColor &v) { setColorValue("darkTotalColor", v); }
-
-    static constexpr QColor darkAxisColorDefault() { return QColor(141, 141, 141); }
-    QColor darkAxisColor() const { return valueColor("darkAxisColor", darkAxisColorDefault()); }
-    void setDarkAxisColor(const QColor &v) { setColorValue("darkAxisColor", v); }
-
-    static constexpr QColor darkTickLabelColorDefault() { return QColor(248, 248, 248); }
-    QColor darkTickLabelColor() const
-    {
-        return valueColor("darkTickLabelColor", darkTickLabelColorDefault());
-    }
-    void setDarkTickLabelColor(const QColor &v) { setColorValue("darkTickLabelColor", v); }
-
-    static constexpr QColor darkLabelColorDefault() { return QColor(248, 248, 248); }
-    QColor darkLabelColor() const { return valueColor("darkLabelColor", darkLabelColorDefault()); }
-    void setDarkLabelColor(const QColor &v) { setColorValue("darkLabelColor", v); }
-
-    static constexpr QColor darkGridColorDefault() { return QColor(108, 108, 108); }
-    QColor darkGridColor() const { return valueColor("darkGridColor", darkGridColorDefault()); }
-    void setDarkGridColor(const QColor &v) { setColorValue("darkGridColor", v); }
+    static QColor colorDefault(GraphColorType type, bool dark);
+    QColor color(GraphColorType type, bool dark) const;
+    void setColor(GraphColorType type, bool dark, const QColor &v);
 
     static constexpr int tickLabelSizeDefault() { return 9; }
     int tickLabelSize() const { return valueInt("tickLabelSize", tickLabelSizeDefault()); }

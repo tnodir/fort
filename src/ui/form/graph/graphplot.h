@@ -6,6 +6,7 @@
 #include <QVarLengthArray>
 
 #include "axistickerspeed.h"
+#include "graph_types.h"
 #include "graphanimation.h"
 
 class GraphBarsItem;
@@ -67,20 +68,7 @@ class GraphPlot : public QGraphicsView
     Q_OBJECT
 
 public:
-    enum ColorType : qint8 {
-        ColorBg = 0,
-        ColorBorder,
-        ColorIn,
-        ColorOut,
-        ColorTotal,
-        ColorAxis,
-        ColorTickLabel,
-        ColorLabel,
-        ColorGrid,
-        ColorCount
-    };
-
-    using ColorArray = QVarLengthArray<QColor, ColorCount>;
+    using ColorArray = QVarLengthArray<QColor, GraphColorCount>;
 
     enum GraphType : qint8 {
         GraphTypeColumn = 0,
@@ -104,6 +92,8 @@ public:
     {
         return GraphType(qBound(int(GraphTypeColumn), index, int(GraphTypeLine)));
     }
+
+    static QStringList graphTypeNames();
 
     bool totalVisible() const { return m_totalVisible; }
     void setTotalVisible(bool v);

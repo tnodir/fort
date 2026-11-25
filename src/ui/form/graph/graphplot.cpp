@@ -203,6 +203,12 @@ void GraphPlot::setAnimated(bool v)
     m_scaleAnimation.setEnabled(v);
 }
 
+QStringList GraphPlot::graphTypeNames()
+{
+    // Sync with GraphType
+    return { tr("Column"), tr("Line") };
+}
+
 void GraphPlot::setGraphType(GraphType v)
 {
     if (m_graphType == v)
@@ -302,32 +308,32 @@ GraphPoint GraphPlot::pointAt(qint64 unixTime) const
 void GraphPlot::setColors(const ColorArray &colors)
 {
     // Background Color
-    const QColor bgColor = colors[ColorBg];
+    const QColor bgColor = colors[GraphColorBg];
     const bool isTransparentBg = (bgColor == Qt::transparent);
 
     setBackgroundBrush(isTransparentBg ? QBrush(Qt::NoBrush) : QBrush(bgColor));
 
     // Grid
-    m_grid->setPen(gridPen(colors[ColorGrid]));
+    m_grid->setPen(gridPen(colors[GraphColorGrid]));
 
     // Graph Inbound
-    setBarsColor(m_barsIn, colors[ColorIn]);
-    setBarsColor(m_risingIn, colors[ColorIn]);
+    setBarsColor(m_barsIn, colors[GraphColorIn]);
+    setBarsColor(m_risingIn, colors[GraphColorIn]);
 
     // Graph Outbound
-    setBarsColor(m_barsOut, colors[ColorOut]);
-    setBarsColor(m_risingOut, colors[ColorOut]);
+    setBarsColor(m_barsOut, colors[GraphColorOut]);
+    setBarsColor(m_risingOut, colors[GraphColorOut]);
 
     // Graph Total
-    setBarsColor(m_barsTotal, colors[ColorTotal]);
-    setBarsColor(m_risingTotal, colors[ColorTotal]);
+    setBarsColor(m_barsTotal, colors[GraphColorTotal]);
+    setBarsColor(m_risingTotal, colors[GraphColorTotal]);
 
     // Graph Lines
-    m_lineTotal->setColor(colors[ColorTotal]);
-    m_fillIn->setColor(colors[ColorIn]);
-    m_fillOut->setColor(colors[ColorOut]);
-    m_lineIn->setColor(colors[ColorIn]);
-    m_lineOut->setColor(colors[ColorOut]);
+    m_lineTotal->setColor(colors[GraphColorTotal]);
+    m_fillIn->setColor(colors[GraphColorIn]);
+    m_fillOut->setColor(colors[GraphColorOut]);
+    m_lineIn->setColor(colors[GraphColorIn]);
+    m_lineOut->setColor(colors[GraphColorOut]);
 
     // Text Speed
     {
@@ -336,19 +342,19 @@ void GraphPlot::setColors(const ColorArray &colors)
 
         m_speedBox->setBrush(speedBgColor);
 
-        m_speedInArrow->setBrush(colors[ColorIn]);
-        m_speedInText->setBrush(colors[ColorLabel]);
-        m_speedOutArrow->setBrush(colors[ColorOut]);
-        m_speedOutText->setBrush(colors[ColorLabel]);
+        m_speedInArrow->setBrush(colors[GraphColorIn]);
+        m_speedInText->setBrush(colors[GraphColorLabel]);
+        m_speedOutArrow->setBrush(colors[GraphColorOut]);
+        m_speedOutText->setBrush(colors[GraphColorLabel]);
     }
 
     // Axis
-    m_axes->setPen(QPen(colors[ColorAxis], 0, Qt::SolidLine, Qt::SquareCap));
+    m_axes->setPen(QPen(colors[GraphColorAxis], 0, Qt::SolidLine, Qt::SquareCap));
 
     // Border
-    m_border->setBrush(colors[ColorBorder]);
+    m_border->setBrush(colors[GraphColorBorder]);
 
-    m_tickLabelColor = colors[ColorTickLabel];
+    m_tickLabelColor = colors[GraphColorTickLabel];
 
     updateTickLabelsStyle();
 }
