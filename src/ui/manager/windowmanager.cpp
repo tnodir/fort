@@ -34,6 +34,7 @@
 #include <fortglobal.h>
 #include <fortsettings.h>
 #include <stat/statmanager.h>
+#include <user/inigraph.h>
 #include <user/usersettings.h>
 #include <util/bitutil.h>
 #include <util/fileutil.h>
@@ -215,7 +216,7 @@ void WindowManager::initialize()
         showSplashScreen();
     }
 
-    if (ini.graphWindowVisible()) {
+    if (IniGraph(Fort::iniUser()).visible()) {
         showGraphWindow();
     }
 }
@@ -323,7 +324,7 @@ void WindowManager::setupByIniUser()
     updateFont(ini);
     updateListIconSize(ini);
     updateTrayIconVisibility(ini);
-    updateGraphWindowVisibility(ini);
+    updateGraphWindowVisibility();
 }
 
 void WindowManager::updateTheme(const IniUser &ini)
@@ -422,7 +423,7 @@ void WindowManager::updateTrayIconVisibility(const IniUser &ini)
     }
 }
 
-void WindowManager::updateGraphWindowVisibility(const IniUser &ini)
+void WindowManager::updateGraphWindowVisibility()
 {
     auto &form = formByCode(WindowGraph);
     const auto w = form.window();
@@ -430,7 +431,7 @@ void WindowManager::updateGraphWindowVisibility(const IniUser &ini)
     if (w && w->isVisible())
         return;
 
-    if (ini.graphWindowHideOnClose()) {
+    if (IniGraph(Fort::iniUser()).hideOnClose()) {
         if (!w) {
             form.initialize();
         }

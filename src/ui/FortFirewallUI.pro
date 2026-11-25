@@ -307,6 +307,7 @@ SOURCES += \
     task/taskupdatechecker.cpp \
     task/taskworker.cpp \
     task/taskzonedownloader.cpp \
+    user/inigraph.cpp \
     user/iniuser.cpp \
     user/usersettings.cpp \
     util/bitutil.cpp \
@@ -697,6 +698,7 @@ HEADERS += \
     task/taskupdatechecker.h \
     task/taskworker.h \
     task/taskzonedownloader.h \
+    user/inigraph.h \
     user/iniuser.h \
     user/usersettings.h \
     util/bitutil.h \

@@ -3,6 +3,7 @@
 
 #include "optbasepage.h"
 
+class IniGraph;
 class LabelColor;
 class LabelSpin;
 class LabelSpinCombo;
@@ -23,6 +24,21 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
+    IniGraph iniGraph() const;
+
+    // The graph's option's check box: its toggling sets the option and marks the user's ini edited
+    QCheckBox *createIniGraphCheckBox(
+            bool (IniGraph::*iniFlag)() const, void (IniGraph::*setIniFlag)(bool));
+
+    // The callback of the graph's option's control: sets the changed option and marks the user's
+    // ini edited
+    std::function<void(int)> iniGraphValueSetter(
+            int (IniGraph::*iniValue)() const, void (IniGraph::*setIniValue)(int));
+
+    template<typename T>
+    std::function<void(T)> iniGraphSetter(
+            T (IniGraph::*iniValue)() const, void (IniGraph::*setIniValue)(T));
+
     void retranslateFixedSpeedCombo();
     void retranslateGraphTypeCombo();
 

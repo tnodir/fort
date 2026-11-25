@@ -14,6 +14,7 @@
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <stat/statmanager.h>
+#include <user/inigraph.h>
 #include <user/iniuser.h>
 #include <util/dateutil.h>
 #include <util/guiutil.h>
@@ -75,53 +76,57 @@ GraphWindow::GraphWindow(QWidget *parent) : FormWindow(parent)
 
 QString GraphWindow::iniGroup() const
 {
-    return IniUser::graphWindowGroup();
+    return iniGraph().group();
 }
 
 bool GraphWindow::deleteOnClose() const
 {
-    return !iniUser().graphWindowHideOnClose();
+    return !iniGraph().hideOnClose();
 }
 
 void GraphWindow::saveWindowState(bool wasVisible)
 {
-    iniUser().setGraphWindowVisible(wasVisible);
+    iniGraph().setVisible(wasVisible);
 
     saveWindowGeometry();
 }
 
 void GraphWindow::restoreWindowState()
 {
-    const auto &iniUser = Fort::iniUser();
+    const IniGraph ini = iniGraph();
 
-    m_iniGeometry = iniUser.graphWindowGeometry();
-    m_iniMaximized = iniUser.graphWindowMaximized();
+    m_iniGeometry = ini.geometry();
+    m_iniMaximized = ini.maximized();
 
     stateWatcher()->restore(this, QSize(400, 300), m_iniGeometry, m_iniMaximized);
 }
 
 void GraphWindow::saveWindowGeometry()
 {
-    auto &iniUser = Fort::iniUser();
+    IniGraph ini = iniGraph();
 
     m_iniGeometry = stateWatcher()->geometry();
     m_iniMaximized = stateWatcher()->maximized();
 
-    iniUser.setGraphWindowGeometry(m_iniGeometry);
-    iniUser.setGraphWindowMaximized(m_iniMaximized);
+    ini.setGeometry(m_iniGeometry);
+    ini.setMaximized(m_iniMaximized);
 
     confManager()->saveIniUser();
 }
 
 void GraphWindow::updateWindowGeometry()
 {
-    const auto &iniUser = Fort::iniUser();
+    const IniGraph ini = iniGraph();
 
-    if (iniUser.graphWindowGeometry() == m_iniGeometry
-            && iniUser.graphWindowMaximized() == m_iniMaximized)
+    if (ini.geometry() == m_iniGeometry && ini.maximized() == m_iniMaximized)
         return;
 
     restoreWindowState();
+}
+
+IniGraph GraphWindow::iniGraph() const
+{
+    return IniGraph(Fort::iniUser());
 }
 
 void GraphWindow::setupUi()
@@ -170,7 +175,7 @@ void GraphWindow::updateFlagsAndColors(bool onlyFlags)
     if (onlyFlags)
         return;
 
-    const auto &ini = Fort::iniUser();
+    const IniGraph ini = iniGraph();
 
     updateWindowFlags(ini);
     updateColors(ini);
@@ -180,47 +185,47 @@ void GraphWindow::updateFlagsAndColors(bool onlyFlags)
     updateGraph();
 }
 
-void GraphWindow::updateWindowFlags(const IniUser &ini)
+void GraphWindow::updateWindowFlags(const IniGraph &ini)
 {
     const bool visible = isVisible();
 
     setWindowFlags(Qt::Tool | Qt::WindowCloseButtonHint
-            | (ini.graphWindowAlwaysOnTop() ? Qt::WindowStaysOnTopHint : Qt::Widget)
-            | (ini.graphWindowFrameless() ? Qt::FramelessWindowHint : Qt::Widget)
-            | (ini.graphWindowClickThrough() ? Qt::WindowTransparentForInput : Qt::Widget));
+            | (ini.alwaysOnTop() ? Qt::WindowStaysOnTopHint : Qt::Widget)
+            | (ini.frameless() ? Qt::FramelessWindowHint : Qt::Widget)
+            | (ini.clickThrough() ? Qt::WindowTransparentForInput : Qt::Widget));
 
     if (visible) {
         show(); // setWindowFlags() hides the window
     }
 }
 
-void GraphWindow::updateColors(const IniUser &ini)
+void GraphWindow::updateColors(const IniGraph &ini)
 {
-    setWindowOpacityPercent(ini.graphWindowOpacity());
+    setWindowOpacityPercent(ini.opacity());
 
     m_plot->setColors(getColors(ini));
 }
 
-void GraphWindow::updateFonts(const IniUser &ini)
+void GraphWindow::updateFonts(const IniGraph &ini)
 {
-    m_plot->setTickLabelSize(ini.graphWindowTickLabelSize());
-    m_plot->setSpeedVisible(ini.graphWindowShowSpeed());
+    m_plot->setTickLabelSize(ini.tickLabelSize());
+    m_plot->setSpeedVisible(ini.showSpeed());
 }
 
-void GraphWindow::updateFormat(const IniUser &ini)
+void GraphWindow::updateFormat(const IniGraph &ini)
 {
-    m_plot->setMaxSeconds(ini.graphWindowMaxSeconds());
-    m_plot->setGraphType(GraphPlot::graphTypeByIndex(ini.graphWindowGraphType()));
-    m_plot->setTotalVisible(ini.graphWindowShowTotal());
-    m_plot->setInVisible(ini.graphWindowShowIn());
-    m_plot->setOutVisible(ini.graphWindowShowOut());
-    m_plot->setBarWidth(ini.graphWindowBarWidth());
-    m_plot->setAxisTicksVisible(ini.graphWindowAxisTicks());
-    m_plot->setYAxisLabelsVisible(!ini.graphWindowHideYAxisLabels());
-    m_plot->setBorderVisible(ini.graphWindowFrameless());
-    m_plot->setUnitFormat(FormatUtil::graphUnitFormat(ini.graphWindowTrafUnit()));
-    m_plot->setFixedValueMax(ini.graphWindowFixedSpeed() * 1024LL);
-    m_plot->setAnimated(ini.graphWindowAnimation());
+    m_plot->setMaxSeconds(ini.maxSeconds());
+    m_plot->setGraphType(GraphPlot::graphTypeByIndex(ini.graphType()));
+    m_plot->setTotalVisible(ini.showTotal());
+    m_plot->setInVisible(ini.showIn());
+    m_plot->setOutVisible(ini.showOut());
+    m_plot->setBarWidth(ini.barWidth());
+    m_plot->setAxisTicksVisible(ini.axisTicks());
+    m_plot->setYAxisLabelsVisible(!ini.hideYAxisLabels());
+    m_plot->setBorderVisible(ini.frameless());
+    m_plot->setUnitFormat(FormatUtil::graphUnitFormat(ini.trafUnit()));
+    m_plot->setFixedValueMax(ini.fixedSpeed() * 1024LL);
+    m_plot->setAnimated(ini.animation());
 }
 
 void GraphWindow::setupTimer()
@@ -318,20 +323,20 @@ void GraphWindow::enterEvent(QEnterEvent *event)
 {
     Q_UNUSED(event);
 
-    if (iniUser().graphWindowHideOnHover()) {
+    if (iniGraph().hideOnHover()) {
         hide();
         m_hoverTimer.start();
         return;
     }
 
-    setWindowOpacityPercent(iniUser().graphWindowHoverOpacity());
+    setWindowOpacityPercent(iniGraph().hoverOpacity());
 }
 
 void GraphWindow::leaveEvent(QEvent *event)
 {
     Q_UNUSED(event);
 
-    setWindowOpacityPercent(iniUser().graphWindowOpacity());
+    setWindowOpacityPercent(iniGraph().opacity());
 }
 
 void GraphWindow::keyPressEvent(QKeyEvent *event)
@@ -426,7 +431,7 @@ void GraphWindow::checkWindowEdges()
     }
 }
 
-GraphPlot::ColorArray GraphWindow::getColors(const IniUser &ini)
+GraphPlot::ColorArray GraphWindow::getColors(const IniGraph &ini)
 {
     GraphPlot::ColorArray colors;
 
@@ -438,16 +443,13 @@ GraphPlot::ColorArray GraphWindow::getColors(const IniUser &ini)
 #endif
 
     if (isLightTheme) {
-        colors << ini.graphWindowColor() << ini.graphWindowBorderColor() << ini.graphWindowColorIn()
-               << ini.graphWindowColorOut() << ini.graphWindowTotalColor()
-               << ini.graphWindowAxisColor() << ini.graphWindowTickLabelColor()
-               << ini.graphWindowLabelColor() << ini.graphWindowGridColor();
+        colors << ini.color() << ini.borderColor() << ini.colorIn() << ini.colorOut()
+               << ini.totalColor() << ini.axisColor() << ini.tickLabelColor() << ini.labelColor()
+               << ini.gridColor();
     } else {
-        colors << ini.graphWindowDarkColor() << ini.graphWindowDarkBorderColor()
-               << ini.graphWindowDarkColorIn() << ini.graphWindowDarkColorOut()
-               << ini.graphWindowDarkTotalColor() << ini.graphWindowDarkAxisColor()
-               << ini.graphWindowDarkTickLabelColor() << ini.graphWindowDarkLabelColor()
-               << ini.graphWindowDarkGridColor();
+        colors << ini.darkColor() << ini.darkBorderColor() << ini.darkColorIn()
+               << ini.darkColorOut() << ini.darkTotalColor() << ini.darkAxisColor()
+               << ini.darkTickLabelColor() << ini.darkLabelColor() << ini.darkGridColor();
     }
 
     return colors;

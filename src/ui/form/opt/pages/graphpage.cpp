@@ -18,6 +18,7 @@
 #include <form/opt/optionscontroller.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
+#include <user/inigraph.h>
 #include <user/iniuser.h>
 #include <util/formatutil.h>
 #include <util/iconcache.h>
@@ -31,49 +32,47 @@ GraphPage::GraphPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctr
 
 void GraphPage::onResetToDefault()
 {
-    const auto &iniUser = Fort::iniUser();
+    m_cbGraphHideOnClose->setChecked(IniGraph::hideOnCloseDefault());
 
-    m_cbGraphHideOnClose->setChecked(iniUser.graphWindowHideOnCloseDefault());
+    m_cbGraphAlwaysOnTop->setChecked(IniGraph::alwaysOnTopDefault());
+    m_cbGraphFrameless->setChecked(IniGraph::framelessDefault());
+    m_cbGraphClickThrough->setChecked(IniGraph::clickThroughDefault());
+    m_cbGraphHideOnHover->setChecked(IniGraph::hideOnHoverDefault());
+    m_cbGraphHideYAxisLabels->setChecked(IniGraph::hideYAxisLabelsDefault());
+    m_cbGraphShowSpeed->setChecked(IniGraph::showSpeedDefault());
+    m_cbGraphAnimation->setChecked(IniGraph::animationDefault());
+    m_cbGraphAxisTicks->setChecked(IniGraph::axisTicksDefault());
+    m_cbGraphShowTotal->setChecked(IniGraph::showTotalDefault());
+    m_cbGraphShowIn->setChecked(IniGraph::showInDefault());
+    m_cbGraphShowOut->setChecked(IniGraph::showOutDefault());
+    m_graphOpacity->spinBox()->setValue(IniGraph::opacityDefault());
+    m_graphHoverOpacity->spinBox()->setValue(IniGraph::hoverOpacityDefault());
+    m_graphTickLabelSize->spinBox()->setValue(IniGraph::tickLabelSizeDefault());
+    m_graphBarWidth->spinBox()->setValue(IniGraph::barWidthDefault());
+    m_graphMaxSeconds->spinBox()->setValue(IniGraph::maxSecondsDefault());
+    m_graphFixedSpeed->spinBox()->setValue(IniGraph::fixedSpeedDefault());
+    changeGraphType(IniGraph::graphTypeDefault());
+    changeTrafUnit(IniGraph::trafUnitDefault());
 
-    m_cbGraphAlwaysOnTop->setChecked(iniUser.graphWindowAlwaysOnTopDefault());
-    m_cbGraphFrameless->setChecked(iniUser.graphWindowFramelessDefault());
-    m_cbGraphClickThrough->setChecked(iniUser.graphWindowClickThroughDefault());
-    m_cbGraphHideOnHover->setChecked(iniUser.graphWindowHideOnHoverDefault());
-    m_cbGraphHideYAxisLabels->setChecked(iniUser.graphWindowHideYAxisLabelsDefault());
-    m_cbGraphShowSpeed->setChecked(iniUser.graphWindowShowSpeedDefault());
-    m_cbGraphAnimation->setChecked(iniUser.graphWindowAnimationDefault());
-    m_cbGraphAxisTicks->setChecked(iniUser.graphWindowAxisTicksDefault());
-    m_cbGraphShowTotal->setChecked(iniUser.graphWindowShowTotalDefault());
-    m_cbGraphShowIn->setChecked(iniUser.graphWindowShowInDefault());
-    m_cbGraphShowOut->setChecked(iniUser.graphWindowShowOutDefault());
-    m_graphOpacity->spinBox()->setValue(iniUser.graphWindowOpacityDefault());
-    m_graphHoverOpacity->spinBox()->setValue(iniUser.graphWindowHoverOpacityDefault());
-    m_graphTickLabelSize->spinBox()->setValue(iniUser.graphWindowTickLabelSizeDefault());
-    m_graphBarWidth->spinBox()->setValue(iniUser.graphWindowBarWidthDefault());
-    m_graphMaxSeconds->spinBox()->setValue(iniUser.graphWindowMaxSecondsDefault());
-    m_graphFixedSpeed->spinBox()->setValue(iniUser.graphWindowFixedSpeedDefault());
-    changeGraphType(iniUser.graphWindowGraphTypeDefault());
-    changeTrafUnit(iniUser.graphWindowTrafUnitDefault());
+    m_graphColor->setColor(IniGraph::colorDefault());
+    m_graphBorderColor->setColor(IniGraph::borderColorDefault());
+    m_graphColorIn->setColor(IniGraph::colorInDefault());
+    m_graphColorOut->setColor(IniGraph::colorOutDefault());
+    m_graphTotalColor->setColor(IniGraph::totalColorDefault());
+    m_graphAxisColor->setColor(IniGraph::axisColorDefault());
+    m_graphTickLabelColor->setColor(IniGraph::tickLabelColorDefault());
+    m_graphLabelColor->setColor(IniGraph::labelColorDefault());
+    m_graphGridColor->setColor(IniGraph::gridColorDefault());
 
-    m_graphColor->setColor(iniUser.graphWindowColorDefault());
-    m_graphBorderColor->setColor(iniUser.graphWindowBorderColorDefault());
-    m_graphColorIn->setColor(iniUser.graphWindowColorInDefault());
-    m_graphColorOut->setColor(iniUser.graphWindowColorOutDefault());
-    m_graphTotalColor->setColor(iniUser.graphWindowTotalColorDefault());
-    m_graphAxisColor->setColor(iniUser.graphWindowAxisColorDefault());
-    m_graphTickLabelColor->setColor(iniUser.graphWindowTickLabelColorDefault());
-    m_graphLabelColor->setColor(iniUser.graphWindowLabelColorDefault());
-    m_graphGridColor->setColor(iniUser.graphWindowGridColorDefault());
-
-    m_graphColor->setDarkColor(iniUser.graphWindowDarkColorDefault());
-    m_graphBorderColor->setDarkColor(iniUser.graphWindowDarkBorderColorDefault());
-    m_graphColorIn->setDarkColor(iniUser.graphWindowDarkColorInDefault());
-    m_graphColorOut->setDarkColor(iniUser.graphWindowDarkColorOutDefault());
-    m_graphTotalColor->setDarkColor(iniUser.graphWindowDarkTotalColorDefault());
-    m_graphAxisColor->setDarkColor(iniUser.graphWindowDarkAxisColorDefault());
-    m_graphTickLabelColor->setDarkColor(iniUser.graphWindowDarkTickLabelColorDefault());
-    m_graphLabelColor->setDarkColor(iniUser.graphWindowDarkLabelColorDefault());
-    m_graphGridColor->setDarkColor(iniUser.graphWindowDarkGridColorDefault());
+    m_graphColor->setDarkColor(IniGraph::darkColorDefault());
+    m_graphBorderColor->setDarkColor(IniGraph::darkBorderColorDefault());
+    m_graphColorIn->setDarkColor(IniGraph::darkColorInDefault());
+    m_graphColorOut->setDarkColor(IniGraph::darkColorOutDefault());
+    m_graphTotalColor->setDarkColor(IniGraph::darkTotalColorDefault());
+    m_graphAxisColor->setDarkColor(IniGraph::darkAxisColorDefault());
+    m_graphTickLabelColor->setDarkColor(IniGraph::darkTickLabelColorDefault());
+    m_graphLabelColor->setDarkColor(IniGraph::darkLabelColorDefault());
+    m_graphGridColor->setDarkColor(IniGraph::darkGridColorDefault());
 }
 
 void GraphPage::onRetranslateUi()
@@ -142,7 +141,39 @@ void GraphPage::retranslateGraphTypeCombo()
     // Sync with GraphPlot::GraphType
     const QStringList list = { tr("Column"), tr("Line") };
 
-    ControlUtil::setComboBoxTexts(m_comboGraphType, list, iniUser().graphWindowGraphType());
+    ControlUtil::setComboBoxTexts(m_comboGraphType, list, iniGraph().graphType());
+}
+
+IniGraph GraphPage::iniGraph() const
+{
+    return IniGraph(iniUser());
+}
+
+QCheckBox *GraphPage::createIniGraphCheckBox(
+        bool (IniGraph::*iniFlag)() const, void (IniGraph::*setIniFlag)(bool))
+{
+    return ControlUtil::createCheckBox(
+            (iniGraph().*iniFlag)(), iniGraphSetter(iniFlag, setIniFlag));
+}
+
+std::function<void(int)> GraphPage::iniGraphValueSetter(
+        int (IniGraph::*iniValue)() const, void (IniGraph::*setIniValue)(int))
+{
+    return iniGraphSetter(iniValue, setIniValue);
+}
+
+template<typename T>
+std::function<void(T)> GraphPage::iniGraphSetter(
+        T (IniGraph::*iniValue)() const, void (IniGraph::*setIniValue)(T))
+{
+    return [=, this](T v) {
+        IniGraph ini = iniGraph();
+        if ((ini.*iniValue)() == v)
+            return;
+
+        (ini.*setIniValue)(v);
+        ctrl()->setIniUserEdited();
+    };
 }
 
 void GraphPage::setupUi()
@@ -248,36 +279,32 @@ void GraphPage::setupGraphBox()
 
 void GraphPage::setupGraphCheckboxes()
 {
-    m_cbGraphHideOnClose = createIniUserCheckBox(
-            &IniUser::graphWindowHideOnClose, &IniUser::setGraphWindowHideOnClose);
+    m_cbGraphHideOnClose =
+            createIniGraphCheckBox(&IniGraph::hideOnClose, &IniGraph::setHideOnClose);
     m_cbGraphHideOnClose->setObjectName("cbGraphHideOnClose");
-    m_cbGraphAlwaysOnTop = createIniUserCheckBox(
-            &IniUser::graphWindowAlwaysOnTop, &IniUser::setGraphWindowAlwaysOnTop);
+    m_cbGraphAlwaysOnTop =
+            createIniGraphCheckBox(&IniGraph::alwaysOnTop, &IniGraph::setAlwaysOnTop);
     m_cbGraphAlwaysOnTop->setObjectName("cbGraphAlwaysOnTop");
-    m_cbGraphFrameless = createIniUserCheckBox(
-            &IniUser::graphWindowFrameless, &IniUser::setGraphWindowFrameless);
+    m_cbGraphFrameless = createIniGraphCheckBox(&IniGraph::frameless, &IniGraph::setFrameless);
     m_cbGraphFrameless->setObjectName("cbGraphFrameless");
-    m_cbGraphClickThrough = createIniUserCheckBox(
-            &IniUser::graphWindowClickThrough, &IniUser::setGraphWindowClickThrough);
+    m_cbGraphClickThrough =
+            createIniGraphCheckBox(&IniGraph::clickThrough, &IniGraph::setClickThrough);
     m_cbGraphClickThrough->setObjectName("cbGraphClickThrough");
-    m_cbGraphHideOnHover = createIniUserCheckBox(
-            &IniUser::graphWindowHideOnHover, &IniUser::setGraphWindowHideOnHover);
+    m_cbGraphHideOnHover =
+            createIniGraphCheckBox(&IniGraph::hideOnHover, &IniGraph::setHideOnHover);
     m_cbGraphHideOnHover->setObjectName("cbGraphHideOnHover");
 }
 
 void GraphPage::setupGraphViewCheckboxes()
 {
-    m_cbGraphHideYAxisLabels = createIniUserCheckBox(
-            &IniUser::graphWindowHideYAxisLabels, &IniUser::setGraphWindowHideYAxisLabels);
+    m_cbGraphHideYAxisLabels =
+            createIniGraphCheckBox(&IniGraph::hideYAxisLabels, &IniGraph::setHideYAxisLabels);
     m_cbGraphHideYAxisLabels->setObjectName("cbGraphHideYAxisLabels");
-    m_cbGraphShowSpeed = createIniUserCheckBox(
-            &IniUser::graphWindowShowSpeed, &IniUser::setGraphWindowShowSpeed);
+    m_cbGraphShowSpeed = createIniGraphCheckBox(&IniGraph::showSpeed, &IniGraph::setShowSpeed);
     m_cbGraphShowSpeed->setObjectName("cbGraphShowSpeed");
-    m_cbGraphAnimation = createIniUserCheckBox(
-            &IniUser::graphWindowAnimation, &IniUser::setGraphWindowAnimation);
+    m_cbGraphAnimation = createIniGraphCheckBox(&IniGraph::animation, &IniGraph::setAnimation);
     m_cbGraphAnimation->setObjectName("cbGraphAnimation");
-    m_cbGraphAxisTicks = createIniUserCheckBox(
-            &IniUser::graphWindowAxisTicks, &IniUser::setGraphWindowAxisTicks);
+    m_cbGraphAxisTicks = createIniGraphCheckBox(&IniGraph::axisTicks, &IniGraph::setAxisTicks);
     m_cbGraphAxisTicks->setObjectName("cbGraphAxisTicks");
 }
 
@@ -295,42 +322,34 @@ QLayout *GraphPage::setupGraphShowLayout()
 
 void GraphPage::setupGraphShowCheckboxes()
 {
-    m_cbGraphShowTotal = createIniUserCheckBox(
-            &IniUser::graphWindowShowTotal, &IniUser::setGraphWindowShowTotal);
+    m_cbGraphShowTotal = createIniGraphCheckBox(&IniGraph::showTotal, &IniGraph::setShowTotal);
     m_cbGraphShowTotal->setObjectName("cbGraphShowTotal");
-    m_cbGraphShowIn =
-            createIniUserCheckBox(&IniUser::graphWindowShowIn, &IniUser::setGraphWindowShowIn);
+    m_cbGraphShowIn = createIniGraphCheckBox(&IniGraph::showIn, &IniGraph::setShowIn);
     m_cbGraphShowIn->setObjectName("cbGraphShowIn");
-    m_cbGraphShowOut =
-            createIniUserCheckBox(&IniUser::graphWindowShowOut, &IniUser::setGraphWindowShowOut);
+    m_cbGraphShowOut = createIniGraphCheckBox(&IniGraph::showOut, &IniGraph::setShowOut);
     m_cbGraphShowOut->setObjectName("cbGraphShowOut");
 }
 
 void GraphPage::setupGraphOptions()
 {
-    m_graphOpacity = ControlUtil::createSpin({ iniUser().graphWindowOpacity(), 0, 100 }, " %",
-            iniUserValueSetter(&IniUser::graphWindowOpacity, &IniUser::setGraphWindowOpacity));
+    m_graphOpacity = ControlUtil::createSpin({ iniGraph().opacity(), 0, 100 }, " %",
+            iniGraphValueSetter(&IniGraph::opacity, &IniGraph::setOpacity));
     m_graphOpacity->setObjectName("graphOpacity");
 
-    m_graphHoverOpacity =
-            ControlUtil::createSpin({ iniUser().graphWindowHoverOpacity(), 0, 100 }, " %",
-                    iniUserValueSetter(&IniUser::graphWindowHoverOpacity,
-                            &IniUser::setGraphWindowHoverOpacity));
+    m_graphHoverOpacity = ControlUtil::createSpin({ iniGraph().hoverOpacity(), 0, 100 }, " %",
+            iniGraphValueSetter(&IniGraph::hoverOpacity, &IniGraph::setHoverOpacity));
     m_graphHoverOpacity->setObjectName("graphHoverOpacity");
 
-    m_graphTickLabelSize =
-            ControlUtil::createSpin({ iniUser().graphWindowTickLabelSize(), 1, 99 }, {},
-                    iniUserValueSetter(&IniUser::graphWindowTickLabelSize,
-                            &IniUser::setGraphWindowTickLabelSize));
+    m_graphTickLabelSize = ControlUtil::createSpin({ iniGraph().tickLabelSize(), 1, 99 }, {},
+            iniGraphValueSetter(&IniGraph::tickLabelSize, &IniGraph::setTickLabelSize));
     m_graphTickLabelSize->setObjectName("graphTickLabelSize");
 
-    m_graphBarWidth = ControlUtil::createSpin({ iniUser().graphWindowBarWidth(), 1, 99 }, " px",
-            iniUserValueSetter(&IniUser::graphWindowBarWidth, &IniUser::setGraphWindowBarWidth));
+    m_graphBarWidth = ControlUtil::createSpin({ iniGraph().barWidth(), 1, 99 }, " px",
+            iniGraphValueSetter(&IniGraph::barWidth, &IniGraph::setBarWidth));
     m_graphBarWidth->setObjectName("graphBarWidth");
 
-    m_graphMaxSeconds = ControlUtil::createSpin({ iniUser().graphWindowMaxSeconds(), 0, 9999 }, {},
-            iniUserValueSetter(
-                    &IniUser::graphWindowMaxSeconds, &IniUser::setGraphWindowMaxSeconds));
+    m_graphMaxSeconds = ControlUtil::createSpin({ iniGraph().maxSeconds(), 0, 9999 }, {},
+            iniGraphValueSetter(&IniGraph::maxSeconds, &IniGraph::setMaxSeconds));
     m_graphMaxSeconds->setObjectName("graphMaxSeconds");
 
     setupGraphFixedSpeed();
@@ -348,10 +367,9 @@ void GraphPage::setupGraphFixedSpeed()
     }
 
     const auto speedValuesList = SpinCombo::makeValuesList(speedValues);
-    m_graphFixedSpeed = ControlUtil::createSpinCombo(
-            { iniUser().graphWindowFixedSpeed(), 0, 9999999 }, speedValuesList, " Kb/s",
-            iniUserValueSetter(
-                    &IniUser::graphWindowFixedSpeed, &IniUser::setGraphWindowFixedSpeed));
+    m_graphFixedSpeed =
+            ControlUtil::createSpinCombo({ iniGraph().fixedSpeed(), 0, 9999999 }, speedValuesList,
+                    " Kb/s", iniGraphValueSetter(&IniGraph::fixedSpeed, &IniGraph::setFixedSpeed));
     m_graphFixedSpeed->setObjectName("graphFixedSpeed");
     m_graphFixedSpeed->setNames(speedNames);
 }
@@ -369,10 +387,10 @@ QLayout *GraphPage::setupGraphTypeLayout()
 
 void GraphPage::changeGraphType(int index)
 {
-    if (iniUser().graphWindowGraphType() == index)
+    if (iniGraph().graphType() == index)
         return;
 
-    iniUser().setGraphWindowGraphType(index);
+    iniGraph().setGraphType(index);
     ctrl()->setIniUserEdited();
 
     m_comboGraphType->setCurrentIndex(index);
@@ -388,17 +406,17 @@ QLayout *GraphPage::setupTrafUnitsLayout()
     m_comboTrafUnit->setObjectName("comboTrafUnit");
     m_comboTrafUnit->setFixedWidth(110);
 
-    m_comboTrafUnit->setCurrentIndex(iniUser().graphWindowTrafUnit());
+    m_comboTrafUnit->setCurrentIndex(iniGraph().trafUnit());
 
     return ControlUtil::createRowLayout(m_traphUnits, m_comboTrafUnit);
 }
 
 void GraphPage::changeTrafUnit(int index)
 {
-    if (iniUser().graphWindowTrafUnit() == index)
+    if (iniGraph().trafUnit() == index)
         return;
 
-    iniUser().setGraphWindowTrafUnit(index);
+    iniGraph().setTrafUnit(index);
     ctrl()->setIniUserEdited();
 
     m_comboTrafUnit->setCurrentIndex(index);
@@ -425,61 +443,61 @@ void GraphPage::setupGraphColors()
 void GraphPage::setupGraphColors1()
 {
     m_graphColor = ControlUtil::createLabelColor(
-            iniUser().graphWindowColor(), iniUser().graphWindowDarkColor(),
+            iniGraph().color(), iniGraph().darkColor(),
             [&](const QColor &v) {
-                iniUser().setGraphWindowColor(v);
+                iniGraph().setColor(v);
                 ctrl()->setIniUserEdited();
             },
             [&](const QColor &v) {
-                iniUser().setGraphWindowDarkColor(v);
+                iniGraph().setDarkColor(v);
                 ctrl()->setIniUserEdited();
             });
     m_graphColor->setObjectName("graphColor");
 
     m_graphBorderColor = ControlUtil::createLabelColor(
-            iniUser().graphWindowBorderColor(), iniUser().graphWindowDarkBorderColor(),
+            iniGraph().borderColor(), iniGraph().darkBorderColor(),
             [&](const QColor &v) {
-                iniUser().setGraphWindowBorderColor(v);
+                iniGraph().setBorderColor(v);
                 ctrl()->setIniUserEdited();
             },
             [&](const QColor &v) {
-                iniUser().setGraphWindowDarkBorderColor(v);
+                iniGraph().setDarkBorderColor(v);
                 ctrl()->setIniUserEdited();
             });
     m_graphBorderColor->setObjectName("graphBorderColor");
 
     m_graphColorIn = ControlUtil::createLabelColor(
-            iniUser().graphWindowColorIn(), iniUser().graphWindowDarkColorIn(),
+            iniGraph().colorIn(), iniGraph().darkColorIn(),
             [&](const QColor &v) {
-                iniUser().setGraphWindowColorIn(v);
+                iniGraph().setColorIn(v);
                 ctrl()->setIniUserEdited();
             },
             [&](const QColor &v) {
-                iniUser().setGraphWindowDarkColorIn(v);
+                iniGraph().setDarkColorIn(v);
                 ctrl()->setIniUserEdited();
             });
     m_graphColorIn->setObjectName("graphColorIn");
 
     m_graphColorOut = ControlUtil::createLabelColor(
-            iniUser().graphWindowColorOut(), iniUser().graphWindowDarkColorOut(),
+            iniGraph().colorOut(), iniGraph().darkColorOut(),
             [&](const QColor &v) {
-                iniUser().setGraphWindowColorOut(v);
+                iniGraph().setColorOut(v);
                 ctrl()->setIniUserEdited();
             },
             [&](const QColor &v) {
-                iniUser().setGraphWindowDarkColorOut(v);
+                iniGraph().setDarkColorOut(v);
                 ctrl()->setIniUserEdited();
             });
     m_graphColorOut->setObjectName("graphColorOut");
 
     m_graphTotalColor = ControlUtil::createLabelColor(
-            iniUser().graphWindowTotalColor(), iniUser().graphWindowDarkTotalColor(),
+            iniGraph().totalColor(), iniGraph().darkTotalColor(),
             [&](const QColor &v) {
-                iniUser().setGraphWindowTotalColor(v);
+                iniGraph().setTotalColor(v);
                 ctrl()->setIniUserEdited();
             },
             [&](const QColor &v) {
-                iniUser().setGraphWindowDarkTotalColor(v);
+                iniGraph().setDarkTotalColor(v);
                 ctrl()->setIniUserEdited();
             });
     m_graphTotalColor->setObjectName("graphTotalColor");
@@ -488,49 +506,49 @@ void GraphPage::setupGraphColors1()
 void GraphPage::setupGraphColors2()
 {
     m_graphAxisColor = ControlUtil::createLabelColor(
-            iniUser().graphWindowAxisColor(), iniUser().graphWindowDarkAxisColor(),
+            iniGraph().axisColor(), iniGraph().darkAxisColor(),
             [&](const QColor &v) {
-                iniUser().setGraphWindowAxisColor(v);
+                iniGraph().setAxisColor(v);
                 ctrl()->setIniUserEdited();
             },
             [&](const QColor &v) {
-                iniUser().setGraphWindowDarkAxisColor(v);
+                iniGraph().setDarkAxisColor(v);
                 ctrl()->setIniUserEdited();
             });
     m_graphAxisColor->setObjectName("graphAxisColor");
 
     m_graphTickLabelColor = ControlUtil::createLabelColor(
-            iniUser().graphWindowTickLabelColor(), iniUser().graphWindowDarkTickLabelColor(),
+            iniGraph().tickLabelColor(), iniGraph().darkTickLabelColor(),
             [&](const QColor &v) {
-                iniUser().setGraphWindowTickLabelColor(v);
+                iniGraph().setTickLabelColor(v);
                 ctrl()->setIniUserEdited();
             },
             [&](const QColor &v) {
-                iniUser().setGraphWindowDarkTickLabelColor(v);
+                iniGraph().setDarkTickLabelColor(v);
                 ctrl()->setIniUserEdited();
             });
     m_graphTickLabelColor->setObjectName("graphTickLabelColor");
 
     m_graphLabelColor = ControlUtil::createLabelColor(
-            iniUser().graphWindowLabelColor(), iniUser().graphWindowDarkLabelColor(),
+            iniGraph().labelColor(), iniGraph().darkLabelColor(),
             [&](const QColor &v) {
-                iniUser().setGraphWindowLabelColor(v);
+                iniGraph().setLabelColor(v);
                 ctrl()->setIniUserEdited();
             },
             [&](const QColor &v) {
-                iniUser().setGraphWindowDarkLabelColor(v);
+                iniGraph().setDarkLabelColor(v);
                 ctrl()->setIniUserEdited();
             });
     m_graphLabelColor->setObjectName("graphLabelColor");
 
     m_graphGridColor = ControlUtil::createLabelColor(
-            iniUser().graphWindowGridColor(), iniUser().graphWindowDarkGridColor(),
+            iniGraph().gridColor(), iniGraph().darkGridColor(),
             [&](const QColor &v) {
-                iniUser().setGraphWindowGridColor(v);
+                iniGraph().setGridColor(v);
                 ctrl()->setIniUserEdited();
             },
             [&](const QColor &v) {
-                iniUser().setGraphWindowDarkGridColor(v);
+                iniGraph().setDarkGridColor(v);
                 ctrl()->setIniUserEdited();
             });
     m_graphGridColor->setObjectName("graphGridColor");
@@ -560,11 +578,10 @@ void GraphPage::saveGraphWindowGeometry()
 
 void GraphPage::setupGeometryControls()
 {
-    m_cbGraphMaximized = createIniUserCheckBox(
-            &IniUser::graphWindowMaximized, &IniUser::setGraphWindowMaximized);
+    m_cbGraphMaximized = createIniGraphCheckBox(&IniGraph::maximized, &IniGraph::setMaximized);
     m_cbGraphMaximized->setObjectName("cbGraphMaximized");
 
-    const QRect rect = iniUser().graphWindowGeometry();
+    const QRect rect = iniGraph().geometry();
 
     m_graphX = createGeometrySpin(rect.x(), -99999);
     m_graphX->setObjectName("graphX");
@@ -587,8 +604,8 @@ void GraphPage::onGeometryEdited()
     const QRect rect(m_graphX->spinBox()->value(), m_graphY->spinBox()->value(),
             m_graphWidth->spinBox()->value(), m_graphHeight->spinBox()->value());
 
-    if (iniUser().graphWindowGeometry() != rect) {
-        iniUser().setGraphWindowGeometry(rect);
+    if (iniGraph().geometry() != rect) {
+        iniGraph().setGeometry(rect);
         ctrl()->setIniUserEdited();
     }
 }

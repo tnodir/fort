@@ -220,7 +220,7 @@ private:
     void setupByIniUser();
 
     void updateTrayIconVisibility(const IniUser &ini);
-    void updateGraphWindowVisibility(const IniUser &ini);
+    void updateGraphWindowVisibility();
 
     void closeAll();
     void quitApp();

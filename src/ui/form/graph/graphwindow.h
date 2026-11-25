@@ -6,7 +6,7 @@
 #include <form/controls/formwindow.h>
 #include <form/graph/graphplot.h>
 
-class IniUser;
+class IniGraph;
 
 class GraphWindow : public FormWindow
 {
@@ -39,9 +39,11 @@ private slots:
     void updateGraph();
 
 protected:
-    static GraphPlot::ColorArray getColors(const IniUser &ini);
+    static GraphPlot::ColorArray getColors(const IniGraph &ini);
 
 private:
+    IniGraph iniGraph() const;
+
     void onMouseDoubleClick(QMouseEvent *event);
     void onMouseDragBegin(QMouseEvent *event);
     void onMouseDragMove(QMouseEvent *event);
@@ -56,10 +58,10 @@ private:
 
     void forceUpdateFlagsAndColors();
     void updateFlagsAndColors(bool onlyFlags = false);
-    void updateWindowFlags(const IniUser &ini);
-    void updateColors(const IniUser &ini);
-    void updateFonts(const IniUser &ini);
-    void updateFormat(const IniUser &ini);
+    void updateWindowFlags(const IniGraph &ini);
+    void updateColors(const IniGraph &ini);
+    void updateFonts(const IniGraph &ini);
+    void updateFormat(const IniGraph &ini);
 
     void setupTimer();
     void startUpdateTimer();
