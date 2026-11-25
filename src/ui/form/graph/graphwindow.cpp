@@ -405,8 +405,8 @@ void GraphWindow::checkWindowEdges()
     const QRect screenRect = screen->geometry();
     const QRect winRect = this->frameGeometry();
     const QPoint diff(
-            stickyEdgeDiff(screenRect.x(), screenRect.width(), winRect.x(), winRect.right()),
-            stickyEdgeDiff(screenRect.y(), screenRect.height(), winRect.y(), winRect.bottom()));
+            stickyEdgeDiff(screenRect.x(), screenRect.right(), winRect.x(), winRect.right()),
+            stickyEdgeDiff(screenRect.y(), screenRect.bottom(), winRect.y(), winRect.bottom()));
 
     if (!diff.isNull()) {
         this->move(winRect.topLeft() + diff);
