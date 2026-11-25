@@ -28,30 +28,16 @@ inline constexpr int stickyDistance = 30;
 inline constexpr QChar inArrow = QChar(0x2193); // Down
 inline constexpr QChar outArrow = QChar(0x2191); // Up
 
-inline void checkWindowHorizontalEdges(const QRect &screenRect, const QRect &winRect, QPoint &diff)
+// The window's shift to stick its edge to the screen's near one on an axis, else 0
+int stickyEdgeDiff(int screenStart, int screenEnd, int winStart, int winEnd)
 {
-    const int leftDiff = screenRect.x() - winRect.x();
-    if (qAbs(leftDiff) < stickyDistance) {
-        diff.setX(leftDiff);
-    } else {
-        const int rightDiff = screenRect.width() - winRect.right();
-        if (qAbs(rightDiff) < stickyDistance) {
-            diff.setX(rightDiff);
-        }
-    }
-}
+    const int startDiff = screenStart - winStart;
+    if (qAbs(startDiff) < stickyDistance)
+        return startDiff;
 
-inline void checkWindowVerticalEdges(const QRect &screenRect, const QRect &winRect, QPoint &diff)
-{
-    const int topDiff = screenRect.y() - winRect.y();
-    if (qAbs(topDiff) < stickyDistance) {
-        diff.setY(topDiff);
-    } else {
-        const int bottomDiff = screenRect.height() - winRect.bottom();
-        if (qAbs(bottomDiff) < stickyDistance) {
-            diff.setY(bottomDiff);
-        }
-    }
+    const int endDiff = screenEnd - winEnd;
+
+    return (qAbs(endDiff) < stickyDistance) ? endDiff : 0;
 }
 
 }
@@ -418,13 +404,12 @@ void GraphWindow::checkWindowEdges()
 
     const QRect screenRect = screen->geometry();
     const QRect winRect = this->frameGeometry();
-    QPoint diff(0, 0);
+    const QPoint diff(
+            stickyEdgeDiff(screenRect.x(), screenRect.width(), winRect.x(), winRect.right()),
+            stickyEdgeDiff(screenRect.y(), screenRect.height(), winRect.y(), winRect.bottom()));
 
-    checkWindowHorizontalEdges(screenRect, winRect, diff);
-    checkWindowVerticalEdges(screenRect, winRect, diff);
-
-    if (diff.x() != 0 || diff.y() != 0) {
-        this->move(winRect.x() + diff.x(), winRect.y() + diff.y());
+    if (!diff.isNull()) {
+        this->move(winRect.topLeft() + diff);
     }
 }
 
