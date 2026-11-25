@@ -14,8 +14,12 @@ public:
 
     bool inTaskbar() const override { return false; }
 
+    bool isWindowShown() const override;
+
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
+
+    void onWindowClosed() override;
 
     void saveWindowGeometry();
 

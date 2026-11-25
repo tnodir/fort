@@ -506,13 +506,11 @@ void WindowManager::updateGraphWindowVisibility(int graphId)
     updateGraphWindowHost(graphId);
 
     auto &form = graphFormById(graphId);
-    const auto w = form.window();
-
-    if (w && w->isVisible())
+    if (form.isShown())
         return;
 
     if (iniGraph.hideOnClose()) {
-        if (!w) {
+        if (!form.window()) {
             form.initialize();
         }
     } else {

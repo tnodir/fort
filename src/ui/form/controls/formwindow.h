@@ -39,6 +39,9 @@ public:
     virtual bool isDockable() const { return (windowCode() & WindowDockable) != 0; }
     bool isDocked() const { return !isWindow(); }
 
+    // The window may be hidden for a while, staying shown for its form
+    virtual bool isWindowShown() const { return isVisible(); }
+
     // The window is to be created anew for another host
     virtual bool isHostChanged() const { return false; }
 

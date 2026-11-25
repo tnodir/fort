@@ -45,6 +45,12 @@ GraphWindow::GraphWindow(int graphId, QWidget *parent) : GraphBaseWindow(graphId
     connect(confManager(), &ConfManager::iniUserChanged, this, &GraphWindow::updateWindowGeometry);
 }
 
+bool GraphWindow::isWindowShown() const
+{
+    // Hidden on hover till the mouse leaves it
+    return isVisible() || m_hoverTimer.isActive();
+}
+
 void GraphWindow::saveWindowState(bool wasVisible)
 {
     setIniGeometry();
@@ -60,6 +66,11 @@ void GraphWindow::restoreWindowState()
     m_iniMaximized = ini.maximized();
 
     stateWatcher()->restore(this, QSize(400, 300), m_iniGeometry, m_iniMaximized);
+}
+
+void GraphWindow::onWindowClosed()
+{
+    m_hoverTimer.stop();
 }
 
 void GraphWindow::saveWindowGeometry()

@@ -180,7 +180,7 @@ PanelDock *FormPointer::dock() const
 bool FormPointer::isShown() const
 {
     // A docked window may be hidden in its tab
-    return m_window && (m_window->isVisible() || m_dock);
+    return m_window && (m_window->isWindowShown() || m_dock);
 }
 
 bool FormPointer::isHostChanged() const
