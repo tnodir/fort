@@ -156,6 +156,7 @@ SOURCES += \
     form/graph/graphplot.cpp \
     form/graph/graphscontroller.cpp \
     form/graph/graphswindow.cpp \
+    form/graph/graphview.cpp \
     form/graph/graphwindow.cpp \
     form/group/groupeditdialog.cpp \
     form/group/groupscontroller.cpp \
@@ -539,6 +540,7 @@ HEADERS += \
     form/graph/graphplot.h \
     form/graph/graphscontroller.h \
     form/graph/graphswindow.h \
+    form/graph/graphview.h \
     form/graph/graphwindow.h \
     form/group/groupeditdialog.h \
     form/group/groupscontroller.h \

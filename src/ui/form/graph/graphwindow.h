@@ -4,8 +4,7 @@
 #include <QTimer>
 
 #include <form/controls/formwindow.h>
-#include <form/graph/graphplot.h>
-#include <user/inigraph.h>
+#include <form/graph/graphview.h>
 
 class GraphWindow : public FormWindow
 {
@@ -26,25 +25,18 @@ public:
 
     void saveWindowGeometry();
 
-signals:
-    void mouseRightClick(QMouseEvent *event);
-
-public slots:
-    void addTraffic(qint64 unixTime, quint64 inBytes, quint64 outBytes);
-
 private slots:
     void checkHoverLeave();
 
     void updateWindowGeometry();
 
-    void updateGraph();
-
-protected:
-    static GraphPlot::ColorArray getColors(const IniGraph &ini);
+    void updateWindowTitle(const QString &inText, const QString &outText);
 
 private:
-    const IniGraph &iniGraph() const { return m_iniGraph; }
-    IniGraph &iniGraph() { return m_iniGraph; }
+    const IniGraph &iniGraph() const { return m_view->iniGraph(); }
+    IniGraph &iniGraph() { return m_view->iniGraph(); }
+
+    GraphPlot *plot() const { return m_view->plot(); }
 
     void onMouseDoubleClick(QMouseEvent *event);
     void onMouseDragBegin(QMouseEvent *event);
@@ -54,29 +46,21 @@ private:
     void cancelMousePressAndDragging();
 
 private:
-    void setupUi();
+    void setupUi(int graphId);
 
-    void setupFlagsAndColors();
+    void setupWindowOptions();
 
-    void forceUpdateFlagsAndColors();
-    void updateFlagsAndColors(bool onlyFlags = false);
+    void updateWindowOptions(bool onlyFlags = false);
     void updateWindowFlags(const IniGraph &ini);
-    void updateColors(const IniGraph &ini);
-    void updateFonts(const IniGraph &ini);
-    void updateFormat(const IniGraph &ini);
+    void updateBorder(const IniGraph &ini);
 
-    void setupTimer();
-    void startUpdateTimer();
-
-    void updateSpeed(qint64 unixTime);
+    void setupHoverTimer();
 
     void setWindowOpacityPercent(int percent);
 
     void checkWindowEdges();
 
 protected:
-    void showEvent(QShowEvent *event) override;
-
     void enterEvent(QEnterEvent *event) override;
     void leaveEvent(QEvent *event) override;
 
@@ -86,7 +70,7 @@ private:
     bool m_mouseDragResize = false;
     bool m_iniMaximized = false;
 
-    GraphPlot *m_plot = nullptr;
+    GraphView *m_view = nullptr;
 
     QPoint m_mousePressPoint;
     QPoint m_posOnMousePress;
@@ -94,9 +78,6 @@ private:
 
     QRect m_iniGeometry;
 
-    IniGraph m_iniGraph;
-
-    QTimer m_updateTimer;
     QTimer m_hoverTimer;
 };
 
