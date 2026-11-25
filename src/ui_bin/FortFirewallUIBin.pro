@@ -19,7 +19,8 @@ SOURCES += \
 
 # Windows
 RC_FILE = FortFirewall.rc
-OTHER_FILES += $${RC_FILE}
+QMAKE_MANIFEST = FortFirewall.exe.manifest
+OTHER_FILES += $${RC_FILE} $${QMAKE_MANIFEST}
 
 # 3rd party integrations
 include(3rdparty/3rdparty.pri)
