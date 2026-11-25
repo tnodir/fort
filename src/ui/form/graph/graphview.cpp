@@ -2,6 +2,8 @@
 
 #include <QApplication>
 #include <QDateTime>
+#include <QMouseEvent>
+#include <QResizeEvent>
 #include <QStyleHints>
 
 #include <conf/confmanager.h>
