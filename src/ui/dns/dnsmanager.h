@@ -68,7 +68,8 @@ public:
     void setUp() override;
     void tearDown() override;
 
-    // The test of the upstream servers, to start after connecting to its signals
+    // The test of the upstream servers, to start after connecting to its signals; checks again that
+    // the system's queries are sent to the forwarder
     virtual DnsServersTest *createServersTest(const QStringList &servers, QObject *parent);
 
     // Returns the Block Zones listing the name, else adds the referenced Hosts Zones and host()
@@ -98,6 +99,7 @@ private:
     void closeForwarder();
 
     void startNrptCheck();
+    void recheckNrpt();
     void recheckNrptIgnored();
     void onNrptChecked(bool received);
 

@@ -56,7 +56,8 @@ void DnsPage::onRetranslateUi()
     m_comboServers->setItemText(0, adaptersServersText());
     m_comboServers->setPlaceholderText(tr("Custom"));
     m_btTest->setText(tr("Test"));
-    m_btTest->setToolTip(tr("Ask each server for \"example.com\" (only with the Service)"));
+    m_btTest->setToolTip(tr("Ask each server for \"example.com\" and check that the system's DNS "
+                            "queries are sent to the DNS Forwarder (only with the Service)"));
     m_editServers->setPlaceholderText(adaptersServersText());
     m_editServers->setToolTip(
             tr("A server per line: addresses, e.g. \"1.1.1.1\", or DNS over HTTPS URLs with the "
@@ -255,6 +256,7 @@ void DnsPage::setupForwarderErrorWarning()
     if (auto dnsManager = Fort::dnsManager()) {
         connect(dnsManager, &DnsManager::statusChanged, this,
                 &DnsPage::updateForwarderErrorWarning);
+        connect(dnsManager, &DnsManager::statusChanged, this, &DnsPage::updateTestResults);
     }
 }
 
@@ -267,8 +269,7 @@ void DnsPage::onBlockZonesEdited()
 // Of the saved options
 void DnsPage::updateForwarderErrorWarning()
 {
-    auto dnsManager = Fort::dnsManager();
-    const DnsForwarderStatus status = dnsManager ? dnsManager->status() : DnsForwarderStatus();
+    const DnsForwarderStatus status = forwarderStatus();
 
     m_labelForwarderError->setText(forwarderWarningText(status));
     m_forwarderErrorWarning->setVisible(status.isError());
@@ -299,9 +300,40 @@ void DnsPage::updateTestResults()
     if (!m_serversTest)
         return;
 
-    const QStringList lines = m_serversTest->resultLines(&serverResultText, adaptersServersText());
+    QStringList lines = m_serversTest->resultLines(&serverResultText, adaptersServersText());
+
+    const QString systemText = systemQueriesText(forwarderStatus());
+    if (!systemText.isEmpty()) {
+        lines.append(tr("System's DNS queries") + ": " + systemText);
+    }
 
     m_editTestResults->setPlainText(lines.join('\n'));
+}
+
+// Only with the Service
+DnsForwarderStatus DnsPage::forwarderStatus()
+{
+    auto dnsManager = Fort::dnsManager();
+
+    return dnsManager ? dnsManager->status() : DnsForwarderStatus();
+}
+
+// Of the started forwarder
+QString DnsPage::systemQueriesText(const DnsForwarderStatus &status)
+{
+    if (status.isReceiving()) {
+        return tr("Sent to the DNS Forwarder");
+    }
+
+    switch (status.status) {
+    case DnsForwarderStatus::StatusChecking:
+        return tr("Testing...");
+    case DnsForwarderStatus::StatusNrptError:
+    case DnsForwarderStatus::StatusNrptIgnored:
+        return tr("Not sent to the DNS Forwarder");
+    default:
+        return {};
+    }
 }
 
 // The Dnscache asks the adapters' DNS servers, while the forwarder doesn't receive its queries:

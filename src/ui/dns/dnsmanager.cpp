@@ -101,6 +101,8 @@ DnsServersTest *DnsManager::createServersTest(const QStringList &servers, QObjec
 
     connect(test, &QObject::destroyed, this, [=, this] { m_serversTests.removeOne(test); });
 
+    recheckNrpt();
+
     return test;
 }
 
@@ -249,6 +251,17 @@ void DnsManager::startNrptCheck()
         return;
 
     m_nrptCheck.start();
+}
+
+// The system's queries may be blocked or sent to it since the last check
+void DnsManager::recheckNrpt()
+{
+    if (!(m_status.isReceiving() || m_status.status == DnsForwarderStatus::StatusNrptIgnored))
+        return;
+
+    setStatus({ .status = DnsForwarderStatus::StatusChecking });
+
+    startNrptCheck();
 }
 
 // A query received may be the system's one: e.g. the rule applied or the blocking filter removed
