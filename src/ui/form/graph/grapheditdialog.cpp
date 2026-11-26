@@ -102,7 +102,7 @@ void GraphEditDialog::setupUi(int graphId)
     this->setSizeGripEnabled(true);
 
     // Size
-    this->resize(800, 600);
+    this->resize(800, 660);
 }
 
 QLayout *GraphEditDialog::setupNameLayout()
