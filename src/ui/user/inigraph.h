@@ -81,6 +81,11 @@ public:
     int hoverOpacity() const { return valueInt("hoverOpacity", hoverOpacityDefault()); }
     void setHoverOpacity(int v) { setValue("hoverOpacity", v); }
 
+    // px
+    static constexpr int borderWidthDefault() { return 0; }
+    int borderWidth() const { return valueInt("borderWidth", borderWidthDefault()); }
+    void setBorderWidth(int v) { setValue("borderWidth", v); }
+
     static constexpr bool showInTaskbarDefault() { return false; }
     bool showInTaskbar() const { return valueBool("showInTaskbar", showInTaskbarDefault()); }
     void setShowInTaskbar(bool on) { setValue("showInTaskbar", on); }

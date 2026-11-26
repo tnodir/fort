@@ -111,8 +111,8 @@ public:
     bool yAxisLabelsVisible() const { return m_yAxisLabelsVisible; }
     void setYAxisLabelsVisible(bool v);
 
-    bool borderVisible() const { return m_borderVisible; }
-    void setBorderVisible(bool v);
+    int borderWidth() const { return m_borderWidth; }
+    void setBorderWidth(int v);
 
     FormatUtil::SizeFormat unitFormat() const { return m_ticker.unitFormat(); }
     void setUnitFormat(FormatUtil::SizeFormat v);
@@ -206,7 +206,7 @@ private:
     QRect axisRect(int tickLabelsWidth) const;
     double minTickStep() const;
     int axisTickLength() const;
-    int borderWidth() const;
+    int borderPixels() const;
     int unitLabelWidth() const;
     int yAxisLabelsWidth(int tickLabelsWidth) const;
 
@@ -249,7 +249,6 @@ private:
     bool m_animated : 1 = false;
     bool m_axisTicksVisible : 1 = false;
     bool m_yAxisLabelsVisible : 1 = true;
-    bool m_borderVisible : 1 = false;
     bool m_axesChanged : 1 = true;
     bool m_barsEmpty : 1 = true;
     bool m_totalVisible : 1 = false;
@@ -262,6 +261,7 @@ private:
 
     int m_maxSeconds = 500;
     int m_barWidth = 5; // pixels per second
+    int m_borderWidth = 0; // pixels
 
     double m_valueUpper = 5; // shown
     double m_valueTarget = 5;

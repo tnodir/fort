@@ -232,12 +232,12 @@ void GraphPlot::setYAxisLabelsVisible(bool v)
     m_axesChanged = true;
 }
 
-void GraphPlot::setBorderVisible(bool v)
+void GraphPlot::setBorderWidth(int v)
 {
-    if (m_borderVisible == v)
+    if (m_borderWidth == v)
         return;
 
-    m_borderVisible = v;
+    m_borderWidth = v;
 
     m_axesChanged = true;
 }
@@ -910,9 +910,10 @@ int GraphPlot::axisTickLength() const
     return m_axisTicksVisible ? tickLength : 0;
 }
 
-int GraphPlot::borderWidth() const
+int GraphPlot::borderPixels() const
 {
-    return m_borderVisible ? 1 : 0;
+    // Device pixels of the border's lines
+    return (m_borderWidth > 0) ? qMax(qRound(m_borderWidth * devicePixelRatioF()), 1) : 0;
 }
 
 int GraphPlot::unitLabelWidth() const
@@ -1211,17 +1212,18 @@ void GraphPlot::updateUnitLabel()
 
 void GraphPlot::updateBorder()
 {
-    if (!m_borderVisible) {
+    const int linePixels = borderPixels();
+    if (linePixels == 0) {
         m_border->setRects({});
         return;
     }
 
-    // A device pixel's lines at the view's edges
+    // The lines of device pixels at the view's edges
     const qreal dpr = devicePixelRatioF();
     const QSize size = viewport()->size();
     const qreal width = qRound(size.width() * dpr) / dpr;
     const qreal height = qRound(size.height() * dpr) / dpr;
-    const qreal line = 1 / dpr;
+    const qreal line = linePixels / dpr;
 
     m_border->setRects({
             QRectF(0, 0, width, line),
@@ -1260,8 +1262,8 @@ int GraphPlot::barsBottom() const
         return qRound((viewport()->height() - borderWidth() - m_speedMargins.bottom()) * dpr);
     }
 
-    // Up to the view's bottom or to the border's line of a device pixel
-    return qRound(viewport()->height() * dpr) - borderWidth();
+    // Up to the view's bottom or to the border's line of device pixels
+    return qRound(viewport()->height() * dpr) - borderPixels();
 }
 
 qreal GraphPlot::xAxisY() const

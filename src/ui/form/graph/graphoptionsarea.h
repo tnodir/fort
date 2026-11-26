@@ -63,6 +63,7 @@ private:
     void setupWindowBox();
     void setupWindowCheckboxes();
     void setupWindowOpacity();
+    void setupWindowBorder();
     void setupGeometryBox();
     void saveGraphWindowGeometry();
     void setupGeometryControls();
@@ -101,6 +102,7 @@ private:
     QCheckBox *m_cbGraphHideOnHover = nullptr;
     LabelSpin *m_graphOpacity = nullptr;
     LabelSpin *m_graphHoverOpacity = nullptr;
+    LabelSpin *m_graphBorderWidth = nullptr;
 
     QCheckBox *m_cbGraphMaximized = nullptr;
     LabelSpin *m_graphX = nullptr;

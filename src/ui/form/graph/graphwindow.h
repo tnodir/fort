@@ -47,7 +47,6 @@ private:
 
     void updateWindowOptions(bool onlyFlags = false);
     void updateWindowFlags(const IniGraph &ini);
-    void updateBorder(const IniGraph &ini);
 
     void setupHoverTimer();
 

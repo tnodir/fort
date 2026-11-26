@@ -135,7 +135,6 @@ void GraphWindow::updateWindowOptions(bool onlyFlags)
     const IniGraph &ini = iniGraph();
 
     updateWindowFlags(ini);
-    updateBorder(ini);
 
     setWindowOpacityPercent(ini.opacity());
 }
@@ -152,18 +151,6 @@ void GraphWindow::updateWindowFlags(const IniGraph &ini)
     if (visible) {
         show(); // setWindowFlags() hides the window
     }
-}
-
-void GraphWindow::updateBorder(const IniGraph &ini)
-{
-    // The border replaces the window's frame
-    const bool frameless = ini.frameless();
-    if (plot()->borderVisible() == frameless)
-        return;
-
-    plot()->setBorderVisible(frameless);
-
-    view()->updateGraph(); // the view is updated before
 }
 
 void GraphWindow::setupHoverTimer()

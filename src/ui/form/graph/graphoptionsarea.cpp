@@ -52,6 +52,7 @@ void GraphOptionsArea::resetToDefault()
     m_cbGraphHideOnHover->setChecked(IniGraph::hideOnHoverDefault());
     m_graphOpacity->spinBox()->setValue(IniGraph::opacityDefault());
     m_graphHoverOpacity->spinBox()->setValue(IniGraph::hoverOpacityDefault());
+    m_graphBorderWidth->spinBox()->setValue(IniGraph::borderWidthDefault());
 
     m_cbGraphShowInTaskbar->setChecked(IniGraph::showInTaskbarDefault());
     m_graphTaskbarWidth->spinBox()->setValue(IniGraph::taskbarWidthDefault());
@@ -100,6 +101,7 @@ void GraphOptionsArea::retranslateUi()
     m_cbGraphHideOnHover->setText(tr("Hide on hover"));
     m_graphOpacity->label()->setText(tr("Opacity:"));
     m_graphHoverOpacity->label()->setText(tr("Hover opacity:"));
+    m_graphBorderWidth->label()->setText(tr("Border width:"));
 
     m_cbGraphMaximized->setText(tr("Maximized"));
     m_graphX->label()->setText(tr("X:"));
@@ -265,6 +267,7 @@ void GraphOptionsArea::setupWindowBox()
 {
     setupWindowCheckboxes();
     setupWindowOpacity();
+    setupWindowBorder();
 
     auto layout = ControlUtil::createVLayoutByWidgets({
             m_cbGraphHideOnClose,
@@ -276,6 +279,7 @@ void GraphOptionsArea::setupWindowBox()
             ControlUtil::createSeparator(),
             m_graphOpacity,
             m_graphHoverOpacity,
+            m_graphBorderWidth,
     });
 
     m_gbWindow = new QGroupBox();
@@ -309,6 +313,13 @@ void GraphOptionsArea::setupWindowOpacity()
     m_graphHoverOpacity = ControlUtil::createSpin({ iniGraph().hoverOpacity(), 0, 100 }, " %",
             iniGraphSetter(&IniGraph::hoverOpacity, &IniGraph::setHoverOpacity));
     m_graphHoverOpacity->setObjectName("graphHoverOpacity");
+}
+
+void GraphOptionsArea::setupWindowBorder()
+{
+    m_graphBorderWidth = ControlUtil::createSpin({ iniGraph().borderWidth(), 0, 99 }, " px",
+            iniGraphSetter(&IniGraph::borderWidth, &IniGraph::setBorderWidth));
+    m_graphBorderWidth->setObjectName("graphBorderWidth");
 }
 
 void GraphOptionsArea::setupGeometryBox()
