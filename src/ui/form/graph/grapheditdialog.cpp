@@ -46,6 +46,7 @@ void GraphEditDialog::retranslateUi()
     m_btDefault->setText(tr("Default"));
     m_btOk->setText(tr("OK"));
     m_btApply->setText(tr("Apply"));
+    m_btApply->setShortcut(QKeySequence::Save); // setText() resets it by the text's mnemonic
     m_btCancel->setText(tr("Cancel"));
 
     this->setWindowTitle(tr("Edit Graph"));
