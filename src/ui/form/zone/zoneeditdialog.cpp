@@ -19,7 +19,6 @@
 #include <model/zonelistmodel.h>
 #include <model/zonesourcewrapper.h>
 #include <util/guiutil.h>
-#include <util/net/netutil.h>
 
 #include "zonescontroller.h"
 
@@ -99,6 +98,8 @@ void ZoneEditDialog::retranslateUi()
     m_labelFormData->setText(tr("Form Data:"));
     m_labelFormData->setToolTip(tr("The data sent with the download request"));
 
+    retranslateEditTextPlaceholderText();
+
     m_usagesView->retranslateUi();
 
     m_btOk->setText(tr("OK"));
@@ -116,6 +117,27 @@ void ZoneEditDialog::retranslateComboSources()
         m_comboSources->setItemText(i, title);
         m_comboSources->setItemData(i, title, Qt::ToolTipRole);
     }
+}
+
+void ZoneEditDialog::retranslateEditTextPlaceholderText()
+{
+    const auto addressesTitle = zoneListModel()->zoneSourceTitleById(ZoneSourceWrapper::SourceText);
+    const auto hostsTitle =
+            zoneListModel()->zoneSourceTitleById(ZoneSourceWrapper::SourceHostsText);
+
+    const QStringList lines = {
+        "# " + addressesTitle + ':',
+        "10.0.0.0/8",
+        "192.168.1.1",
+        "2001:db8::/32",
+        QString(),
+        "# " + hostsTitle + ':',
+        "example.com",
+        "*.example.org",
+        ".example.net",
+    };
+
+    m_editText->setPlaceholderText(lines.join('\n') + '\n');
 }
 
 void ZoneEditDialog::setupController()
@@ -312,7 +334,6 @@ QLayout *ZoneEditDialog::setupTextLayout()
 {
     m_editText = new PlainTextEdit();
     m_editText->setObjectName("editText");
-    m_editText->setPlaceholderText(NetUtil::localIpNetworksText());
 
     auto layout = ControlUtil::createVLayout();
     layout->addWidget(m_editText);

@@ -40,6 +40,7 @@ protected slots:
 
 private:
     void retranslateComboSources();
+    void retranslateEditTextPlaceholderText();
 
     void initializeBySource(const ZoneSourceWrapper &zoneSource);
     void initializeUsages();
