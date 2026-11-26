@@ -1,16 +1,21 @@
 #include "fontselector.h"
 
+#include <QFontDatabase>
+
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/toolbutton.h>
 #include <form/dialog/dialogutil.h>
-#include <util/guiutil.h>
 
 namespace {
 
 QString fontText(const QFont &font)
 {
-    return QString("%1, %2 pt").arg(font.family()).arg(font.pointSize());
+    const QString text = QString("%1, %2 pt").arg(font.family()).arg(font.pointSize());
+
+    const bool isRegular = (font.weight() == QFont::Normal && font.style() == QFont::StyleNormal);
+
+    return isRegular ? text : text + ", " + QFontDatabase::styleString(font);
 }
 
 }
@@ -44,7 +49,7 @@ void FontSelector::retranslateUi()
 void FontSelector::updateFontText()
 {
     // The default font is shown by the placeholder
-    const bool isDefault = GuiUtil::isSameFont(m_selectedFont, m_defaultFont);
+    const bool isDefault = (m_selectedFont == m_defaultFont);
 
     m_editFont->setStartText(isDefault ? QString() : fontText(m_selectedFont));
 }
