@@ -220,6 +220,7 @@ private:
     void updateRisingBars();
     void updateLines(const QVector<GraphColumn> &columns);
     void appendLineStart(GraphLinePoints &points, const QVector<GraphColumn> &columns) const;
+    void appendLineEnd(GraphLinePoints &points, const QVector<GraphColumn> &columns) const;
     void appendLinePoints(GraphLinePoints &points, const GraphColumn &column) const;
     void updateScroll();
     void updateSpeedBox();

@@ -1032,9 +1032,14 @@ void GraphPlot::updateLines(const QVector<GraphColumn> &columns)
 
     appendLineStart(points, columns);
 
-    for (const GraphColumn &column : columns) {
-        appendLinePoints(points, column);
+    // Without the current incomplete second
+    const int completeCount = int(columns.size()) - 1;
+
+    for (int i = 0; i < completeCount; ++i) {
+        appendLinePoints(points, columns.at(i));
     }
+
+    appendLineEnd(points, columns);
 
     m_lineIn->setPoints(points.in);
     m_lineOut->setPoints(points.out);
@@ -1054,6 +1059,20 @@ void GraphPlot::appendLineStart(GraphLinePoints &points, const QVector<GraphColu
     const GraphColumn start = { first.unixTime, first.x - first.width / 2, first.width };
 
     appendLinePoints(points, start);
+}
+
+void GraphPlot::appendLineEnd(GraphLinePoints &points, const QVector<GraphColumn> &columns) const
+{
+    if (columns.size() < 2)
+        return;
+
+    // The last complete second's value is held beyond the right edge scrolled by a second
+    const GraphColumn &current = columns.constLast();
+
+    GraphColumn end = columns.at(columns.size() - 2);
+    end.x = current.x + 2 * current.width;
+
+    appendLinePoints(points, end);
 }
 
 void GraphPlot::appendLinePoints(GraphLinePoints &points, const GraphColumn &column) const
