@@ -1,6 +1,22 @@
 # CodeScene's checks
 
-The thresholds are in `AGENTS.md`'s Conventions. `codescene/cc-check.py` of `dev-tools` (`https://github.com/tnodir/dev-tools`, its `codescene/README.md`; `<dev-tools>` is its clone) reports the C/C++ functions and files exceeding them, as CodeScene measures them (its docstring describes how each one is counted):
+Moved out of `AGENTS.md`'s Conventions: read it when splitting the code for them.
+
+## The thresholds
+
+As CodeScene measures them:
+
+- "Complex Method": cyclomatic complexity 9+. Every `case`/`default` label, `if`, loop, `continue`, `&&`, `||` and `?:` adds one (`break` doesn't); split long `switch`es into helpers or a function table indexed by the enum (e.g. `fort_conf_rule_filter_check_funcList` in `driver/common/fortconf.c`).
+- "Excess Number of Function Arguments": 5+ arguments; group them into a struct (cf. `FORT_CALLOUT_ARG`). The WFP callouts' fixed signatures are exempt.
+- "Complex Conditional": 2+ `&&`/`||` in one `if`/`while` condition; move the rest into a named helper or early returns.
+- "Bumpy Road": 2+ bumps, a bump being a body (an `if`/`else` branch, a loop's or `switch`'s body) of a function's top-level statement which contains another conditional or loop; move the nested ones into helpers.
+- "Large Method": a function of 70+ lines of code (non-empty, non-comment lines, the signature included); split it into helpers.
+- "Lines of Code in a Single File": a file of 1000+ lines of code (non-empty, non-comment lines); move a part into a file of its own.
+- "Duplicated Function Blocks" / "High Degree of Code Duplication": a pair of a file's functions of 10+ lines of code (non-empty, non-comment lines, the signature included) of the same structure: their token sequences match by ~96%+ with the names and numbers generalized, and they share 40%+ of their identifiers (e.g. a handler per IOCTL checking the input's size and calling its setter, a function per group of filters filling them field by field, a reader per log entry type, the two `switch*ConnsWindow()` of `ProgramEditDialog`). Lists of different calls (e.g. `FwpmFilterDeleteByKey0()` of different GUIDs) share too few identifiers to count. Keep the per-item data in a table and process it by one function (cf. `fortDeviceControlProcess_list`'s `in_len` in `driver/fortdev.c`, the `FORT_PROV_GROUP_ARGS` in `driver/common/fortprov.c`, `g_calloutArgs` in `driver/fortcout.c`; a `static const` table refers to the GUIDs by `const GUID *`), or move the common steps into helpers until each function is under 10 lines (cf. `LogBuffer::appendEntry()`/`takeEntry()`, `DriverCommon::logAppHeaderRead()` returning a struct instead of out-parameters).
+
+## The check
+
+`codescene/cc-check.py` of `dev-tools` (`https://github.com/tnodir/dev-tools`, its `codescene/README.md`; `<dev-tools>` is its clone) reports the C/C++ functions and files exceeding them, as CodeScene measures them (its docstring describes how each one is counted):
 
 ```bat
 pip install lizard
