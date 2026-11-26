@@ -444,6 +444,15 @@ bool WindowManager::closeGraphWindow(int graphId)
     return form.close();
 }
 
+void WindowManager::switchGraphWindow(int graphId)
+{
+    if (isGraphWindowShown(graphId)) {
+        closeGraphWindow(graphId);
+    } else {
+        showGraphWindow(graphId);
+    }
+}
+
 void WindowManager::deleteGraphWindow(int graphId)
 {
     auto &form = graphFormById(graphId);

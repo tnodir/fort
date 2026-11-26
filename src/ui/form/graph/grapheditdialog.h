@@ -27,6 +27,7 @@ protected slots:
 
 private:
     IniGraph &iniGraph() const;
+    bool isMainGraph() const;
 
     void setupController();
 
@@ -36,7 +37,7 @@ private:
 
     void setEdited(bool edited = true);
 
-    void save();
+    bool save();
 
 private:
     GraphsController *m_ctrl = nullptr;

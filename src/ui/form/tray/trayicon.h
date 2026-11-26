@@ -66,6 +66,7 @@ protected slots:
     void saveTrayFlags();
 
     void onShowWindowAction();
+    void switchGraphWindow();
 
     void switchTrayFlag(bool checked);
 
@@ -84,17 +85,20 @@ private:
     void setupTrayMenuTopActions();
     void setupTrayMenuOptions();
     void setupTrayMenuStatistics();
+    void setupTrayMenuGraphs();
     void setupTrayMenuBottomActions();
 
     QMenu *addSelectMenu(const QList<const char *> &iniKeys, const QStringList &iconPaths);
     QAction *addMenuPopupAction(QMenu *menu, tray::ActionType actionType);
     QList<QAction *> addFlagActions(int count, const char *member, const char *modifierIniKey);
+    QList<QAction *> addGraphActions();
 
     bool isEditEnabled() const;
 
     void updateTrayMenuFlags();
     void updateGroupFlagActions();
     void updateRuleActions();
+    void updateGraphActions();
 
     void selectTrayFlag(QMenu *menu, QAction *action);
     void confirmSaveTrayFlags(const QString &question);
@@ -159,9 +163,10 @@ private:
     QAction *m_trafficAction = nullptr;
     QAction *m_activityAction = nullptr;
     QAction *m_connectionsAction = nullptr;
-    QAction *m_graphsAction = nullptr;
     QAction *m_filterSimAction = nullptr;
+    QMenu *m_graphsMenu = nullptr;
     QAction *m_graphAction = nullptr;
+    QAction *m_graphsAction = nullptr;
     QAction *m_filterEnabledAction = nullptr;
     QAction *m_snoozeAlertsAction = nullptr;
     QAction *m_blockTrafficMenuAction = nullptr;
@@ -172,6 +177,7 @@ private:
     QAction *m_trayMenuAction = nullptr;
     QList<QAction *> m_groupFlagActions;
     QList<QAction *> m_ruleActions;
+    QList<QAction *> m_graphActions;
     QVector<const char *> m_actionIniKeys;
 
     QAction *m_clickActions[tray::ClickTypeCount] = { nullptr };

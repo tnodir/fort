@@ -100,11 +100,7 @@ bool GraphListModel::setData(const QModelIndex &index, const QVariant &value, in
     switch (role) {
     case Qt::CheckStateRole:
         const auto &graphRow = graphRowAt(index.row());
-        if (graphRow.visible) {
-            windowManager()->closeGraphWindow(graphRow.graphId);
-        } else {
-            windowManager()->showGraphWindow(graphRow.graphId);
-        }
+        windowManager()->switchGraphWindow(graphRow.graphId);
         return true;
     }
 
@@ -151,7 +147,7 @@ bool GraphListModel::updateTableRow(const QVariantHash & /*vars*/, int row) cons
     m_graphRow.visible = windowManager()->isGraphWindowShown(graphId);
     m_graphRow.graphId = graphId;
     m_graphRow.graphType = ini.graphType();
-    m_graphRow.name = ini.name();
+    m_graphRow.name = GraphTypes::graphName(ini);
 
     return true;
 }

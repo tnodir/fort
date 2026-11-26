@@ -159,6 +159,7 @@ public slots:
 
     bool showGraphWindow(int graphId = 0);
     bool closeGraphWindow(int graphId = 0);
+    void switchGraphWindow(int graphId);
     void deleteGraphWindow(int graphId);
     void recreateGraphWindow(int graphId);
 

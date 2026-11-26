@@ -4,6 +4,8 @@
 #include <QCoreApplication>
 #include <QStringList>
 
+class IniGraph;
+
 enum GraphColorType : qint8 {
     GraphColorBg = 0,
     GraphColorBorder,
@@ -38,6 +40,8 @@ public:
     {
         return GraphType(qBound(int(GraphTypeColumn), index, int(GraphTypeLine)));
     }
+
+    static QString graphName(const IniGraph &ini);
 
     static QStringList graphTypeNames();
 

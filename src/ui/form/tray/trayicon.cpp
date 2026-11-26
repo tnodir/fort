@@ -23,6 +23,7 @@
 #include <manager/windowmanager.h>
 #include <model/grouplistmodel.h>
 #include <stat/pendingconnmanager.h>
+#include <user/inigraph.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
@@ -323,6 +324,9 @@ TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayCo
     connect(confRuleManager(), &ConfRuleManager::trayMenuUpdated, this,
             &TrayIcon::updateRuleActions, Qt::QueuedConnection);
 
+    connect(windowManager(), &WindowManager::graphWindowVisibilityChanged, this,
+            &TrayIcon::updateGraphActions);
+
     connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this,
             &TrayIcon::updateTrayIconShape);
 }
@@ -439,6 +443,7 @@ void TrayIcon::updateTrayMenu(bool onlyFlags)
     if (!onlyFlags) {
         updateGroupFlagActions();
         updateRuleActions();
+        updateGraphActions();
     }
 
     updateTrayMenuFlags();
@@ -477,9 +482,10 @@ void TrayIcon::retranslateUi()
     m_trafficAction->setText(tr("Traffic"));
     m_activityAction->setText(tr("Activity"));
     m_connectionsAction->setText(tr("Connections"));
-    m_graphsAction->setText(tr("Graphs"));
     m_filterSimAction->setText(tr("Filter Simulator"));
+    m_graphsMenu->setTitle(tr("Graphs"));
     m_graphAction->setText(tr("Traffic Graph"));
+    m_graphsAction->setText(tr("Graphs"));
 
     m_filterEnabledAction->setText(tr("Filter Enabled"));
     m_snoozeAlertsAction->setText(tr("Snooze Alerts"));
@@ -551,11 +557,8 @@ void TrayIcon::setupTrayMenuTopActions()
     setupTrayMenuStatistics();
     m_menu->addMenu(m_statisticsMenu);
 
-    m_graphAction = addAction(m_menu,
-            { ":/icons/action_log.png", this, SLOT(onShowWindowAction()), WindowGraph,
-                    /*checkable=*/true, windowManager()->isWindowOpen(WindowGraph) });
-    m_graphAction->setObjectName("graphAction");
-    addHotKey(m_graphAction, HotKey::graph);
+    setupTrayMenuGraphs();
+    m_menu->addMenu(m_graphsMenu);
 
     m_menu->addSeparator();
 
@@ -647,16 +650,32 @@ void TrayIcon::setupTrayMenuStatistics()
     m_connectionsAction->setObjectName("connectionsAction");
     addHotKey(m_connectionsAction, HotKey::connections);
 
-    m_graphsAction = addAction(m_statisticsMenu,
-            { ":/icons/action_log.png", this, SLOT(onShowWindowAction()), WindowGraphs });
-    m_graphsAction->setObjectName("graphsAction");
-
     m_statisticsMenu->addSeparator();
 
     m_filterSimAction = addAction(m_statisticsMenu,
             { ":/icons/filter.png", this, SLOT(onShowWindowAction()), WindowFilterSim });
     m_filterSimAction->setObjectName("filterSimAction");
     addHotKey(m_filterSimAction, HotKey::filterSim);
+}
+
+void TrayIcon::setupTrayMenuGraphs()
+{
+    m_graphsMenu = new QMenu(m_menu);
+    m_graphsMenu->setIcon(IconCache::icon(":/icons/action_log.png"));
+
+    m_graphAction = addAction(m_graphsMenu,
+            { QString(), this, SLOT(onShowWindowAction()), WindowGraph, /*checkable=*/true,
+                    windowManager()->isWindowOpen(WindowGraph) });
+    m_graphAction->setObjectName("graphAction");
+    addHotKey(m_graphAction, HotKey::graph);
+
+    m_graphActions = addGraphActions();
+
+    m_graphsMenu->addSeparator();
+
+    m_graphsAction = addAction(m_graphsMenu,
+            { ":/icons/action_log.png", this, SLOT(onShowWindowAction()), WindowGraphs });
+    m_graphsAction->setObjectName("graphsAction");
 }
 
 QMenu *TrayIcon::addSelectMenu(const QList<const char *> &iniKeys, const QStringList &iconPaths)
@@ -700,6 +719,22 @@ QList<QAction *> TrayIcon::addFlagActions(int count, const char *member, const c
         if (i < MAX_FKEY_COUNT) {
             addHotKey(a, modifierIniKey);
         }
+
+        actions.append(a);
+    }
+
+    return actions;
+}
+
+QList<QAction *> TrayIcon::addGraphActions()
+{
+    // The extra graphs' actions: the main graph's one is m_graphAction
+    QList<QAction *> actions;
+
+    for (int i = 1; i < IniGraph::maxCount; ++i) {
+        QAction *a = addAction(m_graphsMenu,
+                { QString(), this, SLOT(switchGraphWindow()), /*userData=*/ {},
+                        /*checkable=*/true });
 
         actions.append(a);
     }
@@ -776,6 +811,24 @@ void TrayIcon::updateRuleActions()
 
     updateActionsVisible(m_ruleActions, rulesCount);
     updateActionsEnabled(m_ruleActions, isEditEnabled());
+}
+
+void TrayIcon::updateGraphActions()
+{
+    auto &iniUser = Fort::iniUser();
+
+    // The first id is the main graph's
+    const auto graphIds = iniUser.graphWindowIds();
+    const int graphsCount = graphIds.size() - 1;
+
+    for (int i = 0; i < graphsCount; ++i) {
+        const int graphId = graphIds[i + 1];
+
+        setFlagAction(m_graphActions.at(i), graphId, windowManager()->isGraphWindowShown(graphId),
+                IniGraph(iniUser, graphId).name());
+    }
+
+    updateActionsVisible(m_graphActions, graphsCount);
 }
 
 void TrayIcon::sendAlertMessage()
@@ -915,6 +968,16 @@ void TrayIcon::onShowWindowAction()
     } else {
         windowManager()->showWindowByCode(windowCode);
     }
+}
+
+void TrayIcon::switchGraphWindow()
+{
+    const auto action = qobject_cast<QAction *>(sender());
+    Q_ASSERT(action);
+
+    const int graphId = action->data().toInt();
+
+    windowManager()->switchGraphWindow(graphId);
 }
 
 void TrayIcon::switchTrayFlag(bool /*checked*/)

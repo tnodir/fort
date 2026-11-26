@@ -13,6 +13,7 @@
 #include <user/usersettings.h>
 #include <util/guiutil.h>
 
+#include "graph_types.h"
 #include "graphoptionsarea.h"
 #include "graphscontroller.h"
 
@@ -26,13 +27,19 @@ GraphEditDialog::GraphEditDialog(GraphsController *ctrl, int graphId, QWidget *p
 
     retranslateUi();
 
-    m_editName->setStartText(iniGraph().name());
+    m_editName->setStartText(GraphTypes::graphName(iniGraph()));
+    m_editName->setReadOnly(isMainGraph());
     m_editName->setFocus();
 }
 
 IniGraph &GraphEditDialog::iniGraph() const
 {
     return m_graphOptions->iniGraph();
+}
+
+bool GraphEditDialog::isMainGraph() const
+{
+    return iniGraph().graphId() == 0;
 }
 
 void GraphEditDialog::retranslateUi()
@@ -122,16 +129,18 @@ QLayout *GraphEditDialog::setupButtons()
 
     // OK
     m_btOk = ControlUtil::createButton(QString(), [&] {
-        save();
-        this->close();
+        if (save()) {
+            this->close();
+        }
     });
     m_btOk->setObjectName("btOk");
     m_btOk->setDefault(true);
 
     // Apply
     m_btApply = ControlUtil::createButton(QString(), [&] {
-        save();
-        setEdited(false);
+        if (save()) {
+            setEdited(false);
+        }
     });
     m_btApply->setObjectName("btApply");
     m_btApply->setEnabled(false);
@@ -155,11 +164,20 @@ void GraphEditDialog::setEdited(bool edited)
     m_btApply->setEnabled(edited);
 }
 
-void GraphEditDialog::save()
+bool GraphEditDialog::save()
 {
     auto &ini = iniGraph();
 
-    ini.setName(m_editName->text());
+    if (!isMainGraph()) {
+        if (m_editName->text().isEmpty()) {
+            m_editName->setFocus();
+            return false;
+        }
+
+        ini.setName(m_editName->text());
+    }
 
     ctrl()->saveGraph(m_iniUser, ini.graphId());
+
+    return true;
 }
