@@ -50,6 +50,9 @@ public:
     static QComboBox *createComboBox(
             const QStringList &texts, const std::function<void(int index)> &onActivated);
 
+    // Selects the index as the user does: calls the onActivated
+    static void activateComboBox(QComboBox *c, int index);
+
     static void setComboBoxTexts(
             QComboBox *c, const QStringList &texts = {}, int currentIndex = -2);
     static void setComboBoxIcons(QComboBox *c, const QStringList &iconPaths);

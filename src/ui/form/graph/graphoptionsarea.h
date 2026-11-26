@@ -45,6 +45,10 @@ private:
     QCheckBox *createIniGraphCheckBox(
             bool (IniGraph::*iniFlag)() const, void (IniGraph::*setIniFlag)(bool));
 
+    // The graph's option's combo box: its activation sets the option and emits edited()
+    QComboBox *createIniGraphComboBox(const QStringList &texts, int (IniGraph::*iniValue)() const,
+            void (IniGraph::*setIniValue)(int));
+
     void retranslateFixedSpeedCombo();
     void retranslateGraphColors();
     void retranslateGraphTypeCombo();
@@ -67,7 +71,6 @@ private:
     void setupTaskbarBox();
     void setupGraphBox();
     QLayout *setupGraphTypeLayout();
-    void changeGraphType(int index);
     QLayout *setupGraphShowLayout();
     void setupGraphShowCheckboxes();
     void setupGraphOptions();
@@ -75,9 +78,7 @@ private:
     void setupGraphViewOptions();
     void setupSpeedBox();
     QLayout *setupSpeedPositionLayout();
-    void changeSpeedPosition(int index);
     QLayout *setupTrafUnitsLayout();
-    void changeTrafUnit(int index);
     void setupColorsBox();
     void setupGraphColors();
     LabelColor *createGraphColor(GraphColorType type);

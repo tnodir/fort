@@ -57,7 +57,7 @@ void GraphOptionsArea::resetToDefault()
     m_graphTaskbarWidth->spinBox()->setValue(IniGraph::taskbarWidthDefault());
 
     m_cbGraphShowGraph->setChecked(IniGraph::showGraphDefault());
-    changeGraphType(IniGraph::graphTypeDefault());
+    ControlUtil::activateComboBox(m_comboGraphType, IniGraph::graphTypeDefault());
     m_cbGraphShowTotal->setChecked(IniGraph::showTotalDefault());
     m_cbGraphShowIn->setChecked(IniGraph::showInDefault());
     m_cbGraphShowOut->setChecked(IniGraph::showOutDefault());
@@ -71,9 +71,9 @@ void GraphOptionsArea::resetToDefault()
 
     m_cbGraphShowSpeed->setChecked(IniGraph::showSpeedDefault());
     m_graphSpeedTextSize->spinBox()->setValue(IniGraph::speedTextSizeDefault());
-    changeSpeedPosition(IniGraph::speedPositionDefault());
+    ControlUtil::activateComboBox(m_comboSpeedPosition, IniGraph::speedPositionDefault());
     m_cbGraphSpeedInside->setChecked(IniGraph::speedInsideDefault());
-    changeTrafUnit(IniGraph::trafUnitDefault());
+    ControlUtil::activateComboBox(m_comboTrafUnit, IniGraph::trafUnitDefault());
 
     for (int i = 0; i < GraphColorCount; ++i) {
         const auto type = GraphColorType(i);
@@ -185,6 +185,16 @@ QCheckBox *GraphOptionsArea::createIniGraphCheckBox(
 {
     return ControlUtil::createCheckBox(
             (iniGraph().*iniFlag)(), iniGraphSetter(iniFlag, setIniFlag));
+}
+
+QComboBox *GraphOptionsArea::createIniGraphComboBox(const QStringList &texts,
+        int (IniGraph::*iniValue)() const, void (IniGraph::*setIniValue)(int))
+{
+    auto c = ControlUtil::createComboBox(texts, iniGraphSetter(iniValue, setIniValue));
+    c->setFixedWidth(110);
+    c->setCurrentIndex((iniGraph().*iniValue)());
+
+    return c;
 }
 
 void GraphOptionsArea::setupUi()
@@ -405,22 +415,10 @@ QLayout *GraphOptionsArea::setupGraphTypeLayout()
 {
     m_labelGraphType = ControlUtil::createLabel();
 
-    m_comboGraphType = ControlUtil::createComboBox({}, [&](int index) { changeGraphType(index); });
+    m_comboGraphType = createIniGraphComboBox({}, &IniGraph::graphType, &IniGraph::setGraphType);
     m_comboGraphType->setObjectName("comboGraphType");
-    m_comboGraphType->setFixedWidth(110);
 
     return ControlUtil::createRowLayout(m_labelGraphType, m_comboGraphType);
-}
-
-void GraphOptionsArea::changeGraphType(int index)
-{
-    if (iniGraph().graphType() == index)
-        return;
-
-    iniGraph().setGraphType(index);
-    emit edited();
-
-    m_comboGraphType->setCurrentIndex(index);
 }
 
 QLayout *GraphOptionsArea::setupGraphShowLayout()
@@ -525,22 +523,10 @@ QLayout *GraphOptionsArea::setupSpeedPositionLayout()
     m_labelSpeedPosition = ControlUtil::createLabel();
 
     m_comboSpeedPosition =
-            ControlUtil::createComboBox({}, [&](int index) { changeSpeedPosition(index); });
+            createIniGraphComboBox({}, &IniGraph::speedPosition, &IniGraph::setSpeedPosition);
     m_comboSpeedPosition->setObjectName("comboSpeedPosition");
-    m_comboSpeedPosition->setFixedWidth(110);
 
     return ControlUtil::createRowLayout(m_labelSpeedPosition, m_comboSpeedPosition);
-}
-
-void GraphOptionsArea::changeSpeedPosition(int index)
-{
-    if (iniGraph().speedPosition() == index)
-        return;
-
-    iniGraph().setSpeedPosition(index);
-    emit edited();
-
-    m_comboSpeedPosition->setCurrentIndex(index);
 }
 
 QLayout *GraphOptionsArea::setupTrafUnitsLayout()
@@ -549,24 +535,10 @@ QLayout *GraphOptionsArea::setupTrafUnitsLayout()
 
     m_labelTrafUnits = ControlUtil::createLabel();
 
-    m_comboTrafUnit = ControlUtil::createComboBox(list, [&](int index) { changeTrafUnit(index); });
+    m_comboTrafUnit = createIniGraphComboBox(list, &IniGraph::trafUnit, &IniGraph::setTrafUnit);
     m_comboTrafUnit->setObjectName("comboTrafUnit");
-    m_comboTrafUnit->setFixedWidth(110);
-
-    m_comboTrafUnit->setCurrentIndex(iniGraph().trafUnit());
 
     return ControlUtil::createRowLayout(m_labelTrafUnits, m_comboTrafUnit);
-}
-
-void GraphOptionsArea::changeTrafUnit(int index)
-{
-    if (iniGraph().trafUnit() == index)
-        return;
-
-    iniGraph().setTrafUnit(index);
-    emit edited();
-
-    m_comboTrafUnit->setCurrentIndex(index);
 }
 
 void GraphOptionsArea::setupColorsBox()

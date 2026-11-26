@@ -149,6 +149,13 @@ QComboBox *ControlUtil::createComboBox(
     return c;
 }
 
+void ControlUtil::activateComboBox(QComboBox *c, int index)
+{
+    c->setCurrentIndex(index);
+
+    emit c->activated(index);
+}
+
 void ControlUtil::setComboBoxTexts(QComboBox *c, const QStringList &texts, int currentIndex)
 {
     if (currentIndex < -1) {
