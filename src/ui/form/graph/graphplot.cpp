@@ -1087,6 +1087,9 @@ void GraphPlot::updateSpeedBox()
     const QSizeF size = m_speedBox->layout(isSpeedRows());
 
     m_speedBox->setPos(speedBoxPos(size));
+
+    // Outside the graph there is only the view's background under the text
+    m_speedBox->setBackgroundVisible(m_speedInside && m_graphVisible);
 }
 
 bool GraphPlot::isSpeedRows() const

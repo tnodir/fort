@@ -98,15 +98,25 @@ void GraphSpeedItem::setText(const QString &inText, const QString &outText)
 void GraphSpeedItem::setColors(const QColor &bgColor, const QColor &inColor, const QColor &outColor,
         const QColor &textColor)
 {
-    QColor speedBgColor = bgColor;
-    speedBgColor.setAlpha(speedBgAlpha);
+    m_bgColor = bgColor;
+    m_bgColor.setAlpha(speedBgAlpha);
 
-    setBrush(speedBgColor);
+    updateBackground();
 
     m_inArrow->setBrush(inColor);
     m_inText->setBrush(textColor);
     m_outArrow->setBrush(outColor);
     m_outText->setBrush(textColor);
+}
+
+void GraphSpeedItem::setBackgroundVisible(bool v)
+{
+    if (m_backgroundVisible == v)
+        return;
+
+    m_backgroundVisible = v;
+
+    updateBackground();
 }
 
 void GraphSpeedItem::setTextFont(const QFont &font)
@@ -139,6 +149,11 @@ QSizeF GraphSpeedItem::layout(bool rows)
     setRect(QRectF(QPointF(), size));
 
     return size;
+}
+
+void GraphSpeedItem::updateBackground()
+{
+    setBrush(m_backgroundVisible ? QBrush(m_bgColor) : QBrush(Qt::NoBrush));
 }
 
 void GraphSpeedItem::setupArrows(const QFont &font)
