@@ -33,6 +33,23 @@ QString expandPath(const QString &path, EnvManager *envManager = nullptr)
     return pathSlash(expPath);
 }
 
+// Processed by main() before the parser: added for the help only
+void addInstallOptions(QCommandLineParser &parser)
+{
+    parser.addOption({ "u",
+            "Uninstall the service, Explorer integration, auto-run and boot filter."
+            " Only the service or Explorer integration by the next argument \"service\" or"
+            " \"explorer\"; all but auto-run and boot filter by \"most\"."
+            " Must be the first argument." });
+
+    parser.addOption({ "i",
+            "Install the component: service, auto-run, explorer, portable or boot-filter."
+            " Must be the first argument.",
+            "component" });
+
+    parser.addOption({ "s", "Stop the service (by the installer). Must be the first argument." });
+}
+
 void showHelp(QCommandLineParser &parser)
 {
     if (ConsoleOutput::hasConsoleOutput()) {
@@ -343,48 +360,54 @@ void FortSettings::processArguments(const QStringList &args)
     QCommandLineParser parser;
 
     const QCommandLineOption profileOption(
-            { "p", "profile" }, "Directory to store settings.", "profile");
+            { "p", "profile" }, "Directory to store settings.", "folder");
     parser.addOption(profileOption);
 
-    const QCommandLineOption statOption("stat", "Directory to store statistics.", "stat");
+    const QCommandLineOption statOption(
+            "stat", "Directory to store statistics. Default: the profile's one.", "folder");
     parser.addOption(statOption);
 
-    const QCommandLineOption cacheOption("cache", "Directory to store cache.", "cache");
+    const QCommandLineOption cacheOption("cache",
+            "Directory to store cache. Default: \"cache\" in the profile's one.", "folder");
     parser.addOption(cacheOption);
 
-    const QCommandLineOption logsOption("logs", "Directory to store logs.", "logs");
+    const QCommandLineOption logsOption("logs",
+            "Directory to store logs and crash dumps. Default: \"logs\" in the user settings' one.",
+            "folder");
     parser.addOption(logsOption);
 
-    const QCommandLineOption outputOption("o", "Output file path.", "output");
+    const QCommandLineOption outputOption(
+            "o", "Write the control command's output to the file.", "file");
     parser.addOption(outputOption);
 
-    const QCommandLineOption uninstallOption("u", "Uninstall boot filter and startup entries.");
-    parser.addOption(uninstallOption);
+    addInstallOptions(parser);
 
-    const QCommandLineOption installOption("i", "Install startup entries.");
-    parser.addOption(installOption);
-
-    const QCommandLineOption noCacheOption("no-cache", "Don't use cache on disk.");
+    const QCommandLineOption noCacheOption(
+            "no-cache", "Keep programs' names and icons in memory only, not on disk.");
     parser.addOption(noCacheOption);
 
     const QCommandLineOption noSplashOption("no-splash", "Don't show Splash screen on startup.");
     parser.addOption(noSplashOption);
 
-    const QCommandLineOption langOption("lang", "Default language.", "lang", "en");
+    const QCommandLineOption langOption(
+            "lang", "Default language, used at first start.", "code", "en");
     parser.addOption(langOption);
 
     // TODO: COMPAT: Remove after v4.1.0 (via v4.0.0)
-    const QCommandLineOption restartedOption("restarted", "Restarted by Installer?");
+    QCommandLineOption restartedOption("restarted", "Launched by Installer.");
+    restartedOption.setFlags(QCommandLineOption::HiddenFromHelp);
     parser.addOption(restartedOption);
 
-    const QCommandLineOption launchOption("launch", "Launched by Installer?");
+    const QCommandLineOption launchOption(
+            "launch", "Launched by Installer: don't show the window of the running instance.");
     parser.addOption(launchOption);
 
-    const QCommandLineOption serviceOption("service", "Is running as a service?");
+    const QCommandLineOption serviceOption(
+            "service", "Run as the Windows service (set in the service's command line).");
     parser.addOption(serviceOption);
 
     const QCommandLineOption controlOption(
-            { "c", "control" }, "Control running instance by executing the command.", "control");
+            { "c", "control" }, "Control running instance by executing the command.", "command");
     parser.addOption(controlOption);
 
     parser.addVersionOption();
