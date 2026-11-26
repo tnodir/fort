@@ -20,6 +20,7 @@
 
 #include "fileutil.h"
 #include "processinfo.h"
+#include "regkey.h"
 
 namespace {
 
@@ -145,6 +146,15 @@ bool OsUtil::isHvciRunning()
         return false;
 
     return (info.CodeIntegrityOptions & CODEINTEGRITY_OPTION_HVCI_KMCI_ENABLED) != 0;
+}
+
+bool OsUtil::isSystemLightTheme()
+{
+    // The taskbar's theme; no value before Windows 10 1903, when the taskbar is dark
+    const RegKey regKey(
+            RegKey::HKCU, R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize)");
+
+    return regKey.value("SystemUsesLightTheme").toInt() != 0;
 }
 
 QDateTime OsUtil::bootTime()

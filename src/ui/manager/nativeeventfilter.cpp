@@ -187,8 +187,13 @@ void NativeEventFilter::processWmSettingChange(void *message)
 
     const auto src = reinterpret_cast<const wchar_t *>(msg->lParam);
 
-    if (src && wcscmp(src, L"Environment") == 0) {
+    if (!src)
+        return;
+
+    if (wcscmp(src, L"Environment") == 0) {
         emit environmentChanged();
+    } else if (wcscmp(src, L"ImmersiveColorSet") == 0) {
+        emit themeChanged();
     }
 }
 

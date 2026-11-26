@@ -30,6 +30,7 @@ public:
 signals:
     void hotKeyPressed(int hotKeyId);
     void environmentChanged();
+    void themeChanged();
     void sessionLocked();
 
 private:

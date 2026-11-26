@@ -10,13 +10,33 @@
 #include <form/controls/controlutil.h>
 #include <form/tray/trayicon.h>
 #include <fortglobal.h>
+#include <manager/nativeeventfilter.h>
 #include <manager/windowmanager.h>
 #include <stat/statmanager.h>
 #include <user/iniuser.h>
 #include <util/dateutil.h>
 #include <util/guiutil.h>
+#include <util/osutil.h>
 
 using namespace Fort;
+
+namespace {
+
+bool isDarkTheme(const IniGraph &ini)
+{
+    // The taskbar follows the system's theme, not the apps' one
+    if (ini.showInTaskbar()) {
+        return !OsUtil::isSystemLightTheme();
+    }
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    return QApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark;
+#else
+    return false;
+#endif
+}
+
+}
 
 GraphView::GraphView(int graphId, QWidget *parent) :
     QWidget(parent), m_iniGraph(Fort::iniUser(), graphId)
@@ -52,6 +72,12 @@ void GraphView::setupOptions()
     connect(QApplication::styleHints(), &QStyleHints::colorSchemeChanged, this,
             &GraphView::forceUpdateOptions);
 #endif
+
+    connect(nativeEventFilter(), &NativeEventFilter::themeChanged, this, [&] {
+        if (iniGraph().showInTaskbar()) {
+            forceUpdateOptions();
+        }
+    });
 }
 
 void GraphView::forceUpdateOptions()
@@ -179,15 +205,10 @@ GraphPlot::ColorArray GraphView::getColors(const IniGraph &ini)
 {
     GraphPlot::ColorArray colors;
 
-    const bool isLightTheme =
-#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
-            QApplication::styleHints()->colorScheme() != Qt::ColorScheme::Dark;
-#else
-            true;
-#endif
+    const bool dark = isDarkTheme(ini);
 
     for (int i = 0; i < GraphColorCount; ++i) {
-        colors << ini.color(GraphColorType(i), /*dark=*/!isLightTheme);
+        colors << ini.color(GraphColorType(i), dark);
     }
 
     return colors;

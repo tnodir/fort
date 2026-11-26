@@ -41,6 +41,8 @@ public:
 
     static bool isHvciRunning();
 
+    static bool isSystemLightTheme();
+
     static QDateTime bootTime();
 
     static bool beep(BeepType type = BeepSimple);
