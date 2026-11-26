@@ -226,12 +226,6 @@ void GraphPlot::setAnimated(bool v)
     m_scaleAnimation.setEnabled(v);
 }
 
-QStringList GraphPlot::graphTypeNames()
-{
-    // Sync with GraphType
-    return { tr("Column"), tr("Line") };
-}
-
 void GraphPlot::setGraphType(GraphType v)
 {
     if (m_graphType == v)

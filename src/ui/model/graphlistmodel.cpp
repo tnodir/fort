@@ -1,7 +1,7 @@
 #include "graphlistmodel.h"
 
 #include <conf/confmanager.h>
-#include <form/graph/graphplot.h>
+#include <form/graph/graph_types.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <user/inigraph.h>
@@ -74,7 +74,7 @@ QVariant GraphListModel::dataDisplay(const QModelIndex &index) const
     case GraphListColumn::Name:
         return QString("%1) %2").arg(QString::number(graphRow.graphId + 1), graphRow.name);
     case GraphListColumn::GraphType:
-        return GraphPlot::graphTypeNames().value(graphRow.graphType);
+        return GraphTypes::graphTypeNames().value(graphRow.graphType);
     default:
         return {};
     }

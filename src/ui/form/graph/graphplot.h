@@ -70,11 +70,6 @@ class GraphPlot : public QGraphicsView
 public:
     using ColorArray = QVarLengthArray<QColor, GraphColorCount>;
 
-    enum GraphType : qint8 {
-        GraphTypeColumn = 0,
-        GraphTypeLine,
-    };
-
     explicit GraphPlot(QWidget *parent = nullptr);
 
     bool mousePressed() const { return m_mousePressed; }
@@ -90,13 +85,6 @@ public:
     void setGraphType(GraphType v);
 
     bool isLine() const { return m_graphType == GraphTypeLine; }
-
-    static GraphType graphTypeByIndex(int index)
-    {
-        return GraphType(qBound(int(GraphTypeColumn), index, int(GraphTypeLine)));
-    }
-
-    static QStringList graphTypeNames();
 
     bool totalVisible() const { return m_totalVisible; }
     void setTotalVisible(bool v);

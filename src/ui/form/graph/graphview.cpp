@@ -91,7 +91,7 @@ void GraphView::updateFormat(const IniGraph &ini)
 {
     m_plot->setGraphVisible(ini.showGraph());
     m_plot->setMaxSeconds(ini.maxSeconds());
-    m_plot->setGraphType(GraphPlot::graphTypeByIndex(ini.graphType()));
+    m_plot->setGraphType(GraphTypes::graphTypeByIndex(ini.graphType()));
     m_plot->setTotalVisible(ini.showTotal());
     m_plot->setInVisible(ini.showIn());
     m_plot->setOutVisible(ini.showOut());

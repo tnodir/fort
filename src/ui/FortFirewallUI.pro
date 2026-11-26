@@ -147,6 +147,7 @@ SOURCES += \
     form/filtersim/filtersimwindow.cpp \
     form/formpointer.cpp \
     form/graph/axistickerspeed.cpp \
+    form/graph/graph_types.cpp \
     form/graph/graphanimation.cpp \
     form/graph/graphbasewindow.cpp \
     form/graph/graphbarsitem.cpp \

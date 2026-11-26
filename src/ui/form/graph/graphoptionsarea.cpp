@@ -12,6 +12,7 @@
 #include <form/controls/labelcolor.h>
 #include <form/controls/labelspin.h>
 #include <form/controls/labelspincombo.h>
+#include <form/graph/graph_types.h>
 #include <form/graph/graphwindow.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -157,7 +158,7 @@ void GraphOptionsArea::retranslateGraphColors()
 void GraphOptionsArea::retranslateGraphTypeCombo()
 {
     ControlUtil::setComboBoxTexts(
-            m_comboGraphType, GraphPlot::graphTypeNames(), iniGraph().graphType());
+            m_comboGraphType, GraphTypes::graphTypeNames(), iniGraph().graphType());
 }
 
 template<typename T>
