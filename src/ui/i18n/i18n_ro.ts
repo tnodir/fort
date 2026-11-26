@@ -163,6 +163,10 @@
         <source>Program Connections</source>
         <translation>Conexiunile programului</translation>
     </message>
+    <message>
+        <source>Are you sure to remove all connections of the program?</source>
+        <translation>Sigur doriți să eliminați toate conexiunile programului?</translation>
+    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -207,6 +211,10 @@
     <message>
         <source>Name</source>
         <translation>Nume</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation>Filtre</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -685,10 +693,6 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
         <translation>Derulare automată</translation>
     </message>
     <message>
-        <source>Show host names</source>
-        <translation>Afișează numele gazdelor</translation>
-    </message>
-    <message>
         <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
         <translation>Sunt colectate doar conexiunile programelor alertate sau marcate de acțiunea Alertă</translation>
     </message>
@@ -774,6 +778,10 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
         <translation>Rezolvă numele gazdelor prin serverele DNS din amonte, adăugând înainte de răspuns adresele Zonelor de gazde folosite de Adresele IP, Programe și Reguli și ale filtrelor host(); numele Zonelor de blocare nu sunt găsite (doar cu Serviciul). Programele care rezolvă singure numele prin DNS over HTTPS, de ex. browserele cu DNS securizat, ocolesc Redirecționarea DNS</translation>
     </message>
     <message>
+        <source>Ask each server for &quot;example.com&quot; and check that the system&apos;s DNS queries are sent to the DNS Forwarder (only with the Service)</source>
+        <translation>Interogați fiecare server pentru „example.com” și verificați că interogările DNS ale sistemului sunt trimise la Redirecționarea DNS (doar cu Serviciul)</translation>
+    </message>
+    <message>
         <source>Block Zones:</source>
         <translation>Zone de blocare:</translation>
     </message>
@@ -814,12 +822,20 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
         <translation>Testează</translation>
     </message>
     <message>
-        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
-        <translation>Întreabă fiecare server de „example.com” (doar cu Serviciul)</translation>
-    </message>
-    <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>Un server pe rând: adrese, de ex. „1.1.1.1”, sau URL-uri DNS over HTTPS cu adresa serverului, de ex. „https://dns.example/dns-query?ip=192.0.2.1”</translation>
+    </message>
+    <message>
+        <source>System&apos;s DNS queries</source>
+        <translation>Interogările DNS ale sistemului</translation>
+    </message>
+    <message>
+        <source>Sent to the DNS Forwarder</source>
+        <translation>Trimise la Redirecționarea DNS</translation>
+    </message>
+    <message>
+        <source>Not sent to the DNS Forwarder</source>
+        <translation>Netrimise la Redirecționarea DNS</translation>
     </message>
     <message>
         <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
@@ -1384,7 +1400,73 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
     </message>
 </context>
 <context>
-    <name>GraphPage</name>
+    <name>GraphEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Nume:</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>Implicit</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Aplică</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Anulează</translation>
+    </message>
+    <message>
+        <source>Edit Graph</source>
+        <translation>Editează graficul</translation>
+    </message>
+</context>
+<context>
+    <name>GraphListModel</name>
+    <message>
+        <source>Graph</source>
+        <translation>Grafic</translation>
+    </message>
+    <message>
+        <source>Graph type</source>
+        <translation>Tipul graficului</translation>
+    </message>
+</context>
+<context>
+    <name>GraphOptionsArea</name>
+    <message>
+        <source>Window</source>
+        <translation>Fereastră</translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
+        <translation>Geometria ferestrei</translation>
+    </message>
+    <message>
+        <source>Taskbar</source>
+        <translation>Bara de activități</translation>
+    </message>
+    <message>
+        <source>Graph</source>
+        <translation>Grafic</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation>Viteză</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation>Culori (Luminos | Întunecat)</translation>
+    </message>
+    <message>
+        <source>Hide on close</source>
+        <translation>Ascunde la închidere</translation>
+    </message>
     <message>
         <source>Always on top</source>
         <translation>Mereu deasupra</translation>
@@ -1402,16 +1484,48 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
         <translation>Ascunde la trecerea mouse-ului</translation>
     </message>
     <message>
-        <source>Hide Y axis scale labels</source>
-        <translation>Ascunde etichetele scalei axei Y</translation>
+        <source>Opacity:</source>
+        <translation>Opacitate:</translation>
     </message>
     <message>
-        <source>Animation</source>
-        <translation>Animație</translation>
+        <source>Hover opacity:</source>
+        <translation>Opacitate la trecerea mouse-ului:</translation>
     </message>
     <message>
-        <source>Axis ticks</source>
-        <translation>Diviziuni pe axe</translation>
+        <source>Border width:</source>
+        <translation>Lățimea chenarului:</translation>
+    </message>
+    <message>
+        <source>Maximized</source>
+        <translation>Maximizat</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation>Lățime:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>Înălțime:</translation>
+    </message>
+    <message>
+        <source>Show in taskbar</source>
+        <translation>Afișează în bara de activități</translation>
+    </message>
+    <message>
+        <source>Show graph</source>
+        <translation>Afișează graficul</translation>
+    </message>
+    <message>
+        <source>Graph type:</source>
+        <translation>Tip de grafic:</translation>
     </message>
     <message>
         <source>Show:</source>
@@ -1430,20 +1544,76 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
         <translation>Încărcare</translation>
     </message>
     <message>
-        <source>Opacity:</source>
-        <translation>Opacitate:</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>Opacitate la trecerea mouse-ului:</translation>
-    </message>
-    <message>
         <source>Bar width:</source>
         <translation>Lățimea barei:</translation>
     </message>
     <message>
-        <source>Graph type:</source>
-        <translation>Tip de grafic:</translation>
+        <source>History length:</source>
+        <translation>Lungimea istoricului:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>Câte secunde de trafic arată graficul</translation>
+    </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation>Viteză fixă:</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>Limita superioară constantă a scalei de viteză în loc de cea automată</translation>
+    </message>
+    <message>
+        <source>Animation</source>
+        <translation>Animație</translation>
+    </message>
+    <message>
+        <source>Axis lines:</source>
+        <translation>Liniile axelor:</translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation>Diviziuni pe axe</translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation>Liniile grilei</translation>
+    </message>
+    <message>
+        <source>Y axis scale labels</source>
+        <translation>Etichetele scalei axei Y</translation>
+    </message>
+    <message>
+        <source>Tick label font:</source>
+        <translation>Fontul etichetei diviziunii:</translation>
+    </message>
+    <message>
+        <source>Show speed</source>
+        <translation>Afișează viteza</translation>
+    </message>
+    <message>
+        <source>Speed label font:</source>
+        <translation>Fontul etichetei vitezei:</translation>
+    </message>
+    <message>
+        <source>Position:</source>
+        <translation>Poziție:</translation>
+    </message>
+    <message>
+        <source>Inside the graph</source>
+        <translation>În interiorul graficului</translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation>Unități:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Personalizat</translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
+        <translation>Scalare automată</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -1474,32 +1644,19 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
         <translation>Eticheta diviziunii:</translation>
     </message>
     <message>
-        <source>Label:</source>
-        <translation>Etichetă:</translation>
+        <source>Speed label:</source>
+        <translation>Eticheta vitezei:</translation>
     </message>
     <message>
         <source>Grid:</source>
         <translation>Grilă:</translation>
     </message>
+</context>
+<context>
+    <name>GraphTypes</name>
     <message>
-        <source>Maximized</source>
-        <translation>Maximizat</translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation>X:</translation>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation>Y:</translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation>Lățime:</translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation>Înălțime:</translation>
+        <source>Traffic Graph</source>
+        <translation>Grafic de trafic</translation>
     </message>
     <message>
         <source>Column</source>
@@ -1510,56 +1667,43 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
         <translation>Linie</translation>
     </message>
     <message>
-        <source>Window</source>
-        <translation>Fereastră</translation>
+        <source>Top</source>
+        <translation>Sus</translation>
     </message>
     <message>
-        <source>Hide on close</source>
-        <translation>Ascunde la închidere</translation>
+        <source>Bottom</source>
+        <translation>Jos</translation>
     </message>
     <message>
-        <source>Units:</source>
-        <translation>Unități:</translation>
+        <source>Left</source>
+        <translation>Stânga</translation>
     </message>
     <message>
-        <source>Colors (Light | Dark)</source>
-        <translation>Culori (Luminos | Întunecat)</translation>
+        <source>Right</source>
+        <translation>Dreapta</translation>
+    </message>
+</context>
+<context>
+    <name>GraphsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Editează</translation>
     </message>
     <message>
-        <source>Window Geometry</source>
-        <translation>Geometria ferestrei</translation>
+        <source>Add</source>
+        <translation>Adaugă</translation>
     </message>
     <message>
-        <source>History length:</source>
-        <translation>Lungimea istoricului:</translation>
+        <source>Remove</source>
+        <translation>Elimină</translation>
     </message>
     <message>
-        <source>How many seconds of the traffic the graph shows</source>
-        <translation>Câte secunde de trafic arată graficul</translation>
+        <source>Graphs</source>
+        <translation>Grafice</translation>
     </message>
     <message>
-        <source>Fixed speed:</source>
-        <translation>Viteză fixă:</translation>
-    </message>
-    <message>
-        <source>The constant top of the speed scale instead of the automatic one</source>
-        <translation>Limita superioară constantă a scalei de viteză în loc de cea automată</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Personalizat</translation>
-    </message>
-    <message>
-        <source>Auto-scale</source>
-        <translation>Scalare automată</translation>
-    </message>
-    <message>
-        <source>Tick label size:</source>
-        <translation>Dimensiunea etichetei diviziunii:</translation>
-    </message>
-    <message>
-        <source>Show speed</source>
-        <translation>Afișează viteza</translation>
+        <source>Are you sure to remove selected graph?</source>
+        <translation>Sigur doriți să eliminați graficul selectat?</translation>
     </message>
 </context>
 <context>
@@ -2405,10 +2549,6 @@ Sau mutați aici o fereastră cu elementul &quot;Andochează în Fortul meu&quot
         <translation>Anulează</translation>
     </message>
     <message>
-        <source>Traffic Graph</source>
-        <translation>Grafic de trafic</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>Implicit</translation>
     </message>
@@ -2788,6 +2928,18 @@ Sau mutați aici o fereastră cu elementul &quot;Andochează în Fortul meu&quot
         <translation>Planificare</translation>
     </message>
     <message>
+        <source>Allow and Save</source>
+        <translation>Permite și salvează</translation>
+    </message>
+    <message>
+        <source>Block and Save</source>
+        <translation>Blochează și salvează</translation>
+    </message>
+    <message>
+        <source>Remove Later</source>
+        <translation>Elimină mai târziu</translation>
+    </message>
+    <message>
         <source># Examples:</source>
         <translation># Exemple:</translation>
     </message>
@@ -2898,6 +3050,14 @@ Sau mutați aici o fereastră cu elementul &quot;Andochează în Fortul meu&quot
     <message>
         <source>Icons (*.ico; *.png; *.exe)</source>
         <translation>Pictograme (*.ico; *.png; *.exe)</translation>
+    </message>
+    <message>
+        <source>Allow Temporarily</source>
+        <translation>Permite temporar</translation>
+    </message>
+    <message>
+        <source>Block Temporarily</source>
+        <translation>Blochează temporar</translation>
     </message>
 </context>
 <context>
@@ -3703,6 +3863,10 @@ Salvați modificările?</translation>
         <translation>Nume afișat</translation>
     </message>
     <message>
+        <source>Command Line</source>
+        <translation>Linie de comandă</translation>
+    </message>
+    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>Modificările au fost resetate de sistem. Faceți serviciul urmăribil din nou.</translation>
     </message>
@@ -4403,6 +4567,10 @@ Pierdere de pachete: %2</translation>
     <message>
         <source>Statistics</source>
         <translation>Statistici</translation>
+    </message>
+    <message>
+        <source>Graphs</source>
+        <translation>Grafice</translation>
     </message>
     <message>
         <source>New program(s) request network access</source>

@@ -163,6 +163,10 @@
         <source>Program Connections</source>
         <translation>프로그램 연계</translation>
     </message>
+    <message>
+        <source>Are you sure to remove all connections of the program?</source>
+        <translation>프로그램의 모든 연결을 제거하시겠습니까?</translation>
+    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -207,6 +211,10 @@
     <message>
         <source>Name</source>
         <translation>이름</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation>필터</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -685,10 +693,6 @@ Make sure that you have a fresh backup.</source>
         <translation>자동 스크롤</translation>
     </message>
     <message>
-        <source>Show host names</source>
-        <translation>호스트 이름 표시</translation>
-    </message>
-    <message>
         <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
         <translation>경고된 프로그램 또는 경고 동작으로 표시된 연결만 수집됨</translation>
     </message>
@@ -774,6 +778,10 @@ Make sure that you have a fresh backup.</source>
         <translation>업스트림 DNS 서버로 호스트 이름을 확인하고, 응답하기 전에 IP 주소, 프로그램, 규칙에서 사용하는 호스트 영역과 host() 필터의 주소를 추가합니다. 차단 영역의 이름은 찾을 수 없습니다(서비스가 있는 경우에만). DNS over HTTPS로 직접 이름을 확인하는 프로그램(예: 보안 DNS를 사용하는 브라우저)은 DNS 전달자를 우회합니다</translation>
     </message>
     <message>
+        <source>Ask each server for &quot;example.com&quot; and check that the system&apos;s DNS queries are sent to the DNS Forwarder (only with the Service)</source>
+        <translation>각 서버에 &quot;example.com&quot;을 질의하고 시스템의 DNS 쿼리가 DNS 전달자로 전송되는지 확인합니다(서비스 사용 시에만)</translation>
+    </message>
+    <message>
         <source>Block Zones:</source>
         <translation>차단 영역:</translation>
     </message>
@@ -814,12 +822,20 @@ Make sure that you have a fresh backup.</source>
         <translation>테스트</translation>
     </message>
     <message>
-        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
-        <translation>각 서버에 &quot;example.com&quot; 질의(서비스가 있는 경우에만)</translation>
-    </message>
-    <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>한 줄에 서버 하나: 주소(예: &quot;1.1.1.1&quot;) 또는 서버 주소가 포함된 DNS over HTTPS URL(예: &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;)</translation>
+    </message>
+    <message>
+        <source>System&apos;s DNS queries</source>
+        <translation>시스템의 DNS 쿼리</translation>
+    </message>
+    <message>
+        <source>Sent to the DNS Forwarder</source>
+        <translation>DNS 전달자로 전송됨</translation>
+    </message>
+    <message>
+        <source>Not sent to the DNS Forwarder</source>
+        <translation>DNS 전달자로 전송되지 않음</translation>
     </message>
     <message>
         <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
@@ -1384,7 +1400,73 @@ Make sure that you have a fresh backup.</source>
     </message>
 </context>
 <context>
-    <name>GraphPage</name>
+    <name>GraphEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>이름:</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>기본값</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>확인</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>적용</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>취소</translation>
+    </message>
+    <message>
+        <source>Edit Graph</source>
+        <translation>그래프 편집</translation>
+    </message>
+</context>
+<context>
+    <name>GraphListModel</name>
+    <message>
+        <source>Graph</source>
+        <translation>그래프</translation>
+    </message>
+    <message>
+        <source>Graph type</source>
+        <translation>그래프 유형</translation>
+    </message>
+</context>
+<context>
+    <name>GraphOptionsArea</name>
+    <message>
+        <source>Window</source>
+        <translation>창</translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
+        <translation>창 기하 구조</translation>
+    </message>
+    <message>
+        <source>Taskbar</source>
+        <translation>작업 표시줄</translation>
+    </message>
+    <message>
+        <source>Graph</source>
+        <translation>그래프</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation>속도</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation>색상 (밝은 | 어두운)</translation>
+    </message>
+    <message>
+        <source>Hide on close</source>
+        <translation>닫기 시 숨기기</translation>
+    </message>
     <message>
         <source>Always on top</source>
         <translation>항상 위에 표시</translation>
@@ -1402,16 +1484,48 @@ Make sure that you have a fresh backup.</source>
         <translation>호버 시 숨기기</translation>
     </message>
     <message>
-        <source>Hide Y axis scale labels</source>
-        <translation>Y축 눈금 레이블 숨기기</translation>
+        <source>Opacity:</source>
+        <translation>불투명도:</translation>
     </message>
     <message>
-        <source>Animation</source>
-        <translation>애니메이션</translation>
+        <source>Hover opacity:</source>
+        <translation>호버 불투명도:</translation>
     </message>
     <message>
-        <source>Axis ticks</source>
-        <translation>축 눈금</translation>
+        <source>Border width:</source>
+        <translation>테두리 너비:</translation>
+    </message>
+    <message>
+        <source>Maximized</source>
+        <translation>최대화</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation>너비:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>높이:</translation>
+    </message>
+    <message>
+        <source>Show in taskbar</source>
+        <translation>작업 표시줄에 표시</translation>
+    </message>
+    <message>
+        <source>Show graph</source>
+        <translation>그래프 표시</translation>
+    </message>
+    <message>
+        <source>Graph type:</source>
+        <translation>그래프 유형:</translation>
     </message>
     <message>
         <source>Show:</source>
@@ -1430,20 +1544,76 @@ Make sure that you have a fresh backup.</source>
         <translation>업로드</translation>
     </message>
     <message>
-        <source>Opacity:</source>
-        <translation>불투명도:</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>호버 불투명도:</translation>
-    </message>
-    <message>
         <source>Bar width:</source>
         <translation>막대 너비:</translation>
     </message>
     <message>
-        <source>Graph type:</source>
-        <translation>그래프 유형:</translation>
+        <source>History length:</source>
+        <translation>기록 길이:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>그래프에 표시할 트래픽의 초 수</translation>
+    </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation>고정 속도:</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>자동 대신 고정된 속도 눈금의 상단</translation>
+    </message>
+    <message>
+        <source>Animation</source>
+        <translation>애니메이션</translation>
+    </message>
+    <message>
+        <source>Axis lines:</source>
+        <translation>축 선:</translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation>축 눈금</translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation>격자 선</translation>
+    </message>
+    <message>
+        <source>Y axis scale labels</source>
+        <translation>Y축 눈금 레이블</translation>
+    </message>
+    <message>
+        <source>Tick label font:</source>
+        <translation>눈금 레이블 글꼴:</translation>
+    </message>
+    <message>
+        <source>Show speed</source>
+        <translation>속도 표시</translation>
+    </message>
+    <message>
+        <source>Speed label font:</source>
+        <translation>속도 레이블 글꼴:</translation>
+    </message>
+    <message>
+        <source>Position:</source>
+        <translation>위치:</translation>
+    </message>
+    <message>
+        <source>Inside the graph</source>
+        <translation>그래프 내부</translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation>단위:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>사용자 지정</translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
+        <translation>자동 비율</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -1474,32 +1644,19 @@ Make sure that you have a fresh backup.</source>
         <translation>눈금 레이블:</translation>
     </message>
     <message>
-        <source>Label:</source>
-        <translation>레이블:</translation>
+        <source>Speed label:</source>
+        <translation>속도 레이블:</translation>
     </message>
     <message>
         <source>Grid:</source>
         <translation>격자:</translation>
     </message>
+</context>
+<context>
+    <name>GraphTypes</name>
     <message>
-        <source>Maximized</source>
-        <translation>최대화</translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation>X:</translation>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation>Y:</translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation>너비:</translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation>높이:</translation>
+        <source>Traffic Graph</source>
+        <translation>트래픽 그래프</translation>
     </message>
     <message>
         <source>Column</source>
@@ -1510,56 +1667,43 @@ Make sure that you have a fresh backup.</source>
         <translation>줄</translation>
     </message>
     <message>
-        <source>Window</source>
-        <translation>창</translation>
+        <source>Top</source>
+        <translation>위</translation>
     </message>
     <message>
-        <source>Hide on close</source>
-        <translation>닫기 시 숨기기</translation>
+        <source>Bottom</source>
+        <translation>아래</translation>
     </message>
     <message>
-        <source>Units:</source>
-        <translation>단위:</translation>
+        <source>Left</source>
+        <translation>왼쪽</translation>
     </message>
     <message>
-        <source>Colors (Light | Dark)</source>
-        <translation>색상 (밝은 | 어두운)</translation>
+        <source>Right</source>
+        <translation>오른쪽</translation>
+    </message>
+</context>
+<context>
+    <name>GraphsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>편집</translation>
     </message>
     <message>
-        <source>Window Geometry</source>
-        <translation>창 기하 구조</translation>
+        <source>Add</source>
+        <translation>추가</translation>
     </message>
     <message>
-        <source>History length:</source>
-        <translation>기록 길이:</translation>
+        <source>Remove</source>
+        <translation>제거</translation>
     </message>
     <message>
-        <source>How many seconds of the traffic the graph shows</source>
-        <translation>그래프에 표시할 트래픽의 초 수</translation>
+        <source>Graphs</source>
+        <translation>그래프 목록</translation>
     </message>
     <message>
-        <source>Fixed speed:</source>
-        <translation>고정 속도:</translation>
-    </message>
-    <message>
-        <source>The constant top of the speed scale instead of the automatic one</source>
-        <translation>자동 대신 고정된 속도 눈금의 상단</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>사용자 지정</translation>
-    </message>
-    <message>
-        <source>Auto-scale</source>
-        <translation>자동 비율</translation>
-    </message>
-    <message>
-        <source>Tick label size:</source>
-        <translation>틱 레이블 크기:</translation>
-    </message>
-    <message>
-        <source>Show speed</source>
-        <translation>속도 표시</translation>
+        <source>Are you sure to remove selected graph?</source>
+        <translation>선택한 그래프를 제거하시겠습니까?</translation>
     </message>
 </context>
 <context>
@@ -2405,10 +2549,6 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
         <translation>취소</translation>
     </message>
     <message>
-        <source>Traffic Graph</source>
-        <translation>트래픽 그래프</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>기본값</translation>
     </message>
@@ -2788,6 +2928,18 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
         <translation>예약</translation>
     </message>
     <message>
+        <source>Allow and Save</source>
+        <translation>허용 및 저장</translation>
+    </message>
+    <message>
+        <source>Block and Save</source>
+        <translation>차단 및 저장</translation>
+    </message>
+    <message>
+        <source>Remove Later</source>
+        <translation>나중에 제거</translation>
+    </message>
+    <message>
         <source># Examples:</source>
         <translation># 예제:</translation>
     </message>
@@ -2898,6 +3050,14 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
     <message>
         <source>Icons (*.ico; *.png; *.exe)</source>
         <translation>아이콘 (*.ico; *.png; *.exe)</translation>
+    </message>
+    <message>
+        <source>Allow Temporarily</source>
+        <translation>일시적으로 허용</translation>
+    </message>
+    <message>
+        <source>Block Temporarily</source>
+        <translation>일시적으로 차단</translation>
     </message>
 </context>
 <context>
@@ -3703,6 +3863,10 @@ Save the changes?</source>
         <translation>표시 이름</translation>
     </message>
     <message>
+        <source>Command Line</source>
+        <translation>명령줄</translation>
+    </message>
+    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>변경 사항은 시스템에 의해 초기화되었습니다. 서비스를 다시 추적 가능하게 만드세요.</translation>
     </message>
@@ -4403,6 +4567,10 @@ Packet loss: %2</source>
     <message>
         <source>Statistics</source>
         <translation>통계</translation>
+    </message>
+    <message>
+        <source>Graphs</source>
+        <translation>그래프 목록</translation>
     </message>
     <message>
         <source>New program(s) request network access</source>

@@ -163,6 +163,10 @@
         <source>Program Connections</source>
         <translation>Соединения программы</translation>
     </message>
+    <message>
+        <source>Are you sure to remove all connections of the program?</source>
+        <translation>Удалить все соединения программы?</translation>
+    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -207,6 +211,10 @@
     <message>
         <source>Name</source>
         <translation>Наименование</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation>Фильтры</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -685,10 +693,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Автопрокрутка</translation>
     </message>
     <message>
-        <source>Show host names</source>
-        <translation>Показать имена хостов</translation>
-    </message>
-    <message>
         <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
         <translation>Собираются только соединения оповещённых программ или помеченные действием Оповещение</translation>
     </message>
@@ -774,6 +778,10 @@ Make sure that you have a fresh backup.</source>
         <translation>Разрешать имена хостов через вышестоящие DNS-серверы, добавляя перед ответом адреса Зон хостов, используемых IP-адресами, Программами и Правилами, и фильтров host(); имена Зон блокировки не находятся (только со Службой). Программы, сами разрешающие имена по DNS over HTTPS, например браузеры с безопасным DNS, обходят DNS-ретранслятор</translation>
     </message>
     <message>
+        <source>Ask each server for &quot;example.com&quot; and check that the system&apos;s DNS queries are sent to the DNS Forwarder (only with the Service)</source>
+        <translation>Запросить у каждого сервера «example.com» и проверить, что системные DNS-запросы отправляются DNS-ретранслятору (только со службой)</translation>
+    </message>
+    <message>
         <source>Block Zones:</source>
         <translation>Зоны блокировки:</translation>
     </message>
@@ -814,12 +822,20 @@ Make sure that you have a fresh backup.</source>
         <translation>Проверить</translation>
     </message>
     <message>
-        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
-        <translation>Запросить у каждого сервера &quot;example.com&quot; (только со Службой)</translation>
-    </message>
-    <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>По серверу на строку: адреса, например &quot;1.1.1.1&quot;, или URL DNS over HTTPS с адресом сервера, например &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</translation>
+    </message>
+    <message>
+        <source>System&apos;s DNS queries</source>
+        <translation>Системные DNS-запросы</translation>
+    </message>
+    <message>
+        <source>Sent to the DNS Forwarder</source>
+        <translation>Отправляются DNS-ретранслятору</translation>
+    </message>
+    <message>
+        <source>Not sent to the DNS Forwarder</source>
+        <translation>Не отправляются DNS-ретранслятору</translation>
     </message>
     <message>
         <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
@@ -1384,7 +1400,73 @@ Make sure that you have a fresh backup.</source>
     </message>
 </context>
 <context>
-    <name>GraphPage</name>
+    <name>GraphEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Наименование:</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>По умолчанию</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>ОК</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Применить</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Отмена</translation>
+    </message>
+    <message>
+        <source>Edit Graph</source>
+        <translation>Редактирование графика</translation>
+    </message>
+</context>
+<context>
+    <name>GraphListModel</name>
+    <message>
+        <source>Graph</source>
+        <translation>График</translation>
+    </message>
+    <message>
+        <source>Graph type</source>
+        <translation>Тип графика</translation>
+    </message>
+</context>
+<context>
+    <name>GraphOptionsArea</name>
+    <message>
+        <source>Window</source>
+        <translation>Окно</translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
+        <translation>Геометрия окна</translation>
+    </message>
+    <message>
+        <source>Taskbar</source>
+        <translation>Панель задач</translation>
+    </message>
+    <message>
+        <source>Graph</source>
+        <translation>График</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation>Скорость</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation>Цвета (Светлый | Тёмный)</translation>
+    </message>
+    <message>
+        <source>Hide on close</source>
+        <translation>Скрыть при закрытии</translation>
+    </message>
     <message>
         <source>Always on top</source>
         <translation>Всегда сверху</translation>
@@ -1402,16 +1484,48 @@ Make sure that you have a fresh backup.</source>
         <translation>Скрыть при наведении</translation>
     </message>
     <message>
-        <source>Hide Y axis scale labels</source>
-        <translation>Скрыть метки шкалы оси Y</translation>
+        <source>Opacity:</source>
+        <translation>Непрозрачность:</translation>
     </message>
     <message>
-        <source>Animation</source>
-        <translation>Анимация</translation>
+        <source>Hover opacity:</source>
+        <translation>Непрозрачность при наведении:</translation>
     </message>
     <message>
-        <source>Axis ticks</source>
-        <translation>Деления на осях</translation>
+        <source>Border width:</source>
+        <translation>Толщина рамки:</translation>
+    </message>
+    <message>
+        <source>Maximized</source>
+        <translation>Развёрнуто</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation>Ширина:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>Высота:</translation>
+    </message>
+    <message>
+        <source>Show in taskbar</source>
+        <translation>Показывать на панели задач</translation>
+    </message>
+    <message>
+        <source>Show graph</source>
+        <translation>Показывать график</translation>
+    </message>
+    <message>
+        <source>Graph type:</source>
+        <translation>Тип графика:</translation>
     </message>
     <message>
         <source>Show:</source>
@@ -1430,20 +1544,76 @@ Make sure that you have a fresh backup.</source>
         <translation>Отдача</translation>
     </message>
     <message>
-        <source>Opacity:</source>
-        <translation>Непрозрачность:</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>Непрозрачность при наведении:</translation>
-    </message>
-    <message>
         <source>Bar width:</source>
         <translation>Ширина столбца:</translation>
     </message>
     <message>
-        <source>Graph type:</source>
-        <translation>Тип графика:</translation>
+        <source>History length:</source>
+        <translation>Длина истории:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>Сколько секунд трафика показывает график</translation>
+    </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation>Фиксированная скорость:</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>Постоянный верх шкалы скорости вместо автоматического</translation>
+    </message>
+    <message>
+        <source>Animation</source>
+        <translation>Анимация</translation>
+    </message>
+    <message>
+        <source>Axis lines:</source>
+        <translation>Линии осей:</translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation>Деления на осях</translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation>Линии сетки</translation>
+    </message>
+    <message>
+        <source>Y axis scale labels</source>
+        <translation>Метки шкалы оси Y</translation>
+    </message>
+    <message>
+        <source>Tick label font:</source>
+        <translation>Шрифт меток:</translation>
+    </message>
+    <message>
+        <source>Show speed</source>
+        <translation>Показать скорость</translation>
+    </message>
+    <message>
+        <source>Speed label font:</source>
+        <translation>Шрифт метки скорости:</translation>
+    </message>
+    <message>
+        <source>Position:</source>
+        <translation>Положение:</translation>
+    </message>
+    <message>
+        <source>Inside the graph</source>
+        <translation>Внутри графика</translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation>Единицы:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Другое</translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
+        <translation>Автомасштабирование</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -1474,32 +1644,19 @@ Make sure that you have a fresh backup.</source>
         <translation>Метка:</translation>
     </message>
     <message>
-        <source>Label:</source>
-        <translation>Подпись:</translation>
+        <source>Speed label:</source>
+        <translation>Метка скорости:</translation>
     </message>
     <message>
         <source>Grid:</source>
         <translation>Сетка:</translation>
     </message>
+</context>
+<context>
+    <name>GraphTypes</name>
     <message>
-        <source>Maximized</source>
-        <translation>Развёрнуто</translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation>X:</translation>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation>Y:</translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation>Ширина:</translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation>Высота:</translation>
+        <source>Traffic Graph</source>
+        <translation>График трафика</translation>
     </message>
     <message>
         <source>Column</source>
@@ -1510,56 +1667,43 @@ Make sure that you have a fresh backup.</source>
         <translation>Линии</translation>
     </message>
     <message>
-        <source>Window</source>
-        <translation>Окно</translation>
+        <source>Top</source>
+        <translation>Сверху</translation>
     </message>
     <message>
-        <source>Hide on close</source>
-        <translation>Скрыть при закрытии</translation>
+        <source>Bottom</source>
+        <translation>Снизу</translation>
     </message>
     <message>
-        <source>Units:</source>
-        <translation>Единицы:</translation>
+        <source>Left</source>
+        <translation>Слева</translation>
     </message>
     <message>
-        <source>Colors (Light | Dark)</source>
-        <translation>Цвета (Светлый | Тёмный)</translation>
+        <source>Right</source>
+        <translation>Справа</translation>
+    </message>
+</context>
+<context>
+    <name>GraphsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Изменить</translation>
     </message>
     <message>
-        <source>Window Geometry</source>
-        <translation>Геометрия окна</translation>
+        <source>Add</source>
+        <translation>Добавить</translation>
     </message>
     <message>
-        <source>History length:</source>
-        <translation>Длина истории:</translation>
+        <source>Remove</source>
+        <translation>Удалить</translation>
     </message>
     <message>
-        <source>How many seconds of the traffic the graph shows</source>
-        <translation>Сколько секунд трафика показывает график</translation>
+        <source>Graphs</source>
+        <translation>Графики</translation>
     </message>
     <message>
-        <source>Fixed speed:</source>
-        <translation>Фиксированная скорость:</translation>
-    </message>
-    <message>
-        <source>The constant top of the speed scale instead of the automatic one</source>
-        <translation>Постоянный верх шкалы скорости вместо автоматического</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Другое</translation>
-    </message>
-    <message>
-        <source>Auto-scale</source>
-        <translation>Автомасштабирование</translation>
-    </message>
-    <message>
-        <source>Tick label size:</source>
-        <translation>Размер метки:</translation>
-    </message>
-    <message>
-        <source>Show speed</source>
-        <translation>Показать скорость</translation>
+        <source>Are you sure to remove selected graph?</source>
+        <translation>Удалить выбранный график?</translation>
     </message>
 </context>
 <context>
@@ -2405,10 +2549,6 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
         <translation>Отмена</translation>
     </message>
     <message>
-        <source>Traffic Graph</source>
-        <translation>График трафика</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>По умолчанию</translation>
     </message>
@@ -2788,6 +2928,18 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
         <translation>Запланировать</translation>
     </message>
     <message>
+        <source>Allow and Save</source>
+        <translation>Разрешить и сохранить</translation>
+    </message>
+    <message>
+        <source>Block and Save</source>
+        <translation>Блокировать и сохранить</translation>
+    </message>
+    <message>
+        <source>Remove Later</source>
+        <translation>Удалить позже</translation>
+    </message>
+    <message>
         <source># Examples:</source>
         <translation># Примеры:</translation>
     </message>
@@ -2898,6 +3050,14 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
     <message>
         <source>Icons (*.ico; *.png; *.exe)</source>
         <translation>Значки (*.ico; *.png; *.exe)</translation>
+    </message>
+    <message>
+        <source>Allow Temporarily</source>
+        <translation>Разрешить временно</translation>
+    </message>
+    <message>
+        <source>Block Temporarily</source>
+        <translation>Блокировать временно</translation>
     </message>
 </context>
 <context>
@@ -3703,6 +3863,10 @@ Save the changes?</source>
         <translation>Отображаемое имя</translation>
     </message>
     <message>
+        <source>Command Line</source>
+        <translation>Командная строка</translation>
+    </message>
+    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>Изменения были сброшены системой. Сделайте службу отслеживаемой снова.</translation>
     </message>
@@ -4403,6 +4567,10 @@ Packet loss: %2</source>
     <message>
         <source>Statistics</source>
         <translation>Статистика</translation>
+    </message>
+    <message>
+        <source>Graphs</source>
+        <translation>Графики</translation>
     </message>
     <message>
         <source>New program(s) request network access</source>

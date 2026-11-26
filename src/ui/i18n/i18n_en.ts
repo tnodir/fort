@@ -163,6 +163,10 @@
         <source>Program Connections</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Are you sure to remove all connections of the program?</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -206,6 +210,10 @@
     </message>
     <message>
         <source>Name</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Filters</source>
         <translation></translation>
     </message>
     <message>
@@ -683,10 +691,6 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Show host names</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
         <translation></translation>
     </message>
@@ -772,6 +776,10 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
+        <source>Ask each server for &quot;example.com&quot; and check that the system&apos;s DNS queries are sent to the DNS Forwarder (only with the Service)</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Block Zones:</source>
         <translation></translation>
     </message>
@@ -812,11 +820,19 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
+        <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation></translation>
     </message>
     <message>
-        <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
+        <source>System&apos;s DNS queries</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Sent to the DNS Forwarder</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Not sent to the DNS Forwarder</source>
         <translation></translation>
     </message>
     <message>
@@ -1382,7 +1398,73 @@ Make sure that you have a fresh backup.</source>
     </message>
 </context>
 <context>
-    <name>GraphPage</name>
+    <name>GraphEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Edit Graph</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>GraphListModel</name>
+    <message>
+        <source>Graph</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Graph type</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>GraphOptionsArea</name>
+    <message>
+        <source>Window</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Taskbar</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Graph</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Hide on close</source>
+        <translation></translation>
+    </message>
     <message>
         <source>Always on top</source>
         <translation></translation>
@@ -1400,15 +1482,47 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Hide Y axis scale labels</source>
+        <source>Opacity:</source>
         <translation></translation>
     </message>
     <message>
-        <source>Animation</source>
+        <source>Hover opacity:</source>
         <translation></translation>
     </message>
     <message>
-        <source>Axis ticks</source>
+        <source>Border width:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Maximized</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show in taskbar</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show graph</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Graph type:</source>
         <translation></translation>
     </message>
     <message>
@@ -1428,19 +1542,75 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Opacity:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Bar width:</source>
         <translation></translation>
     </message>
     <message>
-        <source>Graph type:</source>
+        <source>History length:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Animation</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Axis lines:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Y axis scale labels</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Tick label font:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show speed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Speed label font:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Position:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Inside the graph</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
         <translation></translation>
     </message>
     <message>
@@ -1472,31 +1642,18 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Label:</source>
+        <source>Speed label:</source>
         <translation></translation>
     </message>
     <message>
         <source>Grid:</source>
         <translation></translation>
     </message>
+</context>
+<context>
+    <name>GraphTypes</name>
     <message>
-        <source>Maximized</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Height:</source>
+        <source>Traffic Graph</source>
         <translation></translation>
     </message>
     <message>
@@ -1508,55 +1665,42 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Window</source>
+        <source>Top</source>
         <translation></translation>
     </message>
     <message>
-        <source>Hide on close</source>
+        <source>Bottom</source>
         <translation></translation>
     </message>
     <message>
-        <source>Units:</source>
+        <source>Left</source>
         <translation></translation>
     </message>
     <message>
-        <source>Colors (Light | Dark)</source>
+        <source>Right</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>GraphsWindow</name>
+    <message>
+        <source>Edit</source>
         <translation></translation>
     </message>
     <message>
-        <source>Window Geometry</source>
+        <source>Add</source>
         <translation></translation>
     </message>
     <message>
-        <source>History length:</source>
+        <source>Remove</source>
         <translation></translation>
     </message>
     <message>
-        <source>How many seconds of the traffic the graph shows</source>
+        <source>Graphs</source>
         <translation></translation>
     </message>
     <message>
-        <source>Fixed speed:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>The constant top of the speed scale instead of the automatic one</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Auto-scale</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Tick label size:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Show speed</source>
+        <source>Are you sure to remove selected graph?</source>
         <translation></translation>
     </message>
 </context>
@@ -2401,10 +2545,6 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
         <translation></translation>
     </message>
     <message>
-        <source>Traffic Graph</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation></translation>
     </message>
@@ -2784,6 +2924,18 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
         <translation></translation>
     </message>
     <message>
+        <source>Allow and Save</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block and Save</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remove Later</source>
+        <translation></translation>
+    </message>
+    <message>
         <source># Examples:</source>
         <translation></translation>
     </message>
@@ -2893,6 +3045,14 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
     </message>
     <message>
         <source>Icons (*.ico; *.png; *.exe)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Allow Temporarily</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block Temporarily</source>
         <translation></translation>
     </message>
 </context>
@@ -3691,6 +3851,10 @@ Save the changes?</source>
         <translation></translation>
     </message>
     <message>
+        <source>Command Line</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation></translation>
     </message>
@@ -4389,6 +4553,10 @@ Packet loss: %2</source>
     </message>
     <message>
         <source>Statistics</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Graphs</source>
         <translation></translation>
     </message>
     <message>

@@ -163,6 +163,10 @@
         <source>Program Connections</source>
         <translation>Program Bağlantıları</translation>
     </message>
+    <message>
+        <source>Are you sure to remove all connections of the program?</source>
+        <translation>Programın tüm bağlantılarını kaldırmak istediğinizden emin misiniz?</translation>
+    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -207,6 +211,10 @@
     <message>
         <source>Name</source>
         <translation>Ad</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation>Filtreler</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -685,10 +693,6 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Otomatik Kaydır </translation>
     </message>
     <message>
-        <source>Show host names</source>
-        <translation>Sunucu Adlarını Göster </translation>
-    </message>
-    <message>
         <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
         <translation>Yalnızca uyarı verilen veya Uyarı eylemiyle işaretlenen programların bağlantıları toplanıyor</translation>
     </message>
@@ -774,6 +778,10 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Host adlarını üst DNS sunucuları üzerinden çözümle; yanıtlamadan önce IP Adresleri, Programlar ve Kurallar tarafından kullanılan Host Bölgelerinin ve host() filtrelerinin adreslerini ekle; Engelleme Bölgelerinin adları bulunmaz (yalnızca Hizmet ile). Adları DNS over HTTPS ile kendileri çözümleyen programlar, ör. Güvenli DNS kullanan tarayıcılar, DNS Yönlendiriciyi atlar</translation>
     </message>
     <message>
+        <source>Ask each server for &quot;example.com&quot; and check that the system&apos;s DNS queries are sent to the DNS Forwarder (only with the Service)</source>
+        <translation>Her sunucuya &quot;example.com&quot; için sorun ve sistemin DNS sorgularının DNS Yönlendiriciye gönderildiğini denetleyin (yalnızca Hizmet ile)</translation>
+    </message>
+    <message>
         <source>Block Zones:</source>
         <translation>Engelleme Bölgeleri:</translation>
     </message>
@@ -814,12 +822,20 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Test Et</translation>
     </message>
     <message>
-        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
-        <translation>Her sunucuya &quot;example.com&quot; sor (yalnızca Hizmet ile)</translation>
-    </message>
-    <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>Satır başına bir sunucu: adresler, ör. &quot;1.1.1.1&quot; veya sunucunun adresini içeren DNS over HTTPS URL&apos;leri, ör. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</translation>
+    </message>
+    <message>
+        <source>System&apos;s DNS queries</source>
+        <translation>Sistemin DNS Sorguları</translation>
+    </message>
+    <message>
+        <source>Sent to the DNS Forwarder</source>
+        <translation>DNS Yönlendiriciye Gönderiliyor</translation>
+    </message>
+    <message>
+        <source>Not sent to the DNS Forwarder</source>
+        <translation>DNS Yönlendiriciye Gönderilmiyor</translation>
     </message>
     <message>
         <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
@@ -1384,7 +1400,73 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     </message>
 </context>
 <context>
-    <name>GraphPage</name>
+    <name>GraphEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Ad:</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>Varsayılan</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Tamam</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Uygula</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>İptal Et</translation>
+    </message>
+    <message>
+        <source>Edit Graph</source>
+        <translation>Tabloyu Düzenle</translation>
+    </message>
+</context>
+<context>
+    <name>GraphListModel</name>
+    <message>
+        <source>Graph</source>
+        <translation>Tablo</translation>
+    </message>
+    <message>
+        <source>Graph type</source>
+        <translation>Tablo Türü</translation>
+    </message>
+</context>
+<context>
+    <name>GraphOptionsArea</name>
+    <message>
+        <source>Window</source>
+        <translation>Pencere</translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
+        <translation>Pencere Geometrisi</translation>
+    </message>
+    <message>
+        <source>Taskbar</source>
+        <translation>Görev Çubuğu</translation>
+    </message>
+    <message>
+        <source>Graph</source>
+        <translation>Tablo</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation>Hız</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation>Renkler (Açık | Koyu)</translation>
+    </message>
+    <message>
+        <source>Hide on close</source>
+        <translation>Kapatıldığında Gizle</translation>
+    </message>
     <message>
         <source>Always on top</source>
         <translation>Her Zaman En Üstte</translation>
@@ -1402,16 +1484,48 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Fareyle Üzerine Gelindiğinde Gizle</translation>
     </message>
     <message>
-        <source>Hide Y axis scale labels</source>
-        <translation>Y ekseni ölçek etiketlerini gizle</translation>
+        <source>Opacity:</source>
+        <translation>Saydamlık:</translation>
     </message>
     <message>
-        <source>Animation</source>
-        <translation>Animasyon</translation>
+        <source>Hover opacity:</source>
+        <translation>Fareyle Üzerine Gelindiğinde Saydamlık: </translation>
     </message>
     <message>
-        <source>Axis ticks</source>
-        <translation>Eksen işaretleri</translation>
+        <source>Border width:</source>
+        <translation>Kenarlık Genişliği:</translation>
+    </message>
+    <message>
+        <source>Maximized</source>
+        <translation>Büyütülmüş</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation>Genişlik:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>Yükseklik:</translation>
+    </message>
+    <message>
+        <source>Show in taskbar</source>
+        <translation>Görev Çubuğunda Göster</translation>
+    </message>
+    <message>
+        <source>Show graph</source>
+        <translation>Tabloyu Göster</translation>
+    </message>
+    <message>
+        <source>Graph type:</source>
+        <translation>Grafik türü:</translation>
     </message>
     <message>
         <source>Show:</source>
@@ -1430,20 +1544,76 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Yükle</translation>
     </message>
     <message>
-        <source>Opacity:</source>
-        <translation>Saydamlık:</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>Fareyle Üzerine Gelindiğinde Saydamlık: </translation>
-    </message>
-    <message>
         <source>Bar width:</source>
         <translation>Çubuk genişliği:</translation>
     </message>
     <message>
-        <source>Graph type:</source>
-        <translation>Grafik türü:</translation>
+        <source>History length:</source>
+        <translation>Geçmiş Uzunluğu:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>Grafiğin trafiğin kaç saniyesini gösterdiği</translation>
+    </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation>Sabit Hız: </translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>Otomatik ölçek yerine hız ölçeğinin sabit üst sınırı</translation>
+    </message>
+    <message>
+        <source>Animation</source>
+        <translation>Animasyon</translation>
+    </message>
+    <message>
+        <source>Axis lines:</source>
+        <translation>Eksen Çizgileri:</translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation>Eksen işaretleri</translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation>Izgara Çizgileri</translation>
+    </message>
+    <message>
+        <source>Y axis scale labels</source>
+        <translation>Y Ekseni Ölçek Etiketleri</translation>
+    </message>
+    <message>
+        <source>Tick label font:</source>
+        <translation>Ölçek Değerleri Yazı Tipi:</translation>
+    </message>
+    <message>
+        <source>Show speed</source>
+        <translation>Hızı göster</translation>
+    </message>
+    <message>
+        <source>Speed label font:</source>
+        <translation>Hız Etiketi Yazı Tipi:</translation>
+    </message>
+    <message>
+        <source>Position:</source>
+        <translation>Konum:</translation>
+    </message>
+    <message>
+        <source>Inside the graph</source>
+        <translation>Tablonun İçinde</translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation>Birimler:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Özel</translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
+        <translation>Otomatik Ölçeklendirme </translation>
     </message>
     <message>
         <source>Background:</source>
@@ -1474,32 +1644,19 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Ölçek Değerleri: </translation>
     </message>
     <message>
-        <source>Label:</source>
-        <translation>Mevcut Hız:</translation>
+        <source>Speed label:</source>
+        <translation>Hız Etiketi:</translation>
     </message>
     <message>
         <source>Grid:</source>
         <translation>Izgara:</translation>
     </message>
+</context>
+<context>
+    <name>GraphTypes</name>
     <message>
-        <source>Maximized</source>
-        <translation>Büyütülmüş</translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation>X:</translation>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation>Y:</translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation>Genişlik:</translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation>Yükseklik:</translation>
+        <source>Traffic Graph</source>
+        <translation>Trafik Tablosu</translation>
     </message>
     <message>
         <source>Column</source>
@@ -1510,56 +1667,43 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Çizgi</translation>
     </message>
     <message>
-        <source>Window</source>
-        <translation>Pencere</translation>
+        <source>Top</source>
+        <translation>Üst</translation>
     </message>
     <message>
-        <source>Hide on close</source>
-        <translation>Kapatıldığında Gizle</translation>
+        <source>Bottom</source>
+        <translation>Alt</translation>
     </message>
     <message>
-        <source>Units:</source>
-        <translation>Birimler:</translation>
+        <source>Left</source>
+        <translation>Sol</translation>
     </message>
     <message>
-        <source>Colors (Light | Dark)</source>
-        <translation>Renkler (Açık | Koyu)</translation>
+        <source>Right</source>
+        <translation>Sağ</translation>
+    </message>
+</context>
+<context>
+    <name>GraphsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Düzenle</translation>
     </message>
     <message>
-        <source>Window Geometry</source>
-        <translation>Pencere Geometrisi</translation>
+        <source>Add</source>
+        <translation>Ekle</translation>
     </message>
     <message>
-        <source>History length:</source>
-        <translation>Geçmiş Uzunluğu:</translation>
+        <source>Remove</source>
+        <translation>Kaldır</translation>
     </message>
     <message>
-        <source>How many seconds of the traffic the graph shows</source>
-        <translation>Grafiğin trafiğin kaç saniyesini gösterdiği</translation>
+        <source>Graphs</source>
+        <translation>Tablolar</translation>
     </message>
     <message>
-        <source>Fixed speed:</source>
-        <translation>Sabit Hız: </translation>
-    </message>
-    <message>
-        <source>The constant top of the speed scale instead of the automatic one</source>
-        <translation>Otomatik ölçek yerine hız ölçeğinin sabit üst sınırı</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Özel</translation>
-    </message>
-    <message>
-        <source>Auto-scale</source>
-        <translation>Otomatik Ölçeklendirme </translation>
-    </message>
-    <message>
-        <source>Tick label size:</source>
-        <translation>Ölçek Değerleri | Mevcut Hız Boyutu:</translation>
-    </message>
-    <message>
-        <source>Show speed</source>
-        <translation>Hızı göster</translation>
+        <source>Are you sure to remove selected graph?</source>
+        <translation>Seçili tabloyu kaldırmak istediğinizden emin misiniz?</translation>
     </message>
 </context>
 <context>
@@ -2405,10 +2549,6 @@ Veya bir pencereyi menüsündeki &quot;Fort&apos;a Yerleştir&quot; öğesiyle b
         <translation>İptal Et</translation>
     </message>
     <message>
-        <source>Traffic Graph</source>
-        <translation>Trafik Tablosu</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>Varsayılan</translation>
     </message>
@@ -2788,6 +2928,18 @@ Veya bir pencereyi menüsündeki &quot;Fort&apos;a Yerleştir&quot; öğesiyle b
         <translation>Zamanla</translation>
     </message>
     <message>
+        <source>Allow and Save</source>
+        <translation>İzin Ver ve Kaydet</translation>
+    </message>
+    <message>
+        <source>Block and Save</source>
+        <translation>Engelle ve Kaydet</translation>
+    </message>
+    <message>
+        <source>Remove Later</source>
+        <translation>Daha Sonra Kaldır</translation>
+    </message>
+    <message>
         <source># Examples:</source>
         <translation># Örnekler:</translation>
     </message>
@@ -2898,6 +3050,14 @@ Veya bir pencereyi menüsündeki &quot;Fort&apos;a Yerleştir&quot; öğesiyle b
     <message>
         <source>Icons (*.ico; *.png; *.exe)</source>
         <translation>Simgeler (*.ico; *.png; *.exe)</translation>
+    </message>
+    <message>
+        <source>Allow Temporarily</source>
+        <translation>Geçici Olarak İzin Ver</translation>
+    </message>
+    <message>
+        <source>Block Temporarily</source>
+        <translation>Geçici Olarak Engelle</translation>
     </message>
 </context>
 <context>
@@ -3702,6 +3862,10 @@ Değişiklikler kaydedilsin mi?</translation>
         <translation>Görünen Ad</translation>
     </message>
     <message>
+        <source>Command Line</source>
+        <translation>Komut Satırı</translation>
+    </message>
+    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>Değişiklikler sistem tarafından sıfırlandı. Hizmeti yeniden izlenebilir yapın.</translation>
     </message>
@@ -4402,6 +4566,10 @@ Paket kaybı: %2</translation>
     <message>
         <source>Statistics</source>
         <translation>İstatistikler</translation>
+    </message>
+    <message>
+        <source>Graphs</source>
+        <translation>Tablolar</translation>
     </message>
     <message>
         <source>New program(s) request network access</source>

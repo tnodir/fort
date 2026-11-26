@@ -163,6 +163,10 @@
         <source>Program Connections</source>
         <translation>Conexões do Programa</translation>
     </message>
+    <message>
+        <source>Are you sure to remove all connections of the program?</source>
+        <translation>Tem certeza de que deseja remover todas as conexões do programa?</translation>
+    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -207,6 +211,10 @@
     <message>
         <source>Name</source>
         <translation>Nome</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation>Filtros</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -684,10 +692,6 @@ Certifique-se de que possui um backup recente.</translation>
         <translation>Rolagem automática</translation>
     </message>
     <message>
-        <source>Show host names</source>
-        <translation>Mostrar nomes de host</translation>
-    </message>
-    <message>
         <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
         <translation>Somente as conexões de programas alertados ou marcados pela ação Alerta são coletadas</translation>
     </message>
@@ -773,6 +777,10 @@ Certifique-se de que possui um backup recente.</translation>
         <translation>Resolver os nomes de host pelos servidores DNS superiores, adicionando antes da resposta os endereços das Zonas de Hosts usadas pelos Endereços IP, Programas e Regras e dos filtros host(); os nomes das Zonas de Bloqueio não são encontrados (somente com o Serviço). Os programas que resolvem os nomes por DNS over HTTPS por conta própria, p. ex. os navegadores com DNS seguro, contornam o Encaminhador DNS</translation>
     </message>
     <message>
+        <source>Ask each server for &quot;example.com&quot; and check that the system&apos;s DNS queries are sent to the DNS Forwarder (only with the Service)</source>
+        <translation>Perguntar a cada servidor por &quot;example.com&quot; e verificar se as consultas DNS do sistema são enviadas ao Encaminhador DNS (somente com o Serviço)</translation>
+    </message>
+    <message>
         <source>Block Zones:</source>
         <translation>Zonas de Bloqueio:</translation>
     </message>
@@ -813,12 +821,20 @@ Certifique-se de que possui um backup recente.</translation>
         <translation>Testar</translation>
     </message>
     <message>
-        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
-        <translation>Perguntar a cada servidor por &quot;example.com&quot; (somente com o Serviço)</translation>
-    </message>
-    <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>Um servidor por linha: endereços, p. ex. &quot;1.1.1.1&quot;, ou URLs de DNS over HTTPS com o endereço do servidor, p. ex. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</translation>
+    </message>
+    <message>
+        <source>System&apos;s DNS queries</source>
+        <translation>Consultas DNS do Sistema</translation>
+    </message>
+    <message>
+        <source>Sent to the DNS Forwarder</source>
+        <translation>Enviadas ao Encaminhador DNS</translation>
+    </message>
+    <message>
+        <source>Not sent to the DNS Forwarder</source>
+        <translation>Não Enviadas ao Encaminhador DNS</translation>
     </message>
     <message>
         <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
@@ -1383,7 +1399,73 @@ Certifique-se de que possui um backup recente.</translation>
     </message>
 </context>
 <context>
-    <name>GraphPage</name>
+    <name>GraphEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Nome:</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>Padrão</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Aplicar</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Cancelar</translation>
+    </message>
+    <message>
+        <source>Edit Graph</source>
+        <translation>Editar Gráfico</translation>
+    </message>
+</context>
+<context>
+    <name>GraphListModel</name>
+    <message>
+        <source>Graph</source>
+        <translation>Gráfico</translation>
+    </message>
+    <message>
+        <source>Graph type</source>
+        <translation>Tipo de Gráfico</translation>
+    </message>
+</context>
+<context>
+    <name>GraphOptionsArea</name>
+    <message>
+        <source>Window</source>
+        <translation>Janela</translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
+        <translation>Geometria da Janela</translation>
+    </message>
+    <message>
+        <source>Taskbar</source>
+        <translation>Barra de Tarefas</translation>
+    </message>
+    <message>
+        <source>Graph</source>
+        <translation>Gráfico</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation>Velocidade</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation>Cores (Claro | Escuro)</translation>
+    </message>
+    <message>
+        <source>Hide on close</source>
+        <translation>Ocultar ao fechar</translation>
+    </message>
     <message>
         <source>Always on top</source>
         <translation>Sempre no topo</translation>
@@ -1401,16 +1483,48 @@ Certifique-se de que possui um backup recente.</translation>
         <translation>Esconder ao sobrepor o cursor</translation>
     </message>
     <message>
-        <source>Hide Y axis scale labels</source>
-        <translation>Ocultar rótulos da escala do eixo Y</translation>
+        <source>Opacity:</source>
+        <translation>Opacidade:</translation>
     </message>
     <message>
-        <source>Animation</source>
-        <translation>Animação</translation>
+        <source>Hover opacity:</source>
+        <translation>Opacidade ao passar o mouse:</translation>
     </message>
     <message>
-        <source>Axis ticks</source>
-        <translation>Marcas dos eixos</translation>
+        <source>Border width:</source>
+        <translation>Largura da Borda:</translation>
+    </message>
+    <message>
+        <source>Maximized</source>
+        <translation>Maximizada</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation>Largura:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>Altura:</translation>
+    </message>
+    <message>
+        <source>Show in taskbar</source>
+        <translation>Mostrar na Barra de Tarefas</translation>
+    </message>
+    <message>
+        <source>Show graph</source>
+        <translation>Mostrar Gráfico</translation>
+    </message>
+    <message>
+        <source>Graph type:</source>
+        <translation>Tipo de gráfico:</translation>
     </message>
     <message>
         <source>Show:</source>
@@ -1429,20 +1543,76 @@ Certifique-se de que possui um backup recente.</translation>
         <translation>Upload</translation>
     </message>
     <message>
-        <source>Opacity:</source>
-        <translation>Opacidade:</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>Opacidade ao passar o mouse:</translation>
-    </message>
-    <message>
         <source>Bar width:</source>
         <translation>Largura da barra:</translation>
     </message>
     <message>
-        <source>Graph type:</source>
-        <translation>Tipo de gráfico:</translation>
+        <source>History length:</source>
+        <translation>Duração do histórico:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>Quantos segundos de tráfego o gráfico mostra</translation>
+    </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation>Velocidade fixa:</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>Topo constante da escala de velocidade em vez do automático</translation>
+    </message>
+    <message>
+        <source>Animation</source>
+        <translation>Animação</translation>
+    </message>
+    <message>
+        <source>Axis lines:</source>
+        <translation>Linhas dos Eixos:</translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation>Marcas dos eixos</translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation>Linhas de Grade</translation>
+    </message>
+    <message>
+        <source>Y axis scale labels</source>
+        <translation>Etiquetas da Escala do Eixo Y</translation>
+    </message>
+    <message>
+        <source>Tick label font:</source>
+        <translation>Fonte da Etiqueta de Marcação:</translation>
+    </message>
+    <message>
+        <source>Show speed</source>
+        <translation>Mostrar velocidade</translation>
+    </message>
+    <message>
+        <source>Speed label font:</source>
+        <translation>Fonte da Etiqueta de Velocidade:</translation>
+    </message>
+    <message>
+        <source>Position:</source>
+        <translation>Posição:</translation>
+    </message>
+    <message>
+        <source>Inside the graph</source>
+        <translation>Dentro do Gráfico</translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation>Unidades:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Personalizar</translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
+        <translation>Ajuste automático</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -1473,32 +1643,19 @@ Certifique-se de que possui um backup recente.</translation>
         <translation>Etiqueta de marcação:</translation>
     </message>
     <message>
-        <source>Label:</source>
-        <translation>Etiqueta:</translation>
+        <source>Speed label:</source>
+        <translation>Etiqueta de Velocidade:</translation>
     </message>
     <message>
         <source>Grid:</source>
         <translation>Grade:</translation>
     </message>
+</context>
+<context>
+    <name>GraphTypes</name>
     <message>
-        <source>Maximized</source>
-        <translation>Maximizada</translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation>X:</translation>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation>Y:</translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation>Largura:</translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation>Altura:</translation>
+        <source>Traffic Graph</source>
+        <translation>Gráfico de Tráfico</translation>
     </message>
     <message>
         <source>Column</source>
@@ -1509,56 +1666,43 @@ Certifique-se de que possui um backup recente.</translation>
         <translation>Linha</translation>
     </message>
     <message>
-        <source>Window</source>
-        <translation>Janela</translation>
+        <source>Top</source>
+        <translation>Em Cima</translation>
     </message>
     <message>
-        <source>Hide on close</source>
-        <translation>Ocultar ao fechar</translation>
+        <source>Bottom</source>
+        <translation>Embaixo</translation>
     </message>
     <message>
-        <source>Units:</source>
-        <translation>Unidades</translation>
+        <source>Left</source>
+        <translation>À Esquerda</translation>
     </message>
     <message>
-        <source>Colors (Light | Dark)</source>
-        <translation>Cores (Claro | Escuro)</translation>
+        <source>Right</source>
+        <translation>À Direita</translation>
+    </message>
+</context>
+<context>
+    <name>GraphsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Editar</translation>
     </message>
     <message>
-        <source>Window Geometry</source>
-        <translation>Geometria da Janela</translation>
+        <source>Add</source>
+        <translation>Adicionar</translation>
     </message>
     <message>
-        <source>History length:</source>
-        <translation>Duração do histórico:</translation>
+        <source>Remove</source>
+        <translation>Remover</translation>
     </message>
     <message>
-        <source>How many seconds of the traffic the graph shows</source>
-        <translation>Quantos segundos de tráfego o gráfico mostra</translation>
+        <source>Graphs</source>
+        <translation>Gráficos</translation>
     </message>
     <message>
-        <source>Fixed speed:</source>
-        <translation>Velocidade fixa:</translation>
-    </message>
-    <message>
-        <source>The constant top of the speed scale instead of the automatic one</source>
-        <translation>Topo constante da escala de velocidade em vez do automático</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Personalizar</translation>
-    </message>
-    <message>
-        <source>Auto-scale</source>
-        <translation>Ajuste automático</translation>
-    </message>
-    <message>
-        <source>Tick label size:</source>
-        <translation>Tamanho dos rótulos dos eixos:</translation>
-    </message>
-    <message>
-        <source>Show speed</source>
-        <translation>Mostrar velocidade</translation>
+        <source>Are you sure to remove selected graph?</source>
+        <translation>Tem certeza de que deseja remover o gráfico selecionado?</translation>
     </message>
 </context>
 <context>
@@ -2404,10 +2548,6 @@ Ou mova uma janela para cá pelo item &quot;Acoplar ao Meu Forte&quot; do seu me
         <translation>Cancelar</translation>
     </message>
     <message>
-        <source>Traffic Graph</source>
-        <translation>Gráfico de Tráfico</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>Padrão</translation>
     </message>
@@ -2787,6 +2927,18 @@ Ou mova uma janela para cá pelo item &quot;Acoplar ao Meu Forte&quot; do seu me
         <translation>Intervalo de Tempo</translation>
     </message>
     <message>
+        <source>Allow and Save</source>
+        <translation>Permitir e Salvar</translation>
+    </message>
+    <message>
+        <source>Block and Save</source>
+        <translation>Bloquear e Salvar</translation>
+    </message>
+    <message>
+        <source>Remove Later</source>
+        <translation>Remover Depois</translation>
+    </message>
+    <message>
         <source># Examples:</source>
         <translation># Exemplos:</translation>
     </message>
@@ -2897,6 +3049,14 @@ Ou mova uma janela para cá pelo item &quot;Acoplar ao Meu Forte&quot; do seu me
     <message>
         <source>Icons (*.ico; *.png; *.exe)</source>
         <translation>Ícones (*.ico; *.png; *.exe)</translation>
+    </message>
+    <message>
+        <source>Allow Temporarily</source>
+        <translation>Permitir Temporariamente</translation>
+    </message>
+    <message>
+        <source>Block Temporarily</source>
+        <translation>Bloquear Temporariamente</translation>
     </message>
 </context>
 <context>
@@ -3702,6 +3862,10 @@ Salvar as alterações?</translation>
         <translation>Nome para Exibição</translation>
     </message>
     <message>
+        <source>Command Line</source>
+        <translation>Linha de Comando</translation>
+    </message>
+    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>As alterações foram redefinidas pelo sistema. Torne o serviço rastreável novamente.</translation>
     </message>
@@ -4402,6 +4566,10 @@ Perda de pacotes: %2</translation>
     <message>
         <source>Statistics</source>
         <translation>Estatísticas</translation>
+    </message>
+    <message>
+        <source>Graphs</source>
+        <translation>Gráficos</translation>
     </message>
     <message>
         <source>New program(s) request network access</source>

@@ -163,6 +163,10 @@
         <source>Program Connections</source>
         <translation>اتصالات البرنامج</translation>
     </message>
+    <message>
+        <source>Are you sure to remove all connections of the program?</source>
+        <translation>هل أنت متأكد من حذف جميع اتصالات البرنامج؟</translation>
+    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -207,6 +211,10 @@
     <message>
         <source>Name</source>
         <translation>الاسم</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation>المرشحات</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -685,10 +693,6 @@ Make sure that you have a fresh backup.</source>
         <translation>تمرير تلقائي</translation>
     </message>
     <message>
-        <source>Show host names</source>
-        <translation>عرض اسم المضيف</translation>
-    </message>
-    <message>
         <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
         <translation>يتم جمع اتصالات البرامج المنبَّه عنها أو المعلَّمة بإجراء التنبيه فقط</translation>
     </message>
@@ -774,6 +778,10 @@ Make sure that you have a fresh backup.</source>
         <translation>حل أسماء المضيفين عبر خوادم DNS العليا، مع إضافة عناوين مناطق المضيفين المستخدمة في عناوين الـ IP والبرامج والقواعد وعناوين مرشّحات host() قبل الرد؛ لا يتم العثور على أسماء مناطق الحظر (مع الخدمة فقط). البرامج التي تحل الأسماء بنفسها عبر DNS over HTTPS، مثل المتصفحات ذات DNS الآمن، تتجاوز مُعيد توجيه DNS</translation>
     </message>
     <message>
+        <source>Ask each server for &quot;example.com&quot; and check that the system&apos;s DNS queries are sent to the DNS Forwarder (only with the Service)</source>
+        <translation>سؤال كل خادم عن &quot;example.com&quot; والتحقق من إرسال استعلامات DNS الخاصة بالنظام إلى مُعيد توجيه DNS (مع الخدمة فقط)</translation>
+    </message>
+    <message>
         <source>Block Zones:</source>
         <translation>مناطق الحظر:</translation>
     </message>
@@ -814,12 +822,20 @@ Make sure that you have a fresh backup.</source>
         <translation>اختبار</translation>
     </message>
     <message>
-        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
-        <translation>سؤال كل خادم عن &quot;example.com&quot; (مع الخدمة فقط)</translation>
-    </message>
-    <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>خادم في كل سطر: عناوين، مثل &quot;1.1.1.1&quot;، أو عناوين URL لـ DNS over HTTPS مع عنوان الخادم، مثل &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</translation>
+    </message>
+    <message>
+        <source>System&apos;s DNS queries</source>
+        <translation>استعلامات DNS الخاصة بالنظام</translation>
+    </message>
+    <message>
+        <source>Sent to the DNS Forwarder</source>
+        <translation>مُرسَلة إلى مُعيد توجيه DNS</translation>
+    </message>
+    <message>
+        <source>Not sent to the DNS Forwarder</source>
+        <translation>غير مُرسَلة إلى مُعيد توجيه DNS</translation>
     </message>
     <message>
         <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
@@ -1384,7 +1400,73 @@ Make sure that you have a fresh backup.</source>
     </message>
 </context>
 <context>
-    <name>GraphPage</name>
+    <name>GraphEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>الاسم:</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>الافتراضي</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>موافق</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>تطبيق</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>إلغاء</translation>
+    </message>
+    <message>
+        <source>Edit Graph</source>
+        <translation>تعديل المخطط</translation>
+    </message>
+</context>
+<context>
+    <name>GraphListModel</name>
+    <message>
+        <source>Graph</source>
+        <translation>المخطط</translation>
+    </message>
+    <message>
+        <source>Graph type</source>
+        <translation>نوع المخطط</translation>
+    </message>
+</context>
+<context>
+    <name>GraphOptionsArea</name>
+    <message>
+        <source>Window</source>
+        <translation>النافذة</translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
+        <translation>أبعاد النافذة</translation>
+    </message>
+    <message>
+        <source>Taskbar</source>
+        <translation>شريط المهام</translation>
+    </message>
+    <message>
+        <source>Graph</source>
+        <translation>المخطط</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation>السرعة</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation>الألوان (فاتح | غامق)</translation>
+    </message>
+    <message>
+        <source>Hide on close</source>
+        <translation>إخفاء عند الإغلاق</translation>
+    </message>
     <message>
         <source>Always on top</source>
         <translation>دائمًا في المقدمة</translation>
@@ -1402,16 +1484,48 @@ Make sure that you have a fresh backup.</source>
         <translation>إخفاء عند مرور المؤشر</translation>
     </message>
     <message>
-        <source>Hide Y axis scale labels</source>
-        <translation>إخفاء تسميات مقياس المحور Y</translation>
+        <source>Opacity:</source>
+        <translation>الشفافية:</translation>
     </message>
     <message>
-        <source>Animation</source>
-        <translation>الحركة</translation>
+        <source>Hover opacity:</source>
+        <translation>الشفافية عند مرور المؤشر:</translation>
     </message>
     <message>
-        <source>Axis ticks</source>
-        <translation>علامات المحور</translation>
+        <source>Border width:</source>
+        <translation>عرض الحد:</translation>
+    </message>
+    <message>
+        <source>Maximized</source>
+        <translation>مكبّرة</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation>العرض:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>الارتفاع:</translation>
+    </message>
+    <message>
+        <source>Show in taskbar</source>
+        <translation>العرض في شريط المهام</translation>
+    </message>
+    <message>
+        <source>Show graph</source>
+        <translation>إظهار المخطط</translation>
+    </message>
+    <message>
+        <source>Graph type:</source>
+        <translation>نوع المخطط:</translation>
     </message>
     <message>
         <source>Show:</source>
@@ -1423,27 +1537,83 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Download</source>
-        <translation>تنزيل</translation>
+        <translation>التنزيل</translation>
     </message>
     <message>
         <source>Upload</source>
         <translation>الرفع</translation>
     </message>
     <message>
-        <source>Opacity:</source>
-        <translation>الشفافية:</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>الشفافية عند مرور المؤشر:</translation>
-    </message>
-    <message>
         <source>Bar width:</source>
         <translation>عرض الشريط:</translation>
     </message>
     <message>
-        <source>Graph type:</source>
-        <translation>نوع المخطط:</translation>
+        <source>History length:</source>
+        <translation>طول السجل:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>عدد ثواني حركة المرور التي يعرضها الرسم البياني</translation>
+    </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation>السرعة الثابتة:</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>حد أعلى ثابت لمقياس السرعة بدلاً من التلقائي</translation>
+    </message>
+    <message>
+        <source>Animation</source>
+        <translation>الحركة</translation>
+    </message>
+    <message>
+        <source>Axis lines:</source>
+        <translation>خطوط المحاور:</translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation>علامات المحور</translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation>خطوط الشبكة</translation>
+    </message>
+    <message>
+        <source>Y axis scale labels</source>
+        <translation>تسميات مقياس المحور Y</translation>
+    </message>
+    <message>
+        <source>Tick label font:</source>
+        <translation>خط عنوان الانتقالات:</translation>
+    </message>
+    <message>
+        <source>Show speed</source>
+        <translation>عرض السرعة</translation>
+    </message>
+    <message>
+        <source>Speed label font:</source>
+        <translation>خط تسمية السرعة:</translation>
+    </message>
+    <message>
+        <source>Position:</source>
+        <translation>الموضع:</translation>
+    </message>
+    <message>
+        <source>Inside the graph</source>
+        <translation>داخل المخطط</translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation>الوحدات:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>مخصص</translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
+        <translation>حجم تلقائي</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -1474,32 +1644,19 @@ Make sure that you have a fresh backup.</source>
         <translation>عنوان الانتقالات:</translation>
     </message>
     <message>
-        <source>Label:</source>
-        <translation>العنوان:</translation>
+        <source>Speed label:</source>
+        <translation>تسمية السرعة:</translation>
     </message>
     <message>
         <source>Grid:</source>
         <translation>الشبكة:</translation>
     </message>
+</context>
+<context>
+    <name>GraphTypes</name>
     <message>
-        <source>Maximized</source>
-        <translation>مكبّرة</translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation>X:</translation>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation>Y:</translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation>العرض:</translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation>الارتفاع:</translation>
+        <source>Traffic Graph</source>
+        <translation>مخطط حركة البيانات</translation>
     </message>
     <message>
         <source>Column</source>
@@ -1510,56 +1667,43 @@ Make sure that you have a fresh backup.</source>
         <translation>خطوط</translation>
     </message>
     <message>
-        <source>Window</source>
-        <translation>النافذة</translation>
+        <source>Top</source>
+        <translation>أعلى</translation>
     </message>
     <message>
-        <source>Hide on close</source>
-        <translation>إخفاء عند الإغلاق</translation>
+        <source>Bottom</source>
+        <translation>أسفل</translation>
     </message>
     <message>
-        <source>Units:</source>
-        <translation>الوحدات:</translation>
+        <source>Left</source>
+        <translation>يسار</translation>
     </message>
     <message>
-        <source>Colors (Light | Dark)</source>
-        <translation>الألوان (فاتح | غامق)</translation>
+        <source>Right</source>
+        <translation>يمين</translation>
+    </message>
+</context>
+<context>
+    <name>GraphsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>تعديل</translation>
     </message>
     <message>
-        <source>Window Geometry</source>
-        <translation>أبعاد النافذة</translation>
+        <source>Add</source>
+        <translation>إضافة</translation>
     </message>
     <message>
-        <source>History length:</source>
-        <translation>طول السجل:</translation>
+        <source>Remove</source>
+        <translation>حذف</translation>
     </message>
     <message>
-        <source>How many seconds of the traffic the graph shows</source>
-        <translation>عدد ثواني حركة المرور التي يعرضها الرسم البياني</translation>
+        <source>Graphs</source>
+        <translation>المخططات</translation>
     </message>
     <message>
-        <source>Fixed speed:</source>
-        <translation>السرعة الثابتة:</translation>
-    </message>
-    <message>
-        <source>The constant top of the speed scale instead of the automatic one</source>
-        <translation>حد أعلى ثابت لمقياس السرعة بدلاً من التلقائي</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>مخصص</translation>
-    </message>
-    <message>
-        <source>Auto-scale</source>
-        <translation>حجم تلقائي</translation>
-    </message>
-    <message>
-        <source>Tick label size:</source>
-        <translation>حجم تسمية العلامات:</translation>
-    </message>
-    <message>
-        <source>Show speed</source>
-        <translation>عرض السرعة</translation>
+        <source>Are you sure to remove selected graph?</source>
+        <translation>هل أنت متأكد من حذف المخطط المحدد؟</translation>
     </message>
 </context>
 <context>
@@ -2405,10 +2549,6 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
         <translation>إلغاء</translation>
     </message>
     <message>
-        <source>Traffic Graph</source>
-        <translation>مخطط حركة البيانات</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>الافتراضي</translation>
     </message>
@@ -2788,6 +2928,18 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
         <translation>الجدول</translation>
     </message>
     <message>
+        <source>Allow and Save</source>
+        <translation>السماح والحفظ</translation>
+    </message>
+    <message>
+        <source>Block and Save</source>
+        <translation>الحظر والحفظ</translation>
+    </message>
+    <message>
+        <source>Remove Later</source>
+        <translation>الحذف لاحقًا</translation>
+    </message>
+    <message>
         <source># Examples:</source>
         <translation># أمثلة:</translation>
     </message>
@@ -2898,6 +3050,14 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
     <message>
         <source>Icons (*.ico; *.png; *.exe)</source>
         <translation>الأيقونات (*.ico; *.png; *.exe)</translation>
+    </message>
+    <message>
+        <source>Allow Temporarily</source>
+        <translation>السماح مؤقتًا</translation>
+    </message>
+    <message>
+        <source>Block Temporarily</source>
+        <translation>الحظر مؤقتًا</translation>
     </message>
 </context>
 <context>
@@ -3703,6 +3863,10 @@ Save the changes?</source>
         <translation>الاسم الظاهر</translation>
     </message>
     <message>
+        <source>Command Line</source>
+        <translation>سطر الأوامر</translation>
+    </message>
+    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>تمت إعادة ضبط التغييرات بواسطة النظام. اجعل الخدمة قابلة للتتبع مرة أخرى.</translation>
     </message>
@@ -4403,6 +4567,10 @@ Packet loss: %2</source>
     <message>
         <source>Statistics</source>
         <translation>الإحصائيات</translation>
+    </message>
+    <message>
+        <source>Graphs</source>
+        <translation>المخططات</translation>
     </message>
     <message>
         <source>New program(s) request network access</source>

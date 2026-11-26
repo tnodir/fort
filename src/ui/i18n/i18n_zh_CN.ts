@@ -163,6 +163,10 @@
         <source>Program Connections</source>
         <translation>应用程序连接</translation>
     </message>
+    <message>
+        <source>Are you sure to remove all connections of the program?</source>
+        <translation>确定要删除该程序的所有连接吗？</translation>
+    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -207,6 +211,10 @@
     <message>
         <source>Name</source>
         <translation>名称</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation>筛选</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -685,10 +693,6 @@ Make sure that you have a fresh backup.</source>
         <translation>自动滚动</translation>
     </message>
     <message>
-        <source>Show host names</source>
-        <translation>显示主机名</translation>
-    </message>
-    <message>
         <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
         <translation>仅收集已提示应用程序或被“提示”操作标记的连接</translation>
     </message>
@@ -774,6 +778,10 @@ Make sure that you have a fresh backup.</source>
         <translation>通过上游 DNS 服务器解析主机名，并在应答前添加 IP 地址、应用程序和规则所用的主机区域以及 host() 过滤器的地址；阻止区域的名称将找不到（仅限有服务时）。自行通过 DNS over HTTPS 解析名称的应用程序（例如启用了安全 DNS 的浏览器）会绕过 DNS 转发器</translation>
     </message>
     <message>
+        <source>Ask each server for &quot;example.com&quot; and check that the system&apos;s DNS queries are sent to the DNS Forwarder (only with the Service)</source>
+        <translation>向每个服务器查询“example.com”，并检查系统的 DNS 查询是否发送到 DNS 转发器（仅在使用服务时）</translation>
+    </message>
+    <message>
         <source>Block Zones:</source>
         <translation>阻止区域：</translation>
     </message>
@@ -814,12 +822,20 @@ Make sure that you have a fresh backup.</source>
         <translation>测试</translation>
     </message>
     <message>
-        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
-        <translation>向每个服务器查询“example.com”（仅限有服务时）</translation>
-    </message>
-    <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>每行一个服务器：地址，例如“1.1.1.1”，或带服务器地址的 DNS over HTTPS URL，例如“https://dns.example/dns-query?ip=192.0.2.1”</translation>
+    </message>
+    <message>
+        <source>System&apos;s DNS queries</source>
+        <translation>系统的 DNS 查询</translation>
+    </message>
+    <message>
+        <source>Sent to the DNS Forwarder</source>
+        <translation>已发送到 DNS 转发器</translation>
+    </message>
+    <message>
+        <source>Not sent to the DNS Forwarder</source>
+        <translation>未发送到 DNS 转发器</translation>
     </message>
     <message>
         <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
@@ -1384,7 +1400,73 @@ Make sure that you have a fresh backup.</source>
     </message>
 </context>
 <context>
-    <name>GraphPage</name>
+    <name>GraphEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>名称：</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>默认</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>确定</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>应用</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <source>Edit Graph</source>
+        <translation>编辑图表</translation>
+    </message>
+</context>
+<context>
+    <name>GraphListModel</name>
+    <message>
+        <source>Graph</source>
+        <translation>图表</translation>
+    </message>
+    <message>
+        <source>Graph type</source>
+        <translation>图表类型</translation>
+    </message>
+</context>
+<context>
+    <name>GraphOptionsArea</name>
+    <message>
+        <source>Window</source>
+        <translation>窗口</translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
+        <translation>窗口几何</translation>
+    </message>
+    <message>
+        <source>Taskbar</source>
+        <translation>任务栏</translation>
+    </message>
+    <message>
+        <source>Graph</source>
+        <translation>图表</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation>速度</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation>颜色（浅色 | 深色）</translation>
+    </message>
+    <message>
+        <source>Hide on close</source>
+        <translation>关闭时隐藏</translation>
+    </message>
     <message>
         <source>Always on top</source>
         <translation>始终置顶</translation>
@@ -1402,16 +1484,48 @@ Make sure that you have a fresh backup.</source>
         <translation>悬停时隐藏</translation>
     </message>
     <message>
-        <source>Hide Y axis scale labels</source>
-        <translation>隐藏 Y 轴刻度标签</translation>
+        <source>Opacity:</source>
+        <translation>不透明度：</translation>
     </message>
     <message>
-        <source>Animation</source>
-        <translation>动画</translation>
+        <source>Hover opacity:</source>
+        <translation>悬停不透明度：</translation>
     </message>
     <message>
-        <source>Axis ticks</source>
-        <translation>坐标轴刻度</translation>
+        <source>Border width:</source>
+        <translation>边框宽度：</translation>
+    </message>
+    <message>
+        <source>Maximized</source>
+        <translation>最大化</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X：</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y：</translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation>宽度：</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>高度：</translation>
+    </message>
+    <message>
+        <source>Show in taskbar</source>
+        <translation>在任务栏中显示</translation>
+    </message>
+    <message>
+        <source>Show graph</source>
+        <translation>显示图表</translation>
+    </message>
+    <message>
+        <source>Graph type:</source>
+        <translation>图表类型：</translation>
     </message>
     <message>
         <source>Show:</source>
@@ -1430,20 +1544,76 @@ Make sure that you have a fresh backup.</source>
         <translation>上传</translation>
     </message>
     <message>
-        <source>Opacity:</source>
-        <translation>不透明度：</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>悬停不透明度：</translation>
-    </message>
-    <message>
         <source>Bar width:</source>
         <translation>柱宽：</translation>
     </message>
     <message>
-        <source>Graph type:</source>
-        <translation>图表类型：</translation>
+        <source>History length:</source>
+        <translation>历史长度：</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>图表显示多少秒的流量</translation>
+    </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation>固定速度：</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>速度刻度的固定上限，而不是自动上限</translation>
+    </message>
+    <message>
+        <source>Animation</source>
+        <translation>动画</translation>
+    </message>
+    <message>
+        <source>Axis lines:</source>
+        <translation>轴线：</translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation>坐标轴刻度</translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation>网格线</translation>
+    </message>
+    <message>
+        <source>Y axis scale labels</source>
+        <translation>Y 轴刻度标签</translation>
+    </message>
+    <message>
+        <source>Tick label font:</source>
+        <translation>刻度标签字体：</translation>
+    </message>
+    <message>
+        <source>Show speed</source>
+        <translation>显示速度</translation>
+    </message>
+    <message>
+        <source>Speed label font:</source>
+        <translation>速度标签字体：</translation>
+    </message>
+    <message>
+        <source>Position:</source>
+        <translation>位置：</translation>
+    </message>
+    <message>
+        <source>Inside the graph</source>
+        <translation>在图表内部</translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation>单元：</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>自定义</translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
+        <translation>自动扩展</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -1474,32 +1644,19 @@ Make sure that you have a fresh backup.</source>
         <translation>已勾选的标签：</translation>
     </message>
     <message>
-        <source>Label:</source>
-        <translation>标签：</translation>
+        <source>Speed label:</source>
+        <translation>速度标签：</translation>
     </message>
     <message>
         <source>Grid:</source>
         <translation>网格：</translation>
     </message>
+</context>
+<context>
+    <name>GraphTypes</name>
     <message>
-        <source>Maximized</source>
-        <translation>最大化</translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation>X：</translation>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation>Y：</translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation>宽度：</translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation>高度：</translation>
+        <source>Traffic Graph</source>
+        <translation>流量图</translation>
     </message>
     <message>
         <source>Column</source>
@@ -1510,56 +1667,43 @@ Make sure that you have a fresh backup.</source>
         <translation>折线</translation>
     </message>
     <message>
-        <source>Window</source>
-        <translation>窗口</translation>
+        <source>Top</source>
+        <translation>顶部</translation>
     </message>
     <message>
-        <source>Hide on close</source>
-        <translation>关闭时隐藏</translation>
+        <source>Bottom</source>
+        <translation>底部</translation>
     </message>
     <message>
-        <source>Units:</source>
-        <translation>单元：</translation>
+        <source>Left</source>
+        <translation>左侧</translation>
     </message>
     <message>
-        <source>Colors (Light | Dark)</source>
-        <translation>颜色（浅色 | 深色）</translation>
+        <source>Right</source>
+        <translation>右侧</translation>
+    </message>
+</context>
+<context>
+    <name>GraphsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>编辑</translation>
     </message>
     <message>
-        <source>Window Geometry</source>
-        <translation>窗口几何</translation>
+        <source>Add</source>
+        <translation>添加</translation>
     </message>
     <message>
-        <source>History length:</source>
-        <translation>历史长度：</translation>
+        <source>Remove</source>
+        <translation>删除</translation>
     </message>
     <message>
-        <source>How many seconds of the traffic the graph shows</source>
-        <translation>图表显示多少秒的流量</translation>
+        <source>Graphs</source>
+        <translation>图表</translation>
     </message>
     <message>
-        <source>Fixed speed:</source>
-        <translation>固定速度：</translation>
-    </message>
-    <message>
-        <source>The constant top of the speed scale instead of the automatic one</source>
-        <translation>速度刻度的固定上限，而不是自动上限</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>自定义</translation>
-    </message>
-    <message>
-        <source>Auto-scale</source>
-        <translation>自动扩展</translation>
-    </message>
-    <message>
-        <source>Tick label size:</source>
-        <translation>刻度标签文字大小：</translation>
-    </message>
-    <message>
-        <source>Show speed</source>
-        <translation>显示速度</translation>
+        <source>Are you sure to remove selected graph?</source>
+        <translation>确定要删除所选图表吗？</translation>
     </message>
 </context>
 <context>
@@ -2405,10 +2549,6 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
         <translation>取消</translation>
     </message>
     <message>
-        <source>Traffic Graph</source>
-        <translation>流量图</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>默认</translation>
     </message>
@@ -2788,6 +2928,18 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
         <translation>计划</translation>
     </message>
     <message>
+        <source>Allow and Save</source>
+        <translation>允许并保存</translation>
+    </message>
+    <message>
+        <source>Block and Save</source>
+        <translation>阻止并保存</translation>
+    </message>
+    <message>
+        <source>Remove Later</source>
+        <translation>稍后删除</translation>
+    </message>
+    <message>
         <source># Examples:</source>
         <translation># 示例：</translation>
     </message>
@@ -2898,6 +3050,14 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
     <message>
         <source>Icons (*.ico; *.png; *.exe)</source>
         <translation>图标文件 (*.ico; *.png; *.exe)</translation>
+    </message>
+    <message>
+        <source>Allow Temporarily</source>
+        <translation>临时允许</translation>
+    </message>
+    <message>
+        <source>Block Temporarily</source>
+        <translation>临时阻止</translation>
     </message>
 </context>
 <context>
@@ -3703,6 +3863,10 @@ Save the changes?</source>
         <translation>显示名称</translation>
     </message>
     <message>
+        <source>Command Line</source>
+        <translation>命令行</translation>
+    </message>
+    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>更改已被系统重置。请重新设置服务为可跟踪。</translation>
     </message>
@@ -4403,6 +4567,10 @@ Packet loss: %2</source>
     <message>
         <source>Statistics</source>
         <translation>统计数据</translation>
+    </message>
+    <message>
+        <source>Graphs</source>
+        <translation>图表</translation>
     </message>
     <message>
         <source>New program(s) request network access</source>

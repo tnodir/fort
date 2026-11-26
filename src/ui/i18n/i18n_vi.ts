@@ -163,6 +163,10 @@
         <source>Program Connections</source>
         <translation>Kết nối chương trình</translation>
     </message>
+    <message>
+        <source>Are you sure to remove all connections of the program?</source>
+        <translation>Bạn có chắc muốn gỡ bỏ tất cả kết nối của chương trình?</translation>
+    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -207,6 +211,10 @@
     <message>
         <source>Name</source>
         <translation>Tên</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation>Bộ lọc</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -685,10 +693,6 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
         <translation>Tự động cuộn</translation>
     </message>
     <message>
-        <source>Show host names</source>
-        <translation>Hiển thị tên máy</translation>
-    </message>
-    <message>
         <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
         <translation>Chỉ các kết nối của chương trình bị cảnh báo hoặc được đánh dấu bằng hành động Cảnh báo được thu thập</translation>
     </message>
@@ -774,6 +778,10 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
         <translation>Phân giải tên máy qua các máy chủ DNS thượng nguồn, thêm địa chỉ của các Vùng tên máy được dùng bởi Địa chỉ IP, Chương trình và Quy tắc và của các bộ lọc host() trước khi trả lời; tên của các Vùng chặn không được tìm thấy (chỉ khi có Dịch vụ). Các chương trình tự phân giải tên bằng DNS over HTTPS, ví dụ trình duyệt có DNS bảo mật, sẽ bỏ qua Bộ chuyển tiếp DNS</translation>
     </message>
     <message>
+        <source>Ask each server for &quot;example.com&quot; and check that the system&apos;s DNS queries are sent to the DNS Forwarder (only with the Service)</source>
+        <translation>Hỏi từng máy chủ về &quot;example.com&quot; và kiểm tra các truy vấn DNS của hệ thống có được gửi đến Bộ chuyển tiếp DNS không (chỉ khi có Dịch vụ)</translation>
+    </message>
+    <message>
         <source>Block Zones:</source>
         <translation>Vùng chặn:</translation>
     </message>
@@ -814,12 +822,20 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
         <translation>Kiểm tra</translation>
     </message>
     <message>
-        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
-        <translation>Hỏi từng máy chủ về &quot;example.com&quot; (chỉ khi có Dịch vụ)</translation>
-    </message>
-    <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>Mỗi dòng một máy chủ: địa chỉ, ví dụ &quot;1.1.1.1&quot;, hoặc URL DNS over HTTPS kèm địa chỉ máy chủ, ví dụ &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</translation>
+    </message>
+    <message>
+        <source>System&apos;s DNS queries</source>
+        <translation>Truy vấn DNS của hệ thống</translation>
+    </message>
+    <message>
+        <source>Sent to the DNS Forwarder</source>
+        <translation>Được gửi đến Bộ chuyển tiếp DNS</translation>
+    </message>
+    <message>
+        <source>Not sent to the DNS Forwarder</source>
+        <translation>Không được gửi đến Bộ chuyển tiếp DNS</translation>
     </message>
     <message>
         <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
@@ -1384,7 +1400,73 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
     </message>
 </context>
 <context>
-    <name>GraphPage</name>
+    <name>GraphEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Tên:</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>Mặc định</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Áp dụng</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Hủy</translation>
+    </message>
+    <message>
+        <source>Edit Graph</source>
+        <translation>Chỉnh sửa biểu đồ</translation>
+    </message>
+</context>
+<context>
+    <name>GraphListModel</name>
+    <message>
+        <source>Graph</source>
+        <translation>Biểu đồ</translation>
+    </message>
+    <message>
+        <source>Graph type</source>
+        <translation>Loại biểu đồ</translation>
+    </message>
+</context>
+<context>
+    <name>GraphOptionsArea</name>
+    <message>
+        <source>Window</source>
+        <translation>Cửa sổ</translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
+        <translation>Hình học cửa sổ</translation>
+    </message>
+    <message>
+        <source>Taskbar</source>
+        <translation>Thanh tác vụ</translation>
+    </message>
+    <message>
+        <source>Graph</source>
+        <translation>Biểu đồ</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation>Tốc độ</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation>Màu sắc (Sáng | Tối)</translation>
+    </message>
+    <message>
+        <source>Hide on close</source>
+        <translation>Ẩn khi đóng</translation>
+    </message>
     <message>
         <source>Always on top</source>
         <translation>Luôn ở trên cùng</translation>
@@ -1402,16 +1484,48 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
         <translation>Ẩn khi di chuột qua</translation>
     </message>
     <message>
-        <source>Hide Y axis scale labels</source>
-        <translation>Ẩn nhãn tỷ lệ trục Y</translation>
+        <source>Opacity:</source>
+        <translation>Độ mờ:</translation>
     </message>
     <message>
-        <source>Animation</source>
-        <translation>Hiệu ứng động</translation>
+        <source>Hover opacity:</source>
+        <translation>Độ mờ khi di chuột:</translation>
     </message>
     <message>
-        <source>Axis ticks</source>
-        <translation>Vạch chia trục</translation>
+        <source>Border width:</source>
+        <translation>Độ rộng viền:</translation>
+    </message>
+    <message>
+        <source>Maximized</source>
+        <translation>Phóng to tối đa</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation>Chiều rộng:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>Chiều cao:</translation>
+    </message>
+    <message>
+        <source>Show in taskbar</source>
+        <translation>Hiển thị trên thanh tác vụ</translation>
+    </message>
+    <message>
+        <source>Show graph</source>
+        <translation>Hiển thị biểu đồ</translation>
+    </message>
+    <message>
+        <source>Graph type:</source>
+        <translation>Loại biểu đồ:</translation>
     </message>
     <message>
         <source>Show:</source>
@@ -1430,20 +1544,76 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
         <translation>Tải lên</translation>
     </message>
     <message>
-        <source>Opacity:</source>
-        <translation>Độ mờ:</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>Độ mờ khi di chuột:</translation>
-    </message>
-    <message>
         <source>Bar width:</source>
         <translation>Chiều rộng thanh:</translation>
     </message>
     <message>
-        <source>Graph type:</source>
-        <translation>Loại biểu đồ:</translation>
+        <source>History length:</source>
+        <translation>Độ dài lịch sử:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>Số giây lưu lượng mà biểu đồ hiển thị</translation>
+    </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation>Tốc độ cố định:</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>Mức trên cố định của thang tốc độ thay cho tự động</translation>
+    </message>
+    <message>
+        <source>Animation</source>
+        <translation>Hiệu ứng động</translation>
+    </message>
+    <message>
+        <source>Axis lines:</source>
+        <translation>Đường trục:</translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation>Vạch chia trục</translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation>Đường lưới</translation>
+    </message>
+    <message>
+        <source>Y axis scale labels</source>
+        <translation>Nhãn thang đo trục Y</translation>
+    </message>
+    <message>
+        <source>Tick label font:</source>
+        <translation>Phông chữ nhãn đánh dấu:</translation>
+    </message>
+    <message>
+        <source>Show speed</source>
+        <translation>Hiển thị tốc độ</translation>
+    </message>
+    <message>
+        <source>Speed label font:</source>
+        <translation>Phông chữ nhãn tốc độ:</translation>
+    </message>
+    <message>
+        <source>Position:</source>
+        <translation>Vị trí:</translation>
+    </message>
+    <message>
+        <source>Inside the graph</source>
+        <translation>Bên trong biểu đồ</translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation>Đơn vị:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Tùy chỉnh</translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
+        <translation>Tỉ lệ tự động</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -1474,32 +1644,19 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
         <translation>Nhãn đánh dấu:</translation>
     </message>
     <message>
-        <source>Label:</source>
-        <translation>Nhãn:</translation>
+        <source>Speed label:</source>
+        <translation>Nhãn tốc độ:</translation>
     </message>
     <message>
         <source>Grid:</source>
         <translation>Lưới:</translation>
     </message>
+</context>
+<context>
+    <name>GraphTypes</name>
     <message>
-        <source>Maximized</source>
-        <translation>Phóng to tối đa</translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation>X:</translation>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation>Y:</translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation>Chiều rộng:</translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation>Chiều cao:</translation>
+        <source>Traffic Graph</source>
+        <translation>Biểu đồ lưu lượng</translation>
     </message>
     <message>
         <source>Column</source>
@@ -1510,56 +1667,43 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
         <translation>Đường</translation>
     </message>
     <message>
-        <source>Window</source>
-        <translation>Cửa sổ</translation>
+        <source>Top</source>
+        <translation>Trên</translation>
     </message>
     <message>
-        <source>Hide on close</source>
-        <translation>Ẩn khi đóng</translation>
+        <source>Bottom</source>
+        <translation>Dưới</translation>
     </message>
     <message>
-        <source>Units:</source>
-        <translation>Đơn vị:</translation>
+        <source>Left</source>
+        <translation>Trái</translation>
     </message>
     <message>
-        <source>Colors (Light | Dark)</source>
-        <translation>Màu sắc (Sáng | Tối)</translation>
+        <source>Right</source>
+        <translation>Phải</translation>
+    </message>
+</context>
+<context>
+    <name>GraphsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Chỉnh sửa</translation>
     </message>
     <message>
-        <source>Window Geometry</source>
-        <translation>Hình học cửa sổ</translation>
+        <source>Add</source>
+        <translation>Thêm</translation>
     </message>
     <message>
-        <source>History length:</source>
-        <translation>Độ dài lịch sử:</translation>
+        <source>Remove</source>
+        <translation>Gỡ bỏ</translation>
     </message>
     <message>
-        <source>How many seconds of the traffic the graph shows</source>
-        <translation>Số giây lưu lượng mà biểu đồ hiển thị</translation>
+        <source>Graphs</source>
+        <translation>Các biểu đồ</translation>
     </message>
     <message>
-        <source>Fixed speed:</source>
-        <translation>Tốc độ cố định:</translation>
-    </message>
-    <message>
-        <source>The constant top of the speed scale instead of the automatic one</source>
-        <translation>Mức trên cố định của thang tốc độ thay cho tự động</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Tùy chỉnh</translation>
-    </message>
-    <message>
-        <source>Auto-scale</source>
-        <translation>Tỉ lệ tự động</translation>
-    </message>
-    <message>
-        <source>Tick label size:</source>
-        <translation>Kích thước nhãn đánh dấu:</translation>
-    </message>
-    <message>
-        <source>Show speed</source>
-        <translation>Hiển thị tốc độ</translation>
+        <source>Are you sure to remove selected graph?</source>
+        <translation>Bạn có chắc muốn gỡ bỏ biểu đồ đã chọn?</translation>
     </message>
 </context>
 <context>
@@ -2405,10 +2549,6 @@ Hoặc chuyển một cửa sổ vào đây bằng mục &quot;Gắn vào Fort c
         <translation>Hủy</translation>
     </message>
     <message>
-        <source>Traffic Graph</source>
-        <translation>Biểu đồ lưu lượng</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>Mặc định</translation>
     </message>
@@ -2788,6 +2928,18 @@ Hoặc chuyển một cửa sổ vào đây bằng mục &quot;Gắn vào Fort c
         <translation>Lịch trình</translation>
     </message>
     <message>
+        <source>Allow and Save</source>
+        <translation>Cho phép và lưu</translation>
+    </message>
+    <message>
+        <source>Block and Save</source>
+        <translation>Chặn và lưu</translation>
+    </message>
+    <message>
+        <source>Remove Later</source>
+        <translation>Gỡ bỏ sau</translation>
+    </message>
+    <message>
         <source># Examples:</source>
         <translation># Ví dụ:</translation>
     </message>
@@ -2898,6 +3050,14 @@ Hoặc chuyển một cửa sổ vào đây bằng mục &quot;Gắn vào Fort c
     <message>
         <source>Icons (*.ico; *.png; *.exe)</source>
         <translation>Biểu tượng (*.ico; *.png; *.exe)</translation>
+    </message>
+    <message>
+        <source>Allow Temporarily</source>
+        <translation>Cho phép tạm thời</translation>
+    </message>
+    <message>
+        <source>Block Temporarily</source>
+        <translation>Chặn tạm thời</translation>
     </message>
 </context>
 <context>
@@ -3703,6 +3863,10 @@ Lưu các thay đổi?</translation>
         <translation>Tên hiển thị</translation>
     </message>
     <message>
+        <source>Command Line</source>
+        <translation>Dòng lệnh</translation>
+    </message>
+    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>Các thay đổi đã bị hệ thống đặt lại. Hãy làm cho dịch vụ có thể theo dõi lại được.</translation>
     </message>
@@ -4403,6 +4567,10 @@ Mất gói tin: %2</translation>
     <message>
         <source>Statistics</source>
         <translation>Thống kê</translation>
+    </message>
+    <message>
+        <source>Graphs</source>
+        <translation>Các biểu đồ</translation>
     </message>
     <message>
         <source>New program(s) request network access</source>

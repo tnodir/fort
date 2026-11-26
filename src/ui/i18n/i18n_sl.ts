@@ -163,6 +163,10 @@
         <source>Program Connections</source>
         <translation>Povezave programa</translation>
     </message>
+    <message>
+        <source>Are you sure to remove all connections of the program?</source>
+        <translation>Ali ste prepričani, da želite odstraniti vse povezave programa?</translation>
+    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -207,6 +211,10 @@
     <message>
         <source>Name</source>
         <translation>Ime</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation>Filtri</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -685,10 +693,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Samodejni pomik</translation>
     </message>
     <message>
-        <source>Show host names</source>
-        <translation>Prikaži imena gostiteljev</translation>
-    </message>
-    <message>
         <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
         <translation>Zbirajo se samo povezave opozorjenih programov ali označene z dejanjem Opozorilo</translation>
     </message>
@@ -774,6 +778,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Razreši imena gostiteljev prek nadrejenih strežnikov DNS in pred odgovorom dodaj naslove Področij gostiteljev, ki jih uporabljajo Naslovi IP, Programi in Pravila, ter filtrov host(); imena Področij blokiranja niso najdena (samo s Storitvijo). Programi, ki imena sami razrešujejo prek DNS over HTTPS, npr. brskalniki z varnim DNS, obidejo Posredovalnik DNS</translation>
     </message>
     <message>
+        <source>Ask each server for &quot;example.com&quot; and check that the system&apos;s DNS queries are sent to the DNS Forwarder (only with the Service)</source>
+        <translation>Vprašajte vsak strežnik za »example.com« in preverite, da se sistemske poizvedbe DNS pošiljajo Posredovalniku DNS (samo s Storitvijo)</translation>
+    </message>
+    <message>
         <source>Block Zones:</source>
         <translation>Področja blokiranja:</translation>
     </message>
@@ -814,12 +822,20 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Preizkusi</translation>
     </message>
     <message>
-        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
-        <translation>Vprašaj vsak strežnik za &quot;example.com&quot; (samo s Storitvijo)</translation>
-    </message>
-    <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>En strežnik na vrstico: naslovi, npr. &quot;1.1.1.1&quot;, ali URL-ji DNS over HTTPS z naslovom strežnika, npr. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</translation>
+    </message>
+    <message>
+        <source>System&apos;s DNS queries</source>
+        <translation>Sistemske poizvedbe DNS</translation>
+    </message>
+    <message>
+        <source>Sent to the DNS Forwarder</source>
+        <translation>Poslane Posredovalniku DNS</translation>
+    </message>
+    <message>
+        <source>Not sent to the DNS Forwarder</source>
+        <translation>Niso poslane Posredovalniku DNS</translation>
     </message>
     <message>
         <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
@@ -1384,7 +1400,73 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
 </context>
 <context>
-    <name>GraphPage</name>
+    <name>GraphEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Ime:</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>Privzeto</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Vredu</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Uporabi</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Prekliči</translation>
+    </message>
+    <message>
+        <source>Edit Graph</source>
+        <translation>Uredi graf</translation>
+    </message>
+</context>
+<context>
+    <name>GraphListModel</name>
+    <message>
+        <source>Graph</source>
+        <translation>Graf</translation>
+    </message>
+    <message>
+        <source>Graph type</source>
+        <translation>Vrsta grafa</translation>
+    </message>
+</context>
+<context>
+    <name>GraphOptionsArea</name>
+    <message>
+        <source>Window</source>
+        <translation>Okno</translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
+        <translation>Geometrija okna</translation>
+    </message>
+    <message>
+        <source>Taskbar</source>
+        <translation>Programska vrstica</translation>
+    </message>
+    <message>
+        <source>Graph</source>
+        <translation>Graf</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation>Hitrost</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation>Barve (Svetla | Temna)</translation>
+    </message>
+    <message>
+        <source>Hide on close</source>
+        <translation>Skrij ob zapiranju</translation>
+    </message>
     <message>
         <source>Always on top</source>
         <translation>Vedno na zaslonu</translation>
@@ -1402,16 +1484,48 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Skrij ob prehodu</translation>
     </message>
     <message>
-        <source>Hide Y axis scale labels</source>
-        <translation>Skrij oznake merila osi Y</translation>
+        <source>Opacity:</source>
+        <translation>Motnost:</translation>
     </message>
     <message>
-        <source>Animation</source>
-        <translation>Animacija</translation>
+        <source>Hover opacity:</source>
+        <translation>Motnost prehoda:</translation>
     </message>
     <message>
-        <source>Axis ticks</source>
-        <translation>Oznake osi</translation>
+        <source>Border width:</source>
+        <translation>Širina obrobe:</translation>
+    </message>
+    <message>
+        <source>Maximized</source>
+        <translation>Maksimirano</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation>Širina:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>Višina:</translation>
+    </message>
+    <message>
+        <source>Show in taskbar</source>
+        <translation>Prikaži v programski vrstici</translation>
+    </message>
+    <message>
+        <source>Show graph</source>
+        <translation>Prikaži graf</translation>
+    </message>
+    <message>
+        <source>Graph type:</source>
+        <translation>Vrsta grafa:</translation>
     </message>
     <message>
         <source>Show:</source>
@@ -1430,20 +1544,76 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Nalaganje</translation>
     </message>
     <message>
-        <source>Opacity:</source>
-        <translation>Motnost:</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>Motnost prehoda:</translation>
-    </message>
-    <message>
         <source>Bar width:</source>
         <translation>Širina stolpca:</translation>
     </message>
     <message>
-        <source>Graph type:</source>
-        <translation>Vrsta grafa:</translation>
+        <source>History length:</source>
+        <translation>Dolžina zgodovine:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>Koliko sekund prometa prikazuje graf</translation>
+    </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation>Fiksna hitrost:</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>Stalna zgornja meja lestvice hitrosti namesto samodejne</translation>
+    </message>
+    <message>
+        <source>Animation</source>
+        <translation>Animacija</translation>
+    </message>
+    <message>
+        <source>Axis lines:</source>
+        <translation>Črte osi:</translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation>Oznake osi</translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation>Črte mreže</translation>
+    </message>
+    <message>
+        <source>Y axis scale labels</source>
+        <translation>Oznake merila osi Y</translation>
+    </message>
+    <message>
+        <source>Tick label font:</source>
+        <translation>Pisava oznake kljukice:</translation>
+    </message>
+    <message>
+        <source>Show speed</source>
+        <translation>Prikaži hitrost</translation>
+    </message>
+    <message>
+        <source>Speed label font:</source>
+        <translation>Pisava oznake hitrosti:</translation>
+    </message>
+    <message>
+        <source>Position:</source>
+        <translation>Položaj:</translation>
+    </message>
+    <message>
+        <source>Inside the graph</source>
+        <translation>Znotraj grafa</translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation>Enote:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Po meri</translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
+        <translation>Samodejno merilo</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -1474,32 +1644,19 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Oznaka kljukice:</translation>
     </message>
     <message>
-        <source>Label:</source>
-        <translation>Oznaka:</translation>
+        <source>Speed label:</source>
+        <translation>Oznaka hitrosti:</translation>
     </message>
     <message>
         <source>Grid:</source>
         <translation>Mreža:</translation>
     </message>
+</context>
+<context>
+    <name>GraphTypes</name>
     <message>
-        <source>Maximized</source>
-        <translation>Maksimirano</translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation>X:</translation>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation>Y:</translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation>Širina:</translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation>Višina:</translation>
+        <source>Traffic Graph</source>
+        <translation>Graf prometa</translation>
     </message>
     <message>
         <source>Column</source>
@@ -1510,56 +1667,43 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Črta</translation>
     </message>
     <message>
-        <source>Window</source>
-        <translation>Okno</translation>
+        <source>Top</source>
+        <translation>Zgoraj</translation>
     </message>
     <message>
-        <source>Hide on close</source>
-        <translation>Skrij ob zapiranju</translation>
+        <source>Bottom</source>
+        <translation>Spodaj</translation>
     </message>
     <message>
-        <source>Units:</source>
-        <translation>Enote:</translation>
+        <source>Left</source>
+        <translation>Levo</translation>
     </message>
     <message>
-        <source>Colors (Light | Dark)</source>
-        <translation>Barve (Svetla | Temna)</translation>
+        <source>Right</source>
+        <translation>Desno</translation>
+    </message>
+</context>
+<context>
+    <name>GraphsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Uredi</translation>
     </message>
     <message>
-        <source>Window Geometry</source>
-        <translation>Geometrija okna</translation>
+        <source>Add</source>
+        <translation>Dodaj</translation>
     </message>
     <message>
-        <source>History length:</source>
-        <translation>Dolžina zgodovine:</translation>
+        <source>Remove</source>
+        <translation>Odstrani</translation>
     </message>
     <message>
-        <source>How many seconds of the traffic the graph shows</source>
-        <translation>Koliko sekund prometa prikazuje graf</translation>
+        <source>Graphs</source>
+        <translation>Grafi</translation>
     </message>
     <message>
-        <source>Fixed speed:</source>
-        <translation>Fiksna hitrost:</translation>
-    </message>
-    <message>
-        <source>The constant top of the speed scale instead of the automatic one</source>
-        <translation>Stalna zgornja meja lestvice hitrosti namesto samodejne</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Po meri</translation>
-    </message>
-    <message>
-        <source>Auto-scale</source>
-        <translation>Samodejno merilo</translation>
-    </message>
-    <message>
-        <source>Tick label size:</source>
-        <translation>Velikost etikete:</translation>
-    </message>
-    <message>
-        <source>Show speed</source>
-        <translation>Prikaži hitrost</translation>
+        <source>Are you sure to remove selected graph?</source>
+        <translation>Ali ste prepričani, da želite odstraniti izbrani graf?</translation>
     </message>
 </context>
 <context>
@@ -2405,10 +2549,6 @@ Ali premaknite okno sem z elementom &quot;Zasidraj v Mojo trdnjavo&quot; njegove
         <translation>Prekliči</translation>
     </message>
     <message>
-        <source>Traffic Graph</source>
-        <translation>Graf prometa</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>Privzeto</translation>
     </message>
@@ -2788,6 +2928,18 @@ Ali premaknite okno sem z elementom &quot;Zasidraj v Mojo trdnjavo&quot; njegove
         <translation>Načrtuj</translation>
     </message>
     <message>
+        <source>Allow and Save</source>
+        <translation>Dovoli in shrani</translation>
+    </message>
+    <message>
+        <source>Block and Save</source>
+        <translation>Blokiraj in shrani</translation>
+    </message>
+    <message>
+        <source>Remove Later</source>
+        <translation>Odstrani pozneje</translation>
+    </message>
+    <message>
         <source># Examples:</source>
         <translation>#Primeri:</translation>
     </message>
@@ -2898,6 +3050,14 @@ Ali premaknite okno sem z elementom &quot;Zasidraj v Mojo trdnjavo&quot; njegove
     <message>
         <source>Icons (*.ico; *.png; *.exe)</source>
         <translation>Ikone (*.ico; *.png; *.exe)</translation>
+    </message>
+    <message>
+        <source>Allow Temporarily</source>
+        <translation>Začasno dovoli</translation>
+    </message>
+    <message>
+        <source>Block Temporarily</source>
+        <translation>Začasno blokiraj</translation>
     </message>
 </context>
 <context>
@@ -3703,6 +3863,10 @@ Shraniti spremembe?</translation>
         <translation>Prikazno ime</translation>
     </message>
     <message>
+        <source>Command Line</source>
+        <translation>Ukazna vrstica</translation>
+    </message>
+    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>Spremembe je ponastavil sistem. Storitev znova nastavite kot sledljivo.</translation>
     </message>
@@ -4403,6 +4567,10 @@ Izguba paketov: %2</translation>
     <message>
         <source>Statistics</source>
         <translation>Statistika</translation>
+    </message>
+    <message>
+        <source>Graphs</source>
+        <translation>Grafi</translation>
     </message>
     <message>
         <source>New program(s) request network access</source>

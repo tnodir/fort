@@ -163,6 +163,10 @@
         <source>Program Connections</source>
         <translation>プログラムの接続</translation>
     </message>
+    <message>
+        <source>Are you sure to remove all connections of the program?</source>
+        <translation>プログラムのすべての接続を削除してもよろしいですか？</translation>
+    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -207,6 +211,10 @@
     <message>
         <source>Name</source>
         <translation>名前</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation>フィルター</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -685,10 +693,6 @@ Make sure that you have a fresh backup.</source>
         <translation>自動スクロール</translation>
     </message>
     <message>
-        <source>Show host names</source>
-        <translation>ホスト名を表示</translation>
-    </message>
-    <message>
         <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
         <translation>警告されたプログラム、または警告アクションでマークされた接続のみを収集しています</translation>
     </message>
@@ -774,6 +778,10 @@ Make sure that you have a fresh backup.</source>
         <translation>上位 DNS サーバーでホスト名を解決し、応答する前に IPアドレス、プログラム、ルールで使用されているホストゾーンと host() フィルターのアドレスを追加します。ブロックゾーンの名前は見つかりません (サービスがある場合のみ)。DNS over HTTPS で自ら名前を解決するプログラム (セキュア DNS を使用するブラウザーなど) は DNS フォワーダーを迂回します</translation>
     </message>
     <message>
+        <source>Ask each server for &quot;example.com&quot; and check that the system&apos;s DNS queries are sent to the DNS Forwarder (only with the Service)</source>
+        <translation>各サーバーに「example.com」を問い合わせ、システムの DNS クエリが DNS フォワーダーに送られていることを確認します (サービス使用時のみ)</translation>
+    </message>
+    <message>
         <source>Block Zones:</source>
         <translation>ブロックゾーン:</translation>
     </message>
@@ -814,12 +822,20 @@ Make sure that you have a fresh backup.</source>
         <translation>テスト</translation>
     </message>
     <message>
-        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
-        <translation>各サーバーに「example.com」を問い合わせ (サービスがある場合のみ)</translation>
-    </message>
-    <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>1 行に 1 サーバー: アドレス (例:「1.1.1.1」) またはサーバーのアドレス付きの DNS over HTTPS の URL (例:「https://dns.example/dns-query?ip=192.0.2.1」)</translation>
+    </message>
+    <message>
+        <source>System&apos;s DNS queries</source>
+        <translation>システムの DNS クエリ</translation>
+    </message>
+    <message>
+        <source>Sent to the DNS Forwarder</source>
+        <translation>DNS フォワーダーに送信</translation>
+    </message>
+    <message>
+        <source>Not sent to the DNS Forwarder</source>
+        <translation>DNS フォワーダーに未送信</translation>
     </message>
     <message>
         <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
@@ -1384,7 +1400,73 @@ Make sure that you have a fresh backup.</source>
     </message>
 </context>
 <context>
-    <name>GraphPage</name>
+    <name>GraphEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>名前 :</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>デフォルト</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>適用</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>キャンセル</translation>
+    </message>
+    <message>
+        <source>Edit Graph</source>
+        <translation>グラフの編集</translation>
+    </message>
+</context>
+<context>
+    <name>GraphListModel</name>
+    <message>
+        <source>Graph</source>
+        <translation>グラフ</translation>
+    </message>
+    <message>
+        <source>Graph type</source>
+        <translation>グラフの種類</translation>
+    </message>
+</context>
+<context>
+    <name>GraphOptionsArea</name>
+    <message>
+        <source>Window</source>
+        <translation>ウィンドウ</translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
+        <translation>ウィンドウの形状</translation>
+    </message>
+    <message>
+        <source>Taskbar</source>
+        <translation>タスクバー</translation>
+    </message>
+    <message>
+        <source>Graph</source>
+        <translation>グラフ</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation>速度</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation>色 (明 | 暗)</translation>
+    </message>
+    <message>
+        <source>Hide on close</source>
+        <translation>閉じるで非表示</translation>
+    </message>
     <message>
         <source>Always on top</source>
         <translation>常に手前に表示</translation>
@@ -1402,16 +1484,48 @@ Make sure that you have a fresh backup.</source>
         <translation>ホバー時に非表示</translation>
     </message>
     <message>
-        <source>Hide Y axis scale labels</source>
-        <translation>Y軸の目盛りラベルを非表示</translation>
+        <source>Opacity:</source>
+        <translation>不透明度 :</translation>
     </message>
     <message>
-        <source>Animation</source>
-        <translation>アニメーション</translation>
+        <source>Hover opacity:</source>
+        <translation>ホバー時の不透明度 :</translation>
     </message>
     <message>
-        <source>Axis ticks</source>
-        <translation>軸目盛り</translation>
+        <source>Border width:</source>
+        <translation>枠線の幅 :</translation>
+    </message>
+    <message>
+        <source>Maximized</source>
+        <translation>最大化</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X :</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y :</translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation>幅 :</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>高さ :</translation>
+    </message>
+    <message>
+        <source>Show in taskbar</source>
+        <translation>タスクバーに表示</translation>
+    </message>
+    <message>
+        <source>Show graph</source>
+        <translation>グラフを表示</translation>
+    </message>
+    <message>
+        <source>Graph type:</source>
+        <translation>グラフの種類 :</translation>
     </message>
     <message>
         <source>Show:</source>
@@ -1430,20 +1544,76 @@ Make sure that you have a fresh backup.</source>
         <translation>アップロード</translation>
     </message>
     <message>
-        <source>Opacity:</source>
-        <translation>不透明度 :</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>ホバー時の不透明度 :</translation>
-    </message>
-    <message>
         <source>Bar width:</source>
         <translation>バー幅 :</translation>
     </message>
     <message>
-        <source>Graph type:</source>
-        <translation>グラフの種類 :</translation>
+        <source>History length:</source>
+        <translation>履歴の長さ :</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>グラフに表示するトラフィックの秒数</translation>
+    </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation>固定速度 :</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>自動の代わりに固定された速度目盛りの上限</translation>
+    </message>
+    <message>
+        <source>Animation</source>
+        <translation>アニメーション</translation>
+    </message>
+    <message>
+        <source>Axis lines:</source>
+        <translation>軸線 :</translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation>軸目盛り</translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation>グリッド線</translation>
+    </message>
+    <message>
+        <source>Y axis scale labels</source>
+        <translation>Y 軸の目盛りラベル</translation>
+    </message>
+    <message>
+        <source>Tick label font:</source>
+        <translation>ティックラベルのフォント :</translation>
+    </message>
+    <message>
+        <source>Show speed</source>
+        <translation>速度を表示</translation>
+    </message>
+    <message>
+        <source>Speed label font:</source>
+        <translation>速度ラベルのフォント :</translation>
+    </message>
+    <message>
+        <source>Position:</source>
+        <translation>位置 :</translation>
+    </message>
+    <message>
+        <source>Inside the graph</source>
+        <translation>グラフの内側</translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation>単位 :</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>カスタム</translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
+        <translation>自動スケール</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -1474,32 +1644,19 @@ Make sure that you have a fresh backup.</source>
         <translation>ティックラベル :</translation>
     </message>
     <message>
-        <source>Label:</source>
-        <translation>ラベル :</translation>
+        <source>Speed label:</source>
+        <translation>速度ラベル :</translation>
     </message>
     <message>
         <source>Grid:</source>
         <translation>グリッド :</translation>
     </message>
+</context>
+<context>
+    <name>GraphTypes</name>
     <message>
-        <source>Maximized</source>
-        <translation>最大化</translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation>X :</translation>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation>Y :</translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation>幅 :</translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation>高さ :</translation>
+        <source>Traffic Graph</source>
+        <translation>トラフィック グラフ</translation>
     </message>
     <message>
         <source>Column</source>
@@ -1510,56 +1667,43 @@ Make sure that you have a fresh backup.</source>
         <translation>折れ線</translation>
     </message>
     <message>
-        <source>Window</source>
-        <translation>ウィンドウ</translation>
+        <source>Top</source>
+        <translation>上</translation>
     </message>
     <message>
-        <source>Hide on close</source>
-        <translation>閉じるで非表示</translation>
+        <source>Bottom</source>
+        <translation>下</translation>
     </message>
     <message>
-        <source>Units:</source>
-        <translation>単位 :</translation>
+        <source>Left</source>
+        <translation>左</translation>
     </message>
     <message>
-        <source>Colors (Light | Dark)</source>
-        <translation>色 (明 | 暗)</translation>
+        <source>Right</source>
+        <translation>右</translation>
+    </message>
+</context>
+<context>
+    <name>GraphsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>編集</translation>
     </message>
     <message>
-        <source>Window Geometry</source>
-        <translation>ウィンドウの形状</translation>
+        <source>Add</source>
+        <translation>追加</translation>
     </message>
     <message>
-        <source>History length:</source>
-        <translation>履歴の長さ :</translation>
+        <source>Remove</source>
+        <translation>削除</translation>
     </message>
     <message>
-        <source>How many seconds of the traffic the graph shows</source>
-        <translation>グラフに表示するトラフィックの秒数</translation>
+        <source>Graphs</source>
+        <translation>グラフ一覧</translation>
     </message>
     <message>
-        <source>Fixed speed:</source>
-        <translation>固定速度 :</translation>
-    </message>
-    <message>
-        <source>The constant top of the speed scale instead of the automatic one</source>
-        <translation>自動の代わりに固定された速度目盛りの上限</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>カスタム</translation>
-    </message>
-    <message>
-        <source>Auto-scale</source>
-        <translation>自動スケール</translation>
-    </message>
-    <message>
-        <source>Tick label size:</source>
-        <translation>ティックラベルサイズ :</translation>
-    </message>
-    <message>
-        <source>Show speed</source>
-        <translation>速度を表示</translation>
+        <source>Are you sure to remove selected graph?</source>
+        <translation>選択したグラフを削除してもよろしいですか？</translation>
     </message>
 </context>
 <context>
@@ -2405,10 +2549,6 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
         <translation>キャンセル</translation>
     </message>
     <message>
-        <source>Traffic Graph</source>
-        <translation>トラフィック グラフ</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>デフォルト</translation>
     </message>
@@ -2788,6 +2928,18 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
         <translation>スケジュール</translation>
     </message>
     <message>
+        <source>Allow and Save</source>
+        <translation>許可して保存</translation>
+    </message>
+    <message>
+        <source>Block and Save</source>
+        <translation>ブロックして保存</translation>
+    </message>
+    <message>
+        <source>Remove Later</source>
+        <translation>後で削除</translation>
+    </message>
+    <message>
         <source># Examples:</source>
         <translation># 例 :</translation>
     </message>
@@ -2898,6 +3050,14 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
     <message>
         <source>Icons (*.ico; *.png; *.exe)</source>
         <translation>アイコン (*.ico; *.png; *.exe)</translation>
+    </message>
+    <message>
+        <source>Allow Temporarily</source>
+        <translation>一時的に許可</translation>
+    </message>
+    <message>
+        <source>Block Temporarily</source>
+        <translation>一時的にブロック</translation>
     </message>
 </context>
 <context>
@@ -3703,6 +3863,10 @@ Save the changes?</source>
         <translation>表示名</translation>
     </message>
     <message>
+        <source>Command Line</source>
+        <translation>コマンドライン</translation>
+    </message>
+    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>変更はシステムによってリセットされました。サービスを再度追跡可能にしてください。</translation>
     </message>
@@ -4403,6 +4567,10 @@ Packet loss: %2</source>
     <message>
         <source>Statistics</source>
         <translation>統計</translation>
+    </message>
+    <message>
+        <source>Graphs</source>
+        <translation>グラフ一覧</translation>
     </message>
     <message>
         <source>New program(s) request network access</source>

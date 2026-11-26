@@ -163,6 +163,10 @@
         <source>Program Connections</source>
         <translation>اتصال‌های برنامه</translation>
     </message>
+    <message>
+        <source>Are you sure to remove all connections of the program?</source>
+        <translation>آیا از حذف همه اتصال‌های برنامه اطمینان دارید؟</translation>
+    </message>
 </context>
 <context>
     <name>AppInfoRow</name>
@@ -207,6 +211,10 @@
     <message>
         <source>Name</source>
         <translation>نام</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation>فیلترها</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -685,10 +693,6 @@ Make sure that you have a fresh backup.</source>
         <translation>پیمایش خودکار</translation>
     </message>
     <message>
-        <source>Show host names</source>
-        <translation>نمایش نام میزبان‌ها</translation>
-    </message>
-    <message>
         <source>Only the connections of alerted programs or marked by the Alert action are collected</source>
         <translation>فقط اتصال‌های برنامه‌های دارای هشدار یا علامت‌گذاری‌شده با عمل هشدار جمع‌آوری می‌شوند</translation>
     </message>
@@ -774,6 +778,10 @@ Make sure that you have a fresh backup.</source>
         <translation>نام میزبان‌ها را از طریق سرورهای DNS بالادستی تفکیک می‌کند و پیش از پاسخ، آدرس‌های مناطق میزبان‌ها که در آدرس‌های IP، برنامه‌ها و قوانین استفاده شده‌اند و آدرس‌های فیلترهای host() را اضافه می‌کند؛ نام‌های مناطق مسدودسازی پیدا نمی‌شوند (فقط با سرویس). برنامه‌هایی که خودشان نام‌ها را با DNS over HTTPS تفکیک می‌کنند، مثلاً مرورگرهایی با DNS امن، بازارسال‌کننده DNS را دور می‌زنند</translation>
     </message>
     <message>
+        <source>Ask each server for &quot;example.com&quot; and check that the system&apos;s DNS queries are sent to the DNS Forwarder (only with the Service)</source>
+        <translation>پرسیدن «example.com» از هر سرور و بررسی ارسال پرس‌وجوهای DNS سیستم به بازارسال‌کننده DNS (فقط با سرویس)</translation>
+    </message>
+    <message>
         <source>Block Zones:</source>
         <translation>مناطق مسدودسازی:</translation>
     </message>
@@ -814,12 +822,20 @@ Make sure that you have a fresh backup.</source>
         <translation>آزمایش</translation>
     </message>
     <message>
-        <source>Ask each server for &quot;example.com&quot; (only with the Service)</source>
-        <translation>پرسیدن «example.com» از هر سرور (فقط با سرویس)</translation>
-    </message>
-    <message>
         <source>A server per line: addresses, e.g. &quot;1.1.1.1&quot;, or DNS over HTTPS URLs with the server&apos;s address, e.g. &quot;https://dns.example/dns-query?ip=192.0.2.1&quot;</source>
         <translation>یک سرور در هر خط: آدرس‌ها، مثلاً «1.1.1.1»، یا URLهای DNS over HTTPS با آدرس سرور، مثلاً «https://dns.example/dns-query?ip=192.0.2.1»</translation>
+    </message>
+    <message>
+        <source>System&apos;s DNS queries</source>
+        <translation>پرس‌وجوهای DNS سیستم</translation>
+    </message>
+    <message>
+        <source>Sent to the DNS Forwarder</source>
+        <translation>ارسال‌شده به بازارسال‌کننده DNS</translation>
+    </message>
+    <message>
+        <source>Not sent to the DNS Forwarder</source>
+        <translation>ارسال‌نشده به بازارسال‌کننده DNS</translation>
     </message>
     <message>
         <source>%1; the names aren&apos;t resolved while the ports 53 and 853 are blocked for other programs</source>
@@ -1384,7 +1400,73 @@ Make sure that you have a fresh backup.</source>
     </message>
 </context>
 <context>
-    <name>GraphPage</name>
+    <name>GraphEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>نام:</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>پیش‌فرض</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>تأیید</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>اعمال</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>انصراف</translation>
+    </message>
+    <message>
+        <source>Edit Graph</source>
+        <translation>ویرایش نمودار</translation>
+    </message>
+</context>
+<context>
+    <name>GraphListModel</name>
+    <message>
+        <source>Graph</source>
+        <translation>نمودار</translation>
+    </message>
+    <message>
+        <source>Graph type</source>
+        <translation>نوع نمودار</translation>
+    </message>
+</context>
+<context>
+    <name>GraphOptionsArea</name>
+    <message>
+        <source>Window</source>
+        <translation>پنجره</translation>
+    </message>
+    <message>
+        <source>Window Geometry</source>
+        <translation>اندازه و موقعیت پنجره</translation>
+    </message>
+    <message>
+        <source>Taskbar</source>
+        <translation>نوار وظیفه</translation>
+    </message>
+    <message>
+        <source>Graph</source>
+        <translation>نمودار</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation>سرعت</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation>رنگ‌ها (روشن | تیره)</translation>
+    </message>
+    <message>
+        <source>Hide on close</source>
+        <translation>پنهان شدن هنگام بستن</translation>
+    </message>
     <message>
         <source>Always on top</source>
         <translation>همیشه در بالا</translation>
@@ -1402,16 +1484,48 @@ Make sure that you have a fresh backup.</source>
         <translation>پنهان شدن هنگام عبور ماوس</translation>
     </message>
     <message>
-        <source>Hide Y axis scale labels</source>
-        <translation>پنهان کردن برچسب‌های مقیاس محور Y</translation>
+        <source>Opacity:</source>
+        <translation>شفافیت:</translation>
     </message>
     <message>
-        <source>Animation</source>
-        <translation>پویانمایی</translation>
+        <source>Hover opacity:</source>
+        <translation>شفافیت هنگام عبور ماوس:</translation>
     </message>
     <message>
-        <source>Axis ticks</source>
-        <translation>درجه‌های محور</translation>
+        <source>Border width:</source>
+        <translation>عرض حاشیه:</translation>
+    </message>
+    <message>
+        <source>Maximized</source>
+        <translation>بیشینه‌شده</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation>عرض:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>ارتفاع:</translation>
+    </message>
+    <message>
+        <source>Show in taskbar</source>
+        <translation>نمایش در نوار وظیفه</translation>
+    </message>
+    <message>
+        <source>Show graph</source>
+        <translation>نمایش نمودار</translation>
+    </message>
+    <message>
+        <source>Graph type:</source>
+        <translation>نوع نمودار:</translation>
     </message>
     <message>
         <source>Show:</source>
@@ -1423,27 +1537,83 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Download</source>
-        <translation>دریافت</translation>
+        <translation>دانلود</translation>
     </message>
     <message>
         <source>Upload</source>
         <translation>ارسال</translation>
     </message>
     <message>
-        <source>Opacity:</source>
-        <translation>شفافیت:</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>شفافیت هنگام عبور ماوس:</translation>
-    </message>
-    <message>
         <source>Bar width:</source>
         <translation>عرض ستون:</translation>
     </message>
     <message>
-        <source>Graph type:</source>
-        <translation>نوع نمودار:</translation>
+        <source>History length:</source>
+        <translation>طول تاریخچه:</translation>
+    </message>
+    <message>
+        <source>How many seconds of the traffic the graph shows</source>
+        <translation>تعداد ثانیه‌های ترافیک که نمودار نشان می‌دهد</translation>
+    </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation>سرعت ثابت:</translation>
+    </message>
+    <message>
+        <source>The constant top of the speed scale instead of the automatic one</source>
+        <translation>سقف ثابت مقیاس سرعت به‌جای حالت خودکار</translation>
+    </message>
+    <message>
+        <source>Animation</source>
+        <translation>پویانمایی</translation>
+    </message>
+    <message>
+        <source>Axis lines:</source>
+        <translation>خطوط محورها:</translation>
+    </message>
+    <message>
+        <source>Axis ticks</source>
+        <translation>درجه‌های محور</translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation>خطوط شبکه</translation>
+    </message>
+    <message>
+        <source>Y axis scale labels</source>
+        <translation>برچسب‌های مقیاس محور Y</translation>
+    </message>
+    <message>
+        <source>Tick label font:</source>
+        <translation>قلم برچسب درجه:</translation>
+    </message>
+    <message>
+        <source>Show speed</source>
+        <translation>نمایش سرعت</translation>
+    </message>
+    <message>
+        <source>Speed label font:</source>
+        <translation>قلم برچسب سرعت:</translation>
+    </message>
+    <message>
+        <source>Position:</source>
+        <translation>موقعیت:</translation>
+    </message>
+    <message>
+        <source>Inside the graph</source>
+        <translation>داخل نمودار</translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation>واحدها:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>سفارشی</translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
+        <translation>مقیاس خودکار</translation>
     </message>
     <message>
         <source>Background:</source>
@@ -1474,32 +1644,19 @@ Make sure that you have a fresh backup.</source>
         <translation>برچسب درجه:</translation>
     </message>
     <message>
-        <source>Label:</source>
-        <translation>برچسب:</translation>
+        <source>Speed label:</source>
+        <translation>برچسب سرعت:</translation>
     </message>
     <message>
         <source>Grid:</source>
         <translation>شبکه‌بندی:</translation>
     </message>
+</context>
+<context>
+    <name>GraphTypes</name>
     <message>
-        <source>Maximized</source>
-        <translation>بیشینه‌شده</translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation>X:</translation>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation>Y:</translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation>عرض:</translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation>ارتفاع:</translation>
+        <source>Traffic Graph</source>
+        <translation>نمودار ترافیک</translation>
     </message>
     <message>
         <source>Column</source>
@@ -1510,56 +1667,43 @@ Make sure that you have a fresh backup.</source>
         <translation>خطی</translation>
     </message>
     <message>
-        <source>Window</source>
-        <translation>پنجره</translation>
+        <source>Top</source>
+        <translation>بالا</translation>
     </message>
     <message>
-        <source>Hide on close</source>
-        <translation>پنهان شدن هنگام بستن</translation>
+        <source>Bottom</source>
+        <translation>پایین</translation>
     </message>
     <message>
-        <source>Units:</source>
-        <translation>واحدها:</translation>
+        <source>Left</source>
+        <translation>چپ</translation>
     </message>
     <message>
-        <source>Colors (Light | Dark)</source>
-        <translation>رنگ‌ها (روشن | تیره)</translation>
+        <source>Right</source>
+        <translation>راست</translation>
+    </message>
+</context>
+<context>
+    <name>GraphsWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>ویرایش</translation>
     </message>
     <message>
-        <source>Window Geometry</source>
-        <translation>اندازه و موقعیت پنجره</translation>
+        <source>Add</source>
+        <translation>افزودن</translation>
     </message>
     <message>
-        <source>History length:</source>
-        <translation>طول تاریخچه:</translation>
+        <source>Remove</source>
+        <translation>حذف</translation>
     </message>
     <message>
-        <source>How many seconds of the traffic the graph shows</source>
-        <translation>تعداد ثانیه‌های ترافیک که نمودار نشان می‌دهد</translation>
+        <source>Graphs</source>
+        <translation>نمودارها</translation>
     </message>
     <message>
-        <source>Fixed speed:</source>
-        <translation>سرعت ثابت:</translation>
-    </message>
-    <message>
-        <source>The constant top of the speed scale instead of the automatic one</source>
-        <translation>سقف ثابت مقیاس سرعت به‌جای حالت خودکار</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>سفارشی</translation>
-    </message>
-    <message>
-        <source>Auto-scale</source>
-        <translation>مقیاس خودکار</translation>
-    </message>
-    <message>
-        <source>Tick label size:</source>
-        <translation>اندازه برچسب درجه:</translation>
-    </message>
-    <message>
-        <source>Show speed</source>
-        <translation>نمایش سرعت</translation>
+        <source>Are you sure to remove selected graph?</source>
+        <translation>آیا از حذف نمودار انتخاب‌شده اطمینان دارید؟</translation>
     </message>
 </context>
 <context>
@@ -2405,10 +2549,6 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
         <translation>انصراف</translation>
     </message>
     <message>
-        <source>Traffic Graph</source>
-        <translation>نمودار ترافیک</translation>
-    </message>
-    <message>
         <source>Default</source>
         <translation>پیش‌فرض</translation>
     </message>
@@ -2788,6 +2928,18 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
         <translation>زمان‌بندی</translation>
     </message>
     <message>
+        <source>Allow and Save</source>
+        <translation>اجازه و ذخیره</translation>
+    </message>
+    <message>
+        <source>Block and Save</source>
+        <translation>مسدودسازی و ذخیره</translation>
+    </message>
+    <message>
+        <source>Remove Later</source>
+        <translation>حذف بعدی</translation>
+    </message>
+    <message>
         <source># Examples:</source>
         <translation># مثال‌ها:</translation>
     </message>
@@ -2898,6 +3050,14 @@ Or move a window here by its menu&apos;s &quot;Dock to My Fort&quot; item.</sour
     <message>
         <source>Icons (*.ico; *.png; *.exe)</source>
         <translation>آیکون‌ها (*.ico; *.png; *.exe)</translation>
+    </message>
+    <message>
+        <source>Allow Temporarily</source>
+        <translation>اجازه موقت</translation>
+    </message>
+    <message>
+        <source>Block Temporarily</source>
+        <translation>مسدودسازی موقت</translation>
     </message>
 </context>
 <context>
@@ -3703,6 +3863,10 @@ Save the changes?</source>
         <translation>نام نمایشی</translation>
     </message>
     <message>
+        <source>Command Line</source>
+        <translation>خط فرمان</translation>
+    </message>
+    <message>
         <source>The changes were reset by the system. Make the service trackable again.</source>
         <translation>تغییرات توسط سیستم بازنشانی شدند. سرویس را دوباره قابل ردیابی کنید.</translation>
     </message>
@@ -4403,6 +4567,10 @@ Packet loss: %2</source>
     <message>
         <source>Statistics</source>
         <translation>آمار</translation>
+    </message>
+    <message>
+        <source>Graphs</source>
+        <translation>نمودارها</translation>
     </message>
     <message>
         <source>New program(s) request network access</source>
