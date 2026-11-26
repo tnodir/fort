@@ -8,7 +8,7 @@
 QT_FORWARD_DECLARE_CLASS(QWidget)
 
 // Places the windows into the primary monitor's taskbar, before its notification area: left of
-// it, above it on the vertical one; the nearest to it are of the lowest order
+// it, at the task list's bottom on the vertical one; the nearest to it are of the lowest order
 class TaskbarHost : public QObject
 {
     Q_OBJECT

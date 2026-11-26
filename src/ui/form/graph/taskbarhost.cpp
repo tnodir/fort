@@ -143,14 +143,15 @@ bool isVertical(const QRect &rect)
     return rect.height() > rect.width();
 }
 
-// The notification area's near edge, else the taskbar's far one
-int notifyEdge(const QRect &bar, const QRect &notify, bool vertical)
+// The vertical task list's bottom edge, the notification area's near one, else the taskbar's far
+// one
+int endEdge(const QRect &bar, const QRect &end, bool vertical)
 {
-    if (notify.isEmpty()) {
+    if (end.isEmpty()) {
         return vertical ? bar.bottom() + 1 : bar.right() + 1;
     }
 
-    return vertical ? notify.top() : notify.left();
+    return vertical ? end.bottom() + 1 : end.left();
 }
 
 }
@@ -561,11 +562,13 @@ void TaskbarHost::layoutBeforeNotify(WId parent, WId insertAfter)
     if (rect.isEmpty())
         return;
 
-    // The vertical taskbar's notification area is at its bottom
+    // The vertical taskbar's notification area is at its bottom, after the bands of the task list
+    // and e.g. the language bar
     const bool vertical = isVertical(rect);
 
-    const QRect notifyRect = windowRect(toHwnd(m_bar.notify), toHwnd(parent));
-    const int end = notifyEdge(rect, notifyRect, vertical);
+    const WId endWindow = vertical ? m_bar.taskList : m_bar.notify;
+    const QRect endRect = windowRect(toHwnd(endWindow), toHwnd(parent));
+    const int end = endEdge(rect, endRect, vertical);
 
     placeWindows(rect, end, vertical, insertAfter);
 }
