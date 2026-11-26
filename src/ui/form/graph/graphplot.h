@@ -120,8 +120,11 @@ public:
     bool speedVisible() const;
     void setSpeedVisible(bool v);
 
-    bool speedLeft() const { return m_speedLeft; }
-    void setSpeedLeft(bool v);
+    GraphSpeedPosition speedPosition() const { return m_speedPosition; }
+    void setSpeedPosition(GraphSpeedPosition v);
+
+    bool speedInside() const { return m_speedInside; }
+    void setSpeedInside(bool v);
 
     void setSpeedText(const QString &inText, const QString &outText);
 
@@ -215,8 +218,11 @@ private:
     void appendLinePoints(GraphLinePoints &points, const GraphColumn &column) const;
     void updateScroll();
     void updateSpeedBox();
-    int speedColumnWidth() const;
-    QPointF speedBoxPos(qreal width, qreal height) const;
+    bool isSpeedRows() const;
+    bool isSpeedOutside() const;
+    bool isSpeedBelow() const;
+    QMargins speedMargins() const;
+    QPointF speedBoxPos(const QSizeF &size) const;
     void updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs);
     void updateTickLabels(const QVector<int> &tickYs);
     void updateUnitLabel();
@@ -225,6 +231,7 @@ private:
     int valueToPixel(double value) const;
     QVector<int> valuesToPixels(const QVector<double> &values) const;
     int barsBottom() const;
+    qreal xAxisY() const;
     int barHeight(quint64 bits) const;
     QVector<GraphColumn> visibleColumns(qint64 keyLower) const;
     GraphColumn columnAt(qreal x, qreal width, const GraphPoint &point) const;
@@ -246,9 +253,10 @@ private:
     bool m_totalVisible : 1 = false;
     bool m_inVisible : 1 = true;
     bool m_outVisible : 1 = true;
-    bool m_speedLeft : 1 = false;
+    bool m_speedInside : 1 = true;
 
     GraphType m_graphType = GraphTypeColumn;
+    GraphSpeedPosition m_speedPosition = GraphSpeedTop;
 
     int m_maxSeconds = 500;
     int m_barWidth = 5; // pixels per second
@@ -281,6 +289,7 @@ private:
 
     QPoint m_mousePressPos;
     QRect m_axisRect;
+    QMargins m_speedMargins; // of the axis rectangle: as laid out
 
     GraphColumn m_risingColumn;
     GraphBarsRects m_risingNeighbors;

@@ -48,6 +48,7 @@ private:
     void retranslateFixedSpeedCombo();
     void retranslateGraphColors();
     void retranslateGraphTypeCombo();
+    void retranslateSpeedPositionCombo();
 
     void setupUi();
     QLayout *setupColumns();
@@ -73,6 +74,8 @@ private:
     void setupGraphFixedSpeed();
     void setupGraphViewOptions();
     void setupSpeedBox();
+    QLayout *setupSpeedPositionLayout();
+    void changeSpeedPosition(int index);
     QLayout *setupTrafUnitsLayout();
     void changeTrafUnit(int index);
     void setupColorsBox();
@@ -124,6 +127,9 @@ private:
 
     QCheckBox *m_cbGraphShowSpeed = nullptr;
     LabelSpin *m_graphSpeedTextSize = nullptr;
+    QLabel *m_labelSpeedPosition = nullptr;
+    QComboBox *m_comboSpeedPosition = nullptr;
+    QCheckBox *m_cbGraphSpeedInside = nullptr;
     QLabel *m_labelTrafUnits = nullptr;
     QComboBox *m_comboTrafUnit = nullptr;
 

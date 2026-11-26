@@ -38,6 +38,7 @@ private:
     void updateColors(const IniGraph &ini);
     void updateFonts(const IniGraph &ini);
     void updateFormat(const IniGraph &ini);
+    void updateSpeedLayout(const IniGraph &ini);
 
     void setupTimer();
     void startUpdateTimer();

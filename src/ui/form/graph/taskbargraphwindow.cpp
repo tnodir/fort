@@ -37,9 +37,6 @@ bool TaskbarGraphWindow::isHostChanged() const
 
 void TaskbarGraphWindow::setupUi()
 {
-    // The speed is left of the graph: the taskbar's height is small
-    plot()->setSpeedLeft(true);
-
     // The width
     connect(view(), &GraphView::optionsUpdated, this, &TaskbarGraphWindow::updatePlacement);
 

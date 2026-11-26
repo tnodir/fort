@@ -116,6 +116,14 @@ public:
     int speedTextSize() const { return valueInt("speedTextSize", speedTextSizeDefault()); }
     void setSpeedTextSize(int v) { setValue("speedTextSize", v); }
 
+    static constexpr int speedPositionDefault() { return 0; }
+    int speedPosition() const { return valueInt("speedPosition", speedPositionDefault()); }
+    void setSpeedPosition(int v) { setValue("speedPosition", v); }
+
+    static constexpr bool speedInsideDefault() { return true; }
+    bool speedInside() const { return valueBool("speedInside", speedInsideDefault()); }
+    void setSpeedInside(bool on) { setValue("speedInside", on); }
+
     static constexpr bool showGraphDefault() { return true; }
     bool showGraph() const { return valueBool("showGraph", showGraphDefault()); }
     void setShowGraph(bool on) { setValue("showGraph", on); }

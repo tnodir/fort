@@ -71,6 +71,8 @@ void GraphOptionsArea::resetToDefault()
 
     m_cbGraphShowSpeed->setChecked(IniGraph::showSpeedDefault());
     m_graphSpeedTextSize->spinBox()->setValue(IniGraph::speedTextSizeDefault());
+    changeSpeedPosition(IniGraph::speedPositionDefault());
+    m_cbGraphSpeedInside->setChecked(IniGraph::speedInsideDefault());
     changeTrafUnit(IniGraph::trafUnitDefault());
 
     for (int i = 0; i < GraphColorCount; ++i) {
@@ -129,6 +131,9 @@ void GraphOptionsArea::retranslateUi()
 
     m_cbGraphShowSpeed->setText(tr("Show speed"));
     m_graphSpeedTextSize->label()->setText(tr("Speed text size:"));
+    m_labelSpeedPosition->setText(tr("Position:"));
+    retranslateSpeedPositionCombo();
+    m_cbGraphSpeedInside->setText(tr("Inside the graph"));
     m_labelTrafUnits->setText(tr("Units:"));
 
     retranslateGraphColors();
@@ -159,6 +164,12 @@ void GraphOptionsArea::retranslateGraphTypeCombo()
 {
     ControlUtil::setComboBoxTexts(
             m_comboGraphType, GraphTypes::graphTypeNames(), iniGraph().graphType());
+}
+
+void GraphOptionsArea::retranslateSpeedPositionCombo()
+{
+    ControlUtil::setComboBoxTexts(
+            m_comboSpeedPosition, GraphTypes::speedPositionNames(), iniGraph().speedPosition());
 }
 
 template<typename T>
@@ -490,14 +501,46 @@ void GraphOptionsArea::setupSpeedBox()
             iniGraphSetter(&IniGraph::speedTextSize, &IniGraph::setSpeedTextSize));
     m_graphSpeedTextSize->setObjectName("graphSpeedTextSize");
 
+    // Position
+    auto speedPositionLayout = setupSpeedPositionLayout();
+
+    m_cbGraphSpeedInside =
+            createIniGraphCheckBox(&IniGraph::speedInside, &IniGraph::setSpeedInside);
+    m_cbGraphSpeedInside->setObjectName("cbGraphSpeedInside");
+
     // Traffic Units
     auto trafUnitsLayout = setupTrafUnitsLayout();
 
     auto layout = ControlUtil::createVLayoutByWidgets({ m_cbGraphShowSpeed, m_graphSpeedTextSize });
+    layout->addLayout(speedPositionLayout);
+    layout->addWidget(m_cbGraphSpeedInside);
     layout->addLayout(trafUnitsLayout);
 
     m_gbSpeed = new QGroupBox();
     m_gbSpeed->setLayout(layout);
+}
+
+QLayout *GraphOptionsArea::setupSpeedPositionLayout()
+{
+    m_labelSpeedPosition = ControlUtil::createLabel();
+
+    m_comboSpeedPosition =
+            ControlUtil::createComboBox({}, [&](int index) { changeSpeedPosition(index); });
+    m_comboSpeedPosition->setObjectName("comboSpeedPosition");
+    m_comboSpeedPosition->setFixedWidth(110);
+
+    return ControlUtil::createRowLayout(m_labelSpeedPosition, m_comboSpeedPosition);
+}
+
+void GraphOptionsArea::changeSpeedPosition(int index)
+{
+    if (iniGraph().speedPosition() == index)
+        return;
+
+    iniGraph().setSpeedPosition(index);
+    emit edited();
+
+    m_comboSpeedPosition->setCurrentIndex(index);
 }
 
 QLayout *GraphOptionsArea::setupTrafUnitsLayout()

@@ -27,13 +27,13 @@ inline constexpr qreal lineCenterOffset = 1.5; // device pixels: a line of 2 is 
 inline constexpr int gridLineWidth = 2;
 inline constexpr int mouseMoveDistance = 3;
 
-void addHLine(QPainterPath &path, int x1, int x2, int y)
+void addHLine(QPainterPath &path, int x1, int x2, qreal y)
 {
     path.moveTo(x1, y);
     path.lineTo(x2, y);
 }
 
-void addVLine(QPainterPath &path, int x, int y1, int y2)
+void addVLine(QPainterPath &path, int x, qreal y1, qreal y2)
 {
     path.moveTo(x, y1);
     path.lineTo(x, y2);
@@ -69,6 +69,25 @@ void addTicks(QPainterPath &path, const QVector<int> &ys, const QRect &axisRect,
     for (const int y : ys) {
         addHLine(path, left - length, left, y);
         addHLine(path, right, right + length, y);
+    }
+}
+
+// At the area's side, centered on the center along the side
+QPointF speedSidePos(
+        GraphSpeedPosition position, const QRectF &area, const QPointF &center, const QSizeF &size)
+{
+    const qreal x = center.x() - size.width() / 2;
+    const qreal y = center.y() - size.height() / 2;
+
+    switch (position) {
+    case GraphSpeedBottom:
+        return { x, area.bottom() - size.height() };
+    case GraphSpeedLeft:
+        return { area.left(), y };
+    case GraphSpeedRight:
+        return { area.right() - size.width(), y };
+    default: // GraphSpeedTop
+        return { x, area.top() };
     }
 }
 
@@ -244,15 +263,25 @@ void GraphPlot::setSpeedVisible(bool v)
     m_axesChanged = true; // the speed column is changed
 }
 
-void GraphPlot::setSpeedLeft(bool v)
+void GraphPlot::setSpeedPosition(GraphSpeedPosition v)
 {
-    if (m_speedLeft == v)
+    if (m_speedPosition == v)
         return;
 
-    m_speedLeft = v;
+    m_speedPosition = v;
 
-    // The column is out of the plot area
-    m_speedBox->setParentItem(v ? nullptr : m_plotArea);
+    m_axesChanged = true; // the speed's margin is changed
+}
+
+void GraphPlot::setSpeedInside(bool v)
+{
+    if (m_speedInside == v)
+        return;
+
+    m_speedInside = v;
+
+    // The outside speed is out of the plot area
+    m_speedBox->setParentItem(v ? m_plotArea : nullptr);
 
     m_axesChanged = true;
 }
@@ -764,6 +793,8 @@ void GraphPlot::redrawText()
 
 void GraphPlot::layoutAxes()
 {
+    m_speedMargins = speedMargins();
+
     AxisTicks axisTicks;
     m_ticker.generate(m_valueUpper, axisTicks);
 
@@ -838,15 +869,16 @@ void GraphPlot::updateAxisRect(int tickLabelsWidth)
 {
     const int border = borderWidth();
     const int ticksWidth = axisTickLength();
-    const int speedWidth = speedColumnWidth();
-    const int leftWidth = speedWidth + yAxisLabelsWidth(tickLabelsWidth) + ticksWidth;
+    const QMargins &speed = m_speedMargins;
+    const int leftWidth = speed.left() + yAxisLabelsWidth(tickLabelsWidth) + ticksWidth;
     // The base line is on the border without the speed, labels and ticks
     const int leftMargin = (leftWidth > 0) ? border + leftWidth : 0;
-    // The bars are up to the right edge without the ticks
-    const int rightMargin = border + ticksWidth;
+    // The bars are up to the right edge without the ticks and the speed
+    const int rightMargin = border + ticksWidth + speed.right();
+    const int topMargin = border + axisMarginTop + speed.top();
+    const int bottomMargin = border + speed.bottom();
 
-    m_axisRect =
-            viewport()->rect().adjusted(leftMargin, border + axisMarginTop, -rightMargin, -border);
+    m_axisRect = viewport()->rect().adjusted(leftMargin, topMargin, -rightMargin, -bottomMargin);
 
     // Clip the bars at their bottom in device pixels
     QRectF plotRect = m_axisRect;
@@ -1033,57 +1065,93 @@ void GraphPlot::updateScroll()
 
 void GraphPlot::updateSpeedBox()
 {
-    const QSizeF size = m_speedBox->layout(/*rows=*/m_speedLeft);
+    const QSizeF size = m_speedBox->layout(isSpeedRows());
 
-    m_speedBox->setPos(speedBoxPos(size.width(), size.height()));
+    m_speedBox->setPos(speedBoxPos(size));
 }
 
-int GraphPlot::speedColumnWidth() const
+bool GraphPlot::isSpeedRows() const
 {
-    if (!m_speedLeft || !m_graphVisible)
-        return 0;
-
-    if (!m_speedBox->isVisible())
-        return 0;
-
-    return qCeil(m_speedBox->rowsWidth()) + axisPadding * 2;
+    // The rows at the sides: the line would take the graph's width
+    return m_speedPosition == GraphSpeedLeft || m_speedPosition == GraphSpeedRight;
 }
 
-QPointF GraphPlot::speedBoxPos(qreal width, qreal height) const
+bool GraphPlot::isSpeedOutside() const
 {
-    const QRect viewRect = viewport()->rect();
-    const int y = qRound((viewRect.height() - height) / 2);
+    return !m_speedInside && m_graphVisible && m_speedBox->isVisible();
+}
+
+bool GraphPlot::isSpeedBelow() const
+{
+    return m_speedMargins.bottom() > 0;
+}
+
+QMargins GraphPlot::speedMargins() const
+{
+    if (!isSpeedOutside())
+        return {};
+
+    const int width = qCeil(m_speedBox->rowsWidth()) + axisPadding * 2;
+    const int height = qCeil(m_speedBox->textHeight()) + axisPadding * 2;
+
+    switch (m_speedPosition) {
+    case GraphSpeedBottom:
+        return { 0, 0, 0, height };
+    case GraphSpeedLeft:
+        return { width, 0, 0, 0 };
+    case GraphSpeedRight:
+        return { 0, 0, width, 0 };
+    default: // GraphSpeedTop
+        return { 0, height, 0, 0 };
+    }
+}
+
+QPointF GraphPlot::speedBoxPos(const QSizeF &size) const
+{
+    const QRectF viewRect = viewport()->rect();
 
     // The text alone is in the view's center
     if (!m_graphVisible) {
-        return QPointF(qRound((viewRect.width() - width) / 2), y);
+        const QPointF pos = viewRect.center() - QPointF(size.width(), size.height()) / 2;
+        return pos.toPoint();
     }
 
-    // At the view's left, left of the graph
-    if (m_speedLeft) {
-        return QPointF(borderWidth() + axisPadding, y);
-    }
+    // Inside at the axis rectangle's side, else at the view's side
+    const int edge = borderWidth() + axisPadding;
+    const QRectF area = m_speedInside ? QRectF(m_axisRect).adjusted(axisPadding, 0, -axisPadding, 0)
+                                      : viewRect.adjusted(edge, edge, -edge, -edge);
 
-    // At the axis rectangle's top center
-    const double centerX = m_axisRect.left() + m_axisRect.width() / 2.0;
+    // Centered on the graph
+    const QPointF pos = speedSidePos(m_speedPosition, area, QRectF(m_axisRect).center(), size);
 
-    return QPointF(qRound(centerX - width / 2), m_axisRect.top());
+    return pos.toPoint();
 }
 
 void GraphPlot::updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs)
 {
-    const int bottom = m_axisRect.bottom();
-    const int top = bottom - m_axisRect.height();
+    const int right = m_axisRect.right() + 1;
+    const int top = m_axisRect.bottom() - m_axisRect.height();
+    const bool speedBelow = isSpeedBelow();
+    // The vertical lines are up to the X axis line
+    const qreal bottom = speedBelow ? xAxisY() : m_axisRect.bottom();
 
     QPainterPath path;
 
     // Base Lines
     addVLine(path, m_axisRect.left(), bottom, top);
 
-    // Right Line and Ticks
-    if (m_axisTicksVisible) {
-        addVLine(path, m_axisRect.right() + 1, bottom, top);
+    // X Axis Line: Between the bars and the speed below them
+    if (speedBelow) {
+        addHLine(path, m_axisRect.left(), right, bottom);
+    }
 
+    // Right Line: Also between the bars and the speed at the right
+    if (m_axisTicksVisible || m_speedMargins.right() > 0) {
+        addVLine(path, right, bottom, top);
+    }
+
+    // Ticks
+    if (m_axisTicksVisible) {
         addTicks(path, tickYs, m_axisRect, tickLength);
         addTicks(path, subTickYs, m_axisRect, subTickLength);
     }
@@ -1115,7 +1183,7 @@ void GraphPlot::updateUnitLabel()
     const double centerY = m_axisRect.top() + m_axisRect.height() / 2.0;
 
     // The rotated label's text goes up from its position
-    const int x = borderWidth() + speedColumnWidth() + axisPadding;
+    const int x = borderWidth() + m_speedMargins.left() + axisPadding;
 
     m_unitLabel->setPos(x, qRound(centerY + rect.width() / 2));
 
@@ -1167,8 +1235,20 @@ QVector<int> GraphPlot::valuesToPixels(const QVector<double> &values) const
 
 int GraphPlot::barsBottom() const
 {
-    // In device pixels: up to the view's bottom or to the border's line of a device pixel
-    return qRound(viewport()->height() * devicePixelRatioF()) - borderWidth();
+    const qreal dpr = devicePixelRatioF();
+
+    // In device pixels: up to the X axis line of a device pixel above the speed
+    if (isSpeedBelow()) {
+        return qRound((viewport()->height() - borderWidth() - m_speedMargins.bottom()) * dpr);
+    }
+
+    // Up to the view's bottom or to the border's line of a device pixel
+    return qRound(viewport()->height() * dpr) - borderWidth();
+}
+
+qreal GraphPlot::xAxisY() const
+{
+    return barsBottom() / devicePixelRatioF();
 }
 
 int GraphPlot::barHeight(quint64 bits) const

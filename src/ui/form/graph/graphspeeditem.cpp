@@ -127,6 +127,11 @@ qreal GraphSpeedItem::rowsWidth() const
             + metrics.horizontalAdvance(QLatin1String(speedSampleText));
 }
 
+qreal GraphSpeedItem::textHeight() const
+{
+    return QFontMetricsF(m_inText->font()).height();
+}
+
 QSizeF GraphSpeedItem::layout(bool rows)
 {
     const QSizeF size = rows ? layoutRows() : layoutLine();
@@ -154,14 +159,14 @@ QSizeF GraphSpeedItem::layoutLine()
     width = layoutSpeedItem(m_outArrow, width) + speedArrowSpacing;
     width = layoutSpeedItem(m_outText, width);
 
-    return { width, m_inText->boundingRect().height() };
+    return { width, textHeight() };
 }
 
 QSizeF GraphSpeedItem::layoutRows()
 {
     // The in and out rows: the arrows at the left, the texts at the right
     const qreal width = rowsWidth();
-    const qreal height = m_inText->boundingRect().height();
+    const qreal height = textHeight();
 
     layoutSpeedRow(m_inArrow, m_inText, 0, width);
     layoutSpeedRow(m_outArrow, m_outText, height, width);

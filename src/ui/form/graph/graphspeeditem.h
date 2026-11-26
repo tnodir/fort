@@ -23,6 +23,9 @@ public:
     // By the widest speed text: the graph doesn't move with the speed
     qreal rowsWidth() const;
 
+    // By the font: the empty text has no height
+    qreal textHeight() const;
+
     // Lays out the texts and sets the box's rectangle by their size
     QSizeF layout(bool rows);
 

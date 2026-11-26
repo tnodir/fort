@@ -22,6 +22,13 @@ enum GraphType : qint8 {
     GraphTypeLine,
 };
 
+enum GraphSpeedPosition : qint8 {
+    GraphSpeedTop = 0,
+    GraphSpeedBottom,
+    GraphSpeedLeft,
+    GraphSpeedRight,
+};
+
 class GraphTypes
 {
     Q_DECLARE_TR_FUNCTIONS(GraphTypes)
@@ -33,6 +40,13 @@ public:
     }
 
     static QStringList graphTypeNames();
+
+    static GraphSpeedPosition speedPositionByIndex(int index)
+    {
+        return GraphSpeedPosition(qBound(int(GraphSpeedTop), index, int(GraphSpeedRight)));
+    }
+
+    static QStringList speedPositionNames();
 };
 
 #endif // GRAPH_TYPES_H

@@ -69,6 +69,7 @@ void GraphView::updateOptions(bool onlyFlags)
     updateColors(ini);
     updateFonts(ini);
     updateFormat(ini);
+    updateSpeedLayout(ini);
 
     updateGraph();
 
@@ -84,7 +85,6 @@ void GraphView::updateFonts(const IniGraph &ini)
 {
     m_plot->setTickLabelSize(ini.tickLabelSize());
     m_plot->setSpeedTextSize(ini.speedTextSize());
-    m_plot->setSpeedVisible(ini.showSpeed());
 }
 
 void GraphView::updateFormat(const IniGraph &ini)
@@ -101,6 +101,13 @@ void GraphView::updateFormat(const IniGraph &ini)
     m_plot->setUnitFormat(FormatUtil::graphUnitFormat(ini.trafUnit()));
     m_plot->setFixedValueMax(ini.fixedSpeed() * 1024LL);
     m_plot->setAnimated(ini.animation());
+}
+
+void GraphView::updateSpeedLayout(const IniGraph &ini)
+{
+    m_plot->setSpeedVisible(ini.showSpeed());
+    m_plot->setSpeedPosition(GraphTypes::speedPositionByIndex(ini.speedPosition()));
+    m_plot->setSpeedInside(ini.speedInside());
 }
 
 void GraphView::setupTimer()
