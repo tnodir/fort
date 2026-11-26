@@ -1,5 +1,19 @@
 Fort Firewall ChangeLog
 
+v3.21.2, 2026-11-26:
+- UI: Add the Graphs window and the Graphs tray menu: several Traffic Graphs, instead of the Options' Traffic Graph tab.
+- UI: Graph: Add the Show in Taskbar option.
+- UI: Graph: Add the options of Show Graph, Speed (position, inside the graph), Grid lines, Border width and the labels' fonts.
+- UI: Services: Add the Command Line column.
+- UI: Programs: Add the Filters column.
+- UI: Program Edit: Show both the Allow and Block quick buttons.
+- UI: Program Connections: Add the Clear All action.
+- UI: Connections: Always show the host names; Show the address with the host name in the tooltip.
+- UI: DNS Forwarder: Check the system's queries again on Test and after a failed check.
+- UI: Fix the Windows 7 service's hang in the Starting state at the system's start (v3.21.1 regression).
+- UI: Reduce the windows' default size to 800x600; Describe the command line options in the help.
+- Driver: Fix the blocked DNS Forwarder's loopback queries with the local addresses filtered.
+
 v3.21.1, 2026-11-23:
 - UI: Add the Main window: the list windows dock into it; It replaces the My Fort window.
 - UI: Main window: Move the Backup from the Options window to the File menu.
