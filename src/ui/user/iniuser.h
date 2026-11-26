@@ -390,6 +390,8 @@ public:
     static QString colorSchemeName(int colorScheme);
 
 private:
+    void addDefaultTaskbarGraph();
+
     // The graphs' ids' bits: the main graph's one (0) is always set
     quint8 graphWindowIdsMask() const;
     void setGraphWindowIdsMask(quint8 v);

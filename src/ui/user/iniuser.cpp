@@ -135,7 +135,27 @@ void IniUser::saveDefaultIni()
 {
     setLanguage(defaultLanguage());
 
+    addDefaultTaskbarGraph();
+
     saveAndClear();
+}
+
+void IniUser::addDefaultTaskbarGraph()
+{
+    const int graphId = newGraphWindowId();
+
+    IniGraph ini(*this, graphId);
+    ini.setName("Taskbar");
+    ini.setShowInTaskbar(true);
+    ini.setGraphType(GraphTypeLine);
+    ini.setYAxisLabels(false);
+    ini.setShowSpeed(true);
+    ini.setSpeedPosition(GraphSpeedLeft);
+    ini.setSpeedInside(false);
+    ini.setColor(GraphColorBg, /*dark=*/false, Qt::transparent);
+    ini.setColor(GraphColorBg, /*dark=*/true, Qt::transparent);
+
+    addGraphWindowId(graphId);
 }
 
 int IniUser::colorSchemeByName(const QString &theme)
