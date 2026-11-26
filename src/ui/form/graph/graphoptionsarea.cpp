@@ -157,7 +157,7 @@ void GraphOptionsArea::retranslateGraphColors()
 {
     // Sync with GraphColorType
     const QStringList names = { tr("Background:"), tr("Border:"), tr("Download:"), tr("Upload:"),
-        tr("Total:"), tr("Axis:"), tr("Tick label:"), tr("Label:"), tr("Grid:") };
+        tr("Total:"), tr("Axis:"), tr("Tick label:"), tr("Speed label:"), tr("Grid:") };
 
     for (int i = 0; i < GraphColorCount; ++i) {
         m_graphColors[i]->label()->setText(names[i]);

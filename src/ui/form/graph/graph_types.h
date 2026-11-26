@@ -14,7 +14,7 @@ enum GraphColorType : qint8 {
     GraphColorTotal,
     GraphColorAxis,
     GraphColorTickLabel,
-    GraphColorLabel,
+    GraphColorSpeedLabel,
     GraphColorGrid,
     GraphColorCount
 };

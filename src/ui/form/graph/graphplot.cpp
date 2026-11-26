@@ -341,7 +341,7 @@ void GraphPlot::setColors(const ColorArray &colors)
 
     // Text Speed
     m_speedBox->setColors(
-            bgColor, colors[GraphColorIn], colors[GraphColorOut], colors[GraphColorLabel]);
+            bgColor, colors[GraphColorIn], colors[GraphColorOut], colors[GraphColorSpeedLabel]);
 
     // Axis
     m_axes->setPen(QPen(colors[GraphColorAxis], 0, Qt::SolidLine, Qt::SquareCap));
