@@ -20,6 +20,8 @@ public:
     void write(const QString &line);
     void write(const QStringList &lines, char sep = ' ');
 
+    static bool hasConsoleOutput();
+
     static bool attachConsole(quint32 processId = -1);
     static bool freeConsole();
 

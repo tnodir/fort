@@ -7,7 +7,9 @@
 #include <fort_version.h>
 
 #include <conf/firewallconf.h>
+#include <form/dialog/dialogutil.h>
 #include <manager/envmanager.h>
+#include <util/consoleoutput.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/osutil.h>
@@ -29,6 +31,28 @@ QString expandPath(const QString &path, EnvManager *envManager = nullptr)
 {
     const auto expPath = envManager ? envManager->expandString(path) : path;
     return pathSlash(expPath);
+}
+
+void showHelp(QCommandLineParser &parser)
+{
+    if (ConsoleOutput::hasConsoleOutput()) {
+        parser.showHelp();
+    }
+
+    const QString text = "<pre>" + parser.helpText().toHtmlEscaped() + "</pre>"
+            + QString("<a href=\"%1\">%1</a>")
+                      .arg(APP_WIKI_URL "/Fort-Firewall-User-Guide#command-line");
+
+    auto box = DialogUtil::createMessageBox({
+            .icon = QMessageBox::Information,
+            .buttons = QMessageBox::Ok,
+            .text = text,
+    });
+
+    box->setTextFormat(Qt::RichText);
+    box->exec();
+
+    ::exit(0);
 }
 
 }
@@ -364,7 +388,12 @@ void FortSettings::processArguments(const QStringList &args)
     parser.addOption(controlOption);
 
     parser.addVersionOption();
-    parser.addHelpOption();
+    const QCommandLineOption helpOption = parser.addHelpOption();
+
+    // Errors, the version and "--help-all" are processed by the parser
+    if (parser.parse(args) && parser.isSet(helpOption)) {
+        showHelp(parser);
+    }
 
     parser.process(args);
 

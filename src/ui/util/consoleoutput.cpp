@@ -82,6 +82,19 @@ void ConsoleOutput::write(const QStringList &lines, char sep)
     write(lines.join(sep) + '\n');
 }
 
+bool ConsoleOutput::hasConsoleOutput()
+{
+    // As QCommandLineParser checks before printing instead of showing a message box
+    if (GetConsoleWindow())
+        return true;
+
+    STARTUPINFOW startupInfo;
+    startupInfo.cb = sizeof(STARTUPINFOW);
+    GetStartupInfoW(&startupInfo);
+
+    return (startupInfo.dwFlags & STARTF_USESTDHANDLES) != 0;
+}
+
 bool ConsoleOutput::attachConsole(quint32 processId)
 {
     return AttachConsole(processId);
