@@ -13,6 +13,7 @@ QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QGroupBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 
+class FontSelector;
 class LabelColor;
 class LabelSpin;
 class LabelSpinCombo;
@@ -77,6 +78,9 @@ private:
     void setupGraphOptions();
     void setupGraphFixedSpeed();
     void setupGraphViewOptions();
+    FontSelector *createGraphFont(GraphFontType type);
+    void resetGraphFont(FontSelector *c, GraphFontType type);
+    void setGraphFont(GraphFontType type, const QFont &v);
     void setupSpeedBox();
     QLayout *setupSpeedPositionLayout();
     QLayout *setupTrafUnitsLayout();
@@ -127,10 +131,12 @@ private:
     QCheckBox *m_cbGraphAxisTicks = nullptr;
     QCheckBox *m_cbGraphGridLines = nullptr;
     QCheckBox *m_cbGraphYAxisLabels = nullptr;
-    LabelSpin *m_graphTickLabelSize = nullptr;
+    QLabel *m_labelTickLabelFont = nullptr;
+    FontSelector *m_graphTickLabelFont = nullptr;
 
     QCheckBox *m_cbGraphShowSpeed = nullptr;
-    LabelSpin *m_graphSpeedTextSize = nullptr;
+    QLabel *m_labelSpeedLabelFont = nullptr;
+    FontSelector *m_graphSpeedLabelFont = nullptr;
     QLabel *m_labelSpeedPosition = nullptr;
     QComboBox *m_comboSpeedPosition = nullptr;
     QCheckBox *m_cbGraphSpeedInside = nullptr;

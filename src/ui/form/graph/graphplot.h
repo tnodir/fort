@@ -134,8 +134,8 @@ public:
     GraphPoint pointAt(qint64 unixTime) const;
 
     void setColors(const GraphPlot::ColorArray &colors);
-    void setTickLabelSize(int pointSize);
-    void setSpeedTextSize(int pointSize);
+    void setTickLabelFont(const QFont &font);
+    void setSpeedLabelFont(const QFont &font);
 
     void addPoint(const GraphPoint &point);
 

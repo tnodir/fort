@@ -354,24 +354,18 @@ void GraphPlot::setColors(const ColorArray &colors)
     updateTickLabelsStyle();
 }
 
-void GraphPlot::setTickLabelSize(int pointSize)
+void GraphPlot::setTickLabelFont(const QFont &font)
 {
-    m_tickLabelFont = font();
-    m_tickLabelFont.setPointSize(pointSize);
-    m_tickLabelFont.setWeight(QFont::DemiBold);
+    m_tickLabelFont = font;
 
     updateTickLabelsStyle();
 
     m_axesChanged = true; // the tick labels' sizes are changed
 }
 
-void GraphPlot::setSpeedTextSize(int pointSize)
+void GraphPlot::setSpeedLabelFont(const QFont &font)
 {
-    QFont speedFont = font();
-    speedFont.setPointSize(pointSize);
-    speedFont.setWeight(QFont::DemiBold);
-
-    m_speedBox->setTextFont(speedFont);
+    m_speedBox->setTextFont(font);
 
     m_axesChanged = true; // the speed column is changed
 }

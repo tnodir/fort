@@ -12,6 +12,7 @@
 #include <form/controls/labelcolor.h>
 #include <form/controls/labelspin.h>
 #include <form/controls/labelspincombo.h>
+#include <form/controls/selector/fontselector.h>
 #include <form/graph/graph_types.h>
 #include <form/graph/graphwindow.h>
 #include <fortglobal.h>
@@ -69,10 +70,10 @@ void GraphOptionsArea::resetToDefault()
     m_cbGraphAxisTicks->setChecked(IniGraph::axisTicksDefault());
     m_cbGraphGridLines->setChecked(IniGraph::gridLinesDefault());
     m_cbGraphYAxisLabels->setChecked(IniGraph::yAxisLabelsDefault());
-    m_graphTickLabelSize->spinBox()->setValue(IniGraph::tickLabelSizeDefault());
+    resetGraphFont(m_graphTickLabelFont, GraphFontTickLabel);
 
     m_cbGraphShowSpeed->setChecked(IniGraph::showSpeedDefault());
-    m_graphSpeedTextSize->spinBox()->setValue(IniGraph::speedTextSizeDefault());
+    resetGraphFont(m_graphSpeedLabelFont, GraphFontSpeedLabel);
     ControlUtil::activateComboBox(m_comboSpeedPosition, IniGraph::speedPositionDefault());
     m_cbGraphSpeedInside->setChecked(IniGraph::speedInsideDefault());
     ControlUtil::activateComboBox(m_comboTrafUnit, IniGraph::trafUnitDefault());
@@ -131,10 +132,12 @@ void GraphOptionsArea::retranslateUi()
     m_cbGraphAxisTicks->setText(tr("Axis ticks"));
     m_cbGraphGridLines->setText(tr("Grid lines"));
     m_cbGraphYAxisLabels->setText(tr("Y axis scale labels"));
-    m_graphTickLabelSize->label()->setText(tr("Tick label size:"));
+    m_labelTickLabelFont->setText(tr("Tick label font:"));
+    m_graphTickLabelFont->retranslateUi();
 
     m_cbGraphShowSpeed->setText(tr("Show speed"));
-    m_graphSpeedTextSize->label()->setText(tr("Speed text size:"));
+    m_labelSpeedLabelFont->setText(tr("Speed label font:"));
+    m_graphSpeedLabelFont->retranslateUi();
     m_labelSpeedPosition->setText(tr("Position:"));
     retranslateSpeedPositionCombo();
     m_cbGraphSpeedInside->setText(tr("Inside the graph"));
@@ -418,7 +421,8 @@ void GraphOptionsArea::setupGraphBox()
     ControlUtil::fillLayoutByWidgets(layout,
             { ControlUtil::createSeparator(), m_graphBarWidth, m_graphMaxSeconds, m_graphFixedSpeed,
                     ControlUtil::createSeparator(), m_cbGraphAnimation, m_cbGraphAxisTicks,
-                    m_cbGraphGridLines, m_cbGraphYAxisLabels, m_graphTickLabelSize });
+                    m_cbGraphGridLines, m_cbGraphYAxisLabels });
+    layout->addLayout(ControlUtil::createRowLayout(m_labelTickLabelFont, m_graphTickLabelFont));
 
     m_gbGraph = new QGroupBox();
     m_gbGraph->setLayout(layout);
@@ -500,9 +504,43 @@ void GraphOptionsArea::setupGraphViewOptions()
             createIniGraphCheckBox(&IniGraph::yAxisLabels, &IniGraph::setYAxisLabels);
     m_cbGraphYAxisLabels->setObjectName("cbGraphYAxisLabels");
 
-    m_graphTickLabelSize = ControlUtil::createSpin({ iniGraph().tickLabelSize(), 1, 99 }, {},
-            iniGraphSetter(&IniGraph::tickLabelSize, &IniGraph::setTickLabelSize));
-    m_graphTickLabelSize->setObjectName("graphTickLabelSize");
+    m_labelTickLabelFont = ControlUtil::createLabel();
+
+    m_graphTickLabelFont = createGraphFont(GraphFontTickLabel);
+    m_graphTickLabelFont->setObjectName("graphTickLabelFont");
+}
+
+FontSelector *GraphOptionsArea::createGraphFont(GraphFontType type)
+{
+    const QFont baseFont = WindowManager::defaultFont();
+
+    auto c = new FontSelector();
+    c->setDefaultFont(IniGraph::fontDefault(type, baseFont));
+    c->setSelectedFont(iniGraph().font(type, baseFont));
+
+    connect(c, &FontSelector::fontSelected, this,
+            [=, this](const QFont &font) { setGraphFont(type, font); });
+
+    return c;
+}
+
+void GraphOptionsArea::resetGraphFont(FontSelector *c, GraphFontType type)
+{
+    const QFont font = c->defaultFont();
+
+    c->setSelectedFont(font);
+    setGraphFont(type, font);
+}
+
+void GraphOptionsArea::setGraphFont(GraphFontType type, const QFont &v)
+{
+    const QFont baseFont = WindowManager::defaultFont();
+
+    if (iniGraph().font(type, baseFont) == v)
+        return;
+
+    iniGraph().setFont(type, v, baseFont);
+    emit edited();
 }
 
 void GraphOptionsArea::setupSpeedBox()
@@ -510,9 +548,10 @@ void GraphOptionsArea::setupSpeedBox()
     m_cbGraphShowSpeed = createIniGraphCheckBox(&IniGraph::showSpeed, &IniGraph::setShowSpeed);
     m_cbGraphShowSpeed->setObjectName("cbGraphShowSpeed");
 
-    m_graphSpeedTextSize = ControlUtil::createSpin({ iniGraph().speedTextSize(), 1, 99 }, {},
-            iniGraphSetter(&IniGraph::speedTextSize, &IniGraph::setSpeedTextSize));
-    m_graphSpeedTextSize->setObjectName("graphSpeedTextSize");
+    m_labelSpeedLabelFont = ControlUtil::createLabel();
+
+    m_graphSpeedLabelFont = createGraphFont(GraphFontSpeedLabel);
+    m_graphSpeedLabelFont->setObjectName("graphSpeedLabelFont");
 
     // Position
     auto speedPositionLayout = setupSpeedPositionLayout();
@@ -524,7 +563,8 @@ void GraphOptionsArea::setupSpeedBox()
     // Traffic Units
     auto trafUnitsLayout = setupTrafUnitsLayout();
 
-    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbGraphShowSpeed, m_graphSpeedTextSize });
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbGraphShowSpeed });
+    layout->addLayout(ControlUtil::createRowLayout(m_labelSpeedLabelFont, m_graphSpeedLabelFont));
     layout->addLayout(speedPositionLayout);
     layout->addWidget(m_cbGraphSpeedInside);
     layout->addLayout(trafUnitsLayout);

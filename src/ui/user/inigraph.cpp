@@ -26,6 +26,21 @@ inline constexpr GraphColorInfo graphColorInfos[] = {
 static_assert(std::size(graphColorInfos) == GraphColorCount,
         "Missing a GraphColorType in graphColorInfos[]");
 
+struct GraphFontInfo
+{
+    const char *key;
+    int size;
+};
+
+// Sync with GraphFontType
+inline constexpr GraphFontInfo graphFontInfos[] = {
+    { "tickLabelFont", 9 },
+    { "speedLabelFont", 10 },
+};
+
+static_assert(
+        std::size(graphFontInfos) == GraphFontCount, "Missing a GraphFontType in graphFontInfos[]");
+
 }
 
 IniGraph::IniGraph(MapSettings &ini, int graphId) :
@@ -63,6 +78,35 @@ QColor IniGraph::color(GraphColorType type, bool dark) const
 void IniGraph::setColor(GraphColorType type, bool dark, const QColor &v)
 {
     setColorValue(colorKey(type, dark), v);
+}
+
+QFont IniGraph::fontDefault(GraphFontType type, const QFont &baseFont)
+{
+    QFont font = baseFont;
+    font.setPointSize(graphFontInfos[type].size);
+    font.setWeight(QFont::DemiBold);
+
+    return font;
+}
+
+QFont IniGraph::font(GraphFontType type, const QFont &baseFont) const
+{
+    QFont font = fontDefault(type, baseFont);
+
+    const QString text = value(graphFontInfos[type].key).toString();
+    if (!text.isEmpty()) {
+        font.fromString(text);
+    }
+
+    return font;
+}
+
+void IniGraph::setFont(GraphFontType type, const QFont &v, const QFont &baseFont)
+{
+    // The default font isn't saved to follow the base font's change
+    const bool isDefault = (v == fontDefault(type, baseFont));
+
+    setValue(graphFontInfos[type].key, isDefault ? QString() : v.toString());
 }
 
 QString IniGraph::key(const char *name) const

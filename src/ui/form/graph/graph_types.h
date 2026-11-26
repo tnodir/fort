@@ -19,6 +19,8 @@ enum GraphColorType : qint8 {
     GraphColorCount
 };
 
+enum GraphFontType : qint8 { GraphFontTickLabel = 0, GraphFontSpeedLabel, GraphFontCount };
+
 enum GraphType : qint8 {
     GraphTypeColumn = 0,
     GraphTypeLine,

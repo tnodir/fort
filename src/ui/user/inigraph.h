@@ -2,6 +2,7 @@
 #define INIGRAPH_H
 
 #include <QColor>
+#include <QFont>
 #include <QRect>
 #include <QVariant>
 
@@ -117,13 +118,10 @@ public:
     QColor color(GraphColorType type, bool dark) const;
     void setColor(GraphColorType type, bool dark, const QColor &v);
 
-    static constexpr int tickLabelSizeDefault() { return 9; }
-    int tickLabelSize() const { return valueInt("tickLabelSize", tickLabelSizeDefault()); }
-    void setTickLabelSize(int v) { setValue("tickLabelSize", v); }
-
-    static constexpr int speedTextSizeDefault() { return 10; }
-    int speedTextSize() const { return valueInt("speedTextSize", speedTextSizeDefault()); }
-    void setSpeedTextSize(int v) { setValue("speedTextSize", v); }
+    // The default font is the base font of the type's size, demi-bold
+    static QFont fontDefault(GraphFontType type, const QFont &baseFont);
+    QFont font(GraphFontType type, const QFont &baseFont) const;
+    void setFont(GraphFontType type, const QFont &v, const QFont &baseFont);
 
     static constexpr int speedPositionDefault() { return 0; }
     int speedPosition() const { return valueInt("speedPosition", speedPositionDefault()); }

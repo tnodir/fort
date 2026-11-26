@@ -83,8 +83,10 @@ void GraphView::updateColors(const IniGraph &ini)
 
 void GraphView::updateFonts(const IniGraph &ini)
 {
-    m_plot->setTickLabelSize(ini.tickLabelSize());
-    m_plot->setSpeedTextSize(ini.speedTextSize());
+    const QFont baseFont = m_plot->font();
+
+    m_plot->setTickLabelFont(ini.font(GraphFontTickLabel, baseFont));
+    m_plot->setSpeedLabelFont(ini.font(GraphFontSpeedLabel, baseFont));
 }
 
 void GraphView::updateFormat(const IniGraph &ini)
