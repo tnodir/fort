@@ -57,9 +57,9 @@ public:
     bool hideOnHover() const { return valueBool("hideOnHover", hideOnHoverDefault()); }
     void setHideOnHover(bool on) { setValue("hideOnHover", on); }
 
-    static constexpr bool hideYAxisLabelsDefault() { return false; }
-    bool hideYAxisLabels() const { return valueBool("hideYAxisLabels", hideYAxisLabelsDefault()); }
-    void setHideYAxisLabels(bool on) { setValue("hideYAxisLabels", on); }
+    static constexpr bool yAxisLabelsDefault() { return true; }
+    bool yAxisLabels() const { return valueBool("yAxisLabels", yAxisLabelsDefault()); }
+    void setYAxisLabels(bool on) { setValue("yAxisLabels", on); }
 
     static constexpr bool showSpeedDefault() { return false; }
     bool showSpeed() const { return valueBool("showSpeed", showSpeedDefault()); }

@@ -66,7 +66,7 @@ void GraphOptionsArea::resetToDefault()
     m_graphFixedSpeed->spinBox()->setValue(IniGraph::fixedSpeedDefault());
     m_cbGraphAnimation->setChecked(IniGraph::animationDefault());
     m_cbGraphAxisTicks->setChecked(IniGraph::axisTicksDefault());
-    m_cbGraphHideYAxisLabels->setChecked(IniGraph::hideYAxisLabelsDefault());
+    m_cbGraphYAxisLabels->setChecked(IniGraph::yAxisLabelsDefault());
     m_graphTickLabelSize->spinBox()->setValue(IniGraph::tickLabelSizeDefault());
 
     m_cbGraphShowSpeed->setChecked(IniGraph::showSpeedDefault());
@@ -126,7 +126,7 @@ void GraphOptionsArea::retranslateUi()
     retranslateFixedSpeedCombo();
     m_cbGraphAnimation->setText(tr("Animation"));
     m_cbGraphAxisTicks->setText(tr("Axis ticks"));
-    m_cbGraphHideYAxisLabels->setText(tr("Hide Y axis scale labels"));
+    m_cbGraphYAxisLabels->setText(tr("Y axis scale labels"));
     m_graphTickLabelSize->label()->setText(tr("Tick label size:"));
 
     m_cbGraphShowSpeed->setText(tr("Show speed"));
@@ -405,7 +405,7 @@ void GraphOptionsArea::setupGraphBox()
     ControlUtil::fillLayoutByWidgets(layout,
             { ControlUtil::createSeparator(), m_graphBarWidth, m_graphMaxSeconds, m_graphFixedSpeed,
                     ControlUtil::createSeparator(), m_cbGraphAnimation, m_cbGraphAxisTicks,
-                    m_cbGraphHideYAxisLabels, m_graphTickLabelSize });
+                    m_cbGraphYAxisLabels, m_graphTickLabelSize });
 
     m_gbGraph = new QGroupBox();
     m_gbGraph->setLayout(layout);
@@ -481,9 +481,9 @@ void GraphOptionsArea::setupGraphViewOptions()
     m_cbGraphAnimation->setObjectName("cbGraphAnimation");
     m_cbGraphAxisTicks = createIniGraphCheckBox(&IniGraph::axisTicks, &IniGraph::setAxisTicks);
     m_cbGraphAxisTicks->setObjectName("cbGraphAxisTicks");
-    m_cbGraphHideYAxisLabels =
-            createIniGraphCheckBox(&IniGraph::hideYAxisLabels, &IniGraph::setHideYAxisLabels);
-    m_cbGraphHideYAxisLabels->setObjectName("cbGraphHideYAxisLabels");
+    m_cbGraphYAxisLabels =
+            createIniGraphCheckBox(&IniGraph::yAxisLabels, &IniGraph::setYAxisLabels);
+    m_cbGraphYAxisLabels->setObjectName("cbGraphYAxisLabels");
 
     m_graphTickLabelSize = ControlUtil::createSpin({ iniGraph().tickLabelSize(), 1, 99 }, {},
             iniGraphSetter(&IniGraph::tickLabelSize, &IniGraph::setTickLabelSize));

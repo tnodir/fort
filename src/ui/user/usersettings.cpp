@@ -73,6 +73,8 @@ void UserSettings::migrateIniOnLoad()
         setCacheValue("mainWindow/autoShowWindow", iniValue("homeWindow/autoShowWindow"));
         setCacheValue("hotKey/main", iniValue("hotKey/home"));
     }
+
+    migrateGraphIniOnLoad(version);
 }
 
 void UserSettings::migrateIniOnWrite()
@@ -129,6 +131,8 @@ void UserSettings::migrateIniOnWrite()
         ini()->setValue("mainWindow/autoShowWindow", cacheValue("mainWindow/autoShowWindow"));
         ini()->setValue("hotKey/main", cacheValue("hotKey/main"));
     }
+
+    migrateGraphIniOnWrite(version);
 }
 
 // COMPAT: v3.4.0: .ini ~> .user.ini
@@ -169,4 +173,30 @@ void UserSettings::migrateUserIniOnWrite(int version)
             "statWindow/connListHeaderVersion", cacheValue("statWindow/connListHeaderVersion"));
     ini()->setValue("statWindow/autoScroll", cacheValue("statWindow/autoScroll"));
     ini()->setValue("statWindow/maximized", cacheValue("statWindow/maximized"));
+}
+
+// COMPAT: v3.21.2: Graph: "Hide Y axis scale labels" ~> "Y axis scale labels"
+void UserSettings::migrateGraphIniOnLoad(int version)
+{
+    if (version >= 0x032102)
+        return;
+
+    const QVariant hideYAxisLabels = iniValue("graphWindow/hideYAxisLabels");
+    if (!hideYAxisLabels.isNull()) {
+        setCacheValue("graphWindow/yAxisLabels", !hideYAxisLabels.toBool());
+    }
+}
+
+// COMPAT: v3.21.2: Graph: "Hide Y axis scale labels" ~> "Y axis scale labels"
+void UserSettings::migrateGraphIniOnWrite(int version)
+{
+    if (version >= 0x032102)
+        return;
+
+    removeIniKey("graphWindow/hideYAxisLabels");
+
+    const QVariant yAxisLabels = cacheValue("graphWindow/yAxisLabels");
+    if (!yAxisLabels.isNull()) {
+        ini()->setValue("graphWindow/yAxisLabels", yAxisLabels);
+    }
 }

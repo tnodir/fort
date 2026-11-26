@@ -123,7 +123,7 @@ private:
     LabelSpinCombo *m_graphFixedSpeed = nullptr;
     QCheckBox *m_cbGraphAnimation = nullptr;
     QCheckBox *m_cbGraphAxisTicks = nullptr;
-    QCheckBox *m_cbGraphHideYAxisLabels = nullptr;
+    QCheckBox *m_cbGraphYAxisLabels = nullptr;
     LabelSpin *m_graphTickLabelSize = nullptr;
 
     QCheckBox *m_cbGraphShowSpeed = nullptr;

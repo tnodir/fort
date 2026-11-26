@@ -29,6 +29,9 @@ private:
     void migrateUserIniOnLoad(int version);
     void migrateUserIniOnWrite(int version);
 
+    void migrateGraphIniOnLoad(int version);
+    void migrateGraphIniOnWrite(int version);
+
     IniUser m_iniUser;
 };
 
