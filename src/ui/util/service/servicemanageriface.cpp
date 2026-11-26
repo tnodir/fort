@@ -71,6 +71,10 @@ void ServiceManagerIface::reportStartPending()
 {
     QMutexLocker locker(&g_service.mutex);
 
+    // The running state may be reported meanwhile
+    if (g_service.status.dwCurrentState != SERVICE_START_PENDING)
+        return;
+
     ++g_service.status.dwCheckPoint;
 
     reportStatusLocked();

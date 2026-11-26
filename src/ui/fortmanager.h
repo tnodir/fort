@@ -21,6 +21,7 @@ public:
     bool checkRunningInstance(bool isService, bool isLaunch);
 
     void initialize();
+    void start();
 
     static void install(const char *arg);
     static void uninstall(const char *arg = nullptr);

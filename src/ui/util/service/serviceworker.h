@@ -11,7 +11,8 @@ public:
     // Connects to the Service Control Manager and reports the pending start
     static void run(ServiceManagerIface *manager);
 
-    // Reports the running service: the initialization is finished
+    // Reports the running service: the Service Control Manager's auto-start waits for it,
+    // so the service starts the driver only after it
     static void setStarted();
 };
 

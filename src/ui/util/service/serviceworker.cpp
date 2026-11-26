@@ -32,8 +32,6 @@ void waitStarted()
     while (!g_started.tryAcquire(1, startCheckPointPeriod)) {
         g_manager->reportStartPending();
     }
-
-    g_manager->reportRunning();
 }
 
 void WINAPI serviceMain(DWORD argc, wchar_t *argv[])
@@ -89,5 +87,7 @@ void ServiceWorker::run(ServiceManagerIface *manager)
 
 void ServiceWorker::setStarted()
 {
+    g_manager->reportRunning();
+
     g_started.release();
 }

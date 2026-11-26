@@ -241,7 +241,10 @@ void FortManager::initialize()
 
     checkReinstallDriver();
     checkStartService();
+}
 
+void FortManager::start()
+{
     if (!setupDriver()) {
         checkDriverAccess();
     }

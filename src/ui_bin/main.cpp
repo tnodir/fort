@@ -158,7 +158,11 @@ int main(int argc, char *argv[])
 
     if (settings.isService()) {
         ServiceWorker::setStarted();
-    } else {
+    }
+
+    fortManager.start();
+
+    if (!settings.isService()) {
         Fort::windowManager()->initialize();
     }
 
