@@ -73,7 +73,7 @@ void GraphEditDialog::setupUi(int graphId)
     auto layout = new QVBoxLayout();
     layout->addLayout(nameLayout);
     layout->addWidget(ControlUtil::createHSeparator());
-    layout->addWidget(m_graphOptions, 1);
+    layout->addWidget(ControlUtil::wrapToScrollArea(m_graphOptions), 1);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(buttonsLayout);
 
@@ -93,6 +93,9 @@ void GraphEditDialog::setupUi(int graphId)
 
     // Size Grip
     this->setSizeGripEnabled(true);
+
+    // Size
+    this->resize(800, 600);
 }
 
 QLayout *GraphEditDialog::setupNameLayout()
