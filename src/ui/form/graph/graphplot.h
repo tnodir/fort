@@ -11,6 +11,7 @@
 
 class GraphBarsItem;
 class GraphLineItem;
+class GraphSpeedItem;
 
 class QGraphicsPathItem;
 class QGraphicsRectItem;
@@ -213,11 +214,7 @@ private:
     void appendLineStart(GraphLinePoints &points, const QVector<GraphColumn> &columns) const;
     void appendLinePoints(GraphLinePoints &points, const GraphColumn &column) const;
     void updateScroll();
-    void setupSpeedArrows(const QFont &font);
     void updateSpeedBox();
-    QSizeF layoutSpeedLine();
-    QSizeF layoutSpeedRows();
-    qreal speedRowsWidth() const;
     int speedColumnWidth() const;
     QPointF speedBoxPos(qreal width, qreal height) const;
     void updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs);
@@ -259,8 +256,6 @@ private:
     double m_valueUpper = 5; // shown
     double m_valueTarget = 5;
 
-    qreal m_speedSpacing = 0; // between the in and out texts
-
     qint64 m_fixedValueMax = 0;
     qint64 m_risingTime = 0;
 
@@ -278,11 +273,7 @@ private:
     GraphLineItem *m_fillOut = nullptr;
     GraphLineItem *m_lineIn = nullptr;
     GraphLineItem *m_lineOut = nullptr;
-    QGraphicsRectItem *m_speedBox = nullptr;
-    QGraphicsPathItem *m_speedInArrow = nullptr;
-    QGraphicsSimpleTextItem *m_speedInText = nullptr;
-    QGraphicsPathItem *m_speedOutArrow = nullptr;
-    QGraphicsSimpleTextItem *m_speedOutText = nullptr;
+    GraphSpeedItem *m_speedBox = nullptr;
     QGraphicsPathItem *m_axes = nullptr;
     QGraphicsRectItem *m_yAxisLabels = nullptr;
     QGraphicsSimpleTextItem *m_unitLabel = nullptr;

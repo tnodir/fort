@@ -1,15 +1,15 @@
 #include "graphplot.h"
 
 #include <QDateTime>
-#include <QFontMetricsF>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QMouseEvent>
-#include <QPainter>
+#include <QPainterPath>
 #include <QtMath>
 
 #include "graphbarsitem.h"
 #include "graphlineitem.h"
+#include "graphspeeditem.h"
 
 namespace {
 
@@ -22,16 +22,8 @@ inline constexpr int unitLabelPadding = 6;
 inline constexpr int risingMsecs = 400;
 inline constexpr int scaleMsecs = 400;
 inline constexpr qreal valueHeadroom = 1.1f; // the empty space above the highest bar
-inline constexpr int speedBgAlpha = 130;
 inline constexpr int barOutlineDarker = 150; // as in NetTraffic
 inline constexpr qreal lineCenterOffset = 1.5; // device pixels: a line of 2 is above the value
-inline constexpr int speedArrowSpacing = 2;
-inline constexpr char speedSampleText[] = "888.88 MiB/s"; // the widest speed text
-inline constexpr double speedArrowTop = 0.18; // of the text's height
-inline constexpr double speedArrowWidth = 0.55; // of the text's height
-inline constexpr double speedArrowHeight = 0.66; // of the text's height
-inline constexpr double speedArrowShaft = 0.36; // of the arrow's width
-inline constexpr double speedArrowHead = 0.45; // of the arrow's height
 inline constexpr int gridLineWidth = 2;
 inline constexpr int mouseMoveDistance = 3;
 
@@ -79,65 +71,6 @@ void addTicks(QPainterPath &path, const QVector<int> &ys, const QRect &axisRect,
         addHLine(path, right, right + length, y);
     }
 }
-
-QPainterPath arrowPath(const QRectF &rect, bool down)
-{
-    const qreal shaftHalf = rect.width() * speedArrowShaft / 2;
-    const qreal headHeight = rect.height() * speedArrowHead;
-    const qreal centerX = rect.center().x();
-
-    // From the shaft's end to the head's tip
-    const qreal endY = down ? rect.top() : rect.bottom();
-    const qreal tipY = down ? rect.bottom() : rect.top();
-    const qreal headY = down ? (tipY - headHeight) : (tipY + headHeight);
-
-    const QPolygonF polygon = {
-        { centerX - shaftHalf, endY },
-        { centerX + shaftHalf, endY },
-        { centerX + shaftHalf, headY },
-        { rect.right(), headY },
-        { centerX, tipY },
-        { rect.left(), headY },
-        { centerX - shaftHalf, headY },
-    };
-
-    QPainterPath path;
-    path.addPolygon(polygon);
-    path.closeSubpath();
-
-    return path;
-}
-
-qreal layoutSpeedItem(QGraphicsItem *item, qreal x)
-{
-    item->setPos(x, 0);
-
-    // The items' rectangles start at 0
-    return x + item->boundingRect().right();
-}
-
-void layoutSpeedRow(QGraphicsItem *arrow, QGraphicsItem *text, qreal y, qreal width)
-{
-    arrow->setPos(0, y);
-    text->setPos(width - text->boundingRect().right(), y);
-}
-
-// Smooth, unlike the other items aligned to the pixels
-class SmoothPathItem : public QGraphicsPathItem
-{
-public:
-    using QGraphicsPathItem::QGraphicsPathItem;
-
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-            QWidget *widget = nullptr) override
-    {
-        const bool antialiased = painter->testRenderHint(QPainter::Antialiasing);
-
-        painter->setRenderHint(QPainter::Antialiasing);
-        QGraphicsPathItem::paint(painter, option, widget);
-        painter->setRenderHint(QPainter::Antialiasing, antialiased);
-    }
-};
 
 template<typename T>
 T *createNoPenItem(QGraphicsItem *parent)
@@ -326,8 +259,7 @@ void GraphPlot::setSpeedLeft(bool v)
 
 void GraphPlot::setSpeedText(const QString &inText, const QString &outText)
 {
-    m_speedInText->setText(inText);
-    m_speedOutText->setText(outText);
+    m_speedBox->setText(inText, outText);
 }
 
 GraphPoint GraphPlot::pointAt(qint64 unixTime) const
@@ -368,17 +300,8 @@ void GraphPlot::setColors(const ColorArray &colors)
     m_lineOut->setColor(colors[GraphColorOut]);
 
     // Text Speed
-    {
-        QColor speedBgColor = bgColor;
-        speedBgColor.setAlpha(speedBgAlpha);
-
-        m_speedBox->setBrush(speedBgColor);
-
-        m_speedInArrow->setBrush(colors[GraphColorIn]);
-        m_speedInText->setBrush(colors[GraphColorLabel]);
-        m_speedOutArrow->setBrush(colors[GraphColorOut]);
-        m_speedOutText->setBrush(colors[GraphColorLabel]);
-    }
+    m_speedBox->setColors(
+            bgColor, colors[GraphColorIn], colors[GraphColorOut], colors[GraphColorLabel]);
 
     // Axis
     m_axes->setPen(QPen(colors[GraphColorAxis], 0, Qt::SolidLine, Qt::SquareCap));
@@ -408,12 +331,7 @@ void GraphPlot::setSpeedTextSize(int pointSize)
     speedFont.setPointSize(pointSize);
     speedFont.setWeight(QFont::DemiBold);
 
-    m_speedInText->setFont(speedFont);
-    m_speedOutText->setFont(speedFont);
-
-    m_speedSpacing = QFontMetricsF(speedFont).horizontalAdvance(QLatin1String("  "));
-
-    setupSpeedArrows(speedFont);
+    m_speedBox->setTextFont(speedFont);
 
     m_axesChanged = true; // the speed column is changed
 }
@@ -603,12 +521,7 @@ void GraphPlot::setupItems()
     updateItemsVisible();
 
     // Text Speed
-    m_speedBox = createNoPenItem<QGraphicsRectItem>(m_plotArea);
-
-    m_speedInArrow = createNoPenItem<SmoothPathItem>(m_speedBox);
-    m_speedInText = new QGraphicsSimpleTextItem(m_speedBox);
-    m_speedOutArrow = createNoPenItem<SmoothPathItem>(m_speedBox);
-    m_speedOutText = new QGraphicsSimpleTextItem(m_speedBox);
+    m_speedBox = new GraphSpeedItem(m_plotArea);
 
     // Axis
     m_axes = scene->addPath(QPainterPath());
@@ -1118,55 +1031,11 @@ void GraphPlot::updateScroll()
     }
 }
 
-void GraphPlot::setupSpeedArrows(const QFont &font)
-{
-    // By the text's height
-    const qreal textHeight = QFontMetricsF(font).height();
-    const QRectF rect(0, textHeight * speedArrowTop, textHeight * speedArrowWidth,
-            textHeight * speedArrowHeight);
-
-    m_speedInArrow->setPath(arrowPath(rect, /*down=*/true));
-    m_speedOutArrow->setPath(arrowPath(rect, /*down=*/false));
-}
-
 void GraphPlot::updateSpeedBox()
 {
-    const QSizeF size = m_speedLeft ? layoutSpeedRows() : layoutSpeedLine();
+    const QSizeF size = m_speedBox->layout(/*rows=*/m_speedLeft);
 
-    m_speedBox->setRect(QRectF(QPointF(), size));
     m_speedBox->setPos(speedBoxPos(size.width(), size.height()));
-}
-
-QSizeF GraphPlot::layoutSpeedLine()
-{
-    // The arrows are colored by their bars
-    qreal width = layoutSpeedItem(m_speedInArrow, 0) + speedArrowSpacing;
-    width = layoutSpeedItem(m_speedInText, width) + m_speedSpacing;
-    width = layoutSpeedItem(m_speedOutArrow, width) + speedArrowSpacing;
-    width = layoutSpeedItem(m_speedOutText, width);
-
-    return { width, m_speedInText->boundingRect().height() };
-}
-
-QSizeF GraphPlot::layoutSpeedRows()
-{
-    // The in and out rows: the arrows at the left, the texts at the right
-    const qreal width = speedRowsWidth();
-    const qreal height = m_speedInText->boundingRect().height();
-
-    layoutSpeedRow(m_speedInArrow, m_speedInText, 0, width);
-    layoutSpeedRow(m_speedOutArrow, m_speedOutText, height, width);
-
-    return { width, height * 2 };
-}
-
-qreal GraphPlot::speedRowsWidth() const
-{
-    // By the widest speed text: the graph doesn't move with the speed
-    const QFontMetricsF metrics(m_speedInText->font());
-
-    return m_speedInArrow->boundingRect().right() + speedArrowSpacing
-            + metrics.horizontalAdvance(QLatin1String(speedSampleText));
 }
 
 int GraphPlot::speedColumnWidth() const
@@ -1177,7 +1046,7 @@ int GraphPlot::speedColumnWidth() const
     if (!m_speedBox->isVisible())
         return 0;
 
-    return qCeil(speedRowsWidth()) + axisPadding * 2;
+    return qCeil(m_speedBox->rowsWidth()) + axisPadding * 2;
 }
 
 QPointF GraphPlot::speedBoxPos(qreal width, qreal height) const
