@@ -3,6 +3,7 @@
 #include <QLoggingCategory>
 #include <QOperatingSystemVersion>
 #include <QWidget>
+#include <QtMath>
 
 #include <qt_windows.h>
 
@@ -54,6 +55,80 @@ bool isWindowVisible(HWND hwnd)
 int physicalLength(QWidget *window, int length)
 {
     return qRound(length * window->devicePixelRatioF());
+}
+
+// Qt keeps a window's geometry in the device-independent pixels: the native one is rounded to them
+// and back, and a layered window is painted at the latter (QHighDpi::toNativePixels() of its frame
+// geometry), e.g. a coordinate of 5n + 2 is moved by 1 at 125%
+bool isNativeExact(int value, qreal dpr)
+{
+    const int logical = qRound(value * (qreal(1) / dpr)); // as QHighDpi::fromNativePixels()
+
+    return qRound(logical * dpr) == value;
+}
+
+int nativeExactUp(int value, qreal dpr)
+{
+    while (!isNativeExact(value, dpr)) {
+        ++value;
+    }
+    return value;
+}
+
+int nativeExactDown(int value, qreal dpr)
+{
+    while (!isNativeExact(value, dpr)) {
+        --value;
+    }
+    return value;
+}
+
+struct Span
+{
+    int start = 0;
+    int length = 0;
+
+    int end() const { return start + length; }
+};
+
+bool isBetterSpan(const Span &span, const Span &best)
+{
+    // Up to the end: flush with the notification area and the next window, else the longest
+    if (span.end() != best.end()) {
+        return span.end() > best.end();
+    }
+
+    return span.length > best.length;
+}
+
+// Inside [start, end), of the native exact start and length
+Span nativeExactSpan(int start, int end, qreal dpr)
+{
+    Span best = { nativeExactUp(start, dpr), 0 };
+
+    const int maxStart = qMin(start + qCeil(dpr), end - 1);
+
+    for (int s = best.start; s <= maxStart; s = nativeExactUp(s + 1, dpr)) {
+        const Span span = { s, nativeExactDown(end - s, dpr) };
+
+        if (isBetterSpan(span, best)) {
+            best = span;
+        }
+    }
+
+    return best;
+}
+
+// Of the span along the bar, across all of it
+QRect barSpanRect(const QRect &bar, const Span &span, bool vertical, qreal dpr)
+{
+    if (vertical) {
+        const Span cross = nativeExactSpan(bar.left(), bar.right() + 1, dpr);
+        return QRect(cross.start, span.start, cross.length, span.length);
+    }
+
+    const Span cross = nativeExactSpan(bar.top(), bar.bottom() + 1, dpr);
+    return QRect(span.start, cross.start, span.length, cross.length);
 }
 
 bool isVertical(const QRect &rect)
@@ -492,14 +567,17 @@ void TaskbarHost::placeWindows(const QRect &bar, int end, bool vertical, WId ins
 {
     // From the end: the first window is the nearest to the notification area
     for (const auto &hosted : std::as_const(m_windows)) {
-        const int length = physicalLength(hosted.window, hosted.options.length);
-        end -= length;
+        QWidget *window = hosted.window;
+        const qreal dpr = window->devicePixelRatioF();
 
-        const QRect rect = vertical ? QRect(bar.left(), end, bar.width(), length)
-                                    : QRect(end, bar.top(), length, bar.height());
+        const int length = physicalLength(window, hosted.options.length);
+        const Span span = nativeExactSpan(end - length, end, dpr);
+        end = span.start;
 
-        SetWindowPos(windowHwnd(hosted.window), toHwnd(insertAfter), rect.x(), rect.y(),
-                rect.width(), rect.height(), SWP_NOACTIVATE);
+        const QRect rect = barSpanRect(bar, span, vertical, dpr);
+
+        SetWindowPos(windowHwnd(window), toHwnd(insertAfter), rect.x(), rect.y(), rect.width(),
+                rect.height(), SWP_NOACTIVATE);
     }
 }
 
