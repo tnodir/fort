@@ -72,7 +72,7 @@ private:
     void setupGraphOptions();
     void setupGraphFixedSpeed();
     void setupGraphViewOptions();
-    void setupTextBox();
+    void setupSpeedBox();
     QLayout *setupTrafUnitsLayout();
     void changeTrafUnit(int index);
     void setupColorsBox();
@@ -87,7 +87,7 @@ private:
     QGroupBox *m_gbGeometry = nullptr;
     QGroupBox *m_gbTaskbar = nullptr;
     QGroupBox *m_gbGraph = nullptr;
-    QGroupBox *m_gbText = nullptr;
+    QGroupBox *m_gbSpeed = nullptr;
     QGroupBox *m_gbColors = nullptr;
 
     QCheckBox *m_cbGraphHideOnClose = nullptr;

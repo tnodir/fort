@@ -87,7 +87,7 @@ void GraphOptionsArea::retranslateUi()
     m_gbGeometry->setTitle(tr("Window Geometry"));
     m_gbTaskbar->setTitle(tr("Taskbar"));
     m_gbGraph->setTitle(tr("Graph"));
-    m_gbText->setTitle(tr("Text"));
+    m_gbSpeed->setTitle(tr("Speed"));
     m_gbColors->setTitle(tr("Colors (Light | Dark)"));
 
     m_cbGraphHideOnClose->setText(tr("Hide on close"));
@@ -226,10 +226,10 @@ QLayout *GraphOptionsArea::setupColumn2()
     // Graph Group Box
     setupGraphBox();
 
-    // Text Group Box
-    setupTextBox();
+    // Speed Group Box
+    setupSpeedBox();
 
-    return createColumnLayout({ m_gbGraph, m_gbText });
+    return createColumnLayout({ m_gbGraph, m_gbSpeed });
 }
 
 QLayout *GraphOptionsArea::setupColumn3()
@@ -481,7 +481,7 @@ void GraphOptionsArea::setupGraphViewOptions()
     m_graphTickLabelSize->setObjectName("graphTickLabelSize");
 }
 
-void GraphOptionsArea::setupTextBox()
+void GraphOptionsArea::setupSpeedBox()
 {
     m_cbGraphShowSpeed = createIniGraphCheckBox(&IniGraph::showSpeed, &IniGraph::setShowSpeed);
     m_cbGraphShowSpeed->setObjectName("cbGraphShowSpeed");
@@ -496,8 +496,8 @@ void GraphOptionsArea::setupTextBox()
     auto layout = ControlUtil::createVLayoutByWidgets({ m_cbGraphShowSpeed, m_graphSpeedTextSize });
     layout->addLayout(trafUnitsLayout);
 
-    m_gbText = new QGroupBox();
-    m_gbText->setLayout(layout);
+    m_gbSpeed = new QGroupBox();
+    m_gbSpeed->setLayout(layout);
 }
 
 QLayout *GraphOptionsArea::setupTrafUnitsLayout()
