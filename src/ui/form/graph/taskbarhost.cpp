@@ -8,6 +8,7 @@
 #include <qt_windows.h>
 
 #include <algorithm>
+#include <utility>
 
 namespace {
 
@@ -129,16 +130,75 @@ Span nativeExactSpan(int start, int end, qreal dpr)
     return best;
 }
 
-// Of the span along the bar, across all of it
-QRect barSpanRect(const QRect &bar, const Span &span, bool vertical, qreal dpr)
+QRect clientRect(HWND hwnd)
 {
-    if (vertical) {
-        const Span cross = nativeExactSpan(bar.left(), bar.right() + 1, dpr);
-        return QRect(cross.start, span.start, cross.length, span.length);
+    RECT r;
+    if (!GetClientRect(hwnd, &r))
+        return {};
+
+    return QRect(r.left, r.top, r.right - r.left, r.bottom - r.top);
+}
+
+// The window is visible in its parent's client area, else in the virtual screen
+QRect clipRect(HWND hwnd)
+{
+    const HWND parent = GetAncestor(hwnd, GA_PARENT);
+
+    if (parent && parent != GetDesktopWindow()) {
+        return clientRect(parent);
     }
 
-    const Span cross = nativeExactSpan(bar.top(), bar.bottom() + 1, dpr);
-    return QRect(span.start, cross.start, span.length, cross.length);
+    return QRect(GetSystemMetrics(SM_XVIRTUALSCREEN), GetSystemMetrics(SM_YVIRTUALSCREEN),
+            GetSystemMetrics(SM_CXVIRTUALSCREEN), GetSystemMetrics(SM_CYVIRTUALSCREEN));
+}
+
+Span crossSpanOf(const QRect &rect, bool vertical)
+{
+    return vertical ? Span { rect.left(), rect.width() } : Span { rect.top(), rect.height() };
+}
+
+int coveredLength(const Span &span, int start, int end)
+{
+    return qMax(qMin(span.end(), end) - qMax(span.start, start), 0);
+}
+
+// Of the native exact start and length, covering the most of the bar's visible part, the shortest:
+// it may go out of the clip area (beyond the screen's or the parent's edge), not into the clip area
+// beside the bar
+Span crossSpan(const Span &bar, const Span &clip, qreal dpr)
+{
+    const int margin = qCeil(dpr);
+    const int start = qMax(bar.start, clip.start);
+    const int end = qMin(bar.end(), clip.end());
+
+    const int minStart = (start == clip.start) ? start - margin : start;
+    const int maxEnd = (end == clip.end()) ? end + margin : end;
+
+    Span best;
+    int bestCovered = -1;
+
+    for (int s = nativeExactUp(minStart, dpr); s <= start + margin; s = nativeExactUp(s + 1, dpr)) {
+        Span span = { s, nativeExactUp(end - s, dpr) };
+        if (span.end() > maxEnd) {
+            span.length = nativeExactDown(maxEnd - s, dpr);
+        }
+
+        const int covered = coveredLength(span, start, end);
+
+        if (std::make_pair(covered, -span.length) > std::make_pair(bestCovered, -best.length)) {
+            best = span;
+            bestCovered = covered;
+        }
+    }
+
+    return best;
+}
+
+// Of the spans along the bar and across it
+QRect barSpanRect(const Span &span, const Span &cross, bool vertical)
+{
+    return vertical ? QRect(cross.start, span.start, cross.length, span.length)
+                    : QRect(span.start, cross.start, span.length, cross.length);
 }
 
 // The upper window is above the lower one in the z-order
@@ -614,10 +674,14 @@ void TaskbarHost::placeWindows(const QRect &bar, int end, bool vertical, WId ins
         const Span span = nativeExactSpan(end - length, end, dpr);
         end = span.start;
 
-        const QRect rect = barSpanRect(bar, span, vertical, dpr);
+        const HWND hwnd = windowHwnd(window);
+        const Span cross =
+                crossSpan(crossSpanOf(bar, vertical), crossSpanOf(clipRect(hwnd), vertical), dpr);
 
-        SetWindowPos(windowHwnd(window), toHwnd(insertAfter), rect.x(), rect.y(), rect.width(),
-                rect.height(), SWP_NOACTIVATE);
+        const QRect rect = barSpanRect(span, cross, vertical);
+
+        SetWindowPos(hwnd, toHwnd(insertAfter), rect.x(), rect.y(), rect.width(), rect.height(),
+                SWP_NOACTIVATE);
 
         syncWidgetGeometry(window);
     }
