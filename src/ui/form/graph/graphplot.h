@@ -203,6 +203,8 @@ private:
 
     int setupTickLabels(const QStringList &labels);
     void updateAxisRect(int tickLabelsWidth);
+    QRect axisRect(int tickLabelsWidth) const;
+    double minTickStep() const;
     int axisTickLength() const;
     int borderWidth() const;
     int unitLabelWidth() const;

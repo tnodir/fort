@@ -9,14 +9,14 @@ inline constexpr int tickStepBase = 2;
 
 }
 
-void AxisTickerSpeed::generate(double rangeUpper, AxisTicks &axisTicks) const
+void AxisTickerSpeed::generate(double rangeUpper, double minTickStep, AxisTicks &axisTicks) const
 {
     axisTicks = {};
 
     if (rangeUpper <= 0)
         return;
 
-    const double tickStep = getTickStep(rangeUpper);
+    const double tickStep = getTickStep(rangeUpper, minTickStep);
     const double subTickStep = tickStep / 2; // one sub tick between ticks
     const int lastStep = qFloor(rangeUpper / tickStep);
 
@@ -34,11 +34,18 @@ void AxisTickerSpeed::generate(double rangeUpper, AxisTicks &axisTicks) const
     setupLabels(tickStep, axisTicks);
 }
 
-double AxisTickerSpeed::getTickStep(double rangeSize)
+double AxisTickerSpeed::getTickStep(double rangeSize, double minTickStep)
 {
     const double exactStep = rangeSize / tickCount;
 
-    return qPow(tickStepBase, qFloor(qLn(exactStep) / qLn(tickStepBase) + 0.5));
+    double step = qPow(tickStepBase, qFloor(qLn(exactStep) / qLn(tickStepBase) + 0.5));
+
+    // Fewer ticks in a low view: up to one step for the whole range
+    while (step < minTickStep && step < rangeSize) {
+        step *= tickStepBase;
+    }
+
+    return step;
 }
 
 void AxisTickerSpeed::setupLabels(double tickStep, AxisTicks &axisTicks) const

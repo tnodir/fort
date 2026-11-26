@@ -1,6 +1,7 @@
 #include "graphplot.h"
 
 #include <QDateTime>
+#include <QFontMetricsF>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QMouseEvent>
@@ -796,7 +797,7 @@ void GraphPlot::layoutAxes()
     m_speedMargins = speedMargins();
 
     AxisTicks axisTicks;
-    m_ticker.generate(m_valueUpper, axisTicks);
+    m_ticker.generate(m_valueUpper, minTickStep(), axisTicks);
 
     m_unitLabel->setText(axisTicks.unit);
 
@@ -867,6 +868,17 @@ int GraphPlot::setupTickLabels(const QStringList &labels)
 
 void GraphPlot::updateAxisRect(int tickLabelsWidth)
 {
+    m_axisRect = axisRect(tickLabelsWidth);
+
+    // Clip the bars at their bottom in device pixels
+    QRectF plotRect = m_axisRect;
+    plotRect.setBottom(barsBottom() / devicePixelRatioF());
+
+    m_plotArea->setRect(plotRect);
+}
+
+QRect GraphPlot::axisRect(int tickLabelsWidth) const
+{
     const int border = borderWidth();
     const int ticksWidth = axisTickLength();
     const QMargins &speed = m_speedMargins;
@@ -878,13 +890,19 @@ void GraphPlot::updateAxisRect(int tickLabelsWidth)
     const int topMargin = border + axisMarginTop + speed.top();
     const int bottomMargin = border + speed.bottom();
 
-    m_axisRect = viewport()->rect().adjusted(leftMargin, topMargin, -rightMargin, -bottomMargin);
+    return viewport()->rect().adjusted(leftMargin, topMargin, -rightMargin, -bottomMargin);
+}
 
-    // Clip the bars at their bottom in device pixels
-    QRectF plotRect = m_axisRect;
-    plotRect.setBottom(barsBottom() / devicePixelRatioF());
+double GraphPlot::minTickStep() const
+{
+    // The ticks are apart by the labels' height at least, also without the labels
+    const int axisHeight = axisRect(0).height();
+    if (axisHeight <= 0)
+        return 0;
 
-    m_plotArea->setRect(plotRect);
+    const qreal labelHeight = QFontMetricsF(m_tickLabelFont).height();
+
+    return m_valueUpper * labelHeight / axisHeight;
 }
 
 int GraphPlot::axisTickLength() const

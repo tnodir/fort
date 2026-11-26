@@ -22,11 +22,11 @@ public:
     FormatUtil::SizeFormat unitFormat() const { return m_unitFormat; }
     void setUnitFormat(FormatUtil::SizeFormat v) { m_unitFormat = v; }
 
-    // Generates the ticks of the [0, rangeUpper] range
-    void generate(double rangeUpper, AxisTicks &axisTicks) const;
+    // Generates the ticks of the [0, rangeUpper] range, their step isn't less than minTickStep
+    void generate(double rangeUpper, double minTickStep, AxisTicks &axisTicks) const;
 
 private:
-    static double getTickStep(double rangeSize);
+    static double getTickStep(double rangeSize, double minTickStep);
 
     void setupLabels(double tickStep, AxisTicks &axisTicks) const;
 
