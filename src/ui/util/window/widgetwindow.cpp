@@ -40,6 +40,11 @@ int nextToX(const QRect &r, int width, const QRect &screen)
     return leftX;
 }
 
+bool acceptsFocus(const QWidget *w)
+{
+    return !w->windowFlags().testFlag(Qt::WindowDoesNotAcceptFocus);
+}
+
 }
 
 WidgetWindow::WidgetWindow(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f) { }
@@ -91,7 +96,8 @@ void WidgetWindow::showWidget(QWidget *w, bool activate, bool expose)
     w->show();
     w->raise();
 
-    if (activate) {
+    // Qt warns on activating a window not accepting the focus, e.g. a taskbar's graph
+    if (activate && acceptsFocus(w)) {
         w->activateWindow();
     }
 
