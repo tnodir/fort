@@ -15,6 +15,9 @@ const QLoggingCategory LC("form.graph.taskbarHost");
 
 inline constexpr wchar_t messageWindowClass[] = L"FortFirewallTaskbarHost";
 
+// A walk of the z-order by GetWindow() may cycle while the order changes
+inline constexpr int maxZOrderSteps = 1000;
+
 UINT g_taskbarCreatedMsg = 0;
 
 TaskbarHost *g_taskbarHost = nullptr; // for the static callbacks
@@ -138,6 +141,19 @@ QRect barSpanRect(const QRect &bar, const Span &span, bool vertical, qreal dpr)
     return QRect(span.start, cross.start, span.length, cross.length);
 }
 
+// The upper window is above the lower one in the z-order
+bool isWindowAbove(HWND upper, HWND lower)
+{
+    HWND hwnd = lower;
+
+    for (int i = 0; i < maxZOrderSteps && hwnd; ++i) {
+        hwnd = GetWindow(hwnd, GW_HWNDPREV);
+        if (hwnd == upper)
+            return true;
+    }
+    return false;
+}
+
 bool isVertical(const QRect &rect)
 {
     return rect.height() > rect.width();
@@ -171,9 +187,17 @@ struct TaskbarHostEvents
         return DefWindowProcW(hwnd, msg, wParam, lParam);
     }
 
-    static void CALLBACK winEventProc(HWINEVENTHOOK /*hook*/, DWORD /*event*/, HWND hwnd,
-            LONG idObject, LONG idChild, DWORD /*thread*/, DWORD /*time*/)
+    static void CALLBACK winEventProc(HWINEVENTHOOK /*hook*/, DWORD event, HWND hwnd, LONG idObject,
+            LONG idChild, DWORD /*thread*/, DWORD /*time*/)
     {
+        // The top-level windows' z-order: of the desktop's children
+        if (event == EVENT_OBJECT_REORDER) {
+            if (hwnd == GetDesktopWindow()) {
+                g_taskbarHost->onZOrderChanged();
+            }
+            return;
+        }
+
         if (idObject != OBJID_WINDOW || idChild != CHILDID_SELF)
             return;
 
@@ -409,14 +433,20 @@ void TaskbarHost::startEvents()
     m_foregroundHook =
             TaskbarHostEvents::setWinEventHook(EVENT_SYSTEM_FOREGROUND, processId, threadId);
 
-    if (!m_locationHook || !m_foregroundHook) {
+    // Of any process: the desktop's z-order events aren't of the Explorer's thread, which raises
+    // the taskbar over the overlay e.g. after the Start menu's closing
+    m_reorderHook = TaskbarHostEvents::setWinEventHook(EVENT_OBJECT_REORDER, 0, 0);
+
+    const void *hooks[] = { m_locationHook, m_foregroundHook, m_reorderHook };
+
+    if (std::find(std::cbegin(hooks), std::cend(hooks), nullptr) != std::cend(hooks)) {
         qCWarning(LC) << "WinEvent hook error:" << GetLastError();
     }
 }
 
 void TaskbarHost::stopEvents()
 {
-    for (void **hook : { &m_locationHook, &m_foregroundHook }) {
+    for (void **hook : { &m_locationHook, &m_foregroundHook, &m_reorderHook }) {
         if (*hook) {
             UnhookWinEvent(HWINEVENTHOOK(*hook));
             *hook = nullptr;
@@ -593,6 +623,17 @@ void TaskbarHost::placeWindows(const QRect &bar, int end, bool vertical, WId ins
     }
 }
 
+bool TaskbarHost::isTaskbarAboveWindows() const
+{
+    const HWND taskbar = toHwnd(m_bar.taskbar);
+
+    for (const auto &hosted : m_windows) {
+        if (isWindowAbove(taskbar, windowHwnd(hosted.window)))
+            return true;
+    }
+    return false;
+}
+
 bool TaskbarHost::isTaskbarWindow(WId hwnd) const
 {
     if (!hwnd)
@@ -608,6 +649,14 @@ void TaskbarHost::onTaskbarWindowChanged(WId hwnd)
     // The taskbar's layout is changed or it's over the overlay
     if (isTaskbarWindow(hwnd)) {
         updateMode();
+        layout();
+    }
+}
+
+void TaskbarHost::onZOrderChanged()
+{
+    // The taskbar raised over the overlay, e.g. by the Start menu's closing
+    if (m_mode == ModeOverlay && isTaskbarAboveWindows()) {
         layout();
     }
 }

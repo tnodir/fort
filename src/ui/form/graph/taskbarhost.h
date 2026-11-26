@@ -88,9 +88,11 @@ private:
     void layoutBeforeNotify(WId parent, WId insertAfter);
     void placeWindows(const QRect &bar, int end, bool vertical, WId insertAfter);
 
+    bool isTaskbarAboveWindows() const;
     bool isTaskbarWindow(WId hwnd) const;
 
     void onTaskbarWindowChanged(WId hwnd);
+    void onZOrderChanged();
     void onTaskbarCreated();
 
     friend struct TaskbarHostEvents;
@@ -105,6 +107,7 @@ private:
 
     void *m_locationHook = nullptr;
     void *m_foregroundHook = nullptr;
+    void *m_reorderHook = nullptr;
 
     QWindow *m_parentWindow = nullptr; // the foreign taskbar's window
 
