@@ -98,6 +98,7 @@ void GraphView::updateFormat(const IniGraph &ini)
     m_plot->setBarWidth(ini.barWidth());
     m_plot->setBorderWidth(ini.borderWidth());
     m_plot->setAxisTicksVisible(ini.axisTicks());
+    m_plot->setGridVisible(ini.gridLines());
     m_plot->setYAxisLabelsVisible(ini.yAxisLabels());
     m_plot->setUnitFormat(FormatUtil::graphUnitFormat(ini.trafUnit()));
     m_plot->setFixedValueMax(ini.fixedSpeed() * 1024LL);

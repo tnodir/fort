@@ -220,6 +220,16 @@ void GraphPlot::setAxisTicksVisible(bool v)
     m_axesChanged = true;
 }
 
+void GraphPlot::setGridVisible(bool v)
+{
+    if (m_gridVisible == v)
+        return;
+
+    m_gridVisible = v;
+
+    updateGraphItemsVisible();
+}
+
 void GraphPlot::setYAxisLabelsVisible(bool v)
 {
     if (m_yAxisLabelsVisible == v)
@@ -598,7 +608,7 @@ void GraphPlot::setupScaleAnimation()
 
 void GraphPlot::updateGraphItemsVisible()
 {
-    m_grid->setVisible(m_graphVisible);
+    m_grid->setVisible(m_graphVisible && m_gridVisible);
     m_bars->setVisible(m_graphVisible);
     m_axes->setVisible(m_graphVisible);
     m_yAxisLabels->setVisible(m_graphVisible && m_yAxisLabelsVisible);

@@ -73,6 +73,10 @@ public:
     bool axisTicks() const { return valueBool("axisTicks", axisTicksDefault()); }
     void setAxisTicks(bool on) { setValue("axisTicks", on); }
 
+    static constexpr bool gridLinesDefault() { return true; }
+    bool gridLines() const { return valueBool("gridLines", gridLinesDefault()); }
+    void setGridLines(bool on) { setValue("gridLines", on); }
+
     static constexpr int opacityDefault() { return 90; }
     int opacity() const { return valueInt("opacity", opacityDefault()); }
     void setOpacity(int v) { setValue("opacity", v); }

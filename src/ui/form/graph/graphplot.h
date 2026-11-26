@@ -108,6 +108,9 @@ public:
     bool axisTicksVisible() const { return m_axisTicksVisible; }
     void setAxisTicksVisible(bool v);
 
+    bool gridVisible() const { return m_gridVisible; }
+    void setGridVisible(bool v);
+
     bool yAxisLabelsVisible() const { return m_yAxisLabelsVisible; }
     void setYAxisLabelsVisible(bool v);
 
@@ -248,6 +251,7 @@ private:
     bool m_mouseHasMoved : 1 = false;
     bool m_animated : 1 = false;
     bool m_axisTicksVisible : 1 = false;
+    bool m_gridVisible : 1 = true;
     bool m_yAxisLabelsVisible : 1 = true;
     bool m_axesChanged : 1 = true;
     bool m_barsEmpty : 1 = true;
