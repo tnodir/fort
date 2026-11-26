@@ -422,7 +422,8 @@ void GraphOptionsArea::setupGraphBox()
             { ControlUtil::createSeparator(), m_graphBarWidth, m_graphMaxSeconds, m_graphFixedSpeed,
                     ControlUtil::createSeparator(), m_cbGraphAnimation, m_cbGraphAxisTicks,
                     m_cbGraphGridLines, m_cbGraphYAxisLabels });
-    layout->addLayout(ControlUtil::createRowLayout(m_labelTickLabelFont, m_graphTickLabelFont));
+    layout->addLayout(ControlUtil::createRowLayout(
+            m_labelTickLabelFont, m_graphTickLabelFont, /*stretch1=*/0));
 
     m_gbGraph = new QGroupBox();
     m_gbGraph->setLayout(layout);
@@ -564,7 +565,8 @@ void GraphOptionsArea::setupSpeedBox()
     auto trafUnitsLayout = setupTrafUnitsLayout();
 
     auto layout = ControlUtil::createVLayoutByWidgets({ m_cbGraphShowSpeed });
-    layout->addLayout(ControlUtil::createRowLayout(m_labelSpeedLabelFont, m_graphSpeedLabelFont));
+    layout->addLayout(ControlUtil::createRowLayout(
+            m_labelSpeedLabelFont, m_graphSpeedLabelFont, /*stretch1=*/0));
     layout->addLayout(speedPositionLayout);
     layout->addWidget(m_cbGraphSpeedInside);
     layout->addLayout(trafUnitsLayout);
