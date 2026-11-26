@@ -51,6 +51,7 @@ private:
             void (IniGraph::*setIniValue)(int));
 
     void retranslateFixedSpeedCombo();
+    void retranslateGraphAxisLines();
     void retranslateGraphColors();
     void retranslateGraphTypeCombo();
     void retranslateSpeedPositionCombo();
@@ -78,6 +79,10 @@ private:
     void setupGraphOptions();
     void setupGraphFixedSpeed();
     void setupGraphViewOptions();
+    QLayout *setupGraphAxisLinesLayout();
+    QCheckBox *createGraphAxisLine(GraphAxisLine line);
+    void resetGraphAxisLines();
+    void setGraphAxisLine(GraphAxisLine line, bool on);
     FontSelector *createGraphFont(GraphFontType type);
     void resetGraphFont(FontSelector *c, GraphFontType type);
     void setGraphFont(GraphFontType type, const QFont &v);
@@ -128,6 +133,8 @@ private:
     LabelSpin *m_graphMaxSeconds = nullptr;
     LabelSpinCombo *m_graphFixedSpeed = nullptr;
     QCheckBox *m_cbGraphAnimation = nullptr;
+    QLabel *m_labelGraphAxisLines = nullptr;
+    std::array<QCheckBox *, GraphAxisLineCount> m_cbGraphAxisLines = {};
     QCheckBox *m_cbGraphAxisTicks = nullptr;
     QCheckBox *m_cbGraphGridLines = nullptr;
     QCheckBox *m_cbGraphYAxisLabels = nullptr;

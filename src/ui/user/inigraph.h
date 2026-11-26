@@ -70,6 +70,10 @@ public:
     bool animation() const { return valueBool("animation", animationDefault()); }
     void setAnimation(bool on) { setValue("animation", on); }
 
+    static constexpr int axisLinesDefault() { return GraphTypes::axisLineMask(GraphAxisLineLeft); }
+    int axisLines() const { return valueInt("axisLines", axisLinesDefault()); }
+    void setAxisLines(int v) { setValue("axisLines", v); }
+
     static constexpr bool axisTicksDefault() { return false; }
     bool axisTicks() const { return valueBool("axisTicks", axisTicksDefault()); }
     void setAxisTicks(bool on) { setValue("axisTicks", on); }

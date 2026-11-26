@@ -33,6 +33,14 @@ enum GraphSpeedPosition : qint8 {
     GraphSpeedRight,
 };
 
+enum GraphAxisLine : qint8 {
+    GraphAxisLineLeft = 0,
+    GraphAxisLineTop,
+    GraphAxisLineRight,
+    GraphAxisLineBottom,
+    GraphAxisLineCount
+};
+
 class GraphTypes
 {
     Q_DECLARE_TR_FUNCTIONS(GraphTypes)
@@ -53,6 +61,11 @@ public:
     }
 
     static QStringList speedPositionNames();
+
+    // The bit of the line in the mask of the visible ones
+    static constexpr int axisLineMask(GraphAxisLine line) { return 1 << line; }
+
+    static QStringList axisLineNames();
 };
 
 #endif // GRAPH_TYPES_H

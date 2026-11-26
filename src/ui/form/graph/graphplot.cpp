@@ -210,6 +210,16 @@ void GraphPlot::setOutVisible(bool v)
     updateItemsVisible();
 }
 
+void GraphPlot::setAxisLines(int v)
+{
+    if (m_axisLines == v)
+        return;
+
+    m_axisLines = v;
+
+    m_axesChanged = true;
+}
+
 void GraphPlot::setAxisTicksVisible(bool v)
 {
     if (m_axisTicksVisible == v)
@@ -889,10 +899,11 @@ QRect GraphPlot::axisRect(int tickLabelsWidth) const
     const int leftWidth = speed.left() + yAxisLabelsWidth(tickLabelsWidth) + ticksWidth;
     // The base line is on the border without the speed, labels and ticks
     const int leftMargin = (leftWidth > 0) ? border + leftWidth : 0;
-    // The bars are up to the right edge without the ticks and the speed
-    const int rightMargin = border + ticksWidth + speed.right();
+    // The bars are up to the right edge without the ticks, the speed and the right line
+    const int rightWidth = ticksWidth + speed.right();
+    const int rightMargin = border + rightWidth + axisLineWidth(GraphAxisLineRight, rightWidth);
     const int topMargin = border + axisMarginTop + speed.top();
-    const int bottomMargin = border + speed.bottom();
+    const int bottomMargin = border + this->bottomMargin();
 
     return viewport()->rect().adjusted(leftMargin, topMargin, -rightMargin, -bottomMargin);
 }
@@ -907,6 +918,19 @@ double GraphPlot::minTickStep() const
     const qreal labelHeight = QFontMetricsF(m_tickLabelFont).height();
 
     return m_valueUpper * labelHeight / axisHeight;
+}
+
+int GraphPlot::axisLineWidth(GraphAxisLine line, int marginWidth) const
+{
+    // A pixel for the line at the view's side without a margin
+    return (marginWidth == 0 && hasAxisLine(line)) ? 1 : 0;
+}
+
+int GraphPlot::bottomMargin() const
+{
+    const int speedHeight = m_speedMargins.bottom();
+
+    return speedHeight + axisLineWidth(GraphAxisLineBottom, speedHeight);
 }
 
 int GraphPlot::axisTickLength() const
@@ -1126,11 +1150,6 @@ bool GraphPlot::isSpeedOutside() const
     return !m_speedInside && m_graphVisible && m_speedBox->isVisible();
 }
 
-bool GraphPlot::isSpeedBelow() const
-{
-    return m_speedMargins.bottom() > 0;
-}
-
 QMargins GraphPlot::speedMargins() const
 {
     if (!isSpeedOutside())
@@ -1176,23 +1195,29 @@ void GraphPlot::updateAxes(const QVector<int> &tickYs, const QVector<int> &subTi
 {
     const int right = m_axisRect.right() + 1;
     const int top = m_axisRect.bottom() - m_axisRect.height();
-    const bool speedBelow = isSpeedBelow();
-    // The vertical lines are up to the X axis line
-    const qreal bottom = speedBelow ? xAxisY() : m_axisRect.bottom();
+    // The vertical lines are up to the X axis line's place
+    const qreal bottom = (bottomMargin() > 0) ? xAxisY() : m_axisRect.bottom();
 
     QPainterPath path;
 
-    // Base Lines
-    addVLine(path, m_axisRect.left(), bottom, top);
-
-    // X Axis Line: Between the bars and the speed below them
-    if (speedBelow) {
-        addHLine(path, m_axisRect.left(), right, bottom);
+    // Base Line
+    if (hasAxisLine(GraphAxisLineLeft)) {
+        addVLine(path, m_axisRect.left(), bottom, top);
     }
 
-    // Right Line: Also between the bars and the speed at the right
-    if (m_axisTicksVisible || m_speedMargins.right() > 0) {
+    // Top Line: Between the bars and the speed above them
+    if (hasAxisLine(GraphAxisLineTop)) {
+        addHLine(path, m_axisRect.left(), right, top);
+    }
+
+    // Right Line: Between the bars and the ticks or the speed at the right
+    if (hasAxisLine(GraphAxisLineRight)) {
         addVLine(path, right, bottom, top);
+    }
+
+    // X Axis Line: Between the bars and the speed below them
+    if (hasAxisLine(GraphAxisLineBottom)) {
+        addHLine(path, m_axisRect.left(), right, bottom);
     }
 
     // Ticks
@@ -1283,9 +1308,10 @@ int GraphPlot::barsBottom() const
 {
     const qreal dpr = devicePixelRatioF();
 
-    // In device pixels: up to the X axis line of a device pixel above the speed
-    if (isSpeedBelow()) {
-        return qRound((viewport()->height() - borderWidth() - m_speedMargins.bottom()) * dpr);
+    // In device pixels: up to the X axis line of a device pixel above the bottom margin
+    const int bottomMargin = this->bottomMargin();
+    if (bottomMargin > 0) {
+        return qRound((viewport()->height() - borderWidth() - bottomMargin) * dpr);
     }
 
     // Up to the view's bottom or to the border's line of device pixels

@@ -19,3 +19,9 @@ QStringList GraphTypes::speedPositionNames()
     // Sync with GraphSpeedPosition
     return { tr("Top"), tr("Bottom"), tr("Left"), tr("Right") };
 }
+
+QStringList GraphTypes::axisLineNames()
+{
+    // Sync with GraphAxisLine
+    return { tr("Left"), tr("Top"), tr("Right"), tr("Bottom") };
+}

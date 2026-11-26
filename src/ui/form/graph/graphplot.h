@@ -105,6 +105,14 @@ public:
     bool animated() const { return m_animated; }
     void setAnimated(bool v);
 
+    int axisLines() const { return m_axisLines; }
+    void setAxisLines(int v);
+
+    bool hasAxisLine(GraphAxisLine line) const
+    {
+        return (m_axisLines & GraphTypes::axisLineMask(line)) != 0;
+    }
+
     bool axisTicksVisible() const { return m_axisTicksVisible; }
     void setAxisTicksVisible(bool v);
 
@@ -226,8 +234,9 @@ private:
     void updateSpeedBox();
     bool isSpeedRows() const;
     bool isSpeedOutside() const;
-    bool isSpeedBelow() const;
     QMargins speedMargins() const;
+    int axisLineWidth(GraphAxisLine line, int marginWidth) const;
+    int bottomMargin() const;
     QPointF speedBoxPos(const QSizeF &size) const;
     void updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs);
     void updateTickLabels(const QVector<int> &tickYs);
@@ -263,6 +272,8 @@ private:
 
     GraphType m_graphType = GraphTypeColumn;
     GraphSpeedPosition m_speedPosition = GraphSpeedTop;
+
+    quint8 m_axisLines = GraphTypes::axisLineMask(GraphAxisLineLeft);
 
     int m_maxSeconds = 500;
     int m_barWidth = 5; // pixels per second

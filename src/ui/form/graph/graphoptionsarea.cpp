@@ -67,6 +67,7 @@ void GraphOptionsArea::resetToDefault()
     m_graphMaxSeconds->spinBox()->setValue(IniGraph::maxSecondsDefault());
     m_graphFixedSpeed->spinBox()->setValue(IniGraph::fixedSpeedDefault());
     m_cbGraphAnimation->setChecked(IniGraph::animationDefault());
+    resetGraphAxisLines();
     m_cbGraphAxisTicks->setChecked(IniGraph::axisTicksDefault());
     m_cbGraphGridLines->setChecked(IniGraph::gridLinesDefault());
     m_cbGraphYAxisLabels->setChecked(IniGraph::yAxisLabelsDefault());
@@ -129,6 +130,8 @@ void GraphOptionsArea::retranslateUi()
             tr("The constant top of the speed scale instead of the automatic one"));
     retranslateFixedSpeedCombo();
     m_cbGraphAnimation->setText(tr("Animation"));
+    m_labelGraphAxisLines->setText(tr("Axis lines:"));
+    retranslateGraphAxisLines();
     m_cbGraphAxisTicks->setText(tr("Axis ticks"));
     m_cbGraphGridLines->setText(tr("Grid lines"));
     m_cbGraphYAxisLabels->setText(tr("Y axis scale labels"));
@@ -154,6 +157,15 @@ void GraphOptionsArea::retranslateFixedSpeedCombo()
     names.replace(1, tr("Auto-scale"));
 
     m_graphFixedSpeed->setNames(names);
+}
+
+void GraphOptionsArea::retranslateGraphAxisLines()
+{
+    const QStringList names = GraphTypes::axisLineNames();
+
+    for (int i = 0; i < GraphAxisLineCount; ++i) {
+        m_cbGraphAxisLines[i]->setText(names[i]);
+    }
 }
 
 void GraphOptionsArea::retranslateGraphColors()
@@ -420,8 +432,10 @@ void GraphOptionsArea::setupGraphBox()
 
     ControlUtil::fillLayoutByWidgets(layout,
             { ControlUtil::createSeparator(), m_graphBarWidth, m_graphMaxSeconds, m_graphFixedSpeed,
-                    ControlUtil::createSeparator(), m_cbGraphAnimation, m_cbGraphAxisTicks,
-                    m_cbGraphGridLines, m_cbGraphYAxisLabels });
+                    ControlUtil::createSeparator(), m_cbGraphAnimation });
+    layout->addLayout(setupGraphAxisLinesLayout());
+    ControlUtil::fillLayoutByWidgets(
+            layout, { m_cbGraphAxisTicks, m_cbGraphGridLines, m_cbGraphYAxisLabels });
     layout->addLayout(ControlUtil::createRowLayout(
             m_labelTickLabelFont, m_graphTickLabelFont, /*stretch1=*/0));
 
@@ -509,6 +523,55 @@ void GraphOptionsArea::setupGraphViewOptions()
 
     m_graphTickLabelFont = createGraphFont(GraphFontTickLabel);
     m_graphTickLabelFont->setObjectName("graphTickLabelFont");
+}
+
+QLayout *GraphOptionsArea::setupGraphAxisLinesLayout()
+{
+    m_labelGraphAxisLines = ControlUtil::createLabel();
+
+    QList<QWidget *> widgets = { m_labelGraphAxisLines, /*stretch*/ nullptr };
+
+    for (int i = 0; i < GraphAxisLineCount; ++i) {
+        auto c = createGraphAxisLine(GraphAxisLine(i));
+        m_cbGraphAxisLines[i] = c;
+        widgets.append(c);
+    }
+
+    return ControlUtil::createHLayoutByWidgets(widgets, /*margin=*/0);
+}
+
+QCheckBox *GraphOptionsArea::createGraphAxisLine(GraphAxisLine line)
+{
+    const bool checked = (iniGraph().axisLines() & GraphTypes::axisLineMask(line)) != 0;
+
+    auto c = ControlUtil::createCheckBox(
+            checked, [=, this](bool checked) { setGraphAxisLine(line, checked); });
+    c->setObjectName(QString("cbGraphAxisLine%1").arg(int(line)));
+
+    return c;
+}
+
+void GraphOptionsArea::resetGraphAxisLines()
+{
+    const int lines = IniGraph::axisLinesDefault();
+
+    for (int i = 0; i < GraphAxisLineCount; ++i) {
+        const int mask = GraphTypes::axisLineMask(GraphAxisLine(i));
+        m_cbGraphAxisLines[i]->setChecked((lines & mask) != 0);
+    }
+}
+
+void GraphOptionsArea::setGraphAxisLine(GraphAxisLine line, bool on)
+{
+    const int mask = GraphTypes::axisLineMask(line);
+    const int lines = iniGraph().axisLines();
+    const int v = on ? (lines | mask) : (lines & ~mask);
+
+    if (v == lines)
+        return;
+
+    iniGraph().setAxisLines(v);
+    emit edited();
 }
 
 FontSelector *GraphOptionsArea::createGraphFont(GraphFontType type)

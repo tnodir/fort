@@ -125,6 +125,7 @@ void GraphView::updateFormat(const IniGraph &ini)
     m_plot->setOutVisible(ini.showOut());
     m_plot->setBarWidth(ini.barWidth());
     m_plot->setBorderWidth(ini.borderWidth());
+    m_plot->setAxisLines(ini.axisLines());
     m_plot->setAxisTicksVisible(ini.axisTicks());
     m_plot->setGridVisible(ini.gridLines());
     m_plot->setYAxisLabelsVisible(ini.yAxisLabels());
