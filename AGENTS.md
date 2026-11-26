@@ -128,7 +128,7 @@ The Main window (`form/main/`: `MainWindow`, its menu bar on the tray's actions,
 
 The Activity window (`form/activity/`, `ActivityWindow`, `ActivityTreeModel`: the live processes and their allowed flows with the speeds, read from `ActivityManager`'s DB, which the master writes from the driver's CONN/FLOW_TRAF/FLOW_CLOSED log entries; a client reads the file read-only): read `docs/agents/activity.md` before changing it.
 
-The traffic graphs (`form/graph/`: `GraphWindow`, `GraphPlot` on a `QGraphicsView`, no chart library; the bars, lines, scrolling and animations in device pixels; up to 8 graphs by id, the Graphs window): read `docs/agents/traffic-graph.md` before changing it.
+The traffic graphs (`form/graph/`: `GraphWindow`, `GraphPlot` on a `QGraphicsView`, no chart library; the bars, lines, scrolling and animations in device pixels; up to 8 graphs by id, the Graphs window; the taskbar's graphs: `TaskbarGraphWindow`, `TaskbarHost`'s embedding, layering and z-order): read `docs/agents/traffic-graph.md` before changing it.
 
 ## Conventions
 
