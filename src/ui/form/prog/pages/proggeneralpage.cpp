@@ -172,8 +172,8 @@ void ProgGeneralPage::onRetranslateUi()
     retranslateScheduleIn();
     m_dteScheduleAt->unsetLocale();
 
-    m_btQuickAllow->setToolTip(m_rbAllow->text());
-    m_btQuickBlock->setToolTip(m_rbBlock->text());
+    m_btQuickAllow->setToolTip(tr("Allow and Save"));
+    m_btQuickBlock->setToolTip(tr("Block and Save"));
     retranslateTimedMenuActions();
     retranslateTimedAction(m_btTimedAction);
     updateTimedAction();
