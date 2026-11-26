@@ -3,6 +3,8 @@
 #include <QLayout>
 #include <QTimer>
 
+#include <qt_windows.h>
+
 #include <form/graph/taskbarhost.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -95,4 +97,16 @@ void TaskbarGraphWindow::updatePlacement()
     options.length = iniGraph().taskbarWidth();
 
     windowManager()->taskbarHost()->addWindow(this, options);
+}
+
+bool TaskbarGraphWindow::nativeEvent(const QByteArray &eventType, void *message, qintptr *result)
+{
+    // Qt makes a window not accepting the focus the focus window on WM_SETFOCUS, then on another
+    // window's WM_SETFOCUS within SetParent() re-activates it with a warning
+    // (QWindowsContext::handleFocusEvent() of Qt 6.1.3 on Windows 7)
+    const auto msg = static_cast<MSG *>(message);
+    if (msg->message == WM_SETFOCUS)
+        return true;
+
+    return GraphBaseWindow::nativeEvent(eventType, message, result);
 }
