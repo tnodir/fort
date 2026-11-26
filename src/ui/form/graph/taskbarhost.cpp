@@ -47,6 +47,13 @@ QRect windowRect(HWND hwnd, HWND parent = nullptr)
     return QRect(r.left, r.top, r.right - r.left, r.bottom - r.top);
 }
 
+// The widget's geometry follows the native one at once (exact in the device-independent pixels):
+// else the native show after its show event applies the widget's own geometry
+void syncWidgetGeometry(QWidget *window)
+{
+    window->setGeometry(window->windowHandle()->geometry());
+}
+
 bool isWindowVisible(HWND hwnd)
 {
     return hwnd && IsWindowVisible(hwnd);
@@ -578,6 +585,8 @@ void TaskbarHost::placeWindows(const QRect &bar, int end, bool vertical, WId ins
 
         SetWindowPos(windowHwnd(window), toHwnd(insertAfter), rect.x(), rect.y(), rect.width(),
                 rect.height(), SWP_NOACTIVATE);
+
+        syncWidgetGeometry(window);
     }
 }
 

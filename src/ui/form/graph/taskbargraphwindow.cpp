@@ -1,5 +1,6 @@
 #include "taskbargraphwindow.h"
 
+#include <QLayout>
 #include <QTimer>
 
 #include <form/graph/taskbarhost.h>
@@ -37,6 +38,10 @@ bool TaskbarGraphWindow::isHostChanged() const
 
 void TaskbarGraphWindow::setupUi()
 {
+    // The size is of the taskbar: the layout's minimum (of the view's hidden scroll bars) may be
+    // taller, and QWidget::setGeometry() would raise the height to it
+    layout()->setSizeConstraint(QLayout::SetNoConstraint);
+
     // The width
     connect(view(), &GraphView::optionsUpdated, this, &TaskbarGraphWindow::updatePlacement);
 
@@ -71,9 +76,6 @@ void TaskbarGraphWindow::showEvent(QShowEvent *event)
     GraphBaseWindow::showEvent(event);
 
     updatePlacement();
-
-    // The native show after the event applies the widget's own geometry
-    QMetaObject::invokeMethod(this, &TaskbarGraphWindow::updatePlacement, Qt::QueuedConnection);
 }
 
 void TaskbarGraphWindow::hideEvent(QHideEvent *event)
