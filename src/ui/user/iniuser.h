@@ -54,6 +54,9 @@ const char *const appGroupModifier = "Ctrl+Alt+Shift";
 class IniUser : public MapSettings
 {
 public:
+    // The values of Qt::ColorScheme (Qt 6.5+)
+    enum ColorScheme { ColorSchemeSystem = 0, ColorSchemeLight, ColorSchemeDark };
+
     explicit IniUser(Settings *settings = nullptr);
 
     QString defaultLanguage() const { return m_defaultLanguage; }

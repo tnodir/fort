@@ -7,6 +7,7 @@
 
 QT_FORWARD_DECLARE_CLASS(QColor)
 QT_FORWARD_DECLARE_CLASS(QMouseEvent)
+QT_FORWARD_DECLARE_CLASS(QPalette)
 
 class GuiUtil
 {
@@ -26,6 +27,9 @@ public:
     static bool isSameFont(const QFont &f1, const QFont &f2);
 
     static QPoint globalPos(const QMouseEvent *event);
+
+    /* For the Fusion style on a Qt, which can't set the color scheme */
+    static QPalette darkPalette();
 };
 
 #endif // GUIUTIL_H

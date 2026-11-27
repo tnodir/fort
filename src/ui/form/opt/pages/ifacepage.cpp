@@ -464,10 +464,6 @@ QLayout *IfacePage::setupThemeLayout()
     m_comboTheme->setObjectName("comboTheme");
     m_comboTheme->setFixedWidth(200);
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
-    m_comboTheme->setEnabled(false);
-#endif
-
     return ControlUtil::createRowLayout(m_labelTheme, m_comboTheme);
 }
 

@@ -7,6 +7,7 @@
 #include <QProcess>
 #include <QStyle>
 #include <QStyleHints>
+#include <QToolTip>
 
 #include <conf/confmanager.h>
 #include <form/conn/connectionswindow.h>
@@ -53,6 +54,9 @@ const QLoggingCategory LC("manager.window");
 
 bool g_isFusionStyle = false;
 bool g_isArgStyleSheet = false;
+#if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
+bool g_isDarkTheme = false;
+#endif
 
 QFont &defaultFontRef()
 {
@@ -76,6 +80,30 @@ QAbstractItemView *listView(QWidget *w)
 
     return qobject_cast<TreeView *>(w);
 }
+
+QPalette appPalette()
+{
+    if (!g_isFusionStyle) {
+        return QPalette();
+    }
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
+    // Qt can't set the color scheme: the style's palette stays light
+    if (g_isDarkTheme) {
+        return GuiUtil::darkPalette();
+    }
+#endif
+
+    return QApplication::style()->standardPalette();
+}
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
+// The tooltips have an own palette, of the system's theme by default
+void refreshToolTipPalette()
+{
+    QToolTip::setPalette(appPalette());
+}
+#endif
 
 }
 
@@ -278,10 +306,11 @@ void WindowManager::setupAppPalette()
 
 void WindowManager::refreshAppPalette()
 {
-    const QPalette palette =
-            g_isFusionStyle ? QApplication::style()->standardPalette() : QPalette();
+    QApplication::setPalette(appPalette());
 
-    QApplication::setPalette(palette);
+#if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
+    refreshToolTipPalette();
+#endif
 }
 
 void WindowManager::setupNativeWindow()
@@ -338,12 +367,14 @@ void WindowManager::setupByIniUser()
 
 void WindowManager::updateTheme(const IniUser &ini)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
-    const auto colorScheme = Qt::ColorScheme(IniUser::colorSchemeByName(ini.theme()));
+    const int colorScheme = IniUser::colorSchemeByName(ini.theme());
 
-    QApplication::styleHints()->setColorScheme(colorScheme);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    QApplication::styleHints()->setColorScheme(Qt::ColorScheme(colorScheme));
 #else
-    Q_UNUSED(ini);
+    g_isDarkTheme = (colorScheme == IniUser::ColorSchemeDark);
+
+    refreshAppPalette();
 #endif
 }
 
@@ -725,6 +756,13 @@ bool WindowManager::eventFilter(QObject *watched, QEvent *event)
     if (event->type() == QEvent::Quit) {
         quitApp();
     }
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
+    // Qt has just reset the tooltips' palette to the system theme's one
+    if (event->type() == QEvent::ThemeChange) {
+        refreshToolTipPalette();
+    }
+#endif
 
     return QObject::eventFilter(watched, event);
 }

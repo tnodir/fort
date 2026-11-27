@@ -160,32 +160,24 @@ void IniUser::addDefaultTaskbarGraph()
 
 int IniUser::colorSchemeByName(const QString &theme)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
     if (theme == QLatin1String("light"))
-        return int(Qt::ColorScheme::Light);
+        return ColorSchemeLight;
 
     if (theme == QLatin1String("dark"))
-        return int(Qt::ColorScheme::Dark);
-#else
-    Q_UNUSED(theme);
-#endif
+        return ColorSchemeDark;
 
-    return 0;
+    return ColorSchemeSystem;
 }
 
 QString IniUser::colorSchemeName(int colorScheme)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
-    switch (Qt::ColorScheme(colorScheme)) {
-    case Qt::ColorScheme::Light:
+    switch (colorScheme) {
+    case ColorSchemeLight:
         return QLatin1String("light");
 
-    case Qt::ColorScheme::Dark:
+    case ColorSchemeDark:
         return QLatin1String("dark");
     }
-#else
-    Q_UNUSED(colorScheme);
-#endif
 
     return {};
 }
