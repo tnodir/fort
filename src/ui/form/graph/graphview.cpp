@@ -32,7 +32,7 @@ bool isDarkSystemTheme(const IniGraph &ini)
 #if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
     return QApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark;
 #else
-    return false;
+    return QApplication::palette().color(QPalette::Window).lightness() < 128;
 #endif
 }
 
@@ -80,7 +80,7 @@ void GraphView::setupOptions()
 
     connect(confManager(), &ConfManager::iniUserChanged, this, &GraphView::updateOptions);
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
     connect(QApplication::styleHints(), &QStyleHints::colorSchemeChanged, this,
             &GraphView::forceUpdateOptions);
 #endif
@@ -171,6 +171,18 @@ void GraphView::startUpdateTimer()
 
     m_updateTimer.start(1000 - msecs + 10);
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
+void GraphView::changeEvent(QEvent *event)
+{
+    QWidget::changeEvent(event);
+
+    // The theme is told by the palette
+    if (event->type() == QEvent::PaletteChange) {
+        forceUpdateOptions();
+    }
+}
+#endif
 
 void GraphView::showEvent(QShowEvent *event)
 {

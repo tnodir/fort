@@ -48,6 +48,9 @@ private:
     static GraphPlot::ColorArray getColors(const IniGraph &ini);
 
 protected:
+#if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
+    void changeEvent(QEvent *event) override;
+#endif
     void showEvent(QShowEvent *event) override;
 
 private:
