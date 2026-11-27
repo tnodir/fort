@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <utility>
 
+#include <util/window/nativewindowutil.h>
+
 namespace {
 
 const QLoggingCategory LC("form.graph.taskbarHost");
@@ -30,40 +32,6 @@ TaskbarHost *g_taskbarHost = nullptr; // for the static callbacks
 bool canLayerChildWindows()
 {
     return QOperatingSystemVersion::current() >= QOperatingSystemVersion::Windows8;
-}
-
-HWND toHwnd(WId wid)
-{
-    return reinterpret_cast<HWND>(wid);
-}
-
-HWND windowHwnd(QWidget *window)
-{
-    return toHwnd(window->winId());
-}
-
-QRect toQRect(const RECT &r)
-{
-    return QRect(r.left, r.top, r.right - r.left, r.bottom - r.top);
-}
-
-QRect windowRect(HWND hwnd, HWND parent = nullptr)
-{
-    RECT r;
-    if (!hwnd || !GetWindowRect(hwnd, &r))
-        return {};
-
-    // In the parent's client coordinates, else in the screen's
-    MapWindowPoints(HWND_DESKTOP, parent, reinterpret_cast<POINT *>(&r), 2);
-
-    return toQRect(r);
-}
-
-// The widget's geometry follows the native one at once (exact in the device-independent pixels):
-// else the native show after its show event applies the widget's own geometry
-void syncWidgetGeometry(QWidget *window)
-{
-    window->setGeometry(window->windowHandle()->geometry());
 }
 
 bool isWindowVisible(HWND hwnd)
@@ -138,22 +106,13 @@ Span nativeExactSpan(int start, int end, qreal dpr)
     return best;
 }
 
-QRect clientRect(HWND hwnd)
-{
-    RECT r;
-    if (!GetClientRect(hwnd, &r))
-        return {};
-
-    return toQRect(r);
-}
-
 // The window is visible in its parent's client area, else in the virtual screen
 QRect clipRect(HWND hwnd)
 {
     const HWND parent = GetAncestor(hwnd, GA_PARENT);
 
     if (parent && parent != GetDesktopWindow()) {
-        return clientRect(parent);
+        return NativeWindowUtil::clientRect(parent);
     }
 
     return QRect(GetSystemMetrics(SM_XVIRTUALSCREEN), GetSystemMetrics(SM_YVIRTUALSCREEN),
@@ -323,7 +282,7 @@ bool TaskbarHost::canLayerWindows() const
 void TaskbarHost::addWindow(QWidget *window, const WindowOptions &options)
 {
     // Destroyed with the old taskbar: waits for its recreation
-    if (!IsWindow(windowHwnd(window)))
+    if (!IsWindow(NativeWindowUtil::windowHwnd(window)))
         return;
 
     if (m_windows.isEmpty()) {
@@ -418,7 +377,7 @@ TaskbarHost::TaskbarWindows TaskbarHost::findTaskbar()
 
 TaskbarHost::Mode TaskbarHost::taskbarMode(const TaskbarWindows &bar)
 {
-    const QRect rect = windowRect(toHwnd(bar.taskbar));
+    const QRect rect = NativeWindowUtil::windowRect(NativeWindowUtil::toHwnd(bar.taskbar));
     if (rect.isEmpty())
         return ModeNone;
 
@@ -427,8 +386,9 @@ TaskbarHost::Mode TaskbarHost::taskbarMode(const TaskbarWindows &bar)
         return ModeOverlay;
 
     // Windows 11 keeps the old task list's window, empty, with its list hidden
-    const HWND taskList = bar.taskList
-            ? FindWindowExW(toHwnd(bar.taskList), nullptr, L"MSTaskListWClass", nullptr)
+    const HWND taskListParent = NativeWindowUtil::toHwnd(bar.taskList);
+    const HWND taskList = taskListParent
+            ? FindWindowExW(taskListParent, nullptr, L"MSTaskListWClass", nullptr)
             : nullptr;
 
     return isWindowVisible(taskList) ? ModeTaskList : ModeTaskbar;
@@ -499,7 +459,8 @@ void TaskbarHost::startEvents()
 
     // The taskbar's windows are of one thread
     DWORD processId = 0;
-    const DWORD threadId = GetWindowThreadProcessId(toHwnd(m_bar.taskbar), &processId);
+    const DWORD threadId =
+            GetWindowThreadProcessId(NativeWindowUtil::toHwnd(m_bar.taskbar), &processId);
 
     m_locationHook =
             TaskbarHostEvents::setWinEventHook(EVENT_OBJECT_LOCATIONCHANGE, processId, threadId);
@@ -529,7 +490,7 @@ void TaskbarHost::stopEvents()
     }
 
     if (m_messageWindow) {
-        DestroyWindow(toHwnd(m_messageWindow));
+        DestroyWindow(NativeWindowUtil::toHwnd(m_messageWindow));
         m_messageWindow = 0;
     }
 }
@@ -563,7 +524,7 @@ void TaskbarHost::embedWindow(QWidget *window)
     window->winId(); // creates the window's handle
     window->windowHandle()->setParent(m_parentWindow);
 
-    if (GetParent(windowHwnd(window)) != toHwnd(parent)) {
+    if (GetParent(NativeWindowUtil::windowHwnd(window)) != NativeWindowUtil::toHwnd(parent)) {
         qCWarning(LC) << "Embedding error: the overlay is used";
         useOverlay();
     }
@@ -650,16 +611,18 @@ void TaskbarHost::layout()
 
 void TaskbarHost::layoutTaskList()
 {
-    const HWND taskList = toHwnd(m_bar.taskList);
+    const HWND taskList = NativeWindowUtil::toHwnd(m_bar.taskList);
 
-    const QRect rect = windowRect(taskList, toHwnd(m_bar.rebar));
+    const QRect rect =
+            NativeWindowUtil::windowRect(taskList, NativeWindowUtil::toHwnd(m_bar.rebar));
     if (rect.isEmpty())
         return;
 
     // The full width is of the Explorer's layout, else of ours: told by the width, as the Explorer
     // changes the height and position keeping it, unless the list reaches the rebar's end: the
     // Explorer's full width may equal ours
-    const int rebarWidth = clientRect(toHwnd(m_bar.rebar)).width();
+    const int rebarWidth =
+            NativeWindowUtil::clientRect(NativeWindowUtil::toHwnd(m_bar.rebar)).width();
     const bool isShrunk =
             (rect.width() == m_shrunkListWidth && rect.x() + rect.width() != rebarWidth);
     const int fullWidth = rect.width() + (isShrunk ? m_shrunkWidth : 0);
@@ -679,7 +642,8 @@ void TaskbarHost::layoutTaskList()
 
 void TaskbarHost::layoutBeforeNotify(WId parent, WId insertAfter)
 {
-    const QRect rect = windowRect(toHwnd(m_bar.taskbar), toHwnd(parent));
+    const QRect rect = NativeWindowUtil::windowRect(
+            NativeWindowUtil::toHwnd(m_bar.taskbar), NativeWindowUtil::toHwnd(parent));
     if (rect.isEmpty())
         return;
 
@@ -688,7 +652,8 @@ void TaskbarHost::layoutBeforeNotify(WId parent, WId insertAfter)
     const bool vertical = isVertical(rect);
 
     const WId endWindow = vertical ? m_bar.taskList : m_bar.notify;
-    const QRect endRect = windowRect(toHwnd(endWindow), toHwnd(parent));
+    const QRect endRect = NativeWindowUtil::windowRect(
+            NativeWindowUtil::toHwnd(endWindow), NativeWindowUtil::toHwnd(parent));
     const int end = endEdge(rect, endRect, vertical);
 
     placeWindows(rect, end, vertical, insertAfter);
@@ -705,25 +670,25 @@ void TaskbarHost::placeWindows(const QRect &bar, int end, bool vertical, WId ins
         const Span span = nativeExactSpan(end - length, end, dpr);
         end = span.start;
 
-        const HWND hwnd = windowHwnd(window);
+        const HWND hwnd = NativeWindowUtil::windowHwnd(window);
         const Span cross =
                 crossSpan(crossSpanOf(bar, vertical), crossSpanOf(clipRect(hwnd), vertical), dpr);
 
         const QRect rect = barSpanRect(span, cross, vertical);
 
-        SetWindowPos(hwnd, toHwnd(insertAfter), rect.x(), rect.y(), rect.width(), rect.height(),
-                SWP_NOACTIVATE);
+        SetWindowPos(hwnd, NativeWindowUtil::toHwnd(insertAfter), rect.x(), rect.y(), rect.width(),
+                rect.height(), SWP_NOACTIVATE);
 
-        syncWidgetGeometry(window);
+        NativeWindowUtil::syncWidgetGeometry(window);
     }
 }
 
 bool TaskbarHost::isTaskbarAboveWindows() const
 {
-    const HWND taskbar = toHwnd(m_bar.taskbar);
+    const HWND taskbar = NativeWindowUtil::toHwnd(m_bar.taskbar);
 
     for (const auto &hosted : m_windows) {
-        if (isWindowAbove(taskbar, windowHwnd(hosted.window)))
+        if (isWindowAbove(taskbar, NativeWindowUtil::windowHwnd(hosted.window)))
             return true;
     }
     return false;

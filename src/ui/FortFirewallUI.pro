@@ -386,6 +386,7 @@ SOURCES += \
     util/triggertimer.cpp \
     util/variantutil.cpp \
     util/window/basewindowstatewatcher.cpp \
+    util/window/nativewindowutil.cpp \
     util/window/widgetwindow.cpp \
     util/window/widgetwindowstatewatcher.cpp \
     util/window/windowstatewatcher.cpp \
@@ -801,6 +802,7 @@ HEADERS += \
     util/util_types.h \
     util/variantutil.h \
     util/window/basewindowstatewatcher.h \
+    util/window/nativewindowutil.h \
     util/window/widgetwindow.h \
     util/window/widgetwindowstatewatcher.h \
     util/window/windowstatewatcher.h \
