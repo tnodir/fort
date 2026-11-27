@@ -42,6 +42,11 @@ HWND windowHwnd(QWidget *window)
     return toHwnd(window->winId());
 }
 
+QRect toQRect(const RECT &r)
+{
+    return QRect(r.left, r.top, r.right - r.left, r.bottom - r.top);
+}
+
 QRect windowRect(HWND hwnd, HWND parent = nullptr)
 {
     RECT r;
@@ -51,7 +56,7 @@ QRect windowRect(HWND hwnd, HWND parent = nullptr)
     // In the parent's client coordinates, else in the screen's
     MapWindowPoints(HWND_DESKTOP, parent, reinterpret_cast<POINT *>(&r), 2);
 
-    return QRect(r.left, r.top, r.right - r.left, r.bottom - r.top);
+    return toQRect(r);
 }
 
 // The widget's geometry follows the native one at once (exact in the device-independent pixels):
@@ -139,7 +144,7 @@ QRect clientRect(HWND hwnd)
     if (!GetClientRect(hwnd, &r))
         return {};
 
-    return QRect(r.left, r.top, r.right - r.left, r.bottom - r.top);
+    return toQRect(r);
 }
 
 // The window is visible in its parent's client area, else in the virtual screen
@@ -378,7 +383,7 @@ void TaskbarHost::attach()
         qCWarning(LC) << "Taskbar not found";
     }
 
-    m_taskbarMode = m_mode = taskbarMode(m_bar);
+    setMode(taskbarMode(m_bar));
 
     startEvents();
 }
@@ -389,9 +394,7 @@ void TaskbarHost::detach()
 
     releaseParentWindow();
 
-    m_taskbarMode = m_mode = ModeNone;
-    m_shrunkWidth = 0;
-    m_shrunkListWidth = 0;
+    setMode(ModeNone);
 
     m_bar = {};
 }
@@ -437,6 +440,13 @@ bool TaskbarHost::isLayeredMode(Mode mode)
     return mode == ModeOverlay || canLayerChildWindows();
 }
 
+void TaskbarHost::setMode(Mode mode)
+{
+    m_taskbarMode = m_mode = mode;
+    m_shrunkWidth = 0;
+    m_shrunkListWidth = 0;
+}
+
 void TaskbarHost::updateMode()
 {
     // The taskbar is moved to another edge
@@ -451,9 +461,7 @@ void TaskbarHost::updateMode()
 
     unembedWindows();
 
-    m_taskbarMode = m_mode = mode;
-    m_shrunkWidth = 0;
-    m_shrunkListWidth = 0;
+    setMode(mode);
 
     embedWindows();
 }

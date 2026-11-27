@@ -68,6 +68,7 @@ private:
     static TaskbarWindows findTaskbar();
     static Mode taskbarMode(const TaskbarWindows &bar);
     static bool isLayeredMode(Mode mode);
+    void setMode(Mode mode);
     void updateMode();
     WId parentHandle() const;
 
