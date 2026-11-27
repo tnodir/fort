@@ -151,6 +151,18 @@ QSizeF GraphSpeedItem::layout(bool rows)
     return size;
 }
 
+std::pair<GraphSpeedItem::Part, GraphSpeedItem::Part> GraphSpeedItem::orderedParts() const
+{
+    const Part in = { m_inArrow, m_inText };
+    const Part out = { m_outArrow, m_outText };
+
+    if (m_swapped) {
+        return { out, in };
+    }
+
+    return { in, out };
+}
+
 void GraphSpeedItem::updateBackground()
 {
     setBrush(m_backgroundVisible ? QBrush(m_bgColor) : QBrush(Qt::NoBrush));
@@ -169,10 +181,12 @@ void GraphSpeedItem::setupArrows(const QFont &font)
 
 QSizeF GraphSpeedItem::layoutLine()
 {
-    qreal width = layoutSpeedItem(m_inArrow, 0) + speedArrowSpacing;
-    width = layoutSpeedItem(m_inText, width) + m_spacing;
-    width = layoutSpeedItem(m_outArrow, width) + speedArrowSpacing;
-    width = layoutSpeedItem(m_outText, width);
+    const auto [first, second] = orderedParts();
+
+    qreal width = layoutSpeedItem(first.arrow, 0) + speedArrowSpacing;
+    width = layoutSpeedItem(first.text, width) + m_spacing;
+    width = layoutSpeedItem(second.arrow, width) + speedArrowSpacing;
+    width = layoutSpeedItem(second.text, width);
 
     return { width, textHeight() };
 }
@@ -180,11 +194,13 @@ QSizeF GraphSpeedItem::layoutLine()
 QSizeF GraphSpeedItem::layoutRows()
 {
     // The in and out rows: the arrows at the left, the texts at the right
+    const auto [first, second] = orderedParts();
+
     const qreal width = rowsWidth();
     const qreal height = textHeight();
 
-    layoutSpeedRow(m_inArrow, m_inText, 0, width);
-    layoutSpeedRow(m_outArrow, m_outText, height, width);
+    layoutSpeedRow(first.arrow, first.text, 0, width);
+    layoutSpeedRow(second.arrow, second.text, height, width);
 
     return { width, height * 2 };
 }

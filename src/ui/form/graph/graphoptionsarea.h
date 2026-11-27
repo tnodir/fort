@@ -149,6 +149,7 @@ private:
     QLabel *m_labelSpeedPosition = nullptr;
     QComboBox *m_comboSpeedPosition = nullptr;
     QCheckBox *m_cbGraphSpeedInside = nullptr;
+    QCheckBox *m_cbGraphSpeedSwapped = nullptr;
     QLabel *m_labelTrafUnits = nullptr;
     QComboBox *m_comboTrafUnit = nullptr;
 

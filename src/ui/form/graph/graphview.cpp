@@ -151,6 +151,7 @@ void GraphView::updateSpeedLayout(const IniGraph &ini)
     m_plot->setSpeedVisible(ini.showSpeed());
     m_plot->setSpeedPosition(GraphTypes::speedPositionByIndex(ini.speedPosition()));
     m_plot->setSpeedInside(ini.speedInside());
+    m_plot->setSpeedSwapped(ini.speedSwapped());
 }
 
 void GraphView::setupTimer()

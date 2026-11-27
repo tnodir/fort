@@ -307,6 +307,12 @@ void GraphPlot::setSpeedInside(bool v)
     m_axesChanged = true;
 }
 
+void GraphPlot::setSpeedSwapped(bool v)
+{
+    // Laid out by the next replot: the box's size is the same
+    m_speedBox->setSwapped(v);
+}
+
 void GraphPlot::setSpeedText(const QString &inText, const QString &outText)
 {
     m_speedBox->setText(inText, outText);

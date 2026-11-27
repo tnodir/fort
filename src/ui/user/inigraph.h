@@ -139,6 +139,11 @@ public:
     bool speedInside() const { return valueBool("speedInside", speedInsideDefault()); }
     void setSpeedInside(bool on) { setValue("speedInside", on); }
 
+    // The upload speed before the download one
+    static constexpr bool speedSwappedDefault() { return false; }
+    bool speedSwapped() const { return valueBool("speedSwapped", speedSwappedDefault()); }
+    void setSpeedSwapped(bool on) { setValue("speedSwapped", on); }
+
     static constexpr bool showGraphDefault() { return true; }
     bool showGraph() const { return valueBool("showGraph", showGraphDefault()); }
     void setShowGraph(bool on) { setValue("showGraph", on); }

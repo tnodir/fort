@@ -3,10 +3,13 @@
 
 #include <QGraphicsRectItem>
 
+#include <utility>
+
 class QGraphicsPathItem;
 class QGraphicsSimpleTextItem;
 
-// The text speed: the in and out texts after their arrows, in a line or in two rows
+// The text speed: the in and out texts after their arrows, in a line or in two rows,
+// the out one first if swapped
 class GraphSpeedItem : public QGraphicsRectItem
 {
 public:
@@ -23,6 +26,8 @@ public:
 
     void setTextFont(const QFont &font);
 
+    void setSwapped(bool v) { m_swapped = v; }
+
     // By the widest speed text: the graph doesn't move with the speed
     qreal rowsWidth() const;
 
@@ -33,6 +38,15 @@ public:
     QSizeF layout(bool rows);
 
 private:
+    struct Part
+    {
+        QGraphicsItem *arrow = nullptr;
+        QGraphicsItem *text = nullptr;
+    };
+
+    // In the shown order
+    std::pair<Part, Part> orderedParts() const;
+
     void updateBackground();
 
     void setupArrows(const QFont &font);
@@ -41,6 +55,7 @@ private:
     QSizeF layoutRows();
 
 private:
+    bool m_swapped = false;
     bool m_backgroundVisible = true;
 
     qreal m_spacing = 0; // between the in and out texts

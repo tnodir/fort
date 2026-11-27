@@ -137,6 +137,8 @@ public:
     bool speedInside() const { return m_speedInside; }
     void setSpeedInside(bool v);
 
+    void setSpeedSwapped(bool v);
+
     void setSpeedText(const QString &inText, const QString &outText);
 
     GraphPoint pointAt(qint64 unixTime) const;

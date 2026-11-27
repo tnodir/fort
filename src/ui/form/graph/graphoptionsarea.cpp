@@ -78,6 +78,7 @@ void GraphOptionsArea::resetToDefault()
     resetGraphFont(m_graphSpeedLabelFont, GraphFontSpeedLabel);
     ControlUtil::activateComboBox(m_comboSpeedPosition, IniGraph::speedPositionDefault());
     m_cbGraphSpeedInside->setChecked(IniGraph::speedInsideDefault());
+    m_cbGraphSpeedSwapped->setChecked(IniGraph::speedSwappedDefault());
     ControlUtil::activateComboBox(m_comboTrafUnit, IniGraph::trafUnitDefault());
 
     ControlUtil::activateComboBox(m_comboTheme, IniGraph::themeDefault());
@@ -147,6 +148,8 @@ void GraphOptionsArea::retranslateUi()
     m_labelSpeedPosition->setText(tr("Position:"));
     retranslateSpeedPositionCombo();
     m_cbGraphSpeedInside->setText(tr("Inside the graph"));
+    m_cbGraphSpeedSwapped->setText(tr("Swap order"));
+    m_cbGraphSpeedSwapped->setToolTip(tr("Show the upload speed before the download one"));
     m_labelTrafUnits->setText(tr("Units:"));
 
     m_labelTheme->setText(tr("Theme:"));
@@ -634,6 +637,10 @@ void GraphOptionsArea::setupSpeedBox()
             createIniGraphCheckBox(&IniGraph::speedInside, &IniGraph::setSpeedInside);
     m_cbGraphSpeedInside->setObjectName("cbGraphSpeedInside");
 
+    m_cbGraphSpeedSwapped =
+            createIniGraphCheckBox(&IniGraph::speedSwapped, &IniGraph::setSpeedSwapped);
+    m_cbGraphSpeedSwapped->setObjectName("cbGraphSpeedSwapped");
+
     // Traffic Units
     auto trafUnitsLayout = setupTrafUnitsLayout();
 
@@ -642,6 +649,7 @@ void GraphOptionsArea::setupSpeedBox()
             m_labelSpeedLabelFont, m_graphSpeedLabelFont, /*stretch1=*/0));
     layout->addLayout(speedPositionLayout);
     layout->addWidget(m_cbGraphSpeedInside);
+    layout->addWidget(m_cbGraphSpeedSwapped);
     layout->addLayout(trafUnitsLayout);
 
     m_gbSpeed = new QGroupBox();
