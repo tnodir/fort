@@ -4,6 +4,7 @@
 #include <QHash>
 #include <QString>
 
+#include <activity/activity_types.h>
 #include <common/common_types.h>
 #include <util/conf/conn.h>
 
@@ -19,20 +20,6 @@ struct ActivityProcRow
 
     bool operator==(const ActivityProcRow &o) const = default;
 };
-
-// The Program of the processes: an unknown one by the process's path
-struct ActivityAppKey
-{
-    qint64 appId = 0;
-    QString path; // of an unknown Program only
-
-    bool operator==(const ActivityAppKey &o) const = default;
-};
-
-inline size_t qHash(const ActivityAppKey &key, size_t seed = 0)
-{
-    return qHashMulti(seed, key.appId, key.path);
-}
 
 struct ActivityTraf
 {

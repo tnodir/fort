@@ -394,6 +394,7 @@ SOURCES += \
     util/worker/workerobject.cpp
 
 HEADERS += \
+    activity/activity_types.h \
     activity/activitymanager.h \
     appinfo/appbasejob.h \
     appinfo/appiconjob.h \

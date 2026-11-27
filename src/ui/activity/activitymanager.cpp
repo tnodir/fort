@@ -81,6 +81,16 @@ const char *const sqlSelectFlowHosts =
 const char *const sqlSelectProcCmdLines =
         "SELECT pid, cmdline FROM proc WHERE cmdline IS NOT NULL;";
 
+// A process without a Program is grouped by its path
+const char *const sqlSelectTopApps =
+        "SELECT proc.app_id, IIF(proc.app_id IS NULL, proc.path, NULL) AS app_path,"
+        "    SUM(flow.in_speed) AS sum_in, SUM(flow.out_speed) AS sum_out"
+        "  FROM flow JOIN proc ON proc.pid = flow.pid"
+        "  GROUP BY proc.app_id, app_path"
+        "  HAVING sum_in + sum_out > 0"
+        "  ORDER BY sum_in + sum_out DESC"
+        "  LIMIT ?1;";
+
 const char *const sqlDeleteFlow = "DELETE FROM flow WHERE flow_id = ?1;";
 
 const char *const sqlDeleteProcFlows = "DELETE FROM flow WHERE pid = ?1;";
@@ -484,4 +494,29 @@ QHash<quint32, QString> ActivityManager::serviceCommandLines() const
     }
 
     return cmdLines;
+}
+
+QList<ActivityAppSpeed> ActivityManager::topApps(int limit) const
+{
+    QList<ActivityAppSpeed> apps;
+
+    SqliteDb *db = sqliteDb();
+    const bool inTransaction = db->beginTransaction();
+
+    SqliteStmt stmt;
+    if (DbQuery(db).sql(sqlSelectTopApps).vars({ limit }).prepare(stmt)) {
+        while (stmt.step() == SqliteStmt::StepRow) {
+            apps.append({
+                    .inSpeed = stmt.columnInt64(2),
+                    .outSpeed = stmt.columnInt64(3),
+                    .appKey = { .appId = stmt.columnInt64(0), .path = stmt.columnText(1) },
+            });
+        }
+    }
+
+    if (inTransaction) {
+        db->endTransaction(/*ok=*/false);
+    }
+
+    return apps;
 }

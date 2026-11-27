@@ -2,12 +2,14 @@
 #define ACTIVITYMANAGER_H
 
 #include <QHash>
+#include <QList>
 #include <QObject>
 
 #include <sqlite/sqlite_types.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqliteutilbase.h>
 
+#include <activity/activity_types.h>
 #include <util/classhelpers.h>
 #include <util/expiringhash.h>
 #include <util/ioc/iocservice.h>
@@ -56,6 +58,9 @@ public:
 
     // The live services' processes' command lines by their PIDs
     QHash<quint32, QString> serviceCommandLines() const;
+
+    // The Programs with the highest speeds, the fastest first
+    QList<ActivityAppSpeed> topApps(int limit) const;
 
 signals:
     // The changes are committed: each log buffer and each late host name at most
