@@ -4,9 +4,6 @@
 #include <conf/firewallconf.h>
 #include <fortglobal.h>
 #include <stat/statmanager.h>
-#include <util/dateutil.h>
-
-#include "statsql.h"
 
 using namespace Fort;
 
@@ -170,13 +167,8 @@ void QuotaManager::setupByConfIni()
     setQuotaMBytes(AlertDay, ini.quotaDayMb());
     setQuotaMBytes(AlertMonth, ini.quotaMonthMb());
 
-    const qint64 unixTime = DateUtil::getUnixTime();
-    const qint32 trafDay = DateUtil::getUnixDay(unixTime);
-    const qint32 trafMonth = DateUtil::getUnixMonth(unixTime, ini.monthStart());
-
     auto statManager = Fort::statManager();
 
-    setTrafBytes(AlertDay, statManager->getTraffic(StatSql::sqlSelectTrafDay, trafDay).inBytes);
-    setTrafBytes(
-            AlertMonth, statManager->getTraffic(StatSql::sqlSelectTrafMonth, trafMonth).inBytes);
+    setTrafBytes(AlertDay, statManager->getTrafficDay().inBytes);
+    setTrafBytes(AlertMonth, statManager->getTrafficMonth().inBytes);
 }

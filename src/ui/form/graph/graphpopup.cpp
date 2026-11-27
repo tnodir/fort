@@ -11,13 +11,11 @@
 #include <activity/activitymanager.h>
 #include <appinfo/appinfocache.h>
 #include <conf/confappmanager.h>
-#include <conf/inioptions.h>
 #include <form/controls/controlutil.h>
 #include <form/graph/graphbasewindow.h>
 #include <fortglobal.h>
 #include <model/applistmodeldata.h>
 #include <stat/statmanager.h>
-#include <stat/statsql.h>
 #include <util/dateutil.h>
 #include <util/formatutil.h>
 #include <util/window/nativewindowutil.h>
@@ -202,14 +200,10 @@ void GraphPopup::setupRefresh()
 
 void GraphPopup::updateTraffic()
 {
-    const qint64 unixTime = DateUtil::getUnixTime();
-    const qint32 trafDay = DateUtil::getUnixDay(unixTime);
-    const qint32 trafMonth = DateUtil::getUnixMonth(unixTime, ini().monthStart());
-
     auto statManager = Fort::statManager();
 
-    setRowBytes(m_todayRow, statManager->getTraffic(StatSql::sqlSelectTrafDay, trafDay));
-    setRowBytes(m_monthRow, statManager->getTraffic(StatSql::sqlSelectTrafMonth, trafMonth));
+    setRowBytes(m_todayRow, statManager->getTrafficDay());
+    setRowBytes(m_monthRow, statManager->getTrafficMonth());
 
     updateOtherSpeed();
     updateSize();

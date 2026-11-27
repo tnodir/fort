@@ -604,6 +604,21 @@ TrafBytes StatManager::getTraffic(const char *sql, qint32 trafTime, qint64 appId
     return bytes;
 }
 
+TrafBytes StatManager::getTrafficDay()
+{
+    const qint32 trafDay = DateUtil::getUnixDay(DateUtil::getUnixTime());
+
+    return getTraffic(StatSql::sqlSelectTrafDay, trafDay);
+}
+
+TrafBytes StatManager::getTrafficMonth()
+{
+    const qint64 unixTime = DateUtil::getUnixTime();
+    const qint32 trafMonth = DateUtil::getUnixMonth(unixTime, ini().monthStart());
+
+    return getTraffic(StatSql::sqlSelectTrafMonth, trafMonth);
+}
+
 bool StatManager::exportBackup(const QString &path)
 {
     FileUtil::makePath(path);

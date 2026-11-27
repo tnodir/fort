@@ -56,6 +56,10 @@ public:
 
     TrafBytes getTraffic(const char *sql, qint32 trafTime, qint64 appId = 0);
 
+    // The traffic of the current day and month
+    TrafBytes getTrafficDay();
+    TrafBytes getTrafficMonth();
+
     bool exportBackup(const QString &path);
     virtual bool exportMasterBackup(const QString &path);
 
