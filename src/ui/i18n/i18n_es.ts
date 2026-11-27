@@ -1520,6 +1520,10 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
         <translation>Mostrar en la barra de tareas</translation>
     </message>
     <message>
+        <source>Theme:</source>
+        <translation>Tema:</translation>
+    </message>
+    <message>
         <source>Show graph</source>
         <translation>Mostrar gráfica</translation>
     </message>
@@ -1681,6 +1685,18 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     <message>
         <source>Right</source>
         <translation>Derecha</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Sistema</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Claro</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Oscuro</translation>
     </message>
 </context>
 <context>

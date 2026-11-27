@@ -1519,6 +1519,10 @@ Certifique-se de que possui um backup recente.</translation>
         <translation>Mostrar na Barra de Tarefas</translation>
     </message>
     <message>
+        <source>Theme:</source>
+        <translation>Tema:</translation>
+    </message>
+    <message>
         <source>Show graph</source>
         <translation>Mostrar Gráfico</translation>
     </message>
@@ -1680,6 +1684,18 @@ Certifique-se de que possui um backup recente.</translation>
     <message>
         <source>Right</source>
         <translation>À Direita</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Sistema</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Claro</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Escuro</translation>
     </message>
 </context>
 <context>

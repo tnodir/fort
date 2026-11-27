@@ -1520,6 +1520,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Prikaži v programski vrstici</translation>
     </message>
     <message>
+        <source>Theme:</source>
+        <translation>Tema:</translation>
+    </message>
+    <message>
         <source>Show graph</source>
         <translation>Prikaži graf</translation>
     </message>
@@ -1681,6 +1685,18 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>Right</source>
         <translation>Desno</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Sistem</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Svetla</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Temna</translation>
     </message>
 </context>
 <context>

@@ -1520,6 +1520,10 @@ Make sure that you have a fresh backup.</source>
         <translation>在任务栏中显示</translation>
     </message>
     <message>
+        <source>Theme:</source>
+        <translation>主题：</translation>
+    </message>
+    <message>
         <source>Show graph</source>
         <translation>显示图表</translation>
     </message>
@@ -1681,6 +1685,18 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Right</source>
         <translation>右侧</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>系统</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>亮色主题</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>深色主题</translation>
     </message>
 </context>
 <context>

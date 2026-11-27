@@ -1520,6 +1520,10 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <translation>Pokaż na pasku zadań</translation>
     </message>
     <message>
+        <source>Theme:</source>
+        <translation>Motyw:</translation>
+    </message>
+    <message>
         <source>Show graph</source>
         <translation>Pokaż wykres</translation>
     </message>
@@ -1681,6 +1685,18 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
     <message>
         <source>Right</source>
         <translation>Po prawej</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Systemowy</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Jasny</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Ciemny</translation>
     </message>
 </context>
 <context>

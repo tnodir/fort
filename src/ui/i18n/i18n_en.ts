@@ -1518,6 +1518,10 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
+        <source>Theme:</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Show graph</source>
         <translation></translation>
     </message>
@@ -1678,6 +1682,18 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Right</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Dark</source>
         <translation></translation>
     </message>
 </context>

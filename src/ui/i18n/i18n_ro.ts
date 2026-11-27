@@ -1520,6 +1520,10 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
         <translation>Afișează în bara de activități</translation>
     </message>
     <message>
+        <source>Theme:</source>
+        <translation>Temă:</translation>
+    </message>
+    <message>
         <source>Show graph</source>
         <translation>Afișează graficul</translation>
     </message>
@@ -1681,6 +1685,18 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
     <message>
         <source>Right</source>
         <translation>Dreapta</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Sistem</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Luminos</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Întunecat</translation>
     </message>
 </context>
 <context>

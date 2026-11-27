@@ -1520,6 +1520,10 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
         <translation>Hiển thị trên thanh tác vụ</translation>
     </message>
     <message>
+        <source>Theme:</source>
+        <translation>Giao diện:</translation>
+    </message>
+    <message>
         <source>Show graph</source>
         <translation>Hiển thị biểu đồ</translation>
     </message>
@@ -1681,6 +1685,18 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
     <message>
         <source>Right</source>
         <translation>Phải</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Hệ thống</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Sáng</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Tối</translation>
     </message>
 </context>
 <context>

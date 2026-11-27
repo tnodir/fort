@@ -1520,6 +1520,10 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <translation>Afficher dans la barre des tâches</translation>
     </message>
     <message>
+        <source>Theme:</source>
+        <translation>Thème :</translation>
+    </message>
+    <message>
         <source>Show graph</source>
         <translation>Afficher le graphique</translation>
     </message>
@@ -1681,6 +1685,18 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     <message>
         <source>Right</source>
         <translation>Droite</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Système</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Clair</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Sombre</translation>
     </message>
 </context>
 <context>

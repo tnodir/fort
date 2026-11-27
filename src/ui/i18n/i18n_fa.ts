@@ -1520,6 +1520,10 @@ Make sure that you have a fresh backup.</source>
         <translation>نمایش در نوار وظیفه</translation>
     </message>
     <message>
+        <source>Theme:</source>
+        <translation>پوسته:</translation>
+    </message>
+    <message>
         <source>Show graph</source>
         <translation>نمایش نمودار</translation>
     </message>
@@ -1681,6 +1685,18 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Right</source>
         <translation>راست</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>سیستم</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>روشن</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>تیره</translation>
     </message>
 </context>
 <context>

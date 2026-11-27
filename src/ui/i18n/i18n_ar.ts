@@ -1520,6 +1520,10 @@ Make sure that you have a fresh backup.</source>
         <translation>العرض في شريط المهام</translation>
     </message>
     <message>
+        <source>Theme:</source>
+        <translation>السمة:</translation>
+    </message>
+    <message>
         <source>Show graph</source>
         <translation>إظهار المخطط</translation>
     </message>
@@ -1681,6 +1685,18 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Right</source>
         <translation>يمين</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>النظام</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>فاتح</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>داكن</translation>
     </message>
 </context>
 <context>

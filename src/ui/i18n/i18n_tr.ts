@@ -1520,6 +1520,10 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Görev Çubuğunda Göster</translation>
     </message>
     <message>
+        <source>Theme:</source>
+        <translation>Tema:</translation>
+    </message>
+    <message>
         <source>Show graph</source>
         <translation>Tabloyu Göster</translation>
     </message>
@@ -1681,6 +1685,18 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     <message>
         <source>Right</source>
         <translation>Sağ</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Sistem</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Aydınlık</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Karanlık</translation>
     </message>
 </context>
 <context>

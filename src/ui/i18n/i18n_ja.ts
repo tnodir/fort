@@ -1520,6 +1520,10 @@ Make sure that you have a fresh backup.</source>
         <translation>タスクバーに表示</translation>
     </message>
     <message>
+        <source>Theme:</source>
+        <translation>テーマ :</translation>
+    </message>
+    <message>
         <source>Show graph</source>
         <translation>グラフを表示</translation>
     </message>
@@ -1681,6 +1685,18 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Right</source>
         <translation>右</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>システム</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>ライト</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>ダーク</translation>
     </message>
 </context>
 <context>

@@ -1520,6 +1520,10 @@ Assicurati di avere un nuovo backup.</translation>
         <translation>Mostra nella barra delle applicazioni</translation>
     </message>
     <message>
+        <source>Theme:</source>
+        <translation>Tema:</translation>
+    </message>
+    <message>
         <source>Show graph</source>
         <translation>Mostra grafico</translation>
     </message>
@@ -1681,6 +1685,18 @@ Assicurati di avere un nuovo backup.</translation>
     <message>
         <source>Right</source>
         <translation>A destra</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Sistema</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Chiaro</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Scuro</translation>
     </message>
 </context>
 <context>

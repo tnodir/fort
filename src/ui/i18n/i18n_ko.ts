@@ -1520,6 +1520,10 @@ Make sure that you have a fresh backup.</source>
         <translation>작업 표시줄에 표시</translation>
     </message>
     <message>
+        <source>Theme:</source>
+        <translation>테마:</translation>
+    </message>
+    <message>
         <source>Show graph</source>
         <translation>그래프 표시</translation>
     </message>
@@ -1681,6 +1685,18 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Right</source>
         <translation>오른쪽</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>시스템</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>밝은</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>어두운</translation>
     </message>
 </context>
 <context>

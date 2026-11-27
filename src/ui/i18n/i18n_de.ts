@@ -1520,6 +1520,10 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <translation>In der Taskleiste anzeigen</translation>
     </message>
     <message>
+        <source>Theme:</source>
+        <translation>Thema:</translation>
+    </message>
+    <message>
         <source>Show graph</source>
         <translation>Diagramm anzeigen</translation>
     </message>
@@ -1681,6 +1685,18 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     <message>
         <source>Right</source>
         <translation>Rechts</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>System</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Hell</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Dunkel</translation>
     </message>
 </context>
 <context>
