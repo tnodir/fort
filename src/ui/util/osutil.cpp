@@ -4,6 +4,7 @@
 #include <QDesktopServices>
 #include <QDir>
 #include <QLoggingCategory>
+#include <QOperatingSystemVersion>
 #include <QProcess>
 #include <QUrl>
 #include <QWidget>
@@ -150,7 +151,11 @@ bool OsUtil::isHvciRunning()
 
 bool OsUtil::isSystemLightTheme()
 {
-    // The taskbar's theme; no value before Windows 10 1903, when the taskbar is dark
+    // The taskbar's theme: light before Windows 10
+    if (QOperatingSystemVersion::current() < QOperatingSystemVersion::Windows10)
+        return true;
+
+    // No value before Windows 10 1903, when the taskbar is dark
     const RegKey regKey(
             RegKey::HKCU, R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize)");
 
