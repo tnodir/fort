@@ -49,6 +49,7 @@ private:
     void updateOtherSpeed();
 
     void updateSize();
+    void growSize();
 
     static Row createRow(QGridLayout *layout, int rowIndex, bool withIcon);
     static void setRowBytes(const Row &row, const TrafBytes &bytes);

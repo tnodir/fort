@@ -109,8 +109,7 @@ void GraphPopup::showPopup()
     updateTraffic();
     updateTopApps();
 
-    adjustSize();
-    updatePlacement();
+    growSize();
 
     show();
 }
@@ -137,6 +136,7 @@ void GraphPopup::setupUi()
     layout->setContentsMargins(6, 4, 6, 4);
     layout->setHorizontalSpacing(10);
     layout->setColumnStretch(ColumnName, 1);
+    layout->setSizeConstraint(QLayout::SetNoConstraint); // the minimum size is growSize()'s
 
     setupHeader(layout);
     setupRows(layout);
@@ -181,6 +181,9 @@ void GraphPopup::setupRows(QGridLayout *layout)
 
     m_otherRow = createRow(layout, rowIndex++, /*withIcon=*/false);
     m_otherRow.nameLabel->setText(tr("Other"));
+
+    // Keeps the rows at the top, when there are fewer of them than the popup's height fits
+    layout->setRowStretch(rowIndex, 1);
 }
 
 void GraphPopup::setupRefresh()
@@ -270,7 +273,14 @@ void GraphPopup::updateSize()
     if (!isVisible())
         return;
 
+    growSize();
+}
+
+void GraphPopup::growSize()
+{
     adjustSize();
+    setMinimumSize(size()); // never shrinks while shown, to not jump on each refresh
+
     updatePlacement();
 }
 
