@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QToolButton>
+#include <QVBoxLayout>
 
 #include <form/controls/controlutil.h>
 #include <form/controls/labelcolor.h>
@@ -79,6 +80,8 @@ void GraphOptionsArea::resetToDefault()
     m_cbGraphSpeedInside->setChecked(IniGraph::speedInsideDefault());
     ControlUtil::activateComboBox(m_comboTrafUnit, IniGraph::trafUnitDefault());
 
+    ControlUtil::activateComboBox(m_comboTheme, IniGraph::themeDefault());
+
     for (int i = 0; i < GraphColorCount; ++i) {
         const auto type = GraphColorType(i);
 
@@ -146,6 +149,8 @@ void GraphOptionsArea::retranslateUi()
     m_cbGraphSpeedInside->setText(tr("Inside the graph"));
     m_labelTrafUnits->setText(tr("Units:"));
 
+    m_labelTheme->setText(tr("Theme:"));
+    retranslateThemeCombo();
     retranslateGraphColors();
 }
 
@@ -189,6 +194,11 @@ void GraphOptionsArea::retranslateSpeedPositionCombo()
 {
     ControlUtil::setComboBoxTexts(
             m_comboSpeedPosition, GraphTypes::speedPositionNames(), iniGraph().speedPosition());
+}
+
+void GraphOptionsArea::retranslateThemeCombo()
+{
+    ControlUtil::setComboBoxTexts(m_comboTheme, GraphTypes::themeNames(), iniGraph().theme());
 }
 
 template<typename T>
@@ -663,13 +673,30 @@ QLayout *GraphOptionsArea::setupTrafUnitsLayout()
 
 void GraphOptionsArea::setupColorsBox()
 {
+    // Theme
+    auto themeLayout = setupThemeLayout();
+
     setupGraphColors();
 
-    auto layout = ControlUtil::createVLayoutByWidgets(
-            QList<QWidget *>(m_graphColors.begin(), m_graphColors.end()));
+    auto layout = new QVBoxLayout();
+    layout->addLayout(themeLayout);
+    layout->addWidget(ControlUtil::createSeparator());
+
+    ControlUtil::fillLayoutByWidgets(
+            layout, QList<QWidget *>(m_graphColors.begin(), m_graphColors.end()));
 
     m_gbColors = new QGroupBox();
     m_gbColors->setLayout(layout);
+}
+
+QLayout *GraphOptionsArea::setupThemeLayout()
+{
+    m_labelTheme = ControlUtil::createLabel();
+
+    m_comboTheme = createIniGraphComboBox({}, &IniGraph::theme, &IniGraph::setTheme);
+    m_comboTheme->setObjectName("comboTheme");
+
+    return ControlUtil::createRowLayout(m_labelTheme, m_comboTheme);
 }
 
 void GraphOptionsArea::setupGraphColors()

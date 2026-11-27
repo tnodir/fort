@@ -116,6 +116,10 @@ public:
     int trafUnit() const { return valueInt("trafUnit", trafUnitDefault()); }
     void setTrafUnit(int v) { setValue("trafUnit", v); }
 
+    static constexpr int themeDefault() { return 0; }
+    int theme() const { return valueInt("theme", themeDefault()); }
+    void setTheme(int v) { setValue("theme", v); }
+
     static const char *colorKey(GraphColorType type, bool dark);
 
     static QColor colorDefault(GraphColorType type, bool dark);

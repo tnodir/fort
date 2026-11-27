@@ -55,6 +55,7 @@ private:
     void retranslateGraphColors();
     void retranslateGraphTypeCombo();
     void retranslateSpeedPositionCombo();
+    void retranslateThemeCombo();
 
     void setupUi();
     QLayout *setupColumns();
@@ -90,6 +91,7 @@ private:
     QLayout *setupSpeedPositionLayout();
     QLayout *setupTrafUnitsLayout();
     void setupColorsBox();
+    QLayout *setupThemeLayout();
     void setupGraphColors();
     LabelColor *createGraphColor(GraphColorType type);
     void setGraphColor(GraphColorType type, bool dark, const QColor &v);
@@ -150,6 +152,8 @@ private:
     QLabel *m_labelTrafUnits = nullptr;
     QComboBox *m_comboTrafUnit = nullptr;
 
+    QLabel *m_labelTheme = nullptr;
+    QComboBox *m_comboTheme = nullptr;
     std::array<LabelColor *, GraphColorCount> m_graphColors = {};
 };
 

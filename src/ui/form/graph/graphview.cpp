@@ -22,7 +22,7 @@ using namespace Fort;
 
 namespace {
 
-bool isDarkTheme(const IniGraph &ini)
+bool isDarkSystemTheme(const IniGraph &ini)
 {
     // The taskbar follows the system's theme, not the apps' one
     if (ini.showInTaskbar()) {
@@ -34,6 +34,18 @@ bool isDarkTheme(const IniGraph &ini)
 #else
     return false;
 #endif
+}
+
+bool isDarkTheme(const IniGraph &ini)
+{
+    switch (GraphTypes::themeByIndex(ini.theme())) {
+    case GraphThemeLight:
+        return false;
+    case GraphThemeDark:
+        return true;
+    default:
+        return isDarkSystemTheme(ini);
+    }
 }
 
 }

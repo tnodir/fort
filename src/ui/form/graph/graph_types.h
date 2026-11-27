@@ -33,6 +33,13 @@ enum GraphSpeedPosition : qint8 {
     GraphSpeedRight,
 };
 
+// The colors of a graph: the light or the dark ones
+enum GraphTheme : qint8 {
+    GraphThemeSystem = 0,
+    GraphThemeLight,
+    GraphThemeDark,
+};
+
 enum GraphAxisLine : qint8 {
     GraphAxisLineLeft = 0,
     GraphAxisLineTop,
@@ -61,6 +68,13 @@ public:
     }
 
     static QStringList speedPositionNames();
+
+    static GraphTheme themeByIndex(int index)
+    {
+        return GraphTheme(qBound(int(GraphThemeSystem), index, int(GraphThemeDark)));
+    }
+
+    static QStringList themeNames();
 
     // The bit of the line in the mask of the visible ones
     static constexpr int axisLineMask(GraphAxisLine line) { return 1 << line; }

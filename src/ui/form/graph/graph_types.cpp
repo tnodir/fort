@@ -20,6 +20,12 @@ QStringList GraphTypes::speedPositionNames()
     return { tr("Top"), tr("Bottom"), tr("Left"), tr("Right") };
 }
 
+QStringList GraphTypes::themeNames()
+{
+    // Sync with GraphTheme
+    return { tr("System"), tr("Light"), tr("Dark") };
+}
+
 QStringList GraphTypes::axisLineNames()
 {
     // Sync with GraphAxisLine
