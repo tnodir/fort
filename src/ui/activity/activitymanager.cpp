@@ -84,6 +84,7 @@ const char *const sqlSelectProcCmdLines =
 // A process without a Program is grouped by its path
 const char *const sqlSelectTopApps =
         "SELECT proc.app_id, IIF(proc.app_id IS NULL, proc.path, NULL) AS app_path,"
+        "    MIN(proc.path) AS proc_path,"
         "    SUM(flow.in_speed) AS sum_in, SUM(flow.out_speed) AS sum_out"
         "  FROM flow JOIN proc ON proc.pid = flow.pid"
         "  GROUP BY proc.app_id, app_path"
@@ -507,8 +508,9 @@ QList<ActivityAppSpeed> ActivityManager::topApps(int limit) const
     if (DbQuery(db).sql(sqlSelectTopApps).vars({ limit }).prepare(stmt)) {
         while (stmt.step() == SqliteStmt::StepRow) {
             apps.append({
-                    .inSpeed = stmt.columnInt64(2),
-                    .outSpeed = stmt.columnInt64(3),
+                    .inSpeed = stmt.columnInt64(3),
+                    .outSpeed = stmt.columnInt64(4),
+                    .procPath = stmt.columnText(2),
                     .appKey = { .appId = stmt.columnInt64(0), .path = stmt.columnText(1) },
             });
         }

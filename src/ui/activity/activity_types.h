@@ -23,6 +23,7 @@ struct ActivityAppSpeed
 {
     qint64 inSpeed = 0; // bytes per second
     qint64 outSpeed = 0;
+    QString procPath; // of one of its processes: a deleted Program is shown by it
     ActivityAppKey appKey;
 
     bool operator==(const ActivityAppSpeed &o) const = default;

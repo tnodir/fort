@@ -771,13 +771,18 @@ TEST_F(ActivityTest, topAppsSumProgramsSpeeds)
             });
     endBuffer();
 
+    const QString appPath = procRow(100).value(2).toString();
+    const QString fastPath = procRow(108).value(2).toString();
     const QString unknownPath = procRow(112).value(2).toString();
+    ASSERT_FALSE(appPath.isEmpty());
+    ASSERT_FALSE(fastPath.isEmpty());
     ASSERT_FALSE(unknownPath.isEmpty());
 
+    // The Programs have their processes' paths too: to show the deleted ones
     const QList<ActivityAppSpeed> expected = {
-        { .inSpeed = 400, .appKey = { .appId = testAppId + 1 } },
-        { .inSpeed = 300, .outSpeed = 20, .appKey = { .appId = testAppId } },
-        { .outSpeed = 150, .appKey = { .path = unknownPath } },
+        { .inSpeed = 400, .procPath = fastPath, .appKey = { .appId = testAppId + 1 } },
+        { .inSpeed = 300, .outSpeed = 20, .procPath = appPath, .appKey = { .appId = testAppId } },
+        { .outSpeed = 150, .procPath = unknownPath, .appKey = { .path = unknownPath } },
     };
 
     ASSERT_EQ(m_manager.topApps(3), expected);

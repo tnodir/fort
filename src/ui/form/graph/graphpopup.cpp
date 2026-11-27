@@ -227,11 +227,11 @@ void GraphPopup::updateTopApps()
 
 void GraphPopup::fillAppRow(const Row &row, const ActivityAppSpeed &appSpeed)
 {
-    const ActivityAppKey &key = appSpeed.appKey;
-    const App app = (key.appId != 0) ? confAppManager()->appById(key.appId) : App();
+    const qint64 appId = appSpeed.appKey.appId;
+    const App app = (appId != 0) ? confAppManager()->appById(appId) : App();
 
-    const QString name = AppListModelData::appNameOf(app, key.path);
-    const QIcon icon = AppListModelData::appIconOf(app, key.path);
+    const QString name = AppListModelData::appNameOf(app, appSpeed.procPath);
+    const QIcon icon = AppListModelData::appIconOf(app, appSpeed.procPath);
 
     const int maxNameWidth = row.nameLabel->fontMetrics().averageCharWidth() * maxNameChars;
 
