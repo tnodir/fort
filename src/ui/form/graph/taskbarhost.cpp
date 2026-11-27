@@ -283,7 +283,7 @@ GraphSide TaskbarHost::taskbarSide() const
 {
     const HWND taskbar = NativeWindowUtil::toHwnd(m_bar.taskbar);
     const QRect rect = NativeWindowUtil::windowRect(taskbar);
-    const QPoint screenCenter = NativeWindowUtil::monitorRects(taskbar).screen.center();
+    const QPoint screenCenter = NativeWindowUtil::monitorRect(taskbar).center();
 
     if (isVertical(rect)) {
         return (rect.center().x() < screenCenter.x()) ? GraphSideLeft : GraphSideRight;

@@ -2,11 +2,10 @@
 
 #include <QGridLayout>
 #include <QLabel>
+#include <QScreen>
 #include <QStyleOptionFrame>
 #include <QStylePainter>
 #include <QToolTip>
-
-#include <qt_windows.h>
 
 #include <activity/activitymanager.h>
 #include <conf/confappmanager.h>
@@ -17,7 +16,6 @@
 #include <stat/statmanager.h>
 #include <util/dateutil.h>
 #include <util/formatutil.h>
-#include <util/window/nativewindowutil.h>
 
 using namespace Fort;
 
@@ -112,9 +110,6 @@ void GraphPopup::showPopup()
     updateTopApps();
 
     adjustSize();
-
-    // Placed by the native window: in the device pixels
-    winId();
     updatePlacement();
 
     show();
@@ -281,21 +276,14 @@ void GraphPopup::updateSize()
 
 void GraphPopup::updatePlacement()
 {
-    const HWND hwnd = NativeWindowUtil::windowHwnd(this);
-    const QRect rect = NativeWindowUtil::windowRect(hwnd);
+    // The graph's frame in the screen's coordinates: a taskbar's graph is a native child window
+    const QRect frame = m_graphWindow->frameGeometry();
+    const QPoint frameOffset = frame.topLeft() - m_graphWindow->geometry().topLeft();
+    const QRect anchor(m_graphWindow->mapToGlobal(frameOffset), frame.size());
 
-    const HWND graphHwnd = NativeWindowUtil::windowHwnd(m_graphWindow);
-    const QRect anchor = NativeWindowUtil::windowRect(graphHwnd);
-    const QRect workRect = NativeWindowUtil::monitorRects(graphHwnd).work;
+    const QRect workRect = m_graphWindow->screen()->availableGeometry();
 
-    const QRect popup = popupRect(anchor, rect.size(), m_graphWindow->popupSides(), workRect);
-    if (popup.topLeft() == rect.topLeft())
-        return;
-
-    SetWindowPos(
-            hwnd, nullptr, popup.x(), popup.y(), 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
-
-    NativeWindowUtil::syncWidgetGeometry(this);
+    move(popupRect(anchor, size(), m_graphWindow->popupSides(), workRect).topLeft());
 }
 
 GraphPopup::Row GraphPopup::createRow(QGridLayout *layout, int rowIndex, bool withIcon)
