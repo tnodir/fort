@@ -1608,6 +1608,14 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
         <translation>În interiorul graficului</translation>
     </message>
     <message>
+        <source>Swap order</source>
+        <translation>Inversează ordinea</translation>
+    </message>
+    <message>
+        <source>Show the upload speed before the download one</source>
+        <translation>Afișează viteza de încărcare înaintea celei de descărcare</translation>
+    </message>
+    <message>
         <source>Units:</source>
         <translation>Unități:</translation>
     </message>

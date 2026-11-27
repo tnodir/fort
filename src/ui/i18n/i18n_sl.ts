@@ -1608,6 +1608,14 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Znotraj grafa</translation>
     </message>
     <message>
+        <source>Swap order</source>
+        <translation>Zamenjaj vrstni red</translation>
+    </message>
+    <message>
+        <source>Show the upload speed before the download one</source>
+        <translation>Prikaži hitrost nalaganja pred hitrostjo prenosa</translation>
+    </message>
+    <message>
         <source>Units:</source>
         <translation>Enote:</translation>
     </message>

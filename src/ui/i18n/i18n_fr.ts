@@ -1608,6 +1608,14 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <translation>À l&apos;intérieur du graphique</translation>
     </message>
     <message>
+        <source>Swap order</source>
+        <translation>Inverser l&apos;ordre</translation>
+    </message>
+    <message>
+        <source>Show the upload speed before the download one</source>
+        <translation>Afficher la vitesse d&apos;envoi avant celle de téléchargement</translation>
+    </message>
+    <message>
         <source>Units:</source>
         <translation>Unités :</translation>
     </message>

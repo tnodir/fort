@@ -1608,6 +1608,14 @@ Make sure that you have a fresh backup.</source>
         <translation>داخل نمودار</translation>
     </message>
     <message>
+        <source>Swap order</source>
+        <translation>تعویض ترتیب</translation>
+    </message>
+    <message>
+        <source>Show the upload speed before the download one</source>
+        <translation>نمایش سرعت ارسال پیش از سرعت دانلود</translation>
+    </message>
+    <message>
         <source>Units:</source>
         <translation>واحدها:</translation>
     </message>

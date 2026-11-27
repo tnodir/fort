@@ -1608,6 +1608,14 @@ Make sure that you have a fresh backup.</source>
         <translation>داخل المخطط</translation>
     </message>
     <message>
+        <source>Swap order</source>
+        <translation>تبديل الترتيب</translation>
+    </message>
+    <message>
+        <source>Show the upload speed before the download one</source>
+        <translation>عرض سرعة الرفع قبل سرعة التنزيل</translation>
+    </message>
+    <message>
         <source>Units:</source>
         <translation>الوحدات:</translation>
     </message>

@@ -1608,6 +1608,14 @@ Assicurati di avere un nuovo backup.</translation>
         <translation>Dentro il grafico</translation>
     </message>
     <message>
+        <source>Swap order</source>
+        <translation>Inverti l&apos;ordine</translation>
+    </message>
+    <message>
+        <source>Show the upload speed before the download one</source>
+        <translation>Mostra la velocità di caricamento prima di quella di scaricamento</translation>
+    </message>
+    <message>
         <source>Units:</source>
         <translation>Unità:</translation>
     </message>

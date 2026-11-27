@@ -1608,6 +1608,14 @@ Make sure that you have a fresh backup.</source>
         <translation>그래프 내부</translation>
     </message>
     <message>
+        <source>Swap order</source>
+        <translation>순서 바꾸기</translation>
+    </message>
+    <message>
+        <source>Show the upload speed before the download one</source>
+        <translation>업로드 속도를 다운로드 속도보다 먼저 표시</translation>
+    </message>
+    <message>
         <source>Units:</source>
         <translation>단위:</translation>
     </message>

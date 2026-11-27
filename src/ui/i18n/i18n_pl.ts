@@ -1608,6 +1608,14 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <translation>Wewnątrz wykresu</translation>
     </message>
     <message>
+        <source>Swap order</source>
+        <translation>Zamień kolejność</translation>
+    </message>
+    <message>
+        <source>Show the upload speed before the download one</source>
+        <translation>Pokazuj prędkość wysyłania przed prędkością pobierania</translation>
+    </message>
+    <message>
         <source>Units:</source>
         <translation>Jednostki:</translation>
     </message>

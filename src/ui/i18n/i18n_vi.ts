@@ -1608,6 +1608,14 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
         <translation>Bên trong biểu đồ</translation>
     </message>
     <message>
+        <source>Swap order</source>
+        <translation>Đảo thứ tự</translation>
+    </message>
+    <message>
+        <source>Show the upload speed before the download one</source>
+        <translation>Hiển thị tốc độ tải lên trước tốc độ tải xuống</translation>
+    </message>
+    <message>
         <source>Units:</source>
         <translation>Đơn vị:</translation>
     </message>

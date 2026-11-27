@@ -1608,6 +1608,14 @@ Make sure that you have a fresh backup.</source>
         <translation>グラフの内側</translation>
     </message>
     <message>
+        <source>Swap order</source>
+        <translation>順序を入れ替える</translation>
+    </message>
+    <message>
+        <source>Show the upload speed before the download one</source>
+        <translation>アップロード速度をダウンロード速度より先に表示します</translation>
+    </message>
+    <message>
         <source>Units:</source>
         <translation>単位 :</translation>
     </message>

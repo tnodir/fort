@@ -1608,6 +1608,14 @@ Make sure that you have a fresh backup.</source>
         <translation>在图表内部</translation>
     </message>
     <message>
+        <source>Swap order</source>
+        <translation>交换顺序</translation>
+    </message>
+    <message>
+        <source>Show the upload speed before the download one</source>
+        <translation>先显示上传速度，再显示下载速度</translation>
+    </message>
+    <message>
         <source>Units:</source>
         <translation>单元：</translation>
     </message>

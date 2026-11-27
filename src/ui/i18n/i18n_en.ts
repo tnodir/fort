@@ -1606,6 +1606,14 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
+        <source>Swap order</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show the upload speed before the download one</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Units:</source>
         <translation></translation>
     </message>

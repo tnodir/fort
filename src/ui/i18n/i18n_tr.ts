@@ -1608,6 +1608,14 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
         <translation>Tablonun İçinde</translation>
     </message>
     <message>
+        <source>Swap order</source>
+        <translation>Sırayı değiştir</translation>
+    </message>
+    <message>
+        <source>Show the upload speed before the download one</source>
+        <translation>Yükleme hızını indirme hızından önce göster</translation>
+    </message>
+    <message>
         <source>Units:</source>
         <translation>Birimler:</translation>
     </message>

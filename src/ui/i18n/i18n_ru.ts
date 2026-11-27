@@ -1608,6 +1608,14 @@ Make sure that you have a fresh backup.</source>
         <translation>Внутри графика</translation>
     </message>
     <message>
+        <source>Swap order</source>
+        <translation>Изменить порядок</translation>
+    </message>
+    <message>
+        <source>Show the upload speed before the download one</source>
+        <translation>Показывать скорость отдачи перед скоростью загрузки</translation>
+    </message>
+    <message>
         <source>Units:</source>
         <translation>Единицы:</translation>
     </message>

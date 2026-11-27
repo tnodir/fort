@@ -1608,6 +1608,14 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <translation>Innerhalb des Diagramms</translation>
     </message>
     <message>
+        <source>Swap order</source>
+        <translation>Reihenfolge tauschen</translation>
+    </message>
+    <message>
+        <source>Show the upload speed before the download one</source>
+        <translation>Die Upload-Geschwindigkeit vor der Download-Geschwindigkeit anzeigen</translation>
+    </message>
+    <message>
         <source>Units:</source>
         <translation>Einheiten:</translation>
     </message>
