@@ -1,8 +1,6 @@
 #ifndef GRAPHWINDOW_H
 #define GRAPHWINDOW_H
 
-#include <QTimer>
-
 #include <form/graph/graphbasewindow.h>
 
 class GraphWindow : public GraphBaseWindow
@@ -27,8 +25,6 @@ public:
     void saveWindowGeometry();
 
 private slots:
-    void checkHoverLeave();
-
     void updateWindowGeometry();
 
     void updateWindowTitle(const QString &inText, const QString &outText);
@@ -51,8 +47,6 @@ private:
     void updateWindowOptions(bool onlyFlags = false);
     void updateWindowFlags(const IniGraph &ini);
 
-    void setupHoverTimer();
-
     void setWindowOpacityPercent(int percent);
 
     void checkWindowEdges();
@@ -63,6 +57,8 @@ protected:
 
     void keyPressEvent(QKeyEvent *event) override;
 
+    void onCursorLeft() override;
+
 private:
     bool m_mouseDragResize = false;
     bool m_iniMaximized = false;
@@ -72,8 +68,6 @@ private:
     QSize m_sizeOnMousePress;
 
     QRect m_iniGeometry;
-
-    QTimer m_hoverTimer;
 };
 
 #endif // GRAPHWINDOW_H

@@ -286,11 +286,7 @@ void GraphPopup::growSize()
 
 void GraphPopup::updatePlacement()
 {
-    // The graph's frame in the screen's coordinates: a taskbar's graph is a native child window
-    const QRect frame = m_graphWindow->frameGeometry();
-    const QPoint frameOffset = frame.topLeft() - m_graphWindow->geometry().topLeft();
-    const QRect anchor(m_graphWindow->mapToGlobal(frameOffset), frame.size());
-
+    const QRect anchor = m_graphWindow->globalFrameGeometry();
     const QRect workRect = m_graphWindow->screen()->availableGeometry();
 
     move(popupRect(anchor, size(), m_graphWindow->popupSides(), workRect).topLeft());

@@ -38,7 +38,6 @@ GraphWindow::GraphWindow(int graphId, QWidget *parent) : GraphBaseWindow(graphId
 {
     setupUi();
     setupWindowOptions();
-    setupHoverTimer();
 
     setupFormWindow(iniUser());
 
@@ -58,7 +57,7 @@ bool GraphWindow::popupOnTop() const
 bool GraphWindow::isWindowShown() const
 {
     // Hidden on hover till the mouse leaves it
-    return isVisible() || m_hoverTimer.isActive();
+    return isVisible() || isCursorLeaveWatched();
 }
 
 void GraphWindow::saveWindowState(bool wasVisible)
@@ -80,7 +79,7 @@ void GraphWindow::restoreWindowState()
 
 void GraphWindow::onWindowClosed()
 {
-    m_hoverTimer.stop();
+    stopCursorLeaveWatch();
 }
 
 void GraphWindow::saveWindowGeometry()
@@ -163,13 +162,6 @@ void GraphWindow::updateWindowFlags(const IniGraph &ini)
     }
 }
 
-void GraphWindow::setupHoverTimer()
-{
-    connect(&m_hoverTimer, &QTimer::timeout, this, &GraphWindow::checkHoverLeave);
-
-    m_hoverTimer.setInterval(300);
-}
-
 void GraphWindow::onMouseDoubleClick(QMouseEvent *event)
 {
     if (event->button() != Qt::LeftButton)
@@ -238,7 +230,7 @@ void GraphWindow::enterEvent(QEnterEvent *event)
 {
     if (iniGraph().hideOnHover()) {
         hide();
-        m_hoverTimer.start();
+        startCursorLeaveWatch();
         return;
     }
 
@@ -270,14 +262,14 @@ void GraphWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void GraphWindow::checkHoverLeave()
+void GraphWindow::onCursorLeft()
 {
-    const QPoint mousePos = QCursor::pos();
-
-    if (!geometry().contains(mousePos)) {
-        m_hoverTimer.stop();
-        show();
+    if (isHidden()) {
+        show(); // hidden on hover
+        return;
     }
+
+    GraphBaseWindow::onCursorLeft();
 }
 
 void GraphWindow::updateWindowTitle(const QString &inText, const QString &outText)

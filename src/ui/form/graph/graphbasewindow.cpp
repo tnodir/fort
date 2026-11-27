@@ -1,5 +1,7 @@
 #include "graphbasewindow.h"
 
+#include <QCursor>
+
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
 #include <form/graph/graphpopup.h>
@@ -7,9 +9,16 @@
 
 using namespace Fort;
 
+namespace {
+
+inline constexpr int cursorLeaveCheckMsec = 150;
+
+}
+
 GraphBaseWindow::GraphBaseWindow(int graphId, QWidget *parent) : FormWindow(parent)
 {
     setupUi(graphId);
+    setupCursorLeaveTimer();
 }
 
 GraphBaseWindow::~GraphBaseWindow()
@@ -39,6 +48,14 @@ void GraphBaseWindow::saveWindowState(bool wasVisible)
     confManager()->saveIniUser();
 }
 
+QRect GraphBaseWindow::globalFrameGeometry() const
+{
+    const QRect frame = frameGeometry();
+    const QPoint frameOffset = frame.topLeft() - geometry().topLeft();
+
+    return QRect(mapToGlobal(frameOffset), frame.size());
+}
+
 void GraphBaseWindow::enterEvent(QEnterEvent *event)
 {
     FormWindow::enterEvent(event);
@@ -50,6 +67,13 @@ void GraphBaseWindow::leaveEvent(QEvent *event)
 {
     FormWindow::leaveEvent(event);
 
+    // A layered window's transparent pixel doesn't take the mouse: the graph scrolled under a still
+    // cursor leaves it. No other leave follows, so the cursor is polled
+    if (m_popup && isCursorInFrame()) {
+        startCursorLeaveWatch();
+        return;
+    }
+
     closePopup();
 }
 
@@ -57,6 +81,21 @@ void GraphBaseWindow::hideEvent(QHideEvent *event)
 {
     FormWindow::hideEvent(event);
 
+    closePopup();
+}
+
+void GraphBaseWindow::startCursorLeaveWatch()
+{
+    m_cursorLeaveTimer.start();
+}
+
+void GraphBaseWindow::stopCursorLeaveWatch()
+{
+    m_cursorLeaveTimer.stop();
+}
+
+void GraphBaseWindow::onCursorLeft()
+{
     closePopup();
 }
 
@@ -68,8 +107,17 @@ void GraphBaseWindow::setupUi(int graphId)
     setLayout(layout);
 }
 
+void GraphBaseWindow::setupCursorLeaveTimer()
+{
+    connect(&m_cursorLeaveTimer, &QTimer::timeout, this, &GraphBaseWindow::checkCursorLeave);
+
+    m_cursorLeaveTimer.setInterval(cursorLeaveCheckMsec);
+}
+
 void GraphBaseWindow::showPopup()
 {
+    stopCursorLeaveWatch();
+
     if (!m_popup) {
         m_popup = new GraphPopup(this);
     }
@@ -79,6 +127,26 @@ void GraphBaseWindow::showPopup()
 
 void GraphBaseWindow::closePopup()
 {
+    if (!m_popup)
+        return; // the watch of a window hidden on hover goes on
+
+    stopCursorLeaveWatch();
+
     delete m_popup;
     m_popup = nullptr;
+}
+
+bool GraphBaseWindow::isCursorInFrame() const
+{
+    return globalFrameGeometry().contains(QCursor::pos());
+}
+
+void GraphBaseWindow::checkCursorLeave()
+{
+    if (isCursorInFrame())
+        return;
+
+    stopCursorLeaveWatch();
+
+    onCursorLeft();
 }
