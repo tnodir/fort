@@ -758,8 +758,9 @@ bool WindowManager::eventFilter(QObject *watched, QEvent *event)
     }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
-    // Qt has just reset the tooltips' palette to the system theme's one
-    if (event->type() == QEvent::ThemeChange) {
+    // Qt has just reset the tooltips' palette to the system theme's one.
+    // The window's widget gets the event too: react to the window's one only
+    if (event->type() == QEvent::ThemeChange && watched->isWindowType()) {
         refreshToolTipPalette();
     }
 #endif
