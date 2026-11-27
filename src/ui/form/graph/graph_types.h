@@ -55,7 +55,7 @@ class GraphTypes
 public:
     static GraphType graphTypeByIndex(int index)
     {
-        return GraphType(qBound(int(GraphTypeColumn), index, int(GraphTypeLine)));
+        return enumByIndex(index, GraphTypeColumn, GraphTypeLine);
     }
 
     static QString graphName(const IniGraph &ini);
@@ -64,14 +64,14 @@ public:
 
     static GraphSpeedPosition speedPositionByIndex(int index)
     {
-        return GraphSpeedPosition(qBound(int(GraphSpeedTop), index, int(GraphSpeedRight)));
+        return enumByIndex(index, GraphSpeedTop, GraphSpeedRight);
     }
 
     static QStringList speedPositionNames();
 
     static GraphTheme themeByIndex(int index)
     {
-        return GraphTheme(qBound(int(GraphThemeSystem), index, int(GraphThemeDark)));
+        return enumByIndex(index, GraphThemeSystem, GraphThemeDark);
     }
 
     static QStringList themeNames();
@@ -80,6 +80,14 @@ public:
     static constexpr int axisLineMask(GraphAxisLine line) { return 1 << line; }
 
     static QStringList axisLineNames();
+
+private:
+    // The index is bounded by the enum's first and last values
+    template<typename T>
+    static T enumByIndex(int index, T first, T last)
+    {
+        return T(qBound(int(first), index, int(last)));
+    }
 };
 
 #endif // GRAPH_TYPES_H
