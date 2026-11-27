@@ -391,7 +391,7 @@ void TaskbarHost::detach()
 
     m_taskbarMode = m_mode = ModeNone;
     m_shrunkWidth = 0;
-    m_shrunkTaskList = {};
+    m_shrunkListWidth = 0;
 
     m_bar = {};
 }
@@ -453,7 +453,7 @@ void TaskbarHost::updateMode()
 
     m_taskbarMode = m_mode = mode;
     m_shrunkWidth = 0;
-    m_shrunkTaskList = {};
+    m_shrunkListWidth = 0;
 
     embedWindows();
 }
@@ -648,14 +648,19 @@ void TaskbarHost::layoutTaskList()
     if (rect.isEmpty())
         return;
 
-    // The full width is of the Explorer's layout, else of ours
-    const int fullWidth = rect.width() + (rect == m_shrunkTaskList ? m_shrunkWidth : 0);
+    // The full width is of the Explorer's layout, else of ours: told by the width, as the Explorer
+    // changes the height and position keeping it, unless the list reaches the rebar's end: the
+    // Explorer's full width may equal ours
+    const int rebarWidth = clientRect(toHwnd(m_bar.rebar)).width();
+    const bool isShrunk =
+            (rect.width() == m_shrunkListWidth && rect.x() + rect.width() != rebarWidth);
+    const int fullWidth = rect.width() + (isShrunk ? m_shrunkWidth : 0);
     const int width = qMax(fullWidth - totalLength(), 0);
 
-    m_shrunkTaskList = QRect(rect.x(), rect.y(), width, rect.height());
+    m_shrunkListWidth = width;
     m_shrunkWidth = fullWidth - width;
 
-    if (m_shrunkTaskList != rect) {
+    if (width != rect.width()) {
         // Not waiting for the Explorer's thread
         SetWindowPos(taskList, nullptr, rect.x(), rect.y(), width, rect.height(),
                 SWP_NOZORDER | SWP_NOACTIVATE | SWP_ASYNCWINDOWPOS);

@@ -105,6 +105,7 @@ private:
     Mode m_taskbarMode = ModeNone; // of the taskbar's layout, m_mode is the overlay on an error
 
     int m_shrunkWidth = 0; // the task list's width given to the windows
+    int m_shrunkListWidth = 0; // the task list's width set by the layout
 
     WId m_messageWindow = 0;
 
@@ -117,8 +118,6 @@ private:
     TriggerTimer m_layoutTimer; // of the task list, after the Explorer's changes
 
     TaskbarWindows m_bar;
-
-    QRect m_shrunkTaskList; // set by the layout, in the rebar's coordinates
 
     QList<HostedWindow> m_windows;
 };
