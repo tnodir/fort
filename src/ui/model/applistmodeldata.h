@@ -12,6 +12,10 @@ public:
     explicit AppListModelData(
             const App &app, const QModelIndex &index = {}, int role = Qt::DisplayRole);
 
+    // The Program's name and icon, without a valid one they are of the path
+    static QString appNameOf(const App &app, const QString &path);
+    static QIcon appIconOf(const App &app, const QString &path);
+
     int role() const { return m_role; }
     const QModelIndex &index() const { return m_index; }
     const App &app() const { return m_app; }

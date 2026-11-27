@@ -68,13 +68,12 @@ QString appPathOf(const ActivityAppNode &n)
 
 QString appNameOf(const ActivityAppNode &n)
 {
-    return n.app.isValid() ? n.app.appName : appInfoCache()->appName(appPathOf(n));
+    return AppListModelData::appNameOf(n.app, appPathOf(n));
 }
 
 QIcon appIconOf(const ActivityAppNode &n)
 {
-    return n.app.isValid() ? AppListModelData(n.app).appIcon()
-                           : appInfoCache()->appIcon(appPathOf(n));
+    return AppListModelData::appIconOf(n.app, appPathOf(n));
 }
 
 QString nameWithPid(const QString &name, quint32 pid)

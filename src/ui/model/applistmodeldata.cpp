@@ -203,6 +203,16 @@ AppListModelData::AppListModelData(const App &app, const QModelIndex &index, int
 {
 }
 
+QString AppListModelData::appNameOf(const App &app, const QString &path)
+{
+    return app.isValid() ? app.appName : appInfoCache()->appName(path);
+}
+
+QIcon AppListModelData::appIconOf(const App &app, const QString &path)
+{
+    return app.isValid() ? AppListModelData(app).appIcon() : appInfoCache()->appIcon(path);
+}
+
 QString AppListModelData::appActionIconPath() const
 {
     if (app().alerted)

@@ -9,7 +9,6 @@
 #include <qt_windows.h>
 
 #include <activity/activitymanager.h>
-#include <appinfo/appinfocache.h>
 #include <conf/confappmanager.h>
 #include <form/controls/controlutil.h>
 #include <form/graph/graphbasewindow.h>
@@ -236,9 +235,8 @@ void GraphPopup::fillAppRow(const Row &row, const ActivityAppSpeed &appSpeed)
     const ActivityAppKey &key = appSpeed.appKey;
     const App app = (key.appId != 0) ? confAppManager()->appById(key.appId) : App();
 
-    const QString name = app.isValid() ? app.appName : appInfoCache()->appName(key.path);
-    const QIcon icon =
-            app.isValid() ? AppListModelData(app).appIcon() : appInfoCache()->appIcon(key.path);
+    const QString name = AppListModelData::appNameOf(app, key.path);
+    const QIcon icon = AppListModelData::appIconOf(app, key.path);
 
     const int maxNameWidth = row.nameLabel->fontMetrics().averageCharWidth() * maxNameChars;
 
