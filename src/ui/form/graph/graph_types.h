@@ -21,16 +21,20 @@ enum GraphColorType : qint8 {
 
 enum GraphFontType : qint8 { GraphFontTickLabel = 0, GraphFontSpeedLabel, GraphFontCount };
 
+// The values of the enums below are stored in the ini: don't reorder them
+
 enum GraphType : qint8 {
     GraphTypeColumn = 0,
     GraphTypeLine,
 };
 
-enum GraphSpeedPosition : qint8 {
-    GraphSpeedTop = 0,
-    GraphSpeedBottom,
-    GraphSpeedLeft,
-    GraphSpeedRight,
+// A side of the graph
+enum GraphSide : qint8 {
+    GraphSideTop = 0,
+    GraphSideBottom,
+    GraphSideLeft,
+    GraphSideRight,
+    GraphSideCount
 };
 
 // The colors of a graph: the light or the dark ones
@@ -38,14 +42,6 @@ enum GraphTheme : qint8 {
     GraphThemeSystem = 0,
     GraphThemeLight,
     GraphThemeDark,
-};
-
-enum GraphAxisLine : qint8 {
-    GraphAxisLineLeft = 0,
-    GraphAxisLineTop,
-    GraphAxisLineRight,
-    GraphAxisLineBottom,
-    GraphAxisLineCount
 };
 
 class GraphTypes
@@ -62,12 +58,12 @@ public:
 
     static QStringList graphTypeNames();
 
-    static GraphSpeedPosition speedPositionByIndex(int index)
+    static GraphSide speedPositionByIndex(int index)
     {
-        return enumByIndex(index, GraphSpeedTop, GraphSpeedRight);
+        return enumByIndex(index, GraphSideTop, GraphSideRight);
     }
 
-    static QStringList speedPositionNames();
+    static QStringList sideNames();
 
     static GraphTheme themeByIndex(int index)
     {
@@ -76,10 +72,8 @@ public:
 
     static QStringList themeNames();
 
-    // The bit of the line in the mask of the visible ones
-    static constexpr int axisLineMask(GraphAxisLine line) { return 1 << line; }
-
-    static QStringList axisLineNames();
+    // The bit of the side's axis line in the mask of the visible ones
+    static constexpr int axisLineMask(GraphSide side) { return 1 << side; }
 
 private:
     // The index is bounded by the enum's first and last values

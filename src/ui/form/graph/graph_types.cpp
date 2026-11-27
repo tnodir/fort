@@ -14,9 +14,9 @@ QStringList GraphTypes::graphTypeNames()
     return { tr("Column"), tr("Line") };
 }
 
-QStringList GraphTypes::speedPositionNames()
+QStringList GraphTypes::sideNames()
 {
-    // Sync with GraphSpeedPosition
+    // Sync with GraphSide
     return { tr("Top"), tr("Bottom"), tr("Left"), tr("Right") };
 }
 
@@ -24,10 +24,4 @@ QStringList GraphTypes::themeNames()
 {
     // Sync with GraphTheme
     return { tr("System"), tr("Light"), tr("Dark") };
-}
-
-QStringList GraphTypes::axisLineNames()
-{
-    // Sync with GraphAxisLine
-    return { tr("Left"), tr("Top"), tr("Right"), tr("Bottom") };
 }

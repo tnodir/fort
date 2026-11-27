@@ -75,19 +75,19 @@ void addTicks(QPainterPath &path, const QVector<int> &ys, const QRect &axisRect,
 
 // At the area's side, centered on the center along the side
 QPointF speedSidePos(
-        GraphSpeedPosition position, const QRectF &area, const QPointF &center, const QSizeF &size)
+        GraphSide position, const QRectF &area, const QPointF &center, const QSizeF &size)
 {
     const qreal x = center.x() - size.width() / 2;
     const qreal y = center.y() - size.height() / 2;
 
     switch (position) {
-    case GraphSpeedBottom:
+    case GraphSideBottom:
         return { x, area.bottom() - size.height() };
-    case GraphSpeedLeft:
+    case GraphSideLeft:
         return { area.left(), y };
-    case GraphSpeedRight:
+    case GraphSideRight:
         return { area.right() - size.width(), y };
-    default: // GraphSpeedTop
+    default: // GraphSideTop
         return { x, area.top() };
     }
 }
@@ -284,7 +284,7 @@ void GraphPlot::setSpeedVisible(bool v)
     m_axesChanged = true; // the speed column is changed
 }
 
-void GraphPlot::setSpeedPosition(GraphSpeedPosition v)
+void GraphPlot::setSpeedPosition(GraphSide v)
 {
     if (m_speedPosition == v)
         return;
@@ -901,7 +901,7 @@ QRect GraphPlot::axisRect(int tickLabelsWidth) const
     const int leftMargin = (leftWidth > 0) ? border + leftWidth : 0;
     // The bars are up to the right edge without the ticks, the speed and the right line
     const int rightWidth = ticksWidth + speed.right();
-    const int rightMargin = border + rightWidth + axisLineWidth(GraphAxisLineRight, rightWidth);
+    const int rightMargin = border + rightWidth + axisLineWidth(GraphSideRight, rightWidth);
     const int topMargin = border + axisMarginTop + speed.top();
     const int bottomMargin = border + this->bottomMargin();
 
@@ -920,17 +920,17 @@ double GraphPlot::minTickStep() const
     return m_valueUpper * labelHeight / axisHeight;
 }
 
-int GraphPlot::axisLineWidth(GraphAxisLine line, int marginWidth) const
+int GraphPlot::axisLineWidth(GraphSide side, int marginWidth) const
 {
     // A pixel for the line at the view's side without a margin
-    return (marginWidth == 0 && hasAxisLine(line)) ? 1 : 0;
+    return (marginWidth == 0 && hasAxisLine(side)) ? 1 : 0;
 }
 
 int GraphPlot::bottomMargin() const
 {
     const int speedHeight = m_speedMargins.bottom();
 
-    return speedHeight + axisLineWidth(GraphAxisLineBottom, speedHeight);
+    return speedHeight + axisLineWidth(GraphSideBottom, speedHeight);
 }
 
 int GraphPlot::axisTickLength() const
@@ -1142,7 +1142,7 @@ void GraphPlot::updateSpeedBox()
 bool GraphPlot::isSpeedRows() const
 {
     // The rows at the sides: the line would take the graph's width
-    return m_speedPosition == GraphSpeedLeft || m_speedPosition == GraphSpeedRight;
+    return m_speedPosition == GraphSideLeft || m_speedPosition == GraphSideRight;
 }
 
 bool GraphPlot::isSpeedOutside() const
@@ -1159,13 +1159,13 @@ QMargins GraphPlot::speedMargins() const
     const int height = qCeil(m_speedBox->textHeight()) + axisPadding * 2;
 
     switch (m_speedPosition) {
-    case GraphSpeedBottom:
+    case GraphSideBottom:
         return { 0, 0, 0, height };
-    case GraphSpeedLeft:
+    case GraphSideLeft:
         return { width, 0, 0, 0 };
-    case GraphSpeedRight:
+    case GraphSideRight:
         return { 0, 0, width, 0 };
-    default: // GraphSpeedTop
+    default: // GraphSideTop
         return { 0, height, 0, 0 };
     }
 }
@@ -1201,22 +1201,22 @@ void GraphPlot::updateAxes(const QVector<int> &tickYs, const QVector<int> &subTi
     QPainterPath path;
 
     // Base Line
-    if (hasAxisLine(GraphAxisLineLeft)) {
+    if (hasAxisLine(GraphSideLeft)) {
         addVLine(path, m_axisRect.left(), bottom, top);
     }
 
     // Top Line: Between the bars and the speed above them
-    if (hasAxisLine(GraphAxisLineTop)) {
+    if (hasAxisLine(GraphSideTop)) {
         addHLine(path, m_axisRect.left(), right, top);
     }
 
     // Right Line: Between the bars and the ticks or the speed at the right
-    if (hasAxisLine(GraphAxisLineRight)) {
+    if (hasAxisLine(GraphSideRight)) {
         addVLine(path, right, bottom, top);
     }
 
     // X Axis Line: Between the bars and the speed below them
-    if (hasAxisLine(GraphAxisLineBottom)) {
+    if (hasAxisLine(GraphSideBottom)) {
         addHLine(path, m_axisRect.left(), right, bottom);
     }
 

@@ -108,9 +108,9 @@ public:
     int axisLines() const { return m_axisLines; }
     void setAxisLines(int v);
 
-    bool hasAxisLine(GraphAxisLine line) const
+    bool hasAxisLine(GraphSide side) const
     {
-        return (m_axisLines & GraphTypes::axisLineMask(line)) != 0;
+        return (m_axisLines & GraphTypes::axisLineMask(side)) != 0;
     }
 
     bool axisTicksVisible() const { return m_axisTicksVisible; }
@@ -131,8 +131,8 @@ public:
     bool speedVisible() const;
     void setSpeedVisible(bool v);
 
-    GraphSpeedPosition speedPosition() const { return m_speedPosition; }
-    void setSpeedPosition(GraphSpeedPosition v);
+    GraphSide speedPosition() const { return m_speedPosition; }
+    void setSpeedPosition(GraphSide v);
 
     bool speedInside() const { return m_speedInside; }
     void setSpeedInside(bool v);
@@ -235,7 +235,7 @@ private:
     bool isSpeedRows() const;
     bool isSpeedOutside() const;
     QMargins speedMargins() const;
-    int axisLineWidth(GraphAxisLine line, int marginWidth) const;
+    int axisLineWidth(GraphSide side, int marginWidth) const;
     int bottomMargin() const;
     QPointF speedBoxPos(const QSizeF &size) const;
     void updateAxes(const QVector<int> &tickYs, const QVector<int> &subTickYs);
@@ -271,9 +271,9 @@ private:
     bool m_speedInside : 1 = true;
 
     GraphType m_graphType = GraphTypeColumn;
-    GraphSpeedPosition m_speedPosition = GraphSpeedTop;
+    GraphSide m_speedPosition = GraphSideTop;
 
-    quint8 m_axisLines = GraphTypes::axisLineMask(GraphAxisLineLeft);
+    quint8 m_axisLines = GraphTypes::axisLineMask(GraphSideLeft);
 
     int m_maxSeconds = 500;
     int m_barWidth = 5; // pixels per second

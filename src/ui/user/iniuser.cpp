@@ -150,7 +150,7 @@ void IniUser::addDefaultTaskbarGraph()
     ini.setGraphType(GraphTypeLine);
     ini.setYAxisLabels(false);
     ini.setShowSpeed(true);
-    ini.setSpeedPosition(GraphSpeedLeft);
+    ini.setSpeedPosition(GraphSideLeft);
     ini.setSpeedInside(false);
     ini.setColor(GraphColorBg, /*dark=*/false, Qt::transparent);
     ini.setColor(GraphColorBg, /*dark=*/true, Qt::transparent);

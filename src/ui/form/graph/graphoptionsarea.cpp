@@ -166,9 +166,9 @@ void GraphOptionsArea::retranslateFixedSpeedCombo()
 
 void GraphOptionsArea::retranslateGraphAxisLines()
 {
-    const QStringList names = GraphTypes::axisLineNames();
+    const QStringList names = GraphTypes::sideNames();
 
-    for (int i = 0; i < GraphAxisLineCount; ++i) {
+    for (int i = 0; i < GraphSideCount; ++i) {
         m_cbGraphAxisLines[i]->setText(names[i]);
     }
 }
@@ -193,7 +193,7 @@ void GraphOptionsArea::retranslateGraphTypeCombo()
 void GraphOptionsArea::retranslateSpeedPositionCombo()
 {
     ControlUtil::setComboBoxTexts(
-            m_comboSpeedPosition, GraphTypes::speedPositionNames(), iniGraph().speedPosition());
+            m_comboSpeedPosition, GraphTypes::sideNames(), iniGraph().speedPosition());
 }
 
 void GraphOptionsArea::retranslateThemeCombo()
@@ -541,8 +541,8 @@ QLayout *GraphOptionsArea::setupGraphAxisLinesLayout()
 
     QList<QWidget *> widgets = { m_labelGraphAxisLines, /*stretch*/ nullptr };
 
-    for (int i = 0; i < GraphAxisLineCount; ++i) {
-        auto c = createGraphAxisLine(GraphAxisLine(i));
+    for (int i = 0; i < GraphSideCount; ++i) {
+        auto c = createGraphAxisLine(GraphSide(i));
         m_cbGraphAxisLines[i] = c;
         widgets.append(c);
     }
@@ -550,13 +550,13 @@ QLayout *GraphOptionsArea::setupGraphAxisLinesLayout()
     return ControlUtil::createHLayoutByWidgets(widgets, /*margin=*/0);
 }
 
-QCheckBox *GraphOptionsArea::createGraphAxisLine(GraphAxisLine line)
+QCheckBox *GraphOptionsArea::createGraphAxisLine(GraphSide side)
 {
-    const bool checked = (iniGraph().axisLines() & GraphTypes::axisLineMask(line)) != 0;
+    const bool checked = (iniGraph().axisLines() & GraphTypes::axisLineMask(side)) != 0;
 
     auto c = ControlUtil::createCheckBox(
-            checked, [=, this](bool checked) { setGraphAxisLine(line, checked); });
-    c->setObjectName(QString("cbGraphAxisLine%1").arg(int(line)));
+            checked, [=, this](bool checked) { setGraphAxisLine(side, checked); });
+    c->setObjectName(QString("cbGraphAxisLine%1").arg(int(side)));
 
     return c;
 }
@@ -565,15 +565,15 @@ void GraphOptionsArea::resetGraphAxisLines()
 {
     const int lines = IniGraph::axisLinesDefault();
 
-    for (int i = 0; i < GraphAxisLineCount; ++i) {
-        const int mask = GraphTypes::axisLineMask(GraphAxisLine(i));
+    for (int i = 0; i < GraphSideCount; ++i) {
+        const int mask = GraphTypes::axisLineMask(GraphSide(i));
         m_cbGraphAxisLines[i]->setChecked((lines & mask) != 0);
     }
 }
 
-void GraphOptionsArea::setGraphAxisLine(GraphAxisLine line, bool on)
+void GraphOptionsArea::setGraphAxisLine(GraphSide side, bool on)
 {
-    const int mask = GraphTypes::axisLineMask(line);
+    const int mask = GraphTypes::axisLineMask(side);
     const int lines = iniGraph().axisLines();
     const int v = on ? (lines | mask) : (lines & ~mask);
 

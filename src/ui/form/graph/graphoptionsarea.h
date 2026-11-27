@@ -81,9 +81,9 @@ private:
     void setupGraphFixedSpeed();
     void setupGraphViewOptions();
     QLayout *setupGraphAxisLinesLayout();
-    QCheckBox *createGraphAxisLine(GraphAxisLine line);
+    QCheckBox *createGraphAxisLine(GraphSide side);
     void resetGraphAxisLines();
-    void setGraphAxisLine(GraphAxisLine line, bool on);
+    void setGraphAxisLine(GraphSide side, bool on);
     FontSelector *createGraphFont(GraphFontType type);
     void resetGraphFont(FontSelector *c, GraphFontType type);
     void setGraphFont(GraphFontType type, const QFont &v);
@@ -136,7 +136,7 @@ private:
     LabelSpinCombo *m_graphFixedSpeed = nullptr;
     QCheckBox *m_cbGraphAnimation = nullptr;
     QLabel *m_labelGraphAxisLines = nullptr;
-    std::array<QCheckBox *, GraphAxisLineCount> m_cbGraphAxisLines = {};
+    std::array<QCheckBox *, GraphSideCount> m_cbGraphAxisLines = {};
     QCheckBox *m_cbGraphAxisTicks = nullptr;
     QCheckBox *m_cbGraphGridLines = nullptr;
     QCheckBox *m_cbGraphYAxisLabels = nullptr;
