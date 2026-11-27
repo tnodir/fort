@@ -19,6 +19,9 @@ inline constexpr wchar_t messageWindowClass[] = L"FortFirewallTaskbarHost";
 // A walk of the z-order by GetWindow() may cycle while the order changes
 inline constexpr int maxZOrderSteps = 1000;
 
+// The task list is laid out this long after the Explorer's last change of the taskbar
+inline constexpr int taskListLayoutDelay = 200; // ms
+
 UINT g_taskbarCreatedMsg = 0;
 
 TaskbarHost *g_taskbarHost = nullptr; // for the static callbacks
@@ -290,9 +293,11 @@ struct TaskbarHostEvents
     }
 };
 
-TaskbarHost::TaskbarHost(QObject *parent) : QObject(parent)
+TaskbarHost::TaskbarHost(QObject *parent) : QObject(parent), m_layoutTimer(taskListLayoutDelay)
 {
     g_taskbarHost = this;
+
+    connect(&m_layoutTimer, &QTimer::timeout, this, &TaskbarHost::layout);
 }
 
 TaskbarHost::~TaskbarHost()
@@ -506,6 +511,8 @@ void TaskbarHost::startEvents()
 
 void TaskbarHost::stopEvents()
 {
+    m_layoutTimer.stop();
+
     for (void **hook : { &m_locationHook, &m_foregroundHook, &m_reorderHook }) {
         if (*hook) {
             UnhookWinEvent(HWINEVENTHOOK(*hook));
@@ -603,6 +610,17 @@ int TaskbarHost::totalLength() const
     }
 
     return length;
+}
+
+void TaskbarHost::scheduleLayout()
+{
+    // The task list is resized asynchronously: while the Explorer changes it, it may still have our
+    // previous width, which would be taken as the Explorer's one and shrunk again
+    if (m_mode == ModeTaskList) {
+        m_layoutTimer.start(); // anew on each change
+    } else {
+        layout();
+    }
 }
 
 void TaskbarHost::layout()
@@ -713,7 +731,7 @@ void TaskbarHost::onTaskbarWindowChanged(WId hwnd)
     // The taskbar's layout is changed or it's over the overlay
     if (isTaskbarWindow(hwnd)) {
         updateMode();
-        layout();
+        scheduleLayout();
     }
 }
 

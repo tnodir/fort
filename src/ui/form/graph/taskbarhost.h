@@ -5,6 +5,8 @@
 #include <QObject>
 #include <QWindow>
 
+#include <util/triggertimer.h>
+
 QT_FORWARD_DECLARE_CLASS(QWidget)
 
 // Places the windows into the primary monitor's taskbar, before its notification area: left of
@@ -83,6 +85,7 @@ private:
     int insertIndex(int order) const;
     int totalLength() const;
 
+    void scheduleLayout();
     void layout();
     void layoutTaskList();
     void layoutBeforeNotify(WId parent, WId insertAfter);
@@ -110,6 +113,8 @@ private:
     void *m_reorderHook = nullptr;
 
     QWindow *m_parentWindow = nullptr; // the foreign taskbar's window
+
+    TriggerTimer m_layoutTimer; // of the task list, after the Explorer's changes
 
     TaskbarWindows m_bar;
 
