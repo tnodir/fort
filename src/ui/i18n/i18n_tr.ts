@@ -1657,6 +1657,21 @@ Yeni bir yedeğin olduğundan emin ol.</translation>
     </message>
 </context>
 <context>
+    <name>GraphPopup</name>
+    <message>
+        <source>Today</source>
+        <translation>Bugün</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Ay</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>Diğer</translation>
+    </message>
+</context>
+<context>
     <name>GraphTypes</name>
     <message>
         <source>Traffic Graph</source>

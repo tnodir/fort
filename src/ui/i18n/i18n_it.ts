@@ -1657,6 +1657,21 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
 </context>
 <context>
+    <name>GraphPopup</name>
+    <message>
+        <source>Today</source>
+        <translation>Oggi</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Mese</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>Altro</translation>
+    </message>
+</context>
+<context>
     <name>GraphTypes</name>
     <message>
         <source>Traffic Graph</source>

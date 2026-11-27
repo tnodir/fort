@@ -1657,6 +1657,21 @@ Make sure that you have a fresh backup.</source>
     </message>
 </context>
 <context>
+    <name>GraphPopup</name>
+    <message>
+        <source>Today</source>
+        <translation>اليوم</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>الشهر</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>أخرى</translation>
+    </message>
+</context>
+<context>
     <name>GraphTypes</name>
     <message>
         <source>Traffic Graph</source>

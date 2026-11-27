@@ -1657,6 +1657,21 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
     </message>
 </context>
 <context>
+    <name>GraphPopup</name>
+    <message>
+        <source>Today</source>
+        <translation>Dzisiaj</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Miesiąc</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>Pozostałe</translation>
+    </message>
+</context>
+<context>
     <name>GraphTypes</name>
     <message>
         <source>Traffic Graph</source>

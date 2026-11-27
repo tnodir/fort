@@ -1657,6 +1657,21 @@ Hãy đảm bảo rằng bạn đã có một bản sao lưu mới.</translation
     </message>
 </context>
 <context>
+    <name>GraphPopup</name>
+    <message>
+        <source>Today</source>
+        <translation>Hôm nay</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Tháng</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>Khác</translation>
+    </message>
+</context>
+<context>
     <name>GraphTypes</name>
     <message>
         <source>Traffic Graph</source>

@@ -1657,6 +1657,21 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
 </context>
 <context>
+    <name>GraphPopup</name>
+    <message>
+        <source>Today</source>
+        <translation>Danes</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Mesec</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>Drugo</translation>
+    </message>
+</context>
+<context>
     <name>GraphTypes</name>
     <message>
         <source>Traffic Graph</source>

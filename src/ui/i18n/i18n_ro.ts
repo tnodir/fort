@@ -1657,6 +1657,21 @@ Asigurați-vă că aveți o copie de rezervă recentă.</translation>
     </message>
 </context>
 <context>
+    <name>GraphPopup</name>
+    <message>
+        <source>Today</source>
+        <translation>Astăzi</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Lună</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>Altele</translation>
+    </message>
+</context>
+<context>
     <name>GraphTypes</name>
     <message>
         <source>Traffic Graph</source>
