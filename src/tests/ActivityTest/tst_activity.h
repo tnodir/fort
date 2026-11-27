@@ -735,3 +735,57 @@ TEST_F(ActivityTest, failedDbLogsNoEntryErrors)
 
     ASSERT_EQ(g_warningCount, 0);
 }
+
+TEST_F(ActivityTest, topAppsSumProgramsSpeeds)
+{
+    const auto logConn = [&](quint64 flowId, quint32 pid, quint32 appId, const char *path) {
+        LogEntryConn conn = makeConn(flowId, pid);
+        conn.setAppId(appId);
+        conn.setKernelPath(path);
+        m_manager.logConn(conn);
+    };
+
+    // Two processes of a Program
+    logConn(1, 100, testAppId, testPath);
+    logConn(2, 104, testAppId, testPath);
+    // The fastest Program
+    logConn(3, 108, testAppId + 1, "C:\\test\\fast.exe");
+    // Two processes without a Program, of one path
+    logConn(4, 112, 0, "C:\\test\\unknown.exe");
+    logConn(5, 116, 0, "C:\\test\\unknown.exe");
+    // The slowest, of another path
+    logConn(6, 120, 0, "C:\\test\\slow.exe");
+    // A Program without speed
+    logConn(7, 124, testAppId + 2, "C:\\test\\idle.exe");
+    endBuffer();
+
+    m_manager.logTime();
+    logFlowTraf(m_manager,
+            {
+                    { .flow_id = 1, .traf = { .in_bytes = 100, .out_bytes = 10 } },
+                    { .flow_id = 2, .traf = { .in_bytes = 50 } },
+                    { .flow_id = 3, .traf = { .in_bytes = 200 } },
+                    { .flow_id = 4, .traf = { .out_bytes = 50 } },
+                    { .flow_id = 5, .traf = { .out_bytes = 25 } },
+                    { .flow_id = 6, .traf = { .in_bytes = 10 } },
+            });
+    endBuffer();
+
+    const QString unknownPath = procRow(112).value(2).toString();
+    ASSERT_FALSE(unknownPath.isEmpty());
+
+    const QList<ActivityAppSpeed> expected = {
+        { .inSpeed = 400, .appKey = { .appId = testAppId + 1 } },
+        { .inSpeed = 300, .outSpeed = 20, .appKey = { .appId = testAppId } },
+        { .outSpeed = 150, .appKey = { .path = unknownPath } },
+    };
+
+    ASSERT_EQ(m_manager.topApps(3), expected);
+
+    // The Program without speed isn't listed
+    const QList<ActivityAppSpeed> all = m_manager.topApps(10);
+    ASSERT_EQ(all.size(), 4);
+    ASSERT_EQ(all.mid(0, 3), expected);
+    ASSERT_EQ(all[3].inSpeed, 20);
+    ASSERT_EQ(all[3].appKey.path, procRow(120).value(2).toString());
+}
