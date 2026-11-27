@@ -156,6 +156,7 @@ SOURCES += \
     form/graph/graphlineitem.cpp \
     form/graph/graphoptionsarea.cpp \
     form/graph/graphplot.cpp \
+    form/graph/graphpopup.cpp \
     form/graph/graphscontroller.cpp \
     form/graph/graphspeeditem.cpp \
     form/graph/graphswindow.cpp \
@@ -546,6 +547,7 @@ HEADERS += \
     form/graph/graphlineitem.h \
     form/graph/graphoptionsarea.h \
     form/graph/graphplot.h \
+    form/graph/graphpopup.h \
     form/graph/graphscontroller.h \
     form/graph/graphspeeditem.h \
     form/graph/graphswindow.h \

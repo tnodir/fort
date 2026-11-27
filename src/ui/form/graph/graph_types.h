@@ -75,6 +75,9 @@ public:
     // The bit of the side's axis line in the mask of the visible ones
     static constexpr int axisLineMask(GraphSide side) { return 1 << side; }
 
+    // Top for Bottom, Left for Right and vice versa
+    static constexpr GraphSide oppositeSide(GraphSide side) { return GraphSide(side ^ 1); }
+
 private:
     // The index is bounded by the enum's first and last values
     template<typename T>

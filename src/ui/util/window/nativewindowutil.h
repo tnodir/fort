@@ -10,12 +10,21 @@ QT_FORWARD_DECLARE_CLASS(QWidget)
 class NativeWindowUtil
 {
 public:
+    struct MonitorRects
+    {
+        QRect screen;
+        QRect work; // without the taskbars
+    };
+
     static HWND toHwnd(WId wid) { return reinterpret_cast<HWND>(wid); }
     static HWND windowHwnd(QWidget *window);
 
     // In the parent's client coordinates, else in the screen's
     static QRect windowRect(HWND hwnd, HWND parent = nullptr);
     static QRect clientRect(HWND hwnd);
+
+    // Of the monitor nearest to the window
+    static MonitorRects monitorRects(HWND hwnd);
 
     // The widget's geometry follows the native one at once (exact in the device-independent
     // pixels): else the native show after its show event applies the widget's own geometry

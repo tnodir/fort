@@ -3,6 +3,9 @@
 #include <QLayout>
 #include <QTimer>
 
+#include <algorithm>
+#include <array>
+
 #include <qt_windows.h>
 
 #include <form/graph/taskbarhost.h>
@@ -36,6 +39,23 @@ bool TaskbarGraphWindow::isHostChanged() const
     const bool layered = testAttribute(Qt::WA_TranslucentBackground);
 
     return layered != windowManager()->taskbarHost()->canLayerWindows();
+}
+
+QList<GraphSide> TaskbarGraphWindow::popupSides(const QRect &rect, const QRect &screenRect) const
+{
+    // By the GraphSide
+    const std::array<int, GraphSideCount> edgeDistances = {
+        rect.top() - screenRect.top(),
+        screenRect.bottom() - rect.bottom(),
+        rect.left() - screenRect.left(),
+        screenRect.right() - rect.right(),
+    };
+
+    // Away from the screen's edge nearest to the graph: of the taskbar
+    const auto nearestEdge = std::min_element(edgeDistances.begin(), edgeDistances.end());
+    const auto side = GraphSide(nearestEdge - edgeDistances.begin());
+
+    return { GraphTypes::oppositeSide(side) };
 }
 
 void TaskbarGraphWindow::setupUi()

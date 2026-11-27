@@ -39,6 +39,18 @@ QRect NativeWindowUtil::clientRect(HWND hwnd)
     return toQRect(r);
 }
 
+NativeWindowUtil::MonitorRects NativeWindowUtil::monitorRects(HWND hwnd)
+{
+    const HMONITOR monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+
+    MONITORINFO mi;
+    mi.cbSize = sizeof(mi);
+    if (!GetMonitorInfoW(monitor, &mi))
+        return {};
+
+    return { .screen = toQRect(mi.rcMonitor), .work = toQRect(mi.rcWork) };
+}
+
 void NativeWindowUtil::syncWidgetGeometry(QWidget *window)
 {
     window->setGeometry(window->windowHandle()->geometry());

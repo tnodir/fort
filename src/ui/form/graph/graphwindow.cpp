@@ -45,6 +45,19 @@ GraphWindow::GraphWindow(int graphId, QWidget *parent) : GraphBaseWindow(graphId
     connect(confManager(), &ConfManager::iniUserChanged, this, &GraphWindow::updateWindowGeometry);
 }
 
+QList<GraphSide> GraphWindow::popupSides(const QRect &rect, const QRect &screenRect) const
+{
+    Q_UNUSED(rect);
+    Q_UNUSED(screenRect);
+
+    return { GraphSideTop, GraphSideBottom, GraphSideRight, GraphSideLeft };
+}
+
+bool GraphWindow::popupOnTop() const
+{
+    return iniGraph().alwaysOnTop();
+}
+
 bool GraphWindow::isWindowShown() const
 {
     // Hidden on hover till the mouse leaves it
@@ -226,20 +239,20 @@ void GraphWindow::cancelMousePressAndDragging()
 
 void GraphWindow::enterEvent(QEnterEvent *event)
 {
-    Q_UNUSED(event);
-
     if (iniGraph().hideOnHover()) {
         hide();
         m_hoverTimer.start();
         return;
     }
 
+    GraphBaseWindow::enterEvent(event);
+
     setWindowOpacityPercent(iniGraph().hoverOpacity());
 }
 
 void GraphWindow::leaveEvent(QEvent *event)
 {
-    Q_UNUSED(event);
+    GraphBaseWindow::leaveEvent(event);
 
     setWindowOpacityPercent(iniGraph().opacity());
 }
