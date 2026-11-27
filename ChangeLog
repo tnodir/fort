@@ -1,5 +1,12 @@
 Fort Firewall ChangeLog
 
+v3.21.3, 2026-11-27:
+- UI: Graph: Show a popup on hover: today's and month's traffic and the fastest Programs.
+- UI: Graph: Add the Theme option; Add the speed's "Swap order" option.
+- UI: Graph: Fix the taskbar graphs moving to the Start button or over the notification area.
+- UI: Graph: Fix the taskbar graph's theme before Windows 10: the taskbar is light.
+- UI: Add the dark theme for the Fusion style on Windows 7.
+
 v3.21.2, 2026-11-26:
 - UI: Add the Graphs window and the Graphs tray menu: several Traffic Graphs, instead of the Options' Traffic Graph tab.
 - UI: Graph: Add the Show in Taskbar option.
