@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QWindow>
 
+#include <form/graph/graph_types.h>
 #include <util/triggertimer.h>
 
 QT_FORWARD_DECLARE_CLASS(QWidget)
@@ -34,6 +35,9 @@ public:
 
     // The windows to place are created layered: since Windows 8, else for the overlay only
     bool canLayerWindows() const;
+
+    // The screen's side of the placed windows' taskbar
+    GraphSide taskbarSide() const;
 
     // Places the window or updates its options
     void addWindow(QWidget *window, const WindowOptions &options);

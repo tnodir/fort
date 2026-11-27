@@ -30,8 +30,8 @@ public:
 
     void saveWindowState(bool wasVisible) override;
 
-    // The sides of the window's native rect to place the popup at, by priority
-    virtual QList<GraphSide> popupSides(const QRect &rect, const QRect &screenRect) const = 0;
+    // The sides of the window to place the popup at, by priority
+    virtual QList<GraphSide> popupSides() const = 0;
     virtual bool popupOnTop() const = 0;
 
     GraphPlot *plot() const { return m_view->plot(); }

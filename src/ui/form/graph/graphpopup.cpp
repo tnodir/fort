@@ -284,13 +284,11 @@ void GraphPopup::updatePlacement()
     const HWND hwnd = NativeWindowUtil::windowHwnd(this);
     const QRect rect = NativeWindowUtil::windowRect(hwnd);
 
-    const QRect anchor = NativeWindowUtil::windowRect(NativeWindowUtil::windowHwnd(m_graphWindow));
-    const auto monitor =
-            NativeWindowUtil::monitorRects(NativeWindowUtil::windowHwnd(m_graphWindow));
+    const HWND graphHwnd = NativeWindowUtil::windowHwnd(m_graphWindow);
+    const QRect anchor = NativeWindowUtil::windowRect(graphHwnd);
+    const QRect workRect = NativeWindowUtil::monitorRects(graphHwnd).work;
 
-    const QList<GraphSide> sides = m_graphWindow->popupSides(anchor, monitor.screen);
-
-    const QRect popup = popupRect(anchor, rect.size(), sides, monitor.work);
+    const QRect popup = popupRect(anchor, rect.size(), m_graphWindow->popupSides(), workRect);
     if (popup.topLeft() == rect.topLeft())
         return;
 

@@ -14,7 +14,7 @@ public:
 
     bool inTaskbar() const override { return true; }
 
-    QList<GraphSide> popupSides(const QRect &rect, const QRect &screenRect) const override;
+    QList<GraphSide> popupSides() const override;
     bool popupOnTop() const override { return true; }
 
     bool isHostChanged() const override;

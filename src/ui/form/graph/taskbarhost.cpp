@@ -279,6 +279,19 @@ bool TaskbarHost::canLayerWindows() const
     return isLayeredMode(mode);
 }
 
+GraphSide TaskbarHost::taskbarSide() const
+{
+    const HWND taskbar = NativeWindowUtil::toHwnd(m_bar.taskbar);
+    const QRect rect = NativeWindowUtil::windowRect(taskbar);
+    const QPoint screenCenter = NativeWindowUtil::monitorRects(taskbar).screen.center();
+
+    if (isVertical(rect)) {
+        return (rect.center().x() < screenCenter.x()) ? GraphSideLeft : GraphSideRight;
+    }
+
+    return (rect.center().y() < screenCenter.y()) ? GraphSideTop : GraphSideBottom;
+}
+
 void TaskbarHost::addWindow(QWidget *window, const WindowOptions &options)
 {
     // Destroyed with the old taskbar: waits for its recreation

@@ -45,11 +45,8 @@ GraphWindow::GraphWindow(int graphId, QWidget *parent) : GraphBaseWindow(graphId
     connect(confManager(), &ConfManager::iniUserChanged, this, &GraphWindow::updateWindowGeometry);
 }
 
-QList<GraphSide> GraphWindow::popupSides(const QRect &rect, const QRect &screenRect) const
+QList<GraphSide> GraphWindow::popupSides() const
 {
-    Q_UNUSED(rect);
-    Q_UNUSED(screenRect);
-
     return { GraphSideTop, GraphSideBottom, GraphSideRight, GraphSideLeft };
 }
 
